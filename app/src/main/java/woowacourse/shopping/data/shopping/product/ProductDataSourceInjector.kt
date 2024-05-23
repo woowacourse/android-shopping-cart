@@ -6,7 +6,9 @@ object ProductDataSourceInjector {
     @Volatile
     private var instance: ProductDataSource? = null
     fun productDataSource(): ProductDataSource = instance ?: synchronized(this) {
-        instance ?: DefaultProductDataSource(DefaultShoppingProductService()).also { instance = it }
+        instance ?: DefaultProductDataSource(DefaultShoppingProductService.instance()).also {
+            instance = it
+        }
     }
 }
 

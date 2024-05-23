@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryInjector
@@ -15,23 +16,27 @@ import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
+import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
     private val viewModel by viewModels<ProductDetailViewModel> {
-        val shoppingRepository = ShoppingRepositoryInjector.shoppingRepository(requireContext().applicationContext)
-        val cartRepository = CartRepositoryInjector.cartRepository(requireContext().applicationContext)
+        val cartRepository =
+            CartRepositoryInjector.cartRepository(requireContext().applicationContext)
+        val shoppingRepository =
+            ShoppingRepositoryInjector.shoppingRepository(requireContext().applicationContext)
         ProductDetailViewModel.factory(
-            shoppingRepository,
-            cartRepository,
+            cartRepository, shoppingRepository
         )
     }
+
+    private val eventBusViewModel by activityViewModels<ShoppingEventBusViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
             val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
-            viewModel.loadProduct(id)
+            viewModel.loadCartProduct(id)
         }
     }
 
@@ -43,6 +48,7 @@ class ProductDetailFragment :
         binding?.also {
             it.lifecycleOwner = viewLifecycleOwner
             it.vm = viewModel
+            it.listener = detailItemClickListener()
         }
         initAppBar()
         initListeners()
@@ -90,6 +96,25 @@ class ProductDetailFragment :
 
     private fun navigateToShoppingCart() {
         (requireActivity() as? ShoppingNavigator)?.navigateToCart()
+    }
+
+    private fun detailItemClickListener(): DetailProductListener {
+        return object : DetailProductListener {
+            override fun addCartProduct() {
+                viewModel.addCartProduct()
+                eventBusViewModel.sendUpdateCartEvent()
+            }
+
+            override fun increaseProductCount(id: Long) {
+                viewModel.increaseProductCount()
+                eventBusViewModel.sendUpdateCartEvent()
+            }
+
+            override fun decreaseProductCount(id: Long) {
+                viewModel.decreaseProductCount()
+                eventBusViewModel.sendUpdateCartEvent()
+            }
+        }
     }
 
     companion object {

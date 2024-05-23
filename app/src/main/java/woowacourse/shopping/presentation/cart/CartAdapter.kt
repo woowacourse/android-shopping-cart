@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class CartAdapter(
-    private val onDeletedProduct: CartProductListener,
+    private val cartProductListener: CartProductListener,
 ) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: List<CartProductUi> = emptyList()
@@ -30,7 +30,7 @@ class CartAdapter(
                 parent,
                 false,
             )
-        return CartViewHolder(binding, onDeletedProduct)
+        return CartViewHolder(binding, cartProductListener)
     }
 
     override fun onBindViewHolder(
@@ -50,16 +50,12 @@ class CartAdapter(
 
     class CartViewHolder(
         private val binding: ItemCartProductBinding,
-        private val onDeletedProduct: CartProductListener,
+        private val cartProductListener: CartProductListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
-            binding.listener = onDeletedProduct
+            binding.listener = cartProductListener
         }
-    }
-
-    fun interface CartProductListener {
-        fun delete(product: CartProductUi)
     }
 }

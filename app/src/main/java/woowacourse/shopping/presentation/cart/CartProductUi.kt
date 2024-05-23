@@ -6,8 +6,11 @@ import woowacourse.shopping.presentation.shopping.toUiModel
 
 data class CartProductUi(
     val product: ProductUi,
-    val count: Int,
-)
+    val count: Int = 0,
+) {
+    val isVisible: Boolean
+        get() = count > 0
+}
 
 fun CartProduct.toUiModel(): CartProductUi {
     return CartProductUi(product.toUiModel(), count)

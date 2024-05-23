@@ -6,12 +6,20 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.presentation.shopping.product.ShoppingUiModel.Product" />
+            name="id"
+            type="Long" />
+
+        <variable
+            name="visible"
+            type="Boolean" />
+
+        <variable
+            name="count"
+            type="Integer" />
 
         <variable
             name="counterListener"
-            type="woowacourse.shopping.presentation.shopping.product.ProductItemListener" />
+            type="woowacourse.shopping.presentation.cart.CartItemListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +27,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            isVisible="@{product.visible}"
+            isVisible="@{visible}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_border_not_line"
@@ -32,7 +40,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:gravity="center"
-                android:onClick="@{()->counterListener.decreaseProductCount(product.id)}"
+                android:onClick="@{()->counterListener.decreaseProductCount(id)}"
                 android:text="-"
                 android:textColor="@color/gray500"
                 android:textSize="22sp"
@@ -42,7 +50,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:gravity="center"
-                android:text="@{String.valueOf(product.count)}"
+                android:text="@{String.valueOf(count)}"
                 android:textColor="@color/gray500"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -52,7 +60,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:gravity="center"
-                android:onClick="@{()->counterListener.increaseProductCount(product.id)}"
+                android:onClick="@{()->counterListener.increaseProductCount(id)}"
                 android:text="+"
                 android:textColor="@color/gray500"
                 android:textSize="22sp"
@@ -61,11 +69,11 @@
         </LinearLayout>
 
         <ImageView
-            isVisible="@{!product.visible}"
+            isVisible="@{!visible}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:onClick="@{()->counterListener.increaseProductCount(product.id)}"
+            android:onClick="@{()->counterListener.increaseProductCount(id)}"
             android:src="@drawable/ic_plus_cart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

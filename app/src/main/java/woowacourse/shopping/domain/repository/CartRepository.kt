@@ -13,7 +13,7 @@ interface CartRepository {
     ): Result<List<CartProduct>>
 
 
-    fun addCartProduct(
+    fun updateCartProduct(
         productId: Long,
         count: Int,
     ): Result<Long>

@@ -67,10 +67,7 @@ class CartFragment :
     }
 
     private fun initViews() {
-        adapter = CartAdapter(onDeletedProduct = {
-            viewModel.deleteProduct(it)
-            eventBusViewModel.sendUpdateCartEvent()
-        })
+        adapter = CartAdapter(cartProductListener())
         binding?.apply {
             rvShoppingCart.adapter = adapter.apply { setHasStableIds(true) }
         }
@@ -79,6 +76,26 @@ class CartFragment :
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
             adapter.updateProduct(it)
+        }
+    }
+
+    private fun cartProductListener(): CartProductListener {
+        return object : CartProductListener {
+            override fun delete(product: CartProductUi) {
+                viewModel.deleteProduct(product)
+                eventBusViewModel.sendUpdateCartEvent()
+            }
+
+            override fun increaseProductCount(id: Long) {
+                viewModel.increaseCartProduct(id)
+                eventBusViewModel.sendUpdateCartEvent()
+            }
+
+            override fun decreaseProductCount(id: Long) {
+                viewModel.decreaseCartProduct(id)
+                eventBusViewModel.sendUpdateCartEvent()
+            }
+
         }
     }
 

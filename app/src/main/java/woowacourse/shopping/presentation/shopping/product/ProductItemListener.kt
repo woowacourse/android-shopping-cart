@@ -1,9 +1,8 @@
 package woowacourse.shopping.presentation.shopping.product
 
-interface ProductItemListener {
-    fun increaseProductCount(id: Long)
+import woowacourse.shopping.presentation.cart.CartItemListener
 
-    fun decreaseProductCount(id: Long)
+interface ProductItemListener : CartItemListener {
 
     fun navigateToDetail(id: Long)
 

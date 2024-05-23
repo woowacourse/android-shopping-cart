@@ -39,8 +39,10 @@
             android:layout_margin="8dp"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@id/product_image"
+            bind:count="@{product.count}"
             bind:counterListener="@{listener}"
-            bind:product="@{product}" />
+            bind:id="@{product.id}"
+            bind:visible="@{product.visible}" />
 
         <TextView
             android:id="@+id/product_title"

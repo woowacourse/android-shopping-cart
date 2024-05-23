@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.shopping.detail.ProductDetailViewModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.presentation.shopping.detail.DetailProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +21,7 @@
 
         <ImageView
             android:id="@+id/iv_product"
-            imageUrl="@{vm.product.imageUrl}"
+            imageUrl="@{vm.cartProduct.product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1"
@@ -29,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{vm.product.name}"
+            android:text="@{vm.cartProduct.product.name}"
             android:theme="@style/H1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,29 +50,33 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_title" />
 
         <TextView
-            android:id="@+id/tv_product_price_title"
+            android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="33dp"
-            android:text="@string/price_title"
-            android:theme="@style/B2"
+            android:text="@{@string/price_format(vm.cartProduct.product.price)}"
             android:textSize="20sp"
+            android:theme="@style/B2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title"
+            tools:text="2,000원" />
 
-        <TextView
-            android:id="@+id/tv_product_price"
+        <include
+            android:id="@+id/counter"
+            layout="@layout/item_cart_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
-            android:text="@{@string/price_format(vm.product.price)}"
-            android:theme="@style/B2"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_price_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_price"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_product_price_title"
+            app:layout_constraintTop_toTopOf="@id/tv_product_price"
+            bind:count="@{vm.cartProduct.count}"
+            bind:counterListener="@{listener}"
+            bind:id="@{vm.cartProduct.product.id}"
+            bind:visible="@{vm.cartProduct.visible}"
             tools:text="4만원" />
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_product_cart"
@@ -77,9 +86,10 @@
             android:minHeight="0dp"
             android:paddingVertical="12dp"
             android:text="@string/btn_product_cart"
-            android:theme="@style/B1"
+            android:onClick="@{() -> listener.addCartProduct()}"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:theme="@style/B1"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,7 +33,7 @@ class DefaultCartRepository(
         }
     }
 
-    override fun addCartProduct(
+    override fun updateCartProduct(
         productId: Long,
         count: Int,
     ): Result<Long> {

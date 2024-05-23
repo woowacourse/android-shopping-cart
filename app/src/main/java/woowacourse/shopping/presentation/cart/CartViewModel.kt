@@ -61,6 +61,37 @@ class CartViewModel(
         return false
     }
 
+    fun increaseCartProduct(productId: Long) {
+        val currentProducts = _products.value ?: return
+        val product = currentProducts.find { it.product.id == productId } ?: return
+        val newProduct = product.copy(count = product.count + 1)
+        cartRepository.updateCartProduct(productId, newProduct.count).onSuccess {
+            val updatedProducts = currentProducts.map {
+                if (it.product.id == productId) newProduct
+                else it
+            }
+            _products.value = updatedProducts
+        }.onFailure {
+            // TODO : Handle error
+        }
+    }
+
+    fun decreaseCartProduct(productId: Long) {
+        val currentProducts = _products.value ?: return
+        val product = currentProducts.find { it.product.id == productId } ?: return
+        val newProduct = product.copy(count = product.count - 1)
+        if (newProduct.count <= 0) return // TODO : Handle error
+        cartRepository.updateCartProduct(productId, newProduct.count).onSuccess {
+            val updatedProducts = currentProducts.map {
+                if (it.product.id == productId) newProduct
+                else it
+            }
+            _products.value = updatedProducts
+        }.onFailure {
+            // TODO : Handle error
+        }
+    }
+
     fun deleteProduct(product: CartProductUi) {
         // TODO: Plus Loading
         cartRepository.deleteCartProduct(product.product.id).onSuccess {
