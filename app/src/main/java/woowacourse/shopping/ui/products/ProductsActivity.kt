@@ -27,16 +27,30 @@ class ProductsActivity : AppCompatActivity() {
     }
     private lateinit var adapter: ProductsAdapter
 
-    private val activityResultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val changedProductId =
-                result.data?.getLongExtra(CHANGED_PRODUCT_ID_KEY, CHANGED_PRODUCT_ID_DEFAULT_VALUE)
-                    ?: return@registerForActivityResult
-            viewModel.loadProductUiModel(changedProductId)
+    private val productDetailActivityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val changedProductId =
+                    result.data?.getLongExtra(CHANGED_PRODUCT_ID_KEY, CHANGED_PRODUCT_ID_DEFAULT_VALUE)
+                        ?: return@registerForActivityResult
+                viewModel.loadProductUiModel(changedProductId)
+            }
         }
-    }
+
+    private val cartActivityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val isChangedCart =
+                    result.data?.getBooleanExtra(IS_CHANGED_CART_KEY, IS_CHANGED_CART_BOOLEAN)
+                        ?: return@registerForActivityResult
+                if (!isChangedCart) return@registerForActivityResult
+                viewModel.updateProducts()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +74,7 @@ class ProductsActivity : AppCompatActivity() {
                 onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
                 onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
             )
+        binding.rvProducts.itemAnimator = null
         binding.rvProducts.adapter = adapter
         viewModel.productUiModels.observe(this) {
             adapter.insertProducts(it)
@@ -71,7 +86,7 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun navigateToProductDetailView(productId: Long) {
         val intent = ProductDetailActivity.newIntent(this, productId)
-        activityResultLauncher.launch(intent)
+        productDetailActivityResultLauncher.launch(intent)
     }
 
     private fun initializeToolbar() {
@@ -81,7 +96,7 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun navigateToCartView() {
         val intent = Intent(this, CartActivity::class.java)
-        startActivity(intent)
+        cartActivityResultLauncher.launch(intent)
     }
 
     private fun initializePage() {
@@ -104,5 +119,8 @@ class ProductsActivity : AppCompatActivity() {
     companion object {
         const val CHANGED_PRODUCT_ID_KEY = "changed_product_id_key"
         const val CHANGED_PRODUCT_ID_DEFAULT_VALUE = -1L
+
+        const val IS_CHANGED_CART_KEY = "is_changed_cart_key"
+        const val IS_CHANGED_CART_BOOLEAN = false
     }
 }

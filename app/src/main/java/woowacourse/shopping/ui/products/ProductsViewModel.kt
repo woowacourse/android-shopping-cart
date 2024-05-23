@@ -25,8 +25,8 @@ class ProductsViewModel(
     private val _changedProductQuantity = MutableLiveData<ProductUiModel>()
     val changedProductQuantity: LiveData<ProductUiModel> get() = _changedProductQuantity
 
-    private val _cartTotalCount = MutableLiveData<Int>(0)
-    val cartTotalCount: LiveData<Int> get() = _cartTotalCount
+    val cartTotalCount: LiveData<Int> =
+        _productUiModels.map { it.fold(0) { acc, productUiModel -> acc + productUiModel.quantity.count } }
 
     init {
         loadPage()
@@ -39,6 +39,11 @@ class ProductsViewModel(
         _productUiModels.value =
             (currentProductsUiModel + products.toProductsUiModel()).toMutableList()
         _showLoadMore.value = false
+    }
+
+    fun updateProducts() {
+        val products = _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
+        _productUiModels.value = products.toProductsUiModel().toMutableList()
     }
 
     private fun List<Product>.toProductsUiModel(): List<ProductUiModel> {
@@ -62,7 +67,6 @@ class ProductsViewModel(
     fun decreaseQuantity(productId: Long) {
         val productUiModel = _productUiModels.value?.find { it.productId == productId } ?: return
         cartRepository.decreaseQuantity(productId)
-        _cartTotalCount.value = (_cartTotalCount.value ?: 0) - 1
         var changedQuantity = productUiModel.quantity
         val new = productUiModel.copy(quantity = --changedQuantity)
         _changedProductQuantity.value = new
@@ -76,7 +80,6 @@ class ProductsViewModel(
     fun increaseQuantity(productId: Long) {
         val productUiModel = _productUiModels.value?.find { it.productId == productId } ?: return
         cartRepository.increaseQuantity(productId)
-        _cartTotalCount.value = (_cartTotalCount.value ?: 0) + 1
         var changedQuantity = productUiModel.quantity
         val newProductUiModel = productUiModel.copy(quantity = ++changedQuantity)
         _changedProductQuantity.value = newProductUiModel
@@ -101,7 +104,6 @@ class ProductsViewModel(
         val productUiModels = _productUiModels.value ?: return
         val index = productUiModels.indexOfFirst { it.productId == productId }
         _productUiModels.value = productUiModels.apply { this[index] = productUiModel }
-        _cartTotalCount.value = (_cartTotalCount.value ?: return) - productUiModels[index].quantity.count + productUiModel.quantity.count
     }
 
     companion object {
