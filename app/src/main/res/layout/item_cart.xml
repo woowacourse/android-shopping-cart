@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="cart"
-            type="woowacourse.shopping.domain.Cart" />
+            name="product"
+            type="woowacourse.shopping.domain.ProductListItem.ShoppingProductItem" />
+
+        <variable
+            name="cartHandler"
+            type="woowacourse.shopping.presentation.ui.cart.CartHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +28,7 @@
             android:layout_marginEnd="15dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{cart.product.name}"
+            android:text="@{product.name}"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/iv_close"
@@ -34,7 +38,7 @@
 
         <ImageView
             android:id="@+id/iv_cart"
-            bindLoadImage="@{cart.product.imgUrl}"
+            bindLoadImage="@{product.imgUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="14dp"
@@ -44,20 +48,21 @@
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             tools:src="@drawable/ic_close_white" />
 
-        <TextView
-            android:id="@+id/tv_quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:text="@{String.valueOf(cart.count)}"
-            android:textSize="16sp"
+        <include
+            android:id="@+id/layout_cart_quantity_control"
+            layout="@layout/include_quantity_control"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toTopOf="@id/tv_price"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="1개" />
+            app:product="@{product}"
+            app:quantityHandler="@{cartHandler}" />
 
         <TextView
             android:id="@+id/tv_price"
-            bindTextFormattedCurrency="@{cart.product.price}"
+            bindTextFormattedCurrency="@{product.price}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
@@ -71,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
+            android:onClick="@{()->cartHandler.onDeleteClick(product)}"
             android:src="@drawable/ic_close_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_name"

@@ -57,7 +57,7 @@ class ProductDetailViewModel(
     fun updateCartItemQuantity(quantityDelta: Int) {
         val originalQuantity = shoppingProductItem.quantity
         val newShoppingProductItem =
-            shoppingProductItem.copy(quantity = originalQuantity + quantityDelta)
+            shoppingProductItem.copy(quantity = (originalQuantity + quantityDelta).coerceAtLeast(0))
         shoppingProductItem = newShoppingProductItem
         _shoppingProduct.value = UiState.Success(shoppingProductItem)
     }

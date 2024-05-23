@@ -107,7 +107,7 @@ class ShoppingViewModel(
         }
     }
 
-    fun modifyShoppingProductQuantity(
+    private fun modifyShoppingProductQuantity(
         productId: Long,
         quantityDelta: Int,
     ) {

@@ -4,15 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
 import woowacourse.shopping.presentation.util.EventObserver
 
 class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
@@ -24,12 +25,14 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        binding.cartHandler = this
         initActionBarTitle()
         initButtonClickListener()
         initCartAdapter()
         viewModel.loadProductByPage()
         observeErrorEventUpdates()
         observeCartUpdates()
+        observeChangedCartProducts()
     }
 
     private fun initActionBarTitle() {
@@ -60,16 +63,16 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     }
 
     private fun observeCartUpdates() {
-        viewModel.carts.observe(this) {
+        viewModel.shoppingProducts.observe(this) {
             when (it) {
                 is UiState.None -> {}
-                is UiState.Success -> handleSuccessState(it)
+                is UiState.Success -> handleSuccessState(it.data)
             }
         }
     }
 
-    private fun handleSuccessState(it: UiState.Success<List<Cart>>) {
-        cartAdapter.updateList(it.data)
+    private fun handleSuccessState(products: List<ProductListItem.ShoppingProductItem>) {
+        cartAdapter.updateList(products)
         with(binding) {
             layoutPage.isVisible = viewModel.maxPage > 0
             btnRight.isEnabled = viewModel.currentPage < viewModel.maxPage
@@ -78,8 +81,20 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
         }
     }
 
-    override fun onDeleteClick(product: Product) {
-        viewModel.deleteProduct(product)
+    override fun onDeleteClick(product: ProductListItem.ShoppingProductItem) {
+        viewModel.deleteProduct(product.toProduct())
+    }
+
+    override fun onQuantityControlClick(
+        item: ProductListItem.ShoppingProductItem?,
+        quantityDelta: Int,
+    ) {
+        item?.let {
+            viewModel.updateCartItemQuantity(
+                item.toProduct(),
+                quantityDelta,
+            )
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -87,12 +102,30 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
         return true
     }
 
+    private fun observeChangedCartProducts() {
+        viewModel.changedCartProducts.observe(this) { carts ->
+            carts?.let {
+                Intent(applicationContext, ShoppingActivity::class.java).apply {
+                    putExtra(EXTRA_CHANGED_PRODUCT_IDS, it.map { it.product.id }.toLongArray())
+                    putExtra(EXTRA_NEW_PRODUCT_QUANTITIES, it.map { it.count }.toIntArray())
+                    setResult(RESULT_OK, this)
+                }
+            }
+        }
+    }
+
     companion object {
         const val PAGE_OFFSET = 1
 
-        fun start(context: Context) {
+        const val EXTRA_CHANGED_PRODUCT_IDS = "changedProductIds"
+        const val EXTRA_NEW_PRODUCT_QUANTITIES = "newProductQuantities"
+
+        fun startWithResult(
+            context: Context,
+            activityLauncher: ActivityResultLauncher<Intent>,
+        ) {
             Intent(context, CartActivity::class.java).apply {
-                context.startActivity(this)
+                activityLauncher.launch(this)
             }
         }
     }

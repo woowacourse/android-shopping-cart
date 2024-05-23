@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
@@ -93,6 +94,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         quantityDelta: Int,
     ) {
         item?.let {
+            Log.d("테스트", "$quantityDelta")
             viewModel.updateCartItemQuantity(
                 quantityDelta,
             )

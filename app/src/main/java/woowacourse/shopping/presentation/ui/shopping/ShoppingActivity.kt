@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,24 +27,33 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val adapter: ProductListAdapter = ProductListAdapter(this)
 
-    private val activityLauncher =
+    private val activityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            processActivityResult(activityResult)
+            if (activityResult.resultCode == RESULT_OK) {
+                handleActivityResult(activityResult.data)
+            }
         }
 
-    private fun processActivityResult(activityResult: ActivityResult) {
-        val isResultOkAndHasData =
-            activityResult.data != null && activityResult.resultCode == RESULT_OK
-        if (isResultOkAndHasData) updateCartItemQuantity(activityResult)
+    private fun handleActivityResult(data: Intent?) {
+        data?.let {
+            updateSingleProductQuantity(it)
+            updateMultipleProductsQuantities(it)
+        }
     }
 
-    private fun updateCartItemQuantity(activityResult: ActivityResult) {
-        val modifiedProductId =
-            activityResult.data!!.getLongExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, -1L)
-        val newQuantity =
-            activityResult.data!!.getIntExtra(ProductDetailActivity.EXTRA_NEW_PRODUCT_QUANTITY, -1)
-        if (modifiedProductId != -1L) {
+    private fun updateSingleProductQuantity(intent: Intent) {
+        val modifiedProductId = intent.getLongExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, -1L)
+        val newQuantity = intent.getIntExtra(ProductDetailActivity.EXTRA_NEW_PRODUCT_QUANTITY, -1)
+        if (modifiedProductId != -1L && newQuantity != -1) {
             viewModel.updateProductQuantity(modifiedProductId, newQuantity)
+        }
+    }
+
+    private fun updateMultipleProductsQuantities(intent: Intent) {
+        val modifiedProductIds = intent.getLongArrayExtra(CartActivity.EXTRA_CHANGED_PRODUCT_IDS)
+        val newQuantities = intent.getIntArrayExtra(CartActivity.EXTRA_NEW_PRODUCT_QUANTITIES)
+        modifiedProductIds?.zip(newQuantities?.toList() ?: emptyList())?.forEach { (id, quantity) ->
+            viewModel.updateProductQuantity(id, quantity)
         }
     }
 
@@ -114,12 +123,12 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        CartActivity.start(this)
+        CartActivity.startWithResult(this, activityResultLauncher)
         return true
     }
 
     override fun onProductItemClick(productId: Long) {
-        ProductDetailActivity.startWithResult(this, activityLauncher, productId)
+        ProductDetailActivity.startWithResult(this, activityResultLauncher, productId)
     }
 
     override fun onLoadMoreClick() {
@@ -136,11 +145,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 quantityDelta,
             )
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.cartProducts
     }
 
     companion object {
