@@ -21,6 +21,7 @@ class ProductAdapter(
     private val cartItemCountHandler: CartItemCountHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val orders: MutableList<Order> = mutableListOf()
+    private val ordersPosition: HashMap<Long, Int> = hashMapOf()
     private var loadStatus: LoadStatus = LoadStatus()
 
     override fun onCreateViewHolder(
@@ -50,7 +51,12 @@ class ProductAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(orders[position])
+            is ProductViewHolder -> {
+                val order = orders[position]
+                holder.bind(order)
+                ordersPosition[order.product.id] = position
+            }
+
             is LoadingViewHolder -> holder.bind(loadStatus)
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
         }
@@ -76,8 +82,11 @@ class ProductAdapter(
         productId: Long,
         order: Order,
     ) {
-        orders[productId.toInt() - 1] = order
-        notifyItemChanged(productId.toInt() - 1)
+        val position = ordersPosition[productId]
+        position?.let {
+            orders[it] = order
+            notifyItemChanged(it)
+        }
     }
 
     fun updateLoadStatus(loadStatus: LoadStatus) {
