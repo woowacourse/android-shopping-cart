@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -12,6 +13,8 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
+import woowacourse.shopping.presentation.util.EventObserver
 
 class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
@@ -26,10 +29,24 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         viewModel.loadById(id)
         observeErrorEventUpdates()
         observeProductsUpdates()
+        observeCartEventUpdates()
     }
 
     private fun initActionBarTitle() {
         title = getString(R.string.detail_title)
+    }
+
+    private fun observeCartEventUpdates() {
+        viewModel.addCartEvent.observe(
+            this,
+            EventObserver {
+                Intent(applicationContext, ShoppingActivity::class.java).apply {
+                    putExtra(EXTRA_PRODUCT_ID, it)
+                    setResult(RESULT_OK, this)
+                }
+                finish()
+            },
+        )
     }
 
     private fun observeErrorEventUpdates() {
@@ -45,16 +62,15 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         viewModel.products.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
-                is UiState.Success -> handleSuccessState(state.data)
+                is UiState.Success -> handleProductSuccessState(state.data)
             }
         }
     }
 
-    private fun handleSuccessState(product: Product) {
+    private fun handleProductSuccessState(product: Product) {
         binding.product = product
         binding.tvAddCart.setOnClickListener {
-            finish()
-            viewModel.saveCartItem(product)
+            viewModel.saveCartItem(product, 1)
         }
     }
 
@@ -71,13 +87,14 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
 
-        fun start(
+        fun startWithResult(
             context: Context,
+            activityLauncher: ActivityResultLauncher<Intent>,
             productId: Long,
         ) {
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT_ID, productId)
-                context.startActivity(this)
+                activityLauncher.launch(this)
             }
         }
     }

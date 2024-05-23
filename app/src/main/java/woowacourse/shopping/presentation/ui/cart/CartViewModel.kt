@@ -55,7 +55,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun deleteProduct(product: Product) {
-        cartRepository.delete(product).onSuccess {
+        cartRepository.deleteProduct(product).onSuccess {
             updateMaxPage()
             loadProductByPage()
         }.onFailure {

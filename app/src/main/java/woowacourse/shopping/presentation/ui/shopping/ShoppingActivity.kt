@@ -3,11 +3,12 @@ package woowacourse.shopping.presentation.ui.shopping
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
@@ -26,14 +27,33 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val adapter: ProductListAdapter = ProductListAdapter(this)
 
+    private val activityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            processActivityResult(activityResult)
+        }
+
+    private fun processActivityResult(activityResult: ActivityResult) {
+        val isResultOkAndHasData =
+            activityResult.data != null && activityResult.resultCode == RESULT_OK
+        if (isResultOkAndHasData) updateCartItemQuantity(activityResult)
+    }
+
+    private fun updateCartItemQuantity(activityResult: ActivityResult) {
+        val modifiedProductId =
+            activityResult.data!!.getLongExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, -1L)
+        if (modifiedProductId != -1L) {
+            viewModel.modifyShoppingProductQuantity(modifiedProductId, 1)
+        }
+    }
+
     override fun initStartView(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            viewModel.loadInitialProductByPage()
+            viewModel.loadInitialShoppingItems()
         }
         initAdapter()
-        observeErrorEventUpdates()
-        observeProductUpdates()
         observeRecentProductUpdates()
+        observeProductUpdates()
+        observeErrorEventUpdates()
     }
 
     private fun initAdapter() {
@@ -55,37 +75,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
             }
         }
 
-    private fun observeErrorEventUpdates() {
-        viewModel.error.observe(
-            this,
-            EventObserver {
-                showToast(it.message)
-            },
-        )
-    }
-
-    private fun observeProductUpdates() {
-        viewModel.products.observe(this) { state ->
-            when (state) {
-                is UiState.None -> {}
-                is UiState.Success -> handleFinishState(state)
-            }
-        }
-    }
-
-    private fun handleFinishState(newProducts: UiState.Success<List<Product>>) {
-        val items =
-            newProducts.data.map {
-                ProductListItem.ShoppingProductItem(
-                    it.id,
-                    it.name,
-                    it.imgUrl,
-                    it.price,
-                )
-            }
-        adapter.insertProductItemsAtPosition(viewModel.maxPosition, items)
-    }
-
     private fun observeRecentProductUpdates() {
         viewModel.recentProducts.observe(this) { state ->
             when (state) {
@@ -99,6 +88,24 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         }
     }
 
+    private fun observeProductUpdates() {
+        viewModel.shoppingProducts.observe(this) { state ->
+            when (state) {
+                is UiState.Success -> adapter.updateProductItems(state.data)
+                UiState.None -> {}
+            }
+        }
+    }
+
+    private fun observeErrorEventUpdates() {
+        viewModel.error.observe(
+            this,
+            EventObserver {
+                showToast(it.message)
+            },
+        )
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.shopping_menu, menu)
         return true
@@ -109,12 +116,29 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         return true
     }
 
-    override fun onProductClick(productId: Long) {
-        ProductDetailActivity.start(this, productId)
+    override fun onProductItemClick(productId: Long) {
+        ProductDetailActivity.startWithResult(this, activityLauncher, productId)
     }
 
     override fun onLoadMoreClick() {
-        viewModel.addProductByPage()
+        viewModel.fetchProductForNewPage()
+    }
+
+    override fun onQuantityControlClick(
+        item: ProductListItem.ShoppingProductItem?,
+        quantityDelta: Int,
+    ) {
+        item?.let {
+            viewModel.updateCartItemQuantity(
+                item.toProduct(),
+                quantityDelta,
+            )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.cartProducts
     }
 
     companion object {

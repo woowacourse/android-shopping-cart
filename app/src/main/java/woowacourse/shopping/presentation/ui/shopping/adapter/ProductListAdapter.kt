@@ -66,17 +66,60 @@ class ProductListAdapter(
         notifyItemRangeInserted(RECENT_PRODUCT_POSITION, 1)
     }
 
-    fun insertProductItemsAtPosition(
-        startPosition: Int,
-        newProducts: List<ProductListItem>,
+    fun updateProductItems(newProductItems: List<ProductListItem.ShoppingProductItem>) {
+        val oldProductItems = items.filterIsInstance<ProductListItem.ShoppingProductItem>()
+        if (oldProductItems.size == newProductItems.size) {
+            updateSingleItem(
+                newProductItems,
+                oldProductItems,
+            )
+        } else {
+            addItem(
+                newProductItems,
+                getIntersectCount(oldProductItems, newProductItems),
+            )
+        }
+    }
+
+    private fun getIntersectCount(
+        oldProductItems: List<ProductListItem.ShoppingProductItem>,
+        newProductItems: List<ProductListItem.ShoppingProductItem>,
+    ): Int {
+        val a =
+            oldProductItems.filter {
+                newProductItems.contains(it)
+            }
+        return a.size
+    }
+
+    private fun updateSingleItem(
+        newProductItems: List<ProductListItem.ShoppingProductItem>,
+        oldProductItems: List<ProductListItem.ShoppingProductItem>,
     ) {
+        val changedIndex =
+            oldProductItems.indexOfFirst {
+                !newProductItems.contains(it)
+            }
+        updateItems(newProductItems)
+        notifyItemChanged(changedIndex + 1)
+    }
+
+    private fun addItem(
+        newProducts: List<ProductListItem.ShoppingProductItem>,
+        intersectCount: Int,
+    ) {
+        val startPosition = items.size + 1
+        updateItems(newProducts)
+        notifyItemRangeInserted(startPosition, newProducts.size - intersectCount)
+    }
+
+    private fun updateItems(newProducts: List<ProductListItem>) {
+        val recentItems = items[RECENT_PRODUCT_POSITION]
         items.apply {
-            val recentItems = items[RECENT_PRODUCT_POSITION]
             clear()
             add(recentItems)
             addAll(newProducts)
         }
-        notifyItemRangeInserted(startPosition, newProducts.size)
     }
 
     companion object {

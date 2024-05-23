@@ -8,13 +8,17 @@ import kotlin.math.min
 object DummyCartRepository : CartRepository {
     private val cartMap: MutableMap<Product, Int> = mutableMapOf()
 
-    override fun addData(product: Product): Result<Long> =
+    override fun updateQuantity(
+        product: Product,
+        quantityDelta: Int,
+    ): Result<Long> =
         runCatching {
-            cartMap[product] = (cartMap[product] ?: 0) + 1
+            cartMap[product] = ((cartMap[product] ?: 0) + quantityDelta).coerceAtLeast(0)
+            if (cartMap[product] == 0) cartMap.remove(product)
             product.id
         }
 
-    override fun delete(product: Product): Result<Long> =
+    override fun deleteProduct(product: Product): Result<Long> =
         runCatching {
             cartMap.remove(product) ?: throw NoSuchElementException()
             product.id
@@ -29,6 +33,11 @@ object DummyCartRepository : CartRepository {
             val startIndex = startPage * pageSize
             val endIndex = min(startIndex + pageSize, carts.size)
             carts.subList(startIndex, endIndex)
+        }
+
+    override fun loadAll(): Result<List<Cart>> =
+        runCatching {
+            cartMap.map { Cart(it.key, it.value) }.toList()
         }
 
     override fun getMaxPage(pageSize: Int): Result<Int> =

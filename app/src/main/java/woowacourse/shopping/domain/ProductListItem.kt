@@ -2,15 +2,41 @@ package woowacourse.shopping.domain
 
 import java.time.LocalDateTime
 
-sealed class ProductListItem {
+sealed interface ProductListItem {
+    data class RecentProductItems(val items: List<RecentProductItem>) : ProductListItem
+
     data class ShoppingProductItem(
         val id: Long,
         val name: String,
         val imgUrl: String,
         val price: Long,
-    ) : ProductListItem()
+        var quantity: Int = 0,
+    ) : ProductListItem {
+        fun toProduct() =
+            Product(
+                this.id,
+                this.name,
+                this.imgUrl,
+                this.price,
+            )
 
-    data class RecentProductItems(val items: List<RecentProductItem>) : ProductListItem()
+        companion object {
+            fun fromProductsAndCarts(
+                products: List<Product>,
+                carts: List<Cart>,
+            ): List<ShoppingProductItem> {
+                return products.map { product ->
+                    ShoppingProductItem(
+                        product.id,
+                        product.name,
+                        product.imgUrl,
+                        product.price,
+                        carts.firstOrNull { product == it.product }?.count ?: 0,
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class RecentProductItem(

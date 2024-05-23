@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.util
 
 import android.content.Context
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -14,6 +15,11 @@ fun ImageView.loadImage(imgUrl: String) {
     Glide.with(context)
         .load(imgUrl)
         .into(this)
+}
+
+@BindingAdapter("bindSetVisibility")
+fun View.setVisibility(visible: Boolean) {
+    visibility = if (visible) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("bindTextFormattedCurrency")

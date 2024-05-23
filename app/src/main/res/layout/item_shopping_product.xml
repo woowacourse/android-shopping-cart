@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{()->shoppingHandler.onProductClick(product.id)}">
+        android:onClick="@{()->shoppingHandler.onProductItemClick(product.id)}">
 
         <ImageView
             android:id="@+id/img_item"
@@ -60,12 +60,27 @@
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             tools:text="상품 가격" />
 
+        <include
+            android:id="@+id/layout_title_top"
+            bindSetVisibility="@{product.quantity>0}"
+            layout="@layout/include_quantity_control"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/img_item"
+            app:layout_constraintEnd_toEndOf="@id/img_item"
+            app:layout_constraintStart_toStartOf="@id/img_item"
+            app:product="@{product}"
+            app:quantity="@{product.quantity}"
+            app:shoppingHandler="@{shoppingHandler}" />
 
         <ImageView
             android:id="@+id/btn_plus"
+            bindSetVisibility="@{0==product.quantity}"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="8dp"
+            android:onClick="@{()->shoppingHandler.onQuantityControlClick(product,1)}"
             android:src="@drawable/ic_white_plus"
             app:layout_constraintBottom_toBottomOf="@id/img_item"
             app:layout_constraintEnd_toEndOf="@id/img_item" />

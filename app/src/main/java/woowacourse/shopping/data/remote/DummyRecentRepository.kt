@@ -5,8 +5,8 @@ import woowacourse.shopping.domain.RecentRepository
 import java.time.LocalDateTime
 
 object DummyRecentRepository : RecentRepository {
-    private val recentProducts: List<RecentProductItem> =
-        listOf(
+    private val recentProducts: MutableList<RecentProductItem> =
+        mutableListOf(
             RecentProductItem(
                 productId = 0,
                 name = "0",
@@ -59,6 +59,6 @@ object DummyRecentRepository : RecentRepository {
 
     override fun load(): Result<List<RecentProductItem>> =
         runCatching {
-            recentProducts
+            recentProducts.toList()
         }
 }

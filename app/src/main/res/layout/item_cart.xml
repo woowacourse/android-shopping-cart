@@ -45,6 +45,17 @@
             tools:src="@drawable/ic_close_white" />
 
         <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="@{String.valueOf(cart.count)}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="1개" />
+
+        <TextView
             android:id="@+id/tv_price"
             bindTextFormattedCurrency="@{cart.product.price}"
             android:layout_width="wrap_content"
