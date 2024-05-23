@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -42,6 +43,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun initializeBindingVariables() {
         binding.detailViewModel = viewModel
+        binding.quantityListener = viewModel
         binding.lifecycleOwner = this
     }
 
@@ -53,6 +55,10 @@ class DetailActivity : AppCompatActivity() {
                     event.getContentIfNotHandled()?.stringResourceId ?: return@observe,
                 ),
             )
+        }
+
+        viewModel.productInformation.observe(this) {
+            Log.i("TAG", "observeEvents: $it")
         }
     }
 

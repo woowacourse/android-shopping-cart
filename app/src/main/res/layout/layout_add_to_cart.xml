@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> quantityListener.onQuantityChange(cartableProduct.product.id, cartableProduct.cartItem.id, 1)}"/>
+            android:onClick="@{() -> quantityListener.onQuantityChange(cartableProduct.product.id, 1)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

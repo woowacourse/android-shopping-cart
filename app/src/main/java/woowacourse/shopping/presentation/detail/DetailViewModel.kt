@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -10,6 +11,7 @@ import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.home.QuantityListener
 import woowacourse.shopping.presentation.util.Event
 import woowacourse.shopping.presentation.util.StringResource
 import kotlin.concurrent.thread
@@ -19,7 +21,7 @@ class DetailViewModel(
     private val cartRepository: CartRepository,
     id: Long,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : ViewModel(), QuantityListener {
     private val _productInformation: MutableLiveData<CartableProduct> = MutableLiveData()
     val productInformation: LiveData<CartableProduct>
         get() = _productInformation
@@ -53,5 +55,29 @@ class DetailViewModel(
 
     companion object {
         private const val KEY_PRODUCT_ID = "key_product_id"
+    }
+
+    override fun onQuantityChange(productId: Long, quantity: Int) {
+        Log.i("TAG", "onQuantityChange: $productId $quantity")
+
+        if (quantity < 0) return
+//        thread {
+//            val cartId = if (cartItemId == null) {
+//                cartRepository.addCartItem(CartItem(productId = productId, quantity = 1))
+//            } else if (quantity == 0) {
+//                // TODO delete item
+////                cartRepository
+//                cartItemId
+//            } else {
+//                cartRepository.updateQuantity(cartItemId, quantity)
+//                cartItemId
+//            }
+//            val newItem = cartRepository.fetchCartItem(cartId)
+//            _productInformation.postValue(
+//                productInformation.value?.copy(
+//                    cartItem = newItem
+//                )
+//            )
+//        }
     }
 }

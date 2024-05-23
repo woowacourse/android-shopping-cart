@@ -5,9 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="detailViewModel"
             type="woowacourse.shopping.presentation.detail.DetailViewModel" />
+
+        <variable
+            name="quantityListener"
+            type="woowacourse.shopping.presentation.home.QuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,10 +40,10 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/description_thumbnail"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_to_cart_detail"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar_detail"
-            app:layout_constraintBottom_toTopOf="@id/btn_add_to_cart_detail"
             shopping:productThumbnail="@{detailViewModel.productInformation.product.imageSource}"
             tools:src="@drawable/ic_launcher_background" />
 
@@ -50,8 +55,8 @@
             android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/black"
             android:text="@{detailViewModel.productInformation.product.name}"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,39 +69,38 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="17dp"
-            app:layout_constraintStart_toEndOf="@id/iv_product_detail"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_product_detail"
             app:layout_constraintTop_toBottomOf="@id/tv_product_title_detail" />
-
-        <TextView
-            android:id="@+id/tv_price_title_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/detail_price_title"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@id/tv_product_title_detail"
-            app:layout_constraintTop_toBottomOf="@id/div_detail" />
 
         <TextView
             android:id="@+id/tv_price_value_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/format_price(detailViewModel.productInformation.product.price)}"
             android:layout_marginTop="16dp"
+            android:text="@{@string/format_price(detailViewModel.productInformation.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@id/tv_product_title_detail"
+            app:layout_constraintStart_toStartOf="@id/tv_product_title_detail"
             app:layout_constraintTop_toBottomOf="@id/div_detail"
             tools:text="10,000원" />
 
+        <include
+            layout="@layout/layout_quantity_manipulation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/div_detail"
+            shopping:cartableProduct="@{detailViewModel.productInformation}"
+            shopping:quantityListener="@{quantityListener}" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_to_cart_detail"
-            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.product.id)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint_900"
+            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.product.id)}"
             android:text="@string/detail_add_to_cart_button"
             android:textColor="@color/white"
             android:textSize="20sp"

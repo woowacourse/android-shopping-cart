@@ -47,7 +47,12 @@ class HomeViewModel(
 
     private fun loadProducts() {
         thread {
-            _loadStatus.postValue(loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false))
+            _loadStatus.postValue(
+                loadStatus.value?.copy(
+                    isLoadingPage = true,
+                    loadingAvailable = false
+                )
+            )
             _products.postValue(products.value?.plus(productRepository.fetchSinglePage(page++)))
             products.value?.let {
                 _loadStatus.postValue(
@@ -71,35 +76,35 @@ class HomeViewModel(
         loadProducts()
     }
 
-    override fun onQuantityChange(productId: Long, cartItemId: Long?, quantity: Int) {
-        thread {
-            Log.i("TAG", "onQuantityChange: $productId, quantity: $quantity")
-            if (quantity <= -1) return@thread
-            val id = if (cartItemId == null) {
-                cartRepository.addCartItem(
-                    CartItem(
-                        productId = productId,
-                        quantity = quantity,
-                    )
-                )
-            } else {
-                cartRepository.updateQuantity(cartItemId, quantity)
-                cartItemId
-            }
-            Log.i("TAG", "onQuantityChange: $id")
-            val cartItem = cartRepository.fetchCartItem(id)
-            val target = products.value?.map {
-                if (it.cartItem?.id == id) {
-                    val item = it.copy(cartItem = cartItem)
-                    Log.i("TAG", "onQuantityChange: $item")
-                    item
-                } else it
-            }
-            _products.postValue(target)
-            _changedPosition.postValue(Event(products.value?.indexOfFirst { it.cartItem?.id == cartItem.id } ?: return@thread))
-            _totalQuantity.postValue(
-                cartRepository.fetchTotalCount()
-            )
-        }
+    override fun onQuantityChange(productId: Long, quantity: Int) {
+        Log.i("TAG", "onQuantityChange: $productId, quantity: $quantity")
+//        thread {
+//            if (quantity <= -1) return@thread
+//            val id = if (cartItemId == null) {
+//                cartRepository.addCartItem(
+//                    CartItem(
+//                        productId = productId,
+//                        quantity = quantity,
+//                    )
+//                )
+//            } else {
+//                cartRepository.updateQuantity(cartItemId, quantity)
+//                cartItemId
+//            }
+//            Log.i("TAG", "onQuantityChange: $id")
+//            val cartItem = cartRepository.fetchCartItem(id)
+//            val target = products.value?.map {
+//                if (it.cartItem?.id == id) {
+//                    val item = it.copy(cartItem = cartItem)
+//                    Log.i("TAG", "onQuantityChange: $item")
+//                    item
+//                } else it
+//            }
+//            _products.postValue(target)
+//            _changedPosition.postValue(Event(products.value?.indexOfFirst { it.cartItem?.id == cartItem.id } ?: return@thread))
+//            _totalQuantity.postValue(
+//                cartRepository.fetchTotalCount()
+//            )
+//        }
     }
 }

@@ -9,6 +9,10 @@
         <variable
             name="detailViewModel"
             type="woowacourse.shopping.presentation.detail.DetailViewModel" />
+
+        <variable
+            name="quantityListener"
+            type="woowacourse.shopping.presentation.home.QuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,17 +74,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_title_detail" />
 
         <TextView
-            android:id="@+id/tv_price_title_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/detail_price_title"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@id/tv_product_title_detail"
-            app:layout_constraintTop_toBottomOf="@id/div_detail" />
-
-        <TextView
             android:id="@+id/tv_price_value_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,9 +81,19 @@
             android:text="@{@string/format_price(detailViewModel.productInformation.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@id/tv_product_title_detail"
+            app:layout_constraintStart_toStartOf="@id/tv_product_title_detail"
             app:layout_constraintTop_toBottomOf="@id/div_detail"
             tools:text="10,000원" />
+
+        <include
+            layout="@layout/layout_quantity_manipulation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/div_detail"
+            shopping:cartableProduct="@{detailViewModel.productInformation}"
+            shopping:quantityListener="@{quantityListener}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_to_cart_detail"
