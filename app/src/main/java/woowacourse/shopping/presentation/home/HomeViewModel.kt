@@ -37,17 +37,18 @@ class HomeViewModel(
     val changedPosition: LiveData<Event<Int>>
         get() = _changedPosition
 
+    private val _totalQuantity: MutableLiveData<Int> = MutableLiveData(0)
+    val totalQuantity: LiveData<Int>
+        get() = _totalQuantity
+
     init {
         loadProducts()
     }
 
     private fun loadProducts() {
-        _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
-
         thread {
-            productRepository.addAll(PRODUCT_DATA)
+            _loadStatus.postValue(loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false))
             _products.postValue(products.value?.plus(productRepository.fetchSinglePage(page++)))
-
             products.value?.let {
                 _loadStatus.postValue(
                     loadStatus.value?.copy(
@@ -56,6 +57,9 @@ class HomeViewModel(
                     )
                 )
             }
+            _totalQuantity.postValue(
+                cartRepository.fetchTotalCount()
+            )
         }
     }
 
@@ -69,6 +73,7 @@ class HomeViewModel(
 
     override fun onQuantityChange(productId: Long, cartItemId: Long?, quantity: Int) {
         thread {
+            Log.i("TAG", "onQuantityChange: $productId, quantity: $quantity")
             if (quantity <= -1) return@thread
             val id = if (cartItemId == null) {
                 cartRepository.addCartItem(
@@ -92,6 +97,9 @@ class HomeViewModel(
             }
             _products.postValue(target)
             _changedPosition.postValue(Event(products.value?.indexOfFirst { it.cartItem?.id == cartItem.id } ?: return@thread))
+            _totalQuantity.postValue(
+                cartRepository.fetchTotalCount()
+            )
         }
     }
 }

@@ -22,6 +22,10 @@ class CartRepositoryImpl(
         return cartDao.addCartItem(cartItem)
     }
 
+    override fun fetchTotalCount(): Int {
+        return cartDao.getTotalQuantity()
+    }
+
     override fun updateQuantity(cartItemId: Long, quantity: Int) {
         cartDao.updateQuantity(cartItemId, quantity)
     }

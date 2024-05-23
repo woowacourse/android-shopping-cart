@@ -33,17 +33,17 @@ abstract class ShoppingDatabase : RoomDatabase() {
                     "shopping_database.db"
                 )
                     .fallbackToDestructiveMigration()
-//                    .addCallback(
-//                        object : Callback() {
-//                            override fun onCreate(db: SupportSQLiteDatabase) {
-//                                super.onCreate(db)
-//                                val productDao = databaseInstance?.productDao()
-//                                thread {
-//                                    productDao?.addAll(PRODUCT_DATA)
-//                                }
-//                            }
-//                        }
-//                    )
+                    .addCallback(
+                        object : Callback() {
+                            override fun onCreate(db: SupportSQLiteDatabase) {
+                                super.onCreate(db)
+                                val productDao = databaseInstance?.productDao()
+                                thread {
+                                    productDao?.addAll(PRODUCT_DATA)
+                                }
+                            }
+                        }
+                    )
                     .build()
 
                 databaseInstance = instance

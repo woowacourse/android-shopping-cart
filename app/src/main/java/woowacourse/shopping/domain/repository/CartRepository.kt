@@ -9,6 +9,8 @@ interface CartRepository {
 
     fun addCartItem(cartItem: CartItem): Long
 
+    fun fetchTotalCount(): Int
+
     fun updateQuantity(
         cartItemId: Long,
         quantity: Int

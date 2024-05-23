@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityHomeBinding
+import woowacourse.shopping.databinding.LayoutCartCountBinding
 import woowacourse.shopping.presentation.BindableAdapter
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
@@ -39,6 +40,9 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
+        val item = menu?.findItem(R.id.tv_badge_quantity)
+        val binding = LayoutCartCountBinding.inflate(layoutInflater)
+        binding.viewModel = viewModel
         return true
     }
 

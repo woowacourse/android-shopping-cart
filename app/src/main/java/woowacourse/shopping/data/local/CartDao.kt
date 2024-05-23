@@ -17,6 +17,9 @@ interface CartDao {
     @Query("SELECT * FROM cart_item WHERE id=:cartItemId")
     fun getCartItem(cartItemId: Long): CartItem
 
+    @Query("SELECT SUM(quantity) FROM cart_item")
+    fun getTotalQuantity(): Int
+
     @Upsert
     fun addCartItem(cartItem: CartItem): Long
 
