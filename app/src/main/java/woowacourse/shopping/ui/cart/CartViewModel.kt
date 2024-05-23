@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.cart
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,50 +44,40 @@ class CartViewModel(
 
     fun loadCartItems() {
         _cartPage.value = CartPage()
-        _cart.value!!.clear()
-        getProducts().forEach {
-            _cart.value!![it.id] = it
-        }
-        _cart.value = _cart.value
+        renewCart()
         _orderCounts.value = getProductsQuantities()
         _orderPrices.value = getProductsTotalPrices()
     }
 
     fun removeCartItem(productId: Long) {
         cartDao.delete(productId)
-        _cart.value!!.clear()
-        getProducts().forEach {
-            _cart.value!![it.id] = it
-        }
-        _cart.value = _cart.value
+        renewCart()
         val currentPage = _cartPage.value?.number
         _cartPage.value = CartPage(currentPage ?: -1)
     }
 
     fun plusPageNum() {
         _cartPage.value = _cartPage.value?.plus()
-        Log.d("alsong", "${getProducts()}")
-        _cart.value!!.clear()
-        getProducts().forEach {
-            _cart.value!![it.id] = it
-        }
-        Log.d("alsong", "plusPageNum: ${_cart.value}")
-        _cart.value = _cart.value
+        renewCart()
     }
 
     fun minusPageNum() {
         _cartPage.value = _cartPage.value?.minus()
-        _cart.value!!.clear()
-        getProducts().forEach {
-            _cart.value!![it.id] = it
-        }
-        _cart.value = _cart.value
+        renewCart()
     }
 
     private fun getProducts(): List<Product> {
         val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
         return cartItems.subList(fromIndex, toIndex)
+    }
+
+    private fun renewCart() {
+        _cart.value!!.clear()
+        getProducts().forEach {
+            _cart.value!![it.id] = it
+        }
+        _cart.value = _cart.value
     }
 
     private fun getProductsQuantities(): MutableMap<Long, Int> {
