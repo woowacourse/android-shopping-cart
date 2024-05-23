@@ -64,7 +64,8 @@
             app:cartItemCountHandler="@{cartItemCountHandler}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
             app:layout_constraintEnd_toEndOf="parent"
-            app:order="@{order}" />
+            app:productId="@{order.product.id}"
+            app:quantity="@{order.quantity}" />
 
         <TextView
             android:id="@+id/tv_product_title_detail"

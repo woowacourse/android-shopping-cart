@@ -77,15 +77,16 @@
                 shopping:productThumbnail="@{order.product.imageSource}"
                 tools:src="@drawable/ic_launcher_background" />
 
-            <include layout="@layout/layout_plus_minus_button"
+            <include
+                layout="@layout/layout_plus_minus_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="12dp"
                 app:cartItemCountHandler="@{cartItemCountHandler}"
                 app:layout_constraintBottom_toTopOf="@id/tv_price"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:order="@{order}"
-                android:padding="12dp"
-                />
+                app:productId="@{order.product.id}"
+                app:quantity="@{order.quantity}" />
 
             <TextView
                 android:id="@+id/tv_price"
