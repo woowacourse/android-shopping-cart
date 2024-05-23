@@ -14,10 +14,10 @@ sealed class LoadProductState() : UiState {
         UiState.CompleteWithResult<ProductUiModels>
 
     data class ChangeItemCount(
-        override val result: ProductUiModel,
+        override val result: List<ProductUiModel>,
         override val currentProducts: ProductUiModels,
     ) : LoadProductState(),
-        UiState.CompleteWithResult<ProductUiModel>
+        UiState.CompleteWithResult<List<ProductUiModel>>
 
     data class DeleteProductFromCart(
         override val currentProducts: ProductUiModels,

@@ -53,7 +53,11 @@ class ProductListAdapter(
         notifyItemRangeInserted(previous.size, products.size)
     }
 
-    fun changeProductInfo(product: ProductUiModel) {
+    fun changeProductsInfo(products: List<ProductUiModel>)  {
+        products.forEach { changeProductsInfo(it) }
+    }
+
+    fun changeProductsInfo(product: ProductUiModel) {
         val changeIndex = items.indexOfFirst { it.id == product.id }
         items[changeIndex] = product
         notifyItemChanged(changeIndex)

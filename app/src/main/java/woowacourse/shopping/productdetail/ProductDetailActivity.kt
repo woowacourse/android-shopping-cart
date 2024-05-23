@@ -37,7 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
     private fun navigateToProductList(productId: Long) {
         viewModel.isAddSuccess.observe(this) { isSuccess ->
             if (isSuccess) {
-                val intent = ProductListActivity.newInstance(this, productId)
+                val intent = ProductListActivity.newInstance(this, longArrayOf(productId))
                 this.setResult(RESULT_OK, intent)
                 this.finish()
             }

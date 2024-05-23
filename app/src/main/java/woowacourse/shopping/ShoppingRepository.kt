@@ -14,6 +14,8 @@ interface ShoppingRepository {
 
     fun cartItemByProductId(productId: Long): ShoppingCartItem
 
+    fun cartItemsByProductIds(productId: List<Long>): List<ShoppingCartItem>
+
     fun shoppingCartItemByPosition(
         currentPage: Int,
         pageSize: Int,

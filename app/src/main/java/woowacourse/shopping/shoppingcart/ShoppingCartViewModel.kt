@@ -32,6 +32,10 @@ class ShoppingCartViewModel(
             addSource(totalPage) { value = checkIsRightBtnEnable() }
         }
 
+    private val _changedProductIds: MutableSet<Long> = mutableSetOf()
+    val changedProductIds: Set<Long>
+        get() = _changedProductIds.toSet()
+
     private fun currentCartItems(): CartItemUiModels = _loadState?.value?.currentCartItems ?: error("초기화 이후에 메서드를 실행해주세요")
 
     private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(DEFAULT_CURRENT_PAGE)?.not() ?: false
@@ -76,6 +80,7 @@ class ShoppingCartViewModel(
                     currentCartItems().deleteCartItem(productId),
                 )
             updatePageCount()
+            _changedProductIds.add(productId)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -114,6 +119,7 @@ class ShoppingCartViewModel(
                             currentCartItems().updateCartItem(updatedUiModel),
                             updatedUiModel,
                         )
+                    _changedProductIds.add(productId)
                 }
 
                 QuantityUpdate.Failure -> LoadCartItemState.PlusFail(currentCartItems())
@@ -135,6 +141,7 @@ class ShoppingCartViewModel(
                             currentCartItems().updateCartItem(updatedUiModel),
                             updatedUiModel,
                         )
+                    _changedProductIds.add(productId)
                 }
 
                 QuantityUpdate.Failure -> LoadCartItemState.MinusFail(currentCartItems())

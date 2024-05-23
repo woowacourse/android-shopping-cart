@@ -10,6 +10,15 @@ data class ProductUiModels(
     fun updateProduct(product: ProductUiModel): ProductUiModels =
         products.map { if (it.id == product.id) product else it }.let(::ProductUiModels)
 
+    fun updateProducts(updatedProducts: List<ProductUiModel>): ProductUiModels =
+        products.map { product ->
+            if (updatedProducts.map { it.id }.contains(product.id)) {
+                updatedProducts.first { product.id == it.id }
+            } else {
+                product
+            }
+        }.let(::ProductUiModels)
+
     fun addProduct(product: List<ProductUiModel>): ProductUiModels = (products + product).let(::ProductUiModels)
 
     companion object {

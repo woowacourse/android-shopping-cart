@@ -57,11 +57,11 @@ class ProductListViewModel(
             val shoppingCart = shoppingRepository.shoppingCart()
             shoppingRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
         }.onSuccess {
-            val addedProduct = shoppingRepository.cartItemByProductId(productId).toProductUiModel()
+            val addedProduct = shoppingRepository.cartItemByProductId(productId).toProductUiModel().let(::listOf)
             _loadState.value =
                 LoadProductState.ChangeItemCount(
                     addedProduct,
-                    currentLoadState().updateProduct(addedProduct),
+                    currentLoadState().updateProducts(addedProduct),
                 )
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -77,7 +77,7 @@ class ProductListViewModel(
                     val updatedProduct = result.value.toProductUiModel()
                     _loadState.value =
                         LoadProductState.ChangeItemCount(
-                            updatedProduct,
+                            updatedProduct.let(::listOf),
                             currentLoadState().updateProduct(updatedProduct),
                         )
                 }
@@ -110,7 +110,7 @@ class ProductListViewModel(
                     val updatedUiModel = result.value.toProductUiModel()
                     _loadState.value =
                         LoadProductState.ChangeItemCount(
-                            updatedUiModel,
+                            updatedUiModel.let(::listOf),
                             currentLoadState().updateProduct(updatedUiModel),
                         )
                 }
@@ -124,15 +124,15 @@ class ProductListViewModel(
         }
     }
 
-    fun reloadProductOfInfo(productId: Long) {
+    fun reloadProductOfInfo(productIds: List<Long>) {
         runCatching {
-            shoppingRepository.cartItemByProductId(productId)
-        }.onSuccess { cartItem ->
-            val updatedProduct = cartItem.toProductUiModel()
+            shoppingRepository.cartItemsByProductIds(productIds.toList())
+        }.onSuccess { cartItems ->
+            val updatedProducts = cartItems.map { it.toProductUiModel() }
             _loadState.value =
                 LoadProductState.ChangeItemCount(
-                    updatedProduct,
-                    currentLoadState().updateProduct(updatedProduct),
+                    updatedProducts,
+                    currentLoadState().updateProducts(updatedProducts),
                 )
         }
     }

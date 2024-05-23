@@ -38,10 +38,8 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private fun activityResultLauncher() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val changedProductId =
-                    result.data?.getLongExtra(CHANGED_PRODUCT_ID, INVALID_PRODUCT_ID)
-                        ?: INVALID_PRODUCT_ID
-                viewModel.reloadProductOfInfo(changedProductId)
+                val changedProductId: LongArray = result.data?.getLongArrayExtra(CHANGED_PRODUCT_ID) ?: longArrayOf()
+                viewModel.reloadProductOfInfo(changedProductId.toList())
             }
         }
 
@@ -55,9 +53,9 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         viewModel.loadProducts()
         viewModel.loadState.observe(this) { loadState ->
             when (loadState) {
-                is LoadProductState.ChangeItemCount -> adapter.changeProductInfo(loadState.result)
+                is LoadProductState.ChangeItemCount -> adapter.changeProductsInfo(loadState.result)
                 is LoadProductState.ShowProducts -> adapter.submitItems(loadState.currentProducts.products)
-                is LoadProductState.DeleteProductFromCart -> adapter.changeProductInfo(loadState.result)
+                is LoadProductState.DeleteProductFromCart -> adapter.changeProductsInfo(loadState.result)
                 is LoadProductState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
@@ -81,19 +79,18 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     private fun navigateToShoppingCart() {
         binding.ibProductListCart.setOnClickListener {
-            startActivity(ShoppingCartActivity.newInstance(this))
+            activityResultLauncher.launch(ShoppingCartActivity.newInstance(this))
         }
     }
 
     companion object {
         private const val CHANGED_PRODUCT_ID = "productId"
-        private const val INVALID_PRODUCT_ID = -1L
 
         fun newInstance(
             context: Context,
-            changedProductId: Long,
+            changedProductIds: LongArray,
         ) = Intent(context, ProductListActivity::class.java).apply {
-            putExtra(CHANGED_PRODUCT_ID, changedProductId)
+            putExtra(CHANGED_PRODUCT_ID, changedProductIds)
         }
     }
 }

@@ -31,6 +31,11 @@ object DummyShoppingRepository : ShoppingRepository {
         shoppingCart().items.firstOrNull { it.product.id == productId }
             ?: error("$productId 에 해당하는 product가 없습니다.")
 
+    override fun cartItemsByProductIds(productIds: List<Long>): List<ShoppingCartItem> =
+        shoppingCart().items.filter {
+            productIds.contains(it.product.id)
+        }
+
     override fun shoppingCartItemByPosition(
         currentPage: Int,
         pageSize: Int,
