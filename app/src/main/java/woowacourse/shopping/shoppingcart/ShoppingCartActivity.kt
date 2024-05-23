@@ -27,15 +27,19 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         binding.lifecycleOwner = this
         binding.vm = viewModel
 
-        adapter = ShoppingCartAdapter(this)
-        binding.rcvShoppingCart.adapter = adapter
-        binding.rcvShoppingCart.itemAnimator = null
+        attachAdapter()
 
         initShoppingCart()
         onBackPressedCallbackInit()
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         updateView()
+    }
+
+    private fun attachAdapter() {
+        adapter = ShoppingCartAdapter(this)
+        binding.rcvShoppingCart.adapter = adapter
+        binding.rcvShoppingCart.itemAnimator = null
     }
 
     private fun initShoppingCart() {
@@ -79,7 +83,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         viewModel.minusCartItemCount(id)
     }
 
-    private fun onBackPressedCallbackInit()  {
+    private fun onBackPressedCallbackInit() {
         onBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {

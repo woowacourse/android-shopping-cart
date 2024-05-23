@@ -57,34 +57,13 @@ class ProductListViewModel(
             val shoppingCart = shoppingRepository.shoppingCart()
             shoppingRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
         }.onSuccess {
-            val addedProduct = shoppingRepository.cartItemByProductId(productId).toProductUiModel().let(::listOf)
+            val addedProduct =
+                shoppingRepository.cartItemByProductId(productId).toProductUiModel().let(::listOf)
             _loadState.value =
                 LoadProductState.ChangeItemCount(
                     addedProduct,
                     currentLoadState().updateProducts(addedProduct),
                 )
-        }.onFailure {
-            Log.d(this::class.java.simpleName, "$it")
-        }
-    }
-
-    fun minusProductCount(productId: Long) {
-        runCatching {
-            shoppingRepository.decreasedCartItem(productId)
-        }.onSuccess { result ->
-            when (result) {
-                is QuantityUpdate.Success -> {
-                    val updatedProduct = result.value.toProductUiModel()
-                    _loadState.value =
-                        LoadProductState.ChangeItemCount(
-                            updatedProduct.let(::listOf),
-                            currentLoadState().updateProduct(updatedProduct),
-                        )
-                }
-
-                QuantityUpdate.Failure ->
-                    deleteShoppingCart(productId)
-            }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -98,6 +77,22 @@ class ProductListViewModel(
             val updatedProductList = currentLoadState().updateProduct(updatedProduct)
             _loadState.value =
                 LoadProductState.DeleteProductFromCart(updatedProductList, updatedProduct)
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    fun minusProductCount(productId: Long) {
+        runCatching {
+            shoppingRepository.decreasedCartItem(productId)
+        }.onSuccess { result ->
+            when (result) {
+                is QuantityUpdate.Success -> changeLoadState(result)
+                QuantityUpdate.Failure ->
+                    deleteShoppingCart(productId)
+            }
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
         }
     }
 
@@ -106,15 +101,7 @@ class ProductListViewModel(
             shoppingRepository.increasedCartItem(productId)
         }.onSuccess { result ->
             when (result) {
-                is QuantityUpdate.Success -> {
-                    val updatedUiModel = result.value.toProductUiModel()
-                    _loadState.value =
-                        LoadProductState.ChangeItemCount(
-                            updatedUiModel.let(::listOf),
-                            currentLoadState().updateProduct(updatedUiModel),
-                        )
-                }
-
+                is QuantityUpdate.Success -> changeLoadState(result)
                 QuantityUpdate.Failure ->
                     _loadState.value =
                         LoadProductState.PlusFail(currentLoadState())
@@ -122,6 +109,15 @@ class ProductListViewModel(
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
+    }
+
+    private fun changeLoadState(result: QuantityUpdate.Success) {
+        val updatedUiModel = result.value.toProductUiModel()
+        _loadState.value =
+            LoadProductState.ChangeItemCount(
+                updatedUiModel.let(::listOf),
+                currentLoadState().updateProduct(updatedUiModel),
+            )
     }
 
     fun reloadProductOfInfo(productIds: List<Long>) {
@@ -134,6 +130,8 @@ class ProductListViewModel(
                     updatedProducts,
                     currentLoadState().updateProducts(updatedProducts),
                 )
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
         }
     }
 
