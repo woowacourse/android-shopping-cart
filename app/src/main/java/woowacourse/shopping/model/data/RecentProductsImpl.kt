@@ -30,8 +30,9 @@ object RecentProductsImpl : RecentProductDao {
         return recentProducts[id] ?: throw NoSuchElementException(invalidIdMessage(id))
     }
 
-    override fun findMostRecentProduct(): RecentProduct {
-        return recentProducts.values.maxBy { it.recentTime }
+    override fun findMostRecentProduct(): RecentProduct? {
+        if (recentProducts.size == 1) return null
+        return recentProducts.values.sortedByDescending { it.recentTime }[1]
     }
 
     override fun findAll(): List<RecentProduct> {

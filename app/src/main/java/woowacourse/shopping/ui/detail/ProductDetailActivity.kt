@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.data.RecentProductsImpl
 import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
@@ -21,7 +22,7 @@ class ProductDetailActivity :
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
     private val viewModel: ProductDetailViewModel by viewModels {
-        ProductDetailViewModelFactory(ProductsImpl)
+        ProductDetailViewModelFactory(ProductsImpl, RecentProductsImpl)
     }
     private val productId by lazy { productId() }
 

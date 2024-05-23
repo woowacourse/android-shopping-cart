@@ -7,7 +7,7 @@ interface RecentProductDao {
 
     fun find(id: Long): RecentProduct
 
-    fun findMostRecentProduct(): RecentProduct
+    fun findMostRecentProduct(): RecentProduct?
 
     fun findAll(): List<RecentProduct>
 

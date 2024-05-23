@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.model.data.RecentProductDao
 import woowacourse.shopping.ui.utils.Event
 
 class ProductDetailViewModel(
     private val productDao: ProductDao,
+    private val recentProductDao: RecentProductDao,
 ) : ViewModel() {
     private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
     val error: LiveData<Boolean> get() = _error
@@ -25,6 +28,16 @@ class ProductDetailViewModel(
         _productWithQuantity.map {
             it.quantity.value == 0
         }
+
+    private val _mostRecentProduct: MutableLiveData<Product> = MutableLiveData()
+    val mostRecentProduct: LiveData<Product> get() = _mostRecentProduct
+
+    private val _mostRecentProductVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
+    val mostRecentProductVisibility: MutableLiveData<Boolean> get() = _mostRecentProductVisibility
+
+    init {
+        loadMostRecentProduct()
+    }
 
     fun loadProduct(productId: Long) {
         runCatching {
@@ -57,6 +70,29 @@ class ProductDetailViewModel(
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.dec()
         }
+    }
+
+    private fun loadMostRecentProduct() {
+        recentProductDao.findMostRecentProduct()?.let {
+            runCatching {
+                productDao.find(it.productId)
+            }.onSuccess {
+                _error.value = false
+                _mostRecentProduct.value = it
+                setMostRecentVisibility(it)
+            }.onFailure {
+                _error.value = true
+                _mostRecentProductVisibility.value = false
+                _errorMsg.setErrorHandled(it.message.toString())
+            }
+        }
+    }
+
+    private fun setMostRecentVisibility(it: Product) {
+        if (it.id == _mostRecentProduct.value?.id) {
+            _mostRecentProductVisibility.value = false
+        }
+        _mostRecentProductVisibility.value = true
     }
 
     private fun <T> MutableLiveData<Event<T>>.setErrorHandled(value: T?) {
