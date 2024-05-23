@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.util.ViewModelFactory
@@ -23,6 +24,9 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        setSupportActionBar(binding.toolbarShoppingCart as Toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.action_bar_title_shopping_cart_activity)
         initShoppingCart()
 
         adapter = ShoppingCartAdapter(this)
@@ -34,8 +38,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     private fun initShoppingCart() {
         viewModel.loadCartItems(DEFAULT_CURRENT_PAGE)
         viewModel.updatePageSize()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.action_bar_title_shopping_cart_activity)
     }
 
     private fun updateView() {

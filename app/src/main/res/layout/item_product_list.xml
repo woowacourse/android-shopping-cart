@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="invisible"/>
+            android:visibility="visible"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             app:layout_constraintEnd_toEndOf="@id/iv_product_item"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
             android:background="@drawable/rect_white_round"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <ImageView
                 android:id="@+id/button_product_item_minus"

@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
@@ -18,7 +19,6 @@ class ProductDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
@@ -33,6 +33,9 @@ class ProductDetailActivity : AppCompatActivity() {
                 startActivity(ShoppingCartActivity.newInstance(this))
             }
         }
+
+        setSupportActionBar(binding.toolbarProductDetail as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun showProductDetail(productId: Long) {
