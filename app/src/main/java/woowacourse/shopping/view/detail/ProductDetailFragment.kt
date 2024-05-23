@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.utils.NoSuchDataException
@@ -16,7 +17,12 @@ class ProductDetailFragment : Fragment() {
     val binding: FragmentProductDetailBinding get() = _binding!!
 
     private val productDetailViewModel: ProductDetailViewModel by lazy {
-        val viewModelFactory = DetailViewModelFactory(ProductRepositoryImpl(context = requireContext()), receiveProductId())
+        val viewModelFactory =
+            DetailViewModelFactory(
+                ProductRepositoryImpl(requireContext()),
+                CartRepositoryImpl(requireContext()),
+                receiveProductId(),
+            )
         viewModelFactory.create(ProductDetailViewModel::class.java)
     }
 

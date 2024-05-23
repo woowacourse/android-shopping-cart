@@ -1,0 +1,49 @@
+package woowacourse.shopping.data.repository
+
+import android.content.Context
+import woowacourse.shopping.data.db.cartItem.CartItemDatabase
+import woowacourse.shopping.data.model.CartItemEntity
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.utils.NoSuchDataException
+import kotlin.concurrent.thread
+
+class CartRepositoryImpl(context: Context) : CartRepository {
+    private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
+
+    override fun addCartItem(product: Product): Long {
+        var addedCartItemId = ERROR_SAVE_DATA_ID
+        thread {
+            addedCartItemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
+        }.join()
+        if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
+        return addedCartItemId
+    }
+
+    override fun loadPagingCartItems(
+        offset: Int,
+        pagingSize: Int,
+    ): List<CartItem> {
+        return cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
+    }
+
+    override fun deleteCartItem(itemId: Long) {
+        cartItemDao.deleteCartItemById(itemId)
+    }
+
+    override fun hasNextCartItemPage(
+        currentPage: Int,
+        itemsPerPage: Int,
+    ): Boolean {
+        var totalItemCount = 0
+        thread { totalItemCount = cartItemDao.getItemCount() }.join()
+        val totalPageCount = (totalItemCount + itemsPerPage - 1) / itemsPerPage
+
+        return currentPage < totalPageCount
+    }
+
+    companion object {
+        const val ERROR_SAVE_DATA_ID = -1L
+    }
+}

@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.Event
 import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
-    private val repository: ProductRepository,
-) : ViewModel(), ShoppingCartActionHandler {
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+) : ViewModel(), ShoppingCartActionHandler, CountActionHandler {
     private var shoppingCart = ShoppingCart()
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(1)
@@ -40,7 +43,7 @@ class ShoppingCartViewModel(
         var pagingData = emptyList<CartItem>()
         thread {
             val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
-            pagingData = repository.loadPagingCartItems(itemSize, CART_ITEM_LOAD_PAGING_SIZE)
+            pagingData = cartRepository.loadPagingCartItems(itemSize, CART_ITEM_LOAD_PAGING_SIZE)
         }.join()
 
         if (pagingData.isNotEmpty()) {
@@ -50,7 +53,7 @@ class ShoppingCartViewModel(
     }
 
     override fun onRemoveCartItemButtonClicked(cartItemId: Long) {
-        thread { repository.deleteCartItem(cartItemId) }.join()
+        thread { cartRepository.deleteCartItem(cartItemId) }.join()
         shoppingCart.deleteProduct(cartItemId)
         updatePagedData()
     }
@@ -93,7 +96,15 @@ class ShoppingCartViewModel(
     private fun updateButtonState() {
         val pageNumber = currentPage.value ?: 1
         _isPrevButtonActivated.value = pageNumber > MIN_PAGE_COUNT
-        _isNextButtonActivated.value = repository.hasNextCartItemPage(pageNumber, CART_ITEM_PAGE_SIZE)
+        _isNextButtonActivated.value = cartRepository.hasNextCartItemPage(pageNumber, CART_ITEM_PAGE_SIZE)
+    }
+
+    override fun onIncreaseQuantityButtonClicked(id: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDecreaseQuantityButtonClicked(id: Long) {
+        TODO("Not yet implemented")
     }
 
     companion object {

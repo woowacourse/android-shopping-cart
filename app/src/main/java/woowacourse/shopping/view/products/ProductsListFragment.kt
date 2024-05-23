@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.cart.ShoppingCartFragment
@@ -21,7 +22,11 @@ class ProductsListFragment : Fragment() {
     private lateinit var adapter: ProductAdapter
 
     private val productListViewModel: ProductListViewModel by lazy {
-        val viewModelFactory = ProductListViewModelFactory(ProductRepositoryImpl(context = requireContext()))
+        val viewModelFactory =
+            ProductListViewModelFactory(
+                ProductRepositoryImpl(requireContext()),
+                CartRepositoryImpl(requireContext()),
+            )
         viewModelFactory.create(ProductListViewModel::class.java)
     }
 

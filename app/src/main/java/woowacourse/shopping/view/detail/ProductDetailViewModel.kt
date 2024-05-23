@@ -5,13 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.Event
 
 class ProductDetailViewModel(
-    private val repository: ProductRepository,
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
     private val productId: Long,
 ) : ViewModel(), DetailActionHandler, CountActionHandler {
     private val _product: MutableLiveData<Product> = MutableLiveData()
@@ -37,13 +39,13 @@ class ProductDetailViewModel(
     }
 
     private fun loadProductItem() {
-        _product.value = repository.getProduct(productId)
+        _product.value = productRepository.getProduct(productId)
     }
 
     fun addShoppingCartItem() {
         runCatching {
             val selected = product.value ?: throw NoSuchDataException()
-            repository.addCartItem(selected)
+            cartRepository.addCartItem(selected)
         }.onSuccess {
             _cartItemSavedState.value = ProductDetailState.Success
         }.onFailure {
@@ -59,11 +61,11 @@ class ProductDetailViewModel(
         addShoppingCartItem()
     }
 
-    override fun onIncreaseQuantityButtonClicked() {
+    override fun onIncreaseQuantityButtonClicked(id: Long) {
         _quantity.value = _quantity.value?.plus(1)
     }
 
-    override fun onDecreaseQuantityButtonClicked() {
+    override fun onDecreaseQuantityButtonClicked(id: Long) {
         _quantity.value = _quantity.value?.minus(1)
     }
 }

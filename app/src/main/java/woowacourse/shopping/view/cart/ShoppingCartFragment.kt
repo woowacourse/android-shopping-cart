@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
@@ -17,7 +18,11 @@ class ShoppingCartFragment : Fragment() {
     private lateinit var adapter: ShoppingCartAdapter
 
     private val shoppingCartViewModel: ShoppingCartViewModel by lazy {
-        val viewModelFactory = ShoppingCartViewModelFactory(ProductRepositoryImpl(context = requireContext()))
+        val viewModelFactory =
+            ShoppingCartViewModelFactory(
+                ProductRepositoryImpl(requireContext()),
+                CartRepositoryImpl(requireContext()),
+            )
         viewModelFactory.create(ShoppingCartViewModel::class.java)
     }
 
