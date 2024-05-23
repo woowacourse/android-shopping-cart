@@ -47,6 +47,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
                 is LoadCartItemState.DeleteCartItem -> adapter.deleteItemByProductId(state.result)
                 is LoadCartItemState.ChangeItemCount -> adapter.changeProductInfo(state.result)
                 is LoadCartItemState.MinusFail -> showToastMessage(R.string.min_cart_item_message)
+                is LoadCartItemState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
     }

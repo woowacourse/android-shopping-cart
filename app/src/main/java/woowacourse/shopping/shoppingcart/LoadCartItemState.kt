@@ -26,4 +26,6 @@ sealed class LoadCartItemState : UiState {
     ) : LoadCartItemState(), UiState.CompleteWithResult<CartItemUiModel>
 
     data class MinusFail(override val currentCartItems: CartItemUiModels) : LoadCartItemState(), UiState.Fail
+
+    data class PlusFail(override val currentCartItems: CartItemUiModels) : LoadCartItemState(), UiState.Fail
 }

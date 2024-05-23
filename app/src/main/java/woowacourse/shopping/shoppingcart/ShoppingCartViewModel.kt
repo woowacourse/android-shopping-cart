@@ -116,9 +116,7 @@ class ShoppingCartViewModel(
                         )
                 }
 
-                QuantityUpdate.Failure -> {
-                    error(" 장바구니 수량 변경에 실패했습니다. ")
-                }
+                QuantityUpdate.Failure -> LoadCartItemState.PlusFail(currentCartItems())
             }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
