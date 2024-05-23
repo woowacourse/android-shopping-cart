@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.presentation.home.ProductQuantity
 
 class CartActivity : AppCompatActivity() {
     private val binding: ActivityCartBinding by lazy {
@@ -30,11 +32,12 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initializeBindingVariables()
         initializeToolbar()
+        initializeOnBackPressedCallback()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
+            android.R.id.home -> navigateBackToMain()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -50,6 +53,25 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.adapter = adapter
+    }
+
+    private fun initializeOnBackPressedCallback() {
+        val onBackPressedCallBack =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() = navigateBackToMain()
+            }
+        onBackPressedDispatcher.addCallback(onBackPressedCallBack)
+    }
+
+    private fun navigateBackToMain() {
+        setResult(
+            RESULT_OK,
+            Intent().putExtra(
+                "quantities",
+                viewModel.alteredCartItems
+            )
+        )
+        finish()
     }
 
     companion object {

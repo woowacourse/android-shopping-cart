@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.CartedProduct
+import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.home.ProductQuantity
 import woowacourse.shopping.presentation.home.QuantityListener
 import woowacourse.shopping.presentation.util.Event
+import java.util.Collections.replaceAll
 import kotlin.concurrent.thread
 
 class CartViewModel(
@@ -29,6 +32,9 @@ class CartViewModel(
         MutableLiveData(PageInformation())
     val pageInformation: LiveData<PageInformation>
         get() = _pageInformation
+
+    var alteredCartItems: ArrayList<ProductQuantity> = arrayListOf()
+        private set
 
     private var hasNext: Boolean = true
 
@@ -97,6 +103,11 @@ class CartViewModel(
                     cartRepository.removeCartItem(targetItem.cartItem)
                 } else {
                     cartRepository.updateQuantity(targetItem.cartItem.id, quantity)
+                }
+                if (productId !in alteredCartItems.map(ProductQuantity::productId)) {
+                    alteredCartItems.add(ProductQuantity(productId, quantity))
+                } else {
+                    replaceAll(alteredCartItems, alteredCartItems.first { it.productId == productId }, ProductQuantity(productId, quantity))
                 }
             }
             loadCurrentPageCartItems()
