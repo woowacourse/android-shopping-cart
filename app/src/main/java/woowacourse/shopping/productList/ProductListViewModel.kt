@@ -3,13 +3,16 @@ package woowacourse.shopping.productList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.DummyProductStore
 
 class ProductListViewModel : ViewModel() {
     private val dummyProductStore by lazy { DummyProductStore() }
     private var currentIndex = 1
 
+    private val _cartItem: MutableLiveData<CartItem> = MutableLiveData()
+    val cartItem: LiveData<CartItem> get() = _cartItem
     private val _loadedProducts: MutableLiveData<List<Product>> =
         MutableLiveData(loadProducts())
 
@@ -20,6 +23,18 @@ class ProductListViewModel : ViewModel() {
         val newProducts = loadProducts()
         val currentProducts = _loadedProducts.value.orEmpty()
         _loadedProducts.value = currentProducts + newProducts
+    }
+
+    fun increaseQuantity(cartItem: CartItem) {
+        cartItem.increaseQuantity()
+        _cartItem.value = cartItem
+    }
+
+    fun decreaseQuantity(cartItem: CartItem) {
+        if (cartItem.quantity > 0) {
+            cartItem.decreaseQuantity()
+            _cartItem.value = cartItem
+        }
     }
 
     private fun loadProducts(): List<Product> {

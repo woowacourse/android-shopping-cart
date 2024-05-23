@@ -12,14 +12,17 @@ import woowacourse.shopping.R
 import woowacourse.shopping.base.FragmentReplacer.replaceFragment
 import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.productDetail.ProductDetailFragment
 
-class ProductListFragment : Fragment() {
+class ProductListFragment : Fragment(), OnClickCartItemCounter {
     private val viewModel: ProductListViewModel by lazy { ProductListViewModel() }
 
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
             viewModel.loadedProducts.value ?: emptyList(),
+            onClickCartItemCounter = this,
+            cartItems = viewModel.cartItem.value?.let { mutableListOf(it) }.orEmpty(),
             onClick = { id -> navigateToProductDetail(id) },
         )
     }
@@ -48,7 +51,6 @@ class ProductListFragment : Fragment() {
                     dy: Int,
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
-
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val totalItemCount = layoutManager.itemCount
                     val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
@@ -72,12 +74,16 @@ class ProductListFragment : Fragment() {
         binding.productListToolbar.setNavigationOnClickListener {
             navigateToCart()
         }
-
         binding.productListToolbar.setOnMenuItemClickListener {
             clickCartButton(it)
         }
+
         viewModel.loadedProducts.observe(viewLifecycleOwner) {
             adapter.updateData(it)
+        }
+
+        viewModel.cartItem.observe(viewLifecycleOwner) {
+            adapter.updateCartItem(it)
         }
     }
 
@@ -87,6 +93,7 @@ class ProductListFragment : Fragment() {
                 navigateToCart()
                 true
             }
+
             else -> false
         }
 
@@ -101,5 +108,13 @@ class ProductListFragment : Fragment() {
             }
 
         replaceFragment(R.id.container, productDetailFragment, parentFragmentManager)
+    }
+
+    override fun increaseQuantity(cartItem: CartItem) {
+        viewModel.increaseQuantity(cartItem)
+    }
+
+    override fun decreaseQuantity(cartItem: CartItem) {
+        viewModel.decreaseQuantity(cartItem)
     }
 }

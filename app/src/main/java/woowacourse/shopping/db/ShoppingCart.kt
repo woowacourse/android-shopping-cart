@@ -1,5 +1,7 @@
 package woowacourse.shopping.db
 
+import woowacourse.shopping.model.CartItem
+
 object ShoppingCart {
     private val _cartItems = mutableListOf<CartItem>()
     val cartItems get() = _cartItems.toList()

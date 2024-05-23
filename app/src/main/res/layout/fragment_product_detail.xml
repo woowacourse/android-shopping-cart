@@ -2,6 +2,7 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,6 +10,10 @@
         <variable
             name="vm"
             type="woowacourse.shopping.productDetail.ProductDetailViewModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.productList.OnClickCartItemCounter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,43 +66,16 @@
             app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
             tools:text="Product Price" />
 
-        <TextView
-            android:id="@+id/product_detail_minus"
+        <include
+            android:id="@+id/product_detail_quantity_button"
+            layout="@layout/quantity_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="18dp"
-            android:layout_marginTop="16dp"
-            android:text="-"
-            android:onClick="@{() -> vm.subtractProductCount()}"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/product_detail_product_count"
-            app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
-            tools:text="-" />
-
-        <TextView
-            android:id="@+id/product_detail_product_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="18dp"
-            android:layout_marginEnd="18dp"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@+id/product_detail_plus"
-            app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
-            tools:text="1" />
-
-        <TextView
-            android:id="@+id/product_detail_plus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="18dp"
-            android:text="+"
-            android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> vm.addProductCount()}"
             app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
-            tools:text="+" />
+            bind:listener="@{listener}">
+
+        </include>
 
         <Button
             android:layout_width="0dp"

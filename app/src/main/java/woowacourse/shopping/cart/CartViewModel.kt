@@ -3,7 +3,7 @@ package woowacourse.shopping.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.repository.DummyProductStore
 import kotlin.math.min

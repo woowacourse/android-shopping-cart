@@ -1,9 +1,6 @@
-package woowacourse.shopping.db
-
-import androidx.room.PrimaryKey
+package woowacourse.shopping.model
 
 data class Product(
-    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val imgUrl: String,
     val name: String,
