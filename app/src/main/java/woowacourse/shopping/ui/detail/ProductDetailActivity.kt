@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recent.DummyRecentProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.products.ProductsActivity.Companion.CHANGED_PRODUCT_ID_KEY
@@ -22,6 +23,7 @@ class ProductDetailActivity : AppCompatActivity() {
         ProductDetailViewModelFactory(
             productId(),
             ProductRepository.getInstance(),
+            DummyRecentProductRepository,
             CartRepository.getInstance(),
         )
     }

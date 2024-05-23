@@ -7,6 +7,7 @@ import androidx.lifecycle.map
 import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.products.ProductUiModel
@@ -15,6 +16,7 @@ import woowacourse.shopping.ui.utils.AddCartQuantityBundle
 class ProductDetailViewModel(
     private val productId: Long,
     private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _productUiModel = MutableLiveData<ProductUiModel>()
@@ -40,6 +42,7 @@ class ProductDetailViewModel(
 
     init {
         loadProduct()
+        saveRecentProduct()
     }
 
     private fun loadProduct() {
@@ -56,6 +59,10 @@ class ProductDetailViewModel(
             runCatching { cartRepository.find(product.id) }
                 .map { ProductUiModel.from(product, it.quantity) }
                 .getOrElse { ProductUiModel.from(product) }
+    }
+
+    private fun saveRecentProduct() {
+        recentProductRepository.save(productId)
     }
 
     private fun CartItem.toProductUiModel(): ProductUiModel {
