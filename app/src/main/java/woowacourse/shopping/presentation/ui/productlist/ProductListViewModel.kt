@@ -63,8 +63,8 @@ class ProductListViewModel(
                     productHistorys = productHistorys,
                     cartCount = cartCount,
                 )
-            }.onSuccess { productHistoryRepository ->
-                _uiState.postValue(productHistoryRepository)
+            }.onSuccess { productListUiState ->
+                _uiState.postValue(productListUiState)
             }.onFailure { e ->
                 _uiState.value?.let { state ->
                     val newPagingProduct = state.pagingProduct.copy(last = true)
