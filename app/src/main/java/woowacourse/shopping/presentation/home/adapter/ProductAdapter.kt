@@ -93,6 +93,12 @@ class ProductAdapter(
         this.loadStatus = loadStatus
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recyclerView.itemAnimator = null
+        recyclerView.setHasFixedSize(true)
+    }
+
     companion object {
         const val TYPE_PRODUCT = 1000
         const val TYPE_LOAD = 1001
