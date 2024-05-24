@@ -1,4 +1,4 @@
-package woowacourse.shopping.db
+package woowacourse.shopping.db.cart
 
 import android.content.Context
 import androidx.room.Database

@@ -12,7 +12,7 @@ import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.db.CartDatabase
+import woowacourse.shopping.db.cart.CartDatabase
 import woowacourse.shopping.presentation.cart.adapter.CartAdapter
 import woowacourse.shopping.presentation.cart.adapter.CartItemClickListener
 import woowacourse.shopping.presentation.cart.viewmodel.CartViewModel

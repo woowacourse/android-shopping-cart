@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.db.Cart
+import woowacourse.shopping.db.cart.Cart
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(

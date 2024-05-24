@@ -1,4 +1,4 @@
-package woowacourse.shopping.db
+package woowacourse.shopping.db.cart
 
 import androidx.room.Dao
 import androidx.room.Delete

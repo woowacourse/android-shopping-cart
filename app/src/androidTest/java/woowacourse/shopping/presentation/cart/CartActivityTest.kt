@@ -23,8 +23,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.DefaultCart
-import woowacourse.shopping.db.CartDao
-import woowacourse.shopping.db.CartDatabase
+import woowacourse.shopping.db.cart.CartDao
+import woowacourse.shopping.db.cart.CartDatabase
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
