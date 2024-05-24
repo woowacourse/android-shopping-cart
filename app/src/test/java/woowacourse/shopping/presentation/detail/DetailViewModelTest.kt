@@ -20,12 +20,12 @@ class DetailViewModelTest {
     @BeforeEach
     fun setUp() {
         detailViewModel =
-            DetailViewModel(FakeProductRepository(DummyProducts().products), FakeCartRepository(DummyCartItems().cartItems), 1)
+            DetailViewModel(FakeProductRepository(DummyProducts().products), FakeCartRepository(DummyCartItems().carts), 1)
     }
 
     @Test
     fun `상품 갯수를 늘린다`() {
-        detailViewModel.addQuantity()
+        detailViewModel.onCartItemAdd(1)
 
         val quantity = detailViewModel.quantity.getOrAwaitValue()
 
@@ -34,8 +34,8 @@ class DetailViewModelTest {
 
     @Test
     fun `상품 갯수를 줄인다`() {
-        detailViewModel.addQuantity()
-        detailViewModel.minusQuantity()
+        detailViewModel.onCartItemAdd(1)
+        detailViewModel.onCartItemMinus(1)
 
         val quantity = detailViewModel.quantity.getOrAwaitValue()
 

@@ -1,15 +1,15 @@
 package woowacourse.shopping.presentation.dummy
 
-import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.db.Cart
 
 class DummyCartItems {
-    val cartItems =
+    val carts =
         mutableListOf(
-            CartItem(1, 1, 1),
-            CartItem(2, 1, 2),
-            CartItem(3, 1, 3),
-            CartItem(4, 1, 4),
-            CartItem(5, 1, 5),
-            CartItem(6, 1, 6),
+            Cart(1, 1, 1),
+            Cart(2, 1, 2),
+            Cart(3, 1, 3),
+            Cart(4, 1, 4),
+            Cart(5, 1, 5),
+            Cart(6, 1, 6),
         )
 }

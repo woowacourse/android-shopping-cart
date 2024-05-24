@@ -1,17 +1,17 @@
 package woowacourse.shopping.presentation.home
 
-import android.os.Build.VERSION
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.data.datasource.DefaultCart
 import woowacourse.shopping.data.datasource.DefaultProducts
-import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
+import woowacourse.shopping.db.CartDatabase
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.detail.DetailActivity.Companion.DETAIL_RESULT_OK
@@ -27,13 +27,11 @@ class HomeActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == DETAIL_RESULT_OK) {
-                val cartItem: CartItem? =
-                    if (VERSION.SDK_INT >= TIRAMISU_SDK_VERSION) {
-                        result.data?.getParcelableExtra(EXTRA_CART_ITEM, CartItem::class.java)
-                    } else {
-                        result.data?.getParcelableExtra(EXTRA_CART_ITEM)
-                    }
-                viewModel.updateOrder(cartItem?.productId ?: -1)
+                val productId = result?.data?.getLongExtra(EXTRA_CART_ITEM, 0)
+
+                Log.d("HELLO", "$productId")
+
+                viewModel.updateOrder(productId!!)
             }
         }
 
@@ -46,10 +44,11 @@ class HomeActivity : AppCompatActivity() {
             this,
             HomeViewModelFactory(
                 ProductRepositoryImpl(DefaultProducts),
-                CartRepositoryImpl(DefaultCart),
+                CartRepositoryImpl(DefaultCart(CartDatabase.getInstance(this))),
             ),
         )[HomeViewModel::class.java]
     }
+
     private val adapter: ProductAdapter by lazy {
         ProductAdapter(viewModel, viewModel)
     }

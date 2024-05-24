@@ -1,16 +1,18 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.db.Cart
 
 interface CartDataSource {
+    fun getAllCartItems(): List<Cart>?
+
     fun totalCartCount(): Int
 
-    fun getCartItem(productId: Long): CartItem?
+    fun getCartItem(productId: Long): Cart?
 
     fun getCartItems(
         page: Int,
         pageSize: Int,
-    ): List<CartItem>
+    ): List<Cart>
 
     fun addCartItem(
         productId: Long,

@@ -14,6 +14,7 @@ import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.db.CartDatabase
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModelFactory
 
@@ -40,7 +41,11 @@ class DetailActivity : AppCompatActivity() {
                 this,
                 DetailViewModelFactory(
                     ProductRepositoryImpl(DefaultProducts),
-                    CartRepositoryImpl(DefaultCart),
+                    CartRepositoryImpl(
+                        DefaultCart(
+                            CartDatabase.getInstance(this),
+                        ),
+                    ),
                     productId,
                 ),
             )[DetailViewModel::class.java]
@@ -48,7 +53,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun initObserver() {
         viewModel.addComplete.observe(this) {
-            it.getContentIfNotHandled()?.let { cartItem ->
+            it.getContentIfNotHandled()?.let { productId ->
                 Toast.makeText(
                     this,
                     getString(R.string.message_add_to_cart_complete),
@@ -56,7 +61,7 @@ class DetailActivity : AppCompatActivity() {
                 ).show()
 
                 val resultIntent = Intent()
-                resultIntent.putExtra(EXTRA_CART_ITEM, cartItem)
+                resultIntent.putExtra(EXTRA_CART_ITEM, productId)
                 setResult(DETAIL_RESULT_OK, resultIntent)
             }
         }

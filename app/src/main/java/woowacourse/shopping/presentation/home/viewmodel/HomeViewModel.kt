@@ -64,7 +64,6 @@ class HomeViewModel(
 
     fun addCartItem(productId: Long) {
         cartRepository.addCartItem(productId, 1)
-
         updateOrder(productId)
         loadTotalCartCount()
     }
@@ -77,7 +76,6 @@ class HomeViewModel(
                 orders.value?.find {
                     it.product.id == cartItem.productId
                 }?.copy(
-                    cartItemId = cartItem.id,
                     quantity = cartItem.quantity,
                 )
         }
@@ -85,16 +83,17 @@ class HomeViewModel(
 
     fun loadProducts() {
         _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
+        val carts = cartRepository.fetchAllCart()
 
         _orders.value =
             orders.value?.plus(
-                productRepository.fetchSinglePage(page++).map {
-                    val cartItem = cartRepository.fetchCartItem(it.id)
+                productRepository.fetchSinglePage(page++).map { product ->
+                    val cart = carts?.find { it.productId == product.id }
 
                     Order(
-                        cartItemId = cartItem?.id ?: 0,
-                        quantity = cartItem?.quantity ?: 0,
-                        product = it,
+                        cartItemId = cart?.id ?: 0,
+                        quantity = cart?.quantity ?: 0,
+                        product = product,
                     )
                 },
             )

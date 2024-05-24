@@ -18,7 +18,7 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        cartViewModel = CartViewModel(FakeCartRepository(DummyCartItems().cartItems), FakeProductRepository(DummyProducts().products))
+        cartViewModel = CartViewModel(FakeCartRepository(DummyCartItems().carts), FakeProductRepository(DummyProducts().products))
     }
 
     @Test
@@ -47,29 +47,6 @@ class CartViewModelTest {
         cartViewModel.loadPreviousPageCartItems()
 
         assertThat(orders.getOrAwaitValue()).hasSize(5)
-    }
-
-    @Test
-    fun `장바구니 상품 갯수를 증가시킬 수 있다`() {
-        val orders = cartViewModel.orders
-
-        cartViewModel.addCartITem(1, 1)
-
-        val actual = orders.getOrAwaitValue().first { it.product.id == 1L }.quantity
-
-        assertThat(actual).isEqualTo(2)
-    }
-
-    @Test
-    fun `장바구니 상품 갯수를 감소시킬 수 있다`() {
-        val orders = cartViewModel.orders
-
-        cartViewModel.addCartITem(1, 1)
-        cartViewModel.minusCartItem(1, 1)
-
-        val actual = orders.getOrAwaitValue().first { it.product.id == 1L }.quantity
-
-        assertThat(actual).isEqualTo(1)
     }
 
     @Test

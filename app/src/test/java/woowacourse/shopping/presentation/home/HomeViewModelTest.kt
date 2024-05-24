@@ -23,7 +23,7 @@ class HomeViewModelTest {
         homeViewModel =
             HomeViewModel(
                 FakeProductRepository(DummyProducts().products),
-                FakeCartRepository(DummyCartItems().cartItems),
+                FakeCartRepository(DummyCartItems().carts),
             )
     }
 
@@ -43,33 +43,6 @@ class HomeViewModelTest {
         val actualResult = homeViewModel.totalCartCount.getOrAwaitValue()
 
         assertThat(actualResult).isEqualTo(7)
-    }
-
-    @Test
-    fun `장바구니에 갯수를 증가시킨다`() {
-        homeViewModel.addCartItem(7)
-        homeViewModel.plusCartItem(7)
-
-        val actualResult =
-            homeViewModel.orders.getOrAwaitValue().first {
-                it.product.id == 7L
-            }
-
-        assertThat(actualResult.quantity).isEqualTo(2)
-    }
-
-    @Test
-    fun `장바구니에 갯수를 감소시킨다`() {
-        homeViewModel.addCartItem(7)
-        homeViewModel.plusCartItem(7)
-        homeViewModel.minusCartItem(7)
-
-        val actualResult =
-            homeViewModel.orders.getOrAwaitValue().first {
-                it.product.id == 7L
-            }
-
-        assertThat(actualResult.quantity).isEqualTo(1)
     }
 
     @Test

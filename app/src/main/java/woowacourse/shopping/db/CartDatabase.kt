@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(entities = [Cart::class], version = 1)
-abstract class CartDatabase: RoomDatabase() {
+abstract class CartDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
 
     companion object {
@@ -18,11 +18,12 @@ abstract class CartDatabase: RoomDatabase() {
             var instance = instance
 
             if (instance == null) {
-                instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    CartDatabase::class.java,
-                    CART_DATABASE,
-                ).build()
+                instance =
+                    Room.databaseBuilder(
+                        context.applicationContext,
+                        CartDatabase::class.java,
+                        CART_DATABASE,
+                    ).build()
             }
 
             return instance

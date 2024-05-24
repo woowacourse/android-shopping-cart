@@ -1,16 +1,18 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.db.Cart
 
 interface CartRepository {
+    fun fetchAllCart(): List<Cart>?
+
     fun fetchTotalCartCount(): Int
 
-    fun fetchCartItem(productId: Long): CartItem?
+    fun fetchCartItem(productId: Long): Cart?
 
     fun fetchCartItems(
         page: Int,
         pageSize: Int,
-    ): List<CartItem>
+    ): List<Cart>
 
     fun addCartItem(
         productId: Long,

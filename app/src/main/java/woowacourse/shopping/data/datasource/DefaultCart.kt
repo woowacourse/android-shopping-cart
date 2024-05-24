@@ -1,31 +1,57 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.db.Cart
+import woowacourse.shopping.db.CartDatabase
+import kotlin.concurrent.thread
 import kotlin.math.min
 
-object DefaultCart : CartDataSource {
-    private val cartItems: MutableMap<Long, CartItem> = mutableMapOf()
-    private var id: Long = 1
+class DefaultCart(
+    cartDatabase: CartDatabase,
+) : CartDataSource {
+    private val cartDao = cartDatabase.cartDao()
 
-    override fun totalCartCount(): Int {
-        return cartItems.size
+    override fun getAllCartItems(): List<Cart>? {
+        var carts: List<Cart>? = null
+
+        thread {
+            carts = cartDao.getAll()
+        }.join()
+
+        return carts
     }
 
-    override fun getCartItem(productId: Long): CartItem? {
-        return cartItems[productId]
+    override fun totalCartCount(): Int {
+        var count = 0
+
+        thread {
+            count = cartDao.getAll().size
+        }.join()
+
+        return count
+    }
+
+    override fun getCartItem(productId: Long): Cart? {
+        var cart: Cart? = null
+
+        thread {
+            cart = cartDao.getCart(productId)
+        }.join()
+
+        return cart
     }
 
     override fun addCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        cartItems[productId] =
-            CartItem(
-                id = id,
+        val cart =
+            Cart(
                 quantity = quantity,
                 productId = productId,
             )
-        id++
+        thread {
+            cartDao.insert(cart)
+        }.join()
         return productId
     }
 
@@ -33,48 +59,64 @@ object DefaultCart : CartDataSource {
         productId: Long,
         quantity: Int,
     ): Long {
-        val existingCartItem = cartItems[productId]
-        if (existingCartItem != null) {
-            cartItems[productId] =
-                existingCartItem.copy(
-                    quantity = existingCartItem.quantity + 1,
-                )
-        }
-        return productId
+        var updatedProductId = productId
+        thread {
+            val cart = cartDao.getCart(productId)
+            cartDao.update(
+                cart.copy(
+                    quantity = cart.quantity + 1,
+                ),
+            )
+            updatedProductId = productId
+        }.join()
+        return updatedProductId
     }
 
     override fun minusCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        val existingCartItem = cartItems[productId]
-        if (existingCartItem != null && existingCartItem.quantity > 1) {
-            cartItems[productId] =
-                existingCartItem.copy(
-                    quantity = existingCartItem.quantity - 1,
-                )
-        }
-        return productId
+        var updatedProductId = productId
+        thread {
+            val cart = cartDao.getCart(productId)
+            cartDao.update(
+                cart.copy(
+                    quantity = cart.quantity - 1,
+                ),
+            )
+            updatedProductId = productId
+        }.join()
+        return updatedProductId
     }
 
     override fun removeAllCartItem(productId: Long): Long {
-        cartItems.remove(productId)
+        thread {
+            val cart = cartDao.getCart(productId)
+            cartDao.delete(cart)
+        }.join()
         return productId
     }
 
     override fun deleteAll() {
-        cartItems.clear()
+        thread {
+            cartDao.deleteAll()
+        }.join()
     }
 
     override fun getCartItems(
         page: Int,
         pageSize: Int,
-    ): List<CartItem> {
+    ): List<Cart> {
+        var carts: List<Cart> = emptyList()
+        thread {
+            carts = cartDao.getAll()
+        }.join()
+
         val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + pageSize, cartItems.size)
+        val toIndex = min(fromIndex + pageSize, carts.size)
 
         if (fromIndex > toIndex) return emptyList()
 
-        return cartItems.values.toList().subList(fromIndex, toIndex)
+        return carts.subList(fromIndex, toIndex)
     }
 }

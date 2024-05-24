@@ -1,24 +1,28 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.db.Cart
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
+    override fun fetchAllCart(): List<Cart>? {
+        return cartDataSource.getAllCartItems()
+    }
+
     override fun fetchTotalCartCount(): Int {
         return cartDataSource.totalCartCount()
     }
 
-    override fun fetchCartItem(productId: Long): CartItem? {
+    override fun fetchCartItem(productId: Long): Cart? {
         return cartDataSource.getCartItem(productId)
     }
 
     override fun fetchCartItems(
         page: Int,
         pageSize: Int,
-    ): List<CartItem> {
+    ): List<Cart> {
         return cartDataSource.getCartItems(page, pageSize)
     }
 
