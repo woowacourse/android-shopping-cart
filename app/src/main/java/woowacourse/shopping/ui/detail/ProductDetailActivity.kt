@@ -112,7 +112,7 @@ class ProductDetailActivity :
 
     private fun lastSeenProductState() =
         intent.getBooleanExtra(
-            "last_seen_product_State",
+            ProductDetailKey.EXTRA_LAST_SEEN_PRODUCT_KEY,
             false,
         )
 
@@ -125,7 +125,7 @@ class ProductDetailActivity :
             lastSeenProductState: Boolean,
         ) = Intent(context, ProductDetailActivity::class.java).run {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
-            putExtra("last_seen_product_State", lastSeenProductState)
+            putExtra(ProductDetailKey.EXTRA_LAST_SEEN_PRODUCT_KEY, lastSeenProductState)
             context.startActivity(this)
         }
 
@@ -135,7 +135,7 @@ class ProductDetailActivity :
             lastSeenProductState: Boolean,
         ) = Intent(context, ProductDetailActivity::class.java).run {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
-            putExtra("last_seen_product_State", lastSeenProductState)
+            putExtra(ProductDetailKey.EXTRA_LAST_SEEN_PRODUCT_KEY, lastSeenProductState)
             setFlags(FLAG_ACTIVITY_CLEAR_TOP)
             context.startActivity(this)
         }
