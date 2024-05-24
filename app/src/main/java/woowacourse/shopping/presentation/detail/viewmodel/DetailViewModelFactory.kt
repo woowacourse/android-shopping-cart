@@ -11,6 +11,7 @@ class DetailViewModelFactory(
     private val cartRepository: CartRepository,
     private val productHistoryRepository: ProductHistoryRepository,
     private val productId: Long,
+    private val showRecent: Boolean,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
@@ -19,6 +20,7 @@ class DetailViewModelFactory(
                 cartRepository,
                 productHistoryRepository,
                 productId,
+                showRecent,
             ) as T
         } else {
             throw IllegalArgumentException()

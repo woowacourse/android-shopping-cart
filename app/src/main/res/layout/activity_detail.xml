@@ -97,11 +97,14 @@
             app:quantity="@{detailViewModel.quantity}" />
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_last_watch_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="29dp"
-            android:visibility="@{detailViewModel.recentProductHistory != null ? View.VISIBLE : View.GONE}"
+            android:onClick="@{() -> detailViewModel.moveToDetail(detailViewModel.recentProductHistory.id)}"
+            app:hasProductName="@{detailViewModel.recentProductHistory.name}"
+            app:isShowRecent="@{detailViewModel.showRecent}"
             app:layout_constraintTop_toBottomOf="@id/tv_price_value_detail"
             app:strokeColor="@color/gray_500"
             app:strokeWidth="1dp">

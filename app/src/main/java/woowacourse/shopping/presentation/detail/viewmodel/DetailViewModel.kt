@@ -15,6 +15,7 @@ class DetailViewModel(
     private val cartRepository: CartRepository,
     private val productHistoryRepository: ProductHistoryRepository,
     productId: Long,
+    showRecent: Boolean,
 ) : ViewModel(), CartItemCountHandler {
     private val _productInformation: MutableLiveData<Product> = MutableLiveData()
     val productInformation: LiveData<Product>
@@ -32,11 +33,24 @@ class DetailViewModel(
     val recentProductHistory: LiveData<Product>
         get() = _recentProductHistory
 
+    private val _moveToRecentProductHistory = MutableLiveData<Event<Long>>()
+    val moveToRecentProductHistory: LiveData<Event<Long>>
+        get() = _moveToRecentProductHistory
+
+    private val _showRecent = MutableLiveData<Boolean>()
+    val showRecent: LiveData<Boolean>
+        get() = _showRecent
+
     init {
         loadProductInformation(productId)
         loadCartItem(productId)
         getProductHistory()
         addProductHistory(productId)
+        loadShowRecent(showRecent)
+    }
+
+    fun loadShowRecent(showRecent: Boolean) {
+        _showRecent.value = showRecent
     }
 
     fun getProductHistory() {
@@ -64,6 +78,10 @@ class DetailViewModel(
         val cart = cartRepository.fetchCartItem(id)
 
         cart?.let { _addComplete.value = Event(it.productId) }
+    }
+
+    fun moveToDetail(id: Long) {
+        _moveToRecentProductHistory.value = Event(id)
     }
 
     override fun onCartItemAdd(id: Long) {
