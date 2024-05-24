@@ -8,20 +8,24 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.data.RecentProductsImpl
+import woowacourse.shopping.model.db.cart.CartRepositoryImpl
+import woowacourse.shopping.model.db.recentproduct.RecentProductRepositoryImpl
+import woowacourse.shopping.ui.FakeCartDao
+import woowacourse.shopping.ui.FakeRecentProductDao
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
+    private val recentProductRepository = RecentProductRepositoryImpl.get(FakeRecentProductDao)
+    private val cartRepository = CartRepositoryImpl.get(FakeCartDao)
 
     @BeforeEach
     fun setUp() {
         ProductsImpl.deleteAll()
-        CartsImpl.deleteAll()
-        viewModel = ProductDetailViewModel(ProductsImpl, RecentProductsImpl)
+        cartRepository.deleteAll()
+        viewModel = ProductDetailViewModel(ProductsImpl, recentProductRepository, cartRepository)
     }
 
     @Test
@@ -48,7 +52,7 @@ class ProductDetailViewModelTest {
         // when
         viewModel.plusCount()
         viewModel.addProductToCart()
-        val actual = CartsImpl.findAll().size
+        val actual = cartRepository.findAll().size
 
         // then
         assertThat(actual).isEqualTo(1)

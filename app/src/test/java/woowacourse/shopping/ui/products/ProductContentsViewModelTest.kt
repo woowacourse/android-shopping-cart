@@ -7,19 +7,23 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.data.RecentProductsImpl
+import woowacourse.shopping.model.db.cart.CartRepositoryImpl
+import woowacourse.shopping.model.db.recentproduct.RecentProductRepositoryImpl
+import woowacourse.shopping.ui.FakeCartDao
+import woowacourse.shopping.ui.FakeRecentProductDao
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductContentsViewModelTest {
     private lateinit var viewModel: ProductContentsViewModel
+    private val recentProductRepository = RecentProductRepositoryImpl.get(FakeRecentProductDao)
+    private val cartRepository = CartRepositoryImpl.get(FakeCartDao)
 
     @BeforeEach
     fun setUp() {
         ProductsImpl.deleteAll()
-        CartsImpl.deleteAll()
+        cartRepository.deleteAll()
     }
 
     @Test
@@ -30,7 +34,7 @@ class ProductContentsViewModelTest {
         }
 
         // when
-        viewModel = ProductContentsViewModel(ProductsImpl, RecentProductsImpl, CartsImpl)
+        viewModel = ProductContentsViewModel(ProductsImpl, recentProductRepository, cartRepository)
 
         // then
         assertThat(viewModel.productWithQuantity.getOrAwaitValue().size).isEqualTo(20)
@@ -42,7 +46,7 @@ class ProductContentsViewModelTest {
         ProductsImpl.save(product)
 
         // when
-        viewModel = ProductContentsViewModel(ProductsImpl, RecentProductsImpl, CartsImpl)
+        viewModel = ProductContentsViewModel(ProductsImpl, recentProductRepository, cartRepository)
 
         // then
         assertThat(viewModel.productWithQuantity.getOrAwaitValue()[0].product.name).isEqualTo("맥북")
