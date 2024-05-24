@@ -6,9 +6,9 @@ import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.MessageProvider
 
-class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
-    BaseViewModel(),
-    ShoppingCartActionHandler {
+class ShoppingCartViewModel(
+    private val shoppingCartRepository: ShoppingCartRepository,
+) : BaseViewModel(), ShoppingCartActionHandler {
     private val _uiState: MutableLiveData<ShoppingCartUiState> =
         MutableLiveData(ShoppingCartUiState())
     val uiState: LiveData<ShoppingCartUiState> get() = _uiState
@@ -21,7 +21,7 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
         page: Int,
         pageSize: Int = PAGE_SIZE,
     ) {
-        repository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
+        shoppingCartRepository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
             _uiState.value =
                 _uiState.value?.copy(
                     pagingOrder = pagingOrder,
@@ -32,7 +32,25 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     }
 
     override fun onClickClose(orderId: Int) {
-        repository.removeOrder(orderId)
+        shoppingCartRepository.removeOrder(orderId)
+        uiState.value?.let { state ->
+            state.pagingOrder?.let { pagingOrder ->
+                getPagingOrder(pagingOrder.currentPage)
+            }
+        }
+    }
+
+    override fun onClickPlusOrderButton(orderId: Int) {
+        shoppingCartRepository.plusOrder(orderId)
+        uiState.value?.let { state ->
+            state.pagingOrder?.let { pagingOrder ->
+                getPagingOrder(pagingOrder.currentPage)
+            }
+        }
+    }
+
+    override fun onClickMinusOrderButton(orderId: Int) {
+        shoppingCartRepository.minusOrder(orderId)
         uiState.value?.let { state ->
             state.pagingOrder?.let { pagingOrder ->
                 getPagingOrder(pagingOrder.currentPage)

@@ -9,6 +9,10 @@ interface ShoppingCartRepository {
 
     fun minusOrder(product: Product)
 
+    fun plusOrder(orderId: Int)
+
+    fun minusOrder(orderId: Int)
+
     fun removeOrder(orderId: Int)
 
     fun removeAllOrder()
