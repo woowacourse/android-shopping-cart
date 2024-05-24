@@ -8,6 +8,7 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.OrderEntity
 import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.model.data.RecentProductsRepository
 import kotlin.concurrent.thread
 import kotlin.math.min
 
@@ -15,7 +16,11 @@ class ProductContentsViewModel(
     private val productDao: ProductDao,
     application: Context,
 ) : ViewModel() {
+    private val _recentProducts: MutableLiveData<List<Product>> = MutableLiveData()
+    val recentProducts: LiveData<List<Product>> get() = _recentProducts
+
     private val ordersRepository = OrdersRepository(application)
+    private val recentProductsRepository = RecentProductsRepository(application)
 
     private var currentOffset = DEFAULT_OFFSET
     private val items: MutableList<Product> = mutableListOf()
@@ -23,11 +28,15 @@ class ProductContentsViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
     val products: LiveData<List<Product>> get() = _products
 
-    private val _isItemPlusButtonVisible: MutableLiveData<MutableMap<Long, Boolean>> = MutableLiveData(mutableMapOf())
+    private val _isItemPlusButtonVisible: MutableLiveData<MutableMap<Long, Boolean>> =
+        MutableLiveData(mutableMapOf())
     val isItemPlusButtonVisible: LiveData<MutableMap<Long, Boolean>> get() = _isItemPlusButtonVisible
 
     private val _itemCount: MutableLiveData<MutableMap<Long, Int>> = MutableLiveData(mutableMapOf())
     val itemCount: LiveData<MutableMap<Long, Int>> get() = _itemCount
+
+    private val _totalItemCount: MutableLiveData<Int> = MutableLiveData()
+    val totalItemCount: LiveData<Int> get() = _totalItemCount
 
     fun loadProducts() {
         items.clear()
@@ -45,6 +54,14 @@ class ProductContentsViewModel(
         setItemPlusButtonVisible()
     }
 
+    fun loadRecentProducts() {
+        _recentProducts.value = recentProductsRepository.getAllData()
+    }
+
+    private fun calculateTotalCount() {
+        _totalItemCount.value = _itemCount.value?.values?.sum()
+    }
+
     private fun setItemPlusButtonVisible() {
         val allProducts = productDao.findAll()
         allProducts.forEach {
@@ -59,6 +76,7 @@ class ProductContentsViewModel(
         _itemCount.value = temp
         ordersRepository.insert(OrderEntity(id, temp[id]!!))
         setItemPlusButtonVisible()
+        calculateTotalCount()
     }
 
     fun onItemIncreaseButtonClick(id: Long) {
@@ -66,6 +84,7 @@ class ProductContentsViewModel(
         temp[id] = temp[id]!! + ITEM_COUNT_CHANGE
         _itemCount.value = temp
         ordersRepository.insert(OrderEntity(id, temp[id]!!))
+        calculateTotalCount()
     }
 
     fun onItemDecreaseButtonClick(id: Long) {
@@ -77,6 +96,7 @@ class ProductContentsViewModel(
             setItemPlusButtonVisible()
             ordersRepository.deleteById(id)
         }
+        calculateTotalCount()
     }
 
     private fun getProducts(): List<Product> {

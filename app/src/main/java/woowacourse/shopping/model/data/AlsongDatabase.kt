@@ -6,18 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [RecentProductEntity::class], version = 3)
+@Database(entities = [OrderEntity::class, RecentProductEntity::class], version = 2)
 @TypeConverters(Converters::class)
-abstract class RecentProductDatabase : RoomDatabase() {
+abstract class AlsongDatabase : RoomDatabase() {
+    abstract fun orderDao(): OrderDao
+
     abstract fun recentProductDao(): RecentProductDao
 
     companion object {
         @Volatile
-        private var instance: RecentProductDatabase? = null
+        private var instance: AlsongDatabase? = null
 
-        fun getDatabase(context: Context): RecentProductDatabase {
+        fun getDatabase(context: Context): AlsongDatabase {
             return instance ?: synchronized(this) {
-                Room.databaseBuilder(context, RecentProductDatabase::class.java, "alsong.db")
+                Room.databaseBuilder(context, AlsongDatabase::class.java, "alsong.db")
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }

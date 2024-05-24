@@ -4,7 +4,7 @@ import android.content.Context
 import kotlin.concurrent.thread
 
 class OrdersRepository(application: Context) {
-    private val database = OrderDatabase.getDatabase(application)
+    private val database = AlsongDatabase.getDatabase(application)
     private val orderDao: OrderDao = database.orderDao()
 
     fun getAllData(): List<OrderEntity> {

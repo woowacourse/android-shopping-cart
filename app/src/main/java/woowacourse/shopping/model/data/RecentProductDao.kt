@@ -7,7 +7,7 @@ import androidx.room.Query
 
 @Dao
 interface RecentProductDao {
-    @Query("SELECT * FROM recentProducts ORDER BY createdTime")
+    @Query("SELECT * FROM recentProducts ORDER BY createdTime DESC")
     fun getAll(): List<RecentProductEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
