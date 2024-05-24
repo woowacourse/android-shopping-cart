@@ -1,6 +1,6 @@
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.db.CartItemDao
+import woowacourse.shopping.db.cartItem.CartItemDao
 import woowacourse.shopping.model.CartItem
 
 class CartRepository(private val cartItemDao: CartItemDao) {

@@ -1,4 +1,4 @@
-package woowacourse.shopping.db.model
+package woowacourse.shopping.db.cartItem
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,6 +1,6 @@
 package woowacourse.shopping.model
 
-import woowacourse.shopping.db.model.CartItemEntity
+import woowacourse.shopping.db.cartItem.CartItemEntity
 
 data class CartItem(
     val productId: Int,

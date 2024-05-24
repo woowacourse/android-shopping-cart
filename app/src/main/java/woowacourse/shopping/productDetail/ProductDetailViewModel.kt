@@ -12,10 +12,12 @@ import woowacourse.shopping.factory.BaseViewModelFactory
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.DummyProductStore
+import woowacourse.shopping.repository.RecentlyViewedRepository
 
 class ProductDetailViewModel(application: Application, val productId: Int) :
     AndroidViewModel(application) {
     private val productStore = DummyProductStore()
+    private val recentlyViewedRepository = RecentlyViewedRepository(application)
 
     val product: Product
         get() = productStore.findById(productId)
@@ -25,12 +27,19 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
 
     init {
         loadCartItem()
+        addProductToRecentlyViewed()
     }
 
     private fun loadCartItem() {
         viewModelScope.launch {
             val cartItems = ShoppingCart.getCartItems()
-            _cartItem.value = cartItems.find { it.productId == productId } ?: CartItem(productId, 1)
+            _cartItem.value = cartItems.find { it.productId == productId } ?: CartItem(productId, 0)
+        }
+    }
+
+    private fun addProductToRecentlyViewed() {
+        viewModelScope.launch {
+            recentlyViewedRepository.addProduct(productId)
         }
     }
 

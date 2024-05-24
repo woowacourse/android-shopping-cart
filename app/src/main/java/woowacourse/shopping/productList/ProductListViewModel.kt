@@ -10,10 +10,13 @@ import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.DummyProductStore
+import woowacourse.shopping.repository.RecentlyViewedRepository
 
 class ProductListViewModel(application: Application) : AndroidViewModel(application) {
     private val dummyProductStore by lazy { DummyProductStore() }
     private var currentIndex = 1
+
+    private val recentlyViewedRepository = RecentlyViewedRepository(application)
 
     private val _cartItems = MutableLiveData<List<CartItem>>()
     val cartItems: LiveData<List<CartItem>> get() = _cartItems
@@ -41,9 +44,19 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun loadRecentlyViewedProducts() {
         viewModelScope.launch {
-            // 더미 데이터로 대체할 수 있습니다. 실제 데이터베이스 또는 저장소에서 데이터를 가져와야 합니다.
-            val recentlyViewed = dummyProductStore.loadDataAsNeeded(0)
-            _recentlyViewedProducts.value = recentlyViewed
+            val recentlyViewedEntities = recentlyViewedRepository.getRecentProducts()
+            val cartItemIds = _cartItems.value?.map { it.productId } ?: emptyList()
+            val recentlyViewedProducts = recentlyViewedEntities
+                .filter { it.productId !in cartItemIds }
+                .map { dummyProductStore.findById(it.productId) }
+            _recentlyViewedProducts.value = recentlyViewedProducts
+        }
+    }
+
+    fun addProductToRecentlyViewed(productId: Int) {
+        viewModelScope.launch {
+            recentlyViewedRepository.addProduct(productId)
+            loadRecentlyViewedProducts()
         }
     }
 
@@ -57,6 +70,7 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             ShoppingCart.addProductToCart(productId)
             loadCartItems()
+            loadRecentlyViewedProducts()
         }
     }
 
@@ -64,6 +78,7 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             ShoppingCart.subtractProductCount(productId)
             loadCartItems()
+            loadRecentlyViewedProducts()
         }
     }
 

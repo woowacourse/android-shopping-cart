@@ -3,7 +3,7 @@ package woowacourse.shopping.db
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import woowacourse.shopping.db.model.CartItemEntity
+import woowacourse.shopping.db.cartItem.CartItemEntity
 import woowacourse.shopping.model.CartItem
 
 object ShoppingCart {
