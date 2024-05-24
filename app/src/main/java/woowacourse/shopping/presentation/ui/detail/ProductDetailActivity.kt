@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.ProductListItem
+import woowacourse.shopping.domain.RecentProductItem
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
@@ -27,41 +28,32 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
 
     override fun initStartView(savedInstanceState: Bundle?) {
         initActionBarTitle()
-        id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
-        if (id == -1L) finish()
-        viewModel.fetchInitialData(id)
+        fetchInitialData()
         binding.detailHandler = this
-        observeErrorEventUpdates()
-        observeProductsUpdates()
-        observeCartEventUpdates()
-        observeLastProductUpdates()
-    }
-
-    private fun observeLastProductUpdates() {
-        viewModel.lastProduct.observe(this) {
-            when (it) {
-                is UiState.None -> {}
-                is UiState.Success -> binding.lastProduct = it.data
-            }
-        }
+        checkIsLastViewedProduct()
+        observeLiveData()
     }
 
     private fun initActionBarTitle() {
         title = getString(R.string.detail_title)
     }
 
-    private fun observeCartEventUpdates() {
-        viewModel.addCartEvent.observe(
-            this,
-            EventObserver {
-                Intent(applicationContext, ShoppingActivity::class.java).apply {
-                    putExtra(EXTRA_PRODUCT_ID, id)
-                    putExtra(EXTRA_NEW_PRODUCT_QUANTITY, it)
-                    setResult(RESULT_OK, this)
-                }
-                finish()
-            },
-        )
+    private fun fetchInitialData() {
+        id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
+        if (id == -1L) finish()
+        viewModel.fetchInitialData(id)
+    }
+
+    private fun checkIsLastViewedProduct() {
+        val isLastViewedProduct = intent.getBooleanExtra(EXTRA_IS_LAST_VIEWED_PRODUCT, false)
+        if (isLastViewedProduct) viewModel.setLastProductInvisible()
+    }
+
+    private fun observeLiveData() {
+        observeErrorEventUpdates()
+        observeProductsUpdates()
+        observeCartEventUpdates()
+        observeLastProductUpdates()
     }
 
     private fun observeErrorEventUpdates() {
@@ -76,6 +68,30 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
             when (state) {
                 is UiState.None -> {}
                 is UiState.Success -> binding.product = state.data
+            }
+        }
+    }
+
+    private fun observeCartEventUpdates() {
+        viewModel.addCartEvent.observe(
+            this,
+            EventObserver {
+                Intent(applicationContext, ShoppingActivity::class.java).apply {
+                    putExtra(EXTRA_PRODUCT_ID, id)
+                    putExtra(EXTRA_NEW_PRODUCT_QUANTITY, it)
+                    setResult(RESULT_OK, this)
+                    startActivity(this)
+                }
+                finish()
+            },
+        )
+    }
+
+    private fun observeLastProductUpdates() {
+        viewModel.lastProduct.observe(this) {
+            when (it) {
+                is UiState.None -> {}
+                is UiState.Success -> binding.lastProduct = it.data
             }
         }
     }
@@ -105,9 +121,26 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         }
     }
 
+    override fun onLastProductClick(product: RecentProductItem) {
+        startWithFlag(this, product.productId)
+    }
+
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
         const val EXTRA_NEW_PRODUCT_QUANTITY = "productQuantity"
+        private const val EXTRA_IS_LAST_VIEWED_PRODUCT = "isLastViewedProduct"
+
+        fun startWithFlag(
+            context: Context,
+            productId: Long,
+        ) {
+            Intent(context, ProductDetailActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra(EXTRA_PRODUCT_ID, productId)
+                putExtra(EXTRA_IS_LAST_VIEWED_PRODUCT, true)
+                context.startActivity(this)
+            }
+        }
 
         fun startWithResult(
             context: Context,

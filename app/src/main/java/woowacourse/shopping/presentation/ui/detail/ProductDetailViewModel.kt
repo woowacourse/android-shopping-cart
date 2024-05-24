@@ -59,6 +59,10 @@ class ProductDetailViewModel(
         }
     }
 
+    fun setLastProductInvisible() {
+        _lastProduct.value = UiState.None
+    }
+
     private fun addRecentProduct(product: Product) {
         recentRepository.add(
             RecentProductItem(
