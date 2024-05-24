@@ -82,4 +82,5 @@
             tools:text="99,800원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
