@@ -27,11 +27,16 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
     private var id by Delegates.notNull<Long>()
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        checkIsLastViewedProduct()
         initActionBarTitle()
         fetchInitialData()
         binding.detailHandler = this
-        checkIsLastViewedProduct()
-        observeLiveData()
+        observeLiveDatas()
+    }
+
+    private fun checkIsLastViewedProduct() {
+        val isLastViewedProduct = intent.getBooleanExtra(EXTRA_IS_LAST_VIEWED_PRODUCT, false)
+        if (!isLastViewedProduct) viewModel.loadLastProduct()
     }
 
     private fun initActionBarTitle() {
@@ -44,16 +49,20 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         viewModel.fetchInitialData(id)
     }
 
-    private fun checkIsLastViewedProduct() {
-        val isLastViewedProduct = intent.getBooleanExtra(EXTRA_IS_LAST_VIEWED_PRODUCT, false)
-        if (isLastViewedProduct) viewModel.setLastProductInvisible()
-    }
-
-    private fun observeLiveData() {
+    private fun observeLiveDatas() {
+        observeLastProductUpdates()
         observeErrorEventUpdates()
         observeProductsUpdates()
         observeCartEventUpdates()
-        observeLastProductUpdates()
+    }
+
+    private fun observeLastProductUpdates() {
+        viewModel.lastProduct.observe(this) {
+            when (it) {
+                is UiState.None -> {}
+                is UiState.Success -> binding.lastProduct = it.data
+            }
+        }
     }
 
     private fun observeErrorEventUpdates() {
@@ -85,15 +94,6 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
                 finish()
             },
         )
-    }
-
-    private fun observeLastProductUpdates() {
-        viewModel.lastProduct.observe(this) {
-            when (it) {
-                is UiState.None -> {}
-                is UiState.Success -> binding.lastProduct = it.data
-            }
-        }
     }
 
     override fun onAddCartClick() {

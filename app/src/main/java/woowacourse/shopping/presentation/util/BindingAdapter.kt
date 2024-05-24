@@ -30,10 +30,9 @@ fun View.setLastProductVisibility(
     currentProduct: ProductListItem.ShoppingProductItem,
 ) {
     if (lastProduct == null || lastProduct.productId == currentProduct.id) {
-        visibility =
-            View.GONE
+        visibility = View.GONE
     } else {
-        View.VISIBLE
+        visibility = View.VISIBLE
     }
 }
 

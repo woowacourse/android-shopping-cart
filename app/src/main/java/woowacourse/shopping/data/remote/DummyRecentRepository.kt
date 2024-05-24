@@ -11,7 +11,7 @@ object DummyRecentRepository : RecentRepository {
             recentProducts.toList()
         }
 
-    override fun loadLast(): Result<RecentProductItem?> =
+    override fun loadMostRecent(): Result<RecentProductItem?> =
         runCatching {
             recentProducts.lastOrNull()
         }

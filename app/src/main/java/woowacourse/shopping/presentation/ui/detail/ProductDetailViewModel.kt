@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.remote.DummyRecentRepository
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductListItem
@@ -14,11 +13,12 @@ import woowacourse.shopping.domain.RecentRepository
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.util.Event
 import java.time.LocalDateTime
+import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-    private val recentRepository: RecentRepository = DummyRecentRepository,
+    private val recentRepository: RecentRepository,
 ) : ViewModel() {
     private val _shoppingProduct =
         MutableLiveData<UiState<ProductListItem.ShoppingProductItem>>(UiState.None)
@@ -43,7 +43,6 @@ class ProductDetailViewModel(
     private fun fetchProductById(productId: Long) {
         productRepository.loadById(productId).onSuccess {
             loadCartProductById(it)
-            loadLastProduct()
             addRecentProduct(it)
         }.onFailure {
             _error.value =
@@ -51,27 +50,30 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun loadLastProduct() {
-        recentRepository.loadLast().onSuccess {
-            it?.let {
-                _lastProduct.value = UiState.Success(it)
+    fun loadLastProduct() {
+        thread {
+            recentRepository.loadMostRecent().onSuccess {
+                it?.let {
+                    _lastProduct.postValue(UiState.Success(it))
+                }
+            }.onFailure {
+                _error.value =
+                    Event(DetailError.RecentItemNotFound)
             }
-        }
-    }
-
-    fun setLastProductInvisible() {
-        _lastProduct.value = UiState.None
+        }.join()
     }
 
     private fun addRecentProduct(product: Product) {
-        recentRepository.add(
-            RecentProductItem(
-                productId = product.id,
-                name = product.name,
-                imgUrl = product.imgUrl,
-                dateTime = LocalDateTime.now(),
-            ),
-        )
+        thread {
+            recentRepository.add(
+                RecentProductItem(
+                    productId = product.id,
+                    name = product.name,
+                    imgUrl = product.imgUrl,
+                    dateTime = LocalDateTime.now(),
+                ),
+            )
+        }.join()
     }
 
     private fun loadCartProductById(product: Product) {

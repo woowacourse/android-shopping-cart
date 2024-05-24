@@ -105,11 +105,11 @@
             currentProduct="@{product}"
             lastProduct="@{lastProduct}"
             android:layout_width="0dp"
-            android:onClick="@{()->detailHandler.onLastProductClick(lastProduct)}"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="29dp"
             android:background="@drawable/radius_4_strock"
+            android:onClick="@{()->detailHandler.onLastProductClick(lastProduct)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_price_value">
@@ -118,19 +118,19 @@
                 android:id="@+id/tv_last_product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/last_viewed_product"
                 android:textColor="@color/teal_200"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_last_product_name"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_last_product_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="18dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 android:ellipsize="end"
@@ -139,7 +139,8 @@
                 android:textColor="@color/dark_grey"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_last_product"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_last_product" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

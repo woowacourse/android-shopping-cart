@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.remote.DummyCartRepository
 import woowacourse.shopping.data.remote.DummyProductRepository
-import woowacourse.shopping.data.remote.DummyRecentRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.Product
@@ -16,10 +15,11 @@ import woowacourse.shopping.domain.RecentProductItem
 import woowacourse.shopping.domain.RecentRepository
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.util.Event
+import kotlin.concurrent.thread
 
 class ShoppingViewModel(
     private val productRepository: ProductRepository = DummyProductRepository(),
-    private val recentRepository: RecentRepository = DummyRecentRepository,
+    private val recentRepository: RecentRepository,
     private val cartRepository: CartRepository = DummyCartRepository,
 ) :
     ViewModel() {
@@ -52,10 +52,12 @@ class ShoppingViewModel(
     }
 
     fun fetchInitialRecentProducts() {
-        recentRepository.loadAll().onSuccess {
-            _recentProducts.value = UiState.Success(it)
-        }.onFailure {
-            _error.value = Event(ShoppingError.RecentProductItemsNotFound)
+        thread {
+            recentRepository.loadAll().onSuccess {
+                _recentProducts.postValue(UiState.Success(it))
+            }.onFailure {
+                _error.postValue(Event(ShoppingError.RecentProductItemsNotFound))
+            }
         }
     }
 
