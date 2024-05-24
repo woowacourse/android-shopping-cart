@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="lastProduct"
+            type="woowacourse.shopping.domain.RecentProductItem" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.domain.ProductListItem.ShoppingProductItem" />
 
@@ -19,6 +23,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="0dp"
         tools:context=".presentation.ui.detail.ProductDetailActivity">
 
         <ImageView
@@ -95,5 +100,47 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            currentProduct="@{product}"
+            lastProduct="@{lastProduct}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="29dp"
+            android:background="@drawable/radius_4_strock"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_price_value">
+
+            <TextView
+                android:id="@+id/tv_last_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="16dp"
+                android:text="마지막으로 본 상품"
+                android:textColor="@color/teal_200"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_last_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{lastProduct.name}"
+                android:textColor="@color/dark_grey"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_last_product"
+                app:layout_constraintTop_toBottomOf="@id/tv_last_product" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

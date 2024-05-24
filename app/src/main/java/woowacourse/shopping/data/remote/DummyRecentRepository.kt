@@ -6,9 +6,14 @@ import woowacourse.shopping.domain.RecentRepository
 object DummyRecentRepository : RecentRepository {
     private val recentProducts: MutableList<RecentProductItem> = mutableListOf()
 
-    override fun load(): Result<List<RecentProductItem>> =
+    override fun loadAll(): Result<List<RecentProductItem>> =
         runCatching {
             recentProducts.toList()
+        }
+
+    override fun loadLast(): Result<RecentProductItem?> =
+        runCatching {
+            recentProducts.lastOrNull()
         }
 
     override fun add(recentProduct: RecentProductItem): Result<Long> =

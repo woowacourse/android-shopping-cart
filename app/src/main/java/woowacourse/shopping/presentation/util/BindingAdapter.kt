@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.ProductListItem
+import woowacourse.shopping.domain.RecentProductItem
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -20,6 +22,19 @@ fun ImageView.loadImage(imgUrl: String) {
 @BindingAdapter("bindSetVisibility")
 fun View.setVisibility(visible: Boolean) {
     visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("lastProduct", "currentProduct")
+fun View.setLastProductVisibility(
+    lastProduct: RecentProductItem?,
+    currentProduct: ProductListItem.ShoppingProductItem,
+) {
+    if (lastProduct == null || lastProduct.productId == currentProduct.id) {
+        visibility =
+            View.GONE
+    } else {
+        View.VISIBLE
+    }
 }
 
 @BindingAdapter("bindTextFormattedCurrency")

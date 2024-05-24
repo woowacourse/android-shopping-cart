@@ -52,7 +52,7 @@ class ShoppingViewModel(
     }
 
     fun fetchInitialRecentProducts() {
-        recentRepository.load().onSuccess {
+        recentRepository.loadAll().onSuccess {
             _recentProducts.value = UiState.Success(it)
         }.onFailure {
             _error.value = Event(ShoppingError.RecentProductItemsNotFound)

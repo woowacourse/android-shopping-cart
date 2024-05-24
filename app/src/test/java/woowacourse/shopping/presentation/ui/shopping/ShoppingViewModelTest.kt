@@ -37,7 +37,7 @@ class ShoppingViewModelTest {
     @Test
     fun `viewModel이 초기화되면 최근 본 상품과 장바구니 상품, 상품 리스트 20개가 불러와진다`() {
         // given
-        every { recentRepository.load() } returns Result.success(dummyRecentProducts)
+        every { recentRepository.loadAll() } returns Result.success(dummyRecentProducts)
         every { cartRepository.loadAll() } returns Result.success(dummyCartProducts)
         every { productRepository.load(any(), any()) } returns Result.success(dummyProducts)
 
@@ -62,7 +62,7 @@ class ShoppingViewModelTest {
     @Test
     fun `최근 본 상품 데이터 로드가 실패하면 해당하는 Error로 상태가 변화한다`() {
         // given
-        every { recentRepository.load() } returns Result.failure(Throwable())
+        every { recentRepository.loadAll() } returns Result.failure(Throwable())
         every { cartRepository.loadAll() } returns Result.success(dummyCartProducts)
         every { productRepository.load(any(), any()) } returns Result.success(dummyProducts)
 
@@ -78,7 +78,7 @@ class ShoppingViewModelTest {
     @Test
     fun `장바구니 상품 데이터 로드가 실패하면 해당하는 Error로 상태가 변화한다`() {
         // given
-        every { recentRepository.load() } returns Result.success(dummyRecentProducts)
+        every { recentRepository.loadAll() } returns Result.success(dummyRecentProducts)
         every { cartRepository.loadAll() } returns Result.failure(Throwable())
         every { productRepository.load(any(), any()) } returns Result.success(dummyProducts)
 
@@ -94,7 +94,7 @@ class ShoppingViewModelTest {
     @Test
     fun `상품 데이터 로드가 실패하면 해당하는 Error로 상태가 변화한다`() {
         // given
-        every { recentRepository.load() } returns Result.success(dummyRecentProducts)
+        every { recentRepository.loadAll() } returns Result.success(dummyRecentProducts)
         every { cartRepository.loadAll() } returns Result.success(dummyCartProducts)
         every { productRepository.load(any(), any()) } returns Result.failure(Throwable())
 
@@ -110,7 +110,7 @@ class ShoppingViewModelTest {
     @Test
     fun `초기화 후, 더보기 버튼이 눌리면 데이터가 20개 더 불러와진다`() {
         // given
-        every { recentRepository.load() } returns Result.success(dummyRecentProducts)
+        every { recentRepository.loadAll() } returns Result.success(dummyRecentProducts)
         every { cartRepository.loadAll() } returns Result.success(dummyCartProducts)
         every { productRepository.load(any(), any()) } returns Result.success(dummyProducts)
         viewModel.loadInitialShoppingItems()

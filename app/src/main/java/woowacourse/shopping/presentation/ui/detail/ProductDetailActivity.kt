@@ -29,11 +29,21 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         initActionBarTitle()
         id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
-        binding.detailHandler = this
         viewModel.fetchInitialData(id)
+        binding.detailHandler = this
         observeErrorEventUpdates()
         observeProductsUpdates()
         observeCartEventUpdates()
+        observeLastProductUpdates()
+    }
+
+    private fun observeLastProductUpdates() {
+        viewModel.lastProduct.observe(this) {
+            when (it) {
+                is UiState.None -> {}
+                is UiState.Success -> binding.lastProduct = it.data
+            }
+        }
     }
 
     private fun initActionBarTitle() {
@@ -65,13 +75,9 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         viewModel.shoppingProduct.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
-                is UiState.Success -> handleProductSuccessState(state.data)
+                is UiState.Success -> binding.product = state.data
             }
         }
-    }
-
-    private fun handleProductSuccessState(product: ProductListItem.ShoppingProductItem) {
-        binding.product = product
     }
 
     override fun onAddCartClick() {

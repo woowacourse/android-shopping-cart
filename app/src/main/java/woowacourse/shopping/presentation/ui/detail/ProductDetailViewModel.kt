@@ -24,6 +24,9 @@ class ProductDetailViewModel(
         MutableLiveData<UiState<ProductListItem.ShoppingProductItem>>(UiState.None)
     val shoppingProduct: LiveData<UiState<ProductListItem.ShoppingProductItem>> get() = _shoppingProduct
 
+    private val _lastProduct = MutableLiveData<UiState<RecentProductItem>>()
+    val lastProduct: LiveData<UiState<RecentProductItem>> get() = _lastProduct
+
     private lateinit var shoppingProductItem: ProductListItem.ShoppingProductItem
 
     private val _error = MutableLiveData<Event<DetailError>>()
@@ -40,10 +43,19 @@ class ProductDetailViewModel(
     private fun fetchProductById(productId: Long) {
         productRepository.loadById(productId).onSuccess {
             loadCartProductById(it)
+            loadLastProduct()
             addRecentProduct(it)
         }.onFailure {
             _error.value =
                 Event(DetailError.ProductItemsNotFound)
+        }
+    }
+
+    private fun loadLastProduct() {
+        recentRepository.loadLast().onSuccess {
+            it?.let {
+                _lastProduct.value = UiState.Success(it)
+            }
         }
     }
 

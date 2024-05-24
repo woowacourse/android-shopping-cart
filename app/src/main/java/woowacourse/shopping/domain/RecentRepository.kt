@@ -1,7 +1,9 @@
 package woowacourse.shopping.domain
 
 interface RecentRepository {
-    fun load(): Result<List<RecentProductItem>>
+    fun loadAll(): Result<List<RecentProductItem>>
+
+    fun loadLast(): Result<RecentProductItem?>
 
     fun add(recentProduct: RecentProductItem): Result<Long>
 }
