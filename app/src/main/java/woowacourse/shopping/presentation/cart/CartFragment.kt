@@ -14,7 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.common.showToast
+import woowacourse.shopping.presentation.util.showToast
 import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 
 class CartFragment :

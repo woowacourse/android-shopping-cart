@@ -1,8 +1,8 @@
 package woowacourse.shopping.presentation.shopping
 
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.presentation.common.MutableSingleLiveData
-import woowacourse.shopping.presentation.common.SingleLiveData
+import woowacourse.shopping.presentation.util.MutableSingleLiveData
+import woowacourse.shopping.presentation.util.SingleLiveData
 
 class ShoppingEventBusViewModel : ViewModel() {
     private val _updateCartEvent = MutableSingleLiveData<Unit>()

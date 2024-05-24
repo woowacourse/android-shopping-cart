@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.data.common
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors

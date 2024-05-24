@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.presentation.common.ItemUpdateHelper
+import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class CartAdapter(
     private val cartProductListener: CartProductListener,

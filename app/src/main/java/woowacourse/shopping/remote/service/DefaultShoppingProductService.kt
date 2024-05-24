@@ -5,7 +5,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.IOException
-import woowacourse.shopping.ioExecutor
+import woowacourse.shopping.data.common.ioExecutor
 import woowacourse.shopping.remote.model.ProductPageResponse
 import woowacourse.shopping.remote.model.ProductResponse
 import java.net.HttpURLConnection

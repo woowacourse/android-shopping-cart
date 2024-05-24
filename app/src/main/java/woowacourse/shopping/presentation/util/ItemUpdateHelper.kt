@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.common
+package woowacourse.shopping.presentation.util
 
 import androidx.recyclerview.widget.RecyclerView
 

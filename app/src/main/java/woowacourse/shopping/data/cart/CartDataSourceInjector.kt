@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.cart
 
 import android.content.Context
-import woowacourse.shopping.ioExecutor
+import woowacourse.shopping.data.common.ioExecutor
 import woowacourse.shopping.local.ShoppingDatabase
 
 object CartDataSourceInjector {

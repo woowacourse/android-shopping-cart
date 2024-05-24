@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
-import woowacourse.shopping.presentation.common.ItemUpdateHelper
+import woowacourse.shopping.presentation.util.ItemUpdateHelper
 import woowacourse.shopping.presentation.shopping.detail.ProductUi
 import woowacourse.shopping.presentation.shopping.product.RecentProductItemListener
 
