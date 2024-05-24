@@ -32,7 +32,7 @@ class CartRepositoryImpl(context: Context) : CartRepository {
     }
 
     override fun deleteCartItem(itemId: Long) {
-        cartItemDao.deleteCartItemById(itemId)
+        thread { cartItemDao.deleteCartItemById(itemId) }.join()
     }
 
     override fun hasNextCartItemPage(

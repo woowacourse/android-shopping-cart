@@ -59,7 +59,7 @@ class ShoppingCartViewModel(
     }
 
     override fun onRemoveCartItemButtonClicked(cartItemId: Long) {
-        thread { cartRepository.deleteCartItem(cartItemId) }.join()
+        cartRepository.deleteCartItem(cartItemId)
         shoppingCart.deleteProduct(cartItemId)
         updatePagedData()
     }

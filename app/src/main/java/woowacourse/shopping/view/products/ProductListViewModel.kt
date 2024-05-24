@@ -88,8 +88,14 @@ class ProductListViewModel(
     override fun onDecreaseQuantityButtonClicked(id: Long) {
         val cartItem = cartRepository.findCartItemWithProductId(id) ?: throw NoSuchDataException()
         val updatedCartItem = cartItem.decrementQuantity(DECREMENT_VALUE)
-        cartRepository.updateCartItem(updatedCartItem)
-        _updatedCountInfo.value = ProductWithQuantity(updatedCartItem.product, updatedCartItem.quantity)
+
+        if (updatedCartItem.quantity == 0) {
+            cartRepository.deleteCartItem(updatedCartItem.id)
+        } else {
+            cartRepository.updateCartItem(updatedCartItem)
+        }
+        _updateProductCount.value =
+            Event(ProductUpdate(updatedCartItem.product.id, updatedCartItem.quantity))
         _totalCount.value = _totalCount.value?.minus(INCREMENT_VALUE)
     }
 
