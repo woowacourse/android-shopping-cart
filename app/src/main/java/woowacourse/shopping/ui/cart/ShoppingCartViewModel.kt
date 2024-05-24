@@ -7,7 +7,7 @@ import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.data.ProductData
-import woowacourse.shopping.repository.ShoppingCartItemRepository
+import woowacourse.shopping.domain.repository.ShoppingCartItemRepository
 
 class ShoppingCartViewModel(
     private val shoppingCartItemRepository: ShoppingCartItemRepository,

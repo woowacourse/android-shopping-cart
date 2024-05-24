@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentCartListBinding
-import woowacourse.shopping.repository.DummyShoppingCartItemRepository
+import woowacourse.shopping.domain.repository.DummyShoppingCartItemRepository
 
 class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null

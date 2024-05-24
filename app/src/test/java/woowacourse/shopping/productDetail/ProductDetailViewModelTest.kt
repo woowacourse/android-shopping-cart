@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
-import woowacourse.shopping.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.repository.FakeProductIdsCountDataSource
 import woowacourse.shopping.repository.FakeShoppingProductsRepository
-import woowacourse.shopping.repository.ProductIdsCountRepository
-import woowacourse.shopping.repository.ShoppingProductsRepository
+import woowacourse.shopping.domain.repository.ProductIdsCountRepository
+import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
 

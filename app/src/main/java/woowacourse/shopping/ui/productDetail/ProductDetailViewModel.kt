@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter
-import woowacourse.shopping.repository.DefaultProductIdsCountRepository
-import woowacourse.shopping.repository.ProductIdsCountRepository
-import woowacourse.shopping.repository.ShoppingProductsRepository
-import woowacourse.shopping.source.DummyProductIdsCountDataSource
+import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.domain.repository.ProductIdsCountRepository
+import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
 import java.lang.Exception
 
 class ProductDetailViewModel(

@@ -9,10 +9,10 @@ import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.model.ProductIdsCount
-import woowacourse.shopping.repository.DefaultProductIdsCountRepository
-import woowacourse.shopping.repository.ProductIdsCountRepository
-import woowacourse.shopping.repository.ShoppingProductsRepository
-import woowacourse.shopping.source.DummyProductIdsCountDataSource
+import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.domain.repository.ProductIdsCountRepository
+import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
 
 // TODO: 생성자 파라미터 기본값 삭제
 class ProductListViewModel(

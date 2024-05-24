@@ -8,7 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.productsTestFixture
-import woowacourse.shopping.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.repository.FakeProductIdsCountDataSource
 import woowacourse.shopping.repository.FakeShoppingProductsRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture

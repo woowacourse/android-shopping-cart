@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.NumberPagingStrategy
+import woowacourse.shopping.domain.repository.DummyShoppingProductsRepository
+import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 
 class DummyShoppingProductsRepositoryTest {
     private lateinit var dummyShoppingProductsRepository: ShoppingProductsRepository

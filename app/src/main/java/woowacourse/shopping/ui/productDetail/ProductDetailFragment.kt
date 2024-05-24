@@ -11,9 +11,9 @@ import woowacourse.shopping.NonePagingStrategy
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
-import woowacourse.shopping.repository.DefaultProductIdsCountRepository
-import woowacourse.shopping.repository.DummyShoppingProductsRepository
-import woowacourse.shopping.source.DummyProductIdsCountDataSource
+import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.domain.repository.DummyShoppingProductsRepository
+import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null

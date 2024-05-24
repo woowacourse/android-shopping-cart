@@ -15,7 +15,7 @@ import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
-import woowacourse.shopping.repository.DummyShoppingProductsRepository
+import woowacourse.shopping.domain.repository.DummyShoppingProductsRepository
 
 class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null

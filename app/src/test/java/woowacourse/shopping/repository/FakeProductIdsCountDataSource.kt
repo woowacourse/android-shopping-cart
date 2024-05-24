@@ -1,7 +1,7 @@
 package woowacourse.shopping.repository
 
 import woowacourse.shopping.data.ProductIdsCountData
-import woowacourse.shopping.source.ProductIdsCountDataSource
+import woowacourse.shopping.data.source.ProductIdsCountDataSource
 
 class FakeProductIdsCountDataSource(
     private val data: MutableList<ProductIdsCountData> = mutableListOf(),
