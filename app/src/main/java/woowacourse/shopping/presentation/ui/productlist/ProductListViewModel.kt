@@ -10,6 +10,8 @@ import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
+import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUiModel
+import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
 
 class ProductListViewModel(
     private val productListRepository: ProductListRepository,
@@ -26,6 +28,7 @@ class ProductListViewModel(
     fun initPage() {
         getPagingProduct(INIT_PAGE_NUM)
         getOrders()
+        makeUiModels()
     }
 
     override fun onClickProduct(productId: Int) {
@@ -39,6 +42,7 @@ class ProductListViewModel(
             }
         }
         getOrders()
+        makeUiModels()
     }
 
     private fun getPagingProduct(
@@ -54,7 +58,6 @@ class ProductListViewModel(
                             ?: item.productList,
                     isLastPage = item.isLastPage,
                 )
-
             _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
         }.onFailure { _ ->
             showMessage(MessageProvider.DefaultErrorMessage)
@@ -64,6 +67,7 @@ class ProductListViewModel(
     override fun onClickPlusOrderButton(productId: Int) {
         productListRepository.findProductById(productId).onSuccess { product ->
             plusOrder(product)
+            makeUiModels()
         }.onFailure {
             throw NoSuchElementException()
         }
@@ -77,6 +81,7 @@ class ProductListViewModel(
     override fun onClickMinusOrderButton(productId: Int) {
         productListRepository.findProductById(productId).onSuccess { product ->
             minusOrder(product)
+            makeUiModels()
         }.onFailure {
             throw NoSuchElementException()
         }
@@ -90,6 +95,20 @@ class ProductListViewModel(
     private fun getOrders() {
         val orders = shoppingCartRepository.getOrders()
         _uiState.value = _uiState.value?.copy(orders = orders)
+    }
+
+    private fun makeUiModels() {
+        val pagingProduct = _uiState.value?.pagingProduct ?: return
+        val orders = _uiState.value?.orders ?: listOf()
+        val uiModels =
+            pagingProduct.productList.map { product ->
+                val quantity = orders.firstOrNull { product.id == it.product.id }?.quantity ?: 0
+                ProductUiModel(product, quantity)
+            }
+        println(uiModels)
+        val pagingProductUiModel =
+            PagingProductUiModel(pagingProduct.currentPage, uiModels, pagingProduct.isLastPage)
+        _uiState.value = _uiState.value?.copy(pagingProductUiModel = pagingProductUiModel)
     }
 
     companion object {

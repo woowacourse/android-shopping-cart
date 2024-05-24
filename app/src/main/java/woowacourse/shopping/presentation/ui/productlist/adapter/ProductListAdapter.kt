@@ -6,16 +6,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderLoadMoreBinding
 import woowacourse.shopping.databinding.HolderProductBinding
-import woowacourse.shopping.domain.model.PagingProduct
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.LoadMoreViewHolder
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.ProductViewHolder
+import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUiModel
+import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
 
 class ProductListAdapter(
     private val actionHandler: ProductListActionHandler,
-    private var pagingProduct: PagingProduct = PagingProduct(0, emptyList(), true),
+    private var pagingProductUiModel: PagingProductUiModel = PagingProductUiModel(0, emptyList(), true),
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recyclerView.itemAnimator = null
+    }
+
     override fun getItemViewType(position: Int): Int {
         return if (position == itemCount - 1) LOAD_VIEW_TYPE else PRODUCT_VIEW_TYPE
     }
@@ -43,7 +48,7 @@ class ProductListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = pagingProduct.productList.size + 1
+    override fun getItemCount(): Int = pagingProductUiModel.productUiModels.size + 1
 
     override fun onBindViewHolder(
         holder: ProductListViewHolder,
@@ -51,21 +56,23 @@ class ProductListAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> {
-                holder.bind(pagingProduct.productList[position])
+                holder.bind(pagingProductUiModel.productUiModels[position])
             }
 
             is LoadMoreViewHolder -> {
-                holder.bind(pagingProduct.isLastPage)
+                holder.bind(pagingProductUiModel.isLastPage)
             }
         }
     }
 
-    fun updateProductList(newPagingProduct: PagingProduct) {
-        val positionStart = pagingProduct.productList.size
-        val itemCount = newPagingProduct.productList.size - pagingProduct.productList.size
-
-        pagingProduct = newPagingProduct
-        notifyItemRangeChanged(positionStart, itemCount)
+    fun updateProductList(newPagingProductUiModel: PagingProductUiModel) {
+        val diff = newPagingProductUiModel.productUiModels - pagingProductUiModel.productUiModels.toSet()
+        pagingProductUiModel = newPagingProductUiModel
+        newPagingProductUiModel.productUiModels.forEachIndexed { index, productUiModel ->
+            if (diff.map { it.product.id }.contains(productUiModel.product.id)) {
+                notifyItemChanged(index)
+            }
+        }
     }
 
     sealed class ProductListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -73,8 +80,8 @@ class ProductListAdapter(
             private val binding: HolderProductBinding,
             private val actionHandler: ProductListActionHandler,
         ) : ProductListViewHolder(binding.root) {
-            fun bind(product: Product) {
-                binding.product = product
+            fun bind(productUiModel: ProductUiModel) {
+                binding.productUiModel = productUiModel
                 binding.actionHandler = actionHandler
             }
         }

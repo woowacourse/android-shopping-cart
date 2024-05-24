@@ -64,8 +64,8 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         }
 
         viewModel.uiState.observe(this) { state ->
-            state.pagingProduct?.let { pagingProduct ->
-                adapter.updateProductList(pagingProduct)
+            state.pagingProductUiModel?.let { pagingProductUiModel ->
+                adapter.updateProductList(pagingProductUiModel)
             }
         }
 

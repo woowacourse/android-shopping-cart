@@ -34,6 +34,7 @@ class ProductListViewModelTest {
     @Test
     fun `상품을 불러온다`() {
         // given
+        every { shoppingCartRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_A))
         every {
             productListRepository.getPagingProduct(
                 0,
@@ -53,6 +54,7 @@ class ProductListViewModelTest {
     @Test
     fun `더보기 버튼을 눌렀을 때 상품을 더 불러온다`() {
         // given
+        every { shoppingCartRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_A))
         val dummyPagingProduct = DummyProductList.getPagingProduct(0, 20).getOrThrow()
         val nextDummyPagingProduct = DummyProductList.getPagingProduct(1, 20).getOrThrow()
 
@@ -99,35 +101,48 @@ class ProductListViewModelTest {
     @Test
     fun `상품의 더하기 버튼을 누르면 repo에 상품을 하나 더 주문하고 바뀐 주문 정보를 요청한다`() {
         // given
+        every {
+            productListRepository.getPagingProduct(
+                0,
+                20,
+            )
+        } returns DummyProductList.getPagingProduct(0, 20)
         every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_A)
-        every { shoppingCartRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_A))
+        every { shoppingCartRepository.getOrders() } returns listOf(Order(1, 2, DummyData.STUB_PRODUCT_A))
         every { shoppingCartRepository.plusOrder(DummyData.STUB_PRODUCT_A) } just runs
+        productListViewModel.initPage()
 
         // when
         productListViewModel.onClickPlusOrderButton(1)
+        productListViewModel.onClickPlusOrderButton(1)
 
         // then
-        verify(exactly = 1) { shoppingCartRepository.plusOrder(DummyData.STUB_PRODUCT_A) }
-        verify(exactly = 1) { shoppingCartRepository.getOrders() }
+        verify(exactly = 2) { shoppingCartRepository.plusOrder(DummyData.STUB_PRODUCT_A) }
         val uiState = productListViewModel.uiState.getOrAwaitValue()
-        val actual = uiState.orders?.get(0)?.quantity
-        val expected = 1
+        val actual = uiState.pagingProductUiModel?.productUiModels?.get(0)?.quantity
+        val expected = 2
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `상품의 빼기 버튼을 누르면 repo에 주문한 상품을 하나 빼고 바뀐 주문 정보를 요청한다`() {
         // given
+        every {
+            productListRepository.getPagingProduct(
+                0,
+                20,
+            )
+        } returns DummyProductList.getPagingProduct(0, 20)
         every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_A)
         every { shoppingCartRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_A))
         every { shoppingCartRepository.minusOrder(DummyData.STUB_PRODUCT_A) } just runs
+        productListViewModel.initPage()
 
         // when
         productListViewModel.onClickMinusOrderButton(1)
 
         // then
         verify(exactly = 1) { shoppingCartRepository.minusOrder(DummyData.STUB_PRODUCT_A) }
-        verify(exactly = 1) { shoppingCartRepository.getOrders() }
         val uiState = productListViewModel.uiState.getOrAwaitValue()
         val actual = uiState.orders?.get(0)?.quantity
         val expected = 1

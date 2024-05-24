@@ -19,4 +19,6 @@ interface ShoppingCartRepository {
         page: Int,
         pageSize: Int,
     ): Result<PagingOrder>
+
+    fun getOrderByProductId(productId: Int): Order?
 }

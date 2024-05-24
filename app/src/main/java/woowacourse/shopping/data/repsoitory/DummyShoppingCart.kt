@@ -24,24 +24,22 @@ object DummyShoppingCart : ShoppingCartRepository {
 
     override fun plusOrder(product: Product) {
         val order = orders.find { it.product == product }
-        val id = order?.id ?: (orders.size + 1)
+        val id = order?.id ?: (orders[orders.size - 1].id + 1)
         val quantity = order?.quantity?.plus(1) ?: 1
+        orders.removeIf { it.id == id }
         val newOrder = Order(id, quantity, product)
         orders.add(newOrder)
     }
 
     override fun minusOrder(product: Product) {
-        val order =
-            orders.find {
-                it.product.id == product.id
-            } ?: throw NoSuchElementException()
-
-        if (order.quantity - 1 <= 0) {
-            removeOrder(order.id)
-            return
+        val order = orders.find { it.product == product } ?: throw NoSuchElementException()
+        val id = order.id
+        val quantity = order.quantity.minus(1)
+        orders.removeIf { it.id == id }
+        if (quantity > 0) {
+            val newOrder = Order(id, quantity, product)
+            orders.add(newOrder)
         }
-
-        orders[order.id] = order.copy(quantity = order.quantity - 1)
     }
 
     override fun removeOrder(orderId: Int) {
@@ -70,4 +68,6 @@ object DummyShoppingCart : ShoppingCartRepository {
                 last = last,
             )
         }
+
+    override fun getOrderByProductId(productId: Int): Order? = orders.firstOrNull { it.product.id == productId }
 }
