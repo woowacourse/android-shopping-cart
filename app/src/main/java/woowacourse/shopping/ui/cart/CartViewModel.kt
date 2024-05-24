@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.ui.products.ProductUiModel
 
 class CartViewModel(
@@ -16,17 +16,17 @@ class CartViewModel(
     private val _productUiModels = MutableLiveData<MutableList<ProductUiModel>>()
     val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels.map { it.toList() }
 
+    private val totalCartCount = MutableLiveData<Int>(INITIALIZE_CART_SIZE)
+
     private val _page = MutableLiveData<Int>(INITIALIZE_PAGE)
     val page: LiveData<Int> get() = _page
 
-    private val totalCartCount = MutableLiveData<Int>(INITIALIZE_CART_SIZE)
+    private val maxPage: LiveData<Int> = totalCartCount.map { (it - 1) / PAGE_SIZE }
 
-    val hasPage: LiveData<Boolean> = totalCartCount.map { changePageVisibility(it) }
-    val hasPreviousPage: LiveData<Boolean> = _page.map { changePreviousPageVisibility(it) }
-    val hasNextPage: LiveData<Boolean> = _page.map { changeNextPageVisibility(it) }
+    val hasPage: LiveData<Boolean> = totalCartCount.map { it > PAGE_SIZE }
+    val hasPreviousPage: LiveData<Boolean> = _page.map { it > INITIALIZE_PAGE }
+    val hasNextPage: LiveData<Boolean> = maxPage.map { (_page.value ?: INITIALIZE_PAGE) < it }
     val isEmptyCart: LiveData<Boolean> = _productUiModels.map { it.isEmpty() }
-
-    private var maxPage: Int = INITIALIZE_PAGE
 
     init {
         loadCart()
@@ -47,9 +47,7 @@ class CartViewModel(
     }
 
     private fun loadTotalCartCount() {
-        val totalCartCount = cartRepository.totalProductCount()
-        this.totalCartCount.value = totalCartCount
-        maxPage = (totalCartCount - 1) / PAGE_SIZE
+        totalCartCount.value = cartRepository.totalCartItemCount()
     }
 
     fun deleteCartItem(productId: Long) {
@@ -75,12 +73,6 @@ class CartViewModel(
         val totalCartCount = totalCartCount.value ?: INITIALIZE_CART_SIZE
         return page > 0 && totalCartCount % PAGE_SIZE == 1
     }
-
-    private fun changePageVisibility(totalCartCount: Int): Boolean = totalCartCount > PAGE_SIZE
-
-    private fun changePreviousPageVisibility(page: Int): Boolean = page > INITIALIZE_PAGE
-
-    private fun changeNextPageVisibility(page: Int): Boolean = page < maxPage
 
     fun moveNextPage() {
         _page.value = _page.value?.plus(1)
