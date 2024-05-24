@@ -30,7 +30,7 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
     private fun loadCartItem() {
         viewModelScope.launch {
             val cartItems = ShoppingCart.getCartItems()
-            _cartItem.value = cartItems.find { it.productId == productId } ?: CartItem(productId, 0)
+            _cartItem.value = cartItems.find { it.productId == productId } ?: CartItem(productId, 1)
         }
     }
 

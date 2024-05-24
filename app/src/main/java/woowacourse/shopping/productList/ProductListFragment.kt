@@ -32,6 +32,13 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
         )
     }
 
+    private val recentlyViewedAdapter: RecentlyViewedAdapter by lazy {
+        RecentlyViewedAdapter(
+            viewModel.recentlyViewedProducts.value ?: emptyList(),
+            onClick = { id -> navigateToProductDetail(id) },
+        )
+    }
+
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
 
@@ -42,6 +49,9 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.productDetailList.adapter = adapter
+        binding.recentlyViewedList.adapter = recentlyViewedAdapter
+        binding.recentlyViewedList.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         showLoadMoreButton()
@@ -90,6 +100,10 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
 
         viewModel.cartItems.observe(viewLifecycleOwner) {
             adapter.updateCartItems(it)
+        }
+
+        viewModel.recentlyViewedProducts.observe(viewLifecycleOwner) {
+            recentlyViewedAdapter.updateData(it)
         }
 
         binding.loadMoreButton.setOnClickListener {

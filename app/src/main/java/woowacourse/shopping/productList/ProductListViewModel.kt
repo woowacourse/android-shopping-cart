@@ -23,15 +23,27 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     val loadedProducts: LiveData<List<Product>>
         get() = _loadedProducts
 
+    private val _recentlyViewedProducts = MutableLiveData<List<Product>>()
+    val recentlyViewedProducts: LiveData<List<Product>> get() = _recentlyViewedProducts
+
     init {
         ShoppingCart.initialize(application)
         loadCartItems()
+        loadRecentlyViewedProducts()
     }
 
     private fun loadCartItems() {
         viewModelScope.launch {
             val cartItemsFromDb = ShoppingCart.getCartItems()
             _cartItems.value = cartItemsFromDb
+        }
+    }
+
+    private fun loadRecentlyViewedProducts() {
+        viewModelScope.launch {
+            // 더미 데이터로 대체할 수 있습니다. 실제 데이터베이스 또는 저장소에서 데이터를 가져와야 합니다.
+            val recentlyViewed = dummyProductStore.loadDataAsNeeded(0)
+            _recentlyViewedProducts.value = recentlyViewed
         }
     }
 
