@@ -9,7 +9,6 @@ import woowacourse.shopping.data.local.dao.CartProductDao
 import woowacourse.shopping.data.local.entity.Cart
 import woowacourse.shopping.data.local.entity.CartProduct
 import woowacourse.shopping.data.local.entity.Product
-import kotlin.concurrent.thread
 
 
 @Database(entities = [Cart::class, CartProduct::class, Product::class], version = 1)
@@ -21,7 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
         var instance: AppDatabase? = null
             private set
 
-        fun getDatabase(context: Context): AppDatabase {
+        fun init(context: Context): AppDatabase {
             return instance ?: synchronized(this) {
                 Room.databaseBuilder(context, AppDatabase::class.java, "db")
                     .fallbackToDestructiveMigration()

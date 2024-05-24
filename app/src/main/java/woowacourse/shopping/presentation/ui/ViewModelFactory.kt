@@ -13,7 +13,7 @@ import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel
 import java.lang.IllegalStateException
 
-class ViewModelFactory(private val applicationContext: Context) : ViewModelProvider.Factory {
+class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(ProductDetailViewModel::class.java) -> {
@@ -21,7 +21,7 @@ class ViewModelFactory(private val applicationContext: Context) : ViewModelProvi
             }
 
             modelClass.isAssignableFrom(ShoppingViewModel::class.java) -> {
-                ShoppingViewModel(RepositoryImpl(RoomDataSource(AppDatabase.getDatabase(applicationContext).cartProductDao()))) as T
+                ShoppingViewModel(RepositoryImpl(RoomDataSource(AppDatabase.instance?.cartProductDao() ?: throw IllegalStateException("DB is not initialized")))) as T
             }
 
             modelClass.isAssignableFrom(CartViewModel::class.java) -> {

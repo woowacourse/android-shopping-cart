@@ -16,7 +16,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_cart
 
-    private val viewModel: CartViewModel by viewModels { ViewModelFactory(applicationContext) }
+    private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
     private val cartAdapter: CartAdapter by lazy { CartAdapter(viewModel) }
 
     override fun initStartView() {
