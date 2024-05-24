@@ -1,7 +1,8 @@
 package woowacourse.shopping.presentation.ui.shoppingcart
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import woowacourse.shopping.domain.model.Product
-import java.io.Serializable
 
 data class ShoppingCartUiState(
     val pagingCartProduct: PagingCartProduct = PagingCartProduct(),
@@ -14,8 +15,9 @@ data class PagingCartProduct(
     val last: Boolean = true,
 )
 
+@Parcelize
 data class UpdatedProducts(private val products: MutableMap<Long, Product> = mutableMapOf()) :
-    Serializable {
+    Parcelable {
     fun addProduct(other: Product) {
         products[other.id] = other
     }

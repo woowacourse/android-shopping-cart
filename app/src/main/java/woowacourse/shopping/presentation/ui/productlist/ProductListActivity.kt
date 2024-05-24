@@ -43,12 +43,12 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
             if (result.resultCode == RESULT_OK) {
                 val updatedProducts =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getSerializableExtra(
+                        result.data?.getParcelableExtra(
                             PUT_EXTRA_UPDATED_PRODUCTS,
                             UpdatedProducts::class.java,
                         )
                     } else {
-                        result.data?.getSerializableExtra(PUT_EXTRA_UPDATED_PRODUCTS) as UpdatedProducts
+                        result.data?.getParcelableExtra(PUT_EXTRA_UPDATED_PRODUCTS)
                     }
 
                 updatedProducts?.let { products ->
