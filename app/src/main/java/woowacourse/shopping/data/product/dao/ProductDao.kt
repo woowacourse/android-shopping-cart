@@ -2,6 +2,7 @@ package woowacourse.shopping.data.product.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import woowacourse.shopping.data.product.entity.Product
 
@@ -19,6 +20,6 @@ interface ProductDao {
     @Query("SELECT COUNT(*) FROM products")
     fun totalCount(): Int
 
-    @Insert
-    fun insertAll(products: List<Product>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(products: List<Product>): List<Long>
 }

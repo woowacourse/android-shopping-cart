@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.cart.dao
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -9,7 +9,6 @@ import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import woowacourse.shopping.data.cart.dao.CartDao
 import woowacourse.shopping.data.cart.database.CartDataBase
 import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.model.Quantity
@@ -22,7 +21,12 @@ class CartDaoTest {
 
     @Before
     fun setUp() {
-        cartDataBase = Room.databaseBuilder(ApplicationProvider.getApplicationContext(), CartDataBase::class.java, "cart").build()
+        cartDataBase = Room.databaseBuilder(
+            ApplicationProvider.getApplicationContext(),
+            CartDataBase::class.java,
+            "cart",
+        ).build()
+        cartDataBase.clearAllTables()
         cartDao = cartDataBase.cartDao()
     }
 
