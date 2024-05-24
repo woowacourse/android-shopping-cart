@@ -37,7 +37,7 @@ class CartAdapter(
 
     fun updateCart(newCart: List<CartItem>) {
         notifyItemRangeRemoved(0, cart.size)
-        cart.removeAll(cart)
+        cart.clear()
         cart.addAll(newCart)
         notifyItemRangeChanged(0, newCart.size)
     }
