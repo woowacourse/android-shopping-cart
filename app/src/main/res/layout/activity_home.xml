@@ -13,14 +13,17 @@
             type="woowacourse.shopping.presentation.home.HomeViewModel" />
 
         <variable
+            name="historyAdapter"
+            type="woowacourse.shopping.presentation.home.HistoryAdapter" />
+
+        <variable
             name="productAdapter"
             type="woowacourse.shopping.presentation.home.ProductAdapter" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.home.HomeActivity">
+        android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_home"
@@ -32,7 +35,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_home"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:theme="@style/Theme.Shopping">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -43,21 +47,44 @@
                     android:textStyle="bold" />
 
             </androidx.appcompat.widget.Toolbar>
-
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_home"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:adapter="@{productAdapter}"
-            android:clipToPadding="false"
-            android:padding="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appbar_home"
-            shopping:data="@{viewModel.products}"
-            shopping:loadStatus="@{viewModel.loadStatus}"
-            tools:listitem="@layout/item_product" />
+            android:layout_height="match_parent"
+            tools:context=".presentation.home.HomeActivity"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:fillViewport="true">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/item_product_history_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    shopping:recentProducts="@{viewModel.productHistory}"
+                    shopping:adapter="@{historyAdapter}"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adapter="@{productAdapter}"
+                    android:clipToPadding="false"
+                    android:padding="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_history"
+                    shopping:data="@{viewModel.products}"
+                    shopping:loadStatus="@{viewModel.loadStatus}"
+                    tools:listitem="@layout/item_product" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

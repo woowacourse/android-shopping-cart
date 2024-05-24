@@ -22,4 +22,5 @@
 
     <string name="button_minus">-</string>
     <string name="button_plus">+</string>
+    <string name="header_history">최근 본 상품</string>
 </resources>

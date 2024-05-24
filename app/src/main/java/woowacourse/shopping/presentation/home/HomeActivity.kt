@@ -4,13 +4,13 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -32,7 +32,8 @@ class HomeActivity : AppCompatActivity() {
             application.productHistoryRepository,
         )
     }
-    private val adapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }
+    private val productAdapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }
+    private val historyAdapter: HistoryAdapter by lazy { HistoryAdapter(viewModel) }
     private val activityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -71,12 +72,13 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initializeProductListLayout() {
         val layoutManager = GridLayoutManager(this, 2)
-        layoutManager.spanSizeLookup = ProductItemSpanSizeLookup(adapter)
+        layoutManager.spanSizeLookup = ProductItemSpanSizeLookup(productAdapter)
         binding.rvHome.layoutManager = layoutManager
     }
 
     private fun initializeBindingVariables() {
-        binding.productAdapter = adapter
+        binding.productAdapter = productAdapter
+        binding.historyAdapter = historyAdapter
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
@@ -100,10 +102,10 @@ class HomeActivity : AppCompatActivity() {
             activityResultLauncher.launch(CartActivity.newIntent(this))
         }
         viewModel.products.observe(this) {
-            adapter.setData(it)
+            productAdapter.setData(it)
         }
         viewModel.changedPosition.observe(this) {
-            adapter.notifyItemChanged(it.getContentIfNotHandled() ?: return@observe)
+            productAdapter.notifyItemChanged(it.getContentIfNotHandled() ?: return@observe)
         }
     }
 }

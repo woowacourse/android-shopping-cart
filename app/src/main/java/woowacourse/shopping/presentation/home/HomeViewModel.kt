@@ -52,7 +52,7 @@ class HomeViewModel(
 
     init {
         loadProducts()
-//        loadHistory()
+        loadHistory()
     }
 
     private fun loadProducts() {
@@ -93,7 +93,7 @@ class HomeViewModel(
     override fun navigateToProductDetail(id: Long) {
         thread {
             productHistoryRepository.addProductHistory(ProductHistory(productId = id))
-//            loadHistory()
+            loadHistory()
             _navigateToDetailEvent.postValue(Event(id))
         }
     }
