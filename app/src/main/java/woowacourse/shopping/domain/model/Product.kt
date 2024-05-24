@@ -9,6 +9,9 @@ data class Product(
     val quantity: Int = INIT_QUANTITY_NUM,
     val imageUrl: String,
 ) : Serializable {
+    val totalPrice: Int
+        get() = price * quantity
+
     companion object {
         const val INIT_QUANTITY_NUM = 0
     }
