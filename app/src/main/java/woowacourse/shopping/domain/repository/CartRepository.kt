@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.model.Product
 interface CartRepository {
     fun insert(
         product: Product,
-        quantity: Int,
+        quantity: Int = DEFAULT_QUANTITY,
     )
 
     fun update(
@@ -14,7 +14,11 @@ interface CartRepository {
         quantity: Int,
     )
 
-    fun size(): Int
+    fun itemCount(): Int
+
+    fun totalQuantity(): Int
+
+    fun productQuantity(productId: Long): Int
 
     fun findOrNullWithProductId(productId: Long): CartItem?
 
@@ -30,4 +34,8 @@ interface CartRepository {
     fun delete(cartItemId: Long)
 
     fun deleteAll()
+
+    companion object {
+        const val DEFAULT_QUANTITY = 1
+    }
 }

@@ -20,7 +20,7 @@ fun CartItemEntity.toDomainModel(): CartItem {
         productId = this.productId,
         productName = this.productName,
         price = this.price,
-        imgUrl = this.imgUrl,
-        quantity = this.quantity,
+        imageUrl = this.imgUrl,
+        _quantity = this.quantity,
     )
 }

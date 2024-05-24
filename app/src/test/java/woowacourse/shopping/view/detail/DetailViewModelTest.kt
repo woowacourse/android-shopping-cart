@@ -39,11 +39,11 @@ class DetailViewModelTest {
 
     @Test
     fun `선택된 상품의 상세 정보를 가져온다`() {
-        val actual = viewModel.product
+        val actual = viewModel.product.value
 
-        assertThat(actual.name).isEqualTo("1 대전 장인약과")
-        assertThat(actual.price).isEqualTo(10000)
-        assertThat(actual.imageUrl).isEqualTo(
+        assertThat(actual?.name).isEqualTo("1 대전 장인약과")
+        assertThat(actual?.price).isEqualTo(10000)
+        assertThat(actual?.imageUrl).isEqualTo(
             "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
                 "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
                 "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
@@ -53,15 +53,15 @@ class DetailViewModelTest {
 
     @Test
     fun `아무것도 담지 않은 장바구니의 크기는 0 이다`() {
-        val actual = testCartRepository.size()
+        val actual = testCartRepository.itemCount()
 
         assertThat(actual).isEqualTo(0)
     }
 
     @Test
     fun `상품을 장바구니에 담으면 장바구니의 사이즈가 증가한다`() {
-        viewModel.createCartItem()
-        val actual = testCartRepository.size()
+        viewModel.createCartItem(1)
+        val actual = testCartRepository.itemCount()
 
         assertThat(actual).isEqualTo(1)
     }

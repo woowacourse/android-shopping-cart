@@ -6,6 +6,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication.Companion.database
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.Product
@@ -21,7 +23,7 @@ class ShoppingActivity : AppCompatActivity() {
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentAdapter: RecentAdapter
     private val viewModel: ShoppingViewModel by viewModels {
-        ShoppingViewModelFactory(ShoppingRepositoryImpl())
+        ShoppingViewModelFactory(ShoppingRepositoryImpl(), CartRepositoryImpl(database))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -7,9 +7,11 @@ import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.view.cart.CartItemClickListener
 import woowacourse.shopping.view.cart.CartViewModel.Companion.PAGE_SIZE
+import woowacourse.shopping.view.cart.QuantityClickListener
 
 class CartAdapter(
-    private val clickListener: CartItemClickListener,
+    private val cartItemClickListener: CartItemClickListener,
+    private val quantityClickListener: QuantityClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
 
@@ -26,7 +28,7 @@ class CartAdapter(
         position: Int,
     ) {
         val cartItem = cartItems[position]
-        return holder.bind(cartItem, clickListener)
+        return holder.bind(cartItem, cartItemClickListener, quantityClickListener)
     }
 
     override fun getItemCount(): Int {
@@ -52,5 +54,11 @@ class CartAdapter(
                 notifyItemRangeRemoved(removedPosition, oldSize - removedPosition)
             }
         }
+    }
+
+    fun updateCartItemQuantity(cartItem: CartItem) {
+        val position = cartItems.indexOfFirst { it.id == cartItem.id }
+        (cartItems as MutableList)[position] = cartItem
+        notifyItemChanged(position, "click")
     }
 }

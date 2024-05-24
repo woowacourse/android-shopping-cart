@@ -8,7 +8,10 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.state.UIState
 
-class CartViewModel(private val repository: CartRepository) : ViewModel(), CartItemClickListener {
+class CartViewModel(private val cartRepository: CartRepository) :
+    ViewModel(),
+    CartItemClickListener,
+    QuantityClickListener {
     private var lastPage: Int = DEFAULT_PAGE
 
     private val _cartUiState = MutableLiveData<UIState<List<CartItem>>>(UIState.Empty)
@@ -27,8 +30,8 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
     private val _isEmpty = MutableLiveData(true)
     val isEmpty: LiveData<Boolean> = _isEmpty
 
-    private val _isPageControlVisible = MutableLiveData(false)
-    val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
+    private val _isPageControlButtonVisible = MutableLiveData(false)
+    val isPageControlButtonVisible: LiveData<Boolean> = _isPageControlButtonVisible
 
     private val _navigateToDetail = MutableLiveData<Event<Long>>()
     val navigateToDetail: LiveData<Event<Long>>
@@ -42,16 +45,20 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
     val isBackButtonClicked: LiveData<Event<Boolean>>
         get() = _isBackButtonClicked
 
+    private val _updatedCartItem = MutableLiveData<CartItem>()
+    val updatedCartItem: LiveData<CartItem>
+        get() = _updatedCartItem
+
     init {
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 
     private fun updatePageControlVisibility(totalItems: Int) {
-        _isPageControlVisible.value = totalItems > PAGE_SIZE
+        _isPageControlButtonVisible.value = totalItems > PAGE_SIZE
     }
 
     fun loadPage(page: Int) {
-        val totalItems = repository.size()
+        val totalItems = cartRepository.itemCount()
         lastPage = (totalItems - PAGE_STEP) / PAGE_SIZE
 
         _currentPage.value = page.coerceIn(DEFAULT_PAGE, lastPage)
@@ -65,7 +72,7 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
     fun loadCartItems() {
         try {
             val cartItems =
-                repository.findAllPagedItems(currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE)
+                cartRepository.findAllPagedItems(currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE)
             if (cartItems.isEmpty()) {
                 _cartUiState.value = UIState.Empty
                 _isEmpty.value = true
@@ -89,14 +96,8 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
     }
 
     fun deleteItem(itemId: Long) {
-        repository.delete(itemId)
+        cartRepository.delete(itemId)
         loadPage(currentPage.value ?: DEFAULT_PAGE)
-    }
-
-    companion object {
-        const val PAGE_SIZE = 5
-        private const val DEFAULT_PAGE = 0
-        private const val PAGE_STEP = 1
     }
 
     override fun onCartItemClick(productId: Long) {
@@ -105,10 +106,31 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
 
     override fun onDeleteButtonClick(itemId: Long) {
         deleteItem(itemId)
+        cartRepository.delete(itemId)
         _notifyDeletion.value = Event(true)
     }
 
     override fun onBackButtonClick() {
         _isBackButtonClicked.value = Event(true)
+    }
+
+    override fun onPlusButtonClick(productId: Long) {
+        val cartItem = cartRepository.findOrNullWithProductId(productId) ?: return
+        cartItem.plusQuantity()
+        cartRepository.update(productId, cartItem.quantity)
+        _updatedCartItem.value = cartItem
+    }
+
+    override fun onMinusButtonClick(productId: Long) {
+        val cartItem = cartRepository.findOrNullWithProductId(productId) ?: return
+        cartItem.minusQuantity()
+        cartRepository.update(productId, cartItem.quantity)
+        _updatedCartItem.value = cartItem
+    }
+
+    companion object {
+        const val PAGE_SIZE = 5
+        private const val DEFAULT_PAGE = 0
+        private const val PAGE_STEP = 1
     }
 }

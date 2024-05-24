@@ -3,17 +3,24 @@ package woowacourse.shopping.view.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.CartRepository.Companion.DEFAULT_QUANTITY
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.util.Event
+import woowacourse.shopping.view.cart.QuantityClickListener
 import woowacourse.shopping.view.state.UIState
 
 class DetailViewModel(
     private val cartRepository: CartRepository,
     private val shoppingRepository: ShoppingRepository,
     private val productId: Long,
-) : ViewModel(), DetailClickListener {
+) : ViewModel(), DetailClickListener, QuantityClickListener {
+    private val _product: MutableLiveData<Product> = MutableLiveData()
+    val product: LiveData<Product>
+        get() = _product
+
     private val _detailUiState = MutableLiveData<UIState<Product>>(UIState.Empty)
     val detailUiState: LiveData<UIState<Product>>
         get() = _detailUiState
@@ -26,9 +33,14 @@ class DetailViewModel(
     val isFinishButtonClicked: LiveData<Event<Boolean>>
         get() = _isFinishButtonClicked
 
-    private lateinit var _product: Product
-    val product: Product
-        get() = _product
+    private var _quantity = MutableLiveData(1)
+    val quantity: LiveData<Int>
+        get() = _quantity
+
+    val totalPrice: LiveData<Long> =
+        quantity.map {
+            product.value?.price?.times(it) ?: 0
+        }
 
     init {
         loadProduct()
@@ -37,26 +49,35 @@ class DetailViewModel(
     private fun loadProduct() {
         try {
             val productData = shoppingRepository.findProductById(productId)
-            _product = productData
-            _detailUiState.value = UIState.Success(product)
+            _product.value = productData
+            _detailUiState.value = UIState.Success(productData)
         } catch (e: Exception) {
             _detailUiState.value = UIState.Error(e)
         }
     }
 
-    fun createCartItem() {
-        val item = detailUiState.value ?: return
-        if (item is UIState.Success) {
+    fun createCartItem(quantity: Int) {
+        val state = detailUiState.value
+        if (state is UIState.Success) {
             cartRepository.insert(
-                product = item.data,
-                quantity = 1,
+                product = state.data,
+                quantity = quantity,
             )
         }
     }
 
     override fun onPutCartButtonClick() {
-        createCartItem()
+        val currentQuantity = cartRepository.productQuantity(productId)
+        createCartItem(currentQuantity + (quantity.value ?: DEFAULT_QUANTITY))
         _navigateToCart.value = Event(true)
+    }
+
+    override fun onPlusButtonClick(productId: Long) {
+        _quantity.value = quantity.value?.plus(1)
+    }
+
+    override fun onMinusButtonClick(productId: Long) {
+        _quantity.value = (quantity.value?.minus(1))?.coerceAtLeast(1)
     }
 
     override fun onFinishButtonClick() {

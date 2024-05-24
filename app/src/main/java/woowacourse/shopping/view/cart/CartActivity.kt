@@ -20,7 +20,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var adapter: CartAdapter
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = CartRepositoryImpl(database),
+            cartRepository = CartRepositoryImpl(database),
         )
     }
 
@@ -39,7 +39,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setUpAdapter() {
-        adapter = CartAdapter(viewModel)
+        adapter = CartAdapter(viewModel, viewModel)
         binding.rvCart.adapter = adapter
     }
 
@@ -53,6 +53,10 @@ class CartActivity : AppCompatActivity() {
                         state.exception.message ?: getString(R.string.unknown_error),
                     )
             }
+        }
+
+        viewModel.updatedCartItem.observe(this) { cartItem ->
+            adapter.updateCartItemQuantity(cartItem)
         }
 
         viewModel.navigateToDetail.observe(this) {

@@ -4,14 +4,17 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.view.cart.CartItemClickListener
+import woowacourse.shopping.view.cart.QuantityClickListener
 
 class CartViewHolder(private val binding: ItemCartBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
         cartItem: CartItem,
-        clickListener: CartItemClickListener,
+        cartItemClickListener: CartItemClickListener,
+        quantityClickListener: QuantityClickListener,
     ) {
         binding.cartItem = cartItem
-        binding.clickListener = clickListener
+        binding.cartItemClickListener = cartItemClickListener
+        binding.quantityClickListener = quantityClickListener
     }
 }

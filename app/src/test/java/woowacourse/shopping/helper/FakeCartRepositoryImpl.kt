@@ -17,8 +17,8 @@ class FakeCartRepositoryImpl : CartRepository {
                 productId = product.id,
                 productName = product.name,
                 price = product.price,
-                imgUrl = product.imageUrl,
-                quantity = quantity,
+                imageUrl = product.imageUrl,
+                _quantity = quantity,
             ),
         )
     }
@@ -29,8 +29,16 @@ class FakeCartRepositoryImpl : CartRepository {
     ) {
     }
 
-    override fun size(): Int {
+    override fun itemCount(): Int {
         return cartItems.size
+    }
+
+    override fun totalQuantity(): Int {
+        return 1
+    }
+
+    override fun productQuantity(productId: Long): Int {
+        return 1
     }
 
     override fun findOrNullWithProductId(productId: Long): CartItem? {

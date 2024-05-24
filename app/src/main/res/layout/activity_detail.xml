@@ -90,6 +90,7 @@
             android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
+            app:price="@{viewModel.totalPrice}"
             tools:text="10,000원" />
 
         <include
@@ -99,8 +100,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
+            app:clickListener="@{viewModel}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:productId="@{viewModel.product.id}"
+            app:quantity="@{viewModel.quantity}" />
 
         <TextView
             android:id="@+id/btn_put_cart"

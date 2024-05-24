@@ -67,7 +67,7 @@ class CartViewModelTest {
         viewModel.loadCartItems()
 
         // then
-        val isVisible = viewModel.isPageControlVisible.getOrAwaitValue()
+        val isVisible = viewModel.isPageControlButtonVisible.getOrAwaitValue()
         assertThat(isVisible).isFalse()
     }
 
@@ -85,7 +85,7 @@ class CartViewModelTest {
         viewModel.loadPage(0)
 
         // then
-        val isVisible = viewModel.isPageControlVisible.getOrAwaitValue()
+        val isVisible = viewModel.isPageControlButtonVisible.getOrAwaitValue()
         assertThat(isVisible).isTrue()
     }
 
@@ -201,7 +201,7 @@ class CartViewModelTest {
 
         // then
         val currentPage = viewModel.currentPage.getOrAwaitValue()
-        val isVisible = viewModel.isPageControlVisible.getOrAwaitValue()
+        val isVisible = viewModel.isPageControlButtonVisible.getOrAwaitValue()
         assertThat(currentPage).isEqualTo(0)
         assertThat(isVisible).isFalse()
     }

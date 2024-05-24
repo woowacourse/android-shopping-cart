@@ -28,18 +28,33 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         productId: Long,
         quantity: Int,
     ) {
-        val currentQuantity = findOrNullWithProductId(productId)?.quantity ?: 0
         threadAction {
-            dao.update(productId, currentQuantity + quantity)
+            dao.update(productId, quantity)
         }
     }
 
-    override fun size(): Int {
-        var size = 0
+    override fun itemCount(): Int {
+        var itemSize = 0
         threadAction {
-            size = dao.size()
+            itemSize = dao.itemSize()
         }
-        return size
+        return itemSize
+    }
+
+    override fun totalQuantity(): Int {
+        var totalQuantity = 0
+        threadAction {
+            totalQuantity = dao.totalQuantity()
+        }
+        return totalQuantity
+    }
+
+    override fun productQuantity(productId: Long): Int {
+        var productQuantity = 0
+        threadAction {
+            productQuantity = dao.productQuantity(productId)
+        }
+        return productQuantity
     }
 
     override fun findOrNullWithProductId(productId: Long): CartItem? {

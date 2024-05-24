@@ -4,13 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.state.UIState
 
-class ShoppingViewModel(private val repository: ShoppingRepository) :
+class ShoppingViewModel(
+    private val shoppingRepository: ShoppingRepository,
+    private val cartRepository: CartRepository,
+) :
     ViewModel(),
-    ShoppingClickListener {
+        ShoppingClickListener {
     private val _shoppingUiState = MutableLiveData<UIState<List<Product>>>(UIState.Empty)
     val shoppingUiState: LiveData<UIState<List<Product>>>
         get() = _shoppingUiState
@@ -18,6 +22,14 @@ class ShoppingViewModel(private val repository: ShoppingRepository) :
     private val _canLoadMore = MutableLiveData(false)
     val canLoadMore: LiveData<Boolean>
         get() = _canLoadMore
+
+    private val _totalQuantity = MutableLiveData(0)
+    val totalQuantity: LiveData<Int>
+        get() = _totalQuantity
+
+    private val _isQuantityControlVisible = MutableLiveData(false)
+    val isQuantityControlVisible: LiveData<Boolean>
+        get() = _isQuantityControlVisible
 
     private val _navigateToDetail = MutableLiveData<Event<Long>>()
     val navigateToDetail: LiveData<Event<Long>>
@@ -31,21 +43,26 @@ class ShoppingViewModel(private val repository: ShoppingRepository) :
 
     init {
         loadProducts()
+        loadTotalQuantity()
     }
 
     fun loadProducts() {
         try {
-            val products = repository.findProductsByPage()
+            val products = shoppingRepository.findProductsByPage()
             if (products.isEmpty()) {
                 _shoppingUiState.value = UIState.Empty
             } else {
-                _canLoadMore.value = repository.canLoadMore()
+                _canLoadMore.value = shoppingRepository.canLoadMore()
                 _shoppingUiState.value = UIState.Success(loadedProducts + products)
                 loadedProducts += products
             }
         } catch (e: Exception) {
             _shoppingUiState.value = UIState.Error(e)
         }
+    }
+
+    private fun loadTotalQuantity() {
+        _totalQuantity.value = cartRepository.totalQuantity()
     }
 
     override fun onLoadMoreButtonClick() {
@@ -56,11 +73,17 @@ class ShoppingViewModel(private val repository: ShoppingRepository) :
         _navigateToCart.value = Event(true)
     }
 
-    companion object {
-        const val PAGE_SIZE = 20
+    override fun onPlusButtonClick(product: Product) {
+        cartRepository.insert(product)
+        _isQuantityControlVisible.value = true
+        loadTotalQuantity()
     }
 
     override fun onProductClick(productId: Long) {
         _navigateToDetail.value = Event(productId)
+    }
+
+    companion object {
+        const val PAGE_SIZE = 20
     }
 }

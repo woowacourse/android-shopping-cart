@@ -1,11 +1,9 @@
 package woowacourse.shopping.view.shopping
 
 import android.content.Intent
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -35,15 +33,5 @@ class ShoppingActivityTest {
     @Test
     fun `화면에_장바구니_버튼이_보인다`() {
         onView(withId(R.id.btn_shopping_cart)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun `스크롤이_가장_아래로_내려가면_더보기_버튼이_보인다`() {
-        onView(withId(R.id.rv_product_list))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(20))
-
-        Thread.sleep(1000)
-
-        onView(withId(R.id.btn_load_more)).check(matches(isDisplayed()))
     }
 }

@@ -89,7 +89,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_cart"
-            app:viewVisibility="@{viewModel.isPageControlVisible}">
+            app:viewVisibility="@{viewModel.isPageControlButtonVisible}">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_before"

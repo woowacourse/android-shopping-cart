@@ -7,24 +7,27 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.helper.FakeCartRepositoryImpl
 import woowacourse.shopping.helper.InstantTaskExecutorExtension
 import woowacourse.shopping.view.state.UIState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingViewModelTest {
     private lateinit var viewModel: ShoppingViewModel
-    private val repository: ShoppingRepository = mockk()
+    private val shoppingRepository: ShoppingRepository = mockk()
+    private val cartRepository: CartRepository = FakeCartRepositoryImpl()
 
     @BeforeEach
     fun setUp() {
-        viewModel = ShoppingViewModel(repository)
+        viewModel = ShoppingViewModel(shoppingRepository, cartRepository)
     }
 
     @Test
     fun `초기 로딩 시 빈 데이터가 주어지면 UIState는 Empty로 설정된다`() {
-        every { repository.findProductsByPage() } returns emptyList()
-        every { repository.canLoadMore() } returns false
+        every { shoppingRepository.findProductsByPage() } returns emptyList()
+        every { shoppingRepository.canLoadMore() } returns false
 
         viewModel.loadProducts()
 
@@ -43,8 +46,8 @@ class ShoppingViewModelTest {
                     imageUrl = "URL $it",
                 )
             }
-        every { repository.findProductsByPage() } returns products
-        every { repository.canLoadMore() } returns true
+        every { shoppingRepository.findProductsByPage() } returns products
+        every { shoppingRepository.canLoadMore() } returns true
 
         viewModel.loadProducts()
 
@@ -63,8 +66,8 @@ class ShoppingViewModelTest {
                     imageUrl = "URL $it",
                 )
             }
-        every { repository.findProductsByPage() } returns products
-        every { repository.canLoadMore() } returns false
+        every { shoppingRepository.findProductsByPage() } returns products
+        every { shoppingRepository.canLoadMore() } returns false
 
         viewModel.loadProducts()
 
