@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.database.CartDatabase
 import woowacourse.shopping.data.mapper.toCartItemEntity
 import woowacourse.shopping.data.mapper.toDomainModel
+import woowacourse.shopping.data.mapper.toNewCartItemEntity
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.ProductWithQuantity
@@ -13,11 +14,11 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(productWithQuantity: ProductWithQuantity) {
-        if (findOrNullWithProductId(productWithQuantity.product.id) != null) {
-            plusQuantity(productWithQuantity.product.id, productWithQuantity.quantity)
-        } else {
-            threadAction {
-                dao.save(productWithQuantity.toCartItemEntity())
+        threadAction {
+            if (productWithQuantity.quantity > 0) {
+                dao.insert(productWithQuantity.toCartItemEntity())
+            } else {
+                dao.insert(productWithQuantity.toNewCartItemEntity())
             }
         }
     }
@@ -34,8 +35,8 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         productId: Long,
         quantity: Int,
     ) {
-        val currentQuantity = findOrNullWithProductId(productId)?.quantity ?: 0
         threadAction {
+            val currentQuantity = findWithProductId(productId).quantity
             dao.updateQuantity(productId, currentQuantity + quantity)
         }
     }
@@ -44,11 +45,11 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         productId: Long,
         quantity: Int,
     ) {
-        val currentQuantity = findOrNullWithProductId(productId)?.quantity ?: 0
-        if (currentQuantity - quantity <= 0) {
-            delete(productId)
-        } else {
-            threadAction {
+        threadAction {
+            val currentQuantity = findWithProductId(productId).quantity
+            if (currentQuantity - quantity <= 0) {
+                dao.deleteByProductId(productId)
+            } else {
                 dao.updateQuantity(productId, currentQuantity - quantity)
             }
         }
@@ -62,13 +63,12 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         return size
     }
 
-    override fun findOrNullWithProductId(productId: Long): CartItem? {
+    override fun findWithProductId(productId: Long): CartItem {
         var cartItemEntity: CartItemEntity? = null
         threadAction {
             cartItemEntity = dao.findWithProductId(productId)
         }
-
-        return cartItemEntity?.toDomainModel()
+        return cartItemEntity?.toDomainModel() ?: throw Exception(PRODUCT_NOT_FOUND)
     }
 
     override fun sumQuantity(): Int {
@@ -85,13 +85,9 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
     ): ShoppingCart {
         var cartItems: List<CartItem> = emptyList()
         val offset = page * pageSize
-
         threadAction {
-            cartItems =
-                dao.findByPaged(offset = offset, limit = pageSize)
-                    .map { it.toDomainModel() }
+            cartItems = dao.findByPaged(offset = offset, limit = pageSize).map { it.toDomainModel() }
         }
-
         return ShoppingCart(cartItems)
     }
 
@@ -111,5 +107,9 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         val thread = Thread(action)
         thread.start()
         thread.join()
+    }
+
+    companion object {
+        private const val PRODUCT_NOT_FOUND = "해당 상품이 카트에 존재하지 않습니다."
     }
 }

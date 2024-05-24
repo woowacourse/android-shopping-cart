@@ -24,11 +24,11 @@ class ShoppingItemsRepositoryImpl(
         }
     }
 
-    override fun productWithQuantityItem(id: Long): ProductWithQuantity? {
+    override fun productWithQuantityItem(productId: Long): ProductWithQuantity? {
         var productItem: ProductWithQuantity? = null
         threadAction {
-            val product = productDao.findWithProductId(id)
-            val quantity = cartDao.getQuantityByProductId(id) ?: 1
+            val product = productDao.findWithProductId(productId)
+            val quantity = cartDao.getQuantityByProductId(productId) ?: 0
             productItem = ProductWithQuantity(product = product, quantity = quantity)
         }
         return productItem

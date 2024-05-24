@@ -24,7 +24,11 @@ class DetailViewModel(
     }
 
     private fun loadProductData() {
-        _productWithQuantity.postValue(shoppingRepository.productWithQuantityItem(productId))
+        val product =
+            shoppingRepository.productWithQuantityItem(productId)?.copy(
+                quantity = shoppingRepository.productWithQuantityItem(productId)?.quantity?.takeIf { it > 0 } ?: 1,
+            ) ?: return
+        _productWithQuantity.postValue(product)
     }
 
     fun onAddToCartClicked(productId: Long) {

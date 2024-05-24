@@ -8,7 +8,7 @@ import woowacourse.shopping.data.model.CartItemEntity
 @Dao
 interface CartDao {
     @Insert
-    fun save(cartItemEntity: CartItemEntity)
+    fun insert(cartItemEntity: CartItemEntity)
 
     @Query("UPDATE cart_items SET quantity = :quantity WHERE productId = :productId")
     fun updateQuantity(
@@ -39,6 +39,9 @@ interface CartDao {
 
     @Query("DELETE FROM cart_items WHERE id = :id")
     fun delete(id: Long)
+
+    @Query("DELETE FROM cart_items WHERE productId = :productId")
+    fun deleteByProductId(productId: Long)
 
     @Query("DELETE FROM cart_items")
     fun deleteAll()

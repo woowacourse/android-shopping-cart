@@ -26,6 +26,16 @@ fun Product.toCartItemEntity(quantity: Int): CartItemEntity {
     )
 }
 
+fun ProductWithQuantity.toNewCartItemEntity(): CartItemEntity {
+    return CartItemEntity(
+        productId = this.product.id,
+        productName = this.product.name,
+        price = this.product.price,
+        imgUrl = this.product.imageUrl,
+        quantity = 1,
+    )
+}
+
 fun ProductWithQuantity.toCartItemEntity(): CartItemEntity {
     return CartItemEntity(
         productId = this.product.id,
