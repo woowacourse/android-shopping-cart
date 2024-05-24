@@ -11,11 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.data.RecentProductEntity
-import woowacourse.shopping.model.data.RecentProductsRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
-import java.time.LocalDateTime
 
 class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
@@ -34,8 +31,6 @@ class ProductContentsActivity : AppCompatActivity() {
 
         setOnLoadMoreButtonClickListener()
         setOnRecyclerViewScrollListener()
-        val recentProductsRepository = RecentProductsRepository(this.applicationContext)
-        recentProductsRepository.insert(RecentProductEntity(0, LocalDateTime.now()))
     }
 
     override fun onResume() {
