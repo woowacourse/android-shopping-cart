@@ -8,7 +8,7 @@ class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
     override fun fetchAllCart(): List<Cart>? {
-        return cartDataSource.getAllCartItems()
+        return cartDataSource.getCarts()
     }
 
     override fun fetchTotalCartCount(): Int {
@@ -16,38 +16,38 @@ class CartRepositoryImpl(
     }
 
     override fun fetchCartItem(productId: Long): Cart? {
-        return cartDataSource.getCartItem(productId)
+        return cartDataSource.getCart(productId)
     }
 
     override fun fetchCartItems(
         page: Int,
         pageSize: Int,
     ): List<Cart> {
-        return cartDataSource.getCartItems(page, pageSize)
+        return cartDataSource.getCartsByPage(page, pageSize)
     }
 
     override fun addCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        return cartDataSource.addCartItem(productId, quantity)
+        return cartDataSource.addCart(productId, quantity)
     }
 
     override fun plusCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        return cartDataSource.plusCartItem(productId, quantity)
+        return cartDataSource.plusCartQuantity(productId, quantity)
     }
 
     override fun minusCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        return cartDataSource.minusCartItem(productId, quantity)
+        return cartDataSource.minusCartQuantity(productId, quantity)
     }
 
     override fun removeAllCartItem(productId: Long): Long {
-        return cartDataSource.removeAllCartItem(productId)
+        return cartDataSource.removeCart(productId)
     }
 }

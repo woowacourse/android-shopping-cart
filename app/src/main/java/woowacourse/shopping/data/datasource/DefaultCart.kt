@@ -10,7 +10,7 @@ class DefaultCart(
 ) : CartDataSource {
     private val cartDao = cartDatabase.cartDao()
 
-    override fun getAllCartItems(): List<Cart>? {
+    override fun getCarts(): List<Cart>? {
         var carts: List<Cart>? = null
 
         thread {
@@ -30,7 +30,7 @@ class DefaultCart(
         return count
     }
 
-    override fun getCartItem(productId: Long): Cart? {
+    override fun getCart(productId: Long): Cart? {
         var cart: Cart? = null
 
         thread {
@@ -40,7 +40,7 @@ class DefaultCart(
         return cart
     }
 
-    override fun addCartItem(
+    override fun addCart(
         productId: Long,
         quantity: Int,
     ): Long {
@@ -57,7 +57,7 @@ class DefaultCart(
         return productId
     }
 
-    override fun plusCartItem(
+    override fun plusCartQuantity(
         productId: Long,
         quantity: Int,
     ): Long {
@@ -70,7 +70,7 @@ class DefaultCart(
         return productId
     }
 
-    override fun minusCartItem(
+    override fun minusCartQuantity(
         productId: Long,
         quantity: Int,
     ): Long {
@@ -83,7 +83,7 @@ class DefaultCart(
         return productId
     }
 
-    override fun removeAllCartItem(productId: Long): Long {
+    override fun removeCart(productId: Long): Long {
         thread {
             val cart = cartDao.getCart(productId)
             cartDao.delete(cart!!)
@@ -91,13 +91,13 @@ class DefaultCart(
         return productId
     }
 
-    override fun deleteAll() {
+    override fun removeCarts() {
         thread {
             cartDao.deleteAll()
         }.join()
     }
 
-    override fun getCartItems(
+    override fun getCartsByPage(
         page: Int,
         pageSize: Int,
     ): List<Cart> {

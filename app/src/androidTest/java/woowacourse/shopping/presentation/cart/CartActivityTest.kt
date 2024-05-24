@@ -57,7 +57,7 @@ class CartActivityTest {
     @Test
     fun `장바구니_상품_목록과_페이지_내비게이터가_표출된다`() {
         repeat(6) {
-            defaultCart.addCartItem(it + 1L, 1)
+            defaultCart.addCart(it + 1L, 1)
         }
         onView(withId(R.id.rv_cart)).check(matches(isDisplayed()))
         onView(withId(R.id.btn_previous_page)).check(matches(isDisplayed()))
@@ -68,7 +68,7 @@ class CartActivityTest {
     @Test
     fun `다음_페이지_이동_버튼을_클릭하면_새로운_장바구니_상품들이_표출된다`() {
         repeat(6) {
-            defaultCart.addCartItem(it + 1L, 1)
+            defaultCart.addCart(it + 1L, 1)
         }
         onView(withId(R.id.btn_next_page)).perform(click())
         onView(withId(R.id.rv_cart)).check(
@@ -84,7 +84,7 @@ class CartActivityTest {
     @Test
     fun `이전_페이지_이동_버튼을_클릭하면_새로운_장바구니_상품들이_표출된다`() {
         repeat(6) {
-            defaultCart.addCartItem(it + 1L, 1)
+            defaultCart.addCart(it + 1L, 1)
         }
         onView(withId(R.id.btn_next_page)).perform(click())
         onView(withId(R.id.btn_previous_page)).perform(click())
