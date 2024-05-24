@@ -5,7 +5,7 @@ import woowacourse.shopping.db.producthistory.ProductHistory
 import woowacourse.shopping.db.producthistory.ProductHistoryDatabase
 import kotlin.concurrent.thread
 
-class DefaultProductHistoryDatasource(
+class DefaultProductHistoryDataSource(
     productHistoryDatabase: ProductHistoryDatabase,
 ) : ProductHistoryDataSource {
     private val productHistoryDao = productHistoryDatabase.productHistoryDao()

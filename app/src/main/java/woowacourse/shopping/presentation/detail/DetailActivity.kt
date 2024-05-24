@@ -12,9 +12,9 @@ import androidx.cardview.widget.CardView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.datasourceimpl.DefaultCart
-import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDatasource
-import woowacourse.shopping.data.datasourceimpl.DefaultProducts
+import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
+import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
+import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
@@ -47,14 +47,14 @@ class DetailActivity : AppCompatActivity() {
             ViewModelProvider(
                 this,
                 DetailViewModelFactory(
-                    ProductRepositoryImpl(DefaultProducts),
+                    ProductRepositoryImpl(DefaultProductDataSource),
                     CartRepositoryImpl(
-                        DefaultCart(
+                        DefaultCartDataSource(
                             CartDatabase.getInstance(this),
                         ),
                     ),
                     DefaultProductHistoryRepository(
-                        DefaultProductHistoryDatasource(
+                        DefaultProductHistoryDataSource(
                             ProductHistoryDatabase.getInstance(this),
                         ),
                     ),

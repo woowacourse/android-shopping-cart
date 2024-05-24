@@ -7,8 +7,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.datasourceimpl.DefaultCart
-import woowacourse.shopping.data.datasourceimpl.DefaultProducts
+import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
+import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -51,11 +51,11 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
                 this,
                 CartViewModelFactory(
                     CartRepositoryImpl(
-                        DefaultCart(
+                        DefaultCartDataSource(
                             CartDatabase.getInstance(this),
                         ),
                     ),
-                    ProductRepositoryImpl(DefaultProducts),
+                    ProductRepositoryImpl(DefaultProductDataSource),
                 ),
             )[CartViewModel::class.java]
     }

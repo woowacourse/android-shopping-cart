@@ -6,7 +6,7 @@ import woowacourse.shopping.db.cart.CartDatabase
 import kotlin.concurrent.thread
 import kotlin.math.min
 
-class DefaultCart(
+class DefaultCartDataSource(
     cartDatabase: CartDatabase,
 ) : CartDataSource {
     private val cartDao = cartDatabase.cartDao()
