@@ -12,6 +12,11 @@ class OrderListAdapter(
     private val actionHandler: ShoppingCartActionHandler,
     private var orderList: List<Order> = emptyList(),
 ) : RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>() {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recyclerView.itemAnimator = null
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
