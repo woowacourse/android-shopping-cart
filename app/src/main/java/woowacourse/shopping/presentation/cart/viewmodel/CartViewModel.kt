@@ -30,6 +30,10 @@ class CartViewModel(
     val updateOrder: LiveData<Order>
         get() = _updateOrder
 
+    private val _productIds: MutableLiveData<List<Long>> = MutableLiveData(mutableListOf())
+    val productIds: LiveData<List<Long>>
+        get() = _productIds
+
     private var hasNext: Boolean = true
 
     init {
@@ -60,7 +64,9 @@ class CartViewModel(
 
     fun loadCurrentPageCartItems() {
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return, PAGE_SIZE)
-        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return, PAGE_SIZE).isNotEmpty()
+        hasNext =
+            cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return, PAGE_SIZE)
+                .isNotEmpty()
         val products = productRepository.fetchProducts(cartItems.map { it.productId })
 
         val orders =
@@ -83,12 +89,14 @@ class CartViewModel(
     override fun onCartItemAdd(id: Long) {
         cartRepository.plusCartItem(id, 1)
 
+        _productIds.value = productIds.value?.plus(id)
         updateOrder(id)
     }
 
     override fun onCartItemMinus(id: Long) {
         cartRepository.minusCartItem(id, 1)
 
+        _productIds.value = productIds.value?.plus(id)
         updateOrder(id)
     }
 

@@ -12,6 +12,8 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.db.CartDatabase
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.cart.CartActivity.Companion.CART_RESULT_OK
+import woowacourse.shopping.presentation.cart.CartActivity.Companion.EXTRA_CART_ITEMS
 import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.detail.DetailActivity.Companion.DETAIL_RESULT_OK
 import woowacourse.shopping.presentation.detail.DetailActivity.Companion.EXTRA_DETAIL_CART_ITEM
@@ -29,6 +31,19 @@ class HomeActivity : AppCompatActivity() {
                 val productId = result?.data?.getLongExtra(EXTRA_DETAIL_CART_ITEM, 0)
 
                 viewModel.updateOrder(productId!!)
+            }
+        }
+
+    private val cartActivityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == CART_RESULT_OK) {
+                val productIds = result?.data?.getLongArrayExtra(EXTRA_CART_ITEMS)
+
+                productIds?.forEach {
+                    viewModel.updateOrder(it)
+                }
             }
         }
 
@@ -96,7 +111,7 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel.onCartClicked.observe(this) {
             it.getContentIfNotHandled()?.let {
-                startActivity(CartActivity.newIntent(this))
+                cartActivityResultLauncher.launch(CartActivity.newIntent(this))
             }
         }
     }

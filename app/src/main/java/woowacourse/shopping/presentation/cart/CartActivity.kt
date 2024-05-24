@@ -75,7 +75,13 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
+            android.R.id.home -> {
+                val resultIntent = Intent()
+                resultIntent.putExtra(EXTRA_CART_ITEMS, viewModel.productIds.value?.toLongArray())
+                setResult(CART_RESULT_OK, resultIntent)
+
+                finish()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -85,6 +91,9 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
     }
 
     companion object {
+        const val EXTRA_CART_ITEMS = "extra_cart_items"
+        const val CART_RESULT_OK = 2000
+
         fun newIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
