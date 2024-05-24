@@ -12,10 +12,17 @@ class ProductDetailViewModelFactory(
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
+    private val isNavigatedFromDetailView: Boolean,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-            return ProductDetailViewModel(productId, productRepository, recentProductRepository, cartRepository) as T
+            return ProductDetailViewModel(
+                productId,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                isNavigatedFromDetailView,
+            ) as T
         }
         throw IllegalArgumentException()
     }
