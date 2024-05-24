@@ -36,9 +36,6 @@ interface CartItemDao {
     @Update
     fun updateCartItem(cartItemEntity: CartItemEntity)
 
-    @Query("SELECT * FROM $CART_ITEMS_DB_NAME WHERE id = :cartItemId")
-    fun getCartItemByCartItemId(cartItemId: Long): CartItemEntity?
-
     @Query("SELECT SUM(quantity) FROM $CART_ITEMS_DB_NAME")
     fun getTotalQuantity(): Int
 }
