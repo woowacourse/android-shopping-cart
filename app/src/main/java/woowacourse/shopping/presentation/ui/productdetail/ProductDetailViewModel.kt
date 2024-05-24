@@ -18,7 +18,7 @@ class ProductDetailViewModel(
     private val _price: MutableLiveData<Int> = MutableLiveData()
     val price: LiveData<Int> get() = _price
 
-    private val _quantity: MutableLiveData<Int> = MutableLiveData()
+    private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
     val quantity: LiveData<Int> get() = _quantity
 
     private val _product: MutableLiveData<Product> = MutableLiveData()
@@ -26,7 +26,6 @@ class ProductDetailViewModel(
 
     init {
         savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let(::findByProductId)
-        product.value?.let(::getQuantity)
         getPrice()
     }
 
@@ -43,28 +42,20 @@ class ProductDetailViewModel(
 
     fun onAddToCartButtonClick() {
         product.value?.let { product ->
-            shoppingCartRepository.plusOrder(product)
+            quantity.value?.let { quantity ->
+                shoppingCartRepository.plusOrder(product, quantity)
+            }
             showMessage(ProductDetailMessage.AddToCartSuccessMessage)
         }
     }
 
     override fun onClickPlusOrderButton() {
-        product.value?.let { product ->
-            shoppingCartRepository.plusOrder(product)
-            getQuantity(product)
-            getPrice()
-        }
+        _quantity.value = _quantity.value?.plus(1)
     }
 
     override fun onClickMinusOrderButton() {
-        product.value?.let { product ->
-            _quantity.value?.let {
-                if (it > 1) {
-                    shoppingCartRepository.minusOrder(product)
-                    getQuantity(product)
-                    getPrice()
-                }
-            }
+        quantity.value?.let { value ->
+            if (value > 1) _quantity.value = value - 1
         }
     }
 

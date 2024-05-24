@@ -31,11 +31,29 @@ object DummyShoppingCart : ShoppingCartRepository {
         orders.add(newOrder)
     }
 
+    override fun plusOrder(
+        product: Product,
+        count: Int,
+    ) {
+        repeat(count) {
+            plusOrder(product)
+        }
+    }
+
     override fun plusOrder(orderId: Int) {
         val order = orders.find { order -> order.id == orderId } ?: throw NoSuchElementException()
         val newOrder = order.copy(quantity = order.quantity + 1)
         orders.removeIf { it.id == orderId }
         orders.add(newOrder)
+    }
+
+    override fun plusOrder(
+        orderId: Int,
+        count: Int,
+    ) {
+        repeat(count) {
+            plusOrder(orderId)
+        }
     }
 
     override fun minusOrder(product: Product) {

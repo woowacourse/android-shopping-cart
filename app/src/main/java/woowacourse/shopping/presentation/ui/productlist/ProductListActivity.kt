@@ -28,6 +28,11 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
 
+    override fun onResume() {
+        super.onResume()
+        initPage()
+    }
+
     override fun initStartView() {
         initPage()
         initDataBinding()
