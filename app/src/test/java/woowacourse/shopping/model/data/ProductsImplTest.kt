@@ -3,6 +3,7 @@ package woowacourse.shopping.model.data
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.product.ProductsImpl
 import woowacourse.shopping.model.Product
 
 class ProductsImplTest {

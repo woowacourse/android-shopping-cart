@@ -8,12 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.CartDatabase
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductsImpl
+import woowacourse.shopping.data.recentproduct.RecentProductDatabase
+import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
-import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.db.cart.CartDatabase
-import woowacourse.shopping.model.db.cart.CartRepositoryImpl
-import woowacourse.shopping.model.db.recentproduct.RecentProductDatabase
-import woowacourse.shopping.model.db.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductAdapter

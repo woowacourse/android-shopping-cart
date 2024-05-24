@@ -17,11 +17,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.FakeCartDao
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.Cart
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductsImpl
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
-import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.db.cart.Cart
-import woowacourse.shopping.model.db.cart.CartRepositoryImpl
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 
 @RunWith(AndroidJUnit4::class)

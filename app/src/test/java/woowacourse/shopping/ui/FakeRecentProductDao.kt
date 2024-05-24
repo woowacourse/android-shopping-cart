@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui
 
-import woowacourse.shopping.model.db.recentproduct.RecentProduct
-import woowacourse.shopping.model.db.recentproduct.RecentProductDao
+import woowacourse.shopping.data.recentproduct.RecentProduct
+import woowacourse.shopping.data.recentproduct.RecentProductDao
 import java.time.LocalDateTime
 
 object FakeRecentProductDao : RecentProductDao {

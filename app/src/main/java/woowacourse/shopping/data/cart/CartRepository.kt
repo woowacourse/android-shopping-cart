@@ -1,4 +1,4 @@
-package woowacourse.shopping.model.db.cart
+package woowacourse.shopping.data.cart
 
 interface CartRepository {
     fun insert(cart: Cart): Long

@@ -1,4 +1,4 @@
-package woowacourse.shopping.model.db.recentproduct
+package woowacourse.shopping.data.recentproduct
 
 interface RecentProductRepository {
     fun insert(productId: Long): Long

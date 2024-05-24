@@ -1,4 +1,4 @@
-package woowacourse.shopping.model.data
+package woowacourse.shopping.data.product
 
 import woowacourse.shopping.model.Product
 import kotlin.math.min

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import woowacourse.shopping.data.cart.Cart
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.ProductWithQuantity
-import woowacourse.shopping.model.data.ProductDao
-import woowacourse.shopping.model.db.cart.Cart
-import woowacourse.shopping.model.db.cart.CartRepository
 import kotlin.concurrent.thread
 
 class CartViewModel(

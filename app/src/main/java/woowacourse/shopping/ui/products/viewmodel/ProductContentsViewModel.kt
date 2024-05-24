@@ -5,15 +5,15 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import woowacourse.shopping.data.cart.Cart
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.product.ProductsImpl
+import woowacourse.shopping.data.recentproduct.RecentProduct
+import woowacourse.shopping.data.recentproduct.RecentProductRepository
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
-import woowacourse.shopping.model.data.ProductDao
-import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.db.cart.Cart
-import woowacourse.shopping.model.db.cart.CartRepository
-import woowacourse.shopping.model.db.recentproduct.RecentProduct
-import woowacourse.shopping.model.db.recentproduct.RecentProductRepository
 import kotlin.concurrent.thread
 
 class ProductContentsViewModel(

@@ -1,4 +1,4 @@
-package woowacourse.shopping.model.db.cart
+package woowacourse.shopping.data.cart
 
 class CartRepositoryImpl private constructor(private val cartDao: CartDao) : CartRepository {
     override fun insert(cart: Cart): Long = cartDao.insert(cart)
