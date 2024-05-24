@@ -2,7 +2,7 @@ package woowacourse.shopping.repository
 
 import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.PagingStrategy
-import woowacourse.shopping.data.ProductData
+import woowacourse.shopping.data.model.ProductData
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 
 class FakeShoppingProductsRepository(

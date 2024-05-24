@@ -1,6 +1,6 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.data.ProductIdsCountData
+import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.data.source.ProductIdsCountDataSource
 
 class FakeProductIdsCountDataSource(

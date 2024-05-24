@@ -8,7 +8,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.data.ProductData" />
+            type="woowacourse.shopping.data.model.ProductData" />
 
         <variable
             name="quantity"

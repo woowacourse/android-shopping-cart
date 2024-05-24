@@ -1,6 +1,6 @@
 package woowacourse.shopping.testfixture
 
-import woowacourse.shopping.data.ProductIdsCountData
+import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.domain.model.ProductIdsCount
 
 /**

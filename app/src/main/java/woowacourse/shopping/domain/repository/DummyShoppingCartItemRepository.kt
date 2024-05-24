@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.PagingStrategy
-import woowacourse.shopping.data.ProductData
+import woowacourse.shopping.data.model.ProductData
 
 class DummyShoppingCartItemRepository(private val pagingStrategy: PagingStrategy<ProductData>) :
     ShoppingCartItemRepository {

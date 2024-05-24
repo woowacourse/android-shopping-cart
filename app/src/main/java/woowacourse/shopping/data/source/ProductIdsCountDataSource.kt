@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.data.ProductIdsCountData
+import woowacourse.shopping.data.model.ProductIdsCountData
 
 interface ProductIdsCountDataSource {
     fun findByProductId(productId: Int): ProductIdsCountData

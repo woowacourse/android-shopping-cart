@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.ProductData
+import woowacourse.shopping.data.model.ProductData
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository

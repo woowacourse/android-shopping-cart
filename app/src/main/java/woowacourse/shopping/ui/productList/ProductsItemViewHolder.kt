@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.productList
 
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.ProductData
+import woowacourse.shopping.data.model.ProductData
 import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.domain.model.ProductIdsCount
 

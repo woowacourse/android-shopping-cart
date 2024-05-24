@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.source
 
-import woowacourse.shopping.data.ProductIdsCountData
+import woowacourse.shopping.data.model.ProductIdsCountData
 
 class DummyProductIdsCountDataSource : ProductIdsCountDataSource {
     override fun findByProductId(productId: Int): ProductIdsCountData =

@@ -3,7 +3,7 @@ package woowacourse.shopping.source
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.ProductIdsCountData
+import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
 import woowacourse.shopping.data.source.ProductIdsCountDataSource
 

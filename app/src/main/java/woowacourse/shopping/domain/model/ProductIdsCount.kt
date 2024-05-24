@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.model
 
-import woowacourse.shopping.data.ProductIdsCountData
+import woowacourse.shopping.data.model.ProductIdsCountData
 
 data class ProductIdsCount(
     val productId: Int,

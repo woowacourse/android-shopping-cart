@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.data.ProductData
+import woowacourse.shopping.data.model.ProductData
 
 interface ShoppingCartItemRepository {
     fun addCartItem(product: ProductData): Int
