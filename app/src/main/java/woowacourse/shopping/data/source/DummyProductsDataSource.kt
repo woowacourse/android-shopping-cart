@@ -7,7 +7,7 @@ class DummyProductsDataSource(
     private val pagingStrategy: PagingStrategy<ProductData>,
 ) :
     ProductDataSource {
-    override fun loadPagedItems(page: Int): List<ProductData> = pagingStrategy.loadPagedData(page, allProducts)
+    override fun findByPaged(page: Int): List<ProductData> = pagingStrategy.loadPagedData(page, allProducts)
 
     override fun findById(id: Int): ProductData =
         allProducts.find { it.id == id }

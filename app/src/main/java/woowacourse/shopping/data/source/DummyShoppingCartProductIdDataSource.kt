@@ -2,7 +2,7 @@ package woowacourse.shopping.data.source
 
 import woowacourse.shopping.data.model.ProductIdsCountData
 
-class DummyProductIdsCountDataSource : ProductIdsCountDataSource {
+class DummyShoppingCartProductIdDataSource : ShoppingCartProductIdDataSource {
     override fun findByProductId(productId: Int): ProductIdsCountData =
         productIdsCount.find { it.productId == productId }
             ?: throw NoSuchElementException("there is no productId: $productId in DummyProductIdsCountDataSource")

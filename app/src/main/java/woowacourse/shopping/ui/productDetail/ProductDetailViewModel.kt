@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.ProductData
-import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
+import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.domain.repository.ProductIdsCountRepository
@@ -18,10 +18,10 @@ class ProductDetailViewModel(
     shoppingProductsRepository: ShoppingProductsRepository,
     private val productIdsCountRepository: ProductIdsCountRepository =
         DefaultProductIdsCountRepository(
-            DummyProductIdsCountDataSource(),
+            DummyShoppingCartProductIdDataSource(),
         ),
 ) : ViewModel(), ProductRecyclerViewAdapter.OnItemQuantityChangeListener {
-    val currentProduct: ProductData = shoppingProductsRepository.findById(productId)
+    val currentProduct: ProductData = shoppingProductsRepository.loadProduct(productId)
 
     private val _productCount: MutableLiveData<Int> =
         MutableLiveData(

@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.repository.ProductIdsCountRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
-import woowacourse.shopping.repository.FakeProductIdsCountDataSource
+import woowacourse.shopping.repository.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.repository.FakeShoppingProductsRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
@@ -24,7 +24,7 @@ class ProductDetailViewModelTest {
         shoppingProductsRepository = FakeShoppingProductsRepository(productsTestFixture(40))
         productIdsCountRepository =
             DefaultProductIdsCountRepository(
-                FakeProductIdsCountDataSource(
+                FakeShoppingCartProductIdDataSource(
                     productsIdCountDataTestFixture(5, 1).toMutableList(),
                 ),
             )

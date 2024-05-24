@@ -4,15 +4,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.model.ProductIdsCountData
-import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
-import woowacourse.shopping.data.source.ProductIdsCountDataSource
+import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
+import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 
-class DummyProductIdsCountDataSourceTest {
-    private lateinit var source: ProductIdsCountDataSource
+class DummyShoppingCartProductIdDataSourceTest {
+    private lateinit var source: ShoppingCartProductIdDataSource
 
     @BeforeEach
     fun setUp() {
-        source = DummyProductIdsCountDataSource()
+        source = DummyShoppingCartProductIdDataSource()
         source.clearAll()
     }
 

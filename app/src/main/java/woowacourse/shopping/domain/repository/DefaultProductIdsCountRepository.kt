@@ -1,12 +1,12 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.data.source.ProductIdsCountDataSource
+import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.domain.model.toData
 import woowacourse.shopping.domain.model.toDomain
 
 class DefaultProductIdsCountRepository(
-    private val productsIdsCountDataSource: ProductIdsCountDataSource,
+    private val productsIdsCountDataSource: ShoppingCartProductIdDataSource,
 ) : ProductIdsCountRepository {
     override fun findByProductId(productId: Int): ProductIdsCount = productsIdsCountDataSource.findByProductId(productId).toDomain()
 

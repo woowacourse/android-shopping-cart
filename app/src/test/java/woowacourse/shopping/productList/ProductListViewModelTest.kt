@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.productsTestFixture
-import woowacourse.shopping.repository.FakeProductIdsCountDataSource
+import woowacourse.shopping.repository.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.repository.FakeShoppingProductsRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.testfixture.productsIdCountTestFixture
@@ -149,7 +149,7 @@ class ProductListViewModelTest {
                 productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
                 productIdsCountRepository =
                     DefaultProductIdsCountRepository(
-                        FakeProductIdsCountDataSource(productsIdCountDataTestFixture(10).toMutableList()),
+                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10).toMutableList()),
                     ),
                 _currentPage = MutableLiveData(1),
             )
@@ -169,7 +169,7 @@ class ProductListViewModelTest {
                 productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
                 productIdsCountRepository =
                     DefaultProductIdsCountRepository(
-                        FakeProductIdsCountDataSource(productsIdCountDataTestFixture(10).toMutableList()),
+                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10).toMutableList()),
                     ),
                 _currentPage = MutableLiveData(1),
             )
@@ -189,7 +189,7 @@ class ProductListViewModelTest {
                 productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
                 productIdsCountRepository =
                     DefaultProductIdsCountRepository(
-                        FakeProductIdsCountDataSource(productsIdCountDataTestFixture(0).toMutableList()),
+                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(0).toMutableList()),
                     ),
                 _currentPage = MutableLiveData(1),
             )
@@ -210,7 +210,7 @@ class ProductListViewModelTest {
                 productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
                 productIdsCountRepository =
                     DefaultProductIdsCountRepository(
-                        FakeProductIdsCountDataSource(productsIdCountDataTestFixture(10, 1).toMutableList()),
+                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10, 1).toMutableList()),
                     ),
                 _currentPage = MutableLiveData(1),
             )
@@ -231,7 +231,7 @@ class ProductListViewModelTest {
                 productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
                 productIdsCountRepository =
                     DefaultProductIdsCountRepository(
-                        FakeProductIdsCountDataSource(productsIdCountDataTestFixture(10, 1).toMutableList()),
+                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10, 1).toMutableList()),
                     ),
                 _currentPage = MutableLiveData(1),
             )
@@ -252,7 +252,7 @@ class ProductListViewModelTest {
                 productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
                 productIdsCountRepository =
                     DefaultProductIdsCountRepository(
-                        FakeProductIdsCountDataSource(productsIdCountDataTestFixture(10, 2).toMutableList()),
+                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10, 2).toMutableList()),
                     ),
                 _currentPage = MutableLiveData(1),
             )

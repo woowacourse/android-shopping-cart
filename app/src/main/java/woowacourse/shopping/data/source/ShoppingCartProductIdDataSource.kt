@@ -2,7 +2,7 @@ package woowacourse.shopping.data.source
 
 import woowacourse.shopping.data.model.ProductIdsCountData
 
-interface ProductIdsCountDataSource {
+interface ShoppingCartProductIdDataSource {
     fun findByProductId(productId: Int): ProductIdsCountData
 
     fun loadAll(): List<ProductIdsCountData>

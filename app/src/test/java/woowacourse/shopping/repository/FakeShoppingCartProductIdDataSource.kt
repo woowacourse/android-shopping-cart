@@ -1,11 +1,11 @@
 package woowacourse.shopping.repository
 
 import woowacourse.shopping.data.model.ProductIdsCountData
-import woowacourse.shopping.data.source.ProductIdsCountDataSource
+import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 
-class FakeProductIdsCountDataSource(
+class FakeShoppingCartProductIdDataSource(
     private val data: MutableList<ProductIdsCountData> = mutableListOf(),
-) : ProductIdsCountDataSource {
+) : ShoppingCartProductIdDataSource {
     override fun findByProductId(productId: Int): ProductIdsCountData =
         data.find { it.productId == productId } ?: throw NoSuchElementException()
 

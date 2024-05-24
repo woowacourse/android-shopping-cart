@@ -3,7 +3,7 @@ package woowacourse.shopping.repository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import woowacourse.shopping.data.source.ProductIdsCountDataSource
+import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.domain.repository.ProductIdsCountRepository
@@ -12,12 +12,12 @@ import woowacourse.shopping.testfixture.productsIdCountTestFixture
 
 class DefaultProductIdsCountRepositoryTest {
     private lateinit var repository: ProductIdsCountRepository
-    private lateinit var source: ProductIdsCountDataSource
+    private lateinit var source: ShoppingCartProductIdDataSource
 
     @Test
     fun `모두 불러온다`() {
         // given
-        source = FakeProductIdsCountDataSource(productsIdCountDataTestFixture(3).toMutableList())
+        source = FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(3).toMutableList())
         repository = DefaultProductIdsCountRepository(source)
 
         // when
@@ -30,7 +30,7 @@ class DefaultProductIdsCountRepositoryTest {
     @Test
     fun `새 상품 id 와 그 개수를 추가`() {
         // given
-        source = FakeProductIdsCountDataSource(productsIdCountDataTestFixture(3).toMutableList())
+        source = FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(3).toMutableList())
         repository = DefaultProductIdsCountRepository(source)
 
         // when
@@ -43,7 +43,7 @@ class DefaultProductIdsCountRepositoryTest {
     @Test
     fun `상품을 찾아서 삭제`() {
         // given
-        source = FakeProductIdsCountDataSource(productsIdCountDataTestFixture(3).toMutableList())
+        source = FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(3).toMutableList())
         repository = DefaultProductIdsCountRepository(source)
 
         // when
@@ -56,7 +56,7 @@ class DefaultProductIdsCountRepositoryTest {
     @Test
     fun `상품을 찾아서 그 개수를 증가`() {
         // given
-        source = FakeProductIdsCountDataSource(productsIdCountDataTestFixture(3).toMutableList())
+        source = FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(3).toMutableList())
         repository = DefaultProductIdsCountRepository(source)
 
         // when
@@ -69,7 +69,7 @@ class DefaultProductIdsCountRepositoryTest {
     @Test
     fun `상품을 찾아서 그 개수를 감소`() {
         // given
-        source = FakeProductIdsCountDataSource(productsIdCountDataTestFixture(3, 3).toMutableList())
+        source = FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(3, 3).toMutableList())
         repository = DefaultProductIdsCountRepository(source)
 
         // when
@@ -82,7 +82,7 @@ class DefaultProductIdsCountRepositoryTest {
     @Test
     fun `상품을 찾아서 개수를 감소시킬 때 이미 1 개이면 상품을 삭제`() {
         // given
-        source = FakeProductIdsCountDataSource(productsIdCountDataTestFixture(3).toMutableList())
+        source = FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(3).toMutableList())
         repository = DefaultProductIdsCountRepository(source)
 
         // when
@@ -97,7 +97,7 @@ class DefaultProductIdsCountRepositoryTest {
     @Test
     fun `상품 모두 삭제`() {
         // given
-        source = FakeProductIdsCountDataSource(productsIdCountDataTestFixture(3).toMutableList())
+        source = FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(3).toMutableList())
         repository = DefaultProductIdsCountRepository(source)
 
         // when
