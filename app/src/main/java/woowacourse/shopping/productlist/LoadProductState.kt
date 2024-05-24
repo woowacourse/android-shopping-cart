@@ -19,12 +19,6 @@ sealed class LoadProductState() : UiState {
     ) : LoadProductState(),
         UiState.CompleteWithResult<List<ProductUiModel>>
 
-    data class DeleteProductFromCart(
-        override val currentProducts: ProductUiModels,
-        override val result: ProductUiModel,
-    ) : LoadProductState(),
-        UiState.CompleteWithResult<ProductUiModel>
-
     data class PlusFail(override val currentProducts: ProductUiModels) :
         LoadProductState(),
         UiState.Fail

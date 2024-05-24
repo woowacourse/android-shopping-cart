@@ -45,17 +45,16 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     private fun attachAdapter() {
         adapter = ProductListAdapter(this)
-        binding.rcvProductList.itemAnimator = null
-        binding.rcvProductList.adapter = adapter
+        binding.rcvProductListMain.itemAnimator = null
+        binding.rcvProductListMain.adapter = adapter
     }
 
     private fun showProducts() {
-        viewModel.loadProducts()
+        viewModel.initProducts()
         viewModel.loadState.observe(this) { loadState ->
             when (loadState) {
                 is LoadProductState.ChangeItemCount -> adapter.changeProductsInfo(loadState.result)
                 is LoadProductState.ShowProducts -> adapter.submitItems(loadState.currentProducts.products)
-                is LoadProductState.DeleteProductFromCart -> adapter.changeProductsInfo(loadState.result)
                 is LoadProductState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }

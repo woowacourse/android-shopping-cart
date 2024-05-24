@@ -25,7 +25,15 @@ class ProductListViewModel(
 
     private fun currentLoadState(): ProductUiModels = _loadState.value?.currentProducts ?: ProductUiModels.default()
 
-    fun loadProducts() {
+    fun initProducts() {
+        _loadState.value ?: loadProducts()
+    }
+
+    fun loadMoreProducts() {
+        loadProducts()
+    }
+
+    private fun loadProducts() {
         runCatching {
             val products =
                 productRepository.products(
@@ -57,13 +65,8 @@ class ProductListViewModel(
             val shoppingCart = shoppingRepository.shoppingCart()
             shoppingRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
         }.onSuccess {
-            val addedProduct =
-                shoppingRepository.cartItemByProductId(productId).toProductUiModel().let(::listOf)
-            _loadState.value =
-                LoadProductState.ChangeItemCount(
-                    addedProduct,
-                    currentLoadState().updateProducts(addedProduct),
-                )
+            val addedProduct = shoppingRepository.cartItemByProductId(productId).toProductUiModel()
+            changeItemCount(addedProduct)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -74,9 +77,7 @@ class ProductListViewModel(
             shoppingRepository.deleteShoppingCartItem(productId)
             productRepository.productById(productId).toProductUiModel(NO_PRODUCT_OF_CART_ITEM)
         }.onSuccess { updatedProduct ->
-            val updatedProductList = currentLoadState().updateProduct(updatedProduct)
-            _loadState.value =
-                LoadProductState.DeleteProductFromCart(updatedProductList, updatedProduct)
+            changeItemCount(updatedProduct)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -87,7 +88,7 @@ class ProductListViewModel(
             shoppingRepository.decreasedCartItem(productId)
         }.onSuccess { result ->
             when (result) {
-                is QuantityUpdate.Success -> changeLoadState(result)
+                is QuantityUpdate.Success -> changeItemCount(result.value.toProductUiModel())
                 QuantityUpdate.Failure ->
                     deleteShoppingCart(productId)
             }
@@ -101,7 +102,7 @@ class ProductListViewModel(
             shoppingRepository.increasedCartItem(productId)
         }.onSuccess { result ->
             when (result) {
-                is QuantityUpdate.Success -> changeLoadState(result)
+                is QuantityUpdate.Success -> changeItemCount(result.value.toProductUiModel())
                 QuantityUpdate.Failure ->
                     _loadState.value =
                         LoadProductState.PlusFail(currentLoadState())
@@ -111,20 +112,22 @@ class ProductListViewModel(
         }
     }
 
-    private fun changeLoadState(result: QuantityUpdate.Success) {
-        val updatedUiModel = result.value.toProductUiModel()
+    private fun changeItemCount(updatedProduct: ProductUiModel) {
         _loadState.value =
             LoadProductState.ChangeItemCount(
-                updatedUiModel.let(::listOf),
-                currentLoadState().updateProduct(updatedUiModel),
+                updatedProduct.let(::listOf),
+                currentLoadState().updateProduct(updatedProduct),
             )
     }
 
     fun reloadProductOfInfo(productIds: List<Long>) {
         runCatching {
-            shoppingRepository.cartItemsByProductIds(productIds.toList())
-        }.onSuccess { cartItems ->
-            val updatedProducts = cartItems.map { it.toProductUiModel() }
+            val cartItems = shoppingRepository.cartItemsByProductIds(productIds.toList())
+            val products = productIds.map { productRepository.productById(it) }
+            products.map { product ->
+                product.toProductUiModel(productOfCartQuantity(cartItems, product))
+            }
+        }.onSuccess { updatedProducts ->
             _loadState.value =
                 LoadProductState.ChangeItemCount(
                     updatedProducts,
