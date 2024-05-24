@@ -23,7 +23,6 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
         ProductRecyclerViewAdapter(
             viewModel.loadedProducts.value ?: emptyList(),
             onClickCartItemCounter = this,
-            cartItems = viewModel.cartItem.value?.let { mutableListOf(it) }.orEmpty(),
             onClick = { id -> navigateToProductDetail(id) },
         )
     }
@@ -84,8 +83,9 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
         }
 
         viewModel.cartItem.observe(viewLifecycleOwner) {
-            adapter.updateCartItem(it)
+            adapter.updateCartItems(it)
         }
+
     }
 
     private fun clickCartButton(it: MenuItem) =
@@ -112,10 +112,10 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
     }
 
     override fun increaseQuantity(cartItem: CartItem) {
-        viewModel.increaseQuantity(cartItem)
+        viewModel.increaseQuantity(cartItem.productId)
     }
 
     override fun decreaseQuantity(cartItem: CartItem) {
-        viewModel.decreaseQuantity(cartItem)
+        viewModel.decreaseQuantity(cartItem.productId)
     }
 }

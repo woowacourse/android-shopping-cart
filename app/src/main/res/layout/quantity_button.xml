@@ -29,9 +29,9 @@
             android:text="-"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/product_detail_product_count"
             app:layout_constraintTop_toTopOf="parent"
+            app:visibilityByQuantity="@{cartItem.quantity}"
             tools:text="-" />
 
         <TextView
@@ -42,9 +42,9 @@
             android:layout_marginEnd="18dp"
             android:text="@{String.valueOf(cartItem.quantity)}"
             android:textSize="22sp"
-            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/product_detail_plus"
             app:layout_constraintTop_toTopOf="parent"
+            app:visibilityByQuantity="@{cartItem.quantity}"
             tools:text="1" />
 
         <TextView
@@ -56,9 +56,9 @@
             android:text="+"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:visibilityByQuantity="@{cartItem.quantity}"
             tools:text="+" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -82,9 +82,11 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:importantForAccessibility="no"
+            android:onClick="@{() -> listener.increaseQuantity(cartItem)}"
             android:src="@drawable/plus"
             app:layout_constraintBottom_toBottomOf="@id/main_product_list_item_img"
-            app:layout_constraintEnd_toEndOf="@id/main_product_list_item_img" />
+            app:layout_constraintEnd_toEndOf="@id/main_product_list_item_img"
+            app:visibilityByPlusButton="@{cartItem.quantity}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,7 +1,6 @@
 package woowacourse.shopping.productList
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderProductBinding
@@ -10,8 +9,8 @@ import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
 class ProductRecyclerViewAdapter(
-    private var values: List<Product>,
-    private var cartItems: List<CartItem>,
+    private var values: List<Product> = emptyList(),
+    private var cartItems: List<CartItem> = emptyList(),
     private val onClickCartItemCounter: OnClickCartItemCounter,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
@@ -36,21 +35,6 @@ class ProductRecyclerViewAdapter(
             cartItems.find { it.productId == product.id } ?: CartItem(product.id, 0)
         holder.bind(product, cartItems)
         holder.binding.listener = onClickCartItemCounter
-        if (holder.binding.mainProductListAddCartButton.visibility == View.VISIBLE) {
-            holder.binding.mainProductListAddCartButton.setOnClickListener {
-                holder.binding.mainProductListAddCartButton.visibility = View.GONE
-                showQuantityButton(holder)
-            }
-        }
-    }
-
-    private fun showQuantityButton(holder: ViewHolder) {
-        holder.binding.mainProductListQuantityButton.productDetailProductCount.visibility =
-            View.VISIBLE
-        holder.binding.mainProductListQuantityButton.productDetailPlus.visibility = View.VISIBLE
-        holder.binding.mainProductListQuantityButton.productDetailMinus.visibility =
-            View.VISIBLE
-        holder.binding.cartItem = CartItem(holder.binding.product!!.id, 1)
     }
 
     override fun getItemCount(): Int = values.size
@@ -61,11 +45,9 @@ class ProductRecyclerViewAdapter(
         notifyItemRangeInserted(start, newData.size - start)
     }
 
-    fun updateCartItem(cartItem: CartItem) {
-        val index = values.indexOfFirst { it.id == cartItem.productId }
-        if (index != -1) {
-            notifyItemChanged(index)
-        }
+    fun updateCartItems(newData: List<CartItem>) {
+        this.cartItems = newData
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(

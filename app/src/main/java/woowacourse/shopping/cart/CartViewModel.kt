@@ -61,13 +61,11 @@ class CartViewModel : ViewModel() {
     fun increaseQuantity(productId: Int) {
         ShoppingCart.addProductCount(productId)
         _cartItems.value = ShoppingCart.cartItems
-        updateItemsInShoppingCart()
     }
 
     fun decreaseQuantity(productId: Int) {
         ShoppingCart.subtractProductCount(productId)
         _cartItems.value = ShoppingCart.cartItems
-        updateItemsInShoppingCart()
     }
 
     companion object {
