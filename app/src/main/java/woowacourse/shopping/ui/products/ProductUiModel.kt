@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.products
 
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.data.product.entity.Product
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.ui.products.adapter.ProductsViewType
 

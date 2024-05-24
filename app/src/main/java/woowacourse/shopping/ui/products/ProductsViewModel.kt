@@ -7,8 +7,8 @@ import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.RecentProduct
+import woowacourse.shopping.data.product.entity.Product
+import woowacourse.shopping.data.recent.entity.RecentProduct
 import woowacourse.shopping.ui.products.recent.RecentProductUiModel
 import kotlin.math.ceil
 
@@ -70,7 +70,7 @@ class ProductsViewModel(
     }
 
     private fun loadMaxPage() {
-        val totalProductCount = productRepository.totalCount()
+        val totalProductCount = productRepository.totalProductCount()
         maxPage = ceil(totalProductCount.toDouble() / PAGE_SIZE).toInt()
     }
 

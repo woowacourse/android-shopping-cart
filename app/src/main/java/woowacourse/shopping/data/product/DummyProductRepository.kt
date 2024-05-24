@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.product
 
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.data.product.entity.Product
 import kotlin.concurrent.Volatile
 import kotlin.math.min
 
@@ -20,7 +20,7 @@ class DummyProductRepository private constructor(savedProducts: List<Product>) :
         return products.map { it.value }.subList(fromIndex, toIndex)
     }
 
-    override fun totalCount(): Int = products.size
+    override fun totalProductCount(): Int = products.size
 
     companion object {
         private const val INVALID_ID_MESSAGE = "해당하는 id의 상품이 존재하지 않습니다."

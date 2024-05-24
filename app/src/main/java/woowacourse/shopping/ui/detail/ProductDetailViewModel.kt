@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,8 +9,8 @@ import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.model.CartItem
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.data.cart.entity.CartItem
+import woowacourse.shopping.data.product.entity.Product
 import woowacourse.shopping.ui.products.ProductUiModel
 import woowacourse.shopping.ui.utils.AddCartQuantityBundle
 
@@ -93,6 +94,7 @@ class ProductDetailViewModel(
         }.onSuccess {
             _isSuccessAddCart.value = Event(true)
         }.onFailure {
+            Log.e("TEST", "${it.localizedMessage}")
             _isSuccessAddCart.value = Event(false)
         }
     }

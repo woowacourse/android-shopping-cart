@@ -18,7 +18,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
                 val cartItem = CartItem(productId = productId, quantity = Quantity(1))
                 cartDao.insertCartItem(cartItem)
             }
-        }
+        }.join()
     }
 
     override fun decreaseQuantity(productId: Long) {
@@ -34,7 +34,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
             }.onFailure {
                 throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
             }
-        }
+        }.join()
     }
 
     override fun changeQuantity(
@@ -50,7 +50,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
                 val cartItem = CartItem(productId = productId, quantity = quantity)
                 cartDao.insertCartItem(cartItem)
             }
-        }
+        }.join()
     }
 
     override fun deleteCartItem(productId: Long) {
@@ -60,7 +60,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
             }.onFailure {
                 throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
             }
-        }
+        }.join()
     }
 
     override fun find(productId: Long): CartItem {
