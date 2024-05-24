@@ -20,4 +20,5 @@
     <string name="next_page">&gt;</string>
     <string name="quantity_decrease">-</string>
     <string name="quantity_increase">+</string>
+    <string name="product_detail_last_viewed_product">마지막으로 본 상품</string>
 </resources>
