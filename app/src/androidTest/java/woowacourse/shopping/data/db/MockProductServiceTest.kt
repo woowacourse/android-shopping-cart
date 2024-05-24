@@ -5,13 +5,13 @@ import io.kotest.matchers.shouldBe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import woowacourse.shopping.data.db.product.ProductDao
+import woowacourse.shopping.data.db.product.MockProductService
 import woowacourse.shopping.data.db.product.ProductDatabase
 import woowacourse.shopping.domain.model.Product
 
 @RunWith(AndroidJUnit4::class)
-class ProductDaoTest {
-    private val dao = ProductDao()
+class MockProductServiceTest {
+    private val dao = MockProductService()
     private val products = ProductDatabase.products
 
     @Test

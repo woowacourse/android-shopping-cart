@@ -9,7 +9,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.domain.model.Product
 
-class ProductDao {
+class MockProductService {
     private val client = OkHttpClient()
     private val productsJson: String = Gson().toJson(ProductDatabase.products)
 
