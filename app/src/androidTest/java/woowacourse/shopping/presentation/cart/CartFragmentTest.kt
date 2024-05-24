@@ -98,7 +98,7 @@ class CartFragmentTest {
     @Test
     @DisplayName(
         "현재 페이지가 1이고 장바구니에 상품이 6개 있을 때, 3번째 상품을 삭제 하면 " +
-                "6 번째 상품이 현재 페이지에 보인다",
+            "6 번째 상품이 현재 페이지에 보인다",
     )
     fun test6() {
         // given
@@ -108,20 +108,20 @@ class CartFragmentTest {
         startScenarioWith(products(6))
         // when
         onView(withId(R.id.rv_shopping_cart)).performScrollToHolder<CartAdapter.CartViewHolder>(
-            deletePosition
+            deletePosition,
         )
         onView(withId(R.id.rv_shopping_cart)).performClickHolderAt<CartAdapter.CartViewHolder>(
             deletePosition,
-            R.id.iv_shooping_cart_delete
+            R.id.iv_shooping_cart_delete,
         )
         // then
         onView(withId(R.id.rv_shopping_cart)).check(withItemCount(5))
         // when
         onView(withId(R.id.rv_shopping_cart)).performScrollToHolder<CartAdapter.CartViewHolder>(
-            addedPosition
+            addedPosition,
         ).check(
             matchDescendantSoftly(
-                expectProductTitle
+                expectProductTitle,
             ),
         )
     }
@@ -129,7 +129,7 @@ class CartFragmentTest {
     @Test
     @DisplayName(
         "현재 페이지가 1이고 장바구니에 상품이 5개 있을 때, 3번째 상품을 삭제 하면 " +
-                "4개가 보인다",
+            "4개가 보인다",
     )
     fun test7() {
         // given
@@ -138,11 +138,11 @@ class CartFragmentTest {
         startScenarioWith(products(5))
         // when
         onView(withId(R.id.rv_shopping_cart)).performScrollToHolder<CartAdapter.CartViewHolder>(
-            deletePosition
+            deletePosition,
         )
         onView(withId(R.id.rv_shopping_cart)).performClickHolderAt<CartAdapter.CartViewHolder>(
             deletePosition,
-            R.id.iv_shooping_cart_delete
+            R.id.iv_shooping_cart_delete,
         )
         // then
         onView(withId(R.id.rv_shopping_cart)).check(withItemCount(expectCount))

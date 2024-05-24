@@ -9,7 +9,7 @@ import org.hamcrest.CoreMatchers
 inline fun <reified T : RecyclerView.ViewHolder> ViewInteraction.performScrollToHolder(position: Int = 0): ViewInteraction {
     return perform(
         RecyclerViewActions.scrollToHolder(CoreMatchers.instanceOf(T::class.java))
-            .atPosition(position)
+            .atPosition(position),
     )
 }
 

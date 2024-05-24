@@ -27,8 +27,9 @@ class ProductListFragmentTest {
         // given
         val plusText = "더보기"
         // when
-        val viewInteraction = onView(withId(R.id.rv_product_list))
-            .performScrollToHolder<ShoppingViewHolder.LoadMore>()
+        val viewInteraction =
+            onView(withId(R.id.rv_product_list))
+                .performScrollToHolder<ShoppingViewHolder.LoadMore>()
         // then
         viewInteraction.check(matchDescendantSoftly(plusText))
     }
@@ -41,7 +42,8 @@ class ProductListFragmentTest {
         // when
         onView(withId(R.id.rv_product_list)).performScrollToHolder<ShoppingViewHolder.LoadMore>()
         onView(withId(R.id.rv_product_list)).performClickHolderAt<ShoppingViewHolder.LoadMore>(
-            21, R.id.btn_load_more_products
+            21,
+            R.id.btn_load_more_products,
         )
         // 더보기 버튼까지 스크롤
         onView(withId(R.id.rv_product_list))
@@ -51,4 +53,3 @@ class ProductListFragmentTest {
             .check(matchDescendantSoftly(expectProductTitle))
     }
 }
-

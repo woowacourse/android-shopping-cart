@@ -9,7 +9,9 @@ fun Context.showToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.showToast(@StringRes messageRes: Int) {
+fun Context.showToast(
+    @StringRes messageRes: Int,
+) {
     Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
 }
 
@@ -18,7 +20,9 @@ fun Fragment.showToast(message: String) {
     requireContext().showToast(message)
 }
 
-fun Fragment.showToast(@StringRes messageRes: Int) {
+fun Fragment.showToast(
+    @StringRes messageRes: Int,
+) {
     if (!isAdded) return
     requireContext().showToast(getString(messageRes))
 }
