@@ -36,6 +36,12 @@ class ProductDetailFragment :
         binding?.btnProductCart?.setOnClickListener {
             viewModel.addCartProduct()
         }
+        binding?.itemProductCount?.btnPlus?.setOnClickListener {
+            viewModel.increaseCount()
+        }
+        binding?.itemProductCount?.btnMinus?.setOnClickListener {
+            viewModel.decreaseCount()
+        }
         viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
             if (isAdded) {
                 navigateToShoppingCart()

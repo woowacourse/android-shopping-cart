@@ -5,10 +5,6 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.presentation.shopping.product.ShoppingUiModel.Product" />
-
-        <variable
             name="vm"
             type="woowacourse.shopping.presentation.shopping.detail.ProductDetailViewModel" />
     </data>
@@ -71,7 +67,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/tv_product_price_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_price_title"
-            bind:product="@{product}" />
+            bind:product="@{vm.product}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_product_cart"

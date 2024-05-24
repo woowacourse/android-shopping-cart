@@ -21,7 +21,7 @@ class ProductListViewModel(
         val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
         val loadProducts =
             shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
-                .map { it.toShoppingUiModel() }
+                .map { it.toShoppingUiModel(false) }
 
         if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
             _products.value = currentProducts + loadProducts + ShoppingUiModel.LoadMore
