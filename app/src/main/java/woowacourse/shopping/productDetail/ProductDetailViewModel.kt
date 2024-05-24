@@ -1,20 +1,25 @@
 package woowacourse.shopping.productDetail
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.model.Product
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.db.ShoppingCart
+import woowacourse.shopping.factory.BaseViewModelFactory
+import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.DummyProductStore
-import kotlin.properties.Delegates
 
-class ProductDetailViewModel : ViewModel() {
+class ProductDetailViewModel(val productId: Int) : ViewModel() {
     private val productStore = DummyProductStore()
-    var productId by Delegates.notNull<Int>()
 
     val product: Product
         get() = productStore.findById(productId)
 
-
-    val cartItem = ShoppingCart.cartItems.find { it.productId == productId }
+    private val _cartItem = MutableLiveData(
+        ShoppingCart.cartItems.find { it.productId == productId } ?: CartItem(productId, 0)
+    )
+    val cartItem: LiveData<CartItem> get() = _cartItem
 
     fun addProductToCart() {
         if (ShoppingCart.cartItems.any { it.productId == productId }) {
@@ -22,13 +27,22 @@ class ProductDetailViewModel : ViewModel() {
             return
         }
         ShoppingCart.addProductToCart(productId)
+        _cartItem.value = ShoppingCart.cartItems.find { it.productId == productId }
     }
 
-    fun addProductCount() {
+    private fun addProductCount() {
         ShoppingCart.addProductCount(productId)
+        _cartItem.value = ShoppingCart.cartItems.find { it.productId == productId }
     }
 
     fun subtractProductCount() {
         ShoppingCart.subtractProductCount(productId)
+        _cartItem.value = ShoppingCart.cartItems.find { it.productId == productId }
+    }
+
+    companion object {
+        fun factory(productId: Int): ViewModelProvider.Factory {
+            return BaseViewModelFactory { ProductDetailViewModel(productId) }
+        }
     }
 }

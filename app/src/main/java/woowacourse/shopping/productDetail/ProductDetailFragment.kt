@@ -1,7 +1,6 @@
 package woowacourse.shopping.productDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -14,7 +13,10 @@ import woowacourse.shopping.listener.OnClickCartItemCounter
 import woowacourse.shopping.model.CartItem
 
 class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
-    private val viewModel: ProductDetailViewModel by viewModels()
+    private val viewModel: ProductDetailViewModel by viewModels {
+        val id = arguments?.getInt("productId") ?: 1
+        ProductDetailViewModel.factory(productId = id)
+    }
 
     private var _binding: FragmentProductDetailBinding? = null
     private val binding get() = _binding!!
@@ -29,9 +31,6 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
         binding.vm = viewModel
         binding.lifecycleOwner = this
         binding.listener = this
-        arguments?.let {
-            viewModel.productId = it.getInt("productId")
-        }
         return binding.root
     }
 
@@ -44,6 +43,7 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
         binding.productDetailQuantityButton.productDetailPlus.visibility = View.VISIBLE
         binding.productDetailQuantityButton.productDetailMinus.visibility = View.VISIBLE
         binding.productDetailQuantityButton.productDetailProductCount.visibility = View.VISIBLE
+
         binding.productDetailToolbar.setOnMenuItemClickListener { clickXButton(it) }
     }
 
@@ -64,11 +64,9 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
 
     override fun increaseQuantity(cartItem: CartItem) {
         viewModel.addProductToCart()
-        Log.d("ProductDetailFragment", "increaseQuantity")
     }
 
     override fun decreaseQuantity(cartItem: CartItem) {
         viewModel.subtractProductCount()
-        Log.d("ProductDetailFragment", "increaseQuantity")
     }
 }
