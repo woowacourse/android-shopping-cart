@@ -15,6 +15,9 @@ class ProductDetailViewModel(
     private val productListRepository: ProductListRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : BaseViewModel(), ProductDetailActionHandler {
+    private val _price: MutableLiveData<Int> = MutableLiveData()
+    val price: LiveData<Int> get() = _price
+
     private val _quantity: MutableLiveData<Int> = MutableLiveData()
     val quantity: LiveData<Int> get() = _quantity
 
@@ -22,9 +25,9 @@ class ProductDetailViewModel(
     val product: LiveData<Product> get() = _product
 
     init {
-        savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let { productId ->
-            findByProductId(productId)
-        }
+        savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let(::findByProductId)
+        product.value?.let(::getQuantity)
+        getPrice()
     }
 
     private fun findByProductId(id: Int) {
@@ -49,18 +52,30 @@ class ProductDetailViewModel(
         product.value?.let { product ->
             shoppingCartRepository.plusOrder(product)
             getQuantity(product)
+            getPrice()
         }
     }
 
     override fun onClickMinusOrderButton() {
         product.value?.let { product ->
-            shoppingCartRepository.minusOrder(product)
-            getQuantity(product)
+            _quantity.value?.let {
+                if (it > 1) {
+                    shoppingCartRepository.minusOrder(product)
+                    getQuantity(product)
+                    getPrice()
+                }
+            }
         }
     }
 
     private fun getQuantity(product: Product) {
-        val quantity = shoppingCartRepository.getOrderByProductId(product.id)?.quantity ?: -1
+        val quantity = shoppingCartRepository.getOrderByProductId(product.id)?.quantity ?: 1
         _quantity.value = quantity
+    }
+
+    private fun getPrice() {
+        product.value?.price?.let {
+            _price.value = quantity.value?.times(it)
+        }
     }
 }

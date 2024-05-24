@@ -37,6 +37,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private fun initDataBinding() {
         binding.apply {
             vm = viewModel
+            actionHandler = viewModel
             lifecycleOwner = this@ProductDetailActivity
         }
     }

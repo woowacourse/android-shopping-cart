@@ -7,6 +7,9 @@
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.ui.productdetail.ProductDetailViewModel" />
+        <variable
+            name="actionHandler"
+            type="woowacourse.shopping.presentation.ui.productdetail.ProductDetailActionHandler"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,35 +45,38 @@
             android:id="@+id/product_detail_divide_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="8dp"
             android:background="@color/gray6"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
-            tools:layout_editor_absoluteX="0dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="18dp"
-            android:text="@string/detail_price_title"
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line" />
+            tools:layout_editor_absoluteX="-196dp" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="48dp"
+            android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
             android:textSize="20dp"
             android:textColor="@color/black"
-            priceToCurrency="@{vm.product.price}"
-            tools:text="99,800"
-            app:layout_constraintEnd_toEndOf="parent"
+            priceToCurrency="@{vm.price}"
+            tools:text="99,800원"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line" />
+
+        <include
+            layout="@layout/holder_counter"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="8dp"
+            app:count="@{vm.quantity}"
+            app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:minusCount="@{() -> actionHandler.onClickMinusOrderButton()}"
+            app:plusCount="@{() -> actionHandler.onClickPlusOrderButton()}"
+            />
 
         <TextView
             android:id="@+id/tv_add_to_cart"
