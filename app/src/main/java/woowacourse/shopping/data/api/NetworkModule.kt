@@ -9,7 +9,7 @@ import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.data.api.ApiClient.BASE_PORT
 import woowacourse.shopping.data.api.ApiClient.GET_FIND_PRODUCT
 import woowacourse.shopping.data.api.ApiClient.GET_PAGING_PRODUCT
-import woowacourse.shopping.data.model.remote.ProductEntity
+import woowacourse.shopping.data.model.remote.ProductResponse
 import kotlin.concurrent.thread
 
 class NetworkModule : ApiService {
@@ -23,7 +23,7 @@ class NetworkModule : ApiService {
     private val client: OkHttpClient = OkHttpClient.Builder().build()
     private val gson = Gson()
 
-    override fun findProductById(id: Long): Result<ProductEntity> =
+    override fun findProductById(id: Long): Result<ProductResponse> =
         runCatching {
             val request =
                 Request.Builder()
@@ -32,13 +32,13 @@ class NetworkModule : ApiService {
             val response: Response = client.newCall(request).execute()
             val body = response.body?.string()
 
-            gson.fromJson(body, object : TypeToken<ProductEntity>() {}.type)
+            gson.fromJson(body, object : TypeToken<ProductResponse>() {}.type)
         }
 
     override fun getPagingProduct(
         page: Int,
         pageSize: Int,
-    ): Result<List<ProductEntity>> =
+    ): Result<List<ProductResponse>> =
         runCatching {
             val request =
                 Request.Builder()
@@ -47,7 +47,7 @@ class NetworkModule : ApiService {
             val response: Response = client.newCall(request).execute()
             val body = response.body?.string()
 
-            gson.fromJson(body, object : TypeToken<List<ProductEntity>>() {}.type)
+            gson.fromJson(body, object : TypeToken<List<ProductResponse>>() {}.type)
         }
 
     override fun shutdown(): Result<Unit> =
