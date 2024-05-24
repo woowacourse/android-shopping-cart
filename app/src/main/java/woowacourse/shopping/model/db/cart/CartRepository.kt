@@ -1,26 +1,26 @@
-package woowacourse.shopping.model.db
+package woowacourse.shopping.model.db.cart
 
-interface CartDao {
-    fun itemSize(): Int
-
-    fun save(cart: Cart): Long
+interface CartRepository {
+    fun insert(cart: Cart): Long
 
     fun find(id: Long): Cart
 
     fun findAll(): List<Cart>
+
+    fun delete(id: Long)
+
+    fun deleteByProductId(productId: Long)
+
+    fun deleteAll()
+
+    fun itemSize(): Int
 
     fun getProducts(
         page: Int,
         pageSize: Int,
     ): List<Cart>
 
-    fun delete(id: Long)
-
-    fun deleteByProductId(productId: Long)
-
     fun plusQuantityByProductId(productId: Long)
 
     fun minusQuantityByProductId(productId: Long)
-
-    fun deleteAll()
 }

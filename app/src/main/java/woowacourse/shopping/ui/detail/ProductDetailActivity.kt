@@ -11,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.db.cart.CartDatabase
+import woowacourse.shopping.model.db.cart.CartRepositoryImpl
 import woowacourse.shopping.model.db.recentproduct.RecentProductDatabase
 import woowacourse.shopping.model.db.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.ui.CountButtonClickListener
@@ -28,6 +30,7 @@ class ProductDetailActivity :
         ProductDetailViewModelFactory(
             ProductsImpl,
             RecentProductRepositoryImpl.get(RecentProductDatabase.database().recentProductDao()),
+            CartRepositoryImpl.get(CartDatabase.database().cartDao()),
         )
     }
     private val productId by lazy { productId() }

@@ -10,15 +10,16 @@ import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.ProductDao
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.db.Cart
-import woowacourse.shopping.model.db.CartDao
+import woowacourse.shopping.model.db.cart.Cart
+import woowacourse.shopping.model.db.cart.CartRepository
 import woowacourse.shopping.model.db.recentproduct.RecentProduct
 import woowacourse.shopping.model.db.recentproduct.RecentProductRepository
+import kotlin.concurrent.thread
 
 class ProductContentsViewModel(
     private val productDao: ProductDao,
     private val recentProductRepository: RecentProductRepository,
-    private val cartDao: CartDao,
+    private val cartRepository: CartRepository,
 ) :
     ViewModel() {
     private val items = mutableListOf<Product>()
@@ -55,28 +56,36 @@ class ProductContentsViewModel(
     }
 
     fun loadProducts() {
-        items.addAll(productDao.getProducts())
-        products.value = items
+        thread {
+            items.addAll(productDao.getProducts())
+            products.postValue(items)
+        }.join()
     }
 
     fun loadCartItems() {
-        cart.value = cartDao.findAll()
+        thread {
+            cart.postValue(cartRepository.findAll())
+        }.join()
     }
 
     fun plusCount(productId: Long) {
-        cartDao.plusQuantityByProductId(productId)
+        thread {
+            cartRepository.plusQuantityByProductId(productId)
+        }.join()
         loadCartItems()
     }
 
     fun minusCount(productId: Long) {
-        cartDao.minusQuantityByProductId(productId)
+        thread {
+            cartRepository.minusQuantityByProductId(productId)
+        }.join()
         loadCartItems()
     }
 
     fun loadRecentProducts() {
-        Thread {
+        thread {
             _recentProducts.postValue(recentProductRepository.findAll())
-        }.start()
+        }.join()
     }
 
     private fun updateProductWithQuantity() {

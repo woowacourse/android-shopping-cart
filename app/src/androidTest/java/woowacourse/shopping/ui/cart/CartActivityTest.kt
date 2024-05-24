@@ -20,7 +20,7 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.db.Cart
+import woowacourse.shopping.model.db.cart.Cart
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 
 @RunWith(AndroidJUnit4::class)
@@ -137,10 +137,10 @@ class CartActivityTest {
         fun setUp() {
             repeat(5) {
                 val id = ProductsImpl.save(MAC_BOOK)
-                CartsImpl.save(Cart(productId = id, quantity = Quantity(1)))
+                CartsImpl.insert(Cart(productId = id, quantity = Quantity(1)))
             }
             val id = ProductsImpl.save(IPHONE)
-            CartsImpl.save(Cart(productId = id, quantity = Quantity(1)))
+            CartsImpl.insert(Cart(productId = id, quantity = Quantity(1)))
         }
     }
 }

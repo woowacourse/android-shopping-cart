@@ -9,7 +9,7 @@ import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.db.Cart
+import woowacourse.shopping.model.db.cart.Cart
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -38,9 +38,9 @@ class CartViewModelTest {
         val productId2 = ProductsImpl.save(CAR)
         val productId3 = ProductsImpl.save(UMBRELLA)
 
-        CartsImpl.save(Cart(productId = productId1))
-        CartsImpl.save(Cart(productId = productId2))
-        CartsImpl.save(Cart(productId = productId3))
+        CartsImpl.insert(Cart(productId = productId1))
+        CartsImpl.insert(Cart(productId = productId2))
+        CartsImpl.insert(Cart(productId = productId3))
 
         // when
         viewModel = CartViewModel(ProductsImpl, CartsImpl)
@@ -58,9 +58,9 @@ class CartViewModelTest {
         val productId2 = ProductsImpl.save(CAR)
         val productId3 = ProductsImpl.save(UMBRELLA)
 
-        CartsImpl.save(Cart(productId = productId1))
-        CartsImpl.save(Cart(productId = productId2))
-        CartsImpl.save(Cart(productId = productId3))
+        CartsImpl.insert(Cart(productId = productId1))
+        CartsImpl.insert(Cart(productId = productId2))
+        CartsImpl.insert(Cart(productId = productId3))
 
         // when
         viewModel = CartViewModel(ProductsImpl, CartsImpl)

@@ -7,12 +7,13 @@ import androidx.lifecycle.map
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.data.ProductDao
-import woowacourse.shopping.model.db.Cart
-import woowacourse.shopping.model.db.CartDao
+import woowacourse.shopping.model.db.cart.Cart
+import woowacourse.shopping.model.db.cart.CartRepository
+import kotlin.concurrent.thread
 
 class CartViewModel(
     private val productDao: ProductDao,
-    private val cartDao: CartDao,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
     private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
@@ -40,9 +41,11 @@ class CartViewModel(
     }
 
     fun removeCartItem(productId: Long) {
-        cartDao.deleteByProductId(productId)
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartDao.itemSize())
-        cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
+        thread {
+            cartRepository.deleteByProductId(productId)
+            _canMoveNextPage.postValue(cartPageManager.canMoveNextPage(cartRepository.itemSize()))
+            cart.postValue(cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE))
+        }.join()
         loadCartItems()
     }
 
@@ -59,23 +62,31 @@ class CartViewModel(
     }
 
     fun plusCount(productId: Long) {
-        cartDao.plusQuantityByProductId(productId)
+        thread {
+            cartRepository.plusQuantityByProductId(productId)
+        }.join()
         loadCartItems()
     }
 
     fun minusCount(productId: Long) {
-        cartDao.minusQuantityByProductId(productId)
-        loadCartItems()
+        thread {
+            cartRepository.minusQuantityByProductId(productId)
+            loadCartItems()
+        }.start()
     }
 
     private fun loadCartItems() {
-        cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
+        thread {
+            cart.postValue(cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE))
+        }.join()
     }
 
     private fun updatePageState() {
         _pageNumber.value = cartPageManager.pageNum
         _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartDao.itemSize())
+        thread {
+            _canMoveNextPage.postValue(cartPageManager.canMoveNextPage(cartRepository.itemSize()))
+        }.join()
     }
 
     companion object {
