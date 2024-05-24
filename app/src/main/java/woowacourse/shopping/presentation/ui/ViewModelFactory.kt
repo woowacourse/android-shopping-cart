@@ -1,14 +1,19 @@
 package woowacourse.shopping.presentation.ui
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.data.local.RepositoryImpl
+import woowacourse.shopping.data.local.RoomDataSource
+import woowacourse.shopping.data.local.db.AppDatabase
 import woowacourse.shopping.data.remote.DummyProductCartRepository
 import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.presentation.ui.cart.CartViewModel
 import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel
+import java.lang.IllegalStateException
 
-class ViewModelFactory() : ViewModelProvider.Factory {
+class ViewModelFactory(private val applicationContext: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(ProductDetailViewModel::class.java) -> {
@@ -16,7 +21,7 @@ class ViewModelFactory() : ViewModelProvider.Factory {
             }
 
             modelClass.isAssignableFrom(ShoppingViewModel::class.java) -> {
-                ShoppingViewModel(DummyProductRepository()) as T
+                ShoppingViewModel(RepositoryImpl(RoomDataSource(AppDatabase.getDatabase(applicationContext).cartProductDao()))) as T
             }
 
             modelClass.isAssignableFrom(CartViewModel::class.java) -> {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.local.entity.CartProduct
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
@@ -11,7 +12,7 @@ import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
 
 class ShoppingAdapter(
     private val shoppingHandler: ShoppingHandler,
-    private var items: List<Product> = emptyList(),
+    private var items: List<CartProduct> = emptyList(),
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return if (position == itemCount - LOADING_OFFSET) ShoppingViewType.LoadMore.value else ShoppingViewType.Product.value
@@ -51,7 +52,7 @@ class ShoppingAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newItems: List<Product>) {
+    fun updateList(newItems: List<CartProduct>) {
         items = newItems
         notifyDataSetChanged()
     }

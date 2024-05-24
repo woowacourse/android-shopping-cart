@@ -16,7 +16,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_product_detail
 
-    private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory(applicationContext) }
 
     override fun initStartView() {
         binding.viewModel = viewModel

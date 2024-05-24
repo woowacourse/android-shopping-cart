@@ -12,10 +12,18 @@ import woowacourse.shopping.data.local.entity.Product
 @Dao
 interface CartProductDao {
     @Query(
-        "SELECT product.id AS productId, name, imgUrl, price, cart.quantity FROM product, cart " +
+        "SELECT product.id AS productId, product.name, product.imgUrl, product.price, cart.quantity " +
+                "FROM product LEFT JOIN cart ON product.id = cart.productId " +
                 "LIMIT :pageSize OFFSET :offset * :pageSize"
     )
-    fun findByPaging(offset: Int, pageSize: Int): List<CartProduct>
+    fun findProductByPaging(offset: Int, pageSize: Int): List<CartProduct>
+
+    @Query(
+        "SELECT product.id AS productId, product.name, product.imgUrl, product.price, cart.quantity " +
+                "FROM cart LEFT JOIN product ON cart.productId = product.id " +
+                "LIMIT :pageSize OFFSET :offset * :pageSize"
+    )
+    fun findCartByPaging(offset: Int, pageSize: Int): List<CartProduct>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveProduct(product: Product)
