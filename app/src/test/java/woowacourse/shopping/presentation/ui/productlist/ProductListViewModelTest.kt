@@ -65,6 +65,7 @@ class ProductListViewModelTest {
         // when
         every { shoppingCartRepository.getAllCartProducts() } returns Result.success(emptyList())
         viewModel.loadMoreProducts()
+        Thread.sleep(3000)
 
         // then
         val actual = viewModel.uiState.getOrAwaitValue()

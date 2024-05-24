@@ -68,6 +68,7 @@ dependencies {
     androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.3.0")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.3.0")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
 
     // glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
