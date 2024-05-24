@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderProductHistoryBinding
-import woowacourse.shopping.domain.model.ProductHistory
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 
 class ProductHistoryListAdapter(
     private val actionHandler: ProductListActionHandler,
-    private val productHistoryList: MutableList<ProductHistory> = mutableListOf(),
+    private val productHistoryList: MutableList<Product> = mutableListOf(),
 ) : RecyclerView.Adapter<ProductHistoryListAdapter.ProductHistoryViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,7 +29,7 @@ class ProductHistoryListAdapter(
         holder.bind(productHistoryList[position])
     }
 
-    fun updateProductHistorys(newCartProductList: List<ProductHistory>) {
+    fun updateProductHistorys(newCartProductList: List<Product>) {
         productHistoryList.clear()
         productHistoryList.addAll(newCartProductList)
         notifyDataSetChanged()
@@ -39,7 +39,7 @@ class ProductHistoryListAdapter(
         private val binding: HolderProductHistoryBinding,
         private val actionHandler: ProductListActionHandler,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(productHistory: ProductHistory) {
+        fun bind(productHistory: Product) {
             binding.productHistory = productHistory
             binding.actionHandler = actionHandler
         }

@@ -9,7 +9,7 @@
 
         <variable
             name="productHistory"
-            type="woowacourse.shopping.domain.model.ProductHistory" />
+            type="woowacourse.shopping.domain.model.Product" />
 
 
         <variable
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{() -> actionHandler.navigateToProductDetail(productHistory.productId)}">
+        android:onClick="@{() -> actionHandler.navigateToProductDetail(productHistory.id)}">
 
         <ImageView
             android:id="@+id/iv_product_thumbnail"

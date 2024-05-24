@@ -130,7 +130,7 @@ class ProductDetailViewModel(
                 return@onSuccess
             }
 
-            if (product.id == productHistorys.first().productId) {
+            if (product.id == productHistorys.first().id) {
                 val productHistory =
                     if (productHistorys.size >= 2) {
                         productHistorys[1]

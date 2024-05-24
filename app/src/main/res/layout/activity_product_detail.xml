@@ -102,7 +102,7 @@
             android:layout_marginTop="29dp"
             android:background="@drawable/bg_transparent_rounded_gray6"
             android:gravity="center_vertical"
-            android:onClick="@{() -> vm.refresh(vm.uiState.productHistory.productId)}"
+            android:onClick="@{() -> vm.refresh(vm.uiState.productHistory.id)}"
             android:orientation="vertical"
             android:paddingVertical="16dp"
             android:paddingStart="18dp"

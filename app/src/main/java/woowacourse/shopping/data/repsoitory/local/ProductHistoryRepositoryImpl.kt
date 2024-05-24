@@ -3,7 +3,7 @@ package woowacourse.shopping.data.repsoitory.local
 import woowacourse.shopping.data.dao.ProductHistoryDao
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.data.model.local.ProductHistoryEntity
-import woowacourse.shopping.domain.model.ProductHistory
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
 import java.time.LocalDateTime
 
@@ -27,12 +27,12 @@ class ProductHistoryRepositoryImpl(private val dao: ProductHistoryDao) : Product
             dao.insertProductHistory(productHistoryEntity = productHistoryEntity)
         }
 
-    override fun findProductHistory(productId: Long): Result<ProductHistory> =
+    override fun findProductHistory(productId: Long): Result<Product> =
         runCatching {
             dao.findProductHistory(productId = productId).toDomain()
         }
 
-    override fun getProductHistory(size: Int): Result<List<ProductHistory>> =
+    override fun getProductHistory(size: Int): Result<List<Product>> =
         runCatching {
             dao.getProductHistoryPaged(size = size).map { it.toDomain() }
         }
