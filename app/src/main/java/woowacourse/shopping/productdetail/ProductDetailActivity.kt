@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
@@ -17,6 +18,7 @@ import woowacourse.shopping.util.showToastMessage
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
     private lateinit var binding: ActivityProductDetailBinding
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +30,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
         binding.onClick = this
         binding.productId = productId
         showProductDetail(productId)
+        viewModel.updateRecentProduct(productId)
+        onBackPressedCallbackInit()
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -37,7 +41,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
     private fun navigateToProductList(productId: Long) {
         viewModel.isAddSuccess.observe(this) { isSuccess ->
             if (isSuccess) {
-                val intent = ProductListActivity.newInstance(this, longArrayOf(productId))
+                val intent = ProductListActivity.changedProductIntent(this, longArrayOf(productId))
                 this.setResult(RESULT_OK, intent)
                 this.finish()
             }
@@ -91,6 +95,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
 
     override fun onMinusCountClicked(id: Long) {
         viewModel.minusProductCount()
+    }
+
+    private fun onBackPressedCallbackInit() {
+        onBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val intent = ProductListActivity.recentInstance(this@ProductDetailActivity, true)
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
+            }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     companion object {

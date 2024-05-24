@@ -15,7 +15,8 @@ import woowacourse.shopping.util.showToastMessage
 
 class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private lateinit var binding: ActivityProductListBinding
-    private lateinit var adapter: ProductListAdapter
+    private lateinit var productAdapter: ProductListAdapter
+    private lateinit var recentAdapter: RecentProductAdapter
     private val viewModel: ProductListViewModel by viewModels { ViewModelFactory() }
 
     private val activityResultLauncher = activityResultLauncher()
@@ -31,6 +32,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         attachAdapter()
         showProducts()
         supportActionBar?.hide()
+        loadRecentProduct()
 
         navigateToShoppingCart()
     }
@@ -38,23 +40,30 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private fun activityResultLauncher() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val changedProductId: LongArray = result.data?.getLongArrayExtra(CHANGED_PRODUCT_ID) ?: longArrayOf()
+                val changedProductId: LongArray =
+                    result.data?.getLongArrayExtra(CHANGED_PRODUCT_ID) ?: longArrayOf()
                 viewModel.reloadProductOfInfo(changedProductId.toList())
+
+                val isRecentChanged = result.data?.getBooleanExtra(IS_RECENT_CHANGED, false) ?: false
+                if (isRecentChanged) viewModel.loadRecentProduct()
             }
         }
 
     private fun attachAdapter() {
-        adapter = ProductListAdapter(this)
+        productAdapter = ProductListAdapter(this)
         binding.rcvProductListMain.itemAnimator = null
-        binding.rcvProductListMain.adapter = adapter
+        binding.rcvProductListMain.adapter = productAdapter
+
+        recentAdapter = RecentProductAdapter(this)
+        binding.rcvProductListRecent.adapter = recentAdapter
     }
 
     private fun showProducts() {
         viewModel.initProducts()
         viewModel.loadState.observe(this) { loadState ->
             when (loadState) {
-                is LoadProductState.ChangeItemCount -> adapter.changeProductsInfo(loadState.result)
-                is LoadProductState.ShowProducts -> adapter.submitItems(loadState.currentProducts.products)
+                is LoadProductState.ChangeItemCount -> productAdapter.changeProductsInfo(loadState.result)
+                is LoadProductState.ShowProducts -> productAdapter.submitItems(loadState.currentProducts.products)
                 is LoadProductState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
@@ -82,14 +91,29 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         }
     }
 
+    private fun loadRecentProduct() {
+        viewModel.loadRecentProduct()
+        viewModel.recentProducts.observe(this) {
+            recentAdapter.replaceAll(it)
+        }
+    }
+
     companion object {
         private const val CHANGED_PRODUCT_ID = "productId"
+        private const val IS_RECENT_CHANGED = "isRecentChange"
 
-        fun newInstance(
+        fun changedProductIntent(
             context: Context,
             changedProductIds: LongArray,
         ) = Intent(context, ProductListActivity::class.java).apply {
             putExtra(CHANGED_PRODUCT_ID, changedProductIds)
+        }
+
+        fun recentInstance(
+            context: Context,
+            isRecentChanged: Boolean,
+        ) = Intent(context, ProductListActivity::class.java).apply {
+            putExtra(IS_RECENT_CHANGED, isRecentChanged)
         }
     }
 }

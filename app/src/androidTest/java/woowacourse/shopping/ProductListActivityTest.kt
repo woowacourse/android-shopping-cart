@@ -26,13 +26,13 @@ class ProductListActivityTest {
 
     @Test
     fun `화면에_상품_목록이_나타난다`() {
-        onView(withId(R.id.rcv_product_list)).check(matches(isDisplayed()))
+        onView(withId(R.id.rcv_product_list_main)).check(matches(isDisplayed()))
     }
 
     @Test
     fun `상품_목록에는_상품의_이름과_가격이_나타난다`() {
         repeat(4) {
-            onView(withId(R.id.rcv_product_list))
+            onView(withId(R.id.rcv_product_list_main))
                 .perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         it,
@@ -52,7 +52,7 @@ class ProductListActivityTest {
     fun `상품_목록에는_상품의_이미지가_나타난다`() {
         Thread.sleep(5000) // 5초 대기
         repeat(4) {
-            onView(withId(R.id.rcv_product_list))
+            onView(withId(R.id.rcv_product_list_main))
                 .perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         it,

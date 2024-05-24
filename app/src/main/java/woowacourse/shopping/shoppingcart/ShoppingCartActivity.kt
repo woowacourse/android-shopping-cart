@@ -31,7 +31,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
         initShoppingCart()
         onBackPressedCallbackInit()
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         updateView()
     }
@@ -64,7 +63,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            val intent = ProductListActivity.newInstance(this@ShoppingCartActivity, viewModel.changedProductIds.toLongArray())
+            val intent = ProductListActivity.changedProductIntent(this@ShoppingCartActivity, viewModel.changedProductIds.toLongArray())
             setResult(RESULT_OK, intent)
             finish()
         }
@@ -87,11 +86,12 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         onBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val intent = ProductListActivity.newInstance(this@ShoppingCartActivity, viewModel.changedProductIds.toLongArray())
+                    val intent = ProductListActivity.changedProductIntent(this@ShoppingCartActivity, viewModel.changedProductIds.toLongArray())
                     setResult(RESULT_OK, intent)
                     finish()
                 }
             }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     companion object {

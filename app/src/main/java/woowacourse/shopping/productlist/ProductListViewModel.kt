@@ -23,6 +23,9 @@ class ProductListViewModel(
 
     val totalCartItemCount = _loadState.map { it.currentProducts.totalCartItemCount() }
 
+    private val _recentProducts: MutableLiveData<List<RecentProductUiModel>> = MutableLiveData()
+    val recentProducts: LiveData<List<RecentProductUiModel>> get() = _recentProducts
+
     private fun currentLoadState(): ProductUiModels = _loadState.value?.currentProducts ?: ProductUiModels.default()
 
     fun initProducts() {
@@ -133,6 +136,16 @@ class ProductListViewModel(
                     updatedProducts,
                     currentLoadState().updateProducts(updatedProducts),
                 )
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    fun loadRecentProduct() {
+        runCatching {
+            productRepository.sortedRecentProduct()
+        }.onSuccess { recentProduct ->
+            _recentProducts.value = recentProduct.map { it.toRecentProductUiModel() }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }

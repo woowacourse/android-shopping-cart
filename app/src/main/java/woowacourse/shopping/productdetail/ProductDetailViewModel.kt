@@ -11,6 +11,7 @@ import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
+import java.time.LocalDateTime
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -77,6 +78,14 @@ class ProductDetailViewModel(
             _isAddSuccess.setValue(true)
         }.onFailure {
             _isAddSuccess.setValue(false)
+        }
+    }
+
+    fun updateRecentProduct(productId: Long) {
+        runCatching {
+            productRepository.addRecentProduct(productId, LocalDateTime.now())
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
         }
     }
 }
