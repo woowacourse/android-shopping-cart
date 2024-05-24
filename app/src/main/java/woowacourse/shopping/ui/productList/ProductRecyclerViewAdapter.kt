@@ -1,4 +1,4 @@
-package woowacourse.shopping.productList
+package woowacourse.shopping.ui.productList
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

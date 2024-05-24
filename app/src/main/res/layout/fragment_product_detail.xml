@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.productDetail.ProductDetailViewModel" />
+            type="woowacourse.shopping.ui.productDetail.ProductDetailViewModel" />
 
         <variable
             name="productCount"
@@ -17,7 +17,7 @@
 
         <variable
             name="onItemChargeListener"
-            type="woowacourse.shopping.productList.ProductRecyclerViewAdapter.OnItemQuantityChangeListener" />
+            type="woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter.OnItemQuantityChangeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

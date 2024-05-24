@@ -12,6 +12,7 @@ import woowacourse.shopping.repository.FakeShoppingProductsRepository
 import woowacourse.shopping.repository.ProductIdsCountRepository
 import woowacourse.shopping.repository.ShoppingProductsRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
+import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
 
 class ProductDetailViewModelTest {
     private lateinit var shoppingProductsRepository: ShoppingProductsRepository

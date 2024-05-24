@@ -16,11 +16,11 @@
 
         <variable
             name="onProductItemClickListener"
-            type="woowacourse.shopping.productList.ProductRecyclerViewAdapter.OnProductItemClickListener" />
+            type="woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter.OnProductItemClickListener" />
 
         <variable
             name="onItemChargeListener"
-            type="woowacourse.shopping.productList.ProductRecyclerViewAdapter.OnItemQuantityChangeListener" />
+            type="woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter.OnItemQuantityChangeListener" />
 
     </data>
 

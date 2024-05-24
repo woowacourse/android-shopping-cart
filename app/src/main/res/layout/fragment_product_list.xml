@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.productList.ProductListViewModel" />
+            type="woowacourse.shopping.ui.productList.ProductListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
             app:layout_constraintBottom_toTopOf="@id/load_more_button"
             app:layout_constraintTop_toBottomOf="@id/product_list_toolbar"
             app:spanCount="2"
-            tools:context=".productList.ProductListFragment"
+            tools:context=".ui.productList.ProductListFragment"
             tools:itemCount="20"
             tools:listitem="@layout/holder_product">
 

@@ -1,4 +1,4 @@
-package woowacourse.shopping.productList
+package woowacourse.shopping.ui.productList
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.cart.ShoppingCartFragment
+import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
-import woowacourse.shopping.productDetail.ProductDetailFragment
+import woowacourse.shopping.ui.productDetail.ProductDetailFragment
 import woowacourse.shopping.repository.DummyShoppingProductsRepository
 
 class ProductListFragment : Fragment() {

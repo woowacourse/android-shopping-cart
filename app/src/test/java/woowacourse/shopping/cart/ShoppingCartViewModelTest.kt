@@ -9,6 +9,7 @@ import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.repository.FakeShoppingCartItemRepository
+import woowacourse.shopping.ui.cart.ShoppingCartViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {

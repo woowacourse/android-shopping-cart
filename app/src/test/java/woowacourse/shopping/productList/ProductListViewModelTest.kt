@@ -13,6 +13,7 @@ import woowacourse.shopping.repository.FakeProductIdsCountDataSource
 import woowacourse.shopping.repository.FakeShoppingProductsRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.testfixture.productsIdCountTestFixture
+import woowacourse.shopping.ui.productList.ProductListViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {

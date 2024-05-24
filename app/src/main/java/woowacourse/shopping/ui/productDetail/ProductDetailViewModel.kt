@@ -1,4 +1,4 @@
-package woowacourse.shopping.productDetail
+package woowacourse.shopping.ui.productDetail
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.domain.model.ProductIdsCount
-import woowacourse.shopping.productList.ProductRecyclerViewAdapter
+import woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter
 import woowacourse.shopping.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.repository.ProductIdsCountRepository
 import woowacourse.shopping.repository.ShoppingProductsRepository
