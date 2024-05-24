@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.productlist
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
@@ -109,15 +108,6 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     }
 
     companion object {
-        private const val PUT_EXTRA_UPDATED_PRODUCTS = "updatedProducts"
-
-        fun getIntent(
-            context: Context,
-            updatedProducts: UpdatedProducts,
-        ): Intent {
-            return Intent(context, ProductListActivity::class.java).apply {
-                putExtra(PUT_EXTRA_UPDATED_PRODUCTS, updatedProducts)
-            }
-        }
+        const val PUT_EXTRA_UPDATED_PRODUCTS = "updatedProducts"
     }
 }

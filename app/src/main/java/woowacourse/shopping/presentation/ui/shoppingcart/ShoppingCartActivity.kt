@@ -63,8 +63,15 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
         viewModel.navigateAction.observeEvent(this) { navigateAction ->
             when (navigateAction) {
                 is ShoppingCartNavigateAction.NavigateToProductList -> {
-                    val intent = ProductListActivity.getIntent(this, navigateAction.updatedProducts)
-                    setResult(Activity.RESULT_OK, intent)
+                    val resultIntent =
+                        intent.apply {
+                            putExtra(
+                                ProductListActivity.PUT_EXTRA_UPDATED_PRODUCTS,
+                                navigateAction.updatedProducts,
+                            )
+                        }
+
+                    setResult(Activity.RESULT_OK, resultIntent)
                     finish()
                 }
             }

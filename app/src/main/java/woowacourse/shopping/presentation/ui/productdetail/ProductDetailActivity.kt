@@ -48,7 +48,12 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         viewModel.navigateAction.observeEvent(this) { navigateAction ->
             when (navigateAction) {
                 is ProductDetailNavigateAction.NavigateToProductList -> {
-                    val intent = ProductListActivity.getIntent(this, navigateAction.updatedProducts)
+                    intent.apply {
+                        putExtra(
+                            ProductListActivity.PUT_EXTRA_UPDATED_PRODUCTS,
+                            navigateAction.updatedProducts,
+                        )
+                    }
                     setResult(RESULT_OK, intent)
                     finish()
                 }
