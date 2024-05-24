@@ -4,7 +4,7 @@ import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.db.cart.Cart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class CartRepositoryImpl(
+class DefaultCartRepository(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
     override fun fetchAllCart(): List<Cart>? {

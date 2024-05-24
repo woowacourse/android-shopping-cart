@@ -15,9 +15,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.DefaultCartRepository
 import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.`Default ProductRepository`
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.db.cart.CartDatabase
 import woowacourse.shopping.db.producthistory.ProductHistoryDatabase
@@ -47,8 +47,8 @@ class DetailActivity : AppCompatActivity() {
             ViewModelProvider(
                 this,
                 DetailViewModelFactory(
-                    ProductRepositoryImpl(DefaultProductDataSource),
-                    CartRepositoryImpl(
+                    `Default ProductRepository`(DefaultProductDataSource),
+                    DefaultCartRepository(
                         DefaultCartDataSource(
                             CartDatabase.getInstance(this),
                         ),

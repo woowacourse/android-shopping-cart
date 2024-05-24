@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.DefaultCartRepository
+import woowacourse.shopping.data.repository.`Default ProductRepository`
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.db.cart.CartDatabase
 import woowacourse.shopping.presentation.cart.CartActivity
@@ -55,8 +55,8 @@ class HomeActivity : AppCompatActivity() {
         ViewModelProvider(
             this,
             HomeViewModelFactory(
-                ProductRepositoryImpl(DefaultProductDataSource),
-                CartRepositoryImpl(DefaultCartDataSource(CartDatabase.getInstance(this))),
+                `Default ProductRepository`(DefaultProductDataSource),
+                DefaultCartRepository(DefaultCartDataSource(CartDatabase.getInstance(this))),
             ),
         )[HomeViewModel::class.java]
     }
