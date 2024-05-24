@@ -7,14 +7,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
     private val viewModel by lazy {
-        ViewModelProvider(this, CartViewModelFactory(CartsImpl, ProductsImpl, this.applicationContext))
+        ViewModelProvider(this, CartViewModelFactory(ProductsImpl, this.applicationContext))
             .get(CartViewModel::class.java)
     }
 

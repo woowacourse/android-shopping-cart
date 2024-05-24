@@ -10,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
     private val viewModel by lazy {
-        ViewModelProvider(this, ProductDetailViewModelFactory(ProductsImpl, CartsImpl, this.applicationContext))
+        ViewModelProvider(this, ProductDetailViewModelFactory(ProductsImpl, this.applicationContext))
             .get(ProductDetailViewModel::class.java)
     }
     private val productId by lazy { productId() }

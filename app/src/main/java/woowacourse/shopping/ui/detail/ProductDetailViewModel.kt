@@ -5,14 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.OrderEntity
 import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
 
 class ProductDetailViewModel(
     private val productDao: ProductDao,
-    private val cartDao: CartDao,
     applicationContext: Context,
 ) : ViewModel() {
     private val ordersRepository = OrdersRepository(applicationContext)
