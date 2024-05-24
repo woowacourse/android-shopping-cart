@@ -52,6 +52,7 @@ class ProductsAdapter(
                 (holder as RecentProductsViewHolder).bind(
                     (productsViews[position] as RecentProductsUiModel).recentProductUiModels,
                 )
+
             ProductsViewType.PRODUCTS_UI_MODEL ->
                 (holder as ProductsViewHolder).bind(
                     productsViews[position] as ProductUiModel,
@@ -106,6 +107,11 @@ class ProductsAdapter(
 
     private fun isExistedRecentProducts(): Boolean {
         return ProductsViewType.from(getItemViewType(RECENT_PRODUCTS_INDEX)) == ProductsViewType.RECENT_PRODUCTS
+    }
+
+    fun productsLastPosition(lastPosition: Int): Int {
+        if (isExistedRecentProducts()) return lastPosition - 1
+        return lastPosition
     }
 
     companion object {

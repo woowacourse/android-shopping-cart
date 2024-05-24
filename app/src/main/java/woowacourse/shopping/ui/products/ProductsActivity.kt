@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.products
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -113,10 +114,9 @@ class ProductsActivity : AppCompatActivity() {
                     dx: Int,
                     dy: Int,
                 ) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val lastPosition =
-                        (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
-                    viewModel.changeSeeMoreVisibility(lastPosition)
+                    val lastPosition = (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val productsLastPosition = adapter.productsLastPosition(lastPosition)
+                    viewModel.changeSeeMoreVisibility(productsLastPosition)
                 }
             }
         binding.rvProducts.addOnScrollListener(onScrollListener)
