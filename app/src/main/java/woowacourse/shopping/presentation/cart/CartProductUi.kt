@@ -10,6 +10,8 @@ data class CartProductUi(
 ) {
     val isVisible: Boolean
         get() = count > 0
+    val totalPrice: Int
+        get() = product.price * count
 }
 
 fun CartProduct.toUiModel(): CartProductUi {

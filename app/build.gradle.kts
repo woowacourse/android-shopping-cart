@@ -18,7 +18,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] = "de.mannodermaus.junit5.AndroidJUnit5Builder"
+        testInstrumentationRunnerArguments["runnerBuilder"] =
+            "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
 
     buildTypes {
@@ -43,9 +44,11 @@ android {
             excludes += "win32-x86*/**"
         }
     }
-
     buildFeatures {
         dataBinding = true
+    }
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -76,6 +79,7 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     testImplementation("io.mockk:mockk:1.13.2")
     // instrument test
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
     androidTestImplementation("io.mockk:mockk-android:1.13.3")
     debugImplementation("androidx.fragment:fragment-testing:1.6.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

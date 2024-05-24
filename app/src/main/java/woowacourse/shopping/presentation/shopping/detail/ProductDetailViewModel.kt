@@ -35,7 +35,7 @@ class ProductDetailViewModel(
         get() =
             _cartProduct.map {
                 recentProduct.value != null &&
-                    it.product.id != _recentProduct.value?.id
+                        it.product.id != _recentProduct.value?.id
             }
 
     init {
