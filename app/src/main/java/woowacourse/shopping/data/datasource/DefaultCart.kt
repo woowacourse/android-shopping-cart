@@ -44,14 +44,16 @@ class DefaultCart(
         productId: Long,
         quantity: Int,
     ): Long {
-        val cart =
-            Cart(
-                quantity = quantity,
-                productId = productId,
-            )
         thread {
-            cartDao.insert(cart)
+            val cart = cartDao.getCart(productId)
+
+            if (cart == null) {
+                cartDao.insert(Cart(productId = productId, quantity = quantity))
+            } else {
+                cartDao.update(cart.copy(quantity = quantity))
+            }
         }.join()
+
         return productId
     }
 
@@ -59,40 +61,32 @@ class DefaultCart(
         productId: Long,
         quantity: Int,
     ): Long {
-        var updatedProductId = productId
         thread {
             val cart = cartDao.getCart(productId)
-            cartDao.update(
-                cart.copy(
-                    quantity = cart.quantity + 1,
-                ),
-            )
-            updatedProductId = productId
+            cart?.let {
+                cartDao.update(cart.copy(quantity = cart.quantity + 1))
+            }
         }.join()
-        return updatedProductId
+        return productId
     }
 
     override fun minusCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        var updatedProductId = productId
         thread {
             val cart = cartDao.getCart(productId)
-            cartDao.update(
-                cart.copy(
-                    quantity = cart.quantity - 1,
-                ),
-            )
-            updatedProductId = productId
+            cart?.let {
+                cartDao.update(cart.copy(quantity = cart.quantity - 1))
+            }
         }.join()
-        return updatedProductId
+        return productId
     }
 
     override fun removeAllCartItem(productId: Long): Long {
         thread {
             val cart = cartDao.getCart(productId)
-            cartDao.delete(cart)
+            cartDao.delete(cart!!)
         }.join()
         return productId
     }

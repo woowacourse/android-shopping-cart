@@ -22,7 +22,7 @@ interface CartDao {
     fun delete(cart: Cart)
 
     @Query("SELECT * FROM carts WHERE productId = :productId")
-    fun getCart(productId: Long): Cart
+    fun getCart(productId: Long): Cart?
 
     @Query("DELETE FROM carts")
     fun deleteAll()

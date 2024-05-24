@@ -43,11 +43,7 @@ class DetailViewModel(
         id: Long,
         quantity: Int,
     ) {
-        if (quantity == 1) {
-            cartRepository.addCartItem(productId = id, quantity = quantity)
-        } else {
-            cartRepository.plusCartItem(productId = id, quantity = quantity)
-        }
+        cartRepository.addCartItem(productId = id, quantity = quantity)
 
         val cart = cartRepository.fetchCartItem(id)
 
@@ -55,12 +51,12 @@ class DetailViewModel(
     }
 
     override fun onCartItemAdd(id: Long) {
-        _quantity.value = this.quantity.value?.plus(1)
+        _quantity.value = quantity.value?.plus(1)
     }
 
     override fun onCartItemMinus(id: Long) {
-        if (this.quantity.value!! > 1) {
-            _quantity.value = this.quantity.value?.minus(1)
+        if (quantity.value!! > 1) {
+            _quantity.value = quantity.value?.minus(1)
         }
     }
 }
