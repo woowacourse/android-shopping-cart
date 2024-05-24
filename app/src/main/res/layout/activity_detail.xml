@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="detailViewModel"
             type="woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel" />
@@ -93,6 +95,48 @@
             app:layout_constraintTop_toTopOf="@id/tv_price_value_detail"
             app:productId="@{detailViewModel.productInformation.id}"
             app:quantity="@{detailViewModel.quantity}" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="29dp"
+            android:visibility="@{detailViewModel.recentProductHistory != null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/tv_price_value_detail"
+            app:strokeColor="@color/gray_500"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_last_watch_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="16dp"
+                    android:text="마지막으로 본 상품"
+                    android:textColor="@color/mint_900"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="18dp"
+                    android:text="@{detailViewModel.recentProductHistory.name}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tv_last_watch_product"
+                    app:layout_constraintTop_toBottomOf="@id/tv_last_watch_product"
+                    tools:text="PET보틀-정사각형(500ml)" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_to_cart_detail"

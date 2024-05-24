@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.util.Event
@@ -12,6 +13,7 @@ import woowacourse.shopping.util.Event
 class DetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val productHistoryRepository: ProductHistoryRepository,
     productId: Long,
 ) : ViewModel(), CartItemCountHandler {
     private val _productInformation: MutableLiveData<Product> = MutableLiveData()
@@ -26,13 +28,27 @@ class DetailViewModel(
     val addComplete: LiveData<Event<Long>>
         get() = _addComplete
 
+    private val _recentProductHistory = MutableLiveData<Product>()
+    val recentProductHistory: LiveData<Product>
+        get() = _recentProductHistory
+
     init {
         loadProductInformation(productId)
         loadCartItem(productId)
+        getProductHistory()
+        addProductHistory(productId)
     }
 
-    fun loadCartItem(id: Long) {
-        _quantity.value = cartRepository.fetchCartItem(id)?.quantity ?: 1
+    fun getProductHistory() {
+        val productId = productHistoryRepository.getMostRecentProductHistory()?.productId
+
+        productId?.let {
+            _recentProductHistory.value = productRepository.fetchProduct(it)
+        }
+    }
+
+    fun addProductHistory(productId: Long) {
+        productHistoryRepository.setProductHistory(productId)
     }
 
     fun loadProductInformation(id: Long) {
@@ -58,5 +74,9 @@ class DetailViewModel(
         if (quantity.value!! > 1) {
             _quantity.value = quantity.value?.minus(1)
         }
+    }
+
+    private fun loadCartItem(id: Long) {
+        _quantity.value = cartRepository.fetchCartItem(id)?.quantity ?: 1
     }
 }
