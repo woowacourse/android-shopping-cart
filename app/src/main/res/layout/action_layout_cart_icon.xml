@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data></data>
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="cartTotalItemQuantity"
+            type="Integer" />
+    </data>
 
     <FrameLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:foregroundGravity="center"
         android:measureAllChildren="true"
-        android:paddingEnd="10dp"
-        android:layout_marginEnd="10dp">
+        android:paddingEnd="10dp">
 
         <ImageView
             android:id="@+id/cart_icon"
@@ -24,11 +31,11 @@
             android:layout_gravity="start|top"
             android:background="@drawable/oval_emerald_total_quantity_count"
             android:gravity="center"
-            android:text="10"
+            android:text="@{cartTotalItemQuantity.toString()}"
             android:textColor="@color/white"
             android:textSize="12dp"
             android:textStyle="bold"
-            android:visibility="visible"
+            android:visibility="@{cartTotalItemQuantity > 0 ? View.VISIBLE : View.INVISIBLE}"
             tools:text="2" />
 
     </FrameLayout>

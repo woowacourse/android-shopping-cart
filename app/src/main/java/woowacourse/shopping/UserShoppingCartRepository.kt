@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.domain.User
 import kotlin.math.min
 
-object UserShoppingCartRepository: ShoppingCartRepository {
+object UserShoppingCartRepository : ShoppingCartRepository {
     private var users =
         listOf(
             User(
@@ -13,6 +13,7 @@ object UserShoppingCartRepository: ShoppingCartRepository {
                 shoppingCart = ShoppingCart(emptyList()),
             ),
         )
+
     override fun userId(): Long = users.first().id
 
     override fun shoppingCart(userId: Long): ShoppingCart =
@@ -42,4 +43,6 @@ object UserShoppingCartRepository: ShoppingCartRepository {
                 if (it.id == userId()) it.copy(shoppingCart = shoppingCart) else it
             }
     }
+
+    override fun cartTotalItemQuantity(): Int = shoppingCart(userId()).totalItemQuantity()
 }

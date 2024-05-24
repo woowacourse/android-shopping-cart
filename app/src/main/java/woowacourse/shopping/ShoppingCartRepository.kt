@@ -18,4 +18,6 @@ interface ShoppingCartRepository {
     fun shoppingCartSize(): Int
 
     fun updateShoppingCart(shoppingCart: ShoppingCart)
+
+    fun cartTotalItemQuantity(): Int
 }

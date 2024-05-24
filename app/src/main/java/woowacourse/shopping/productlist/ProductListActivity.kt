@@ -50,21 +50,26 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         viewModel.productUiModels.observe(this) { products ->
             adapter.submitList(products)
         }
+        viewModel.updatedItemsId.observe(this) { updatedItemsId ->
+            adapter.updateItems(updatedItemsId)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.product_list_menu, menu)
-        val menuBinding: ActionLayoutCartIconBinding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.action_layout_cart_icon,null, false)
+        val menuBinding: ActionLayoutCartIconBinding = ActionLayoutCartIconBinding.inflate(layoutInflater)
         val menuItem = menu?.findItem(R.id.menu_shopping_cart_nav)
-
         menuItem?.actionView = menuBinding.root
-
         menuBinding.root.setOnClickListener {
             if (menuItem != null) {
                 onOptionsItemSelected(menuItem)
             }
         }
+
+        viewModel.totalItemQuantity.observe(this) {
+            menuBinding.cartTotalItemQuantity = it
+        }
+
         return true
     }
 
@@ -78,5 +83,17 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     override fun onProductClicked(id: Long) {
         startActivity(ProductDetailActivity.newInstance(this, id))
+    }
+
+    override fun onAddButtonClicked(id: Long) {
+        viewModel.addProductToCart(id)
+    }
+
+    override fun onPlusButtonClicked(id: Long, currentQuantity: Int) {
+        viewModel.plusProductOnCart(id, currentQuantity)
+    }
+
+    override fun onMinusButtonClicked(id: Long, currentQuantity: Int) {
+        viewModel.minusProductOnCart(id, currentQuantity)
     }
 }

@@ -24,8 +24,8 @@ class ViewModelFactory : ViewModelProvider.Factory {
             }
 
             modelClass.isAssignableFrom(ShoppingCartViewModel::class.java) -> {
-                val repository = UserShoppingCartRepository
-                ShoppingCartViewModel(repository) as T
+                val shoppingCartRepository = UserShoppingCartRepository
+                ShoppingCartViewModel(shoppingCartRepository) as T
             }
 
             else -> error("Failed to create ViewModel : ${modelClass.name}")
