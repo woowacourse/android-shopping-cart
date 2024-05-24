@@ -13,7 +13,7 @@ object DummyProductRepository : ProductRepository {
 
     private const val RECENT_SIZE = 10
 
-    private val recentProducts = RecentProducts(RECENT_SIZE)
+    private var recentProducts = RecentProducts(emptyList())
 
     private fun moreDummies(): List<Product> {
         val products = mutableListOf<Product>()
@@ -121,6 +121,6 @@ object DummyProductRepository : ProductRepository {
         localDateTime: LocalDateTime,
     ) {
         val product = productById(productId)
-        recentProducts.add(RecentProduct(product, localDateTime))
+        recentProducts = recentProducts.add(RecentProduct(product, localDateTime))
     }
 }
