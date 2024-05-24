@@ -77,7 +77,7 @@ class ProductDetailViewModel(
         try {
             val loadItemCounter = loadProductItemCount(productId)
             val product = productRepository.getProduct(productId)
-            product.cartItemCounter.selectItem()
+            product.itemSelector.selectItem()
             product.cartItemCounter.updateCount(loadItemCounter.itemCount)
             loadRecentlyProduct(product)
             _product.value = product
@@ -169,7 +169,7 @@ class ProductDetailViewModel(
             deletePrevRecentlyProduct(recentlyProduct.id)
             val loadItemCounter = loadProductItemCount(recentlyProduct.productId)
             val product = productRepository.getProduct(recentlyProduct.productId)
-            product.cartItemCounter.selectItem()
+            product.itemSelector.selectItem()
             product.cartItemCounter.updateCount(loadItemCounter.itemCount)
             _product.value = product
             _recentlyProduct.value = RecentlyProduct.defaultRecentlyProduct

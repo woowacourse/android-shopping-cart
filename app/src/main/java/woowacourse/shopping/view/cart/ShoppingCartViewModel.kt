@@ -93,7 +93,7 @@ class ShoppingCartViewModel(
                         cartItemResult.cartItemId,
                         cartItemResult.counter.itemCount,
                     )
-                    product.cartItemCounter.selectItem()
+                    product.itemSelector.selectItem()
                     product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
                     _shoppingCartEvent.value =
                         ShoppingCartEvent.UpdateProductEvent.Success(
@@ -150,15 +150,6 @@ class ShoppingCartViewModel(
                 else -> _errorEvent.postValue(ShoppingCartEvent.ErrorState.NotKnownError)
             }
         }
-    }
-
-    fun updateShoppingCart(cartItem: CartItem) {
-        thread {
-            shoppingCartRepository.updateCartItem(
-                cartItem.id,
-                cartItem.product.cartItemCounter.itemCount,
-            )
-        }.join()
     }
 
     fun getUpdatePageData(): List<CartItem> {

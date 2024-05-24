@@ -6,6 +6,7 @@ data class Product(
     val price: Int,
     val imageUrl: String,
     val cartItemCounter: CartItemCounter = CartItemCounter(),
+    val itemSelector: ItemSelector = ItemSelector(),
 ) {
     companion object {
         const val DEFAULT_PRODUCT_ID = -1L
@@ -15,7 +16,6 @@ data class Product(
                 "",
                 0,
                 "",
-                CartItemCounter(),
             )
     }
 }

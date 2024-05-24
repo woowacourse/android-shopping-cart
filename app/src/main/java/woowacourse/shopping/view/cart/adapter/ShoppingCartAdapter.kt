@@ -37,7 +37,7 @@ class ShoppingCartAdapter(
     ) {
         val item = cartItems[position]
         productPosition[item.product.id] = position
-        item.product.cartItemCounter.selectItem()
+        item.product.itemSelector.selectItem()
         holder.bind(item)
     }
 
