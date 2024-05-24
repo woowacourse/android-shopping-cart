@@ -21,4 +21,5 @@
     <string name="quantity_decrease">-</string>
     <string name="quantity_increase">+</string>
     <string name="product_detail_last_viewed_product">마지막으로 본 상품</string>
+    <string name="main_recent_viewed_product">최근 본 상품</string>
 </resources>
