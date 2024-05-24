@@ -1,25 +1,39 @@
 package woowacourse.shopping.productList
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.DummyProductStore
 
-class ProductListViewModel : ViewModel() {
+class ProductListViewModel(application: Application) : AndroidViewModel(application) {
     private val dummyProductStore by lazy { DummyProductStore() }
     private var currentIndex = 1
 
-    private val _cartItems = MutableLiveData(ShoppingCart.cartItems)
-    val cartItem: LiveData<List<CartItem>> get() = _cartItems
+    private val _cartItems = MutableLiveData<List<CartItem>>()
+    val cartItems: LiveData<List<CartItem>> get() = _cartItems
 
     private val _loadedProducts: MutableLiveData<List<Product>> =
         MutableLiveData(loadProducts())
-
     val loadedProducts: LiveData<List<Product>>
         get() = _loadedProducts
+
+    init {
+        ShoppingCart.initialize(application)
+        loadCartItems()
+    }
+
+    private fun loadCartItems() {
+        viewModelScope.launch {
+            val cartItemsFromDb = ShoppingCart.getCartItems()
+            _cartItems.value = cartItemsFromDb
+        }
+    }
 
     fun loadMoreProducts() {
         val newProducts = loadProducts()
@@ -28,13 +42,17 @@ class ProductListViewModel : ViewModel() {
     }
 
     fun increaseQuantity(productId: Int) {
-        ShoppingCart.addProductToCart(productId)
-        _cartItems.value = ShoppingCart.cartItems
+        viewModelScope.launch {
+            ShoppingCart.addProductToCart(productId)
+            loadCartItems()
+        }
     }
 
     fun decreaseQuantity(productId: Int) {
-        ShoppingCart.subtractProductCount(productId)
-        _cartItems.value = ShoppingCart.cartItems
+        viewModelScope.launch {
+            ShoppingCart.subtractProductCount(productId)
+            loadCartItems()
+        }
     }
 
     private fun loadProducts(): List<Product> {

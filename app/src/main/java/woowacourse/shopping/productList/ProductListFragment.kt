@@ -6,18 +6,23 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.base.FragmentReplacer.replaceFragment
 import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.factory.BaseViewModelFactory
 import woowacourse.shopping.listener.OnClickCartItemCounter
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.productDetail.ProductDetailFragment
 
 class ProductListFragment : Fragment(), OnClickCartItemCounter {
-    private val viewModel: ProductListViewModel by lazy { ProductListViewModel() }
+
+    private val viewModel: ProductListViewModel by viewModels {
+        BaseViewModelFactory { ProductListViewModel(requireActivity().application) }
+    }
 
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
@@ -38,6 +43,7 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.productDetailList.adapter = adapter
         binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         showLoadMoreButton()
         return binding.root
     }
@@ -82,10 +88,13 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
             adapter.updateData(it)
         }
 
-        viewModel.cartItem.observe(viewLifecycleOwner) {
+        viewModel.cartItems.observe(viewLifecycleOwner) {
             adapter.updateCartItems(it)
         }
 
+        binding.loadMoreButton.setOnClickListener {
+            viewModel.loadMoreProducts()
+        }
     }
 
     private fun clickCartButton(it: MenuItem) =
@@ -117,5 +126,10 @@ class ProductListFragment : Fragment(), OnClickCartItemCounter {
 
     override fun decreaseQuantity(cartItem: CartItem) {
         viewModel.decreaseQuantity(cartItem.productId)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

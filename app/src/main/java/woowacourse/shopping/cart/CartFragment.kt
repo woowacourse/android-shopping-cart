@@ -14,11 +14,10 @@ class CartFragment : Fragment(), OnClickCartItemCounter {
     private val viewModel: CartViewModel by viewModels()
     private val adapter: CartItemRecyclerViewAdapter by lazy {
         CartItemRecyclerViewAdapter(
-            viewModel.itemsInShoppingCartPage.value ?: emptyList(),
             onClickCartItemCounter = this,
             onClick = { deleteItemId ->
                 viewModel.deleteItem(deleteItemId)
-            },
+            }
         )
     }
     private var _binding: FragmentCartListBinding? = null
@@ -31,7 +30,6 @@ class CartFragment : Fragment(), OnClickCartItemCounter {
     ): View {
         _binding = FragmentCartListBinding.inflate(inflater)
         binding.cartList.adapter = adapter
-
         return binding.root
     }
 
@@ -48,12 +46,14 @@ class CartFragment : Fragment(), OnClickCartItemCounter {
             parentFragmentManager.popBackStack()
         }
 
-        viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) {
-            adapter.updateData(it)
+        viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) { products ->
+            val cartItems = viewModel.cartItems.value ?: emptyList()
+            adapter.updateData(products, cartItems)
         }
 
-        viewModel.cartItem.observe(viewLifecycleOwner) {
-            adapter.updateCartItems(it)
+        viewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            val products = viewModel.itemsInShoppingCartPage.value ?: emptyList()
+            adapter.updateData(products, cartItems)
         }
     }
 
@@ -63,5 +63,10 @@ class CartFragment : Fragment(), OnClickCartItemCounter {
 
     override fun decreaseQuantity(cartItem: CartItem) {
         viewModel.decreaseQuantity(cartItem.productId)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

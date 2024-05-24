@@ -1,35 +1,58 @@
 package woowacourse.shopping.db
 
+import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import woowacourse.shopping.db.model.CartItemEntity
 import woowacourse.shopping.model.CartItem
 
 object ShoppingCart {
-    private val _cartItems = mutableListOf<CartItem>()
-    val cartItems get() = _cartItems.toList()
+    private lateinit var database: CartDatabase
 
-    fun addProductToCart(productId: Int) {
-        val item = _cartItems.find { it.productId == productId }
-        if (item != null) {
-            item.quantity++
+    fun initialize(context: Context) {
+        database = CartDatabase.getDatabase(context)
+    }
+
+    suspend fun getCartItems(): List<CartItem> = withContext(Dispatchers.IO) {
+        database.cartItemDao().getAllCartItems().map { it.toCartItem() }
+    }
+
+    suspend fun addProductToCart(productId: Int) = withContext(Dispatchers.IO) {
+        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+        if (cartItem != null) {
+            cartItem.quantity++
+            database.cartItemDao().update(cartItem)
         } else {
-            _cartItems.add(CartItem(productId, 1))
+            database.cartItemDao().insert(CartItemEntity(productId = productId, quantity = 1))
         }
     }
 
-    fun delete(productId: Int) {
-        _cartItems.removeAll { it.productId == productId }
+    suspend fun deleteProduct(productId: Int) = withContext(Dispatchers.IO) {
+        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+        if (cartItem != null) {
+            database.cartItemDao().delete(cartItem)
+        }
     }
 
-    fun addProductCount(productId: Int) {
-        val position = _cartItems.indexOfFirst { it.productId == productId }
-        val item = _cartItems.find { it.productId == productId } ?: return
-        val newItem = item.copy(quantity = item.quantity + 1)
-        _cartItems[position] = newItem
+    suspend fun addProductCount(productId: Int) = withContext(Dispatchers.IO) {
+        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+        if (cartItem != null) {
+            cartItem.quantity++
+            database.cartItemDao().update(cartItem)
+        }
     }
 
-    fun subtractProductCount(productId: Int) {
-        val position = _cartItems.indexOfFirst { it.productId == productId }
-        val item = _cartItems.find { it.productId == productId } ?: return
-        val newItem = item.copy(quantity = item.quantity - 1)
-        _cartItems[position] = newItem
+    suspend fun subtractProductCount(productId: Int) = withContext(Dispatchers.IO) {
+        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+        if (cartItem != null && cartItem.quantity > 1) {
+            cartItem.quantity--
+            database.cartItemDao().update(cartItem)
+        } else if (cartItem != null && cartItem.quantity == 1) {
+            database.cartItemDao().delete(cartItem)
+        }
+    }
+
+    suspend fun clearCart() = withContext(Dispatchers.IO) {
+        database.cartItemDao().clearCart()
     }
 }

@@ -1,18 +1,21 @@
 package woowacourse.shopping.cart
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.DummyProductStore
 import kotlin.math.min
 
-class CartViewModel : ViewModel() {
+class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val productStore = DummyProductStore()
 
-    private var _productIds: List<Int> = ShoppingCart.cartItems.map { it.productId }
+    private var _productIds: List<Int> = listOf()
     private val productIds: List<Int>
         get() = _productIds
 
@@ -20,20 +23,34 @@ class CartViewModel : ViewModel() {
     val currentPage: LiveData<Int> get() = _currentPage
     private var _itemsInShoppingCartPage: MutableLiveData<MutableList<Product>> = MutableLiveData()
 
-    private val _cartItems = MutableLiveData(ShoppingCart.cartItems)
-    val cartItem: LiveData<List<CartItem>> get() = _cartItems
+    private val _cartItems = MutableLiveData<List<CartItem>>()
+    val cartItems: LiveData<List<CartItem>> get() = _cartItems
 
     init {
+        ShoppingCart.initialize(application)
+        loadCartItems()
         updateItemsInShoppingCart()
     }
 
     val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
 
+    private fun loadCartItems() {
+        viewModelScope.launch {
+            val cartItemsFromDb = ShoppingCart.getCartItems()
+            _cartItems.value = cartItemsFromDb
+            _productIds = cartItemsFromDb.map { it.productId }
+            updateItemsInShoppingCart()
+        }
+    }
+
     fun deleteItem(productId: Int) {
-        ShoppingCart.delete(productId)
-        _itemsInShoppingCartPage.value =
-            _itemsInShoppingCartPage.value?.filter { it.id != productId }?.toMutableList()
-        _productIds = _productIds.filter { it != productId }
+        viewModelScope.launch {
+            ShoppingCart.deleteProduct(productId)
+            _itemsInShoppingCartPage.value =
+                _itemsInShoppingCartPage.value?.filter { it.id != productId }?.toMutableList()
+            _productIds = _productIds.filter { it != productId }
+            loadCartItems()
+        }
     }
 
     fun nextPage() {
@@ -59,13 +76,17 @@ class CartViewModel : ViewModel() {
     }
 
     fun increaseQuantity(productId: Int) {
-        ShoppingCart.addProductCount(productId)
-        _cartItems.value = ShoppingCart.cartItems
+        viewModelScope.launch {
+            ShoppingCart.addProductCount(productId)
+            loadCartItems()
+        }
     }
 
     fun decreaseQuantity(productId: Int) {
-        ShoppingCart.subtractProductCount(productId)
-        _cartItems.value = ShoppingCart.cartItems
+        viewModelScope.launch {
+            ShoppingCart.subtractProductCount(productId)
+            loadCartItems()
+        }
     }
 
     companion object {

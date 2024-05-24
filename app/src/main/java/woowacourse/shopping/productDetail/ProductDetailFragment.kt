@@ -1,5 +1,6 @@
 package woowacourse.shopping.productDetail
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -15,7 +16,7 @@ import woowacourse.shopping.model.CartItem
 class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
     private val viewModel: ProductDetailViewModel by viewModels {
         val id = arguments?.getInt("productId") ?: 1
-        ProductDetailViewModel.factory(productId = id)
+        ProductDetailViewModel.factory(application = Application(), productId = id)
     }
 
     private var _binding: FragmentProductDetailBinding? = null
