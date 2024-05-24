@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.Cart
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.ProductWithQuantity
 import kotlin.concurrent.thread
 
 class CartViewModel(
-    private val productDao: ProductDao,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
@@ -31,7 +31,7 @@ class CartViewModel(
     val productWithQuantity: LiveData<List<ProductWithQuantity>> =
         cart.map { carts ->
             carts.map { cart ->
-                ProductWithQuantity(productDao.find(cart.productId), cart.quantity)
+                productWithQuantity(cart)
             }
         }
 
@@ -73,6 +73,17 @@ class CartViewModel(
             cartRepository.minusQuantityByProductId(productId)
             loadCartItems()
         }.start()
+    }
+
+    private fun productWithQuantity(cart: Cart): ProductWithQuantity {
+        lateinit var result: ProductWithQuantity
+        val thread =
+            Thread {
+                result = ProductWithQuantity(productRepository.find(cart.productId), cart.quantity)
+            }
+        thread.start()
+        thread.join()
+        return result
     }
 
     private fun loadCartItems() {

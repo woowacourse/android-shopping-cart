@@ -62,7 +62,7 @@ class ProductDetailActivityTest {
         @JvmStatic
         @BeforeClass
         fun setUp() {
-            productId = ProductsImpl.save(MAC_BOOK)
+            productId = ProductsImpl.insert(MAC_BOOK)
         }
     }
 }

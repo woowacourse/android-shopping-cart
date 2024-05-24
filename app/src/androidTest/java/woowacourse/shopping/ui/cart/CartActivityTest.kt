@@ -137,11 +137,11 @@ class CartActivityTest {
         @BeforeClass
         fun setUp() {
             repeat(5) {
-                val id = ProductsImpl.save(MAC_BOOK)
+                val id = ProductsImpl.insert(MAC_BOOK)
                 CartRepositoryImpl.get(FakeCartDao)
                     .insert(Cart(productId = id, quantity = Quantity(1)))
             }
-            val id = ProductsImpl.save(IPHONE)
+            val id = ProductsImpl.insert(IPHONE)
             CartRepositoryImpl.get(FakeCartDao).insert(Cart(productId = id, quantity = Quantity(1)))
         }
     }

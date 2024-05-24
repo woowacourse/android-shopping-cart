@@ -30,7 +30,7 @@ class ProductContentsViewModelTest {
     fun `상품은 한 화면에 20개까지만 보여져야 한다`() {
         // given
         repeat(100) {
-            ProductsImpl.save(product)
+            ProductsImpl.insert(product)
         }
 
         // when
@@ -43,7 +43,7 @@ class ProductContentsViewModelTest {
     @Test
     fun `첫번째 상품은 맥북이어야 한다`() {
         // given
-        ProductsImpl.save(product)
+        ProductsImpl.insert(product)
 
         // when
         viewModel = ProductContentsViewModel(ProductsImpl, recentProductRepository, cartRepository)

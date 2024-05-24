@@ -12,28 +12,15 @@ object ProductsImpl : ProductDao {
 
     init {
         repeat(100) {
-            save(MAC_BOOK.copy(name = "맥북$it"))
-            save(IPHONE.copy(name = "아이폰$it"))
-            save(GALAXY_BOOK.copy(name = "갤럭시북$it"))
-            save(GRAM.copy(name = "그램$it"))
+            insert(MAC_BOOK.copy(name = "맥북$it"))
+            insert(IPHONE.copy(name = "아이폰$it"))
+            insert(GALAXY_BOOK.copy(name = "갤럭시북$it"))
+            insert(GRAM.copy(name = "그램$it"))
         }
-    }
-
-    override fun save(product: Product): Long {
-        products[id] = product.copy(id = id)
-        return id++
-    }
-
-    override fun deleteAll() {
-        products.clear()
     }
 
     override fun find(id: Long): Product {
         return products[id] ?: throw NoSuchElementException(invalidIdMessage(id))
-    }
-
-    override fun findAll(): List<Product> {
-        return products.map { it.value }
     }
 
     override fun getProducts(): List<Product> {
@@ -45,8 +32,17 @@ object ProductsImpl : ProductDao {
         )
     }
 
-    override fun getLastProducts(): List<Product> {
-        return products.values.toList().subList(0, currentOffset)
+    override fun findAll(): List<Product> {
+        return products.map { it.value }
+    }
+
+    override fun insert(product: Product): Long {
+        products[id] = product.copy(id = id)
+        return id++
+    }
+
+    override fun deleteAll() {
+        products.clear()
     }
 
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)

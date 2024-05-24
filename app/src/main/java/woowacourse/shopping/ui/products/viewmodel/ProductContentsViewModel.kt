@@ -7,8 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.Cart
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductsImpl
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProduct
 import woowacourse.shopping.data.recentproduct.RecentProductRepository
 import woowacourse.shopping.model.Product
@@ -17,7 +16,7 @@ import woowacourse.shopping.model.Quantity
 import kotlin.concurrent.thread
 
 class ProductContentsViewModel(
-    private val productDao: ProductDao,
+    private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
 ) :
@@ -46,8 +45,16 @@ class ProductContentsViewModel(
     private val _recentProducts: MutableLiveData<List<RecentProduct>> = MutableLiveData()
     val recentProducts: LiveData<List<Product>> =
         _recentProducts.map { recentProducts ->
-            recentProducts.map { ProductsImpl.find(it.productId) }
+            products(recentProducts)
         }
+
+    private fun products(recentProducts: List<RecentProduct>): List<Product> {
+        lateinit var products: List<Product>
+        thread {
+            products = recentProducts.map { productRepository.find(it.productId) }
+        }.join()
+        return products
+    }
 
     init {
         productWithQuantity.addSource(products) { updateProductWithQuantity() }
@@ -57,7 +64,7 @@ class ProductContentsViewModel(
 
     fun loadProducts() {
         thread {
-            items.addAll(productDao.getProducts())
+            items.addAll(productRepository.getProducts())
             products.postValue(items)
         }.join()
     }

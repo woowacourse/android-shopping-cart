@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductsImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDatabase
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
@@ -28,7 +28,7 @@ class ProductContentsActivity : AppCompatActivity() {
     private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel: ProductContentsViewModel by viewModels {
         ProductContentsViewModelFactory(
-            ProductsImpl,
+            (application as ShoppingApplication).productRepository,
             RecentProductRepositoryImpl.get(RecentProductDatabase.database().recentProductDao()),
             CartRepositoryImpl.get(CartDatabase.database().cartDao()),
         )
@@ -36,7 +36,6 @@ class ProductContentsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initBinding()
         setProductAdapter()
         setRecentProductAdapter()

@@ -31,7 +31,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `선택한 상품이 불러와진다`() {
         // given
-        val productId = ProductsImpl.save(product)
+        val productId = ProductsImpl.insert(product)
 
         // when
         viewModel.loadProduct(productId)
@@ -46,7 +46,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `상품이 장바구니에 담긴다`() {
         // given
-        val productId = ProductsImpl.save(product)
+        val productId = ProductsImpl.insert(product)
         viewModel.loadProduct(productId)
 
         // when

@@ -36,9 +36,9 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 상품을 담으면 장바구니 화면에서 보여야 한다`() {
         // given
-        val productId1 = ProductsImpl.save(CHAIR)
-        val productId2 = ProductsImpl.save(CAR)
-        val productId3 = ProductsImpl.save(UMBRELLA)
+        val productId1 = ProductsImpl.insert(CHAIR)
+        val productId2 = ProductsImpl.insert(CAR)
+        val productId3 = ProductsImpl.insert(UMBRELLA)
 
         cartRepository.insert(Cart(productId = productId1))
         cartRepository.insert(Cart(productId = productId2))
@@ -56,9 +56,9 @@ class CartViewModelTest {
     @Test
     fun `상품을 지울 수 있어야 한다`() {
         // given
-        val productId1 = ProductsImpl.save(CHAIR)
-        val productId2 = ProductsImpl.save(CAR)
-        val productId3 = ProductsImpl.save(UMBRELLA)
+        val productId1 = ProductsImpl.insert(CHAIR)
+        val productId2 = ProductsImpl.insert(CAR)
+        val productId3 = ProductsImpl.insert(UMBRELLA)
 
         cartRepository.insert(Cart(productId = productId1))
         cartRepository.insert(Cart(productId = productId2))

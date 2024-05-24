@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductRepository
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
@@ -13,7 +13,7 @@ import woowacourse.shopping.ui.utils.Event
 import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
-    private val productDao: ProductDao,
+    private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
@@ -38,15 +38,17 @@ class ProductDetailViewModel(
     val mostRecentProductVisibility: MutableLiveData<Boolean> get() = _mostRecentProductVisibility
 
     fun loadProduct(productId: Long) {
-        runCatching {
-            productDao.find(productId)
-        }.onSuccess {
-            _error.value = false
-            _productWithQuantity.value = ProductWithQuantity(product = it)
-        }.onFailure {
-            _error.value = true
-            _errorMsg.setErrorHandled(it.message.toString())
-        }
+        thread {
+            runCatching {
+                productRepository.find(productId)
+            }.onSuccess {
+                _error.postValue(false)
+                _productWithQuantity.postValue(ProductWithQuantity(product = it))
+            }.onFailure {
+                _error.postValue(true)
+                _errorMsg.setErrorHandled(it.message.toString())
+            }
+        }.join()
     }
 
     fun addProductToCart() {
@@ -89,7 +91,7 @@ class ProductDetailViewModel(
         thread {
             recentProductRepository.findMostRecentProduct()?.let {
                 runCatching {
-                    productDao.find(it.productId)
+                    productRepository.find(it.productId)
                 }.onSuccess {
                     _error.postValue(false)
                     _mostRecentProduct.postValue(it)

@@ -16,7 +16,7 @@ class ProductsImplTest {
     fun `상품이 저장되어야 한다`() {
         // given
         // when
-        val id = ProductsImpl.save(product)
+        val id = ProductsImpl.insert(product)
         val actual = ProductsImpl.find(id)
 
         assertThat(actual).isEqualTo(product.copy(id = id))
@@ -25,7 +25,7 @@ class ProductsImplTest {
     @Test
     fun `상품을 찾을 수 있다`() {
         // given
-        val id = ProductsImpl.save(product.copy(name = "맥북 프로"))
+        val id = ProductsImpl.insert(product.copy(name = "맥북 프로"))
         // when
         val actual = ProductsImpl.find(id)
         // then
@@ -35,9 +35,9 @@ class ProductsImplTest {
     @Test
     fun `모든 상품을 찾을 수 있다`() {
         // given
-        ProductsImpl.save(product.copy(name = "갤럭시북"))
-        ProductsImpl.save(product.copy(name = "맥북"))
-        ProductsImpl.save(product.copy(name = "그램"))
+        ProductsImpl.insert(product.copy(name = "갤럭시북"))
+        ProductsImpl.insert(product.copy(name = "맥북"))
+        ProductsImpl.insert(product.copy(name = "그램"))
 
         // when
         val actual = ProductsImpl.findAll()
@@ -51,9 +51,9 @@ class ProductsImplTest {
     @Test
     fun `모두 지울 수 있다`() {
         // given
-        ProductsImpl.save(product.copy(name = "갤럭시북"))
-        ProductsImpl.save(product.copy(name = "맥북"))
-        ProductsImpl.save(product.copy(name = "그램"))
+        ProductsImpl.insert(product.copy(name = "갤럭시북"))
+        ProductsImpl.insert(product.copy(name = "맥북"))
+        ProductsImpl.insert(product.copy(name = "그램"))
 
         // when
         ProductsImpl.deleteAll()
