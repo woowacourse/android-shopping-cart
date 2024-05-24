@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.view
+package woowacourse.shopping.view
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +19,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.view.MainActivity
 import woowacourse.shopping.view.products.ProductsListFragment
 import woowacourse.shopping.view.products.adapter.viewholder.ProductListViewHolder
 

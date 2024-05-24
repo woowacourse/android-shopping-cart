@@ -13,13 +13,14 @@ object TestFixture {
         productId: Long,
         name: String,
         quantity: Int,
+        price: Int = 10000,
     ): CartItemEntity {
         return CartItemEntity(
             productId = productId,
             product =
                 Product(
                     imageUrl = "",
-                    price = 10000,
+                    price = price,
                     name = name,
                     id = productId,
                 ),
