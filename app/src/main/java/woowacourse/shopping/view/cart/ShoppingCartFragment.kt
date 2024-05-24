@@ -75,8 +75,8 @@ class ShoppingCartFragment : Fragment() {
         }
 
         shoppingCartViewModel.updatedCountInfo.observe(viewLifecycleOwner) {
-            adapter.updateCartItem(it)
-            sharedViewModel.setUpdateProductEvent(it.product.id, it.quantity)
+            adapter.updateCartItem(it.productId, it.updatedQuantity)
+            sharedViewModel.setUpdateProductEvent(it.productId, it.updatedQuantity)
         }
     }
 

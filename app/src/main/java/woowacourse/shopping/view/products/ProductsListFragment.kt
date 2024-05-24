@@ -80,9 +80,7 @@ class ProductsListFragment : Fragment() {
         }
 
         productListViewModel.updateProductCount.observe(viewLifecycleOwner) { updatedInfo ->
-            updatedInfo.getContentIfNotHandled()?.let {
-                adapter.updateProductQuantity(it.productId, it.updatedQuantity)
-            }
+            adapter.updateProductQuantity(updatedInfo.productId, updatedInfo.updatedQuantity)
         }
 
         productListViewModel.navigateToCart.observe(viewLifecycleOwner) {

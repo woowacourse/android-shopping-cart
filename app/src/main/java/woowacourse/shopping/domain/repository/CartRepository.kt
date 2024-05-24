@@ -4,11 +4,6 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
-    fun addCartItem(
-        product: Product,
-        quantity: Int,
-    ): Long
-
     fun loadPagingCartItems(
         offset: Int,
         pagingSize: Int,
@@ -21,13 +16,20 @@ interface CartRepository {
         itemsPerPage: Int,
     ): Boolean
 
-    fun findCartItemWithProductId(productId: Long): CartItem?
-
     fun updateCartItem(updatedItem: CartItem)
 
     fun loadAllCartItems(): List<CartItem>
 
-    fun findCartItemWithCartItemId(cartItemId: Long): CartItem?
-
     fun getTotalNumberOfCartItems(): Int
+
+    fun updateIncrementQuantity(
+        product: Product,
+        incrementAmount: Int,
+    ): Int
+
+    fun updateDecrementQuantity(
+        product: Product,
+        decrementAmount: Int,
+        allowZero: Boolean,
+    ): Int
 }

@@ -49,12 +49,16 @@ class ShoppingCartAdapter(
         notifyItemRangeChanged(0, cartItems.size)
     }
 
-    fun updateCartItem(cartItem: CartItem) {
-        val index = cartItems.indexOfFirst { it.id == cartItem.id }
+    fun updateCartItem(
+        productId: Long,
+        newQuantity: Int,
+    ) {
+        val index = cartItems.indexOfFirst { it.product.id == productId }
         if (index != -1) {
+            val updatedCartItem = cartItems[index].copy(quantity = newQuantity)
             cartItems =
                 cartItems.toMutableList().apply {
-                    set(index, cartItem)
+                    set(index, updatedCartItem)
                 }
             notifyItemChanged(index)
         }

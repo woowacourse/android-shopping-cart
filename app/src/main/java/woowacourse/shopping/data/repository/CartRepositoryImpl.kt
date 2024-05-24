@@ -12,13 +12,14 @@ import kotlin.concurrent.thread
 class CartRepositoryImpl(context: Context) : CartRepository {
     private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
-    override fun addCartItem(
+    private fun addCartItem(
         product: Product,
         quantity: Int,
     ): Long {
         var addedCartItemId = ERROR_SAVE_DATA_ID
         thread {
-            addedCartItemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product, quantity))
+            addedCartItemId =
+                cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product, quantity))
         }.join()
         if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         return addedCartItemId
@@ -46,13 +47,6 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         return currentPage < totalPageCount
     }
 
-    override fun findCartItemWithProductId(productId: Long): CartItem? {
-        var cartItem: CartItem? = null
-        thread { cartItem = cartItemDao.getCartItemByProductId(productId)?.toCartItem() }.join()
-
-        return cartItem
-    }
-
     override fun updateCartItem(updatedItem: CartItem) {
         val cartEntity = CartItemEntity.toCartItemEntity(updatedItem)
         thread { cartItemDao.updateCartItem(cartEntity) }.join()
@@ -64,17 +58,51 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         return cartItems
     }
 
-    override fun findCartItemWithCartItemId(cartItemId: Long): CartItem? {
-        var cartItem: CartItem? = null
-        thread { cartItem = cartItemDao.findCartItemById(cartItemId)?.toCartItem() }.join()
-
-        return cartItem
-    }
-
     override fun getTotalNumberOfCartItems(): Int {
         var count = 0
         thread { count = cartItemDao.getTotalQuantity() }.join()
         return count
+    }
+
+    private fun findCartItemEntityByProductId(id: Long): CartItemEntity? {
+        var result: CartItemEntity? = null
+        thread { result = cartItemDao.getCartItemByProductId(id) }.join()
+        return result
+    }
+
+    override fun updateIncrementQuantity(
+        product: Product,
+        incrementAmount: Int,
+    ): Int {
+        val existingCartItem = findCartItemEntityByProductId(product.id)
+        return if (existingCartItem == null) {
+            addCartItem(product, incrementAmount)
+            incrementAmount
+        } else {
+            val updatedQuantity = existingCartItem.quantity + incrementAmount
+            val updatedCartItem = existingCartItem.copy(quantity = updatedQuantity)
+            thread { cartItemDao.updateCartItem(updatedCartItem) }.join()
+            updatedQuantity
+        }
+    }
+
+    override fun updateDecrementQuantity(
+        product: Product,
+        decrementAmount: Int,
+        allowZero: Boolean,
+    ): Int {
+        val existingCartItem = findCartItemEntityByProductId(product.id) ?: throw NoSuchDataException()
+        val updatedQuantity = existingCartItem.quantity - decrementAmount
+
+        if (updatedQuantity == 0) {
+            if (allowZero) {
+                deleteCartItem(existingCartItem.id)
+            }
+        } else {
+            val updatedCartItem = existingCartItem.copy(quantity = updatedQuantity)
+            thread { cartItemDao.updateCartItem(updatedCartItem) }.join()
+        }
+        return updatedQuantity
     }
 
     companion object {

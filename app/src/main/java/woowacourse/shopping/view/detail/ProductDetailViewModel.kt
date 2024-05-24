@@ -42,31 +42,27 @@ class ProductDetailViewModel(
         _product.value = productRepository.getProduct(productId)
     }
 
-    fun addShoppingCartItem() {
-        val selectedProduct = product.value ?: throw NoSuchDataException()
-        val selectedQuantity = quantity.value ?: 1
-        runCatching {
-            cartRepository.addCartItem(selectedProduct, selectedQuantity)
-        }.onSuccess {
-            _cartItemSavedState.value = ProductDetailState.Success(selectedProduct.id, selectedQuantity)
-        }.onFailure {
-            _cartItemSavedState.value = ProductDetailState.Fail
-        }
-    }
-
     override fun onCloseButtonClicked() {
         _navigateToBack.value = Event(true)
     }
 
     override fun onAddCartButtonClicked() {
-        addShoppingCartItem()
+        val selectedProduct = product.value ?: throw NoSuchDataException()
+        val selectedQuantity = quantity.value ?: 1
+        runCatching {
+            cartRepository.updateIncrementQuantity(selectedProduct, selectedQuantity)
+        }.onSuccess {
+            _cartItemSavedState.value = ProductDetailState.Success(selectedProduct.id, it)
+        }.onFailure {
+            _cartItemSavedState.value = ProductDetailState.Fail
+        }
     }
 
-    override fun onIncreaseQuantityButtonClicked(id: Long) {
+    override fun onIncreaseQuantityButtonClicked(product: Product) {
         _quantity.value = _quantity.value?.plus(1)
     }
 
-    override fun onDecreaseQuantityButtonClicked(id: Long) {
+    override fun onDecreaseQuantityButtonClicked(product: Product) {
         _quantity.value = _quantity.value?.minus(1)?.coerceAtLeast(1)
     }
 }

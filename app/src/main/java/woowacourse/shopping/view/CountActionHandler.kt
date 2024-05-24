@@ -1,7 +1,9 @@
 package woowacourse.shopping.view
 
-interface CountActionHandler {
-    fun onIncreaseQuantityButtonClicked(id: Long)
+import woowacourse.shopping.domain.model.Product
 
-    fun onDecreaseQuantityButtonClicked(id: Long)
+interface CountActionHandler {
+    fun onIncreaseQuantityButtonClicked(product: Product)
+
+    fun onDecreaseQuantityButtonClicked(product: Product)
 }

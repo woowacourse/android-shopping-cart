@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            app:id="@{cartItem.id}"
+            app:product="@{cartItem.product}"
             app:count="@{cartItem.quantity}"
             app:countActionHandler="@{countActionHandler}"
             app:layout_constraintBottom_toTopOf="@id/tv_cart_item_price"

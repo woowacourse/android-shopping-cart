@@ -7,8 +7,8 @@
         <import type="android.view.View"/>
 
         <variable
-            name="id"
-            type="Long" />
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
 
         <variable
             name="count"
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
-            android:onClick="@{() -> countActionHandler.onDecreaseQuantityButtonClicked(id)}"
+            android:onClick="@{() -> countActionHandler.onDecreaseQuantityButtonClicked(product)}"
             android:src="@drawable/ic_sub"
             app:visibility="@{count}" />
 
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
-            android:onClick="@{() -> countActionHandler.onIncreaseQuantityButtonClicked(id)}"
+            android:onClick="@{() -> countActionHandler.onIncreaseQuantityButtonClicked(product)}"
             android:src="@drawable/ic_add" />
 
     </LinearLayout>
