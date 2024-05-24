@@ -48,12 +48,13 @@ class ProductAdapter(
             return
         }
         val uniqueNewProducts =
-            newProducts.find { newProduct ->
+            newProducts.filter { newProduct ->
                 !productWithQuantities.contains(newProduct)
             }
+
         productWithQuantities.clear()
         productWithQuantities.addAll(newProducts)
-        uniqueNewProducts?.let {
+        uniqueNewProducts.forEach {
             notifyItemChanged(it.product.id.toInt())
         }
     }
