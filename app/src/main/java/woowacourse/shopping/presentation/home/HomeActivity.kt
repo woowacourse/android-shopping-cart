@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.home
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -28,8 +27,6 @@ class HomeActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == DETAIL_RESULT_OK) {
                 val productId = result?.data?.getLongExtra(EXTRA_CART_ITEM, 0)
-
-                Log.d("HELLO", "$productId")
 
                 viewModel.updateOrder(productId!!)
             }
@@ -107,9 +104,5 @@ class HomeActivity : AppCompatActivity() {
     private fun initToolBar() {
         setSupportActionBar(binding.toolbarHome)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    companion object {
-        private const val TIRAMISU_SDK_VERSION = 33
     }
 }
