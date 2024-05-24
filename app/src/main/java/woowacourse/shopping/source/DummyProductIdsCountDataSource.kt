@@ -4,7 +4,8 @@ import woowacourse.shopping.data.ProductIdsCountData
 
 class DummyProductIdsCountDataSource : ProductIdsCountDataSource {
     override fun findByProductId(productId: Int): ProductIdsCountData =
-        productIdsCount.find { it.productId == productId } ?: throw NoSuchElementException()
+        productIdsCount.find { it.productId == productId }
+            ?: throw NoSuchElementException("there is no productId: $productId in DummyProductIdsCountDataSource")
 
     override fun loadAll(): List<ProductIdsCountData> = productIdsCount
 

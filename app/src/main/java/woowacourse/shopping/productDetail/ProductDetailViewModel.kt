@@ -24,7 +24,13 @@ class ProductDetailViewModel(
     val currentProduct: Product = shoppingProductsRepository.findById(productId)
 
     private val _productCount: MutableLiveData<Int> =
-        MutableLiveData(productIdsCountRepository.findByProductId(productId).quantity)
+        MutableLiveData(
+            try {
+                productIdsCountRepository.findByProductId(productId).quantity
+            } catch (e: NoSuchElementException) {
+                1
+            }
+        )
 
     val productCount: LiveData<Int> get() = _productCount
 
@@ -38,32 +44,12 @@ class ProductDetailViewModel(
         }
     }
 
-    // TODO: 이거 레포지토리에서 nullable 값을 리턴해야 겠는데
     override fun onIncrease(productId: Int) {
-        try {
-            productIdsCountRepository.plusProductsIdCount(productId)
-            val product = productIdsCountRepository.findByProductId(productId)
-            _productCount.value = product.quantity
-        } catch (e: NoSuchElementException) {
-            productIdsCountRepository.addedProductsId(ProductIdsCount(productId, 1))
-            _productCount.value = 1
-        }
+        _productCount.value = _productCount.value?.plus(1)
     }
 
     override fun onDecrease(productId: Int) {
-        // TODO: 이거 레포지토리에서 nullable 값을 리턴해야 겠는데
-        try {
-            productIdsCountRepository.minusProductsIdCount(productId)
-        } catch (e: NoSuchElementException) {
-            return
-        }
-
-        try {
-            val product = productIdsCountRepository.findByProductId(productId)
-            _productCount.value = product.quantity
-        } catch (_: NoSuchElementException) {
-            // 이미 최소 수량이다
-        }
+        _productCount.value = _productCount.value?.minus(1)
     }
 
     companion object {
