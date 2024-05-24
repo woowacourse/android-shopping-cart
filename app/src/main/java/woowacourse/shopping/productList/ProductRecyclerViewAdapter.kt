@@ -80,6 +80,7 @@ class ProductRecyclerViewAdapter(
         fun onClick(productId: Int)
     }
 
+    // TODO: 이 리스너는 공통으로 사용하니까 빼자
     interface OnItemQuantityChangeListener {
         fun onIncrease(productId: Int)
 

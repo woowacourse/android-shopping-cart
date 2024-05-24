@@ -11,8 +11,9 @@ import woowacourse.shopping.NonePagingStrategy
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
-import woowacourse.shopping.repository.DummyShoppingCartItemRepository
+import woowacourse.shopping.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.repository.DummyShoppingProductsRepository
+import woowacourse.shopping.source.DummyProductIdsCountDataSource
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
@@ -32,6 +33,7 @@ class ProductDetailFragment : Fragment() {
 
         binding.vm = viewModel
         binding.lifecycleOwner = this
+        binding.onItemChargeListener = viewModel
 
         return binding.root
     }
@@ -41,9 +43,9 @@ class ProductDetailFragment : Fragment() {
             factory =
                 UniversalViewModelFactory {
                     ProductDetailViewModel(
-                        it.getInt(PRODUCT_ID),
-                        DummyShoppingProductsRepository(NonePagingStrategy()),
-                        DummyShoppingCartItemRepository(NonePagingStrategy()),
+                        productId = it.getInt(PRODUCT_ID),
+                        shoppingProductsRepository = DummyShoppingProductsRepository(NonePagingStrategy()),
+                        productIdsCountRepository = DefaultProductIdsCountRepository(DummyProductIdsCountDataSource()),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
