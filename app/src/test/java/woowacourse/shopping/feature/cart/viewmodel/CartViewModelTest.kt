@@ -46,8 +46,8 @@ class CartViewModelTest {
 
         val actual = viewModel.cart.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(actual).hasSize(pageSize) },
-            Executable { assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize)) },
+            { assertThat(actual).hasSize(pageSize) },
+            { assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize)) },
         )
     }
 
@@ -61,8 +61,8 @@ class CartViewModelTest {
 
         val actual = viewModel.cart.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(actual).hasSize(pageSize) },
-            Executable { assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize)) },
+            { assertThat(actual).hasSize(pageSize) },
+            { assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize)) },
         )
     }
 
@@ -136,8 +136,8 @@ class CartViewModelTest {
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         val hasPreviousPage = viewModel.hasPreviousPage.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(currentPage).isEqualTo(1) },
-            Executable { assertThat(hasPreviousPage).isTrue() },
+            { assertThat(currentPage).isEqualTo(1) },
+            { assertThat(hasPreviousPage).isTrue() },
         )
     }
 
@@ -164,8 +164,8 @@ class CartViewModelTest {
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         val hasNextPage = viewModel.hasNextPage.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(currentPage).isEqualTo(0) },
-            Executable { assertThat(hasNextPage).isTrue() },
+            { assertThat(currentPage).isEqualTo(0) },
+            { assertThat(hasNextPage).isTrue() },
         )
     }
 

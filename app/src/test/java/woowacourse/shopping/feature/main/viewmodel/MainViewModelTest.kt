@@ -39,8 +39,8 @@ class MainViewModelTest {
         // then
         val actual = viewModel.products.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(actual).hasSize(pageSize) },
-            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+            { assertThat(actual).hasSize(pageSize) },
+            { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
         )
     }
 
@@ -57,8 +57,8 @@ class MainViewModelTest {
         // then
         val actual = viewModel.products.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(actual).hasSize(pageSize) },
-            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+            { assertThat(actual).hasSize(pageSize) },
+            { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
         )
     }
 
@@ -75,8 +75,8 @@ class MainViewModelTest {
         // then
         val actual = viewModel.products.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(actual).hasSize(5) },
-            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+            { assertThat(actual).hasSize(5) },
+            { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
         )
     }
 }

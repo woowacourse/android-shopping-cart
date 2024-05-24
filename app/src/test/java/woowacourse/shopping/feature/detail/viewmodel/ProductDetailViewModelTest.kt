@@ -42,9 +42,9 @@ class ProductDetailViewModelTest {
         // then
         val actual = viewModel.product.getOrAwaitValue()
         assertAll(
-            Executable { assertThat(actual.imageUrl).isEqualTo(imageUrl) },
-            Executable { assertThat(actual.title).isEqualTo(title) },
-            Executable { assertThat(actual.price).isEqualTo(price) },
+            { assertThat(actual.imageUrl).isEqualTo(imageUrl) },
+            { assertThat(actual.title).isEqualTo(title) },
+            { assertThat(actual.price).isEqualTo(price) },
         )
     }
 
