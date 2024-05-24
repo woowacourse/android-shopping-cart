@@ -56,13 +56,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeToolbar() {
-        binding.toolbarMain.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.item_cart -> {
-                    navigateToCartView()
-                }
-            }
-            false
+        binding.btnMainCart.setOnClickListener {
+            navigateToCartView()
         }
     }
 

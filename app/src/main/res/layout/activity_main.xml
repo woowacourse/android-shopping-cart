@@ -15,11 +15,37 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"
             style="@style/ToolbarStyle"
+            android:paddingEnd="22dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/menu_main"
-            app:title="@string/app_name" />
+            app:title="@string/app_name">
+
+            <TextView
+                android:id="@+id/tv_main_cart_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="@drawable/shape_cart_quantity"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="1"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/btn_main_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="0dp"
+                android:paddingStart="8dp"
+                android:src="@drawable/ic_cart" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
