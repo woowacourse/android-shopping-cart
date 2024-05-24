@@ -46,6 +46,7 @@ class CartViewModel(
 
     fun loadCount() {
         _cartSize.value = cartRepository.count()
+        updatePageStatus()
     }
 
     fun increasePage() {
@@ -58,26 +59,19 @@ class CartViewModel(
         updatePage()
     }
 
-    fun hasPreviousPage() {
-        val page = currentPage.value ?: return
-        _hasPreviousPage.value = page > MIN_PAGE
-    }
-
-    fun hasNextPage() {
-        val currentPage = currentPage.value ?: return
-        val cartSize = cartSize.value ?: return
-        _hasNextPage.value = currentPage < (cartSize - 1) / MAX_ITEM_SIZE_PER_PAGE
-    }
-
     fun checkEmptyLastPage() {
         val currentPage = currentPage.value ?: return
         val cartSize = cartSize.value ?: return
         _isEmptyLastPage.value = currentPage > MIN_PAGE && cartSize % MAX_ITEM_SIZE_PER_PAGE == 1
     }
 
-    fun checkOnlyOnePage() {
+    private fun updatePageStatus() {
+        val currentPage = currentPage.value ?: return
         val cartSize = cartSize.value ?: return
+
         _isOnlyOnePage.value = cartSize <= MAX_ITEM_SIZE_PER_PAGE
+        _hasPreviousPage.value = currentPage > MIN_PAGE
+        _hasNextPage.value = currentPage < (cartSize - 1) / MAX_ITEM_SIZE_PER_PAGE
     }
 
     private fun updatePage() {

@@ -119,8 +119,7 @@ class CartViewModelTest {
             addCart(productId = it.toLong())
         }
         viewModel.loadCart(pageSize)
-
-        viewModel.hasPreviousPage()
+        viewModel.loadCount()
 
         val actual = viewModel.hasPreviousPage.getOrAwaitValue()
         assertThat(actual).isFalse()
@@ -132,8 +131,7 @@ class CartViewModelTest {
             addCart(productId = it.toLong())
         }
         viewModel.increasePage()
-
-        viewModel.hasPreviousPage()
+        viewModel.loadCount()
 
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         val hasPreviousPage = viewModel.hasPreviousPage.getOrAwaitValue()
@@ -151,8 +149,6 @@ class CartViewModelTest {
         viewModel.loadCart(5)
         viewModel.loadCount()
 
-        viewModel.hasNextPage()
-
         val actual = viewModel.hasNextPage.getOrAwaitValue()
         assertThat(actual).isFalse()
     }
@@ -164,8 +160,6 @@ class CartViewModelTest {
         }
         viewModel.loadCart(5)
         viewModel.loadCount()
-
-        viewModel.hasNextPage()
 
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         val hasNextPage = viewModel.hasNextPage.getOrAwaitValue()
@@ -196,8 +190,6 @@ class CartViewModelTest {
         }
         viewModel.loadCount()
 
-        viewModel.checkOnlyOnePage()
-
         val actual = viewModel.isOnlyOnePage.getOrAwaitValue()
         assertThat(actual).isTrue()
     }
@@ -208,8 +200,6 @@ class CartViewModelTest {
             addCart(productId = it.toLong())
         }
         viewModel.loadCount()
-
-        viewModel.checkOnlyOnePage()
 
         val actual = viewModel.isOnlyOnePage.getOrAwaitValue()
         assertThat(actual).isFalse()

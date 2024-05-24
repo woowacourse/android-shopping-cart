@@ -29,7 +29,6 @@ class CartActivity : AppCompatActivity() {
     private fun initializeView() {
         initializeToolbar()
         initializeCartAdapter()
-        updatePageLayout()
     }
 
     private fun initializeToolbar() {
@@ -54,13 +53,5 @@ class CartActivity : AppCompatActivity() {
             if (isEmptyLastPage) cartViewModel.decreasePage()
         }
         cartViewModel.delete(cartItemId)
-    }
-
-    private fun updatePageLayout() {
-        cartViewModel.cartSize.observe(this) {
-            cartViewModel.checkOnlyOnePage()
-            cartViewModel.hasPreviousPage()
-            cartViewModel.hasNextPage()
-        }
     }
 }
