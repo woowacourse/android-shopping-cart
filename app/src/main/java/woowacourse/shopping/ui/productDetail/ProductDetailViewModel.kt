@@ -5,12 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.ProductData
+import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
 import woowacourse.shopping.domain.model.ProductIdsCount
-import woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.domain.repository.ProductIdsCountRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
-import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
+import woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter
 import java.lang.Exception
 
 class ProductDetailViewModel(
@@ -29,7 +29,7 @@ class ProductDetailViewModel(
                 productIdsCountRepository.findByProductId(productId).quantity
             } catch (e: NoSuchElementException) {
                 1
-            }
+            },
         )
 
     val productCount: LiveData<Int> get() = _productCount

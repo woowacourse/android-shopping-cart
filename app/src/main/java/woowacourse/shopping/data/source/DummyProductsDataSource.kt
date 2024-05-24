@@ -1,17 +1,17 @@
-package woowacourse.shopping.domain.repository
+package woowacourse.shopping.data.source
 
 import woowacourse.shopping.PagingStrategy
 import woowacourse.shopping.data.model.ProductData
 
-class DummyShoppingProductsRepository(
+class DummyProductsDataSource(
     private val pagingStrategy: PagingStrategy<ProductData>,
 ) :
-    ShoppingProductsRepository {
+    ProductDataSource {
     override fun loadPagedItems(page: Int): List<ProductData> = pagingStrategy.loadPagedData(page, allProducts)
 
-    override fun findById(findId: Int): ProductData =
-        allProducts.find { it.id == findId }
-            ?: throw NoSuchElementException("there is no product with id: $findId")
+    override fun findById(id: Int): ProductData =
+        allProducts.find { it.id == id }
+            ?: throw NoSuchElementException("there is no product with id: $id")
 
     override fun isFinalPage(page: Int): Boolean = pagingStrategy.isFinalPage(page, allProducts)
 

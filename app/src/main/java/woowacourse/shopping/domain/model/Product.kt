@@ -10,6 +10,10 @@ data class Product(
     val quantity: Int,
 )
 
-fun Product.toData(): ProductData = ProductData(
-    id = id, imgUrl = imgUrl, name = name, price = price
-)
+fun Product.toData(): ProductData =
+    ProductData(
+        id = id,
+        imgUrl = imgUrl,
+        name = name,
+        price = price,
+    )

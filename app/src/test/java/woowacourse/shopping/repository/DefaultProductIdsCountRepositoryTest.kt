@@ -3,8 +3,8 @@ package woowacourse.shopping.repository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.data.source.ProductIdsCountDataSource
+import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.domain.repository.ProductIdsCountRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture

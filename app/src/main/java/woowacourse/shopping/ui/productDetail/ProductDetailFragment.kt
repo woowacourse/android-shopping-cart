@@ -10,10 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.NonePagingStrategy
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
+import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
+import woowacourse.shopping.data.source.DummyProductsDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
-import woowacourse.shopping.domain.repository.DummyShoppingProductsRepository
-import woowacourse.shopping.data.source.DummyProductIdsCountDataSource
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
@@ -44,7 +44,7 @@ class ProductDetailFragment : Fragment() {
                 UniversalViewModelFactory {
                     ProductDetailViewModel(
                         productId = it.getInt(PRODUCT_ID),
-                        shoppingProductsRepository = DummyShoppingProductsRepository(NonePagingStrategy()),
+                        shoppingProductsRepository = DummyProductsDataSource(NonePagingStrategy()),
                         productIdsCountRepository = DefaultProductIdsCountRepository(DummyProductIdsCountDataSource()),
                     )
                 }

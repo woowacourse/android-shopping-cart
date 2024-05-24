@@ -1,9 +1,9 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.data.source.ProductIdsCountDataSource
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.domain.model.toData
 import woowacourse.shopping.domain.model.toDomain
-import woowacourse.shopping.data.source.ProductIdsCountDataSource
 
 class DefaultProductIdsCountRepository(
     private val productsIdsCountDataSource: ProductIdsCountDataSource,

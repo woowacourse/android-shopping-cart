@@ -4,13 +4,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.model.ProductIdsCount
-import woowacourse.shopping.productTestFixture
-import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
-import woowacourse.shopping.repository.FakeProductIdsCountDataSource
-import woowacourse.shopping.repository.FakeShoppingProductsRepository
 import woowacourse.shopping.domain.repository.ProductIdsCountRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.productTestFixture
+import woowacourse.shopping.productsTestFixture
+import woowacourse.shopping.repository.FakeProductIdsCountDataSource
+import woowacourse.shopping.repository.FakeShoppingProductsRepository
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
 

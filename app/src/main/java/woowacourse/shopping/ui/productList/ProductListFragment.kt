@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.ui.cart.ShoppingCartFragment
+import woowacourse.shopping.data.source.DummyProductsDataSource
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
-import woowacourse.shopping.domain.repository.DummyShoppingProductsRepository
 
 class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
@@ -24,7 +24,7 @@ class ProductListFragment : Fragment() {
     private val factory: UniversalViewModelFactory =
         UniversalViewModelFactory {
             ProductListViewModel(
-                DummyShoppingProductsRepository(
+                DummyProductsDataSource(
                     NumberPagingStrategy(countPerLoad = 20),
                 ),
             )
