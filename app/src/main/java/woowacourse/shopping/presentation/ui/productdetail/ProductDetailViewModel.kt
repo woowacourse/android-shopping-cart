@@ -143,6 +143,7 @@ class ProductDetailViewModel(
                         product = product,
                         productHistory = productHistory,
                         isAddToCart = false,
+                        isLastProductPage = true,
                     ),
                 )
             } else {
