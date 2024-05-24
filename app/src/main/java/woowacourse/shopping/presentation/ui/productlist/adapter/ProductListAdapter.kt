@@ -3,6 +3,8 @@ package woowacourse.shopping.presentation.ui.productlist.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderLoadMoreBinding
 import woowacourse.shopping.databinding.HolderProductBinding
@@ -10,16 +12,15 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.common.ProductCountHandler
 import woowacourse.shopping.presentation.ui.productlist.PagingProduct
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
-import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.LoadMoreViewHolder
-import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.ProductViewHolder
 
 class ProductListAdapter(
     private val actionHandler: ProductListActionHandler,
     private val productCountHandler: ProductCountHandler,
-    private var pagingProduct: PagingProduct = PagingProduct(emptyList(), true),
-) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
+) : ListAdapter<Product, ProductListAdapter.ProductListViewHolder>(ProductDiffCallback) {
+    private var isLast: Boolean = false
+
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1) LOAD_VIEW_TYPE else PRODUCT_VIEW_TYPE
+        return if (position == currentList.size) LOAD_VIEW_TYPE else PRODUCT_VIEW_TYPE
     }
 
     override fun onCreateViewHolder(
@@ -30,7 +31,7 @@ class ProductListAdapter(
 
         return when (viewType) {
             PRODUCT_VIEW_TYPE -> {
-                ProductViewHolder(
+                ProductListViewHolder.ProductViewHolder(
                     HolderProductBinding.inflate(inflater, parent, false),
                     actionHandler,
                     productCountHandler,
@@ -38,7 +39,7 @@ class ProductListAdapter(
             }
 
             else -> {
-                LoadMoreViewHolder(
+                ProductListViewHolder.LoadMoreViewHolder(
                     HolderLoadMoreBinding.inflate(inflater, parent, false),
                     actionHandler,
                 )
@@ -46,28 +47,21 @@ class ProductListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = pagingProduct.productList.size + 1
+    override fun getItemCount(): Int = currentList.size + 1
 
     override fun onBindViewHolder(
         holder: ProductListViewHolder,
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(pagingProduct.productList[position], position)
-            is LoadMoreViewHolder -> holder.bind(pagingProduct.last)
+            is ProductListViewHolder.ProductViewHolder -> holder.bind(getItem(position), position)
+            is ProductListViewHolder.LoadMoreViewHolder -> holder.bind(isLast)
         }
     }
 
     fun updateProductList(newPagingProduct: PagingProduct) {
-        val positionStart = pagingProduct.productList.size
-        pagingProduct = newPagingProduct
-
-        if (newPagingProduct.last) {
-            notifyItemChanged(positionStart)
-        } else {
-            val itemCount = newPagingProduct.productList.size - pagingProduct.productList.size
-            notifyItemRangeInserted(positionStart, itemCount)
-        }
+        isLast = newPagingProduct.last
+        submitList(newPagingProduct.productList)
     }
 
     fun updateProduct(position: Int) {
@@ -88,6 +82,7 @@ class ProductListAdapter(
                 binding.position = position
                 binding.actionHandler = actionHandler
                 binding.productCountHandler = productCountHandler
+                binding.executePendingBindings()
             }
         }
 
@@ -98,7 +93,24 @@ class ProductListAdapter(
             fun bind(last: Boolean) {
                 binding.last = last
                 binding.actionHandler = actionHandler
+                binding.executePendingBindings()
             }
+        }
+    }
+
+    object ProductDiffCallback : DiffUtil.ItemCallback<Product>() {
+        override fun areItemsTheSame(
+            oldItem: Product,
+            newItem: Product,
+        ): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(
+            oldItem: Product,
+            newItem: Product,
+        ): Boolean {
+            return oldItem == newItem
         }
     }
 
