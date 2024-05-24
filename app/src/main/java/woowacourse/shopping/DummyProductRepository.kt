@@ -3,10 +3,17 @@ package woowacourse.shopping
 import woowacourse.shopping.domain.ImageUrl
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentProducts
+import java.time.LocalDateTime
 import kotlin.math.min
 
 object DummyProductRepository : ProductRepository {
     private val products: List<Product> = moreDummies()
+
+    private const val RECENT_SIZE = 10
+
+    private val recentProducts = RecentProducts(RECENT_SIZE)
 
     private fun moreDummies(): List<Product> {
         val products = mutableListOf<Product>()
@@ -106,4 +113,14 @@ object DummyProductRepository : ProductRepository {
         )
 
     override fun productsTotalSize(): Int = products.size
+
+    override fun sortedRecentProduct() = recentProducts.sortedRecentProduct()
+
+    override fun addRecentProduct(
+        productId: Long,
+        localDateTime: LocalDateTime,
+    ) {
+        val product = productById(productId)
+        recentProducts.add(RecentProduct(product, localDateTime))
+    }
 }
