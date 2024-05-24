@@ -88,23 +88,18 @@ class ShoppingCartViewModel(
         try {
             when (val cartItemResult = getCartItemResult(product.id)) {
                 is CartItemResult.Exists -> {
-                    when (cartItemResult.counter.increase()) {
-                        ChangeCartItemResultState.Success -> {
-                            shoppingCartRepository.updateCartItem(
-                                cartItemResult.cartItemId,
-                                cartItemResult.counter.itemCount,
-                            )
-                            product.cartItemCounter.selectItem()
-                            product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
-                            _shoppingCartEvent.value =
-                                ShoppingCartEvent.UpdateProductEvent.Success(
-                                    productId = product.id,
-                                    count = product.cartItemCounter.itemCount,
-                                )
-                        }
-
-                        ChangeCartItemResultState.Fail -> throw NoSuchDataException()
-                    }
+                    cartItemResult.counter.increase()
+                    shoppingCartRepository.updateCartItem(
+                        cartItemResult.cartItemId,
+                        cartItemResult.counter.itemCount,
+                    )
+                    product.cartItemCounter.selectItem()
+                    product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
+                    _shoppingCartEvent.value =
+                        ShoppingCartEvent.UpdateProductEvent.Success(
+                            productId = product.id,
+                            count = product.cartItemCounter.itemCount,
+                        )
                 }
 
                 CartItemResult.NotExists -> throw NoSuchDataException()

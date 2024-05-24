@@ -73,16 +73,11 @@ class ProductListViewModel(
         try {
             when (val cartItemResult = getCartItemResult(product.id)) {
                 is CartItemResult.Exists -> {
-                    when (cartItemResult.counter.increase()) {
-                        ChangeCartItemResultState.Success -> {
-                            shoppingCartRepository.updateCartItem(
-                                cartItemResult.cartItemId,
-                                cartItemResult.counter.itemCount,
-                            )
-                        }
-
-                        ChangeCartItemResultState.Fail -> throw NoSuchDataException()
-                    }
+                    cartItemResult.counter.increase()
+                    shoppingCartRepository.updateCartItem(
+                        cartItemResult.cartItemId,
+                        cartItemResult.counter.itemCount,
+                    )
                     product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
                 }
 

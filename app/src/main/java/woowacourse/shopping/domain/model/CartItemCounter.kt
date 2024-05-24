@@ -11,9 +11,8 @@ class CartItemCounter(
     var isSelected: Boolean = isSelected
         private set
 
-    fun increase(): ChangeCartItemResultState {
+    fun increase(){
         itemCount++
-        return ChangeCartItemResultState.Success
     }
 
     fun decrease(): ChangeCartItemResultState {
