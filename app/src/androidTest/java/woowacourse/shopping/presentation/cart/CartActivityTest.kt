@@ -22,7 +22,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.datasource.DefaultCart
+import woowacourse.shopping.data.datasourceimpl.DefaultCart
 import woowacourse.shopping.db.cart.CartDao
 import woowacourse.shopping.db.cart.CartDatabase
 import java.io.IOException

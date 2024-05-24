@@ -1,5 +1,6 @@
-package woowacourse.shopping.data.datasource
+package woowacourse.shopping.data.datasourceimpl
 
+import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.local.PRODUCT_DATA
 import woowacourse.shopping.data.model.Product
 import kotlin.math.min
