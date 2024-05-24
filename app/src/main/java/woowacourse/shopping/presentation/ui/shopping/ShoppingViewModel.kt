@@ -23,6 +23,9 @@ class ShoppingViewModel(
     private val _navigateToProductDetail = MutableLiveData<Long>()
     val navigateToProductDetail: LiveData<Long> = _navigateToProductDetail
 
+    private val _totalCartItemsCount = MutableLiveData<Int>()
+    val totalCartItemsCount: LiveData<Int> = _totalCartItemsCount
+
     private val _updatedProduct = MutableLiveData<UIState<ProductWithQuantity>>()
     val updatedProduct: LiveData<UIState<ProductWithQuantity>> = _updatedProduct
 
@@ -50,6 +53,7 @@ class ShoppingViewModel(
 
     private fun loadProducts() {
         _currentPage.postValue(0)
+        _totalCartItemsCount.postValue(cartRepository.sumQuantity())
     }
 
     override fun onProductClick(productId: Long) {
@@ -63,33 +67,36 @@ class ShoppingViewModel(
 
     private fun updateProductWithAction(
         productId: Long,
-        action: (ProductWithQuantity) -> Unit,
+        action: () -> Unit,
     ) {
         try {
-            val product =
+            action()
+            val productWithQuantityItem =
                 shoppingRepository.productWithQuantityItem(productId)
                     ?: throw Exception(PRODUCT_NOT_FOUND)
-            action(product)
-            _updatedProduct.postValue(UIState.Success(product))
+            _updatedProduct.postValue(UIState.Success(productWithQuantityItem))
+            _totalCartItemsCount.postValue(cartRepository.sumQuantity())
         } catch (e: Exception) {
             _updatedProduct.postValue(UIState.Error(e))
         }
     }
 
     override fun onAddToCartButtonClick(productId: Long) {
-        updateProductWithAction(productId) { product ->
-            cartRepository.insert(product)
+        updateProductWithAction(productId) {
+            shoppingRepository.productWithQuantityItem(productId)?.let {
+                cartRepository.insert(it)
+            }
         }
     }
 
     override fun onPlusButtonClicked(productId: Long) {
-        updateProductWithAction(productId) { _ ->
+        updateProductWithAction(productId) {
             cartRepository.plusQuantity(productId, 1)
         }
     }
 
     override fun onMinusButtonClicked(productId: Long) {
-        updateProductWithAction(productId) { _ ->
+        updateProductWithAction(productId) {
             cartRepository.minusQuantity(productId, 1)
         }
     }

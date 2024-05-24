@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.ui.shopping
 import android.view.Menu
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -40,11 +39,8 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
     }
 
     private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarMain
-        setSupportActionBar(toolbar)
-        toolbar.setOnMenuItemClickListener {
+        binding.ivCart.setOnClickListener {
             navigateToShoppingCart()
-            true
         }
     }
 
@@ -67,6 +63,12 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
     }
 
     private fun observeViewModel() {
+        observeProductItems()
+        observeProductUpdate()
+        observeProductClick()
+    }
+
+    private fun observeProductItems() {
         viewModel.productItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
@@ -75,15 +77,22 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
                     showErrorMessage(state.exception.message ?: getString(R.string.unknown_error))
             }
         }
+    }
 
+    private fun observeProductUpdate() {
         viewModel.updatedProduct.observe(this) { state ->
             when (state) {
                 is UIState.Success -> adapter.updateItem(state.data)
                 is UIState.Empty -> return@observe
-                is UIState.Error -> showErrorMessage(state.exception.message ?: getString(R.string.unknown_error))
+                is UIState.Error ->
+                    showErrorMessage(
+                        state.exception.message ?: getString(R.string.unknown_error),
+                    )
             }
         }
+    }
 
+    private fun observeProductClick() {
         viewModel.navigateToProductDetail.observe(this) { productId ->
             onProductClick(productId)
         }
