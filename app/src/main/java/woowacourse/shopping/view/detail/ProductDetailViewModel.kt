@@ -43,11 +43,12 @@ class ProductDetailViewModel(
     }
 
     fun addShoppingCartItem() {
+        val selectedProduct = product.value ?: throw NoSuchDataException()
+        val selectedQuantity = quantity.value ?: 1
         runCatching {
-            val selected = product.value ?: throw NoSuchDataException()
-            cartRepository.addCartItem(selected, quantity.value ?: 1)
+            cartRepository.addCartItem(selectedProduct, selectedQuantity)
         }.onSuccess {
-            _cartItemSavedState.value = ProductDetailState.Success
+            _cartItemSavedState.value = ProductDetailState.Success(selectedProduct.id, selectedQuantity)
         }.onFailure {
             _cartItemSavedState.value = ProductDetailState.Fail
         }

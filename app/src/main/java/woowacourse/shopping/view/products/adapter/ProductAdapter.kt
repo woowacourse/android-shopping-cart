@@ -75,9 +75,13 @@ class ProductAdapter(
         notifyItemRangeInserted(startPosition, newProducts.size)
     }
 
-    fun updateProduct(updatedItem: ProductWithQuantity) {
-        val index = findIndexOfProduct(updatedItem.product.id)
+    fun updateProductQuantity(
+        productId: Long,
+        updatedValue: Int,
+    ) {
+        val index = findIndexOfProduct(productId)
         if (index != -1) {
+            val updatedItem = (productItems[index] as ProductItemType.ProductItem).item.copy(quantity = updatedValue)
             productItems =
                 productItems.toMutableList().apply {
                     set(index, ProductItemType.ProductItem(updatedItem))

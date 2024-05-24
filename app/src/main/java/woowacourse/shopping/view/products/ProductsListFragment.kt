@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
@@ -19,8 +21,8 @@ import woowacourse.shopping.view.products.adapter.ProductItemType.Companion.LOAD
 class ProductsListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
-    private lateinit var adapter: ProductAdapter
 
+    private val sharedViewModel: MainViewModel by activityViewModels()
     private val productListViewModel: ProductListViewModel by lazy {
         val viewModelFactory =
             ProductListViewModelFactory(
@@ -29,6 +31,8 @@ class ProductsListFragment : Fragment() {
             )
         viewModelFactory.create(ProductListViewModel::class.java)
     }
+
+    private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,8 +79,10 @@ class ProductsListFragment : Fragment() {
             adapter.updateProducts(products.items, products.hasNextPage)
         }
 
-        productListViewModel.updatedCountInfo.observe(viewLifecycleOwner) { updatedInfo ->
-            adapter.updateProduct(updatedInfo)
+        productListViewModel.updateProductCount.observe(viewLifecycleOwner) { updatedInfo ->
+            updatedInfo.getContentIfNotHandled()?.let {
+                adapter.updateProductQuantity(it.productId, it.updatedQuantity)
+            }
         }
 
         productListViewModel.navigateToCart.observe(viewLifecycleOwner) {
@@ -88,6 +94,13 @@ class ProductsListFragment : Fragment() {
         productListViewModel.navigateToDetail.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { productId ->
                 navigateToDetail(productId)
+            }
+        }
+
+        sharedViewModel.updateProductEvent.observe(viewLifecycleOwner) { updatedInfo ->
+            updatedInfo.getContentIfNotHandled()?.let {
+                adapter.updateProductQuantity(it.productId, it.updatedQuantity)
+                productListViewModel.updateTotalCount()
             }
         }
     }

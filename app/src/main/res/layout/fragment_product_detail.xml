@@ -102,6 +102,7 @@
             android:layout_marginEnd="@dimen/detail_content_horizontal_margin"
             app:count="@{viewModel.quantity}"
             app:countActionHandler="@{countActionHandler}"
+            app:id="@{viewModel.product.id}"
             app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_detail_product_price"

@@ -55,7 +55,7 @@ class CartRepositoryImpl(context: Context) : CartRepository {
 
     override fun updateCartItem(updatedItem: CartItem) {
         val cartEntity = CartItemEntity.toCartItemEntity(updatedItem)
-        thread { cartItemDao.updateCartItem(cartEntity) }
+        thread { cartItemDao.updateCartItem(cartEntity) }.join()
     }
 
     override fun loadAllCartItems(): List<CartItem> {
@@ -69,6 +69,12 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         thread { cartItem = cartItemDao.findCartItemById(cartItemId)?.toCartItem() }.join()
 
         return cartItem
+    }
+
+    override fun getTotalNumberOfCartItems(): Int {
+        var count = 0
+        thread { count = cartItemDao.getTotalQuantity() }.join()
+        return count
     }
 
     companion object {

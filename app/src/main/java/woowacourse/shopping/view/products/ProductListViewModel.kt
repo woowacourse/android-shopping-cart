@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.products
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,12 +12,14 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.Event
+import woowacourse.shopping.view.ProductUpdate
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel(), ProductListActionHandler, CountActionHandler {
-    private val _products: MutableLiveData<PagingResult> = MutableLiveData(PagingResult(emptyList(), false))
+    private val _products: MutableLiveData<PagingResult> =
+        MutableLiveData(PagingResult(emptyList(), false))
     val products: LiveData<PagingResult> get() = _products
 
     private val _navigateToCart = MutableLiveData<Event<Boolean>>()
@@ -27,20 +28,24 @@ class ProductListViewModel(
     private val _navigateToDetail = MutableLiveData<Event<Long>>()
     val navigateToDetail: LiveData<Event<Long>> get() = _navigateToDetail
 
-    private val _updatedCountInfo: MutableLiveData<ProductWithQuantity> = MutableLiveData()
-    val updatedCountInfo: LiveData<ProductWithQuantity> get() = _updatedCountInfo
+    private val _updateProductCount = MutableLiveData<Event<ProductUpdate>>()
 
-    private val _totalCount = MutableLiveData<Int>(1)
+    val updateProductCount: LiveData<Event<ProductUpdate>> = _updateProductCount
+
+    private val _totalCount = MutableLiveData<Int>(0)
     val totalCount: LiveData<Int> get() = _totalCount
 
     init {
         loadPagingProductData()
+        updateTotalCount()
     }
 
     private fun loadPagingProductData() {
         val loadedItems = products.value?.items ?: emptyList()
-        val pagingProducts = productRepository.loadPagingProducts(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
-        val hasNextPage = productRepository.hasNextProductPage(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
+        val pagingProducts =
+            productRepository.loadPagingProducts(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
+        val hasNextPage =
+            productRepository.hasNextProductPage(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
 
         val cartItems = cartRepository.loadAllCartItems()
         val cartMap = cartItems.associateBy { it.product.id }
@@ -53,8 +58,6 @@ class ProductListViewModel(
 
         val updatedProductList = loadedItems + newProductsWithQuantity
         _products.value = PagingResult(updatedProductList, hasNextPage)
-        _totalCount.value = updatedProductList.sumOf { it.quantity }
-        Log.d("yenny", "${totalCount.value}")
     }
 
     override fun onProductItemClicked(productId: Long) {
@@ -80,9 +83,8 @@ class ProductListViewModel(
             updatedCartItem = cartItem.incrementQuantity(INCREMENT_VALUE)
             cartRepository.updateCartItem(updatedCartItem)
         }
-        _updatedCountInfo.value = ProductWithQuantity(updatedCartItem.product, updatedCartItem.quantity)
+        _updateProductCount.value = Event(ProductUpdate(updatedCartItem.product.id, updatedCartItem.quantity))
         _totalCount.value = _totalCount.value?.plus(INCREMENT_VALUE)
-        Log.d("yenny", "${totalCount.value}")
     }
 
     override fun onDecreaseQuantityButtonClicked(id: Long) {
@@ -97,6 +99,10 @@ class ProductListViewModel(
         _updateProductCount.value =
             Event(ProductUpdate(updatedCartItem.product.id, updatedCartItem.quantity))
         _totalCount.value = _totalCount.value?.minus(INCREMENT_VALUE)
+    }
+
+    fun updateTotalCount() {
+        _totalCount.value = cartRepository.getTotalNumberOfCartItems()
     }
 
     companion object {

@@ -28,4 +28,6 @@ interface CartRepository {
     fun loadAllCartItems(): List<CartItem>
 
     fun findCartItemWithCartItemId(cartItemId: Long): CartItem?
+
+    fun getTotalNumberOfCartItems(): Int
 }
