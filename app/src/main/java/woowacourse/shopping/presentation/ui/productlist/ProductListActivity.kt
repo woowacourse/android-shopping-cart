@@ -58,7 +58,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
             viewModel.getProductHistory()
         }
 
-    override fun initStartView() {
+    override fun initCreateView() {
         initDataBinding()
         initAdapter()
         initObserve()

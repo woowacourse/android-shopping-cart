@@ -18,10 +18,10 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, layoutResourceId)
-        initStartView()
+        initCreateView()
     }
 
-    abstract fun initStartView()
+    abstract fun initCreateView()
 
     fun showToastMessage(message: String) {
         toast?.cancel()

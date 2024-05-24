@@ -26,7 +26,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_product_detail
 
-    override fun initStartView() {
+    override fun initCreateView() {
         initActionBar()
         initDataBinding()
         initObserve()

@@ -24,7 +24,7 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
 
     private val adapter: CartProductsAdapter by lazy { CartProductsAdapter(viewModel, viewModel) }
 
-    override fun initStartView() {
+    override fun initCreateView() {
         initActionBar()
         initDataBinding()
         initAdapter()
