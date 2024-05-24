@@ -113,7 +113,7 @@ class ProductListFragment :
             viewModel.loadCartProducts()
         }
 
-        eventBusViewModel.updateProductEvent.observe(viewLifecycleOwner) {
+        eventBusViewModel.updateRecentProductEvent.observe(viewLifecycleOwner) {
             viewModel.loadRecentProducts()
         }
     }

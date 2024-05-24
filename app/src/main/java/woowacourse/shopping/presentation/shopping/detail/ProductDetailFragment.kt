@@ -21,7 +21,7 @@ import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
     private val viewModel by viewModels<ProductDetailViewModel> {
-        eventBusViewModel.sendUpdateProductEvent()
+        eventBusViewModel.sendUpdateRecentProductEvent()
         val cartRepository =
             CartRepositoryInjector.cartRepository(requireContext().applicationContext)
         val shoppingRepository =

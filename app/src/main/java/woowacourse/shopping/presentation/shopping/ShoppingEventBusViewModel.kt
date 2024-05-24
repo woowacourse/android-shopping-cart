@@ -9,13 +9,13 @@ class ShoppingEventBusViewModel : ViewModel() {
     val updateCartEvent: SingleLiveData<Unit> = _updateCartEvent
 
     private val _updateProductEvent = MutableSingleLiveData<Unit>()
-    val updateProductEvent: SingleLiveData<Unit> = _updateProductEvent
+    val updateRecentProductEvent: SingleLiveData<Unit> = _updateProductEvent
 
     fun sendUpdateCartEvent() {
         _updateCartEvent.setValue(Unit)
     }
 
-    fun sendUpdateProductEvent() {
+    fun sendUpdateRecentProductEvent() {
         _updateProductEvent.setValue(Unit)
     }
 }

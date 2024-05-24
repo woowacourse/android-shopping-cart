@@ -86,7 +86,9 @@ class ProductDetailViewModel(
 
     fun navigateToRecentProduct() {
         val recentId = _recentProduct.value?.id ?: return
-        _recentProductEvent.setValue(recentId)
+        shoppingRepository.saveRecentProduct(recentId).onSuccess {
+            _recentProductEvent.setValue(recentId)
+        }
     }
 
     companion object {
