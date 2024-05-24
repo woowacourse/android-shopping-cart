@@ -34,9 +34,7 @@ class ProductListFragment : Fragment() {
         ViewModelProvider(this, factory)[ProductListViewModel::class.java]
     }
 
-    private val adapter: ProductRecyclerViewAdapter by lazy {
-        ProductRecyclerViewAdapter(emptyList(), viewModel)
-    }
+    private val adapter: ProductRecyclerViewAdapter by lazy { ProductRecyclerViewAdapter(viewModel, viewModel) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,17 +89,24 @@ class ProductListFragment : Fragment() {
 
         observeLoadedProducts()
         observeDetailProductDestination()
+        observeProductEvent()
     }
 
     private fun observeLoadedProducts() {
         viewModel.loadedProducts.observe(viewLifecycleOwner) { products ->
-            adapter.updateData(products)
+            adapter.updateAllLoadedProducts(products)
         }
     }
 
     private fun observeDetailProductDestination() {
         viewModel.detailProductDestinationId.observe(viewLifecycleOwner) { productId ->
             navigateToProductDetail(productId)
+        }
+    }
+
+    private fun observeProductEvent() {
+        viewModel.productsEvent.observe(viewLifecycleOwner) {
+            adapter.updateProductInCart(it)
         }
     }
 
@@ -125,5 +130,9 @@ class ProductListFragment : Fragment() {
             addToBackStack(null)
             commit()
         }
+    }
+
+    companion object {
+        private const val TAG = "ProductListFragment"
     }
 }

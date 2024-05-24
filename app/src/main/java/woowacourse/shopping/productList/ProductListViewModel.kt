@@ -22,7 +22,9 @@ class ProductListViewModel(
             DummyProductIdsCountDataSource(),
         ),
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
-) : ViewModel(), ProductRecyclerViewAdapter.OnProductItemClickListener {
+) : ViewModel(),
+    ProductRecyclerViewAdapter.OnProductItemClickListener,
+    ProductRecyclerViewAdapter.OnItemQuantityChangeListener {
     val currentPage: LiveData<Int> get() = _currentPage
 
     private val _loadedProducts: MutableLiveData<List<Product>> =
@@ -34,9 +36,11 @@ class ProductListViewModel(
 
     private val _productIdsCountInCart: MutableLiveData<List<ProductIdsCount>> =
         MutableLiveData(productIdsCountRepository.loadAllProductIdsCounts())
+
     val productIdsCount: LiveData<List<ProductIdsCount>> get() = _productIdsCountInCart
 
-    private val _productsEvent: MutableLiveData<ProductCountEvent> = MutableLiveData()
+    private val _productsEvent: MutableLiveData<ProductCountEvent> =
+        MutableLiveData(ProductCountEvent.ProductCountAllCleared)
     val productsEvent: LiveData<ProductCountEvent> = _productsEvent
 
     private var _isLastPage: MutableLiveData<Boolean> =
@@ -79,6 +83,7 @@ class ProductListViewModel(
             productIdsCountRepository.addedProductsId(ProductIdsCount(productId, 1))
             _productsEvent.value = ProductCountEvent.ProductCountCountChanged(productId, 1)
         }
+        loadProductIdsCount()
     }
 
     override fun onDecrease(productId: Int) {
