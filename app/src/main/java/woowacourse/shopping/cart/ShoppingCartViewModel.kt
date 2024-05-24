@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
-import woowacourse.shopping.data.Product
+import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.repository.ShoppingCartItemRepository
 
 class ShoppingCartViewModel(
@@ -16,10 +16,10 @@ class ShoppingCartViewModel(
     val currentPage: LiveData<Int> get() = _currentPage
 
     private var _itemsInCurrentPage =
-        MutableLiveData<List<Product>>(
+        MutableLiveData<List<ProductData>>(
             shoppingCartItemRepository.loadPagedCartItems(currentPage.value ?: currentPageIsNullException()),
         )
-    val itemsInCurrentPage: LiveData<List<Product>> get() = _itemsInCurrentPage
+    val itemsInCurrentPage: LiveData<List<ProductData>> get() = _itemsInCurrentPage
 
     private var _isLastPage: MutableLiveData<Boolean> =
         MutableLiveData(

@@ -3,10 +3,10 @@ package woowacourse.shopping
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.Product
+import woowacourse.shopping.data.ProductData
 
 class NumberPagingStrategyTest {
-    private lateinit var pagingStrategy: PagingStrategy<Product>
+    private lateinit var pagingStrategy: PagingStrategy<ProductData>
 
     @BeforeEach
     fun setUp() {
@@ -64,7 +64,7 @@ class NumberPagingStrategyTest {
         val firstLoad = pagingStrategy.loadPagedData(1, items)
         val secondLoad = pagingStrategy.loadPagedData(2, items)
 
-        assertThat(secondLoad).isEqualTo(listOf<Product>())
+        assertThat(secondLoad).isEqualTo(listOf<ProductData>())
     }
 
     // test for final page

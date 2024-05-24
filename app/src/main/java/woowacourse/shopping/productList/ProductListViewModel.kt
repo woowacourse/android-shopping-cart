@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
-import woowacourse.shopping.data.Product
+import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.repository.DefaultProductIdsCountRepository
@@ -27,11 +27,11 @@ class ProductListViewModel(
     ProductRecyclerViewAdapter.OnItemQuantityChangeListener {
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private val _loadedProducts: MutableLiveData<List<Product>> =
+    private val _loadedProducts: MutableLiveData<List<ProductData>> =
         MutableLiveData(
             productsRepository.loadPagedItems(currentPage.value ?: currentPageIsNullException()),
         )
-    val loadedProducts: LiveData<List<Product>>
+    val loadedProducts: LiveData<List<ProductData>>
         get() = _loadedProducts
 
     private val _productIdsCountInCart: MutableLiveData<List<ProductIdsCount>> =

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.Product
+import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.model.ProductIdsCount
@@ -13,7 +13,7 @@ class ProductRecyclerViewAdapter(
     private val onProductItemClickListener: OnProductItemClickListener,
     private val onItemQuantityChangeListener: OnItemQuantityChangeListener,
 ) : RecyclerView.Adapter<ProductsItemViewHolder>() {
-    private var products: List<Product> = emptyList()
+    private var products: List<ProductData> = emptyList()
     private var productsIdCounts: List<ProductIdsCount> = emptyList()
 
     override fun onCreateViewHolder(
@@ -35,7 +35,7 @@ class ProductRecyclerViewAdapter(
 
     override fun getItemCount(): Int = products.size
 
-    fun updateAllLoadedProducts(newData: List<Product>) {
+    fun updateAllLoadedProducts(newData: List<ProductData>) {
         this.products = newData
         notifyItemRangeInserted(products.size, newData.size)
     }

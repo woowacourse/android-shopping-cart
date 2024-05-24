@@ -7,22 +7,22 @@ import androidx.lifecycle.Observer
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-import woowacourse.shopping.data.Product
+import woowacourse.shopping.data.ProductData
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 fun productsTestFixture(
     count: Int,
-    productFixture: (Int) -> Product = { productTestFixture(it) },
-): List<Product> = List(count, productFixture)
+    productFixture: (Int) -> ProductData = { productTestFixture(it) },
+): List<ProductData> = List(count, productFixture)
 
 fun productTestFixture(
     id: Int,
     name: String = "$id name",
     imageUrl: String = "1",
     price: Int = 1,
-): Product = Product(id, imageUrl, name, price)
+): ProductData = ProductData(id, imageUrl, name, price)
 
 fun <T> LiveData<T>.getOrAwaitValue(
     time: Long = 2,

@@ -1,7 +1,7 @@
 package woowacourse.shopping.productList
 
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.Product
+import woowacourse.shopping.data.ProductData
 import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.domain.model.ProductIdsCount
 
@@ -11,7 +11,7 @@ class ProductsItemViewHolder(
     private val onItemQuantityChangeListener: ProductRecyclerViewAdapter.OnItemQuantityChangeListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        product: Product,
+        product: ProductData,
         productIdsCount: List<ProductIdsCount>,
     ) {
         binding.product = product

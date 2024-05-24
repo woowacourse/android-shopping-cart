@@ -1,6 +1,6 @@
 package woowacourse.shopping.data
 
-data class Product(
+data class ProductData(
     val id: Int,
     val imgUrl: String,
     val name: String,

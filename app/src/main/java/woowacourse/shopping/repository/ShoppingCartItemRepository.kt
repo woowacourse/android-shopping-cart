@@ -1,15 +1,15 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.data.Product
+import woowacourse.shopping.data.ProductData
 
 interface ShoppingCartItemRepository {
-    fun addCartItem(product: Product): Int
+    fun addCartItem(product: ProductData): Int
 
-    fun findById(id: Int): Product
+    fun findById(id: Int): ProductData
 
-    fun loadPagedCartItems(page: Int): List<Product>
+    fun loadPagedCartItems(page: Int): List<ProductData>
 
-    fun removeCartItem(productId: Int): Product
+    fun removeCartItem(productId: Int): ProductData
 
     fun clearAllCartItems()
 
