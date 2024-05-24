@@ -29,6 +29,8 @@ val dummyRecentProducts =
         ),
     )
 
+val dummyRecentProduct = dummyRecentProducts[0]
+
 val dummyCartProducts: List<Cart> =
     List(3) {
         Cart(

@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.RecentRepository
 class LocalRecentProductRepository(private val dao: RecentProductDao) : RecentRepository {
     override fun loadAll(): Result<List<RecentProductItem>> {
         return runCatching {
-            dao.getAll().map { entity ->
+            dao.loadAll().map { entity ->
                 entity.toDomain()
             }
         }

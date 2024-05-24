@@ -46,7 +46,7 @@ class ShoppingViewModelTest {
 
         // then
         assertEquals(
-            viewModel.recentProducts.getOrAwaitValue(1),
+            viewModel.recentProducts.getOrAwaitValue(15),
             UiState.Success(dummyRecentProducts),
         )
         assertEquals(

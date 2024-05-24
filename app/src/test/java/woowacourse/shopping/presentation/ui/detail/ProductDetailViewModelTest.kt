@@ -11,6 +11,8 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.cart
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.RecentRepository
+import woowacourse.shopping.dummyRecentProduct
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.product
@@ -24,6 +26,9 @@ class ProductDetailViewModelTest {
 
     @MockK
     private lateinit var cartRepository: CartRepository
+
+    @MockK
+    private lateinit var recentRepository: RecentRepository
 
     @InjectMockKs
     private lateinit var viewModel: ProductDetailViewModel
@@ -64,8 +69,38 @@ class ProductDetailViewModelTest {
 
         // then
         Assertions.assertEquals(
-            viewModel.addCartEvent.getOrAwaitValue(1).getContentIfNotHandled(),
+            viewModel.addCartEvent.getOrAwaitValue(10).getContentIfNotHandled(),
             shoppingProduct.quantity,
+        )
+    }
+
+    @Test
+    fun `마지막 상품을 불러와 확인할 수 있다`() {
+        // given
+        every { recentRepository.loadMostRecent() } returns Result.success(dummyRecentProduct)
+
+        // when
+        viewModel.loadLastProduct()
+
+        // then
+        Assertions.assertEquals(
+            viewModel.lastProduct.getOrAwaitValue(10),
+            UiState.Success(dummyRecentProduct),
+        )
+    }
+
+    @Test
+    fun `마지막 상품을 불러오지 못하면 해당하는 Error 이벤트를 보낸다`() {
+        // given
+        every { recentRepository.loadMostRecent() } returns Result.failure(Throwable())
+
+        // when
+        viewModel.loadLastProduct()
+
+        // then
+        Assertions.assertEquals(
+            viewModel.error.getOrAwaitValue(10).getContentIfNotHandled(),
+            DetailError.RecentItemNotFound,
         )
     }
 }
