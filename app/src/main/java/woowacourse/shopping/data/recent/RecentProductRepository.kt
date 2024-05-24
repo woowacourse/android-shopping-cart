@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.model.RecentProduct
+import woowacourse.shopping.data.recent.entity.RecentProduct
 
 interface RecentProductRepository {
     fun findLastOrNull(): RecentProduct?

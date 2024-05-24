@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.model.RecentProduct
+import woowacourse.shopping.data.recent.entity.RecentProduct
 import java.time.LocalDateTime
 
 object DummyRecentProductRepository : RecentProductRepository {
@@ -25,6 +25,6 @@ object DummyRecentProductRepository : RecentProductRepository {
         if (recentProducts.contains(productId)) {
             recentProducts.remove(productId)
         }
-        recentProducts[productId] = RecentProduct(productId, LocalDateTime.now())
+        recentProducts[productId] = RecentProduct(productId = productId, seenDateTime = LocalDateTime.now())
     }
 }
