@@ -3,6 +3,7 @@ package woowacourse.shopping.data.cart
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface CarDao {
@@ -20,4 +21,7 @@ interface CarDao {
 
     @Query("SELECT * FROM cart WHERE productId = :productId")
     fun findCartItemById(productId: Long): CartEntity?
+
+    @Update
+    fun updateCartItem(product: CartEntity): Int
 }

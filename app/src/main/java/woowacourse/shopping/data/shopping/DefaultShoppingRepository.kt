@@ -22,4 +22,8 @@ class DefaultShoppingRepository(
     ): Boolean {
         return shoppingDataSource.canLoadMoreProducts(currentPage, pageSize)
     }
+
+    override fun updateCount(id: Long, count: Int) {
+        shoppingDataSource.updateProductCount(id, count)
+    }
 }

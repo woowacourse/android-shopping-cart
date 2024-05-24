@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.presentation.shopping.product.ShoppingUiModel.Product" />
 
         <variable
             name="vm"
@@ -50,24 +55,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="33dp"
-            android:text="@string/price_title"
-            android:textAppearance="@style/B2"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_title" />
-
-        <TextView
-            android:id="@+id/tv_product_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
             android:text="@{@string/price_format(vm.product.price)}"
             android:textAppearance="@style/B2"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_price_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title"
+            tools:text="4만원" />
+
+        <include
+            android:id="@+id/item_product_count"
+            layout="@layout/item_product_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_product_price_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_price_title"
-            tools:text="4만원" />
+            bind:product="@{product}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_product_cart"

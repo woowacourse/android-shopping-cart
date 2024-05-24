@@ -27,8 +27,18 @@ class DummyCartDataSource(context: Context) : CartDataSource {
 
     override fun addCartProduct(product: Product, count: Int): Long? {
         val thread = Thread {
-            val entity = CartEntity.makeCartEntity(product, count)
-            cartDao.saveItemCart(entity)
+            val existingEntity = cartDao.findCartItemById(product.id)
+
+            if (existingEntity == null) {
+                val entity = CartEntity.makeCartEntity(product, count)
+                cartDao.saveItemCart(entity)
+            } else {
+                val updatedEntity = existingEntity.copy(
+                    product = product.copy(count = count),
+                )
+                cartDao.updateCartItem(updatedEntity)
+            }
+
             cart = cartDao.findAllCartItem()
         }
         thread.start()

@@ -11,6 +11,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
@@ -23,6 +24,7 @@ class ProductListFragment :
     override val viewModel by viewModels<ProductListViewModel> {
         ProductListViewModel.factory(
             DefaultShoppingRepository(),
+            DefaultCartRepository(requireContext()),
         )
     }
     private lateinit var productAdapter: ProductAdapter

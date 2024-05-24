@@ -5,4 +5,7 @@ data class ProductUi(
     val name: String,
     val price: Int,
     val imageUrl: String,
-)
+    val count: Int = 0,
+) {
+    val isVisible get() = count > 0
+}
