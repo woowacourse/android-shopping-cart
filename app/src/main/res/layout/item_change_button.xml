@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemId"
+            type="int" />
+
+        <variable
+            name="quantity"
+            type="int" />
+
+        <variable
+            name="onItemChargeListener"
+            type="woowacourse.shopping.productList.ProductRecyclerViewAdapter.OnItemQuantityChangeListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp">
+
+        <Button
+            android:id="@+id/btn_decrease"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:onClick="@{() -> onItemChargeListener.onDecrease(itemId)}"
+            android:text="@string/minus"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:gravity="center"
+            android:text="@{String.valueOf(quantity)}"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            tools:ignore="SpUsage"
+            tools:text="1" />
+
+        <Button
+            android:id="@+id/btn_increase"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:onClick="@{() -> onItemChargeListener.onIncrease(itemId)}"
+            android:text="@string/plus"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            tools:ignore="SpUsage" />
+    </LinearLayout>
+
+</layout>
