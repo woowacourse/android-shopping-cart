@@ -40,13 +40,11 @@ class ProductAdapter(
     }
 
     fun setData(newProducts: List<ProductWithQuantity>) {
-        if (isLoadMore(newProducts)) {
-            val positionStart = productWithQuantities.size
-            val itemCount = newProducts.size - productWithQuantities.size
-            productWithQuantities.addAll(newProducts.subList(positionStart, newProducts.size))
-            notifyItemRangeInserted(positionStart, itemCount)
-            return
-        }
+        if (setProductsAtLoadMore(newProducts)) return
+        setProductsAtQuantityChanged(newProducts)
+    }
+
+    private fun setProductsAtQuantityChanged(newProducts: List<ProductWithQuantity>) {
         val uniqueNewProducts =
             newProducts.filter { newProduct ->
                 !productWithQuantities.contains(newProduct)
@@ -57,6 +55,17 @@ class ProductAdapter(
         uniqueNewProducts.forEach {
             notifyItemChanged(it.product.id.toInt())
         }
+    }
+
+    private fun setProductsAtLoadMore(newProducts: List<ProductWithQuantity>): Boolean {
+        if (isLoadMore(newProducts)) {
+            val positionStart = productWithQuantities.size
+            val itemCount = newProducts.size - productWithQuantities.size
+            productWithQuantities.addAll(newProducts.subList(positionStart, newProducts.size))
+            notifyItemRangeInserted(positionStart, itemCount)
+            return true
+        }
+        return false
     }
 
     private fun isLoadMore(newProducts: List<ProductWithQuantity>) = newProducts.none { product -> productWithQuantities.contains(product) }
