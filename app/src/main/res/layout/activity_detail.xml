@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="마지막으로 본 상품"
+                    android:text="@string/detail_recent_product"
                     android:textColor="@color/mint_900"
                     android:textSize="12sp"
                     android:textStyle="bold"

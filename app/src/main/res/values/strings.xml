@@ -9,6 +9,7 @@
 
     <string name="detail_price_title">가격</string>
     <string name="detail_add_to_cart_button">장바구니 담기</string>
+    <string name="detail_recent_product">마지막으로 본 상품</string>
 
     <string name="cart_appbar_title">Cart</string>
 
