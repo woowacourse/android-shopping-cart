@@ -35,7 +35,7 @@ class CartViewModel(
     }
 
     fun delete(cartItemId: Long) {
-        cartRepository.deleteCartItemAtOnce(cartItemId)
+        cartRepository.deleteCartItem(cartItemId)
         updatePage()
     }
 

@@ -181,6 +181,6 @@ class CartActivityTest {
         productPrice: Int,
     ) {
         val productId = productRepository.save(productImageUrl, productTitle, productPrice)
-        cartRepository.increaseCartItemQuantity(productId)
+        cartRepository.addProduct(productId)
     }
 }

@@ -25,7 +25,7 @@ class CartViewModelTest {
 
     @Test
     fun `장바구니에 담긴 상품을 삭제한다`() {
-        cartRepository.increaseCartItemQuantity(productId = 0L)
+        cartRepository.addProduct(productId = 0L)
         viewModel.loadCart(pageSize)
         val cart = viewModel.cart.getOrAwaitValue()
 
@@ -206,6 +206,6 @@ class CartViewModelTest {
     }
 
     private fun addCart(productId: Long) {
-        cartRepository.increaseCartItemQuantity(productId)
+        cartRepository.addProduct(productId)
     }
 }

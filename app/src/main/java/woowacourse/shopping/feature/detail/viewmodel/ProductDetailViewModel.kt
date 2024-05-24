@@ -22,7 +22,7 @@ class ProductDetailViewModel(
     }
 
     fun addProductToCart(productId: Long) {
-        cartRepository.increaseCartItemQuantity(productId)
+        cartRepository.addProduct(productId)
         _isSuccessAddToCart.value = true
     }
 }
