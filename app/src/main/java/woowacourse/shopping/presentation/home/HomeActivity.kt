@@ -14,7 +14,7 @@ import woowacourse.shopping.db.CartDatabase
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.detail.DetailActivity.Companion.DETAIL_RESULT_OK
-import woowacourse.shopping.presentation.detail.DetailActivity.Companion.EXTRA_CART_ITEM
+import woowacourse.shopping.presentation.detail.DetailActivity.Companion.EXTRA_DETAIL_CART_ITEM
 import woowacourse.shopping.presentation.home.adapter.ProductAdapter
 import woowacourse.shopping.presentation.home.adapter.ProductsGridLayoutManager
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
@@ -26,7 +26,7 @@ class HomeActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == DETAIL_RESULT_OK) {
-                val productId = result?.data?.getLongExtra(EXTRA_CART_ITEM, 0)
+                val productId = result?.data?.getLongExtra(EXTRA_DETAIL_CART_ITEM, 0)
 
                 viewModel.updateOrder(productId!!)
             }

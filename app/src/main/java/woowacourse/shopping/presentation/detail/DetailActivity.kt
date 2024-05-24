@@ -61,7 +61,7 @@ class DetailActivity : AppCompatActivity() {
                 ).show()
 
                 val resultIntent = Intent()
-                resultIntent.putExtra(EXTRA_CART_ITEM, productId)
+                resultIntent.putExtra(EXTRA_DETAIL_CART_ITEM, productId)
                 setResult(DETAIL_RESULT_OK, resultIntent)
             }
         }
@@ -94,7 +94,7 @@ class DetailActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
         private const val DEFAULT_PRODUCT_ID = -1L
-        const val EXTRA_CART_ITEM = "extra_cart_item"
+        const val EXTRA_DETAIL_CART_ITEM = "extra_detail_cart_item"
         const val DETAIL_RESULT_OK = 1000
 
         fun newIntent(
