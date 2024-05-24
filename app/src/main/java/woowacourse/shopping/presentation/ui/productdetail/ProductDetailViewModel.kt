@@ -42,7 +42,7 @@ class ProductDetailViewModel(
         thread {
             productRepository.findProductById(id).mapCatching { product ->
                 val carProduct = shoppingCartRepository.findCartProduct(id).getOrNull()
-                carProduct ?: product
+                carProduct ?: product.copy(quantity = 1)
             }.onSuccess { product ->
                 _uiState.value?.let { state ->
                     if (state.isLastProductPage) {
