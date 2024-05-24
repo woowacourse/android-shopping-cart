@@ -34,6 +34,15 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         }
     }
 
+    override fun updateQuantity(
+        cartItemId: Long,
+        quantity: Int,
+    ) {
+        threadAction {
+            dao.updateQuantity(cartItemId, quantity)
+        }
+    }
+
     override fun size(): Int {
         var size: Int = 0
         threadAction {
@@ -51,7 +60,7 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         return cartItemEntity?.toDomainModel()
     }
 
-    override fun find(cartItemId: Long): CartItem {
+    override fun findWithCartItemId(cartItemId: Long): CartItem {
         var cartItemEntity: CartItemEntity? = null
         threadAction {
             cartItemEntity = dao.find(cartItemId)

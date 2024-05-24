@@ -31,6 +31,13 @@ class FakeCartRepositoryImpl : CartRepository {
     ) {
     }
 
+    override fun updateQuantity(
+        cartItemId: Long,
+        quantity: Int,
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun size(): Int {
         return cartItems.size
     }
@@ -39,7 +46,7 @@ class FakeCartRepositoryImpl : CartRepository {
         return null
     }
 
-    override fun find(cartItemId: Long): CartItem {
+    override fun findWithCartItemId(cartItemId: Long): CartItem {
         return testCartItem0
     }
 

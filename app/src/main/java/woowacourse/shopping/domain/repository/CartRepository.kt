@@ -15,11 +15,16 @@ interface CartRepository {
         quantity: Int,
     )
 
+    fun updateQuantity(
+        cartItemId: Long,
+        quantity: Int,
+    )
+
     fun size(): Int
 
     fun findOrNullWithProductId(productId: Long): CartItem?
 
-    fun find(cartItemId: Long): CartItem
+    fun findWithCartItemId(cartItemId: Long): CartItem
 
     fun findAll(): ShoppingCart
 

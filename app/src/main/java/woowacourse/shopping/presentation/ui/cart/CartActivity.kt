@@ -39,7 +39,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerViewAdapter(): CartAdapter {
-        val adapter = CartAdapter(viewModel)
+        val adapter = CartAdapter(viewModel, viewModel)
         binding.recyclerView.adapter = adapter
         return adapter
     }
@@ -49,7 +49,7 @@ class CartActivity : AppCompatActivity() {
         viewModel.cartItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data, adapter)
-                is UIState.Empty -> {}
+                is UIState.Empty -> emptyCart()
                 is UIState.Error ->
                     showError(
                         state.exception.message ?: getString(R.string.unknown_error),
@@ -69,7 +69,18 @@ class CartActivity : AppCompatActivity() {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
+    private fun emptyCart() {
+        viewModel.isCartEmpty()
+        Toast.makeText(this, getString(R.string.empty_cart_message), Toast.LENGTH_LONG).show()
+    }
+
     private fun observeViewModel() {
+        viewModel.deleteCartItem.observe(this) {
+            it.getContentIfNotHandled()?.let { itemId ->
+                viewModel.deleteItem(itemId)
+            }
+        }
+
         viewModel.navigateToDetail.observe(this) {
             it.getContentIfNotHandled()?.let { productId ->
                 navigateToDetail(productId)
@@ -83,12 +94,8 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    fun navigateToDetail(productId: Long) {
+    private fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
-    }
-
-    fun onDeleteItemClick(itemId: Long) {
-        viewModel.deleteItem(itemId)
     }
 
     companion object {

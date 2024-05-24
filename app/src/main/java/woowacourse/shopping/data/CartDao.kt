@@ -16,6 +16,12 @@ interface CartDao {
         quantity: Int,
     )
 
+    @Query("UPDATE cart_items SET quantity = :quantity WHERE id = :itemId")
+    fun updateQuantity(
+        itemId: Long,
+        quantity: Int,
+    )
+
     @Query("SELECT COUNT(*) FROM cart_items")
     fun size(): Int
 

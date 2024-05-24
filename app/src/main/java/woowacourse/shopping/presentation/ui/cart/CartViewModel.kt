@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.event.Event
 import woowacourse.shopping.presentation.state.UIState
 
-class CartViewModel(private val repository: CartRepository) : ViewModel(), CartEventHandler {
+class CartViewModel(private val repository: CartRepository) : ViewModel(), CartEventHandler, CartItemCountHandler {
     private val pageSize = PAGE_SIZE
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
@@ -26,11 +26,11 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartE
             page == lastPage
         }
     private val _totalItemSize = MutableLiveData<Int>(repository.size())
+
     val totalItemSize: LiveData<Int> = _totalItemSize
-
     private val _isPageControlVisible = MutableLiveData<Boolean>(((totalItemSize.value ?: 0) > PAGE_SIZE))
-    val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
 
+    val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
     private var lastPage: Int = DEFAULT_PAGE
 
     val cartItemsState: LiveData<UIState<List<CartItem>>> =
@@ -45,6 +45,10 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartE
                     }
             }
         }
+
+    private val _isEmpty = MutableLiveData<Boolean>(false)
+    val isEmpty: LiveData<Boolean>
+        get() = _isEmpty
 
     private val _navigateToShopping = MutableLiveData<Event<Boolean>>()
     val navigateToShopping: LiveData<Event<Boolean>>
@@ -99,18 +103,34 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartE
         loadPage()
     }
 
-    fun isCartEmpty(): Boolean = cartItemsState.value == UIState.Empty
+    fun isCartEmpty() {
+        _isEmpty.postValue(true)
+    }
 
     override fun navigateToShopping() {
         _navigateToShopping.postValue(Event(true))
     }
 
     override fun navigateToDetail(productId: Long) {
-        TODO("Not yet implemented")
+        _navigateToDetail.postValue(Event(productId))
     }
 
     override fun deleteCartItem(itemId: Long) {
-        TODO("Not yet implemented")
+        _deleteCartItem.postValue(Event(itemId))
+    }
+
+    override fun increaseCount(itemId: Long) {
+        val currentQuantity = repository.findWithCartItemId(itemId).quantity
+        repository.updateQuantity(itemId, currentQuantity + 1)
+        loadPage()
+    }
+
+    override fun decreaseCount(itemId: Long) {
+        val currentQuantity = repository.findWithCartItemId(itemId).quantity
+        if (currentQuantity > 1) {
+            repository.updateQuantity(itemId, currentQuantity - 1)
+        }
+        loadPage()
     }
 
     companion object {
