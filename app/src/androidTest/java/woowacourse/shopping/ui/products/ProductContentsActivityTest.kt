@@ -9,7 +9,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Rule
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 
@@ -20,7 +20,7 @@ class ProductContentsActivityTest {
 
     @Test
     fun `화면이_띄워지면_상품이_보인다`() {
-        onView(allOf(withId(R.id.tv_product_name), withText("맥북5")))
+        onView(allOf(withId(R.id.tv_product_name), withText("맥북20")))
             .check(matches(isDisplayed()))
     }
 
