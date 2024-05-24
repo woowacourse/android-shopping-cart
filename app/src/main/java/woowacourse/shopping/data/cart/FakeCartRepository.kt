@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.math.min
@@ -64,7 +64,7 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
         return cart.subList(fromIndex, toIndex)
     }
 
-    override fun totalProductCount(): Int = cart.size
+    override fun totalCartItemCount(): Int = cart.size
 
     companion object {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."

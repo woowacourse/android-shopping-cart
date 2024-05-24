@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.concurrent.Volatile
@@ -24,7 +24,7 @@ interface CartRepository {
         pageSize: Int,
     ): List<CartItem>
 
-    fun totalProductCount(): Int
+    fun totalCartItemCount(): Int
 
     companion object {
         private const val NOT_INITIALIZE_INSTANCE_MESSAGE = "초기화된 인스턴스가 없습니다."
