@@ -20,10 +20,10 @@ interface RecentProductDao {
         LIMIT :size
     """
     )
-    fun findRecentProductsRange(size: Int): List<RecentProduct>
+    fun findRange(size: Int): List<RecentProduct>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(recentProduct: RecentProduct): Long
+    fun insert(recentProduct: RecentProduct): Long
 
     @Query("UPDATE recent_products SET seen_date_time = :seenDateTime WHERE product_id = :productId")
     fun update(

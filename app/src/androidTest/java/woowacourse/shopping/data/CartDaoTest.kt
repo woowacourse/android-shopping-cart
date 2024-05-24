@@ -38,10 +38,10 @@ class CartDaoTest {
         val cartItem = CartItem(productId = 0L, quantity = Quantity(10))
 
         // when
-        cartDao.insertCartItem(cartItem)
+        cartDao.insert(cartItem)
 
         // then
-        val actual = cartDao.findCartItem(productId = 0L)
+        val actual = cartDao.find(productId = 0L)
         assertThat(actual.productId).isEqualTo(0L)
         assertThat(actual.quantity).isEqualTo(Quantity(10))
     }
@@ -50,13 +50,13 @@ class CartDaoTest {
     fun `카트_아이템의_수량을_변경한다`() {
         // given
         val cartItem = CartItem(productId = 0L, quantity = Quantity(10))
-        cartDao.insertCartItem(cartItem)
+        cartDao.insert(cartItem)
 
         // when
         cartDao.changeQuantity(productId = 0L, quantity = Quantity(1))
 
         // then
-        val actual = cartDao.findCartItem(productId = 0L)
+        val actual = cartDao.find(productId = 0L)
         assertThat(actual.quantity).isEqualTo(Quantity(1))
     }
 
@@ -64,14 +64,14 @@ class CartDaoTest {
     fun `카트_아이템을_삭제한다`() {
         // given
         val cartItem = CartItem(productId = 0L, quantity = Quantity(10))
-        cartDao.insertCartItem(cartItem)
+        cartDao.insert(cartItem)
 
         // when
-        cartDao.deleteCartItem(productId = 0L)
+        cartDao.delete(productId = 0L)
 
         // then
         assertThrows(IllegalArgumentException::class.java) {
-            assertThat(cartDao.findCartItem(productId = 0L)).isNull()
+            assertThat(cartDao.find(productId = 0L)).isNull()
         }
     }
 
@@ -79,10 +79,10 @@ class CartDaoTest {
     fun `상품_아이디에_맞는_카트_아이템을_찾는다`() {
         // given
         val cartItem = CartItem(productId = 0L, quantity = Quantity(10))
-        val cartItemId = cartDao.insertCartItem(cartItem)
+        val cartItemId = cartDao.insert(cartItem)
 
         // when
-        val actual = cartDao.findCartItem(productId = 0L)
+        val actual = cartDao.find(productId = 0L)
 
         // then
         assertThat(actual.id).isEqualTo(cartItemId)
@@ -97,7 +97,7 @@ class CartDaoTest {
         cartDao.insertAllCartItem(cartItems)
 
         // when
-        val actual = cartDao.findCartItemRange(0, 5)
+        val actual = cartDao.findRange(0, 5)
 
         // then
         assertThat(actual).hasSize(5)
@@ -110,7 +110,7 @@ class CartDaoTest {
         cartDao.insertAllCartItem(cartItems)
 
         // when
-        val actual = cartDao.findCartItemRange(0, 5)
+        val actual = cartDao.findRange(0, 5)
 
         // then
         assertThat(actual).hasSize(3)
@@ -123,7 +123,7 @@ class CartDaoTest {
         cartDao.insertAllCartItem(cartItems)
 
         // when
-        val actual = cartDao.totalCartItemCount()
+        val actual = cartDao.totalCount()
 
         // then
         assertThat(actual).isEqualTo(22)
@@ -131,7 +131,7 @@ class CartDaoTest {
 
     private fun CartDao.insertAllCartItem(cartItems: List<CartItem>) {
         cartItems.forEach {
-            insertCartItem(it)
+            insert(it)
         }
     }
 }

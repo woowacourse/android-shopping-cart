@@ -10,14 +10,14 @@ class RoomProductRepository(
 ) : ProductRepository {
     init {
         thread {
-            productDao.insertAllProduct(savedProducts)
+            productDao.insertAll(savedProducts)
         }
     }
 
     override fun find(id: Long): Product {
         var product: Product? = null
         thread {
-            product = productDao.findProductOrNull(id)
+            product = productDao.findOrNull(id)
         }.join()
         return product ?: throw IllegalArgumentException(INVALID_ID_MESSAGE)
     }
@@ -28,7 +28,7 @@ class RoomProductRepository(
     ): List<Product> {
         var products: List<Product> = emptyList()
         thread {
-            products = productDao.findProductRange(page, pageSize)
+            products = productDao.findRange(page, pageSize)
         }.join()
         return products
     }
@@ -36,7 +36,7 @@ class RoomProductRepository(
     override fun totalProductCount(): Int {
         var totalProductCount = 0
         thread {
-            totalProductCount = productDao.totalProductCount()
+            totalProductCount = productDao.totalCount()
         }.join()
         return totalProductCount
     }

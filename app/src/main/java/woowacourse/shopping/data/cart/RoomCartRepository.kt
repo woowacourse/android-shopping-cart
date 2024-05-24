@@ -10,13 +10,13 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
     override fun increaseQuantity(productId: Long) {
         thread {
             runCatching {
-                cartDao.findCartItem(productId)
+                cartDao.find(productId)
             }.onSuccess {
                 var oldQuantity = it.quantity
                 cartDao.changeQuantity(productId, ++oldQuantity)
             }.onFailure {
                 val cartItem = CartItem(productId = productId, quantity = Quantity(1))
-                cartDao.insertCartItem(cartItem)
+                cartDao.insert(cartItem)
             }
         }.join()
     }
@@ -24,11 +24,11 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
     override fun decreaseQuantity(productId: Long) {
         thread {
             runCatching {
-                cartDao.findCartItem(productId)
+                cartDao.find(productId)
             }.onSuccess {
                 var oldQuantity = it.quantity
                 if (oldQuantity.count == 1) {
-                    cartDao.deleteCartItem(productId)
+                    cartDao.delete(productId)
                 }
                 cartDao.changeQuantity(productId, --oldQuantity)
             }.onFailure {
@@ -43,12 +43,12 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
     ) {
         thread {
             runCatching {
-                cartDao.findCartItem(productId)
+                cartDao.find(productId)
             }.onSuccess {
                 cartDao.changeQuantity(productId, quantity)
             }.onFailure {
                 val cartItem = CartItem(productId = productId, quantity = quantity)
-                cartDao.insertCartItem(cartItem)
+                cartDao.insert(cartItem)
             }
         }.join()
     }
@@ -56,7 +56,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
     override fun deleteCartItem(productId: Long) {
         thread {
             runCatching {
-                cartDao.deleteCartItem(productId)
+                cartDao.delete(productId)
             }.onFailure {
                 throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
             }
@@ -67,7 +67,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
         var cartItem: CartItem? = null
         thread {
             cartItem =
-                runCatching { cartDao.findCartItem(productId) }
+                runCatching { cartDao.find(productId) }
                     .getOrNull()
         }.join()
         return cartItem ?: throw IllegalArgumentException(CANNOT_FIND_MESSAGE)
@@ -76,7 +76,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
     override fun findRange(page: Int, pageSize: Int): List<CartItem> {
         var cartItems: List<CartItem> = emptyList()
         thread {
-            cartItems = cartDao.findCartItemRange(page, pageSize)
+            cartItems = cartDao.findRange(page, pageSize)
         }.join()
         return cartItems
     }
@@ -84,7 +84,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
     override fun totalCartItemCount(): Int {
         var totalCartItemCount = 0
         thread {
-            totalCartItemCount = cartDao.totalCartItemCount()
+            totalCartItemCount = cartDao.totalCount()
         }.join()
         return totalCartItemCount
     }

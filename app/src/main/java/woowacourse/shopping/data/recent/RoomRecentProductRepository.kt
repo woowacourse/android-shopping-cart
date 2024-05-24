@@ -9,7 +9,7 @@ class RoomRecentProductRepository(private val recentProductDao: RecentProductDao
     override fun findLastOrNull(): RecentProduct? {
         var lastRecentProduct: RecentProduct? = null
         thread {
-            lastRecentProduct = recentProductDao.findRecentProductsRange(1).firstOrNull()
+            lastRecentProduct = recentProductDao.findRange(1).firstOrNull()
         }.join()
         return lastRecentProduct
     }
@@ -17,7 +17,7 @@ class RoomRecentProductRepository(private val recentProductDao: RecentProductDao
     override fun findRecentProducts(): List<RecentProduct> {
         var lastRecentProduct: List<RecentProduct> = emptyList()
         thread {
-            lastRecentProduct = recentProductDao.findRecentProductsRange(FIND_RECENT_PRODUCTS_COUNT)
+            lastRecentProduct = recentProductDao.findRange(FIND_RECENT_PRODUCTS_COUNT)
         }.join()
         return lastRecentProduct
     }
@@ -25,7 +25,7 @@ class RoomRecentProductRepository(private val recentProductDao: RecentProductDao
     override fun save(productId: Long) {
         thread {
             if (recentProductDao.findOrNull(productId) == null) {
-                recentProductDao.save(RecentProduct(productId = productId, seenDateTime = LocalDateTime.now()))
+                recentProductDao.insert(RecentProduct(productId = productId, seenDateTime = LocalDateTime.now()))
                 return@thread
             }
             recentProductDao.update(productId, LocalDateTime.now())
