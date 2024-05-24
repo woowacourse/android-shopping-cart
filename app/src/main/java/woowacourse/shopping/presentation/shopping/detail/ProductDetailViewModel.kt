@@ -31,6 +31,10 @@ class ProductDetailViewModel(
     private val _recentProduct: MutableLiveData<Product> = MutableLiveData()
     val recentProduct: LiveData<Product> get() = _recentProduct
 
+    private val _errorEvent: MutableSingleLiveData<ProductDetailErrorEvent> =
+        MutableSingleLiveData()
+    val errorEvent: SingleLiveData<ProductDetailErrorEvent> get() = _errorEvent
+
     val isRecentProductVisible: LiveData<Boolean>
         get() =
             _cartProduct.map {
@@ -51,7 +55,7 @@ class ProductDetailViewModel(
             if (it.isEmpty()) return loadProduct(id)
             _cartProduct.value = it.first().toUiModel()
         }.onFailure {
-            // TODO Error handling
+            _errorEvent.setValue(ProductDetailErrorEvent.LoadCartProduct)
         }
     }
 
@@ -59,7 +63,7 @@ class ProductDetailViewModel(
         shoppingRepository.productById(id).onSuccess {
             _cartProduct.value = it.toCartUiModel()
         }.onFailure {
-            // TODO Error handling
+            _errorEvent.setValue(ProductDetailErrorEvent.LoadCartProduct)
         }
     }
 
@@ -70,17 +74,16 @@ class ProductDetailViewModel(
 
     fun decreaseProductCount() {
         val cartProduct = _cartProduct.value ?: return
-        if (cartProduct.count <= 1) return // TODO : Handle error
+        if (cartProduct.count <= 1) return _errorEvent.setValue(ProductDetailErrorEvent.DecreaseCartCount)
         _cartProduct.value = cartProduct.copy(count = cartProduct.count - 1)
     }
 
     fun addCartProduct() {
         val cartProduct = _cartProduct.value ?: return
-        // TODO CHANGE COUNT
         cartRepository.updateCartProduct(cartProduct.product.id, cartProduct.count).onSuccess {
             _addCartEvent.setValue(Unit)
         }.onFailure {
-            // TODO Error handling
+            _errorEvent.setValue(ProductDetailErrorEvent.AddCartProduct)
         }
     }
 
@@ -88,6 +91,8 @@ class ProductDetailViewModel(
         val recentId = _recentProduct.value?.id ?: return
         shoppingRepository.saveRecentProduct(recentId).onSuccess {
             _recentProductEvent.setValue(recentId)
+        }.onFailure {
+            _errorEvent.setValue(ProductDetailErrorEvent.SaveRecentProduct)
         }
     }
 
@@ -105,3 +110,4 @@ class ProductDetailViewModel(
         }
     }
 }
+

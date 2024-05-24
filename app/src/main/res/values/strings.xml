@@ -11,4 +11,15 @@
     <string name="decrease_cart_count">-</string>
     <string name="increase_cart_part">+</string>
     <string name="load_more_products">더보기</string>
+
+    <!--    error msg-->
+    <string name="error_msg_load_recent_products">최근 본 상품을 불러오는데 실패했습니다.</string>
+    <string name="error_msg_load_products">상품을 불러오는데 실패했습니다.</string>
+    <string name="error_msg_update_cart_products">상품을 장바구니에 추가하는데 실패했습니다.</string>
+    <string name="error_msg_increase_cart_count">상품 개수를 증가하는데 실패했습니다.</string>
+    <string name="error_msg_decrease_cart_count">상품 개수를 감소하는데 실패했습니다.</string>
+    <string name="error_msg_decrease_cart_count_limit">상품 개수는 1이상 입니다.</string>
+    <string name="error_msg_delete_cart_product">장바구니 상품을 삭제하는데 실패했습니다</string>
+    <string name="error_msg_load_cart_products">장바구니를 불러오는데 실패했습니다.</string>
+    <string name="error_msg_save_recent_product">최근 상품을 저장하는데 실패했습니다.</string>
 </resources>

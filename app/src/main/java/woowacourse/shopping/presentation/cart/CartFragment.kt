@@ -14,6 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
+import woowacourse.shopping.presentation.common.showToast
 import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 
 class CartFragment :
@@ -38,6 +39,7 @@ class CartFragment :
         initAppBar()
         initViews()
         initObservers()
+        initErrorEvent()
     }
 
     private fun initAppBar() {
@@ -76,6 +78,18 @@ class CartFragment :
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
             adapter.updateProduct(it)
+        }
+    }
+
+    private fun initErrorEvent() {
+        viewModel.errorEvent.observe(viewLifecycleOwner) {
+            when (it) {
+                CartErrorEvent.LoadCartProducts -> showToast(R.string.error_msg_load_cart_products)
+                CartErrorEvent.CanLoadMoreCartProducts -> showToast(R.string.error_msg_load_cart_products)
+                CartErrorEvent.UpdateCartProducts -> showToast(R.string.error_msg_update_cart_products)
+                CartErrorEvent.DecreaseCartCountLimit -> showToast(R.string.error_msg_decrease_cart_count_limit)
+                CartErrorEvent.DeleteCartProduct -> showToast(R.string.error_msg_delete_cart_product)
+            }
         }
     }
 

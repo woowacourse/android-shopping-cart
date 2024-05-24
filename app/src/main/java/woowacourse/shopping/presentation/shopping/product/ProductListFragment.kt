@@ -122,23 +122,23 @@ class ProductListFragment :
         viewModel.errorEvent.observe(viewLifecycleOwner) {
             when (it) {
                 ProductListErrorEvent.LoadRecentProducts -> {
-                    showToast("최근 본 상품을 불러오는데 실패했습니다.")
+                    showToast(R.string.error_msg_load_recent_products)
                 }
 
                 ProductListErrorEvent.LoadProducts -> {
-                    showToast("상품을 불러오는데 실패했습니다.")
+                    showToast(R.string.error_msg_load_products)
                 }
 
                 ProductListErrorEvent.IncreaseCartCount -> {
-                    showToast("상품 개수를 증가하는데 실패했습니다.")
+                    showToast(R.string.error_msg_increase_cart_count)
                 }
 
                 ProductListErrorEvent.DecreaseCartCount -> {
-                    showToast("상품 개수를 감소하는데 실패했습니다.")
+                    showToast(R.string.error_msg_decrease_cart_count)
                 }
 
                 ProductListErrorEvent.LoadCartProducts -> {
-                    showToast("장바구니를 불러오는데 실패했습니다.")
+                    showToast(R.string.error_msg_load_cart_products)
                 }
             }
         }

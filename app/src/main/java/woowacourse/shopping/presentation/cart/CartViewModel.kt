@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
+import woowacourse.shopping.presentation.common.MutableSingleLiveData
+import woowacourse.shopping.presentation.common.SingleLiveData
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -39,6 +41,8 @@ class CartViewModel(
                     value = canLoadMoreCartProducts(nextPage)
                 }
             }
+    private val _errorEvent = MutableSingleLiveData<CartErrorEvent>()
+    val errorEvent: SingleLiveData<CartErrorEvent> = _errorEvent
 
     init {
         loadCartProducts(START_PAGE)
@@ -48,7 +52,7 @@ class CartViewModel(
         cartRepository.cartProducts(page, PAGE_SIZE).onSuccess { carts ->
             _products.value = carts.map { it.toUiModel() }
         }.onFailure {
-            // TODO Error handling
+            _errorEvent.setValue(CartErrorEvent.LoadCartProducts)
         }
     }
 
@@ -56,7 +60,7 @@ class CartViewModel(
         cartRepository.canLoadMoreCartProducts(page, PAGE_SIZE).onSuccess {
             return it
         }.onFailure {
-            // TODO Error handling
+            _errorEvent.setValue(CartErrorEvent.CanLoadMoreCartProducts)
         }
         return false
     }
@@ -76,7 +80,7 @@ class CartViewModel(
                 }
             _products.value = updatedProducts
         }.onFailure {
-            // TODO : Handle error
+            _errorEvent.setValue(CartErrorEvent.UpdateCartProducts)
         }
     }
 
@@ -84,7 +88,7 @@ class CartViewModel(
         val currentProducts = _products.value ?: return
         val product = currentProducts.find { it.product.id == productId } ?: return
         val newProduct = product.copy(count = product.count - 1)
-        if (newProduct.count <= 0) return // TODO : Handle error
+        if (newProduct.count <= 0) return _errorEvent.setValue(CartErrorEvent.DecreaseCartCountLimit)
         cartRepository.updateCartProduct(productId, newProduct.count).onSuccess {
             val updatedProducts =
                 currentProducts.map {
@@ -96,18 +100,17 @@ class CartViewModel(
                 }
             _products.value = updatedProducts
         }.onFailure {
-            // TODO : Handle error
+            _errorEvent.setValue(CartErrorEvent.UpdateCartProducts)
         }
     }
 
     fun deleteProduct(product: CartProductUi) {
-        // TODO: Plus Loading
         cartRepository.deleteCartProduct(product.product.id).onSuccess {
             _products.value = _products.value?.minus(product)
             val currentPage = currentPage.value ?: return
             loadCartProducts(currentPage)
         }.onFailure {
-            // TODO Error handling
+            _errorEvent.setValue(CartErrorEvent.DeleteCartProduct)
         }
     }
 
