@@ -12,7 +12,7 @@
             type="woowacourse.shopping.presentation.home.HomeActionHandler" />
 
         <variable
-            name="viewModel"
+            name="homeViewModel"
             type="woowacourse.shopping.presentation.home.viewmodel.HomeViewModel" />
 
         <variable
@@ -52,9 +52,9 @@
                     android:background="@drawable/ic_mint_round"
                     android:gravity="center_horizontal"
                     android:src="@drawable/ic_mint_round"
-                    android:text="@{String.valueOf(viewModel.totalCartCount)}"
+                    android:text="@{String.valueOf(homeViewModel.totalCartCount)}"
                     android:textColor="@color/white"
-                    android:visibility="@{viewModel.totalCartCount > 0 ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{homeViewModel.totalCartCount > 0 ? View.VISIBLE : View.GONE}" />
 
                 <ImageView
                     android:id="@+id/iv_shopping_cart"
