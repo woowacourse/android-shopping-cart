@@ -2,15 +2,15 @@ package woowacourse.shopping.presentation.ui.productlist.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderProductHistoryBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 
-class ProductHistoryListAdapter(
-    private val actionHandler: ProductListActionHandler,
-    private val productHistoryList: MutableList<Product> = mutableListOf(),
-) : RecyclerView.Adapter<ProductHistoryListAdapter.ProductHistoryViewHolder>() {
+class ProductHistoryListAdapter(private val actionHandler: ProductListActionHandler) :
+    ListAdapter<Product, ProductHistoryListAdapter.ProductHistoryViewHolder>(ProductDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -20,19 +20,19 @@ class ProductHistoryListAdapter(
         return ProductHistoryViewHolder(binding, actionHandler)
     }
 
-    override fun getItemCount(): Int = productHistoryList.size
-
     override fun onBindViewHolder(
         holder: ProductHistoryViewHolder,
         position: Int,
     ) {
-        holder.bind(productHistoryList[position])
+        holder.bind(getItem(position))
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
     fun updateProductHistorys(newCartProductList: List<Product>) {
-        productHistoryList.clear()
-        productHistoryList.addAll(newCartProductList)
-        notifyDataSetChanged()
+        submitList(newCartProductList)
     }
 
     class ProductHistoryViewHolder(
@@ -42,6 +42,23 @@ class ProductHistoryListAdapter(
         fun bind(productHistory: Product) {
             binding.productHistory = productHistory
             binding.actionHandler = actionHandler
+            binding.executePendingBindings()
+        }
+    }
+
+    object ProductDiffCallback : DiffUtil.ItemCallback<Product>() {
+        override fun areItemsTheSame(
+            oldItem: Product,
+            newItem: Product,
+        ): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(
+            oldItem: Product,
+            newItem: Product,
+        ): Boolean {
+            return oldItem == newItem
         }
     }
 }
