@@ -15,12 +15,12 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.MainFragmentListener
+import woowacourse.shopping.view.MainActivityListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 
 class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter {
-    private var mainFragmentListener: MainFragmentListener? = null
+    private var mainActivityListener: MainActivityListener? = null
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
     private val productDetailViewModel: ProductDetailViewModel by lazy {
@@ -37,8 +37,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is MainFragmentListener) {
-            mainFragmentListener = context
+        if (context is MainActivityListener) {
+            mainActivityListener = context
         }
     }
 
@@ -65,7 +65,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
         productDetailViewModel.productDetailEvent.observe(viewLifecycleOwner) { productDetailState ->
             when (productDetailState) {
                 is ProductDetailEvent.AddShoppingCart.Success -> {
-                    mainFragmentListener?.saveUpdateProduct(
+                    mainActivityListener?.saveUpdateProduct(
                         productDetailState.productId,
                         productDetailState.count,
                     )
@@ -75,7 +75,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
                 }
 
                 ProductDetailEvent.UpdateRecentlyProductItem.Success -> {
-                    mainFragmentListener?.saveUpdateRecentlyProduct()
+                    mainActivityListener?.saveUpdateRecentlyProduct()
                 }
             }
         }
@@ -133,11 +133,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        mainFragmentListener = null
+        mainActivityListener = null
     }
 
     override fun clickClose() {
-        mainFragmentListener?.popFragment()
+        mainActivityListener?.popFragment()
     }
 
     override fun clickAddCart(product: Product) {

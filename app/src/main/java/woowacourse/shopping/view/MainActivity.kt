@@ -8,7 +8,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.products.ProductsListFragment
 
-class MainActivity : AppCompatActivity(), MainFragmentListener {
+class MainActivity : AppCompatActivity(), MainActivityListener {
     private val mainViewModel: MainViewModel by viewModels()
 
     private val binding: ActivityMainBinding by lazy {

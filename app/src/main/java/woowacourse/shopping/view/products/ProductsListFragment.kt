@@ -14,7 +14,7 @@ import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.MainFragmentListener
+import woowacourse.shopping.view.MainActivityListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
@@ -23,7 +23,7 @@ import woowacourse.shopping.view.products.adapter.ProductAdapter
 import woowacourse.shopping.view.products.adapter.RecentlyAdapter
 
 class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter {
-    private var mainFragmentListener: MainFragmentListener? = null
+    private var mainActivityListener: MainActivityListener? = null
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private val productListViewModel: ProductListViewModel by lazy {
@@ -42,8 +42,8 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is MainFragmentListener) {
-            mainFragmentListener = context
+        if (context is MainActivityListener) {
+            mainActivityListener = context
         }
     }
 
@@ -126,10 +126,10 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
                         )
             }
         }
-        mainFragmentListener?.observeProductList { updatedProducts ->
+        mainActivityListener?.observeProductList { updatedProducts ->
             productListViewModel.updateProducts(updatedProducts)
         }
-        mainFragmentListener?.observeRecentlyProduct {
+        mainActivityListener?.observeRecentlyProduct {
             productListViewModel.loadPagingRecentlyProduct()
         }
     }
@@ -137,7 +137,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        mainFragmentListener = null
+        mainActivityListener = null
     }
 
     override fun clickProductItem(productId: Long) {
@@ -145,12 +145,12 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
-        mainFragmentListener?.changeFragment(productFragment)
+        mainActivityListener?.changeFragment(productFragment)
     }
 
     override fun clickShoppingCart() {
         val shoppingCartFragment = ShoppingCartFragment()
-        mainFragmentListener?.changeFragment(shoppingCartFragment)
+        mainActivityListener?.changeFragment(shoppingCartFragment)
     }
 
     override fun clickLoadPagingData() {
@@ -162,7 +162,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(recentlyProduct.productId)
             }
-        mainFragmentListener?.changeFragment(productFragment)
+        mainActivityListener?.changeFragment(productFragment)
     }
 
     private fun loadPagingData() {
