@@ -9,11 +9,11 @@ import woowacourse.shopping.domain.entity.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
-import woowacourse.shopping.presentation.util.MutableSingleLiveData
-import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.shopping.detail.ProductUi
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 import woowacourse.shopping.presentation.shopping.toUiModel
+import woowacourse.shopping.presentation.util.MutableSingleLiveData
+import woowacourse.shopping.presentation.util.SingleLiveData
 
 class ProductListViewModel(
     private val shoppingRepository: ShoppingRepository,

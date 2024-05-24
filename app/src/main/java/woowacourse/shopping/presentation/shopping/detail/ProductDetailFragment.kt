@@ -15,9 +15,9 @@ import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.util.showToast
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
+import woowacourse.shopping.presentation.util.showToast
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
@@ -66,7 +66,7 @@ class ProductDetailFragment :
     }
 
     private fun initObservers() {
-        viewModel.addCartEvent.observe(viewLifecycleOwner) { isAdded ->
+        viewModel.addCartEvent.observe(viewLifecycleOwner) {
             (requireActivity() as? ShoppingNavigator)?.navigateToCart()
         }
         viewModel.recentProductEvent.observe(viewLifecycleOwner) { id ->

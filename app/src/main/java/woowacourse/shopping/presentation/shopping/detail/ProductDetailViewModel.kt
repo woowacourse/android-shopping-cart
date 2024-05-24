@@ -11,9 +11,9 @@ import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.cart.CartProductUi
 import woowacourse.shopping.presentation.cart.toUiModel
+import woowacourse.shopping.presentation.shopping.toCartUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.SingleLiveData
-import woowacourse.shopping.presentation.shopping.toCartUiModel
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,

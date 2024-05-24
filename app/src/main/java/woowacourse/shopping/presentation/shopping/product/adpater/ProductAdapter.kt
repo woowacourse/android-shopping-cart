@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreProductBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.util.ItemUpdateHelper
 import woowacourse.shopping.presentation.shopping.product.ProductItemListener
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
+import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class ProductAdapter(
     private val listener: ProductItemListener,

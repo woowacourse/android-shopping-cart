@@ -17,12 +17,12 @@ import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.util.showToast
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 import woowacourse.shopping.presentation.shopping.product.adpater.ProductAdapter
 import woowacourse.shopping.presentation.shopping.product.adpater.RecentProductAdapter
 import woowacourse.shopping.presentation.shopping.product.adpater.RecentProductWrapperAdapter
+import woowacourse.shopping.presentation.util.showToast
 
 class ProductListFragment :
     BindingFragment<FragmentProductListBinding>(R.layout.fragment_product_list) {
