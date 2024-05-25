@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.databinding.HolderHistoryListBinding
 import woowacourse.shopping.databinding.HolderLoadMoreBinding
 import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
@@ -20,6 +21,7 @@ class ProductListAdapter(
             emptyList(),
             true,
         ),
+    private val historyListAdapter: HistoryListAdapter,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -27,7 +29,11 @@ class ProductListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1) LOAD_VIEW_TYPE else PRODUCT_VIEW_TYPE
+        return when {
+            (position == 0) -> HISTORY_VIEW_TYPE
+            (position == itemCount - 1) -> LOAD_VIEW_TYPE
+            else -> PRODUCT_VIEW_TYPE
+        }
     }
 
     override fun onCreateViewHolder(
@@ -44,10 +50,16 @@ class ProductListAdapter(
                 )
             }
 
-            else -> {
+            LOAD_VIEW_TYPE -> {
                 LoadMoreViewHolder(
                     HolderLoadMoreBinding.inflate(inflater, parent, false),
                     actionHandler,
+                )
+            }
+
+            else -> {
+                ProductListViewHolder.HistoryViewHolder(
+                    HolderHistoryListBinding.inflate(inflater, parent, false),
                 )
             }
         }
@@ -66,6 +78,10 @@ class ProductListAdapter(
 
             is LoadMoreViewHolder -> {
                 holder.bind(pagingProductUiModel.isLastPage)
+            }
+
+            is ProductListViewHolder.HistoryViewHolder -> {
+                holder.bind(historyListAdapter)
             }
         }
     }
@@ -106,10 +122,19 @@ class ProductListAdapter(
                 binding.actionHandler = actionHandler
             }
         }
+
+        class HistoryViewHolder(
+            private val binding: HolderHistoryListBinding,
+        ) : ProductListViewHolder(binding.root) {
+            fun bind(historyListAdapter: HistoryListAdapter) {
+                binding.rvHistoryList.adapter = historyListAdapter
+            }
+        }
     }
 
     companion object {
         const val PRODUCT_VIEW_TYPE = 0
         const val LOAD_VIEW_TYPE = 1
+        const val HISTORY_VIEW_TYPE = 2
     }
 }

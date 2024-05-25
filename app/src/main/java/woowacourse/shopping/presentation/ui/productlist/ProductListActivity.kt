@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.productlist
 import android.view.Menu
 import androidx.activity.viewModels
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repsoitory.DefaultHistoryRepository
 import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -11,6 +12,7 @@ import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.ui.productlist.adapter.HistoryListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapterManager
@@ -20,13 +22,21 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
 
     private val viewModel: ProductListViewModel by viewModels {
+        val localHistoryDataSource = shoppingApplication.localHistoryDataSource
         ProductListViewModelFactory(
             DummyProductList,
             DummyShoppingCart,
+            DefaultHistoryRepository(localHistoryDataSource),
         )
     }
 
-    private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
+    private val historyListAdapter: HistoryListAdapter by lazy { HistoryListAdapter(actionHandler = viewModel) }
+    private val productListAdapter: ProductListAdapter by lazy {
+        ProductListAdapter(
+            historyListAdapter = historyListAdapter,
+            actionHandler = viewModel,
+        )
+    }
 
     override fun onResume() {
         super.onResume()
@@ -52,9 +62,9 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     }
 
     private fun initAdapter() {
-        binding.rvProductList.adapter = adapter
+        binding.rvProductList.adapter = productListAdapter
         binding.rvProductList.layoutManager =
-            ProductListAdapterManager(this, adapter, 2, PRODUCT_VIEW_TYPE)
+            ProductListAdapterManager(this, productListAdapter, 2, PRODUCT_VIEW_TYPE)
     }
 
     private fun initObserve() {
@@ -73,7 +83,10 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
         viewModel.uiState.observe(this) { state ->
             state.pagingProductUiModel?.let { pagingProductUiModel ->
-                adapter.updateProductList(pagingProductUiModel)
+                productListAdapter.updateProductList(pagingProductUiModel)
+            }
+            state.histories?.let { histories ->
+                historyListAdapter.updateHistoryList(histories)
             }
         }
 
