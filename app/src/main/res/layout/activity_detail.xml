@@ -113,7 +113,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> detailViewModel.navigateToProductDetail(detailViewModel.lastlyViewedProduct.product.id)}"
+                android:onClick="@{() -> detailViewModel.updateNavigationEvent(detailViewModel.lastlyViewedProduct.product.id)}"
                 android:padding="16dp">
 
                 <TextView

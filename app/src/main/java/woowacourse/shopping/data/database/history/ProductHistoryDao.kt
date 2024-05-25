@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.database.history
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -20,9 +21,18 @@ interface ProductHistoryDao {
     )
     fun getProductHistory(pageSize: Int): List<RecentProduct>
 
+    @Query("DELETE FROM product_history WHERE productId=:productId")
+    fun deleteProductHistory(productId: Long)
+
     @Upsert
     fun insertProductHistory(productHistory: ProductHistory): Long
 
+    @Transaction
+    fun addProductHistory(productHistory: ProductHistory) {
+        deleteProductHistory(productHistory.productId)
+        insertProductHistory(productHistory)
+    }
+
     @Query("SELECT * FROM product_history ORDER BY id DESC LIMIT 1")
-    fun getLastProduct(): RecentProduct
+    fun getLastProduct(): RecentProduct?
 }

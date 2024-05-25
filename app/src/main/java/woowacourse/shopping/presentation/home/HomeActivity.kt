@@ -51,6 +51,7 @@ class HomeActivity : AppCompatActivity() {
                     viewModel.onQuantityChange(it.productId, it.quantity)
                 }
             }
+            viewModel.loadHistory()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {

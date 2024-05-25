@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.card.MaterialCardView
@@ -89,6 +88,7 @@ class DetailActivity : AppCompatActivity() {
                     data?.productId ?: return@observe,
                     data.lastlyViewedProductId,
                 )
+            viewModel.updateHistory(id = productId)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
@@ -107,7 +107,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun navigateBackToMain() {
-        viewModel.navigateBack(id = productId)
+        viewModel.updateHistory(id = productId)
         finish()
     }
 
@@ -131,7 +131,7 @@ class DetailActivity : AppCompatActivity() {
         fun newIntent(
             context: Context,
             productId: Long,
-            lastlyViewedProductId: Long,
+            lastlyViewedProductId: Long?,
         ): Intent {
             return Intent(context, DetailActivity::class.java)
                 .putExtra(EXTRA_PRODUCT_ID, productId)

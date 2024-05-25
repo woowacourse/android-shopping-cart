@@ -71,13 +71,13 @@ class DetailViewModel(
         }
     }
 
-    fun navigateToProductDetail(id: Long) {
+    fun updateNavigationEvent(id: Long) {
         thread {
             _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, id)))
         }
     }
 
-    fun navigateBack(id: Long) {
+    fun updateHistory(id: Long) {
         thread {
             historyRepository.addProductHistory(ProductHistory(productId = id))
         }

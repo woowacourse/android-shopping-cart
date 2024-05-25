@@ -84,7 +84,7 @@ class HomeViewModel(
         }
     }
 
-    private fun loadHistory() {
+    fun loadHistory() {
         thread {
             _productHistory.postValue(
                 productHistoryRepository.fetchProductHistory(10),
@@ -98,8 +98,7 @@ class HomeViewModel(
 
     override fun navigateToProductDetail(id: Long) {
         thread {
-            val lastlyViewedId = productHistoryRepository.fetchLatestHistory().product.id
-//            productHistoryRepository.addProductHistory(ProductHistory(productId = id))
+            val lastlyViewedId = productHistoryRepository.fetchLatestHistory()?.product?.id
             loadHistory()
             _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
         }
@@ -165,8 +164,3 @@ class HomeViewModel(
         }
     }
 }
-
-data class DetailNavigationData(
-    val productId: Long,
-    val lastlyViewedProductId: Long,
-)
