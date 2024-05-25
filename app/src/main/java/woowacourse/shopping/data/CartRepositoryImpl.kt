@@ -28,9 +28,8 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         productId: Long,
         quantity: Int,
     ) {
-        val currentQuantity = findOrNullWithProductId(productId)?.quantity ?: 0
         threadAction {
-            dao.update(productId, currentQuantity + quantity)
+            dao.update(productId, quantity)
         }
     }
 
