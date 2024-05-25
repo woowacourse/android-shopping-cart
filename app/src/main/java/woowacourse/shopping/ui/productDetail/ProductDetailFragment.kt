@@ -1,19 +1,19 @@
 package woowacourse.shopping.ui.productDetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.NonePagingStrategy
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
 import woowacourse.shopping.data.source.DummyProductsDataSource
+import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
-import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
@@ -32,7 +32,7 @@ class ProductDetailFragment : Fragment() {
         initViewModel()
 
         binding.vm = viewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.onItemChargeListener = viewModel
 
         return binding.root
@@ -44,12 +44,16 @@ class ProductDetailFragment : Fragment() {
                 UniversalViewModelFactory {
                     ProductDetailViewModel(
                         productId = it.getInt(PRODUCT_ID),
-                        shoppingProductsRepository = DummyProductsDataSource(NonePagingStrategy()),
-                        productIdsCountRepository = DefaultProductIdsCountRepository(DummyShoppingCartProductIdDataSource()),
+                        shoppingProductsRepository =
+                        DefaultShoppingProductRepository(
+                            DummyProductsDataSource(),
+                            DummyShoppingCartProductIdDataSource(),
+                        ),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         }
+        viewModel.loadAll()
     }
 
     override fun onViewCreated(
@@ -57,10 +61,15 @@ class ProductDetailFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d(TAG, "onViewCreated: called")
         binding.productDetailToolbar.setOnMenuItemClickListener {
             navigateToMenuItem(it)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume: called")
     }
 
     private fun navigateToMenuItem(it: MenuItem) =
@@ -82,6 +91,7 @@ class ProductDetailFragment : Fragment() {
 
     companion object {
         private const val PRODUCT_ID = "productId"
+        private const val TAG = "ProductDetailFragment"
 
         fun newInstance(productId: Int): ProductDetailFragment {
             val fragment = ProductDetailFragment()

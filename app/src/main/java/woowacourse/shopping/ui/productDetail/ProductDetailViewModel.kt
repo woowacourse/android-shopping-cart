@@ -1,46 +1,43 @@
 package woowacourse.shopping.ui.productDetail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.model.ProductData
-import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
-import woowacourse.shopping.domain.model.ProductIdsCount
-import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
-import woowacourse.shopping.domain.repository.ProductIdsCountRepository
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter
-import java.lang.Exception
 
 class ProductDetailViewModel(
     private val productId: Int,
-    shoppingProductsRepository: ShoppingProductsRepository,
-    private val productIdsCountRepository: ProductIdsCountRepository =
-        DefaultProductIdsCountRepository(
-            DummyShoppingCartProductIdDataSource(),
-        ),
+    private val shoppingProductsRepository: ShoppingProductsRepository,
 ) : ViewModel(), ProductRecyclerViewAdapter.OnItemQuantityChangeListener {
-    val currentProduct: ProductData = shoppingProductsRepository.loadProduct(productId)
+    private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
+    val currentProduct: LiveData<Product> get() = _currentProduct
 
-    private val _productCount: MutableLiveData<Int> =
-        MutableLiveData(
-            try {
-                productIdsCountRepository.findByProductId(productId).quantity
-            } catch (e: NoSuchElementException) {
-                1
-            },
-        )
-
+    private val _productCount: MutableLiveData<Int> = MutableLiveData()
     val productCount: LiveData<Int> get() = _productCount
+
+    fun loadAll() {
+        _currentProduct.value = shoppingProductsRepository.loadProduct(id = productId)
+        _productCount.value = 1
+    }
 
     fun addProductToCart() {
         try {
-            val product = productIdsCountRepository.findByProductId(productId)
-            // alreay have -> toast msg (이미 있습니다)
-            Log.d(TAG, "addProductToCart: $product 는 이미 있습니다")
-        } catch (e: Exception) {
-            productIdsCountRepository.addedProductsId(ProductIdsCount(productId, productCount.value ?: 1))
+            // TODO: 상품을 증가시킬 때 특정 수량만큼 추가할 수 있도록 변경해야 함
+            repeat(productCount.value!!) {
+                shoppingProductsRepository.increaseShoppingCartProduct(productId)
+            }
+
+            // TODO: "이미 장바구니에 담긴 상품이어서 수량을 업데이트했음" 토스트 메시지 띄우기
+        } catch (e: NoSuchElementException) {
+            // TODO: 상품을 추가할 때 특정 수량만큼 추가할 수 있도록 변경해야 함
+            shoppingProductsRepository.addShoppingCartProduct(productId)
+            repeat(productCount.value!! - 1) {
+                shoppingProductsRepository.increaseShoppingCartProduct(productId)
+            }
+
+            // TODO: "장바구니에 담겼습니다" 토스트 메시지 띄우기
         }
     }
 
@@ -49,6 +46,10 @@ class ProductDetailViewModel(
     }
 
     override fun onDecrease(productId: Int) {
+        val currentProductCount = _productCount.value
+        if (currentProductCount == 1) {
+            return
+        }
         _productCount.value = _productCount.value?.minus(1)
     }
 
