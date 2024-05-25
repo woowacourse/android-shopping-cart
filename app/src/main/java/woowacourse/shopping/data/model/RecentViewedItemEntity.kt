@@ -10,12 +10,17 @@ import java.time.LocalDateTime
 data class RecentViewedItemEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
+    val productId: Long,
     val product: Product,
     val viewedAt: LocalDateTime,
 ) {
     companion object {
         fun makeRecentViewedItemEntity(product: Product): RecentViewedItemEntity {
-            return RecentViewedItemEntity(product = product, viewedAt = LocalDateTime.now())
+            return RecentViewedItemEntity(
+                productId = product.id,
+                product = product,
+                viewedAt = LocalDateTime.now(),
+            )
         }
     }
 }

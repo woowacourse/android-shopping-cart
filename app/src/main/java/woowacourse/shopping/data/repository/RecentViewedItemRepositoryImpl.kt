@@ -5,6 +5,7 @@ import woowacourse.shopping.data.db.recentviewedItem.RecentViewedItemDatabase
 import woowacourse.shopping.data.model.RecentViewedItemEntity.Companion.makeRecentViewedItemEntity
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.RecentViewedItemRepository
+import java.time.LocalDateTime
 import kotlin.concurrent.thread
 
 class RecentViewedItemRepositoryImpl(context: Context) : RecentViewedItemRepository {
@@ -20,8 +21,15 @@ class RecentViewedItemRepositoryImpl(context: Context) : RecentViewedItemReposit
     }
 
     override fun saveRecentViewedItem(product: Product) {
-        val newEntity = makeRecentViewedItemEntity(product)
-        thread { recentViewedItemDao.saveRecentViewedItem(newEntity) }.join()
+        thread {
+            val existingItem = recentViewedItemDao.findItemByProductId(product.id)
+            if (existingItem == null) {
+                val newEntity = makeRecentViewedItemEntity(product)
+                recentViewedItemDao.saveRecentViewedItem(newEntity)
+            } else {
+                recentViewedItemDao.updateViewedDate(product.id, LocalDateTime.now())
+            }
+        }.join()
     }
 
     override fun getLastViewedProduct(): Product {
