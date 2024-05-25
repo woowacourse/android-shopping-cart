@@ -1,5 +1,6 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
@@ -21,5 +22,30 @@ class DefaultShoppingProductRepository(
 
     override fun isFinalPage(page: Int): Boolean = productsSource.isFinalPage(page)
 
+    override fun shoppingCartProductQuantity(): Int =
+        cartSource.loadAll().sumOf {
+            it.quantity
+        }
+
     private fun productQuantity(productId: Int) = cartSource.findByProductId(productId)?.quantity ?: 0
+
+    override fun increaseShoppingCartProduct(id: Int) {
+        cartSource.plusProductsIdCount(id)
+    }
+
+    override fun decreaseShoppingCartProduct(id: Int) {
+        cartSource.minusProductsIdCount(id)
+    }
+
+    override fun addShoppingCartProduct(id: Int) {
+        cartSource.addedNewProductsId(ProductIdsCountData(id, FIRST_QUANTITY))
+    }
+
+    override fun removeShoppingCartProduct(id: Int) {
+        cartSource.removedProductsId(id)
+    }
+
+    companion object {
+        private const val FIRST_QUANTITY = 1
+    }
 }

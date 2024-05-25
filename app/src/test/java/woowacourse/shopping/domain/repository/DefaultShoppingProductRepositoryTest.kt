@@ -40,17 +40,17 @@ class DefaultShoppingProductRepositoryTest {
         // TODO: 가독성이 너무 별로인데 개선해야 할듯?
         val expected =
             (
-                    productsTestFixture(count = 10).map { it.toDomain(2) } +
-                            productsTestFixture(count = 10) {
-                                productTestFixture(
-                                    it + 10,
-                                )
-                            }.map {
-                                it.toDomain(
-                                    0,
-                                )
-                            }
-                    )
+                productsTestFixture(count = 10).map { it.toDomain(2) } +
+                    productsTestFixture(count = 10) {
+                        productTestFixture(
+                            it + 10,
+                        )
+                    }.map {
+                        it.toDomain(
+                            0,
+                        )
+                    }
+            )
         assertThat(loadedProducts).isEqualTo(expected)
     }
 }

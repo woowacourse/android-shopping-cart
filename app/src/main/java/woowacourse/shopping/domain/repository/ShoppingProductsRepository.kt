@@ -8,4 +8,14 @@ interface ShoppingProductsRepository {
     fun loadProduct(id: Int): Product
 
     fun isFinalPage(page: Int): Boolean
+
+    fun shoppingCartProductQuantity(): Int
+
+    fun increaseShoppingCartProduct(id: Int)
+
+    fun decreaseShoppingCartProduct(id: Int)
+
+    fun addShoppingCartProduct(id: Int)
+
+    fun removeShoppingCartProduct(id: Int)
 }

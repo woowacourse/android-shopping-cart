@@ -89,9 +89,7 @@ class DefaultProductIdsCountRepositoryTest {
         repository.minusProductsIdCount(1)
 
         // then
-        assertThrows<NoSuchElementException> {
-            source.findByProductId(1)
-        }
+        assertThrows<NoSuchElementException> { repository.findByProductId(1) }
     }
 
     @Test
