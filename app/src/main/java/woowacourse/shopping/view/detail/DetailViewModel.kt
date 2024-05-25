@@ -38,8 +38,8 @@ class DetailViewModel(
         get() = _quantity
 
     val totalPrice: LiveData<Long> =
-        quantity.map {
-            product.value?.price?.times(it) ?: 0
+        quantity.map { quantityValue ->
+            product.value?.price?.times(quantityValue) ?: 0
         }
 
     init {
@@ -59,7 +59,7 @@ class DetailViewModel(
     fun createCartItem(quantity: Int) {
         val state = detailUiState.value
         if (state is UIState.Success) {
-            cartRepository.insert(
+            cartRepository.save(
                 product = state.data,
                 quantity = quantity,
             )
@@ -72,11 +72,11 @@ class DetailViewModel(
         _navigateToCart.value = Event(true)
     }
 
-    override fun onPlusButtonClick(productId: Long) {
+    override fun onQuantityPlusButtonClick(productId: Long) {
         _quantity.value = quantity.value?.plus(1)
     }
 
-    override fun onMinusButtonClick(productId: Long) {
+    override fun onQuqntityMinusButtonClick(productId: Long) {
         _quantity.value = (quantity.value?.minus(1))?.coerceAtLeast(1)
     }
 

@@ -27,7 +27,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:backgroundTint="@android:color/transparent"
-            android:onClick="@{() -> clickListener.onMinusButtonClick(productId)}"
+            android:onClick="@{() -> clickListener.onQuqntityMinusButtonClick(productId)}"
             android:src="@drawable/ic_minus" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:backgroundTint="@android:color/transparent"
-            android:onClick="@{() -> clickListener.onPlusButtonClick(productId)}"
+            android:onClick="@{() -> clickListener.onQuantityPlusButtonClick(productId)}"
             android:src="@drawable/ic_plus" />
     </LinearLayout>
 </layout>

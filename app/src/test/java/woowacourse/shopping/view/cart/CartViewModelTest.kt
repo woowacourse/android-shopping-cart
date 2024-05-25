@@ -40,7 +40,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품을 확인할 수 있다`() {
         // given
-        testCartRepository.insert(
+        testCartRepository.save(
             product = testProduct0,
             quantity = 1,
         )
@@ -57,7 +57,7 @@ class CartViewModelTest {
     fun `장바구니에 담긴 상품이 5개 미만일 때 페이지 컨트롤이 보이지 않는다`() {
         // given
         repeat(4) {
-            testCartRepository.insert(
+            testCartRepository.save(
                 product = testProduct0,
                 quantity = 1,
             )
@@ -75,7 +75,7 @@ class CartViewModelTest {
     fun `장바구니에 담긴 상품이 5개 초과일 때 페이지 컨트롤이 보인다`() {
         // given
         repeat(6) {
-            testCartRepository.insert(
+            testCartRepository.save(
                 product = testProduct0,
                 quantity = 1,
             )
@@ -93,7 +93,7 @@ class CartViewModelTest {
     fun `아이템이 6개 이상이면 다음 페이지로 이동할 수 있다`() {
         // given
         repeat(6) {
-            testCartRepository.insert(
+            testCartRepository.save(
                 product = testProduct0,
                 quantity = 1,
             )
@@ -112,7 +112,7 @@ class CartViewModelTest {
     fun `첫 페이지에서 이전 페이지로 이동할 수 없다`() {
         // given
         repeat(6) {
-            testCartRepository.insert(
+            testCartRepository.save(
                 product = testProduct0,
                 quantity = 1,
             )
@@ -131,7 +131,7 @@ class CartViewModelTest {
     @Test
     fun `아이템을 삭제할 수 있다`() {
         // given
-        testCartRepository.insert(
+        testCartRepository.save(
             product = testProduct0,
             quantity = 1,
         )
@@ -149,7 +149,7 @@ class CartViewModelTest {
     fun `아이템을 삭제하고 다음 페이지로 이동할 수 있다`() {
         // given
         repeat(7) {
-            testCartRepository.insert(
+            testCartRepository.save(
                 product = testProduct0,
                 quantity = 1,
             )
@@ -169,7 +169,7 @@ class CartViewModelTest {
     fun `아이템을 삭제하고 이전 페이지로 이동할 수 있다`() {
         // given
         repeat(6) {
-            testCartRepository.insert(
+            testCartRepository.save(
                 product = testProduct0,
                 quantity = 1,
             )
@@ -189,7 +189,7 @@ class CartViewModelTest {
     fun `아이템이 6개일때 삭제하면 첫번째 페이지로 넘어가고 페이지 컨트롤이 보이지 않는다`() {
         // given
         repeat(6) {
-            testCartRepository.insert(
+            testCartRepository.save(
                 product = testProduct0,
                 quantity = 1,
             )

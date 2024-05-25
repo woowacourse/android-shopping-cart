@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
-    fun insert(
+    fun save(
         product: Product,
         quantity: Int = DEFAULT_QUANTITY,
     )
@@ -14,9 +14,7 @@ interface CartRepository {
         quantity: Int,
     )
 
-    fun itemCount(): Int
-
-    fun totalQuantity(): Int
+    fun cartItemSize(): Int
 
     fun productQuantity(productId: Long): Int
 

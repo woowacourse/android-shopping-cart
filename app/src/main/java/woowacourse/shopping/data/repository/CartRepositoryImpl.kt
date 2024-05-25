@@ -11,7 +11,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(database: CartDatabase) : CartRepository {
     private val dao = database.cartDao()
 
-    override fun insert(
+    override fun save(
         product: Product,
         quantity: Int,
     ) {
@@ -33,20 +33,12 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         }
     }
 
-    override fun itemCount(): Int {
+    override fun cartItemSize(): Int {
         var itemSize = 0
         threadAction {
-            itemSize = dao.itemSize()
+            itemSize = dao.cartItemSize()
         }
         return itemSize
-    }
-
-    override fun totalQuantity(): Int {
-        var totalQuantity = 0
-        threadAction {
-            totalQuantity = dao.totalQuantity()
-        }
-        return totalQuantity
     }
 
     override fun productQuantity(productId: Long): Int {

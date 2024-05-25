@@ -45,3 +45,11 @@ fun setViewVisibility(
 ) {
     view.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
+
+@BindingAdapter("app:totalQuantityVisibility")
+fun setTotalQuantityVisibility(
+    textView: TextView,
+    totalQuantity: Int,
+) {
+    textView.visibility = if (totalQuantity > 0) View.VISIBLE else View.GONE
+}

@@ -10,11 +10,11 @@ import woowacourse.shopping.ShoppingApplication.Companion.database
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.shopping.adapter.product.ProductAdapter
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingType.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
+import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
+import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.ProductItem
 import woowacourse.shopping.view.shopping.adapter.recent.RecentAdapter
 import woowacourse.shopping.view.state.UIState
 
@@ -35,13 +35,18 @@ class ShoppingActivity : AppCompatActivity() {
         observeViewModel()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.updateProducts()
+    }
+
     private fun setUpDataBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
     }
 
     private fun setUpAdapter() {
-        productAdapter = ProductAdapter(viewModel)
+        productAdapter = ProductAdapter(viewModel, viewModel)
         binding.rvProductList.adapter = productAdapter
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup =
@@ -52,9 +57,10 @@ class ShoppingActivity : AppCompatActivity() {
                 }
             }
         binding.rvProductList.layoutManager = layoutManager
-
         recentAdapter = RecentAdapter(viewModel)
         binding.rvRecentViewedProducts.adapter = recentAdapter
+        binding.rvProductList.itemAnimator = null
+        binding.rvRecentViewedProducts.itemAnimator = null
     }
 
     private fun observeViewModel() {
@@ -67,6 +73,14 @@ class ShoppingActivity : AppCompatActivity() {
                         state.exception.message ?: getString(R.string.unknown_error),
                     )
             }
+        }
+
+        viewModel.updatedProductItem.observe(this) {
+            productAdapter.updateProductQuantity(it)
+        }
+
+        viewModel.loadedProductItems.observe(this) {
+            productAdapter.updateData(it)
         }
 
         viewModel.navigateToDetail.observe(this) {
@@ -82,7 +96,7 @@ class ShoppingActivity : AppCompatActivity() {
         }
     }
 
-    private fun showData(data: List<Product>) {
+    private fun showData(data: List<ProductItem>) {
         productAdapter.loadData(data, viewModel.canLoadMore.value ?: false)
     }
 

@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 class FakeCartRepositoryImpl : CartRepository {
     val cartItems = mutableListOf<CartItem>()
 
-    override fun insert(
+    override fun save(
         product: Product,
         quantity: Int,
     ) {
@@ -29,12 +29,8 @@ class FakeCartRepositoryImpl : CartRepository {
     ) {
     }
 
-    override fun itemCount(): Int {
+    override fun cartItemSize(): Int {
         return cartItems.size
-    }
-
-    override fun totalQuantity(): Int {
-        return 1
     }
 
     override fun productQuantity(productId: Long): Int {

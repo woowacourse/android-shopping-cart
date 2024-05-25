@@ -49,20 +49,22 @@
 
             <TextView
                 android:id="@+id/shopping_cart_count"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:background="@drawable/shape_circle"
                 android:backgroundTint="@color/teal_200"
                 android:gravity="center"
+                android:onClick="@{() -> viewModel.onShoppingCartButtonClick()}"
+                android:text="@{String.valueOf(viewModel.totalQuantity)}"
                 android:textColor="@color/white"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:totalQuantityVisibility="@{viewModel.totalQuantity}"
                 tools:text="2"
-                tools:visibility="" />
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

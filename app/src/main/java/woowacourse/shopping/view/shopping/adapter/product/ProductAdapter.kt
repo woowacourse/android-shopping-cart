@@ -5,17 +5,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreButtonBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.view.cart.QuantityClickListener
 import woowacourse.shopping.view.shopping.ShoppingClickListener
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingType.Companion.PRODUCT_VIEW_TYPE
+import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.Companion.PRODUCT_VIEW_TYPE
+import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.LoadMoreItem
+import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.ProductItem
 
 class ProductAdapter(
-    val clickListener: ShoppingClickListener,
+    private val shoppingClickListener: ShoppingClickListener,
+    val quantityClickListener: QuantityClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val shoppingTypes: MutableList<ShoppingType> = mutableListOf()
+    private val shoppingItems: MutableList<ShoppingItem> = mutableListOf()
 
     override fun getItemViewType(position: Int): Int {
-        return shoppingTypes[position].viewType
+        return shoppingItems[position].viewType
     }
 
     override fun onCreateViewHolder(
@@ -34,34 +37,52 @@ class ProductAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        val shoppingContent = shoppingTypes[position]
-        if (holder is ProductViewHolder && shoppingContent is ShoppingType.ProductType) {
-            holder.bind(shoppingContent.product, clickListener)
+        val shoppingItem = shoppingItems[position]
+        if (holder is ProductViewHolder && shoppingItem is ProductItem) {
+            holder.bind(shoppingItem, shoppingClickListener, quantityClickListener)
         }
         if (holder is LoadMoreButtonViewHolder) {
-            holder.bind(clickListener)
+            holder.bind(shoppingClickListener)
         }
     }
 
     override fun getItemCount(): Int {
-        return shoppingTypes.size
+        return shoppingItems.size
     }
 
     fun loadData(
-        data: List<Product>,
+        productItems: List<ProductItem>,
         canLoadMore: Boolean,
     ) {
-        val currentSize = if (shoppingTypes.isEmpty()) 0 else shoppingTypes.size - 1
-        val items = data.subList(currentSize, data.size).map(ShoppingType::ProductType)
+        val currentSize = if (shoppingItems.isEmpty()) 0 else shoppingItems.size - 1
+        val items = productItems.subList(currentSize, productItems.size)
 
-        shoppingTypes.removeLastOrNull()
-        shoppingTypes += items
+        shoppingItems.removeLastOrNull()
+        shoppingItems += items
 
         if (canLoadMore) {
-            shoppingTypes += ShoppingType.LoadMoreType()
-            notifyItemRangeInserted(shoppingTypes.size, items.size + 1)
+            shoppingItems += LoadMoreItem()
+            notifyItemRangeInserted(shoppingItems.size, items.size + 1)
         } else {
-            notifyItemRangeInserted(shoppingTypes.size, items.size)
+            notifyItemRangeInserted(shoppingItems.size, items.size)
+        }
+    }
+
+    fun updateData(updatedItems: List<ProductItem>) {
+        updatedItems.forEach { updatedItem ->
+            updateProductQuantity(updatedItem)
+        }
+    }
+
+    fun updateProductQuantity(updatedProductItem: ProductItem) {
+        val position =
+            shoppingItems.indexOfFirst { item ->
+                (item as ProductItem).product.id == updatedProductItem.product.id
+            }
+
+        if (position != -1) {
+            shoppingItems[position] = updatedProductItem
+            notifyItemChanged(position)
         }
     }
 }

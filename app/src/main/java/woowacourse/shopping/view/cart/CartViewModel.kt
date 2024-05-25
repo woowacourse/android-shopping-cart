@@ -3,6 +3,7 @@ package woowacourse.shopping.view.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.util.Event
@@ -19,17 +20,26 @@ class CartViewModel(private val cartRepository: CartRepository) :
         get() = _cartUiState
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
-    val currentPage: LiveData<Int> = _currentPage
+    val currentPage: LiveData<Int>
+        get() = _currentPage
 
-    private val _isFirstPage = MutableLiveData(true)
-    val isFirstPage: LiveData<Boolean> = _isFirstPage
+    val isFirstPage: LiveData<Boolean> =
+        currentPage.map { currentPageValue ->
+            currentPageValue == DEFAULT_PAGE
+        }
 
-    private val _isLastPage = MutableLiveData(false)
-    val isLastPage: LiveData<Boolean> = _isLastPage
+    val isLastPage: LiveData<Boolean> =
+        currentPage.map { currentPageValue ->
+            currentPageValue == lastPage
+        }
 
-    private val _isEmpty = MutableLiveData(true)
-    val isEmpty: LiveData<Boolean> = _isEmpty
-
+    val isEmpty: LiveData<Boolean> =
+        cartUiState.map { state ->
+            when (state) {
+                is UIState.Success -> state.data.isEmpty()
+                else -> true
+            }
+        }
     private val _isPageControlButtonVisible = MutableLiveData(false)
     val isPageControlButtonVisible: LiveData<Boolean> = _isPageControlButtonVisible
 
@@ -58,12 +68,9 @@ class CartViewModel(private val cartRepository: CartRepository) :
     }
 
     fun loadPage(page: Int) {
-        val totalItems = cartRepository.itemCount()
+        val totalItems = cartRepository.cartItemSize()
         lastPage = (totalItems - PAGE_STEP) / PAGE_SIZE
-
         _currentPage.value = page.coerceIn(DEFAULT_PAGE, lastPage)
-        _isFirstPage.value = _currentPage.value == DEFAULT_PAGE
-        _isLastPage.value = _currentPage.value == lastPage
 
         loadCartItems()
         updatePageControlVisibility(totalItems)
@@ -75,10 +82,8 @@ class CartViewModel(private val cartRepository: CartRepository) :
                 cartRepository.findAllPagedItems(currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE)
             if (cartItems.isEmpty()) {
                 _cartUiState.value = UIState.Empty
-                _isEmpty.value = true
             } else {
                 _cartUiState.value = UIState.Success(cartItems)
-                _isEmpty.value = false
             }
         } catch (e: Exception) {
             _cartUiState.value = UIState.Error(e)
@@ -114,14 +119,14 @@ class CartViewModel(private val cartRepository: CartRepository) :
         _isBackButtonClicked.value = Event(true)
     }
 
-    override fun onPlusButtonClick(productId: Long) {
+    override fun onQuantityPlusButtonClick(productId: Long) {
         val cartItem = cartRepository.findOrNullWithProductId(productId) ?: return
         cartItem.plusQuantity()
         cartRepository.update(productId, cartItem.quantity)
         _updatedCartItem.value = cartItem
     }
 
-    override fun onMinusButtonClick(productId: Long) {
+    override fun onQuqntityMinusButtonClick(productId: Long) {
         val cartItem = cartRepository.findOrNullWithProductId(productId) ?: return
         cartItem.minusQuantity()
         cartRepository.update(productId, cartItem.quantity)

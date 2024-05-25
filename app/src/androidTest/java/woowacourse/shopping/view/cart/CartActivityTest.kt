@@ -52,9 +52,9 @@ class CartActivityTest {
 
     @Test
     fun `화면에_장바구니_아이템이_존재한다면_아이템들이_보인다`() {
-        cartRepository.insert(testProduct0, 1)
-        cartRepository.insert(testProduct1, 1)
-        cartRepository.insert(testProduct2, 1)
+        cartRepository.save(testProduct0, 1)
+        cartRepository.save(testProduct1, 1)
+        cartRepository.save(testProduct2, 1)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -66,9 +66,9 @@ class CartActivityTest {
 
     @Test
     fun `화면에_장바구니_아이템이_5개가_이하라면_페이지_이동_버튼이_보이지_않는다`() {
-        cartRepository.insert(testProduct0, 1)
-        cartRepository.insert(testProduct1, 1)
-        cartRepository.insert(testProduct2, 1)
+        cartRepository.save(testProduct0, 1)
+        cartRepository.save(testProduct1, 1)
+        cartRepository.save(testProduct2, 1)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -78,12 +78,12 @@ class CartActivityTest {
 
     @Test
     fun `화면에_장바구니_아이템이_5개가_초과한다면_페이지_이동_버튼이_보인다`() {
-        cartRepository.insert(testProduct0, 1)
-        cartRepository.insert(testProduct1, 1)
-        cartRepository.insert(testProduct2, 1)
-        cartRepository.insert(testProduct3, 1)
-        cartRepository.insert(testProduct4, 1)
-        cartRepository.insert(testProduct5, 1)
+        cartRepository.save(testProduct0, 1)
+        cartRepository.save(testProduct1, 1)
+        cartRepository.save(testProduct2, 1)
+        cartRepository.save(testProduct3, 1)
+        cartRepository.save(testProduct4, 1)
+        cartRepository.save(testProduct5, 1)
 
         ActivityScenario.launch(CartActivity::class.java)
 

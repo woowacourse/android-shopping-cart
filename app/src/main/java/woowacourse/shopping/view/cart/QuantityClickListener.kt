@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.cart
 
 interface QuantityClickListener {
-    fun onPlusButtonClick(productId: Long)
+    fun onQuantityPlusButtonClick(productId: Long)
 
-    fun onMinusButtonClick(productId: Long)
+    fun onQuqntityMinusButtonClick(productId: Long)
 }

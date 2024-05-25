@@ -41,6 +41,7 @@ class CartActivity : AppCompatActivity() {
     private fun setUpAdapter() {
         adapter = CartAdapter(viewModel, viewModel)
         binding.rvCart.adapter = adapter
+        binding.rvCart.itemAnimator = null
     }
 
     private fun observeViewModel() {
