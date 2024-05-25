@@ -15,25 +15,7 @@ data class CartItemEntity(
     val productId: Long = product.id,
     val count: Int = product.cartItemCounter.itemCount,
 ) {
-    fun toCartItem(): CartItem {
-        return CartItem(
-            id = id,
-            product =
-                product.copy(
-                    id = product.id,
-                    cartItemCounter = CartItemCounter(count),
-                    imageUrl = product.imageUrl,
-                    name = product.name,
-                    price = product.price,
-                ),
-        )
-    }
-
     companion object {
         const val DEFAULT_CART_ITEM_COUNT = 1
-
-        fun makeCartItemEntity(product: Product): CartItemEntity {
-            return CartItemEntity(product = product)
-        }
     }
 }

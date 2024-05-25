@@ -7,6 +7,8 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.utils.Mapper.toCartItem
+import woowacourse.shopping.utils.Mapper.toCartItemEntity
 import woowacourse.shopping.utils.exception.DataIdException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import kotlin.concurrent.thread
@@ -17,7 +19,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
     override fun addCartItem(product: Product) {
         thread {
             val addedCartItemId =
-                cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
+                cartItemDao.saveCartItem(CartItem(product = product).toCartItemEntity())
             if (addedCartItemId == ERROR_DATA_ID) throw NoSuchDataException()
         }
     }

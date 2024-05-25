@@ -5,6 +5,8 @@ import woowacourse.shopping.data.db.recently.RecentlyProductDatabase
 import woowacourse.shopping.data.model.RecentlyProductEntity
 import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.domain.repository.CurrentProductRepository
+import woowacourse.shopping.utils.Mapper.toRecentlyProduct
+import woowacourse.shopping.utils.Mapper.toRecentlyProductEntity
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import kotlin.concurrent.thread
 
@@ -16,9 +18,7 @@ class CurrentProductRepositoryImpl(context: Context) : CurrentProductRepository 
         thread {
             val addedRecentlyProductId =
                 recentlyProductDao.addRecentlyProduct(
-                    RecentlyProductEntity.makeRecentlyProductEntity(
-                        recentlyProduct,
-                    ),
+                    recentlyProduct.toRecentlyProductEntity(),
                 )
             if (addedRecentlyProductId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         }
