@@ -2,6 +2,7 @@ package woowacourse.shopping.data.local
 
 import woowacourse.shopping.data.local.entity.CartEntity
 import woowacourse.shopping.data.local.entity.CartProductEntity
+import woowacourse.shopping.data.local.entity.RecentProductEntity
 
 interface LocalDataSource {
     fun findProductByPaging(
@@ -13,6 +14,10 @@ interface LocalDataSource {
         offset: Int,
         pageSize: Int,
     ): List<CartProductEntity>
+
+    fun findByLimit(
+        limit: Int
+    ): List<RecentProductEntity>
 
     fun findProductById(id: Long): CartProductEntity?
 

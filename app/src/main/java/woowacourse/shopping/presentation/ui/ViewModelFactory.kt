@@ -16,7 +16,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
             modelClass.isAssignableFrom(ProductDetailViewModel::class.java) -> {
                 ProductDetailViewModel(
                     RepositoryImpl(
-                        RoomDataSource(AppDatabase.instance?.cartProductDao() ?: throw IllegalStateException("DB is not initialized")),
+                        RoomDataSource(AppDatabase.instance.cartProductDao(), AppDatabase.instance.recentProductDao()),
                     ),
                 ) as T
             }
@@ -24,7 +24,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
             modelClass.isAssignableFrom(ShoppingViewModel::class.java) -> {
                 ShoppingViewModel(
                     RepositoryImpl(
-                        RoomDataSource(AppDatabase.instance?.cartProductDao() ?: throw IllegalStateException("DB is not initialized")),
+                        RoomDataSource(AppDatabase.instance.cartProductDao(), AppDatabase.instance.recentProductDao()),
                     ),
                 ) as T
             }
@@ -32,7 +32,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
             modelClass.isAssignableFrom(CartViewModel::class.java) -> {
                 CartViewModel(
                     RepositoryImpl(
-                        RoomDataSource(AppDatabase.instance?.cartProductDao() ?: throw IllegalStateException("DB is not initialized")),
+                        RoomDataSource(AppDatabase.instance.cartProductDao(), AppDatabase.instance.recentProductDao()),
                     ),
                 ) as T
             }

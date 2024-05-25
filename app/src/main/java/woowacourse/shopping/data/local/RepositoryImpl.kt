@@ -4,6 +4,7 @@ import woowacourse.shopping.data.local.mapper.toDomain
 import woowacourse.shopping.data.local.mapper.toEntity
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.Repository
 
 class RepositoryImpl(private val localDataSource: LocalDataSource) : Repository {
@@ -22,6 +23,10 @@ class RepositoryImpl(private val localDataSource: LocalDataSource) : Repository 
         runCatching {
             localDataSource.findCartByPaging(offset, pageSize).map { it.toDomain() }
         }
+
+    override fun findByLimit(limit: Int): Result<List<RecentProduct>> = runCatching {
+        localDataSource.findByLimit(limit).map { it.toDomain() }
+    }
 
     override fun findProductById(id: Long): Result<CartProduct?> =
         runCatching {

@@ -11,6 +11,10 @@ interface Repository {
         pageSize: Int,
     ): Result<List<CartProduct>>
 
+    fun findByLimit(
+        limit: Int
+    ): Result<List<RecentProduct>>
+
     fun findProductById(id: Long): Result<CartProduct?>
 
     fun saveCart(cart: Cart): Result<Long>
