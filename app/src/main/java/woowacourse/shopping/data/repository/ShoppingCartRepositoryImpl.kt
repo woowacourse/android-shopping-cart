@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.repository
 
 import android.content.Context
+import android.util.Log
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.CartItemResult
@@ -69,6 +70,11 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
                     throw DeleteCartItemException(cartItemResult.cartItemId)
                 }
             }
+
+            is UpdateCartItemType.UPDATE -> {
+                Log.d("sdlfsdj",updateCartItemType.count.toString())
+                cartItemResult.updateCount(updateCartItemType.count)
+            }
         }
         var updateDataId = ERROR_UPDATE_DATA_ID
         thread {
@@ -77,6 +83,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
                 cartItemResult.counter.itemCount
             )
         }.join()
+        Log.d("sdlfsdj",updateDataId.toString())
         if (updateDataId == ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
         return cartItemResult
     }

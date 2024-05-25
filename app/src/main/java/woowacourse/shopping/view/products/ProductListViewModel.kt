@@ -119,6 +119,7 @@ class ProductListViewModel(
     private fun deleteCartItem(product: Product) {
         try {
             product.updateItemSelector(false)
+            _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
             _productListEvent.postValue(ProductListEvent.DeleteProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
@@ -143,6 +144,7 @@ class ProductListViewModel(
             val count = items[product.id]
             if (count != null) {
                 if (count == DEFAULT_ITEM_COUNT) product.updateItemSelector(false)
+                else product.updateItemSelector(true)
                 product.updateCartItemCount(count)
                 _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
             }

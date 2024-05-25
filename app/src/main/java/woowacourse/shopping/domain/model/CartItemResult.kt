@@ -13,4 +13,8 @@ data class CartItemResult(
     fun decreaseCount(): ChangeCartItemResultState{
         return counter.decrease()
     }
+
+    fun updateCount(newCount: Int){
+        counter.updateCount(newCount)
+    }
 }

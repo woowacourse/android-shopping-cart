@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,12 +42,16 @@ class ProductDetailViewModel(
         try {
             checkValidProduct(product)
             when (cartItemId) {
-                DEFAULT_CART_ITEM_ID -> shoppingCartRepository.addCartItem(product)
+                DEFAULT_CART_ITEM_ID -> {
+                    shoppingCartRepository.addCartItem(product)
+                }
 
-                else -> shoppingCartRepository.updateCartItem(
-                    cartItemId,
-                    UpdateCartItemType.INCREASE,
-                )
+                else -> {
+                    shoppingCartRepository.updateCartItem(
+                        productId = product.id,
+                        UpdateCartItemType.UPDATE(product.cartItemCounter.itemCount),
+                    )
+                }
             }
             _productDetailEvent.postValue(
                 ProductDetailEvent.AddShoppingCart.Success(
