@@ -1,5 +1,6 @@
 package woowacourse.shopping.shoppingcart
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.productlist.ChangedItemsId
+import woowacourse.shopping.productlist.ProductListActivity
 import woowacourse.shopping.util.ViewModelFactory
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
@@ -24,15 +27,20 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        setSupportActionBar(binding.toolbarShoppingCart as Toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.action_bar_title_shopping_cart_activity)
+        setupToolbar()
         initShoppingCart()
 
         adapter = ShoppingCartAdapter(this)
         binding.rcvShoppingCart.adapter = adapter
 
         updateView()
+        setUpdatedDataOnResult()
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbarShoppingCart as Toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.action_bar_title_shopping_cart_activity)
     }
 
     private fun initShoppingCart() {
@@ -47,6 +55,14 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
         viewModel.currentPage.observe(this) { currentPage ->
             viewModel.loadCartItems(currentPage)
+        }
+    }
+
+    private fun setUpdatedDataOnResult() {
+        viewModel.changedItems.observe(this) { changedItems ->
+            val intent = Intent(this, ProductListActivity::class.java)
+            intent.putExtra(ChangedItemsId.KEY_CHANGED_ITEMS, ChangedItemsId(changedItems))
+            setResult(Activity.RESULT_OK, intent)
         }
     }
 

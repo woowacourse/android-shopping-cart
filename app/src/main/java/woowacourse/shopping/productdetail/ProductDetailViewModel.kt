@@ -24,6 +24,9 @@ class ProductDetailViewModel(
     private val _isAddSuccess: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val isAddSuccess: LiveData<Boolean> get() = _isAddSuccess
 
+    private val _addedItems: MutableLiveData<Set<Long>> = MutableLiveData()
+    val addedItems: LiveData<Set<Long>> get() = _addedItems
+
     fun loadProductDetail(productId: Long) {
         runCatching {
             productRepository.productById(productId)
@@ -43,6 +46,8 @@ class ProductDetailViewModel(
             val shoppingCart = shoppingCartRepository.shoppingCart(userId)
             shoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
         }.onSuccess {
+            val productId = requireNotNull(_product.value?.id)
+            _addedItems.value = setOf(productId)
             _isAddSuccess.value = true
         }.onFailure {
             _isAddSuccess.value = false

@@ -88,7 +88,7 @@ class ProductListAdapter(
         notifyItemRangeInserted(previousCount, products.size - previousCount)
     }
 
-    fun updateItems(productIds: List<Long>) {
+    fun updateItems(productIds: Set<Long>) {
         productIds.forEach { productId ->
             val updatedPosition = items.indexOfFirst { it.id == productId }
             notifyItemChanged(updatedPosition, ProductListPayload.QUANTITY_CHANGED)

@@ -21,6 +21,9 @@ class ShoppingCartViewModel(
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
 
+    private val _changedItems: MutableLiveData<Set<Long>> = MutableLiveData()
+    val changedItems: LiveData<Set<Long>> get() = _changedItems
+
     val isLeftBtnEnable =
         MediatorLiveData(false).apply {
             addSource(_currentPage) { value = checkIsLeftBtnEnable() }
@@ -57,6 +60,7 @@ class ShoppingCartViewModel(
         }.onSuccess {
             val currentPage = requireNotNull(_currentPage.value)
             loadCartItems(currentPage)
+            putChangedItems(setOf(productId))
         }
     }
 
@@ -66,6 +70,10 @@ class ShoppingCartViewModel(
 
     fun previousPage() {
         _currentPage.value = _currentPage.value?.dec()
+    }
+
+    private fun putChangedItems(updatedItems: Set<Long>) {
+        _changedItems.value = changedItems.value.orEmpty() + updatedItems
     }
 
     companion object {

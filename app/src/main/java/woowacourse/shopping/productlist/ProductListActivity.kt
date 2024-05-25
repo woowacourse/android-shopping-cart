@@ -1,12 +1,16 @@
 package woowacourse.shopping.productlist
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil
+import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActionLayoutCartIconBinding
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -18,6 +22,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var adapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels { ViewModelFactory() }
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,16 +34,9 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         attachAdapter()
         showProducts()
 
-        binding.btnLoadMoreProducts.setOnClickListener {
-            viewModel.loadProducts(adapter.itemCount)
-        }
-
+        setLoadMoreButtonAction()
         setupToolBar()
-    }
-
-    private fun setupToolBar() {
-        setSupportActionBar(binding.toolbarProductList as Toolbar)
-        supportActionBar?.title = getString(R.string.action_bar_title_product_list_activity)
+        signUpActivityResults()
     }
 
     private fun attachAdapter() {
@@ -55,9 +53,43 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         }
     }
 
+    private fun setLoadMoreButtonAction() {
+        binding.btnLoadMoreProducts.setOnClickListener {
+            viewModel.loadProducts(adapter.itemCount)
+        }
+    }
+
+    private fun setupToolBar() {
+        setSupportActionBar(binding.toolbarProductList as Toolbar)
+        supportActionBar?.title = getString(R.string.action_bar_title_product_list_activity)
+    }
+
+    private fun signUpActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val changedItems =
+                    result.data?.let {
+                        IntentCompat.getParcelableExtra(
+                            it,
+                            ChangedItemsId.KEY_CHANGED_ITEMS,
+                            ChangedItemsId::class.java,
+                        )
+                    } ?: ChangedItemsId(setOf())
+                updateResultData(changedItems.ids)
+            }
+        }
+    }
+
+    private fun updateResultData(changedItems: Set<Long>) {
+        viewModel.acceptChangedItems(changedItems)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.product_list_menu, menu)
-        val menuBinding: ActionLayoutCartIconBinding = ActionLayoutCartIconBinding.inflate(layoutInflater)
+        val menuBinding: ActionLayoutCartIconBinding =
+            ActionLayoutCartIconBinding.inflate(layoutInflater)
         val menuItem = menu?.findItem(R.id.menu_shopping_cart_nav)
         menuItem?.actionView = menuBinding.root
         menuBinding.root.setOnClickListener {
@@ -75,14 +107,19 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_shopping_cart_nav -> startActivity(ShoppingCartActivity.newInstance(this))
+            R.id.menu_shopping_cart_nav -> {
+                val intent = ShoppingCartActivity.newInstance(this)
+                activityResultLauncher.launch(intent)
+            }
+
             else -> {}
         }
         return true
     }
 
     override fun onProductClicked(id: Long) {
-        startActivity(ProductDetailActivity.newInstance(this, id))
+        val intent = ProductDetailActivity.newInstance(this, id)
+        activityResultLauncher.launch(intent)
     }
 
     override fun onAddButtonClicked(id: Long) {

@@ -21,8 +21,8 @@ class ProductListViewModel(
     private val _totalItemQuantity: MutableLiveData<Int> = MutableLiveData(0)
     val totalItemQuantity: LiveData<Int> get() = _totalItemQuantity
 
-    private val _updatedItemsId: SingleLiveEvent<List<Long>> = SingleLiveEvent()
-    val updatedItemsId: LiveData<List<Long>> get() = _updatedItemsId
+    private val _updatedItemsId: SingleLiveEvent<Set<Long>> = SingleLiveEvent()
+    val updatedItemsId: LiveData<Set<Long>> get() = _updatedItemsId
 
     private val _currentSize: MutableLiveData<Int> = MutableLiveData()
     val currentSize: LiveData<Int> get() = _currentSize
@@ -56,7 +56,7 @@ class ProductListViewModel(
         }.onSuccess {
             changeTotalItemQuantity()
             updateUiModelQuantity(productId, PRODUCT_QUANTITY_ONE)
-            _updatedItemsId.value = listOf(productId)
+            _updatedItemsId.value = setOf(productId)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -92,7 +92,7 @@ class ProductListViewModel(
         }.onSuccess {
             changeTotalItemQuantity()
             updateUiModelQuantity(productId, newQuantity)
-            _updatedItemsId.value = listOf(productId)
+            _updatedItemsId.value = setOf(productId)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -104,7 +104,7 @@ class ProductListViewModel(
         }.onSuccess {
             changeTotalItemQuantity()
             updateUiModelQuantity(productId, ProductUiModel.PRODUCT_DEFAULT_QUANTITY)
-            _updatedItemsId.value = listOf(productId)
+            _updatedItemsId.value = setOf(productId)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -122,6 +122,16 @@ class ProductListViewModel(
             _productUiModels.value?.map {
                 if (productId == it.id) it.copy(quantity = newQuantity) else it
             }
+    }
+
+    fun acceptChangedItems(changedItems: Set<Long>) {
+        Log.d("ActivityResultTest", "ProductListVM $changedItems")
+        val updatedQuantities = shoppingCartRepository.cartItemQuantity(changedItems)
+        updatedQuantities.forEach { (productId, changedQuantity) ->
+            updateUiModelQuantity(productId, changedQuantity)
+        }
+        _updatedItemsId.value = updatedItemsId.value.orEmpty() + changedItems
+        changeTotalItemQuantity()
     }
 
     companion object {
