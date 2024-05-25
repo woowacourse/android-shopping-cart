@@ -9,6 +9,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
+import woowacourse.shopping.ui.OnProductItemClickListener
 
 class ProductRecyclerViewAdapter(
     private val onProductItemClickListener: OnProductItemClickListener,
@@ -76,11 +77,6 @@ class ProductRecyclerViewAdapter(
                 }
             }
     }
-
-    interface OnProductItemClickListener {
-        fun onClick(productId: Int)
-    }
-
 
     companion object {
         private const val TAG = "ProductRecyclerViewAdapter"

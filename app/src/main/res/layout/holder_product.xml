@@ -12,7 +12,7 @@
 
         <variable
             name="onProductItemClickListener"
-            type="woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter.OnProductItemClickListener" />
+            type="woowacourse.shopping.ui.OnProductItemClickListener" />
 
         <variable
             name="onItemChargeListener"
