@@ -49,6 +49,7 @@ val products =
 val dummyProducts =
     List(55) {
         products[it % products.size].copy(
+            id = it.toLong(),
             title = "$it ${products[it % products.size].title}",
         )
     }
