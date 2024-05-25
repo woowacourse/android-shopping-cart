@@ -100,9 +100,8 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initializeProductLoadError() {
-        viewModel.productLoadError.observe(this) { isErrorEvent ->
-            val isError = isErrorEvent.getContentIfNotHandled() ?: return@observe
-            if (!isError) return@observe
+        viewModel.productLoadError.observe(this) { errorEvent ->
+            errorEvent.getContentIfNotHandled() ?: return@observe
             showErrorSnackBar()
         }
     }

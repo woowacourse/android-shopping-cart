@@ -23,8 +23,8 @@ class ProductDetailViewModel(
     private val _productUiModel = MutableLiveData<ProductUiModel>()
     val productUiModel: LiveData<ProductUiModel> get() = _productUiModel
 
-    private val _productLoadError = MutableLiveData<Event<Boolean>>()
-    val productLoadError: LiveData<Event<Boolean>> get() = _productLoadError
+    private val _productLoadError = MutableLiveData<Event<Unit>>()
+    val productLoadError: LiveData<Event<Unit>> get() = _productLoadError
 
     private val _isSuccessAddCart = MutableLiveData<Event<Boolean>>()
     val isSuccessAddCart: LiveData<Event<Boolean>> get() = _isSuccessAddCart
@@ -57,10 +57,8 @@ class ProductDetailViewModel(
         product =
             runCatching {
                 productRepository.find(productId)
-            }.onSuccess {
-                _productLoadError.value = Event(false)
             }.onFailure {
-                _productLoadError.value = Event(true)
+                _productLoadError.value = Event(Unit)
             }.getOrNull() ?: return
 
         _productUiModel.value =
