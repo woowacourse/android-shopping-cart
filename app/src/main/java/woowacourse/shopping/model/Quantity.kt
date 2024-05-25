@@ -13,6 +13,8 @@ class Quantity(val count: Int = DEFAULT_VALUE) {
 
     fun isMin() = count == MIN_VALUE
 
+    fun calculate(price: Int) = count * price
+
     companion object {
         private const val DEFAULT_VALUE = 1
         private const val MAX_VALUE = 99

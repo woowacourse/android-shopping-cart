@@ -7,7 +7,7 @@ interface CartRepository {
 
     fun deleteProduct(productId: Long)
 
-    fun deleteCartItem(cartItemId: Long)
+    fun deleteCartItem(productId: Long)
 
     fun deleteAll()
 

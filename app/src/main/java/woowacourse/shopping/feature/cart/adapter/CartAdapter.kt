@@ -8,6 +8,8 @@ import woowacourse.shopping.model.CartItem
 
 class CartAdapter(
     private val onClickExit: OnClickExit,
+    private val onClickPlusButton: OnClickPlusButton,
+    private val onClickMinusButton: OnClickMinusButton,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val cart: MutableList<CartItem> = mutableListOf()
 
@@ -28,7 +30,7 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(onClickExit, cart[position])
+        holder.bind(onClickExit, onClickPlusButton, onClickMinusButton, cart[position])
     }
 
     override fun getItemCount(): Int {
@@ -42,3 +44,6 @@ class CartAdapter(
         notifyItemRangeChanged(0, newCart.size)
     }
 }
+
+typealias OnClickPlusButton = (productId: Long) -> Unit
+typealias OnClickMinusButton = (productId: Long) -> Unit

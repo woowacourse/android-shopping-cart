@@ -39,7 +39,11 @@ class CartActivity : AppCompatActivity() {
 
     private fun initializeCartAdapter() {
         adapter =
-            CartAdapter(onClickExit = { deleteCartItem(cartItemId = it) })
+            CartAdapter(
+                onClickExit = { deleteCartItem(cartItemId = it) },
+                onClickPlusButton = { cartViewModel.addProduct(it) },
+                onClickMinusButton = { cartViewModel.deleteProduct(it) },
+            )
         binding.rvCart.adapter = adapter
 
         cartViewModel.cart.observe(this) {
@@ -52,6 +56,6 @@ class CartActivity : AppCompatActivity() {
         cartViewModel.isEmptyLastPage.observe(this) { isEmptyLastPage ->
             if (isEmptyLastPage) cartViewModel.decreasePage()
         }
-        cartViewModel.delete(cartItemId)
+        cartViewModel.deleteCartItem(cartItemId)
     }
 }

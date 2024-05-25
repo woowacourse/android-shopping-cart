@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.Executable
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.feature.InstantTaskExecutorExtension
@@ -29,7 +28,7 @@ class CartViewModelTest {
         viewModel.loadCart(pageSize)
         val cart = viewModel.cart.getOrAwaitValue()
 
-        viewModel.delete(cart[0].id)
+        viewModel.deleteCartItem(cart[0].product.id)
         viewModel.loadCount()
 
         val actual = viewModel.cartSize.getOrAwaitValue()
@@ -39,7 +38,7 @@ class CartViewModelTest {
     @Test
     fun `한 페이지에는 5개의 장바구니 상품이 있다`() {
         repeat(pageSize) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
 
         viewModel.loadCart(pageSize)
@@ -54,7 +53,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니 상품이 10개인 경우 5개의 상품을 불러온다`() {
         repeat(10) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
 
         viewModel.loadCart(pageSize)
@@ -69,7 +68,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 6개의 상품을 담았다면 장바구니 상품 수는 6이다`() {
         repeat(6) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
 
         viewModel.loadCount()
@@ -87,7 +86,7 @@ class CartViewModelTest {
     @Test
     fun `인덱스가 0인 페이지에서 페이지를 2번 증가시키면 현재 페이지의 인덱스는 2가 된다`() {
         repeat(15) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
 
         repeat(2) {
@@ -101,7 +100,7 @@ class CartViewModelTest {
     @Test
     fun `인덱스가 3인 페이지에서 페이지를 1번 감소시키면 현재 페이지의 인덱스는 2가 된다`() {
         repeat(20) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         repeat(3) {
             viewModel.increasePage()
@@ -116,7 +115,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 5개라면 이전 페이지는 존재하지 않는다`() {
         repeat(5) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         viewModel.loadCart(pageSize)
         viewModel.loadCount()
@@ -128,7 +127,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 8개이고, 현재 페이지의 인덱스가 1이라면 이전 페이지가 존재한다`() {
         repeat(10) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         viewModel.increasePage()
         viewModel.loadCount()
@@ -144,7 +143,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 5개라면 다음 페이지는 존재하지 않는다`() {
         repeat(5) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         viewModel.loadCart(5)
         viewModel.loadCount()
@@ -156,7 +155,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 10개이고 현재 페이지의 인덱스가 0이라면 다음 페이지가 존재한다`() {
         repeat(10) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         viewModel.loadCart(5)
         viewModel.loadCount()
@@ -172,10 +171,10 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 6개일 때, 장바구니에 담긴 6번째 상품을 삭제한다면 마지막 페이지는 비어있다`() {
         repeat(6) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         viewModel.increasePage()
-        viewModel.delete(cartItemId = 6)
+        viewModel.deleteCartItem(productId = 6)
 
         viewModel.checkEmptyLastPage()
 
@@ -186,7 +185,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 5개 라면 장바구니는 오직 한 페이지만 존재한다`() {
         repeat(5) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         viewModel.loadCount()
 
@@ -197,15 +196,11 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 6개라면 장바구니는 한 페이지만 존재하지 않는다`() {
         repeat(6) {
-            addCart(productId = it.toLong())
+            viewModel.addProduct(productId = it.toLong())
         }
         viewModel.loadCount()
 
         val actual = viewModel.isOnlyOnePage.getOrAwaitValue()
         assertThat(actual).isFalse()
-    }
-
-    private fun addCart(productId: Long) {
-        cartRepository.addProduct(productId)
     }
 }

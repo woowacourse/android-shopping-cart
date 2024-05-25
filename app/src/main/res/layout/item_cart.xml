@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,6 +9,10 @@
         <variable
             name="cartItem"
             type="woowacourse.shopping.model.CartItem" />
+
+        <variable
+            name="quantityControlListener"
+            type="woowacourse.shopping.feature.main.QuantityControlListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,17 +69,17 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/tv_cart_product_price"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="visible" />
+            bind:quantity="@{cartItem.quantity}"
+            bind:quantityControlListener="@{quantityControlListener}" />
 
         <TextView
             android:id="@+id/tv_cart_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:text="@{@string/product_price(cartItem.product.price)}"
+            android:text="@{@string/product_price(cartItem.quantity.calculate(cartItem.product.price))}"
             android:textColor="@color/gray_500"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"

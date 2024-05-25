@@ -34,8 +34,8 @@ class CartViewModel(
         updatePage()
     }
 
-    fun delete(cartItemId: Long) {
-        cartRepository.deleteCartItem(cartItemId)
+    fun deleteCartItem(productId: Long) {
+        cartRepository.deleteCartItem(productId)
         updatePage()
     }
 
@@ -63,6 +63,16 @@ class CartViewModel(
         val currentPage = currentPage.value ?: return
         val cartSize = cartSize.value ?: return
         _isEmptyLastPage.value = currentPage > MIN_PAGE && cartSize % MAX_ITEM_SIZE_PER_PAGE == 1
+    }
+
+    fun addProduct(productId: Long) {
+        cartRepository.addProduct(productId)
+        updatePage()
+    }
+
+    fun deleteProduct(productId: Long) {
+        cartRepository.deleteProduct(productId)
+        updatePage()
     }
 
     private fun updatePageStatus() {
