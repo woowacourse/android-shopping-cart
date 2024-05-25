@@ -28,7 +28,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val adapter: ShoppingAdapter by lazy { ShoppingAdapter(this, viewModel) }
 
-    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun initStartView() {
         initAdapter()
@@ -47,7 +47,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
             }
         }
 
-        activityResultLauncher =
+        resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val updatedProducts =
@@ -90,12 +90,14 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        CartActivity.start(this)
+        resultLauncher.launch(
+            CartActivity.createIntent(this)
+        )
         return true
     }
 
     override fun onClick(productId: Long) {
-        activityResultLauncher.launch(
+        resultLauncher.launch(
             ProductDetailActivity.createIntent(this, productId),
         )
     }
