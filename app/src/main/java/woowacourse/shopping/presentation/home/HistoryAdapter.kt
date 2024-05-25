@@ -14,7 +14,10 @@ class HistoryAdapter(
 ) : RecyclerView.Adapter<HistoryAdapter.HistoryItemViewHolder>(), BindableAdapter<RecentProduct> {
     private var historyItems: List<RecentProduct> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, position: Int): HistoryItemViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        position: Int,
+    ): HistoryItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemProductHistoryBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_product_history, parent, false)
         return HistoryItemViewHolder(binding, homeItemClickListener)
@@ -22,7 +25,10 @@ class HistoryAdapter(
 
     override fun getItemCount(): Int = historyItems.size
 
-    override fun onBindViewHolder(holder: HistoryItemViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: HistoryItemViewHolder,
+        position: Int,
+    ) {
         holder.bind(historyItems[position])
     }
 
@@ -38,6 +44,7 @@ class HistoryAdapter(
         init {
             binding.homeItemClickListener = homeItemClickListener
         }
+
         fun bind(historyItem: RecentProduct) {
             binding.recentProduct = historyItem
         }

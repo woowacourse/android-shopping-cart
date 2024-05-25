@@ -11,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.presentation.home.ProductQuantity
 
 class CartActivity : AppCompatActivity() {
     private val binding: ActivityCartBinding by lazy {
@@ -68,8 +67,8 @@ class CartActivity : AppCompatActivity() {
             RESULT_OK,
             Intent().putExtra(
                 "quantities",
-                viewModel.alteredCartItems
-            )
+                viewModel.alteredCartItems,
+            ),
         )
         finish()
     }

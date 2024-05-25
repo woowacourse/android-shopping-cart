@@ -16,13 +16,13 @@ interface ProductHistoryDao {
     fun getLastProduct(): RecentProduct
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT * FROM product_history
         GROUP BY product_history.productId
         ORDER BY product_history.id DESC
         LIMIT :pageSize
-    """)
-    fun getProductHistory(
-        pageSize: Int,
-    ): List<RecentProduct>
+    """,
+    )
+    fun getProductHistory(pageSize: Int): List<RecentProduct>
 }

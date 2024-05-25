@@ -11,11 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.model.CartableProduct
-import woowacourse.shopping.data.model.RecentProduct
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.databinding.ItemProductHistoryBinding
-import woowacourse.shopping.databinding.ItemProductHistoryListBinding
 import woowacourse.shopping.presentation.BindableAdapter
 import java.lang.IllegalArgumentException
 
@@ -136,6 +133,7 @@ class ProductAdapter(
     companion object {
         const val TYPE_PRODUCT = 1000
         const val TYPE_LOAD = 1001
+
 //        const val TYPE_HISTORY = 1002
         private const val EXCEPTION_ILLEGAL_VIEW_TYPE = "유효하지 않은 뷰 타입입니다."
     }

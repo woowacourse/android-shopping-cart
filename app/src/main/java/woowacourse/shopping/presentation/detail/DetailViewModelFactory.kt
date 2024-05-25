@@ -26,7 +26,7 @@ class DetailViewModelFactory(
                 historyRepository,
                 productId,
                 isLastlyViewed,
-                extras.createSavedStateHandle()
+                extras.createSavedStateHandle(),
             ) as T
         } else {
             throw IllegalArgumentException()

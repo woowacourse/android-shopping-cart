@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -34,20 +33,22 @@ class HomeActivity : AppCompatActivity() {
     }
     private val productAdapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }
     private val historyAdapter: HistoryAdapter by lazy { HistoryAdapter(viewModel) }
-    private val activityResultLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val quantities = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                result.data?.getParcelableArrayListExtra("quantities", ProductQuantity::class.java)
-            } else {
-                result.data?.getParcelableArrayListExtra("quantities")
-            }
-            quantities?.forEach {
-                viewModel.onQuantityChange(it.productId, it.quantity)
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val quantities =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        result.data?.getParcelableArrayListExtra("quantities", ProductQuantity::class.java)
+                    } else {
+                        result.data?.getParcelableArrayListExtra("quantities")
+                    }
+                quantities?.forEach {
+                    viewModel.onQuantityChange(it.productId, it.quantity)
+                }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +95,8 @@ class HomeActivity : AppCompatActivity() {
             activityResultLauncher.launch(
                 DetailActivity.newIntent(
                     this,
-                     data?.productId ?: return@observe,
-                    data.isLastlyViewed
+                    data?.productId ?: return@observe,
+                    data.isLastlyViewed,
                 ),
             )
         }

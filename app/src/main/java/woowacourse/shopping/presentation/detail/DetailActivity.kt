@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -67,11 +66,12 @@ class DetailActivity : AppCompatActivity() {
         }
         viewModel.navigateToDetailEvent.observe(this) { event ->
             val data = event.getContentIfNotHandled()
-            val intent = newIntent(
-                this,
-                data?.productId ?: return@observe,
-                data.isLastlyViewed
-            )
+            val intent =
+                newIntent(
+                    this,
+                    data?.productId ?: return@observe,
+                    data.isLastlyViewed,
+                )
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
@@ -97,10 +97,10 @@ class DetailActivity : AppCompatActivity() {
                 arrayListOf(
                     ProductQuantity(
                         productId,
-                        viewModel.productInformation.value?.quantity ?: -1
-                    )
-                )
-            )
+                        viewModel.productInformation.value?.quantity ?: -1,
+                    ),
+                ),
+            ),
         )
         finish()
     }

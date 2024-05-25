@@ -31,24 +31,25 @@ abstract class ShoppingDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): ShoppingDatabase {
             return databaseInstance ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    ShoppingDatabase::class.java,
-                    "shopping_database.db"
-                )
-                    .fallbackToDestructiveMigration()
-                    .addCallback(
-                        object : Callback() {
-                            override fun onCreate(db: SupportSQLiteDatabase) {
-                                super.onCreate(db)
-                                val productDao = databaseInstance?.productDao()
-                                thread {
-                                    productDao?.addAll(PRODUCT_DATA)
-                                }
-                            }
-                        }
+                val instance =
+                    Room.databaseBuilder(
+                        context.applicationContext,
+                        ShoppingDatabase::class.java,
+                        "shopping_database.db",
                     )
-                    .build()
+                        .fallbackToDestructiveMigration()
+                        .addCallback(
+                            object : Callback() {
+                                override fun onCreate(db: SupportSQLiteDatabase) {
+                                    super.onCreate(db)
+                                    val productDao = databaseInstance?.productDao()
+                                    thread {
+                                        productDao?.addAll(PRODUCT_DATA)
+                                    }
+                                }
+                            },
+                        )
+                        .build()
 
                 databaseInstance = instance
                 instance

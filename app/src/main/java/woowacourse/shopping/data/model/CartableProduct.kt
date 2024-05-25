@@ -7,7 +7,7 @@ data class CartableProduct(
     @Embedded val product: Product,
     @Relation(
         parentColumn = "id",
-        entityColumn = "productId"
+        entityColumn = "productId",
     )
     val cartItem: CartItem? = null,
 ) {

@@ -3,15 +3,11 @@ package woowacourse.shopping.presentation.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.model.CartItem
-import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.CartedProduct
-import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.home.ProductQuantity
 import woowacourse.shopping.presentation.home.QuantityListener
-import woowacourse.shopping.presentation.util.Event
 import java.util.Collections.replaceAll
 import kotlin.concurrent.thread
 
@@ -81,19 +77,22 @@ class CartViewModel(
                 pageInformation.value?.copy(
                     previousPageEnabled = false,
                     nextPageEnabled = hasNext,
-                )
+                ),
             )
         } else {
             _pageInformation.postValue(
                 pageInformation.value?.copy(
                     previousPageEnabled = true,
                     nextPageEnabled = hasNext,
-                )
+                ),
             )
         }
     }
 
-    override fun onQuantityChange(productId: Long, quantity: Int) {
+    override fun onQuantityChange(
+        productId: Long,
+        quantity: Int,
+    ) {
         if (quantity < 0) return
         thread {
             val targetItem = productRepository.fetchProduct(productId)

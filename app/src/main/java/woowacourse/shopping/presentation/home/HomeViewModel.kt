@@ -60,8 +60,8 @@ class HomeViewModel(
             _loadStatus.postValue(
                 loadStatus.value?.copy(
                     isLoadingPage = true,
-                    loadingAvailable = false
-                )
+                    loadingAvailable = false,
+                ),
             )
             _products.postValue(products.value?.plus(productRepository.fetchSinglePage(page++)))
             products.value?.let {
@@ -69,11 +69,11 @@ class HomeViewModel(
                     loadStatus.value?.copy(
                         loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
                         isLoadingPage = false,
-                    )
+                    ),
                 )
             }
             _totalQuantity.postValue(
-                cartRepository.fetchTotalCount()
+                cartRepository.fetchTotalCount(),
             )
         }
     }
@@ -81,7 +81,7 @@ class HomeViewModel(
     private fun loadHistory() {
         thread {
             _productHistory.postValue(
-                productHistoryRepository.fetchProductHistory(10)
+                productHistoryRepository.fetchProductHistory(10),
             )
         }
     }
@@ -103,21 +103,31 @@ class HomeViewModel(
         loadProducts()
     }
 
-    override fun onQuantityChange(productId: Long, quantity: Int) {
+    override fun onQuantityChange(
+        productId: Long,
+        quantity: Int,
+    ) {
         if (quantity < 0) return
         thread {
             val targetProduct = productRepository.fetchProduct(productId)
             if (quantity == 0 && targetProduct.cartItem?.id != null) {
                 cartRepository.removeCartItem(targetProduct.cartItem)
-                val target = products.value?.map {
-                    if (it.product.id == targetProduct.product.id) {
-                        val item = it.copy(cartItem = null)
-                        item
-                    } else it
-                }
+                val target =
+                    products.value?.map {
+                        if (it.product.id == targetProduct.product.id) {
+                            val item = it.copy(cartItem = null)
+                            item
+                        } else {
+                            it
+                        }
+                    }
                 _products.postValue(target)
-                _changedPosition.postValue(Event(products.value?.indexOfFirst { it.product.id == targetProduct.product.id }
-                    ?: return@thread))
+                _changedPosition.postValue(
+                    Event(
+                        products.value?.indexOfFirst { it.product.id == targetProduct.product.id }
+                            ?: return@thread,
+                    ),
+                )
             } else {
                 if (targetProduct.cartItem?.id != null) {
                     cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
@@ -125,19 +135,26 @@ class HomeViewModel(
                 } else {
                     cartRepository.addCartItem(CartItem(productId = productId))
                 }
-                val target = products.value?.map {
-                    if (it.product.id == productId) {
-                        val item =
-                            it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
-                        item
-                    } else it
-                }
+                val target =
+                    products.value?.map {
+                        if (it.product.id == productId) {
+                            val item =
+                                it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
+                            item
+                        } else {
+                            it
+                        }
+                    }
                 _products.postValue(target)
-                _changedPosition.postValue(Event(products.value?.indexOfFirst { it.product.id == productId }
-                    ?: return@thread))
+                _changedPosition.postValue(
+                    Event(
+                        products.value?.indexOfFirst { it.product.id == productId }
+                            ?: return@thread,
+                    ),
+                )
             }
             _totalQuantity.postValue(
-                cartRepository.fetchTotalCount()
+                cartRepository.fetchTotalCount(),
             )
         }
     }

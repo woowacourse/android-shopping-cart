@@ -1,9 +1,5 @@
 package woowacourse.shopping.data.remote
 
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -22,90 +18,56 @@ class MockShoppingWebServer(
     private val cartDao: CartDao,
 ) {
     private val mockWebServer = MockWebServer()
-    private val dispatcher = object : Dispatcher() {
-        override fun dispatch(request: RecordedRequest): MockResponse {
-            val requestedUrl = request.requestUrl
-            return when (requestedUrl?.encodedPath) {
-                "/products" -> {
-                    val page = requestedUrl.queryParameter("page")?.toInt()
-                    val pageSize = requestedUrl.queryParameter("page-size")?.toInt()
-                    if (page == null || pageSize == null) {
-                        MockResponse().setResponseCode(400)
-                    } else {
-                        MockResponse()
-                            .setHeader("Content-Type", "application/json")
-                            .setResponseCode(200)
-                            .setBody(convertToJson(getProductsByPage(page, pageSize)))
-                    }
-                }
-
-                "/product" -> {
-                    val productId = requestedUrl.queryParameter("id")?.toLong()
-                    if (productId == null) {
-                        MockResponse().setResponseCode(400)
-                    } else {
-                        MockResponse()
-                            .setHeader("Content-Type", "application/json")
-                            .setResponseCode(200)
-                            .setBody(convertToJson(getProductById(productId = productId)))
-                    }
-                }
-
-                "/cart-items" -> {
-                    val page = requestedUrl.queryParameter("page")?.toInt()
-                    val pageSize = requestedUrl.queryParameter("page-size")?.toInt()
-                    if (page == null || pageSize == null) {
-                        MockResponse().setResponseCode(400)
-                    } else {
-                        MockResponse()
-                            .setHeader("Content-Type", "application/json")
-                            .setResponseCode(200)
-                            .setBody(convertToJson(getCartItemsByPage(page, pageSize)))
-                    }
-                }
-
-                "/cart-item" -> {
-                    when (request.method) {
-                        "DELETE" -> {
-                            val item =
-                                convertJsonToObject(request.body.readUtf8(), CartItem::class.java)
-                            val isSuccessful = deleteCartItem(item)
-
-                            if (isSuccessful) {
-                                MockResponse()
-                                    .setHeader("Content-Type", "application/json")
-                                    .setResponseCode(200)
-                            } else {
-                                MockResponse()
-                                    .setHeader("Content-Type", "application/json")
-                                    .setResponseCode(400)
-                            }
+    private val dispatcher =
+        object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                val requestedUrl = request.requestUrl
+                return when (requestedUrl?.encodedPath) {
+                    "/products" -> {
+                        val page = requestedUrl.queryParameter("page")?.toInt()
+                        val pageSize = requestedUrl.queryParameter("page-size")?.toInt()
+                        if (page == null || pageSize == null) {
+                            MockResponse().setResponseCode(400)
+                        } else {
+                            MockResponse()
+                                .setHeader("Content-Type", "application/json")
+                                .setResponseCode(200)
+                                .setBody(convertToJson(getProductsByPage(page, pageSize)))
                         }
+                    }
 
-                        "POST" -> {
-                            val item =
-                                convertJsonToObject(request.body.readUtf8(), CartItem::class.java)
-                            val isSuccessful = addCartItem(item)
-                            if (isSuccessful) {
-                                MockResponse()
-                                    .setHeader("Content-Type", "application/json")
-                                    .setResponseCode(200)
-                            } else {
-                                MockResponse()
-                                    .setHeader("Content-Type", "application/json")
-                                    .setResponseCode(400)
-                            }
+                    "/product" -> {
+                        val productId = requestedUrl.queryParameter("id")?.toLong()
+                        if (productId == null) {
+                            MockResponse().setResponseCode(400)
+                        } else {
+                            MockResponse()
+                                .setHeader("Content-Type", "application/json")
+                                .setResponseCode(200)
+                                .setBody(convertToJson(getProductById(productId = productId)))
                         }
+                    }
 
-                        "PATCH" -> {
-                            val id = requestedUrl.queryParameter("id")?.toLong()
-                            val quantity = requestedUrl.queryParameter("quantity")?.toInt()
-                            if (id == null || quantity == null) {
-                                MockResponse()
-                                    .setHeader("Content-Type", "application/json")
-                                    .setResponseCode(400)
-                            } else {
-                                val isSuccessful = updateQuantity(id, quantity)
+                    "/cart-items" -> {
+                        val page = requestedUrl.queryParameter("page")?.toInt()
+                        val pageSize = requestedUrl.queryParameter("page-size")?.toInt()
+                        if (page == null || pageSize == null) {
+                            MockResponse().setResponseCode(400)
+                        } else {
+                            MockResponse()
+                                .setHeader("Content-Type", "application/json")
+                                .setResponseCode(200)
+                                .setBody(convertToJson(getCartItemsByPage(page, pageSize)))
+                        }
+                    }
+
+                    "/cart-item" -> {
+                        when (request.method) {
+                            "DELETE" -> {
+                                val item =
+                                    convertJsonToObject(request.body.readUtf8(), CartItem::class.java)
+                                val isSuccessful = deleteCartItem(item)
+
                                 if (isSuccessful) {
                                     MockResponse()
                                         .setHeader("Content-Type", "application/json")
@@ -116,25 +78,60 @@ class MockShoppingWebServer(
                                         .setResponseCode(400)
                                 }
                             }
+
+                            "POST" -> {
+                                val item =
+                                    convertJsonToObject(request.body.readUtf8(), CartItem::class.java)
+                                val isSuccessful = addCartItem(item)
+                                if (isSuccessful) {
+                                    MockResponse()
+                                        .setHeader("Content-Type", "application/json")
+                                        .setResponseCode(200)
+                                } else {
+                                    MockResponse()
+                                        .setHeader("Content-Type", "application/json")
+                                        .setResponseCode(400)
+                                }
+                            }
+
+                            "PATCH" -> {
+                                val id = requestedUrl.queryParameter("id")?.toLong()
+                                val quantity = requestedUrl.queryParameter("quantity")?.toInt()
+                                if (id == null || quantity == null) {
+                                    MockResponse()
+                                        .setHeader("Content-Type", "application/json")
+                                        .setResponseCode(400)
+                                } else {
+                                    val isSuccessful = updateQuantity(id, quantity)
+                                    if (isSuccessful) {
+                                        MockResponse()
+                                            .setHeader("Content-Type", "application/json")
+                                            .setResponseCode(200)
+                                    } else {
+                                        MockResponse()
+                                            .setHeader("Content-Type", "application/json")
+                                            .setResponseCode(400)
+                                    }
+                                }
+                            }
+
+                            else -> MockResponse().setResponseCode(404)
                         }
-
-                        else -> MockResponse().setResponseCode(404)
                     }
-                }
 
-                "/cart-item/count" -> {
-                    MockResponse()
-                        .setHeader("Content-Type", "application/json")
-                        .setBody(convertToJson(getTotalCount()))
-                        .setResponseCode(200)
-                }
+                    "/cart-item/count" -> {
+                        MockResponse()
+                            .setHeader("Content-Type", "application/json")
+                            .setBody(convertToJson(getTotalCount()))
+                            .setResponseCode(200)
+                    }
 
-                else -> {
-                    MockResponse().setResponseCode(404)
+                    else -> {
+                        MockResponse().setResponseCode(404)
+                    }
                 }
             }
         }
-    }
 
     init {
         thread {
@@ -150,9 +147,7 @@ class MockShoppingWebServer(
         return productDao.getCartableProducts(page, pageSize)
     }
 
-    private fun getProductById(
-        productId: Long
-    ): CartableProduct {
+    private fun getProductById(productId: Long): CartableProduct {
         return productDao.getCartableProduct(productId)
     }
 
@@ -179,9 +174,7 @@ class MockShoppingWebServer(
         }.getOrDefault(false)
     }
 
-    private fun deleteCartItem(
-        cartItem: CartItem
-    ): Boolean {
+    private fun deleteCartItem(cartItem: CartItem): Boolean {
         return runCatching {
             cartDao.deleteCartItem(cartItem)
             true
@@ -190,9 +183,7 @@ class MockShoppingWebServer(
         }.getOrDefault(false)
     }
 
-    private fun addCartItem(
-        cartItem: CartItem
-    ): Boolean {
+    private fun addCartItem(cartItem: CartItem): Boolean {
         return runCatching {
             cartDao.addCartItem(cartItem)
             true

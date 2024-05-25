@@ -7,7 +7,7 @@ data class RecentProduct(
     @Embedded val productHistory: ProductHistory,
     @Relation(
         parentColumn = "productId",
-        entityColumn = "id"
+        entityColumn = "id",
     )
     val product: Product,
 )

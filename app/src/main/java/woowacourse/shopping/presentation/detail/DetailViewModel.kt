@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -8,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
-import woowacourse.shopping.data.model.Product
-import woowacourse.shopping.data.model.ProductHistory
 import woowacourse.shopping.data.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
@@ -79,11 +76,15 @@ class DetailViewModel(
         }
     }
 
-    override fun onQuantityChange(productId: Long, quantity: Int) {
+    override fun onQuantityChange(
+        productId: Long,
+        quantity: Int,
+    ) {
         if (quantity < 0) return
-        _productInformation.value = productInformation.value?.copy(
-            cartItem = CartItem(productId = productId, quantity = quantity)
-        )
+        _productInformation.value =
+            productInformation.value?.copy(
+                cartItem = CartItem(productId = productId, quantity = quantity),
+            )
     }
 
     private fun loadProductInformation(id: Long) {
@@ -95,7 +96,7 @@ class DetailViewModel(
     private fun updateLastlyViewedProduct() {
         thread {
             _lastlyViewedProduct.postValue(
-                historyRepository.fetchLatestHistory()
+                historyRepository.fetchLatestHistory(),
             )
         }
     }

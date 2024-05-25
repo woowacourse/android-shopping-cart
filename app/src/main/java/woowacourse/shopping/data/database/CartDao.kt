@@ -26,7 +26,10 @@ interface CartDao {
     fun addCartItem(cartItem: CartItem): Long
 
     @Query("UPDATE cart_item SET quantity = :quantity WHERE id = :cartItemId")
-    fun updateQuantity(cartItemId: Long, quantity: Int)
+    fun updateQuantity(
+        cartItemId: Long,
+        quantity: Int,
+    )
 
     @Delete
     fun deleteCartItem(cartItem: CartItem)
@@ -35,9 +38,11 @@ interface CartDao {
     fun deleteAll()
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT * FROM cart_item LIMIT :pageSize OFFSET :page * :pageSize
-    """)
+    """,
+    )
     fun getCartedProducts(
         page: Int,
         pageSize: Int,

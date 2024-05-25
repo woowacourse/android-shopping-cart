@@ -11,9 +11,9 @@ import androidx.room.PrimaryKey
             entity = Product::class,
             parentColumns = ["id"],
             childColumns = ["productId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
 )
 data class CartItem(
     @PrimaryKey(autoGenerate = true)

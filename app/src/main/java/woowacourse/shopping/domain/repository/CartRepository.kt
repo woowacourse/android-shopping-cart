@@ -12,7 +12,7 @@ interface CartRepository {
 
     fun updateQuantity(
         cartItemId: Long,
-        quantity: Int
+        quantity: Int,
     )
 
     fun removeCartItem(cartItem: CartItem)

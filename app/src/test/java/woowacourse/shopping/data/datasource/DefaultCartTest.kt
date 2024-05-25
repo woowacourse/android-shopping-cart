@@ -37,9 +37,10 @@ class DefaultCartTest {
         mockkObject(DefaultCart) {
             every { addCartItem(1, 1) } returns 1
             every { addCartItem(1, 2) } returns 1
-            every { getCartItems(0, 1) } returns listOf(
-                CartItem(1, 1, 3)
-            )
+            every { getCartItems(0, 1) } returns
+                listOf(
+                    CartItem(1, 1, 3),
+                )
             addCartItem(1, 1)
             addCartItem(1, 2)
             val cartItem = getCartItems(0, 1).first()
