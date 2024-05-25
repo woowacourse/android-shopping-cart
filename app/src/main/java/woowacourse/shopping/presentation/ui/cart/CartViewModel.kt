@@ -46,21 +46,19 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     private fun fetchMaxPage() {
-        cartRepository.getMaxPage(PAGE_SIZE).onSuccess {
-            maxPage = it
-        }
+        cartRepository.getMaxPage(PAGE_SIZE).onSuccess { maxPage = it }
     }
 
     fun deleteProduct(product: Product) {
         cartRepository.deleteProduct(product).onSuccess {
             val originalChangedCartProducts = changedCartProducts.value ?: emptyList()
             _changedCartProducts.value = originalChangedCartProducts.plus(Cart(product, 0))
-            fetchMaxPage()
-            updatePageController()
-            loadProductByPage()
         }.onFailure {
             _error.value = Event(ShoppingError.CartItemNotDeleted)
         }
+        fetchMaxPage()
+        updatePageController()
+        loadProductByPage(currentPage.value ?: 0)
     }
 
     fun updatePageController() {
@@ -72,36 +70,45 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         _pageControllerIsVisible.value = maxPage > 0
     }
 
-    fun loadProductByPage() {
-        cartRepository.load(currentPage.value ?: 0, PAGE_SIZE).onSuccess {
+    fun loadProductByPage(newPage: Int) {
+        cartRepository.load(newPage, PAGE_SIZE).onSuccess {
             cartProducts.apply {
                 clear()
                 addAll(it)
             }
             _shoppingProducts.value =
-                UiState.Success(cartProducts.map { joinProductAndCart(it.product, it) })
+                UiState.Success(
+                    cartProducts.map {
+                        joinProductAndCart(
+                            it.product,
+                            it,
+                        )
+                    },
+                )
         }.onFailure {
             _error.value = Event(ShoppingError.CartItemsNotFound)
         }
     }
 
-    fun plus() {
+    fun turnNextPage() {
         if (currentPage.value == maxPage) return
-        _currentPage.value = ((currentPage.value ?: 0) + 1).coerceAtMost(maxPage)
-        loadProductByPage()
+        val newPage = ((currentPage.value ?: 0) + 1).coerceAtMost(maxPage)
+        _currentPage.value = newPage
+        loadProductByPage(newPage)
     }
 
-    fun minus() {
+    fun turnPreviousPage() {
         if (currentPage.value == 0) return
-        _currentPage.value = (currentPage.value ?: 0) - 1
-        loadProductByPage()
+        val newPage = (currentPage.value ?: 0) - 1
+        _currentPage.value = newPage
+        loadProductByPage(newPage)
     }
 
     fun updateCartItemQuantity(
         product: Product,
         quantityDelta: Int,
     ) {
-        cartRepository.updateQuantity(product, quantityDelta).onSuccess {
+        cartRepository.modifyQuantity(product, quantityDelta).onSuccess {
             modifyShoppingProductQuantity(product.id, quantityDelta)
         }
     }
@@ -115,13 +122,20 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         val updatedItem =
             cartProducts[productIndex].copy(
                 quantity =
-                    (originalQuantity + quantityDelta).coerceAtLeast(
-                        0,
-                    ),
+                (originalQuantity + quantityDelta).coerceAtLeast(
+                    0,
+                ),
             )
         cartProducts[productIndex] = updatedItem
         _shoppingProducts.value =
-            UiState.Success(cartProducts.map { joinProductAndCart(it.product, it) })
+            UiState.Success(
+                cartProducts.map {
+                    joinProductAndCart(
+                        it.product,
+                        it,
+                    )
+                },
+            )
         val originalChangedCartProducts = changedCartProducts.value ?: emptyList()
         _changedCartProducts.value = originalChangedCartProducts.plus(updatedItem)
     }

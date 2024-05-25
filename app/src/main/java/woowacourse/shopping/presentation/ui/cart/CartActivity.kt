@@ -29,7 +29,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
         binding.lifecycleOwner = this
         initActionBarTitle()
         initCartAdapter()
-        viewModel.loadProductByPage()
+        viewModel.loadProductByPage(0)
         observeErrorEventUpdates()
         observeCartUpdates()
         observeChangedCartProducts()
@@ -84,11 +84,11 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     }
 
     override fun onNextPageClick() {
-        viewModel.plus()
+        viewModel.turnNextPage()
     }
 
     override fun onBeforePageClick() {
-        viewModel.minus()
+        viewModel.turnPreviousPage()
     }
 
     override fun onQuantityControlClick(

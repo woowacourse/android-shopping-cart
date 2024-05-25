@@ -105,6 +105,8 @@ class ProductDetailViewModel(
         cartRepository.setQuantity(shoppingProductItem.toProduct(), shoppingProductItem.quantity)
             .onSuccess {
                 _addCartEvent.value = Event(shoppingProductItem.quantity)
+            }.onFailure {
+                _error.postValue(Event(DetailError.CartItemNotFound))
             }
     }
 }

@@ -13,7 +13,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 @BindingAdapter("bindLoadImage")
-fun ImageView.loadImage(imgUrl: String) {
+fun ImageView.loadImage(imgUrl: String?) {
     Glide.with(context)
         .load(imgUrl)
         .into(this)
@@ -27,12 +27,14 @@ fun View.setVisibility(visible: Boolean) {
 @BindingAdapter("lastProduct", "currentProduct")
 fun View.setLastProductVisibility(
     lastProduct: RecentProductItem?,
-    currentProduct: ProductListItem.ShoppingProductItem,
+    currentProduct: ProductListItem.ShoppingProductItem?,
 ) {
-    if (lastProduct == null || lastProduct.productId == currentProduct.id) {
-        visibility = View.GONE
-    } else {
-        visibility = View.VISIBLE
+    if (currentProduct != null) {
+        if (lastProduct == null || lastProduct.productId == currentProduct.id) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
     }
 }
 

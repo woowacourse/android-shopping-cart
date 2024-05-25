@@ -8,7 +8,7 @@ import kotlin.math.min
 object DummyCartRepository : CartRepository {
     private val cartMap: MutableMap<Product, Int> = mutableMapOf()
 
-    override fun updateQuantity(
+    override fun modifyQuantity(
         product: Product,
         quantityDelta: Int,
     ): Result<Long> =

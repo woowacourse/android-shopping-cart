@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain
 
 interface CartRepository {
-    fun updateQuantity(
+    fun modifyQuantity(
         product: Product,
         quantityDelta: Int,
     ): Result<Long>

@@ -1,7 +1,8 @@
 package woowacourse.shopping.presentation.ui.cart
 
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -19,9 +20,10 @@ import woowacourse.shopping.product
 @ExtendWith(InstantTaskExecutorExtension::class)
 @ExtendWith(MockKExtension::class)
 class CartViewModelTest {
-    @MockK
+    @RelaxedMockK
     private lateinit var cartRepository: CartRepository
 
+    @InjectMockKs
     private lateinit var viewModel: CartViewModel
 
     @BeforeEach
@@ -33,7 +35,7 @@ class CartViewModelTest {
     @Test
     fun `카트 아이템을 pageCount개씩 불러온다`() {
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCartProducts)
-        viewModel.loadProductByPage()
+        viewModel.loadProductByPage(0)
         assertThat(viewModel.shoppingProducts.getOrAwaitValue(3)).isEqualTo(
             UiState.Success(
                 dummyShoppingProducts,
@@ -44,7 +46,7 @@ class CartViewModelTest {
     @Test
     fun `카트 아이템을 불러오기 실패하면 해당하는 Error 상태로 변화한다`() {
         every { cartRepository.load(any(), any()) } returns Result.failure(Throwable())
-        viewModel.loadProductByPage()
+        viewModel.loadProductByPage(0)
         assertThat(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
         ).isEqualTo(ShoppingError.CartItemsNotFound)

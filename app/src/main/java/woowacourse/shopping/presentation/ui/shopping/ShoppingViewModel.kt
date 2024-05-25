@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.ui.shopping
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.remote.DummyCartRepository
 import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartRepository
@@ -20,7 +19,7 @@ import kotlin.concurrent.thread
 class ShoppingViewModel(
     private val productRepository: ProductRepository = DummyProductRepository(),
     private val recentRepository: RecentRepository,
-    private val cartRepository: CartRepository = DummyCartRepository,
+    private val cartRepository: CartRepository,
 ) :
     ViewModel() {
     private var currentPage: Int = 0
@@ -104,8 +103,10 @@ class ShoppingViewModel(
         product: Product,
         quantityDelta: Int,
     ) {
-        cartRepository.updateQuantity(product, quantityDelta).onSuccess {
+        cartRepository.modifyQuantity(product, quantityDelta).onSuccess {
             modifyShoppingProductQuantity(product.id, quantityDelta)
+        }.onFailure {
+            _error.postValue(Event(ShoppingError.CartItemsNotModified))
         }
     }
 

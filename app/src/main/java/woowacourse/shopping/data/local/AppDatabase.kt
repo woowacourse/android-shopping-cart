@@ -8,17 +8,21 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import woowacourse.shopping.domain.Product
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Database(
-    entities = [RecentProductEntity::class],
+    entities = [RecentProductEntity::class, CartEntity::class],
     version = 1,
     exportSchema = true,
 )
-@TypeConverters(value = [LocalDateTimeTypeConverter::class])
+@TypeConverters(value = [LocalDateTimeTypeConverter::class, ProductTypeConverter::class])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recentProductDao(): RecentProductDao
+
+    abstract fun cartDao(): CartDao
 
     companion object {
         @Volatile
@@ -52,4 +56,20 @@ class LocalDateTimeTypeConverter(private val gson: Gson) {
 
     @TypeConverter
     fun stringToLocalDateTime(string: String): LocalDateTime = LocalDateTime.parse(string, formatter)
+}
+
+class ProductTypeConverter {
+    @TypeConverter
+    fun fromProductToJson(value: Product): String {
+        val gson = Gson()
+        val type = object : TypeToken<Product>() {}.type
+        return gson.toJson(value, type)
+    }
+
+    @TypeConverter
+    fun fromJsonToProduct(value: String): Product {
+        val gson = Gson()
+        val type = object : TypeToken<Product>() {}.type
+        return gson.fromJson(value, type)
+    }
 }
