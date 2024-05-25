@@ -155,7 +155,6 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
     override fun clickRemoveCartItem(cartItem: CartItem) {
         shoppingCartViewModel.deleteShoppingCartItem(
             cartItemId = cartItem.id,
-            itemCounter = cartItem.product.cartItemCounter,
             productId = cartItem.product.id,
         )
     }
