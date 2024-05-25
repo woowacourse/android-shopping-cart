@@ -165,10 +165,6 @@ class ShoppingCartViewModel(
         )
     }
 
-    private fun getCartItemResult(productId: Long): CartItemResult {
-        return shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
-    }
-
     companion object {
         private const val MIN_PAGE_COUNT = 1
         private const val INCREMENT_AMOUNT = 1

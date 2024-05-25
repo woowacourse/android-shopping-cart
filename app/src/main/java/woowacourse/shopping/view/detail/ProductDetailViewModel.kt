@@ -9,6 +9,7 @@ import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.Product.Companion.DEFAULT_PRODUCT_ID
 import woowacourse.shopping.domain.model.RecentlyProduct
+import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
@@ -44,7 +45,7 @@ class ProductDetailViewModel(
 
                 else -> shoppingCartRepository.updateCartItem(
                     cartItemId,
-                    product.cartItemCounter.itemCount,
+                    UpdateCartItemType.INCREASE,
                 )
             }
             _productDetailEvent.postValue(
