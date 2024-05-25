@@ -28,7 +28,7 @@ class ShoppingViewModel(private val repository: Repository) :
                     _products.postValue(UiState.Success(it))
                 } else {
                     _products.postValue(
-                        UiState.Success((_products.value as UiState.Success).data + it)
+                        UiState.Success((_products.value as UiState.Success).data + it),
                     )
                 }
                 offSet++
@@ -65,12 +65,12 @@ class ShoppingViewModel(private val repository: Repository) :
             val index = cartProducts.indexOfFirst { it.productId == cartProduct.productId }
             cartProducts[index].minusQuantity()
 
-            if(cartProducts[index].quantity > 0) {
+            if (cartProducts[index].quantity > 0) {
                 repository.saveCart(
                     Cart(
                         cartProducts[index].productId,
-                        cartProducts[index].quantity
-                    )
+                        cartProducts[index].quantity,
+                    ),
                 )
                     .onSuccess {
                         _products.postValue(UiState.Success(cartProducts))
@@ -80,7 +80,7 @@ class ShoppingViewModel(private val repository: Repository) :
                     }
             } else {
                 repository.deleteCart(
-                    cartProducts[index].productId
+                    cartProducts[index].productId,
                 ).onSuccess {
                     _products.postValue(UiState.Success(cartProducts))
                 }.onFailure {

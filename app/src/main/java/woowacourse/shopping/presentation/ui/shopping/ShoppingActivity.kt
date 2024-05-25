@@ -26,10 +26,9 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
-    private val adapter: ShoppingAdapter by lazy { ShoppingAdapter(this,  viewModel) }
+    private val adapter: ShoppingAdapter by lazy { ShoppingAdapter(this, viewModel) }
 
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-
 
     override fun initStartView() {
         initAdapter()
@@ -48,21 +47,22 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
             }
         }
 
-        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val updatedProducts =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getParcelableExtra(
-                            EXTRA_UPDATED_PRODUCT,
-                            UpdateUiModel::class.java,
-                        )
-                    } else {
-                        result.data?.getParcelableExtra(EXTRA_UPDATED_PRODUCT)
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val updatedProducts =
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            result.data?.getParcelableExtra(
+                                EXTRA_UPDATED_PRODUCT,
+                                UpdateUiModel::class.java,
+                            )
+                        } else {
+                            result.data?.getParcelableExtra(EXTRA_UPDATED_PRODUCT)
+                        }
+                    updatedProducts?.let {
+                        viewModel.updateCartProducts(it)
                     }
-                updatedProducts?.let {
-                    viewModel.updateCartProducts(it)
                 }
-            }
             }
     }
 
@@ -96,7 +96,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     override fun onClick(productId: Long) {
         activityResultLauncher.launch(
-            ProductDetailActivity.createIntent(this, productId)
+            ProductDetailActivity.createIntent(this, productId),
         )
     }
 

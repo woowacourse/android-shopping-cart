@@ -10,5 +10,5 @@ data class CartProductEntity(
     val name: String,
     val imgUrl: String,
     val price: Long,
-    val quantity: Int?
+    val quantity: Int?,
 )

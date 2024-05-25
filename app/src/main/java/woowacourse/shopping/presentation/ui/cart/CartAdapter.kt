@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.local.entity.CartProductEntity
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.CartProduct
 

@@ -43,17 +43,20 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             }
         }
 
-        viewModel.cartHandler.observe(this, EventObserver {
-            intent.apply {
-                putExtra(
-                    EXTRA_UPDATED_PRODUCT,
-                    it
-                )
-            }.run {
-                setResult(RESULT_OK, this)
-                this@ProductDetailActivity.finish()
-            }
-        })
+        viewModel.cartHandler.observe(
+            this,
+            EventObserver {
+                intent.apply {
+                    putExtra(
+                        EXTRA_UPDATED_PRODUCT,
+                        it,
+                    )
+                }.run {
+                    setResult(RESULT_OK, this)
+                    this@ProductDetailActivity.finish()
+                }
+            },
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

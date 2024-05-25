@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,7 @@ import woowacourse.shopping.presentation.ui.UpdateUiModel
 import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
-    private val repository: Repository
+    private val repository: Repository,
 ) : ViewModel(), DetailActionHandler {
     private val _product = MutableLiveData<UiState<CartProduct>>(UiState.None)
     val product: LiveData<UiState<CartProduct>> get() = _product
@@ -24,14 +23,16 @@ class ProductDetailViewModel(
     private val _cartHandler = MutableLiveData<EventState<UpdateUiModel>>()
     val cartHandler: LiveData<EventState<UpdateUiModel>> get() = _cartHandler
 
-
     private val updateUiModel: UpdateUiModel = UpdateUiModel()
 
     fun findById(id: Long) {
         thread {
             repository.findProductById(id).onSuccess {
-                if(it == null) _errorHandler.postValue(EventState(PRODUCT_NOT_FOUND))
-                else _product.postValue(UiState.Success(it))
+                if (it == null) {
+                    _errorHandler.postValue(EventState(PRODUCT_NOT_FOUND))
+                } else {
+                    _product.postValue(UiState.Success(it))
+                }
             }.onFailure {
                 _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
             }
@@ -40,15 +41,14 @@ class ProductDetailViewModel(
 
     override fun onAddToCart(cartProduct: CartProduct) {
         thread {
-
             updateUiModel.add(cartProduct.productId, cartProduct)
 
             if (cartProduct.quantity > 0) {
                 repository.saveCart(
                     Cart(
                         cartProduct.productId,
-                        cartProduct.quantity
-                    )
+                        cartProduct.quantity,
+                    ),
                 )
                     .onSuccess {
                         _product.postValue(UiState.Success(cartProduct))
@@ -58,17 +58,15 @@ class ProductDetailViewModel(
                     }
             } else {
                 repository.deleteCart(
-                    cartProduct.productId
+                    cartProduct.productId,
                 ).onSuccess {
                     _product.postValue(UiState.Success(cartProduct))
                 }.onFailure {
                     _errorHandler.postValue(EventState("아이템 증가 오류"))
                 }
-
             }
             _cartHandler.postValue(EventState(updateUiModel))
         }
-
     }
 
     override fun onPlus(cartProduct: CartProduct) {

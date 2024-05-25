@@ -6,9 +6,12 @@ import woowacourse.shopping.domain.CartProduct
 
 @Parcelize
 data class UpdateUiModel(
-    val updatedItems: MutableMap<Long, CartProduct> = mutableMapOf()
-): Parcelable {
-    fun add(id: Long, cartProduct: CartProduct) {
+    val updatedItems: MutableMap<Long, CartProduct> = mutableMapOf(),
+) : Parcelable {
+    fun add(
+        id: Long,
+        cartProduct: CartProduct,
+    ) {
         updatedItems[id] = cartProduct
     }
 }

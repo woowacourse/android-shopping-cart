@@ -3,14 +3,19 @@ package woowacourse.shopping.data.local
 import woowacourse.shopping.data.local.dao.CartProductDao
 import woowacourse.shopping.data.local.entity.CartEntity
 import woowacourse.shopping.data.local.entity.CartProductEntity
-import woowacourse.shopping.domain.CartProduct
 
-class RoomDataSource(private val cartProductDao: CartProductDao): LocalDataSource {
-    override fun findProductByPaging(offset: Int, pageSize: Int): List<CartProductEntity> {
+class RoomDataSource(private val cartProductDao: CartProductDao) : LocalDataSource {
+    override fun findProductByPaging(
+        offset: Int,
+        pageSize: Int,
+    ): List<CartProductEntity> {
         return cartProductDao.findProductByPaging(offset, pageSize)
     }
 
-    override fun findCartByPaging(offset: Int, pageSize: Int): List<CartProductEntity> {
+    override fun findCartByPaging(
+        offset: Int,
+        pageSize: Int,
+    ): List<CartProductEntity> {
         return cartProductDao.findCartByPaging(offset, pageSize)
     }
 

@@ -2,9 +2,6 @@ package woowacourse.shopping.presentation.ui.shopping.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
-import woowacourse.shopping.data.local.entity.CartProductEntity
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.CartProduct
@@ -15,7 +12,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class ProductViewHolder(
         private val binding: ItemProductBinding,
         private val shoppingHandler: ShoppingHandler,
-        private val shoppingActionHandler: ShoppingActionHandler
+        private val shoppingActionHandler: ShoppingActionHandler,
     ) :
         ShoppingViewHolder(binding.root) {
         private var id: Long = -1
