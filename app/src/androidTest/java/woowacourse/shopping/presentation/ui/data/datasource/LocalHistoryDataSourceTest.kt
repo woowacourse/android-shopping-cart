@@ -14,6 +14,7 @@ import woowacourse.shopping.data.db.AppDatabase
 import woowacourse.shopping.data.db.dao.HistoryDao
 import woowacourse.shopping.data.db.mapper.toEntity
 import woowacourse.shopping.data.db.mapper.toHistory
+import woowacourse.shopping.data.db.model.HistoryEntity
 import woowacourse.shopping.domain.model.History
 
 class LocalHistoryDataSourceTest {
@@ -23,7 +24,10 @@ class LocalHistoryDataSourceTest {
     @BeforeEach
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.databaseBuilder(context, AppDatabase::class.java, "testDb").build()
+        db =
+            Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
         dao = db.historyDao()
     }
 
@@ -34,7 +38,7 @@ class LocalHistoryDataSourceTest {
 
     @Test
     fun `history를_읽고_쓰기`() {
-        val history = History(1, STUB_PRODUCT_A, 0L)
+        val history = History(STUB_PRODUCT_A, 0L)
         dao.putHistory(history.toEntity())
         val actual = dao.getHistories(1).toHistory()
         val expected = listOf(history)
@@ -43,9 +47,9 @@ class LocalHistoryDataSourceTest {
 
     @Test
     fun `최근에_조회한_순으로_history를_불러온다`() {
-        val stubA = History(1, STUB_PRODUCT_A, 0L).toEntity()
-        val stubB = History(2, STUB_PRODUCT_B, 1L).toEntity()
-        val stubC = History(3, STUB_PRODUCT_C, 2L).toEntity()
+        val stubA = HistoryEntity(1, STUB_PRODUCT_A.toEntity(), 0L)
+        val stubB = HistoryEntity(2, STUB_PRODUCT_B.toEntity(), 1L)
+        val stubC = HistoryEntity(3, STUB_PRODUCT_C.toEntity(), 2L)
         dao.putHistory(stubA)
         dao.putHistory(stubB)
         dao.putHistory(stubC)
@@ -56,17 +60,17 @@ class LocalHistoryDataSourceTest {
     }
 
     @Test
-    fun `같은_물품을_다시_조회할_경우_새로운_history로_갱신된다`() {
+    fun `같은_물품을_다시_조회할_경우_새로운_timestamp로_갱신된다`() {
         // given
-        val oldHistory = History(1, STUB_PRODUCT_A, 0L).toEntity()
-        val newHistory = History(1, STUB_PRODUCT_A, 1L).toEntity()
+        val oldHistory = History(STUB_PRODUCT_A, 0L).toEntity()
+        val newHistory = History(STUB_PRODUCT_A, 1L).toEntity()
         dao.putHistory(oldHistory)
 
         // when
         dao.putHistory(newHistory)
 
-        val actual = dao.getHistories(1)
-        val expected = listOf(newHistory)
+        val actual = dao.getHistories(1)[0].timestamp
+        val expected = 1L
         assertThat(actual).isEqualTo(expected)
     }
 }
