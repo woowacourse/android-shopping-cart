@@ -62,18 +62,18 @@ class CartAdapter(
     }
 
     private fun deleteProduct(oldProduct: ProductUiModel) {
-        val position = productPosition(oldProduct.productId)
+        val position = findProductPosition(oldProduct.productId)
         products.removeAt(position)
         notifyItemRemoved(position)
     }
 
     private fun changeProduct(newProduct: ProductUiModel) {
-        val position = productPosition(newProduct.productId)
+        val position = findProductPosition(newProduct.productId)
         products[position] = newProduct
         notifyItemChanged(position)
     }
 
-    private fun productPosition(productId: Long): Int {
+    private fun findProductPosition(productId: Long): Int {
         return products.indexOfFirst { it.productId == productId }
     }
 }

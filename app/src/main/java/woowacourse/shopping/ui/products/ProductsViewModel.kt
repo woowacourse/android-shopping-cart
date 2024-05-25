@@ -30,11 +30,8 @@ class ProductsViewModel(
     val cartTotalCount: LiveData<Int> =
         _productUiModels.map { it.fold(0) { acc, productUiModel -> acc + productUiModel.quantity.count } }
 
-    val recentProducts: LiveData<List<RecentProductUiModel>?> =
-        _productUiModels.map {
-            recentProductRepository.findRecentProducts().toRecentProductUiModels()
-                .ifEmpty { return@map null }
-        }
+    val recentProductUiModels: LiveData<List<RecentProductUiModel>?> =
+        _productUiModels.map { recentProductRepository.findRecentProducts().toRecentProductUiModels() }
 
     init {
         loadPage()
@@ -44,30 +41,38 @@ class ProductsViewModel(
     fun loadPage() {
         val currentProductsUiModel = _productUiModels.value ?: emptyList()
         val products = productRepository.findRange(page++, PAGE_SIZE)
-        _productUiModels.value =
-            (currentProductsUiModel + products.toProductsUiModel()).toMutableList()
+        _productUiModels.value = (currentProductsUiModel + products.toProductUiModels()).toMutableList()
         _showLoadMore.value = false
     }
 
-    fun updateProducts() {
-        val products =
-            _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
-        _productUiModels.value = products.toProductsUiModel().toMutableList()
+    fun loadProducts() {
+        val products = _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
+        _productUiModels.value = products.toProductUiModels().toMutableList()
     }
 
-    private fun List<Product>.toProductsUiModel(): List<ProductUiModel> {
-        return map { product ->
-            runCatching { cartRepository.find(product.id) }
-                .map { ProductUiModel.from(product, it.quantity) }
-                .getOrElse { ProductUiModel.from(product) }
-        }
+    fun loadProduct(productId: Long) {
+        val product = productRepository.find(productId)
+        val productUiModel = product.toProductUiModel()
+        updateProductUiModels(productId, productUiModel)
     }
 
-    private fun List<RecentProduct>.toRecentProductUiModels(): List<RecentProductUiModel> {
-        return map {
-            val product = productRepository.find(it.productId)
-            RecentProductUiModel(product.id, product.imageUrl, product.title)
-        }
+    private fun List<Product>.toProductUiModels(): List<ProductUiModel> {
+        return map { it.toProductUiModel() }
+    }
+
+    private fun Product.toProductUiModel(): ProductUiModel {
+        return runCatching { cartRepository.find(id) }
+            .map { ProductUiModel.from(this, it.quantity) }
+            .getOrElse { ProductUiModel.from(this) }
+    }
+
+    private fun List<RecentProduct>.toRecentProductUiModels(): List<RecentProductUiModel>? {
+        val recentProductsUiModels =
+            map {
+                val product = productRepository.find(it.productId)
+                RecentProductUiModel(product.id, product.imageUrl, product.title)
+            }
+        return recentProductsUiModels.ifEmpty { null }
     }
 
     private fun loadMaxPage() {
@@ -81,43 +86,31 @@ class ProductsViewModel(
     }
 
     fun decreaseQuantity(productId: Long) {
-        val productUiModel = _productUiModels.value?.find { it.productId == productId } ?: return
+        val productUiModel = findProductUiModel(productId) ?: return
         cartRepository.decreaseQuantity(productId)
-        var changedQuantity = productUiModel.quantity
-        val new = productUiModel.copy(quantity = --changedQuantity)
-        _productUiModels.value =
-            _productUiModels.value?.apply {
-                val index = indexOfFirst { it.productId == productId }
-                this[index] = new
-            }
+
+        var oldQuantity = productUiModel.quantity
+        val newProductUiModel = productUiModel.copy(quantity = --oldQuantity)
+        updateProductUiModels(productId, newProductUiModel)
     }
 
     fun increaseQuantity(productId: Long) {
-        val productUiModel = _productUiModels.value?.find { it.productId == productId } ?: return
+        val productUiModel = findProductUiModel(productId) ?: return
         cartRepository.increaseQuantity(productId)
-        var changedQuantity = productUiModel.quantity
-        val newProductUiModel = productUiModel.copy(quantity = ++changedQuantity)
-        _productUiModels.value =
-            _productUiModels.value?.apply {
-                val index = indexOfFirst { it.productId == productId }
-                this[index] = newProductUiModel
-            }
+
+        var oldQuantity = productUiModel.quantity
+        val newProductUiModel = productUiModel.copy(quantity = ++oldQuantity)
+        updateProductUiModels(productId, newProductUiModel)
     }
 
-    fun loadProductUiModel(productId: Long) {
-        val product = productRepository.find(productId)
-        val productUiModel =
-            runCatching { cartRepository.find(product.id) }
-                .map {
-                    ProductUiModel.from(product, it.quantity)
-                }
-                .getOrElse {
-                    ProductUiModel.from(product)
-                }
+    private fun findProductUiModel(productId: Long): ProductUiModel? {
+        return _productUiModels.value?.find { it.productId == productId }
+    }
 
+    private fun updateProductUiModels(productId: Long, newProductUiModel: ProductUiModel) {
         val productUiModels = _productUiModels.value ?: return
         val index = productUiModels.indexOfFirst { it.productId == productId }
-        _productUiModels.value = productUiModels.apply { this[index] = productUiModel }
+        _productUiModels.value = productUiModels.apply { this[index] = newProductUiModel }
     }
 
     companion object {

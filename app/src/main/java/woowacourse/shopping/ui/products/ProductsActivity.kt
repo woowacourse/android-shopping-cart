@@ -41,7 +41,7 @@ class ProductsActivity : AppCompatActivity() {
                         PRODUCT_ID_KEY,
                         PRODUCT_ID_DEFAULT_VALUE,
                     ) ?: return@registerForActivityResult
-                viewModel.loadProductUiModel(changedProductId)
+                viewModel.loadProduct(changedProductId)
             }
         }
 
@@ -50,7 +50,7 @@ class ProductsActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.updateProducts()
+                viewModel.loadProducts()
             }
         }
 
@@ -83,10 +83,11 @@ class ProductsActivity : AppCompatActivity() {
                 spanSizeLookup = ProductsSpanSizeLookUp(adapter)
             }
         binding.rvProducts.adapter = adapter
+
         viewModel.productUiModels.observe(this) {
             adapter.updateProducts(it)
         }
-        viewModel.recentProducts.observe(this) {
+        viewModel.recentProductUiModels.observe(this) {
             adapter.updateRecentProducts(it ?: return@observe)
         }
     }
@@ -115,7 +116,7 @@ class ProductsActivity : AppCompatActivity() {
                     dy: Int,
                 ) {
                     val lastPosition = (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
-                    val productsLastPosition = adapter.productsLastPosition(lastPosition)
+                    val productsLastPosition = adapter.findProductsLastPosition(lastPosition)
                     viewModel.changeSeeMoreVisibility(productsLastPosition)
                 }
             }

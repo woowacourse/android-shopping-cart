@@ -86,7 +86,7 @@ class CartViewModel(
 
     fun increaseQuantity(productId: Long) {
         cartRepository.increaseQuantity(productId)
-        val position = productUiModelsPosition(productId) ?: return
+        val position = findProductUiModelsPosition(productId) ?: return
         _productUiModels.value =
             _productUiModels.value?.apply {
                 var changedQuantity = this[position].quantity
@@ -96,7 +96,7 @@ class CartViewModel(
 
     fun decreaseQuantity(productId: Long) {
         cartRepository.decreaseQuantity(productId)
-        val position = productUiModelsPosition(productId) ?: return
+        val position = findProductUiModelsPosition(productId) ?: return
         runCatching {
             cartRepository.find(productId)
         }.onSuccess {
@@ -110,7 +110,7 @@ class CartViewModel(
         }
     }
 
-    private fun productUiModelsPosition(productId: Long): Int? {
+    private fun findProductUiModelsPosition(productId: Long): Int? {
         return _productUiModels.value?.indexOfFirst { it.productId == productId }
     }
 

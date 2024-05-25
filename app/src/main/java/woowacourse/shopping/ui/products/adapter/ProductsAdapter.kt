@@ -106,7 +106,7 @@ class ProductsAdapter(
         return ProductsViewType.from(getItemViewType(RECENT_PRODUCTS_INDEX)) == ProductsViewType.RECENT_PRODUCTS
     }
 
-    fun productsLastPosition(lastPosition: Int): Int {
+    fun findProductsLastPosition(lastPosition: Int): Int {
         if (isExistedRecentProducts()) return lastPosition - 1
         return lastPosition
     }
