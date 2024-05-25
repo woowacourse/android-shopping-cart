@@ -4,4 +4,6 @@ interface DetailActionHandler {
     fun onCloseButtonClicked()
 
     fun onAddCartButtonClicked()
+
+    fun onLastViewedItemClicked(productId: Long)
 }

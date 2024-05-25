@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import androidx.fragment.app.activityViewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -27,6 +28,7 @@ class ProductDetailFragment : Fragment() {
                 CartRepositoryImpl(requireContext()),
                 RecentViewedItemRepositoryImpl(requireContext()),
                 receiveProductId(),
+                receiveLastViewedSelected(),
             )
         viewModelFactory.create(ProductDetailViewModel::class.java)
     }
@@ -74,13 +76,28 @@ class ProductDetailFragment : Fragment() {
                         sharedViewModel.setUpdatedRecentViewedProduct(product)
                     }
                 }
-                parentFragmentManager.popBackStack()
+
+                if (receiveLastViewedSelected()) {
+                    parentFragmentManager.popBackStack("detailFragment", POP_BACK_STACK_INCLUSIVE)
+                } else {
+                    parentFragmentManager.popBackStack()
+                }
+            }
+        }
+
+        productDetailViewModel.navigateToLastViewedItem.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                navigateToDetail(it)
             }
         }
     }
 
     private fun receiveProductId(): Long {
         return arguments?.getLong(PRODUCT_ID) ?: throw NoSuchDataException()
+    }
+
+    private fun receiveLastViewedSelected(): Boolean {
+        return arguments?.getBoolean(LAST_VIEWED_SELECTED) ?: throw NoSuchDataException()
     }
 
     override fun onDestroyView() {
@@ -94,18 +111,34 @@ class ProductDetailFragment : Fragment() {
 
     private fun showToastMessage(message: Int) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
+    private fun navigateToDetail(productId: Long) {
+        val productFragment =
+            ProductDetailFragment().apply {
+                arguments = createBundle(productId, true)
+            }
+        changeFragment(productFragment)
+    }
+
+    private fun changeFragment(nextFragment: Fragment) {
+        parentFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment_container, nextFragment)
+            .addToBackStack("detailFragment2")
+            .commit()
+    }
+
     companion object {
         fun createBundle(
             productId: Long,
-            recentProductId: Long = -1,
+            lastViewedProductSelected: Boolean = false,
         ): Bundle {
             return Bundle().apply {
                 putLong(PRODUCT_ID, productId)
-                putLong(RECENT_VIEWED_PRODUCT_ID, recentProductId)
+                putBoolean(LAST_VIEWED_SELECTED, lastViewedProductSelected)
             }
         }
 
         private const val PRODUCT_ID = "productId"
-        private const val RECENT_VIEWED_PRODUCT_ID = "recentViewedProductId"
+        private const val LAST_VIEWED_SELECTED = "lastViewedProductSelected"
     }
 }

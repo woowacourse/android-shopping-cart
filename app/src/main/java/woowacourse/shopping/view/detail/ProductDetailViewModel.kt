@@ -17,6 +17,7 @@ class ProductDetailViewModel(
     private val cartRepository: CartRepository,
     private val recentViewedItemRepository: RecentViewedItemRepository,
     private val productId: Long,
+    private val lastViewedProductSelected: Boolean,
 ) : ViewModel(), DetailActionHandler, CountActionHandler {
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
@@ -26,6 +27,9 @@ class ProductDetailViewModel(
 
     private val _navigateToBack = MutableLiveData<Event<Boolean>>()
     val navigateToBack: LiveData<Event<Boolean>> get() = _navigateToBack
+
+    private val _navigateToLastViewedItem = MutableLiveData<Event<Long>>()
+    val navigateToLastViewedItem: LiveData<Event<Long>> get() = _navigateToLastViewedItem
 
     private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
     val quantity: LiveData<Int> = _quantity
@@ -37,7 +41,11 @@ class ProductDetailViewModel(
         }
 
     val lastViewedProduct: Product by lazy {
-        recentViewedItemRepository.getLastViewedProduct()
+        if (lastViewedProductSelected) {
+            Product.INVALID_PRODUCT
+        } else {
+            recentViewedItemRepository.getLastViewedProduct()
+        }
     }
 
     init {
@@ -69,6 +77,11 @@ class ProductDetailViewModel(
         }.onFailure {
             _cartItemSavedState.value = ProductDetailState.Fail
         }
+    }
+
+    override fun onLastViewedItemClicked(productId: Long) {
+        product.value?.let { recentViewedItemRepository.saveRecentViewedItem(it) }
+        _navigateToLastViewedItem.value = Event(productId)
     }
 
     override fun onIncreaseQuantityButtonClicked(product: Product) {

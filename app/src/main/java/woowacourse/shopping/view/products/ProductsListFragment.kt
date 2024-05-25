@@ -140,7 +140,7 @@ class ProductsListFragment : Fragment() {
         parentFragmentManager
             .beginTransaction()
             .add(R.id.fragment_container, nextFragment)
-            .addToBackStack(null)
+            .addToBackStack("detailFragment")
             .commit()
     }
 
