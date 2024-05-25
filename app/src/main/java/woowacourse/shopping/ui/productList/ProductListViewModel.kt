@@ -45,7 +45,7 @@ class ProductListViewModel(
     private var _shoppingCartDestination: MutableSingleLiveData<Boolean> = MutableSingleLiveData()
     val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
 
-    init {
+    fun loadAll() {
         _loadedProducts.value = productsRepository.loadAllProducts(currentPage.value ?: currentPageIsNullException())
         _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
         _isLastPage.value = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())

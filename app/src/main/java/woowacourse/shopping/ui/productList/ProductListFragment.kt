@@ -54,6 +54,12 @@ class ProductListFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume: called")
+        viewModel.loadAll()
+    }
+
     private fun showLoadMoreButton() {
         binding.productDetailList.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
