@@ -18,7 +18,7 @@ interface RecentProductDao {
         FROM recent_products
         ORDER BY seen_date_time DESC
         LIMIT :size
-    """
+    """,
     )
     fun findRange(size: Int): List<RecentProduct>
 

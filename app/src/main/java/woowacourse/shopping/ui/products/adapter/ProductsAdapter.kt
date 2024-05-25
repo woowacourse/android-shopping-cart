@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
-import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.products.adapter.recent.OnClickRecentProductItem
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.products.adapter.type.ProductsView
 import woowacourse.shopping.ui.products.adapter.type.ProductsViewType
 import woowacourse.shopping.ui.products.adapter.type.RecentProductsUiModel

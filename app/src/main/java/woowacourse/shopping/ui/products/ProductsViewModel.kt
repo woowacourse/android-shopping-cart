@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.product.entity.Product
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.recent.entity.RecentProduct
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
@@ -107,7 +107,10 @@ class ProductsViewModel(
         return _productUiModels.value?.find { it.productId == productId }
     }
 
-    private fun updateProductUiModels(productId: Long, newProductUiModel: ProductUiModel) {
+    private fun updateProductUiModels(
+        productId: Long,
+        newProductUiModel: ProductUiModel,
+    ) {
         val productUiModels = _productUiModels.value ?: return
         val index = productUiModels.indexOfFirst { it.productId == productId }
         _productUiModels.value = productUiModels.apply { this[index] = newProductUiModel }

@@ -73,7 +73,10 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
         return cartItem ?: throw IllegalArgumentException(CANNOT_FIND_MESSAGE)
     }
 
-    override fun findRange(page: Int, pageSize: Int): List<CartItem> {
+    override fun findRange(
+        page: Int,
+        pageSize: Int,
+    ): List<CartItem> {
         var cartItems: List<CartItem> = emptyList()
         thread {
             cartItems = cartDao.findRange(page, pageSize)

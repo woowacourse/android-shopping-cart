@@ -7,8 +7,8 @@ import androidx.lifecycle.map
 import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.product.entity.Product
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.utils.AddCartQuantityBundle
 

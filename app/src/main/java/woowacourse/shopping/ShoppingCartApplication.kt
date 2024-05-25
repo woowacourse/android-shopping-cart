@@ -13,7 +13,7 @@ class ShoppingCartApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         ProductRepository.setInstance(
-            RoomProductRepository(ProductDataBase.instance(this).productDao(), dummyProducts)
+            RoomProductRepository(ProductDataBase.instance(this).productDao(), dummyProducts),
         )
         CartRepository.setInstance(RoomCartRepository(CartDataBase.instance(this).cartDao()))
     }

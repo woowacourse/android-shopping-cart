@@ -4,10 +4,10 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
-import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.products.adapter.recent.OnClickRecentProductItem
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductsAdapter
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.utils.AddCartQuantityBundle
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
@@ -49,7 +49,6 @@ sealed class ProductsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             adapter.updateRecentProduct(recentProducts)
         }
     }
-
 }
 
 typealias OnClickProductItem = (productId: Long) -> Unit
