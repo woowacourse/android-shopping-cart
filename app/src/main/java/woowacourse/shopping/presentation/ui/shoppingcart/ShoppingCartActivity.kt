@@ -51,7 +51,7 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
 
     private fun initObserve() {
         viewModel.uiState.observe(this) { uiState ->
-            adapter.updateCartProducts(uiState.pagingCartProduct.products)
+            adapter.submitList(uiState.pagingCartProduct.products)
         }
 
         viewModel.message.observeEvent(this) { message ->

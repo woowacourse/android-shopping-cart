@@ -34,10 +34,6 @@ class CartProductsAdapter(
         holder.bind(getItem(position), position)
     }
 
-    fun updateCartProducts(newCartProductList: List<Product>) {
-        submitList(newCartProductList)
-    }
-
     class CartProductViewHolder(
         private val binding: HolderCartProductBinding,
         private val actionHandler: ShoppingCartActionHandler,
