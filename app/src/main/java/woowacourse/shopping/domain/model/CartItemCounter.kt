@@ -6,7 +6,7 @@ class CartItemCounter(count: Int = DEFAULT_ITEM_COUNT) {
     var itemCount: Int = count
         private set
 
-    fun increase(){
+    fun increase()  {
         itemCount++
     }
 

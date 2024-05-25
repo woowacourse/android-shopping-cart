@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_PAGE_SIZE
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.CartItemCounter
-import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
@@ -16,7 +14,6 @@ import woowacourse.shopping.utils.SingleLiveData
 import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.cart.model.ShoppingCart
-import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -83,10 +80,11 @@ class ShoppingCartViewModel(
 
     fun increaseCartItem(product: Product) {
         try {
-            val updateCartItemResult = shoppingCartRepository.updateCartItem(
-                product.id,
-                UpdateCartItemType.INCREASE,
-            )
+            val updateCartItemResult =
+                shoppingCartRepository.updateCartItem(
+                    product.id,
+                    UpdateCartItemType.INCREASE,
+                )
             product.updateCartItemCount(updateCartItemResult.counter.itemCount)
             _shoppingCartEvent.value =
                 ShoppingCartEvent.UpdateProductEvent.Success(
@@ -104,10 +102,11 @@ class ShoppingCartViewModel(
 
     fun decreaseCartItem(product: Product) {
         try {
-            val updateCartItemResult = shoppingCartRepository.updateCartItem(
-                product.id,
-                UpdateCartItemType.DECREASE,
-            )
+            val updateCartItemResult =
+                shoppingCartRepository.updateCartItem(
+                    product.id,
+                    UpdateCartItemType.DECREASE,
+                )
             product.updateCartItemCount(updateCartItemResult.counter.itemCount)
             _shoppingCartEvent.value =
                 ShoppingCartEvent.UpdateProductEvent.Success(

@@ -16,7 +16,7 @@ class RecentlyProductRepositoryImpl(context: Context) : RecentlyProductRepositor
     override fun addRecentlyProduct(recentlyProduct: RecentlyProduct) {
         thread {
             recentlyProductDao.addRecentlyProduct(
-                recentlyProduct.toRecentlyProductEntity()
+                recentlyProduct.toRecentlyProductEntity(),
             )
         }
     }

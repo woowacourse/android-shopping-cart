@@ -74,7 +74,7 @@ class MockShoppingCartRepository : ShoppingCartRepository {
 
     override fun updateCartItem(
         itemId: Long,
-        updateCartItemType: UpdateCartItemType
+        updateCartItemType: UpdateCartItemType,
     ): CartItemResult {
         return CartItemResult(0, CartItemCounter())
     }

@@ -13,8 +13,8 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentlyProduct
-import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
+import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.MainActivityListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter

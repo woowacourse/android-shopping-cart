@@ -72,18 +72,19 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
             }
 
             is UpdateCartItemType.UPDATE -> {
-                Log.d("sdlfsdj",updateCartItemType.count.toString())
+                Log.d("sdlfsdj", updateCartItemType.count.toString())
                 cartItemResult.updateCount(updateCartItemType.count)
             }
         }
         var updateDataId = ERROR_UPDATE_DATA_ID
         thread {
-            updateDataId = cartItemDao.updateCartItemCount(
-                cartItemResult.cartItemId,
-                cartItemResult.counter.itemCount
-            )
+            updateDataId =
+                cartItemDao.updateCartItemCount(
+                    cartItemResult.cartItemId,
+                    cartItemResult.counter.itemCount,
+                )
         }.join()
-        Log.d("sdlfsdj",updateDataId.toString())
+        Log.d("sdlfsdj", updateDataId.toString())
         if (updateDataId == ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
         return cartItemResult
     }

@@ -3,8 +3,6 @@ package woowacourse.shopping.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
-import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.Product
 
 @Entity(tableName = CART_ITEMS_DB_NAME)

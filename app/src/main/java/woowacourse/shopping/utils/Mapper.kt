@@ -11,13 +11,13 @@ object Mapper {
         return CartItem(
             id = id,
             product =
-            product.copy(
-                id = product.id,
-                cartItemCounter = CartItemCounter(count),
-                imageUrl = product.imageUrl,
-                name = product.name,
-                price = product.price,
-            ),
+                product.copy(
+                    id = product.id,
+                    cartItemCounter = CartItemCounter(count),
+                    imageUrl = product.imageUrl,
+                    name = product.name,
+                    price = product.price,
+                ),
         )
     }
 

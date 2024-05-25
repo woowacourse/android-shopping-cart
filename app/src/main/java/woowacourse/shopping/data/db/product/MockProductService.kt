@@ -14,7 +14,7 @@ class MockProductService {
 
     fun findAll(): List<Product> {
         val body = Gson().toJson(ProductDatabase.products)
-        val serverRequest = makeServerRequest(body,DEFAULT_URL)
+        val serverRequest = makeServerRequest(body, DEFAULT_URL)
         val responseBody = makeResponse(serverRequest).body?.string() ?: return emptyList()
         val productType = object : TypeToken<List<Product>>() {}.type
         return Gson().fromJson(responseBody, productType)
@@ -40,7 +40,7 @@ class MockProductService {
                 ProductDatabase.products.drop(offset)
             }.take(pagingSize)
         val body = Gson().toJson(pagingData)
-        val serverRequest = makeServerRequest(body,"?offset=$offset&pagingSize=$pagingSize")
+        val serverRequest = makeServerRequest(body, "?offset=$offset&pagingSize=$pagingSize")
         val response: Response = client.newCall(serverRequest).execute()
         val responseBody = response.body?.string() ?: return emptyList()
         val productType = object : TypeToken<List<Product>>() {}.type
@@ -50,33 +50,32 @@ class MockProductService {
     private fun makeServerRequest(
         body: String,
         requestUrl: String,
-    ): Request{
+    ): Request  {
         val server = MockWebServer()
-        openServer(server,body)
+        openServer(server, body)
         return Request.Builder()
-            .url(makeServerUrl(server,requestUrl))
+            .url(makeServerUrl(server, requestUrl))
             .build()
     }
 
     private fun openServer(
         server: MockWebServer,
         body: String,
-    ){
+    )  {
         server.enqueue(MockResponse().setBody(body).setResponseCode(200))
     }
 
     private fun makeServerUrl(
-        server : MockWebServer,
+        server: MockWebServer,
         requestUrl: String,
-    ): String{
+    ): String  {
         val serverUrl = server.url(MOCK_SERVER_PATH).toString()
-        return "${serverUrl}${requestUrl}"
+        return "${serverUrl}$requestUrl"
     }
 
-    private fun makeResponse(serverRequest: Request): Response{
+    private fun makeResponse(serverRequest: Request): Response  {
         return client.newCall(serverRequest).execute()
     }
-
 
     companion object {
         private const val DEFAULT_URL = ""
