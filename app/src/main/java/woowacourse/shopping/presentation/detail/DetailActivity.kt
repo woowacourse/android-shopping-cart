@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.detail
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +7,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,12 +23,17 @@ class DetailActivity : AppCompatActivity() {
     private val productId by lazy {
         intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
     }
+    private val isLastlyViewed by lazy {
+        intent.getBooleanExtra(EXTRA_LASTLY_VIEWED, false)
+    }
     private val viewModel: DetailViewModel by viewModels {
         val application = application as ShoppingApplication
         DetailViewModelFactory(
             application.productRepository,
             application.cartRepository,
+            application.productHistoryRepository,
             productId,
+            isLastlyViewed,
         )
     }
 
@@ -62,9 +65,15 @@ class DetailActivity : AppCompatActivity() {
                 ),
             )
         }
-
-        viewModel.productInformation.observe(this) {
-            Log.i("TAG", "observeEvents: $it")
+        viewModel.navigateToDetailEvent.observe(this) { event ->
+            val data = event.getContentIfNotHandled()
+            val intent = newIntent(
+                this,
+                data?.productId ?: return@observe,
+                data.isLastlyViewed
+            )
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
         }
     }
 
@@ -110,13 +119,17 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
+        private const val EXTRA_LASTLY_VIEWED = "extra_lastly_viewed"
         private const val DEFAULT_PRODUCT_ID = -1L
 
         fun newIntent(
             context: Context,
             productId: Long,
+            isLastlyViewed: Boolean = false,
         ): Intent {
-            return Intent(context, DetailActivity::class.java).putExtra(EXTRA_PRODUCT_ID, productId)
+            return Intent(context, DetailActivity::class.java)
+                .putExtra(EXTRA_PRODUCT_ID, productId)
+                .putExtra(EXTRA_LASTLY_VIEWED, isLastlyViewed)
         }
     }
 }

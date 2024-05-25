@@ -1,10 +1,9 @@
-package woowacourse.shopping.data.local
+package woowacourse.shopping.data.database
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.ProductHistory
 import woowacourse.shopping.data.model.RecentProduct
 
@@ -12,6 +11,9 @@ import woowacourse.shopping.data.model.RecentProduct
 interface ProductHistoryDao {
     @Upsert
     fun insertProductHistory(productHistory: ProductHistory): Long
+
+    @Query("SELECT * FROM product_history ORDER BY productId DESC LIMIT 1")
+    fun getLastProduct(): RecentProduct
 
     @Transaction
     @Query("""

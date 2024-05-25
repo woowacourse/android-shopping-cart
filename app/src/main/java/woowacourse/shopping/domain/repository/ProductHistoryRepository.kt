@@ -8,4 +8,6 @@ interface ProductHistoryRepository {
     fun addProductHistory(productHistory: ProductHistory): Long
 
     fun fetchProductHistory(size: Int): List<RecentProduct>
+
+    fun fetchLatestHistory(): RecentProduct
 }

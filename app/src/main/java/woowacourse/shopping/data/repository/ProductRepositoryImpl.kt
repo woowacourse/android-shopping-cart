@@ -1,24 +1,40 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.local.ProductDao
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import woowacourse.shopping.data.database.ProductDao
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.data.remote.MockShoppingWebServer
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class ProductRepositoryImpl(private val productDao: ProductDao) : ProductRepository {
+class ProductRepositoryImpl(
+    private val shoppingWebServer: MockShoppingWebServer,
+    private val baseUrl: String = BASE_URL.dropLast(1),
+) : ProductRepository {
+    private val client = OkHttpClient()
+
     override fun fetchSinglePage(page: Int): List<CartableProduct> {
-        return productDao.getCartableProducts(page, PAGE_SIZE)
+        val request = Request.Builder()
+            .url("$baseUrl/products?page=$page&page-size=$PAGE_SIZE")
+            .build()
+        val result = client.newCall(request).execute().body?.string()
+        return shoppingWebServer.convertJsonToList(
+            result ?: "", CartableProduct::class.java
+        )
     }
 
     override fun fetchProduct(id: Long): CartableProduct {
-        return productDao.getCartableProduct(id)
-    }
-
-    override fun addAll(products: List<Product>) {
-        productDao.addAll(products)
+        val request = Request.Builder()
+            .url("$baseUrl/product?id=$id")
+            .build()
+        return shoppingWebServer.convertJsonToObject(
+            client.newCall(request).execute().body?.string() ?: "", CartableProduct::class.java
+        )
     }
 
     companion object {
+        private const val BASE_URL = "http://localhost:12345/"
         private const val PAGE_SIZE = 20
     }
 }

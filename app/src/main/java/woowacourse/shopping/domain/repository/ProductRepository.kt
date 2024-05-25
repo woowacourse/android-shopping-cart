@@ -7,6 +7,4 @@ interface ProductRepository {
     fun fetchSinglePage(page: Int): List<CartableProduct>
 
     fun fetchProduct(id: Long): CartableProduct
-
-    fun addAll(products: List<Product>)
 }

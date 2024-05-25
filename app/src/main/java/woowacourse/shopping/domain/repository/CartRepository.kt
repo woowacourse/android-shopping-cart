@@ -6,7 +6,7 @@ import woowacourse.shopping.data.model.CartedProduct
 interface CartRepository {
     fun fetchCartItems(page: Int): List<CartedProduct>
 
-    fun addCartItem(cartItem: CartItem): Long
+    fun addCartItem(cartItem: CartItem)
 
     fun fetchTotalCount(): Int
 
@@ -16,6 +16,4 @@ interface CartRepository {
     )
 
     fun removeCartItem(cartItem: CartItem)
-
-    fun removeAll()
 }

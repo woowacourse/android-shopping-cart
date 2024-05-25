@@ -90,10 +90,12 @@ class HomeActivity : AppCompatActivity() {
 
     private fun observeEvents() {
         viewModel.navigateToDetailEvent.observe(this) { event ->
+            val data = event.getContentIfNotHandled()
             activityResultLauncher.launch(
                 DetailActivity.newIntent(
                     this,
-                    event.getContentIfNotHandled() ?: return@observe,
+                     data?.productId ?: return@observe,
+                    data.isLastlyViewed
                 ),
             )
         }

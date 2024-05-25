@@ -29,8 +29,8 @@ class HomeViewModel(
     val loadStatus: LiveData<LoadStatus>
         get() = _loadStatus
 
-    private val _navigateToDetailEvent: MutableLiveData<Event<Long>> = MutableLiveData()
-    val navigateToDetailEvent: LiveData<Event<Long>>
+    private val _navigateToDetailEvent: MutableLiveData<Event<DetailNavigationData>> = MutableLiveData()
+    val navigateToDetailEvent: LiveData<Event<DetailNavigationData>>
         get() = _navigateToDetailEvent
 
     private val _navigateToCartEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
@@ -92,9 +92,10 @@ class HomeViewModel(
 
     override fun navigateToProductDetail(id: Long) {
         thread {
+            val lastlyViewedId = productHistoryRepository.fetchLatestHistory().product.id
             productHistoryRepository.addProductHistory(ProductHistory(productId = id))
             loadHistory()
-            _navigateToDetailEvent.postValue(Event(id))
+            _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, id == lastlyViewedId)))
         }
     }
 
@@ -141,3 +142,8 @@ class HomeViewModel(
         }
     }
 }
+
+data class DetailNavigationData(
+    val productId: Long,
+    val isLastlyViewed: Boolean,
+)

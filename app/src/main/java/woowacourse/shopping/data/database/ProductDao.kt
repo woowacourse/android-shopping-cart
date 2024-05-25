@@ -1,11 +1,10 @@
-package woowacourse.shopping.data.local
+package woowacourse.shopping.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.Product
 
