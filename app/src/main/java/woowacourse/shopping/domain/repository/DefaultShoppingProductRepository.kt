@@ -18,9 +18,19 @@ class DefaultShoppingProductRepository(
         }
     }
 
+    override fun loadProductsInCart(page: Int): List<Product> {
+        val allProductIdsInCart = cartSource.loadPaged(page)
+
+        return allProductIdsInCart.map { productIdsCountData ->
+            productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+        }
+    }
+
     override fun loadProduct(id: Int): Product = productsSource.findById(id).toDomain(productQuantity(id))
 
     override fun isFinalPage(page: Int): Boolean = productsSource.isFinalPage(page)
+
+    override fun isCartFinalPage(page: Int): Boolean = cartSource.isFinalPage(page)
 
     override fun shoppingCartProductQuantity(): Int = cartSource.loadAll().sumOf { it.quantity }
 
