@@ -11,8 +11,8 @@ import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
-import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.utils.SingleLiveData
+import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.cart.model.ShoppingCart
 import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 
@@ -85,24 +85,19 @@ class ShoppingCartViewModel(
 
     fun increaseCartItem(product: Product) {
         try {
-            when (val cartItemResult = getCartItemResult(product.id)) {
-                is CartItemResult.Exists -> {
-                    cartItemResult.counter.increase()
-                    shoppingCartRepository.updateCartItem(
-                        cartItemResult.cartItemId,
-                        cartItemResult.counter.itemCount,
-                    )
-                    product.updateItemSelector(true)
-                    product.updateCartItemCount(cartItemResult.counter.itemCount)
-                    _shoppingCartEvent.value =
-                        ShoppingCartEvent.UpdateProductEvent.Success(
-                            productId = product.id,
-                            count = product.cartItemCounter.itemCount,
-                        )
-                }
-
-                CartItemResult.NotExists -> throw NoSuchDataException()
-            }
+            val cartItemResult = getCartItemResult(product.id)
+            cartItemResult.counter.increase()
+            shoppingCartRepository.updateCartItem(
+                cartItemResult.cartItemId,
+                cartItemResult.counter.itemCount,
+            )
+            product.updateItemSelector(true)
+            product.updateCartItemCount(cartItemResult.counter.itemCount)
+            _shoppingCartEvent.value =
+                ShoppingCartEvent.UpdateProductEvent.Success(
+                    productId = product.id,
+                    count = product.cartItemCounter.itemCount,
+                )
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
@@ -115,31 +110,26 @@ class ShoppingCartViewModel(
 
     fun decreaseCartItem(product: Product) {
         try {
-            when (val cartItemResult = getCartItemResult(product.id)) {
-                is CartItemResult.Exists -> {
-                    when (product.cartItemCounter.decrease()) {
-                        ChangeCartItemResultState.Success -> {
-                            shoppingCartRepository.updateCartItem(
-                                cartItemResult.cartItemId,
-                                product.cartItemCounter.itemCount,
-                            )
-                            _shoppingCartEvent.value =
-                                ShoppingCartEvent.UpdateProductEvent.Success(
-                                    productId = product.id,
-                                    count = product.cartItemCounter.itemCount,
-                                )
-                        }
-
-                        ChangeCartItemResultState.Fail ->
-                            deleteShoppingCartItem(
-                                cartItemResult.cartItemId,
-                                itemCounter = cartItemResult.counter,
-                                productId = product.id,
-                            )
-                    }
+            val cartItemResult = getCartItemResult(product.id)
+            when (product.cartItemCounter.decrease()) {
+                ChangeCartItemResultState.Success -> {
+                    shoppingCartRepository.updateCartItem(
+                        cartItemResult.cartItemId,
+                        product.cartItemCounter.itemCount,
+                    )
+                    _shoppingCartEvent.value =
+                        ShoppingCartEvent.UpdateProductEvent.Success(
+                            productId = product.id,
+                            count = product.cartItemCounter.itemCount,
+                        )
                 }
 
-                CartItemResult.NotExists -> throw NoSuchDataException()
+                ChangeCartItemResultState.Fail ->
+                    deleteShoppingCartItem(
+                        cartItemResult.cartItemId,
+                        itemCounter = cartItemResult.counter,
+                        productId = product.id,
+                    )
             }
         } catch (e: Exception) {
             when (e) {
