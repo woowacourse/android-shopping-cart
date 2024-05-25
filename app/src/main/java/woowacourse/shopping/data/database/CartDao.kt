@@ -10,14 +10,16 @@ import woowacourse.shopping.data.model.CartedProduct
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM cart_item LIMIT :pageSize OFFSET :page * :pageSize")
-    fun getCartItems(
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM cart_item LIMIT :pageSize OFFSET :page * :pageSize
+    """,
+    )
+    fun getCartedProducts(
         page: Int,
         pageSize: Int,
-    ): List<CartItem>
-
-    @Query("SELECT * FROM cart_item WHERE id=:cartItemId")
-    fun getCartItem(cartItemId: Long): CartItem
+    ): List<CartedProduct>
 
     @Query("SELECT SUM(quantity) FROM cart_item")
     fun getTotalQuantity(): Int
@@ -33,18 +35,4 @@ interface CartDao {
 
     @Delete
     fun deleteCartItem(cartItem: CartItem)
-
-    @Query("DELETE FROM cart_item")
-    fun deleteAll()
-
-    @Transaction
-    @Query(
-        """
-        SELECT * FROM cart_item LIMIT :pageSize OFFSET :page * :pageSize
-    """,
-    )
-    fun getCartedProducts(
-        page: Int,
-        pageSize: Int,
-    ): List<CartedProduct>
 }

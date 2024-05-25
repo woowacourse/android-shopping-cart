@@ -9,12 +9,6 @@ import woowacourse.shopping.data.model.RecentProduct
 
 @Dao
 interface ProductHistoryDao {
-    @Upsert
-    fun insertProductHistory(productHistory: ProductHistory): Long
-
-    @Query("SELECT * FROM product_history ORDER BY productId DESC LIMIT 1")
-    fun getLastProduct(): RecentProduct
-
     @Transaction
     @Query(
         """
@@ -25,4 +19,10 @@ interface ProductHistoryDao {
     """,
     )
     fun getProductHistory(pageSize: Int): List<RecentProduct>
+
+    @Upsert
+    fun insertProductHistory(productHistory: ProductHistory): Long
+
+    @Query("SELECT * FROM product_history ORDER BY productId DESC LIMIT 1")
+    fun getLastProduct(): RecentProduct
 }
