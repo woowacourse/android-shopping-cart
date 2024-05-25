@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem.Companion.DEFAULT_CART_ITEM_ID
 import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_COUNT
-import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.Product.Companion.DEFAULT_PRODUCT_ID
 import woowacourse.shopping.domain.model.RecentlyProduct
@@ -14,8 +13,8 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
-import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.utils.SingleLiveData
+import woowacourse.shopping.utils.exception.NoSuchDataException
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -98,25 +97,13 @@ class ProductDetailViewModel(
 
     private fun loadProductItemCount(productId: Long): CartItemCounter {
         return try {
-            when (
-                val result =
-                    shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
-            ) {
-                is CartItemResult.Exists -> {
-                    cartItemId = result.cartItemId
-                    result.counter
-                }
-
-                CartItemResult.NotExists -> {
-                    CartItemCounter()
-                }
-            }
+            val result =
+                shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
+            cartItemId = result.cartItemId
+            result.counter
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException ->
-                    _errorEvent.postValue(
-                        ProductDetailEvent.LoadProductItem.Fail,
-                    )
+                is NoSuchDataException -> CartItemCounter()
 
                 else ->
                     _errorEvent.postValue(
