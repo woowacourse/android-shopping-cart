@@ -44,7 +44,8 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
                     result.data?.getLongArrayExtra(CHANGED_PRODUCT_ID) ?: longArrayOf()
                 viewModel.reloadProductOfInfo(changedProductId.toList())
 
-                val isRecentChanged = result.data?.getBooleanExtra(IS_RECENT_CHANGED, false) ?: false
+                val isRecentChanged =
+                    result.data?.getBooleanExtra(IS_RECENT_CHANGED, false) ?: false
                 if (isRecentChanged) viewModel.loadRecentProduct()
             }
         }
@@ -113,6 +114,15 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
             context: Context,
             isRecentChanged: Boolean,
         ) = Intent(context, ProductListActivity::class.java).apply {
+            putExtra(IS_RECENT_CHANGED, isRecentChanged)
+        }
+
+        fun recentAndChangeProductIntent(
+            context: Context,
+            changedProductIds: LongArray,
+            isRecentChanged: Boolean,
+        ) = Intent(context, ProductListActivity::class.java).apply {
+            putExtra(CHANGED_PRODUCT_ID, changedProductIds)
             putExtra(IS_RECENT_CHANGED, isRecentChanged)
         }
     }

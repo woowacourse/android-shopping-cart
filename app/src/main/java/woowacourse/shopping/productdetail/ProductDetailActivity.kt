@@ -55,7 +55,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
     private fun navigateToProductList() {
         viewModel.isAddSuccess.observe(this) { isSuccess ->
             if (isSuccess) {
-                updateInfoChangeAndFinish()
+                viewModel.updateRecentProduct(productId)
+                val intent = ProductListActivity.recentAndChangeProductIntent(this@ProductDetailActivity, longArrayOf(productId), true)
+                setResult(RESULT_OK, intent)
+                finish()
             }
         }
     }
@@ -91,7 +94,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_product_detail_close -> updateInfoChangeAndFinish()
+            R.id.menu_product_detail_close -> updateRecentInfoChangeAndFinish()
             else -> {}
         }
         return true
@@ -121,13 +124,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
         onBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    updateInfoChangeAndFinish()
+                    updateRecentInfoChangeAndFinish()
                 }
             }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
-    private fun updateInfoChangeAndFinish() {
+    private fun updateRecentInfoChangeAndFinish() {
         viewModel.updateRecentProduct(productId)
         val intent = ProductListActivity.recentInstance(this@ProductDetailActivity, true)
         setResult(RESULT_OK, intent)
