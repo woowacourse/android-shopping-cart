@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentViewedItemRepository
 import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.ProductUpdate
@@ -14,6 +15,7 @@ import woowacourse.shopping.view.ProductUpdate
 class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentViewedItemRepository: RecentViewedItemRepository,
 ) : ViewModel(), ProductListActionHandler, CountActionHandler {
     private val _products: MutableLiveData<PagingResult> =
         MutableLiveData(PagingResult(emptyList(), false))
@@ -29,12 +31,16 @@ class ProductListViewModel(
 
     val updateProductCount: LiveData<ProductUpdate> = _updateProductCount
 
-    private val _totalCount = MutableLiveData<Int>(0)
+    private val _totalCount = MutableLiveData(0)
     val totalCount: LiveData<Int> get() = _totalCount
+
+    private val _recentViewed: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
+    val recentViewed: LiveData<List<Product>> = _recentViewed
 
     init {
         loadPagingProductData()
         updateTotalCount()
+        updateRecentViewedItems()
     }
 
     private fun loadPagingProductData() {
@@ -57,8 +63,10 @@ class ProductListViewModel(
         _products.value = PagingResult(updatedProductList, hasNextPage)
     }
 
-    override fun onProductItemClicked(productId: Long) {
-        _navigateToDetail.value = Event(productId)
+    override fun onProductItemClicked(product: Product) {
+        _navigateToDetail.value = Event(product.id)
+        recentViewedItemRepository.addRecentViewedItem(product)
+        _recentViewed.value = recentViewedItemRepository.loadAllRecentViewedItems()
     }
 
     override fun onShoppingCartButtonClicked() {
@@ -83,6 +91,10 @@ class ProductListViewModel(
 
     fun updateTotalCount() {
         _totalCount.value = cartRepository.getTotalNumberOfCartItems()
+    }
+
+    fun updateRecentViewedItems() {
+        _recentViewed.value = recentViewedItemRepository.loadAllRecentViewedItems()
     }
 
     companion object {

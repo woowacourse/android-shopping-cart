@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentViewedItemRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.ShoppingCartFragment
@@ -29,11 +30,13 @@ class ProductsListFragment : Fragment() {
             ProductListViewModelFactory(
                 ProductRepositoryImpl(requireContext()),
                 CartRepositoryImpl(requireContext()),
+                RecentViewedItemRepositoryImpl(requireContext()),
             )
         viewModelFactory.create(ProductListViewModel::class.java)
     }
 
-    private lateinit var adapter: ProductAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentProductAdapter: RecentProductAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,24 +60,24 @@ class ProductsListFragment : Fragment() {
     private fun setUpDataBinding() {
         binding.viewModel = productListViewModel
         binding.productListActionHandler = productListViewModel
-        adapter =
+        productAdapter =
             ProductAdapter(
                 productListActionHandler = productListViewModel,
                 countActionHandler = productListViewModel,
             )
         binding.rvProducts.itemAnimator?.changeDuration = 0
-        binding.rvProducts.adapter = adapter
+        binding.rvProducts.adapter = productAdapter
         val layoutManager = GridLayoutManager(context, 2)
         layoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    if (adapter.getItemViewType(position) == LOAD_MORE_VIEW_TYPE) return 2
+                    if (productAdapter.getItemViewType(position) == LOAD_MORE_VIEW_TYPE) return 2
                     return 1
                 }
             }
         binding.rvProducts.layoutManager = layoutManager
 
-        val recentProductAdapter =
+        recentProductAdapter =
             RecentProductAdapter(
                 productListActionHandler = productListViewModel,
             )
@@ -83,11 +86,11 @@ class ProductsListFragment : Fragment() {
 
     private fun observeData() {
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
-            adapter.updateProducts(products.items, products.hasNextPage)
+            productAdapter.updateProducts(products.items, products.hasNextPage)
         }
 
         productListViewModel.updateProductCount.observe(viewLifecycleOwner) { updatedInfo ->
-            adapter.updateProductQuantity(updatedInfo.productId, updatedInfo.updatedQuantity)
+            productAdapter.updateProductQuantity(updatedInfo.productId, updatedInfo.updatedQuantity)
         }
 
         productListViewModel.navigateToCart.observe(viewLifecycleOwner) {
@@ -102,9 +105,13 @@ class ProductsListFragment : Fragment() {
             }
         }
 
+        productListViewModel.recentViewed.observe(viewLifecycleOwner) {
+            recentProductAdapter.updateRecentProducts(it)
+        }
+
         sharedViewModel.updateProductEvent.observe(viewLifecycleOwner) { updatedInfo ->
             updatedInfo.getContentIfNotHandled()?.let {
-                adapter.updateProductQuantity(it.productId, it.updatedQuantity)
+                productAdapter.updateProductQuantity(it.productId, it.updatedQuantity)
                 productListViewModel.updateTotalCount()
             }
         }

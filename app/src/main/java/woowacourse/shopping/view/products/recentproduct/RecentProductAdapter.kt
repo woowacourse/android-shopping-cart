@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.products.ProductListActionHandler
 
 class RecentProductAdapter(val productListActionHandler: ProductListActionHandler) : RecyclerView.Adapter<RecentProductViewHolder>() {
-    private val recentProducts: MutableList<Product> = mutableListOf()
+    private var recentProducts: List<Product> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,14 +35,8 @@ class RecentProductAdapter(val productListActionHandler: ProductListActionHandle
     }
 
     fun updateRecentProducts(newRecentProducts: List<Product>) {
-        val before = recentProducts.size
-        if (before == 0) {
-            recentProducts.addAll(newRecentProducts)
-            notifyItemInserted(newRecentProducts.size)
-        } else {
-            val updated = newRecentProducts.drop(before - 1)
-            recentProducts.addAll(updated)
-            notifyItemRangeChanged(before, newRecentProducts.size)
-        }
+        val addedCount = newRecentProducts.size - recentProducts.size
+        recentProducts = newRecentProducts
+        notifyItemRangeInserted(0, addedCount)
     }
 }
