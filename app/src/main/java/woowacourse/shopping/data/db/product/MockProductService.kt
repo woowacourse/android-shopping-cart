@@ -11,33 +11,20 @@ import woowacourse.shopping.domain.model.Product
 
 class MockProductService {
     private val client = OkHttpClient()
-    private val productsJson: String = Gson().toJson(ProductDatabase.products)
 
     fun findAll(): List<Product> {
-        val server = MockWebServer()
-        server.enqueue(MockResponse().setBody(productsJson).setResponseCode(200))
-        val serverUrl = server.url("/").toString()
-        val request =
-            Request.Builder()
-                .url("$serverUrl/$MOCK_SERVER_URL")
-                .build()
-        val response: Response = client.newCall(request).execute()
-        val responseBody = response.body?.string() ?: return emptyList()
+        val body = Gson().toJson(ProductDatabase.products)
+        val serverRequest = makeServerRequest(body,DEFAULT_URL)
+        val responseBody = makeResponse(serverRequest).body?.string() ?: return emptyList()
         val productType = object : TypeToken<List<Product>>() {}.type
         return Gson().fromJson(responseBody, productType)
     }
 
     fun findProductById(productId: Long): Product? {
         val product = ProductDatabase.products.find { it.id == productId }
-        val server = MockWebServer()
-        server.enqueue(MockResponse().setBody(Gson().toJson(product)).setResponseCode(200))
-        val serverUrl = server.url("/").toString()
-        val request =
-            Request.Builder()
-                .url("$serverUrl/products/$productId")
-                .build()
-
-        val response: Response = client.newCall(request).execute()
+        val body = Gson().toJson(product)
+        val serverRequest = makeServerRequest(body, productId.toString())
+        val response: Response = client.newCall(serverRequest).execute()
         val responseBody = response.body?.string() ?: return null
         return Gson().fromJson(responseBody, Product::class.java)
     }
@@ -46,28 +33,53 @@ class MockProductService {
         offset: Int,
         pagingSize: Int,
     ): List<Product> {
-        val server = MockWebServer()
         val pagingData =
             if (offset >= ProductDatabase.products.size) {
                 emptyList()
             } else {
                 ProductDatabase.products.drop(offset)
             }.take(pagingSize)
-
-        server.enqueue(MockResponse().setBody(Gson().toJson(pagingData)).setResponseCode(200))
-        val serverUrl = server.url("/").toString()
-        val request =
-            Request.Builder()
-                .url("$serverUrl/products?offset=$offset&pagingSize=$pagingSize")
-                .build()
-
-        val response: Response = client.newCall(request).execute()
+        val body = Gson().toJson(pagingData)
+        val serverRequest = makeServerRequest(body,"?offset=$offset&pagingSize=$pagingSize")
+        val response: Response = client.newCall(serverRequest).execute()
         val responseBody = response.body?.string() ?: return emptyList()
         val productType = object : TypeToken<List<Product>>() {}.type
         return Gson().fromJson(responseBody, productType)
     }
 
+    private fun makeServerRequest(
+        body: String,
+        requestUrl: String,
+    ): Request{
+        val server = MockWebServer()
+        openServer(server,body)
+        return Request.Builder()
+            .url(makeServerUrl(server,requestUrl))
+            .build()
+    }
+
+    private fun openServer(
+        server: MockWebServer,
+        body: String,
+    ){
+        server.enqueue(MockResponse().setBody(body).setResponseCode(200))
+    }
+
+    private fun makeServerUrl(
+        server : MockWebServer,
+        requestUrl: String,
+    ): String{
+        val serverUrl = server.url(MOCK_SERVER_PATH).toString()
+        return "${serverUrl}${requestUrl}"
+    }
+
+    private fun makeResponse(serverRequest: Request): Response{
+        return client.newCall(serverRequest).execute()
+    }
+
+
     companion object {
-        private const val MOCK_SERVER_URL = "/products"
+        private const val DEFAULT_URL = ""
+        private const val MOCK_SERVER_PATH = "/products"
     }
 }
