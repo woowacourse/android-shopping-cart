@@ -5,8 +5,6 @@ import woowacourse.shopping.util.UiState
 sealed class LoadProductState() : UiState {
     abstract val currentProducts: ProductUiModels
 
-    data object BeforeInit : UiState.Loading
-
     data class ShowProducts(
         override val result: ProductUiModels,
         override val currentProducts: ProductUiModels,
@@ -22,6 +20,4 @@ sealed class LoadProductState() : UiState {
     data class PlusFail(override val currentProducts: ProductUiModels) :
         LoadProductState(),
         UiState.Fail
-
-    data class Error(override val throwable: Throwable?) : UiState.Error
 }
