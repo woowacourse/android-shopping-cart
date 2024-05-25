@@ -77,8 +77,8 @@ class ProductDetailViewModel(
         try {
             val loadItemCounter = loadProductItemCount(productId)
             val product = productRepository.getProduct(productId)
-            product.itemSelector.selectItem()
-            product.cartItemCounter.updateCount(loadItemCounter.itemCount)
+            product.updateItemSelector(true)
+            product.updateCartItemCount(loadItemCounter.itemCount)
             loadRecentlyProduct(product)
             _product.value = product
         } catch (e: Exception) {
@@ -169,8 +169,8 @@ class ProductDetailViewModel(
             deletePrevRecentlyProduct(recentlyProduct.id)
             val loadItemCounter = loadProductItemCount(recentlyProduct.productId)
             val product = productRepository.getProduct(recentlyProduct.productId)
-            product.itemSelector.selectItem()
-            product.cartItemCounter.updateCount(loadItemCounter.itemCount)
+            product.updateItemSelector(true)
+            product.updateCartItemCount(loadItemCounter.itemCount)
             _product.value = product
             _recentlyProduct.value = RecentlyProduct.defaultRecentlyProduct
             _productDetailEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Success)

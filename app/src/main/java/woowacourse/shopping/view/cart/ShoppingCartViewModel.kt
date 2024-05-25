@@ -93,8 +93,8 @@ class ShoppingCartViewModel(
                         cartItemResult.cartItemId,
                         cartItemResult.counter.itemCount,
                     )
-                    product.itemSelector.selectItem()
-                    product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
+                    product.updateItemSelector(true)
+                    product.updateCartItemCount(cartItemResult.counter.itemCount)
                     _shoppingCartEvent.value =
                         ShoppingCartEvent.UpdateProductEvent.Success(
                             productId = product.id,

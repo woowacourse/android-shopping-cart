@@ -8,6 +8,17 @@ data class Product(
     val cartItemCounter: CartItemCounter = CartItemCounter(),
     val itemSelector: ItemSelector = ItemSelector(),
 ) {
+    fun updateCartItemCount(newCount: Int){
+        cartItemCounter.updateCount(newCount)
+    }
+
+    fun updateItemSelector(isSelected: Boolean){
+        when(isSelected){
+            true -> itemSelector.selectItem()
+            false -> itemSelector.unSelectItem()
+        }
+    }
+
     companion object {
         const val DEFAULT_PRODUCT_ID = -1L
         val defaultProduct =

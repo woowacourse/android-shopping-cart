@@ -78,15 +78,15 @@ class ProductListViewModel(
                         cartItemResult.cartItemId,
                         cartItemResult.counter.itemCount,
                     )
-                    product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
+                    product.updateCartItemCount(cartItemResult.counter.itemCount)
                 }
 
                 CartItemResult.NotExists -> {
                     shoppingCartRepository.addCartItem(product)
-                    product.cartItemCounter.updateCount(DEFAULT_CART_ITEM_COUNT)
+                    product.updateCartItemCount(DEFAULT_CART_ITEM_COUNT)
                 }
             }
-            product.itemSelector.selectItem()
+            product.updateItemSelector(true)
             _cartItemCount.value = _cartItemCount.value?.plus(DEFAULT_CART_ITEM_COUNT)
             _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
         } catch (e: Exception) {
@@ -137,7 +137,7 @@ class ProductListViewModel(
     ) {
         try {
             shoppingCartRepository.deleteCartItem(cartItemId)
-            product.itemSelector.unSelectItem()
+            product.updateItemSelector(false)
             _productListEvent.postValue(ProductListEvent.DeleteProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
@@ -157,8 +157,8 @@ class ProductListViewModel(
         products.value?.forEach { product ->
             val count = items[product.id]
             if (count != null) {
-                if (count == DEFAULT_ITEM_COUNT) product.itemSelector.unSelectItem()
-                product.cartItemCounter.updateCount(count)
+                if (count == DEFAULT_ITEM_COUNT) product.updateItemSelector(false)
+                product.updateCartItemCount(count)
                 _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
             }
         }
