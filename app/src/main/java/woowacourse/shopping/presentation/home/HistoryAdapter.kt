@@ -33,8 +33,9 @@ class HistoryAdapter(
     }
 
     override fun setData(data: List<RecentProduct>) {
+        val previousSize = historyItems.size
         historyItems = data
-        notifyDataSetChanged()
+        notifyItemRangeInserted(previousSize, historyItems.size - previousSize)
     }
 
     class HistoryItemViewHolder(

@@ -65,9 +65,10 @@ class HomeViewModel(
                     loadingAvailable = false,
                 ),
             )
-            val currentPageData = nextPageProducts.ifEmpty {
-                productRepository.fetchSinglePage(page)
-            }
+            val currentPageData =
+                nextPageProducts.ifEmpty {
+                    productRepository.fetchSinglePage(page)
+                }
             nextPageProducts = productRepository.fetchSinglePage(++page)
             _products.postValue(products.value?.plus(currentPageData))
             val isLoadingAvailable = nextPageProducts.isNotEmpty()

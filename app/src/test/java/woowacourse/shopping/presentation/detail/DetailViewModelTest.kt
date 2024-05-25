@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.product.Product
-import woowacourse.shopping.domain.repository.cart.CartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
+import woowacourse.shopping.domain.repository.cart.CartRepository
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class DetailViewModelTest {

@@ -74,10 +74,8 @@ class ProductAdapter(
     override fun setData(data: List<CartableProduct>) {
         val previousSize = products.size
         products = data
-        if (previousSize != data.size) {
-            notifyItemRangeInserted(previousSize, data.size)
-        } else {
-            notifyDataSetChanged()
+        if (previousSize != products.size) {
+            notifyItemRangeInserted(previousSize, products.size - previousSize)
         }
     }
 
