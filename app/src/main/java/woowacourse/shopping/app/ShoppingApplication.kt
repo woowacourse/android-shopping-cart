@@ -1,6 +1,7 @@
-package woowacourse.shopping
+package woowacourse.shopping.app
 
 import android.app.Application
+import woowacourse.shopping.app.AppErrorHandler.provideErrorListener
 import woowacourse.shopping.data.datasource.local.ProductHistoryDataSource
 import woowacourse.shopping.data.datasource.local.ShoppingCartDataSource
 import woowacourse.shopping.data.datasource.remote.ProductDataSource
@@ -32,8 +33,14 @@ class ShoppingApplication : Application() {
         ProductHistoryRepositoryImpl(productHistoryDataSource)
     }
 
-    private val productDataSource: ProductDataSource by lazy { ProductDataSourceImpl(NetworkModule()) }
-    val productRepository: ProductRepository by lazy { ProductRepositoryImpl(productDataSource, shoppingCartDataSource) }
+    private val networkModule = NetworkModule(provideErrorListener(this))
+    private val productDataSource: ProductDataSource by lazy { ProductDataSourceImpl(networkModule) }
+    val productRepository: ProductRepository by lazy {
+        ProductRepositoryImpl(
+            productDataSource,
+            shoppingCartDataSource,
+        )
+    }
 
     override fun onCreate() {
         super.onCreate()

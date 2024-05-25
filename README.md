@@ -151,3 +151,76 @@ LiveData를 통해 일회성 Event 처리를 하고 싶었지만 위에서 언�
 - 안드로이드 앱에서 화면 회전 및 구성 변경과 같은 구성 변경 시에도 데이터를 보존하고 유지하기 위해 사용되는 클래스.
 - 구성 변경이 발생할 때마다 새로운 ViewModel 인스턴스가 생성되지 않고, 이전에 생성된 ViewModel이 재사용됨.
 - 액티비티 또는 프래그먼트와는 별개의 생명 주기를 가지며, 액티비티 또는 프래그먼트의 생명 주기에 영향을 받지 않음.
+
+
+## UDF
+
+
+## 애니메이션
+
+```kotlin
+
+
+ class ProductViewHolder(
+            private val binding: HolderProductBinding,
+            private val actionHandler: ProductListActionHandler,
+            private val productCountHandler: ProductCountHandler,
+        ) : ProductListViewHolder(binding.root) {
+            init {
+                if (expandAnimator == null) {
+                    binding.includeProductCount.counterContainer.post {
+                        expandAnimator = setupAnimators()
+                    }
+                } else {
+                    binding.includeProductCount.counterContainer.post {
+                        binding.includeProductCount.counterContainer.layoutParams.width = 120
+                    }
+                }
+            }
+
+            fun bind(product: Product) {
+                binding.product = product
+                binding.actionHandler = actionHandler
+                binding.productCountHandler = productCountHandler
+
+                if (expandAnimator != null) {
+                    if (product.quantity == 1) {
+                        if (product.isExpanded == 1) {
+                            binding.includeProductCount.counterContainer.post {
+                                expandAnimator?.start()
+                            }
+                        }
+                    } else if (product.quantity == 0) {
+                        if (product.isExpanded == 2) {
+                            binding.includeProductCount.counterContainer.post {
+                                expandAnimator?.reverse()
+                            }
+                        }
+                    } else {
+                        binding.includeProductCount.counterContainer.post {
+                            binding.includeProductCount.counterContainer.layoutParams.width = 350
+                        }
+                    }
+                }
+            }
+
+            private fun setupAnimators(): ValueAnimator {
+                val initSize = binding.includeProductCount.counterContainer.width
+                val collapsedSize = binding.includeProductCount.ivPlus.width
+
+                return ValueAnimator.ofInt(collapsedSize, initSize).apply {
+                    duration = 250
+                    addUpdateListener { animation ->
+                        val value = animation.animatedValue as Int
+                        binding.includeProductCount.counterContainer.layoutParams.width = value
+                        binding.includeProductCount.counterContainer.requestLayout()
+                    }
+                }
+            }
+
+            companion object {
+                private var expandAnimator: ValueAnimator? = null
+            }
+        }
+
+```

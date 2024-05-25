@@ -12,11 +12,11 @@ import woowacourse.shopping.remote.api.ApiClient.GET_PAGING_PRODUCT
 import woowacourse.shopping.remote.model.ProductResponse
 import kotlin.concurrent.thread
 
-class NetworkModule : ApiService {
+class NetworkModule(private val errorListener: ErrorListener) : ApiService {
     private val server =
         MockWebServer().apply {
             thread {
-                dispatcher = NetworkDispatcher
+                dispatcher = NetworkDispatcher(errorListener)
                 start(BASE_PORT)
             }
         }

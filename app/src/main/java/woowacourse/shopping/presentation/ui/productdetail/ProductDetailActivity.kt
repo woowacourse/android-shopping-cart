@@ -7,11 +7,12 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.app.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
+import woowacourse.shopping.presentation.ui.error.ErrorActivity
 import woowacourse.shopping.presentation.ui.productlist.ProductListActivity
 
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
@@ -83,6 +84,16 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
                     }
             }
         }
+
+        viewModel.error.observeEvent(this) { errorState ->
+            val intent =
+                ErrorActivity.getIntent(
+                    this,
+                    errorState.title,
+                    errorState.description,
+                )
+            startActivity(intent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -95,6 +106,11 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
             R.id.menu_product_detai_closed -> viewModel.navigateToProductList()
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refresh(viewModel.id)
     }
 
     @SuppressLint("MissingSuperCall")

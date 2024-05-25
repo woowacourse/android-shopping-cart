@@ -10,7 +10,7 @@ import woowacourse.shopping.remote.api.ApiClient.GET_FIND_PRODUCT_PATH
 import woowacourse.shopping.remote.api.ApiClient.GET_PAGING_PRODUCT_PATH
 import kotlin.math.min
 
-object NetworkDispatcher : Dispatcher() {
+class NetworkDispatcher(private val errorListener: ErrorListener) : Dispatcher() {
     private val gson = Gson()
 
     override fun dispatch(request: RecordedRequest): MockResponse {
@@ -45,14 +45,17 @@ object NetworkDispatcher : Dispatcher() {
                             .setResponseCode(200)
                             .setBody(gson.toJson(body))
                     } else {
+                        errorListener.handleNetworkError()
                         MockResponse().setResponseCode(404)
                     }
                 } else {
+                    errorListener.handleNetworkError()
                     MockResponse().setResponseCode(404)
                 }
             }
 
             else -> {
+                errorListener.handleNetworkError()
                 MockResponse().setResponseCode(404)
             }
         }

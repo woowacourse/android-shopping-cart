@@ -6,11 +6,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.app.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
+import woowacourse.shopping.presentation.ui.error.ErrorActivity
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductHistoryListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
@@ -104,6 +105,16 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
             when (message) {
                 is MessageProvider.DefaultErrorMessage -> showToastMessage(message.getMessage(this))
             }
+        }
+
+        viewModel.error.observeEvent(this) { errorState ->
+            val intent =
+                ErrorActivity.getIntent(
+                    this,
+                    errorState.title,
+                    errorState.description,
+                )
+            startActivity(intent)
         }
     }
 

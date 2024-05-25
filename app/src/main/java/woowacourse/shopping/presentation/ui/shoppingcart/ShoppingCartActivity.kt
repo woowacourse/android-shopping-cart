@@ -7,11 +7,12 @@ import android.content.Intent
 import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.app.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
+import woowacourse.shopping.presentation.ui.error.ErrorActivity
 import woowacourse.shopping.presentation.ui.productlist.ProductListActivity
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.CartProductsAdapter
 
@@ -75,6 +76,16 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
                     finish()
                 }
             }
+        }
+
+        viewModel.error.observeEvent(this) { errorState ->
+            val intent =
+                ErrorActivity.getIntent(
+                    this,
+                    errorState.title,
+                    errorState.description,
+                )
+            startActivity(intent)
         }
     }
 

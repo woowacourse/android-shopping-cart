@@ -24,6 +24,7 @@ class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
     private val productHistoryRepository: ProductHistoryRepository,
 ) : BaseViewModel(), ProductCountHandler {
+    val id = requireNotNull(savedStateHandle.get<Long>(PUT_EXTRA_PRODUCT_ID))
     private val _uiState: MutableLiveData<ProductDetailUiState> =
         MutableLiveData(ProductDetailUiState())
     val uiState: LiveData<ProductDetailUiState> get() = _uiState
@@ -33,9 +34,7 @@ class ProductDetailViewModel(
     val navigateAction: LiveData<Event<ProductDetailNavigateAction>> get() = _navigateAction
 
     init {
-        savedStateHandle.get<Long>(PUT_EXTRA_PRODUCT_ID)?.let { productId ->
-            getProduct(productId)
-        }
+        getProduct(id)
     }
 
     private fun getProduct(id: Long) {
