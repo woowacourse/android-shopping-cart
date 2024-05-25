@@ -71,8 +71,8 @@ class CartViewModel(
     fun minusCount(productId: Long) {
         thread {
             cartRepository.minusQuantityByProductId(productId)
-            loadCartItems()
-        }.start()
+        }.join()
+        loadCartItems()
     }
 
     private fun productWithQuantity(cart: Cart): ProductWithQuantity {
