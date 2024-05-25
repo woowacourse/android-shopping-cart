@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -94,7 +93,6 @@ class ProductDetailViewModel(
         }.onSuccess {
             _isSuccessAddCart.value = Event(true)
         }.onFailure {
-            Log.e("TEST", "${it.localizedMessage}")
             _isSuccessAddCart.value = Event(false)
         }
     }

@@ -51,7 +51,7 @@ class CartActivity : AppCompatActivity() {
         binding.rvCart.adapter = adapter
 
         viewModel.productUiModels.observe(this) {
-            adapter.changeCartItems(it)
+            adapter.updateCartItems(it)
         }
     }
 }

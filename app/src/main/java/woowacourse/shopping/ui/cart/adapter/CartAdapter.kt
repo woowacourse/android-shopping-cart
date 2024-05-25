@@ -14,7 +14,7 @@ class CartAdapter(
     private val onIncreaseProductQuantity: OnIncreaseProductQuantity,
     private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val productUiModels: MutableList<ProductUiModel> = mutableListOf()
+    private val products: MutableList<ProductUiModel> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,7 +30,7 @@ class CartAdapter(
         position: Int,
     ) {
         holder.bind(
-            productUiModels[position],
+            products[position],
             onClickExit,
             onIncreaseProductQuantity,
             onDecreaseProductQuantity,
@@ -38,13 +38,44 @@ class CartAdapter(
     }
 
     override fun getItemCount(): Int {
-        return productUiModels.size
+        return products.size
+    }
+
+    fun updateCartItems(updatedProducts: List<ProductUiModel>) {
+        val newProducts = updatedProducts.subtract(products.toSet())
+        if (newProducts.size == updatedProducts.size) {
+            changeAllProduct(newProducts)
+            return
+        }
+
+        if (products.size > updatedProducts.size) {
+            val oldProducts = products.subtract(updatedProducts.toSet())
+            oldProducts.forEach { deleteProduct(it) }
+        }
+
+        newProducts.forEach { changeProduct(it) }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun changeCartItems(productUiModels: List<ProductUiModel>) {
-        this.productUiModels.clear()
-        this.productUiModels.addAll(productUiModels)
+    private fun changeAllProduct(newProducts: Set<ProductUiModel>) {
+        products.clear()
+        products.addAll(newProducts)
         notifyDataSetChanged()
+    }
+
+    private fun deleteProduct(oldProduct: ProductUiModel) {
+        val position = productPosition(oldProduct.productId)
+        products.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    private fun changeProduct(newProduct: ProductUiModel) {
+        val position = productPosition(newProduct.productId)
+        products[position] = newProduct
+        notifyItemChanged(position)
+    }
+
+    private fun productPosition(productId: Long): Int {
+        return products.indexOfFirst { it.productId == productId }
     }
 }
