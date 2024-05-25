@@ -13,4 +13,7 @@ interface RecentViewedItemDao {
 
     @Query("SELECT * FROM $RECENT_VIEWED_ITEM_DB_NAME ORDER BY viewedAt DESC")
     fun findAllItemsByMostRecent(): List<RecentViewedItemEntity>
+
+    @Query("SELECT * FROM $RECENT_VIEWED_ITEM_DB_NAME ORDER BY viewedAt DESC LIMIT 1")
+    fun findItemByMostRecent(): RecentViewedItemEntity?
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentViewedItemRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.MainViewModel
@@ -24,6 +25,7 @@ class ProductDetailFragment : Fragment() {
             DetailViewModelFactory(
                 ProductRepositoryImpl(requireContext()),
                 CartRepositoryImpl(requireContext()),
+                RecentViewedItemRepositoryImpl(requireContext()),
                 receiveProductId(),
             )
         viewModelFactory.create(ProductDetailViewModel::class.java)
@@ -66,7 +68,14 @@ class ProductDetailFragment : Fragment() {
         }
 
         productDetailViewModel.navigateToBack.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { parentFragmentManager.popBackStack() }
+            it.getContentIfNotHandled()?.let { shouldUpdate ->
+                if (shouldUpdate) {
+                    productDetailViewModel.product.value?.let { product ->
+                        sharedViewModel.setUpdatedRecentViewedProduct(product)
+                    }
+                }
+                parentFragmentManager.popBackStack()
+            }
         }
     }
 
@@ -86,10 +95,17 @@ class ProductDetailFragment : Fragment() {
     private fun showToastMessage(message: Int) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
-        fun createBundle(id: Long): Bundle {
-            return Bundle().apply { putLong(PRODUCT_ID, id) }
+        fun createBundle(
+            productId: Long,
+            recentProductId: Long = -1,
+        ): Bundle {
+            return Bundle().apply {
+                putLong(PRODUCT_ID, productId)
+                putLong(RECENT_VIEWED_PRODUCT_ID, recentProductId)
+            }
         }
 
         private const val PRODUCT_ID = "productId"
+        private const val RECENT_VIEWED_PRODUCT_ID = "recentViewedProductId"
     }
 }

@@ -5,5 +5,7 @@ import woowacourse.shopping.domain.model.Product
 interface RecentViewedItemRepository {
     fun loadAllRecentViewedItems(maxItemCount: Int): List<Product>
 
-    fun addRecentViewedItem(product: Product)
+    fun saveRecentViewedItem(product: Product)
+
+    fun getLastViewedProduct(): Product
 }

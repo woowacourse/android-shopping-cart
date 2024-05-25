@@ -7,6 +7,7 @@ import androidx.lifecycle.switchMap
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentViewedItemRepository
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.Event
@@ -14,6 +15,7 @@ import woowacourse.shopping.view.Event
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentViewedItemRepository: RecentViewedItemRepository,
     private val productId: Long,
 ) : ViewModel(), DetailActionHandler, CountActionHandler {
     private val _product: MutableLiveData<Product> = MutableLiveData()
@@ -34,6 +36,10 @@ class ProductDetailViewModel(
             MutableLiveData(quantityValue * price)
         }
 
+    val lastViewedProduct: Product by lazy {
+        recentViewedItemRepository.getLastViewedProduct()
+    }
+
     init {
         loadProductItem()
     }
@@ -43,7 +49,14 @@ class ProductDetailViewModel(
     }
 
     override fun onCloseButtonClicked() {
-        _navigateToBack.value = Event(true)
+        var shouldUpdate = false
+        product.value?.let {
+            if (lastViewedProduct.id != it.id) {
+                recentViewedItemRepository.saveRecentViewedItem(it)
+                shouldUpdate = true
+            }
+        }
+        _navigateToBack.value = Event(shouldUpdate)
     }
 
     override fun onAddCartButtonClicked() {

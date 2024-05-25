@@ -65,8 +65,6 @@ class ProductListViewModel(
 
     override fun onProductItemClicked(product: Product) {
         _navigateToDetail.value = Event(product.id)
-        recentViewedItemRepository.addRecentViewedItem(product)
-        updateRecentViewedItems()
     }
 
     override fun onShoppingCartButtonClicked() {

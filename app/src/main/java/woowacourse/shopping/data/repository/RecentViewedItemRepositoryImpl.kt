@@ -19,8 +19,14 @@ class RecentViewedItemRepositoryImpl(context: Context) : RecentViewedItemReposit
         return recentItems.take(maxItemCount)
     }
 
-    override fun addRecentViewedItem(product: Product) {
+    override fun saveRecentViewedItem(product: Product) {
         val newEntity = makeRecentViewedItemEntity(product)
         thread { recentViewedItemDao.saveRecentViewedItem(newEntity) }.join()
+    }
+
+    override fun getLastViewedProduct(): Product {
+        var lastViewed: Product? = null
+        thread { lastViewed = recentViewedItemDao.findItemByMostRecent()?.product }.join()
+        return lastViewed ?: Product.INVALID_PRODUCT
     }
 }

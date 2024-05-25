@@ -115,6 +115,12 @@ class ProductsListFragment : Fragment() {
                 productListViewModel.updateTotalCount()
             }
         }
+
+        sharedViewModel.updatedRecentProduct.observe(viewLifecycleOwner) { updatedRecentViewed ->
+            updatedRecentViewed.getContentIfNotHandled()?.let {
+                productListViewModel.updateRecentViewedItems()
+            }
+        }
     }
 
     private fun navigateToShoppingCart() {
