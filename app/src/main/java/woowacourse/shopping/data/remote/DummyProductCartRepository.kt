@@ -32,7 +32,7 @@ object DummyProductCartRepository : ProductCartRepository {
         pageSize: Int,
     ): Result<List<Cart>> =
         runCatching {
-            val carts = cartMap.map { Cart(it.key, it.value) }.toList()
+            val carts = cartMap.map { Cart(0, 0) }.toList()
             val startIndex = pageOffset * pageSize
             val endIndex = min(startIndex + pageSize, carts.size)
             carts.subList(startIndex, endIndex)

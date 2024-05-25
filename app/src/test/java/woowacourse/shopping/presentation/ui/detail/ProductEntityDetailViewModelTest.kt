@@ -18,7 +18,7 @@ import woowacourse.shopping.product
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 @ExtendWith(MockKExtension::class)
-class ProductDetailViewModelTest {
+class ProductEntityDetailViewModelTest {
     @MockK
     private lateinit var productRepository: ProductRepository
 

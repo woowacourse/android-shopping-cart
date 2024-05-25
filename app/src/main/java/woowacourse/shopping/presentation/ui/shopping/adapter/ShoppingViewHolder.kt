@@ -4,16 +4,18 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.data.local.entity.CartProduct
+import woowacourse.shopping.data.local.entity.CartProductEntity
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
 
 sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class ProductViewHolder(
         private val binding: ItemProductBinding,
         private val shoppingHandler: ShoppingHandler,
+        private val shoppingActionHandler: ShoppingActionHandler
     ) :
         ShoppingViewHolder(binding.root) {
         private var id: Long = -1
@@ -25,12 +27,9 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         fun bind(item: CartProduct) {
+            binding.cartProduct = item
+            binding.shoppingActionHandler = shoppingActionHandler
             id = item.productId
-            binding.tvName.text = item.name
-            binding.tvPrice.text = binding.root.context.getString(R.string.won, item.price)
-            Glide.with(binding.root.context)
-                .load(item.imgUrl)
-                .into(binding.imgItem)
         }
     }
 

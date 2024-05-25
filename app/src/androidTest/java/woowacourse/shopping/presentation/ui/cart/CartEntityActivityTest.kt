@@ -19,7 +19,7 @@ import woowacourse.shopping.data.remote.DummyProductCartRepository
 import woowacourse.shopping.presentation.ui.dummyProduct
 
 @RunWith(AndroidJUnit4::class)
-class CartActivityTest {
+class CartEntityActivityTest {
     @Test
     fun `장바구니에_아이템_리스트가_보여진다`() {
         ActivityScenario.launch(CartActivity::class.java)

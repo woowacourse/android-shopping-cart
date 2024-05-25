@@ -25,7 +25,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
             }
 
             modelClass.isAssignableFrom(CartViewModel::class.java) -> {
-                CartViewModel(DummyProductCartRepository) as T
+                CartViewModel(RepositoryImpl(RoomDataSource(AppDatabase.instance?.cartProductDao() ?: throw IllegalStateException("DB is not initialized")))) as T
             }
 
             else -> {

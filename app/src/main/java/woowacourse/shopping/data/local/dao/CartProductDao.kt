@@ -1,33 +1,37 @@
 package woowacourse.shopping.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import woowacourse.shopping.data.local.entity.Cart
-import woowacourse.shopping.data.local.entity.CartProduct
-import woowacourse.shopping.data.local.entity.Product
+import woowacourse.shopping.data.local.entity.CartEntity
+import woowacourse.shopping.data.local.entity.CartProductEntity
+import woowacourse.shopping.data.local.entity.ProductEntity
 
 
 @Dao
 interface CartProductDao {
     @Query(
-        "SELECT product.id AS productId, product.name, product.imgUrl, product.price, cart.quantity " +
-                "FROM product LEFT JOIN cart ON product.id = cart.productId " +
+        "SELECT productentity.id AS productId, productentity.name, productentity.imgUrl, productentity.price, cartentity.quantity " +
+                "FROM productentity LEFT JOIN cartentity ON productentity.id = cartentity.productId " +
                 "LIMIT :pageSize OFFSET :offset * :pageSize"
     )
-    fun findProductByPaging(offset: Int, pageSize: Int): List<CartProduct>
+    fun findProductByPaging(offset: Int, pageSize: Int): List<CartProductEntity>
 
     @Query(
-        "SELECT product.id AS productId, product.name, product.imgUrl, product.price, cart.quantity " +
-                "FROM cart LEFT JOIN product ON cart.productId = product.id " +
+        "SELECT productentity.id AS productId, productentity.name, productentity.imgUrl, productentity.price, cartentity.quantity " +
+                "FROM cartentity LEFT JOIN productentity ON cartentity.productId = productentity.id " +
                 "LIMIT :pageSize OFFSET :offset * :pageSize"
     )
-    fun findCartByPaging(offset: Int, pageSize: Int): List<CartProduct>
+    fun findCartByPaging(offset: Int, pageSize: Int): List<CartProductEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveProduct(product: Product)
+    fun saveProduct(productEntity: ProductEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveCart(cart: Cart)
+    fun saveCart(cartEntity: CartEntity)
+
+    @Query("DELETE FROM cartentity WHERE productId = :productId")
+    fun deleteCart(productId: Long)
 }

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cart"
-            type="woowacourse.shopping.domain.Cart" />
+            type="woowacourse.shopping.domain.CartProduct"/>
         <variable
             name="cartActionHandler"
             type="woowacourse.shopping.presentation.ui.cart.CartActionHandler" />
@@ -29,7 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             tools:src="@drawable/ic_close_white"
-            cartImgUrl="@{cart.product.imgUrl}"/>
+            cartImgUrl="@{cart.imgUrl}"/>
 
         <ImageView
             android:id="@+id/iv_close"
@@ -41,7 +41,7 @@
             app:layout_constraintLeft_toRightOf="@id/tv_name"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints"
-            android:onClick="@{() -> cartActionHandler.onDelete(cart.product)}"/>
+            android:onClick="@{() -> cartActionHandler.onDelete(cart.productId)}"/>
 
         <TextView
             android:id="@+id/tv_price"
@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_close"
             tools:text="000원"
-            android:text="@{@string/won(cart.product.price)}"/>
+            android:text="@{@string/won(cart.price)}"/>
 
         <TextView
             android:id="@+id/tv_name"
@@ -67,6 +67,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="상품 제목"
-            android:text="@{cart.product.name}"/>
+            android:text="@{cart.name}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

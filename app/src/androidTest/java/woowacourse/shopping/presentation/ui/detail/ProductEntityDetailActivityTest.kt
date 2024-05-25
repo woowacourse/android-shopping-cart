@@ -19,7 +19,7 @@ import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity.Compani
 import java.lang.IllegalStateException
 
 @RunWith(AndroidJUnit4::class)
-class ProductDetailActivityTest {
+class ProductEntityDetailActivityTest {
     private val intent =
         Intent(
             ApplicationProvider.getApplicationContext(),

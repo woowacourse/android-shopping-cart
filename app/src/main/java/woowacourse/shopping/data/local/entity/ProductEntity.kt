@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Product(
+data class ProductEntity(
     val name: String,
     val imgUrl: String,
     val price: Long,

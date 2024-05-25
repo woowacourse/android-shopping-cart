@@ -21,7 +21,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
-    private val adapter: ShoppingAdapter = ShoppingAdapter(this)
+    private val adapter: ShoppingAdapter by lazy { ShoppingAdapter(this,  viewModel) }
 
     override fun initStartView() {
         initAdapter()

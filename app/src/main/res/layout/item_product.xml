@@ -3,6 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.domain.CartProduct" />
+
+        <variable
+            name="shoppingActionHandler"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +26,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            productUrl="@{cartProduct.imgUrl}"
             tools:src="@mipmap/ic_launcher" />
+
+        <include
+            layout="@layout/selector_quantity"
+            android:layout_width="154dp"
+            android:layout_height="wrap_content"
+            app:cartProduct="@{cartProduct}"
+            app:shoppingActionHandler="@{shoppingActionHandler}"
+            app:layout_constraintBottom_toBottomOf="@id/img_item"
+            app:layout_constraintRight_toRightOf="@id/img_item"/>
+
 
         <TextView
             android:id="@+id/tv_name"
@@ -32,7 +53,7 @@
             app:layout_constraintEnd_toEndOf="@id/img_item"
             app:layout_constraintStart_toStartOf="@id/img_item"
             app:layout_constraintTop_toBottomOf="@id/img_item"
-            tools:text="상품 이름" />
+            tools:text="@{cartProduct.name}" />
 
         <TextView
             android:id="@+id/tv_price"
@@ -43,12 +64,8 @@
             app:layout_constraintEnd_toEndOf="@id/img_item"
             app:layout_constraintStart_toStartOf="@id/img_item"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
-            tools:text="상품 가격" />
-
+            tools:text="@{@string/won(cartProduct.price)}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <data>
-
-    </data>
 </layout>
