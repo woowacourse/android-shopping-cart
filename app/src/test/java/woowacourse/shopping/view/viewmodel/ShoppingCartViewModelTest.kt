@@ -39,7 +39,7 @@ class ShoppingCartViewModelTest {
         val before = viewModel.shoppingCart.cartItems.getOrAwaitValue()
         Assertions.assertThat(before.size).isEqualTo(3)
 
-        viewModel.deleteShoppingCartItem(0, 0, CartItemCounter())
+        viewModel.deleteShoppingCartItem(0, 0)
 
         val result = viewModel.shoppingCart.cartItems.getOrAwaitValue()
         Assertions.assertThat(result.size).isEqualTo(2)
