@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.helper.FakeCartRepositoryImpl
 import woowacourse.shopping.helper.InstantTaskExecutorExtension
@@ -17,6 +18,7 @@ class DetailViewModelTest {
     private lateinit var viewModel: DetailViewModel
     private lateinit var testCartRepository: CartRepository
     private val shoppingRepository = mockk<ShoppingRepository>()
+    private val recentProductRepository = mockk<RecentProductRepository>()
 
     private val product =
         Product(
@@ -24,7 +26,7 @@ class DetailViewModelTest {
             name = "1 대전 장인약과",
             price = 10000,
             imageUrl =
-                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
+            "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
                     "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
                     "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
                     "G%2FIMG_5278.jpg&type=sc960_832",
@@ -34,7 +36,8 @@ class DetailViewModelTest {
     fun setUp() {
         testCartRepository = FakeCartRepositoryImpl()
         every { shoppingRepository.findProductById(any()) } returns product
-        viewModel = DetailViewModel(testCartRepository, shoppingRepository, 0L)
+        viewModel =
+            DetailViewModel(testCartRepository, shoppingRepository, recentProductRepository, 0L)
     }
 
     @Test
@@ -45,9 +48,9 @@ class DetailViewModelTest {
         assertThat(actual?.price).isEqualTo(10000)
         assertThat(actual?.imageUrl).isEqualTo(
             "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
-                "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
-                "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
-                "G%2FIMG_5278.jpg&type=sc960_832",
+                    "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
+                    "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
+                    "G%2FIMG_5278.jpg&type=sc960_832",
         )
     }
 
@@ -60,7 +63,7 @@ class DetailViewModelTest {
 
     @Test
     fun `상품을 장바구니에 담으면 장바구니의 사이즈가 증가한다`() {
-        viewModel.createCartItem(1)
+        viewModel.saveCartItem(1)
         val actual = testCartRepository.cartItemSize()
 
         assertThat(actual).isEqualTo(1)

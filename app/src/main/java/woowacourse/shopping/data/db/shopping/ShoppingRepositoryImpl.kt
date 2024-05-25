@@ -1,6 +1,5 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.db.shopping
 
-import woowacourse.shopping.data.db.shopping.DummyShopping
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.view.home.HomeViewModel

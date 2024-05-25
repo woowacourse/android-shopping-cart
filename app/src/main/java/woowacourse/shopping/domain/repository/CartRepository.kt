@@ -18,7 +18,7 @@ interface CartRepository {
 
     fun productQuantity(productId: Long): Int
 
-    fun findOrNullWithProductId(productId: Long): CartItem?
+    fun findOrNullByProductId(productId: Long): CartItem?
 
     fun find(cartItemId: Long): CartItem
 

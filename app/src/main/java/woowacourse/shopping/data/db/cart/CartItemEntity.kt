@@ -10,17 +10,17 @@ data class CartItemEntity(
     val productId: Long,
     val productName: String,
     val price: Long,
-    val imgUrl: String,
+    val imageUrl: String,
     val quantity: Int,
 )
 
-fun CartItemEntity.toDomainModel(): CartItem {
+fun CartItemEntity.toCartItem(): CartItem {
     return CartItem(
         id = this.id,
         productId = this.productId,
         productName = this.productName,
         price = this.price,
-        imageUrl = this.imgUrl,
+        imageUrl = this.imageUrl,
         _quantity = this.quantity,
     )
 }

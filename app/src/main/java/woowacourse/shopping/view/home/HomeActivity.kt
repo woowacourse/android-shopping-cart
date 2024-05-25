@@ -6,24 +6,30 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication.Companion.database
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
+import woowacourse.shopping.ShoppingApplication.Companion.cartDatabase
+import woowacourse.shopping.ShoppingApplication.Companion.recentProductDatabase
+import woowacourse.shopping.data.db.cart.CartRepositoryImpl
+import woowacourse.shopping.data.db.recent.RecentProductRepositoryImpl
+import woowacourse.shopping.data.db.shopping.ShoppingRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.home.adapter.product.ProductAdapter
 import woowacourse.shopping.view.home.adapter.product.ShoppingItem.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
 import woowacourse.shopping.view.home.adapter.product.ShoppingItem.ProductItem
-import woowacourse.shopping.view.home.adapter.recent.RecentAdapter
+import woowacourse.shopping.view.home.adapter.recent.RecentProductAdapter
 import woowacourse.shopping.view.state.UIState
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var productAdapter: ProductAdapter
-    private lateinit var recentAdapter: RecentAdapter
+    private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(ShoppingRepositoryImpl(), CartRepositoryImpl(database))
+        HomeViewModelFactory(
+            ShoppingRepositoryImpl(),
+            CartRepositoryImpl(cartDatabase),
+            RecentProductRepositoryImpl(recentProductDatabase)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +43,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        viewModel.updateProducts()
+        viewModel.updateData()
     }
 
     private fun setUpDataBinding() {
@@ -57,10 +63,10 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         binding.rvProductList.layoutManager = layoutManager
-        recentAdapter = RecentAdapter(viewModel)
-        binding.rvRecentViewedProducts.adapter = recentAdapter
+        recentProductAdapter = RecentProductAdapter(viewModel)
+        binding.rvRecentProducts.adapter = recentProductAdapter
         binding.rvProductList.itemAnimator = null
-        binding.rvRecentViewedProducts.itemAnimator = null
+        binding.rvRecentProducts.itemAnimator = null
     }
 
     private fun observeViewModel() {
@@ -73,6 +79,10 @@ class HomeActivity : AppCompatActivity() {
                         state.exception.message ?: getString(R.string.unknown_error),
                     )
             }
+        }
+
+        viewModel.recentProducts.observe(this) {
+            recentProductAdapter.loadData(it)
         }
 
         viewModel.updatedProductItem.observe(this) {

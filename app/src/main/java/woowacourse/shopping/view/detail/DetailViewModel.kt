@@ -7,6 +7,7 @@ import androidx.lifecycle.map
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.CartRepository.Companion.DEFAULT_QUANTITY
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.cart.QuantityClickListener
@@ -15,15 +16,16 @@ import woowacourse.shopping.view.state.UIState
 class DetailViewModel(
     private val cartRepository: CartRepository,
     private val shoppingRepository: ShoppingRepository,
+    private val recentProductRepository: RecentProductRepository,
     private val productId: Long,
 ) : ViewModel(), DetailClickListener, QuantityClickListener {
-    private val _product: MutableLiveData<Product> = MutableLiveData()
-    val product: LiveData<Product>
-        get() = _product
-
     private val _detailUiState = MutableLiveData<UIState<Product>>(UIState.Empty)
     val detailUiState: LiveData<UIState<Product>>
         get() = _detailUiState
+
+    private val _product: MutableLiveData<Product> = MutableLiveData()
+    val product: LiveData<Product>
+        get() = _product
 
     private val _navigateToCart = MutableLiveData<Event<Boolean>>()
     val navigateToCart: LiveData<Event<Boolean>>
@@ -56,7 +58,7 @@ class DetailViewModel(
         }
     }
 
-    fun createCartItem(quantity: Int) {
+    fun saveCartItem(quantity: Int) {
         val state = detailUiState.value
         if (state is UIState.Success) {
             cartRepository.save(
@@ -66,9 +68,14 @@ class DetailViewModel(
         }
     }
 
+    fun saveRecentProduct() {
+        val currentProduct = product.value ?: return
+        recentProductRepository.save(currentProduct)
+    }
+
     override fun onPutCartButtonClick() {
         val currentQuantity = cartRepository.productQuantity(productId)
-        createCartItem(currentQuantity + (quantity.value ?: DEFAULT_QUANTITY))
+        saveCartItem(currentQuantity + (quantity.value ?: DEFAULT_QUANTITY))
         _navigateToCart.value = Event(true)
     }
 

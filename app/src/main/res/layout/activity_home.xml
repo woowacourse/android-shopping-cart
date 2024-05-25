@@ -88,7 +88,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/tv_recent_viewed_products_title"
+                        android:id="@+id/tv_recent_products_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -100,29 +100,33 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_recent_viewed_products"
+                        android:id="@+id/rv_recent_products"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:orientation="horizontal"
                         android:overScrollMode="never"
-                        android:visibility="visible"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintStart_toStartOf="@id/tv_recent_viewed_products_title"
-                        app:layout_constraintTop_toBottomOf="@id/tv_recent_viewed_products_title"
-                        tools:listitem="@layout/item_recent_viewed_product" />
+                        app:layout_constraintStart_toStartOf="@id/tv_recent_products_title"
+                        app:layout_constraintTop_toBottomOf="@id/tv_recent_products_title"
+                        app:viewVisibility="@{!viewModel.isRecentProductsEmpty}"
+                        tools:listitem="@layout/item_recent_product"
+                        tools:visibility="visible" />
 
                     <TextView
-                        android:id="@+id/rv_recent_viewed_products_empty"
+                        android:id="@+id/rv_recent_products_empty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="최근 본 상품이 존재하지 않습니다."
-                        android:textSize="20dp"
-                        android:visibility="gone"
+                        android:text="텅!"
+                        android:textColor="@color/black"
+                        android:textSize="28dp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/tv_recent_viewed_products_title"
-                        app:layout_constraintTop_toBottomOf="@id/tv_recent_viewed_products_title" />
+                        app:layout_constraintStart_toStartOf="@id/tv_recent_products_title"
+                        app:layout_constraintTop_toBottomOf="@id/tv_recent_products_title"
+                        app:viewVisibility="@{viewModel.isRecentProductsEmpty}"
+                        tools:visibility="gone" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

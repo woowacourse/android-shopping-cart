@@ -3,11 +3,13 @@ package woowacourse.shopping.view.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 
 class HomeViewModelFactory(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
@@ -15,6 +17,7 @@ class HomeViewModelFactory(
             return HomeViewModel(
                 shoppingRepository = shoppingRepository,
                 cartRepository = cartRepository,
+                recentProductRepository = recentProductRepository
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

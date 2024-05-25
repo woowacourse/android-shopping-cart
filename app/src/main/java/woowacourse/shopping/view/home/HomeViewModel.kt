@@ -3,8 +3,11 @@ package woowacourse.shopping.view.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.cart.QuantityClickListener
@@ -14,13 +17,23 @@ import woowacourse.shopping.view.state.UIState
 class HomeViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository
 ) :
     ViewModel(),
-        HomeClickListener,
-        QuantityClickListener {
+    HomeClickListener,
+    QuantityClickListener {
     private val _shoppingUiState = MutableLiveData<UIState<List<ProductItem>>>(UIState.Empty)
     val shoppingUiState: LiveData<UIState<List<ProductItem>>>
         get() = _shoppingUiState
+
+    private val _recentProducts = MutableLiveData<List<RecentProduct>>()
+    val recentProducts: LiveData<List<RecentProduct>>
+        get() = _recentProducts
+
+    val isRecentProductsEmpty: LiveData<Boolean> =
+        recentProducts.map { recentProductsValue ->
+            recentProductsValue.isEmpty()
+        }
 
     private val _canLoadMore = MutableLiveData(false)
     val canLoadMore: LiveData<Boolean>
@@ -47,8 +60,13 @@ class HomeViewModel(
         get() = _loadedProductItems
 
     init {
+        loadRecentProducts()
         loadProducts()
         loadTotalQuantity()
+    }
+
+    private fun loadRecentProducts() {
+        _recentProducts.value = recentProductRepository.findAll(RECENT_PRODUCTS_LIMIT)
     }
 
     fun loadProducts() {
@@ -72,7 +90,9 @@ class HomeViewModel(
         }
     }
 
-    fun updateProducts() {
+    fun updateData() {
+        loadRecentProducts()
+
         val cartItems = cartRepository.findAll()
         _totalQuantity.value = cartItems.sumOf { cartItem -> cartItem.quantity }
 
@@ -150,7 +170,7 @@ class HomeViewModel(
 
     override fun onQuqntityMinusButtonClick(productId: Long) {
         val product = shoppingRepository.findProductById(productId)
-        val cartItem = cartRepository.findOrNullWithProductId(productId) ?: return
+        val cartItem = cartRepository.findOrNullByProductId(productId) ?: return
         val quantity = cartItem.quantity - 1
         _totalQuantity.value = totalQuantity.value?.minus(1)?.coerceAtLeast(0)
         if (quantity == 0) {
@@ -164,5 +184,6 @@ class HomeViewModel(
 
     companion object {
         const val PAGE_SIZE = 20
+        const val RECENT_PRODUCTS_LIMIT = 10
     }
 }

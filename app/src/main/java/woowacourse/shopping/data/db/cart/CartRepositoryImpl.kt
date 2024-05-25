@@ -1,11 +1,8 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.db.cart
 
-import woowacourse.shopping.data.db.cart.CartDatabase
-import woowacourse.shopping.data.db.cart.CartItemEntity
-import woowacourse.shopping.data.db.cart.toDomainModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.toEntity
+import woowacourse.shopping.domain.model.toCartItemEntity
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(database: CartDatabase) : CartRepository {
@@ -15,11 +12,11 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         product: Product,
         quantity: Int,
     ) {
-        if (findOrNullWithProductId(product.id) != null) {
+        if (findOrNullByProductId(product.id) != null) {
             update(product.id, quantity)
         } else {
             threadAction {
-                dao.save(product.toEntity(quantity))
+                dao.save(product.toCartItemEntity(quantity))
             }
         }
     }
@@ -49,13 +46,13 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         return productQuantity
     }
 
-    override fun findOrNullWithProductId(productId: Long): CartItem? {
+    override fun findOrNullByProductId(productId: Long): CartItem? {
         var cartItemEntity: CartItemEntity? = null
         threadAction {
-            cartItemEntity = dao.findWithProductId(productId)
+            cartItemEntity = dao.findByProductId(productId)
         }
 
-        return cartItemEntity?.toDomainModel()
+        return cartItemEntity?.toCartItem()
     }
 
     override fun find(cartItemId: Long): CartItem {
@@ -64,13 +61,13 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
             cartItemEntity = dao.find(cartItemId)
         }
 
-        return cartItemEntity?.toDomainModel() ?: throw IllegalArgumentException("데이터가 존재하지 않습니다.")
+        return cartItemEntity?.toCartItem() ?: throw IllegalArgumentException("데이터가 존재하지 않습니다.")
     }
 
     override fun findAll(): List<CartItem> {
         var cartItems: List<CartItem> = emptyList()
         threadAction {
-            cartItems = dao.findAll().map { it.toDomainModel() }
+            cartItems = dao.findAll().map { it.toCartItem() }
         }
         return cartItems
     }
@@ -85,7 +82,7 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         threadAction {
             cartItems =
                 dao.findAllPaged(offset = offset, limit = pageSize)
-                    .map { it.toDomainModel() }
+                    .map { it.toCartItem() }
         }
 
         return cartItems
