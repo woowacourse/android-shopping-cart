@@ -12,7 +12,7 @@ import woowacourse.shopping.data.DummyData.STUB_PRODUCT_B
 import woowacourse.shopping.data.DummyData.STUB_PRODUCT_C
 import woowacourse.shopping.data.db.AppDatabase
 import woowacourse.shopping.data.db.dao.ProductDao
-import woowacourse.shopping.data.db.toEntity
+import woowacourse.shopping.data.db.mapper.toEntity
 
 class LocalProductDataSourceTest {
     private lateinit var dao: ProductDao

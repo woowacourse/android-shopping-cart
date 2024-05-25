@@ -59,7 +59,7 @@
             android:layout_marginEnd="18dp"
             android:textSize="20dp"
             android:textColor="@color/black"
-            priceToCurrency="@{vm.price}"
+            app:priceToCurrency="@{vm.price}"
             tools:text="99,800원"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line" />

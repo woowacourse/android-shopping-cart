@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.datasource.product
 
 import woowacourse.shopping.data.db.dao.ProductDao
-import woowacourse.shopping.data.db.toProduct
+import woowacourse.shopping.data.db.mapper.toProduct
 import woowacourse.shopping.domain.datasource.ProductDataSource
 import woowacourse.shopping.domain.model.Product
 

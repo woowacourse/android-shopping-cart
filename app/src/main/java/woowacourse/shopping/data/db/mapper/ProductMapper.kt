@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.db
+package woowacourse.shopping.data.db.mapper
 
 import woowacourse.shopping.data.db.model.ProductEntity
 import woowacourse.shopping.domain.model.Product
 
-fun ProductEntity.toProduct(): Product = Product(id, name, price, imageUrl)
+fun ProductEntity.toProduct(): Product = Product(productId, name, price, imageUrl)
 
 fun Product.toEntity(): ProductEntity = ProductEntity(id, name, price, imageUrl)
 

@@ -14,7 +14,12 @@ import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
 
 class ProductListAdapter(
     private val actionHandler: ProductListActionHandler,
-    private var pagingProductUiModel: PagingProductUiModel = PagingProductUiModel(0, emptyList(), true),
+    private var pagingProductUiModel: PagingProductUiModel =
+        PagingProductUiModel(
+            0,
+            emptyList(),
+            true,
+        ),
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -66,7 +71,13 @@ class ProductListAdapter(
     }
 
     fun updateProductList(newPagingProductUiModel: PagingProductUiModel) {
-        val diff = newPagingProductUiModel.productUiModels - pagingProductUiModel.productUiModels.toSet()
+        val positionStart = pagingProductUiModel.productUiModels.size
+        val positionEnd = newPagingProductUiModel.productUiModels.size
+        val itemCount = positionEnd - positionStart
+        notifyItemRangeInserted(positionStart, itemCount)
+
+        val diff =
+            newPagingProductUiModel.productUiModels - pagingProductUiModel.productUiModels.toSet()
         pagingProductUiModel = newPagingProductUiModel
         newPagingProductUiModel.productUiModels.forEachIndexed { index, productUiModel ->
             if (diff.map { it.product.id }.contains(productUiModel.product.id)) {

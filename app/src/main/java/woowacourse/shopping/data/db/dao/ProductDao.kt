@@ -10,10 +10,10 @@ interface ProductDao {
     @Insert
     fun putProduct(productEntity: ProductEntity)
 
-    @Query("select * from ProductEntity where id == :id")
+    @Query("select * from ProductEntity where productId== :id")
     fun findById(id: Int): ProductEntity?
 
-    @Query("select * from ProductEntity where id > :offset * :size limit :size")
+    @Query("select * from ProductEntity where productId > :offset * :size limit :size")
     fun findByOffsetAndSize(
         offset: Int,
         size: Int,
