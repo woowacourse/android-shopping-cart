@@ -9,11 +9,14 @@ import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.CartedProduct
 import woowacourse.shopping.data.remote.MockShoppingWebServer
+import woowacourse.shopping.data.util.convertJsonToList
+import woowacourse.shopping.data.util.convertJsonToObject
+import woowacourse.shopping.data.util.convertToJson
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
-    private val shoppingWebServer: MockShoppingWebServer,
+    shoppingWebServer: MockShoppingWebServer,
     private val baseUrl: String = BASE_URL.dropLast(1),
 ) : CartRepository {
     private val client = OkHttpClient()
@@ -23,7 +26,7 @@ class CartRepositoryImpl(
             .url("$baseUrl/cart-items?page=$page&page-size=$PAGE_SIZE")
             .build()
         val result = client.newCall(request).execute().body?.string()
-        return shoppingWebServer.convertJsonToList(
+        return convertJsonToList(
             result ?: "", CartedProduct::class.java
         )
     }
@@ -32,7 +35,7 @@ class CartRepositoryImpl(
         cartItem: CartItem
     ) {
         val request = Request.Builder()
-            .post(shoppingWebServer.convertToJson(cartItem).toRequestBody())
+            .post(convertToJson(cartItem).toRequestBody())
             .url("$baseUrl/cart-item")
             .build()
         client.newCall(request).execute()
@@ -43,7 +46,7 @@ class CartRepositoryImpl(
             .url("$baseUrl/cart-item/count")
             .build()
         val result = client.newCall(request).execute().body?.string()
-        return shoppingWebServer.convertJsonToObject(
+        return convertJsonToObject(
             result ?: "", Int::class.java
         )
     }
@@ -58,7 +61,7 @@ class CartRepositoryImpl(
 
     override fun removeCartItem(cartItem: CartItem) {
         val request = Request.Builder()
-            .delete(shoppingWebServer.convertToJson(cartItem).toRequestBody())
+            .delete(convertToJson(cartItem).toRequestBody())
             .url("$baseUrl/cart-item")
             .build()
         client.newCall(request).execute()

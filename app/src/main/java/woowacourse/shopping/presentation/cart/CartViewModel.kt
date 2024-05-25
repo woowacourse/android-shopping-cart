@@ -62,7 +62,6 @@ class CartViewModel(
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
         hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
         setPageInformation()
-        println(cartItems)
         _cartableProducts.postValue(cartItems)
     }
 

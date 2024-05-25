@@ -6,10 +6,12 @@ import woowacourse.shopping.data.database.ProductDao
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.data.remote.MockShoppingWebServer
+import woowacourse.shopping.data.util.convertJsonToList
+import woowacourse.shopping.data.util.convertJsonToObject
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(
-    private val shoppingWebServer: MockShoppingWebServer,
+    shoppingWebServer: MockShoppingWebServer,
     private val baseUrl: String = BASE_URL.dropLast(1),
 ) : ProductRepository {
     private val client = OkHttpClient()
@@ -19,7 +21,7 @@ class ProductRepositoryImpl(
             .url("$baseUrl/products?page=$page&page-size=$PAGE_SIZE")
             .build()
         val result = client.newCall(request).execute().body?.string()
-        return shoppingWebServer.convertJsonToList(
+        return convertJsonToList(
             result ?: "", CartableProduct::class.java
         )
     }
@@ -28,7 +30,7 @@ class ProductRepositoryImpl(
         val request = Request.Builder()
             .url("$baseUrl/product?id=$id")
             .build()
-        return shoppingWebServer.convertJsonToObject(
+        return convertJsonToObject(
             client.newCall(request).execute().body?.string() ?: "", CartableProduct::class.java
         )
     }

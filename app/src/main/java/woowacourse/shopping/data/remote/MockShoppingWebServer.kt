@@ -10,10 +10,11 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.database.CartDao
 import woowacourse.shopping.data.database.ProductDao
-import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.CartedProduct
+import woowacourse.shopping.data.util.convertJsonToObject
+import woowacourse.shopping.data.util.convertToJson
 import kotlin.concurrent.thread
 
 class MockShoppingWebServer(
@@ -24,7 +25,6 @@ class MockShoppingWebServer(
     private val dispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
             val requestedUrl = request.requestUrl
-            println("$requestedUrl")
             return when (requestedUrl?.encodedPath) {
                 "/products" -> {
                     val page = requestedUrl.queryParameter("page")?.toInt()
@@ -199,21 +199,5 @@ class MockShoppingWebServer(
         }.onFailure {
             return false
         }.getOrDefault(false)
-    }
-
-    fun <T> convertJsonToList(json: String, classType: Class<T>): List<T> {
-        val gson = Gson()
-        val type = TypeToken.getParameterized(List::class.java, classType).type
-        return gson.fromJson(json, type)
-    }
-
-    fun <T> convertJsonToObject(json: String, classType: Class<T>): T {
-        val gson = Gson()
-        return gson.fromJson(json, classType)
-    }
-
-    fun <T> convertToJson(data: T): String {
-        val gson = Gson()
-        return gson.toJson(data)
     }
 }
