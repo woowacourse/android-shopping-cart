@@ -63,7 +63,7 @@ class DefaultProductIdsCountRepositoryTest {
         repository.plusProductsIdCount(1)
 
         // then
-        assertThat(source.findByProductId(1).quantity).isEqualTo(2)
+        assertThat(source.findByProductId(1)?.quantity).isEqualTo(2)
     }
 
     @Test
@@ -76,7 +76,7 @@ class DefaultProductIdsCountRepositoryTest {
         repository.minusProductsIdCount(1)
 
         // then
-        assertThat(source.findByProductId(1).quantity).isEqualTo(2)
+        assertThat(source.findByProductId(1)?.quantity).isEqualTo(2)
     }
 
     @Test

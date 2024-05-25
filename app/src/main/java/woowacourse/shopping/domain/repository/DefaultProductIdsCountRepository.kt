@@ -8,7 +8,10 @@ import woowacourse.shopping.domain.model.toDomain
 class DefaultProductIdsCountRepository(
     private val productsIdsCountDataSource: ShoppingCartProductIdDataSource,
 ) : ProductIdsCountRepository {
-    override fun findByProductId(productId: Int): ProductIdsCount = productsIdsCountDataSource.findByProductId(productId).toDomain()
+    override fun findByProductId(productId: Int): ProductIdsCount =
+        productsIdsCountDataSource.findByProductId(productId)?.toDomain() ?: throw NoSuchElementException(
+            "no such product id $productId in shopping cart repository",
+        )
 
     override fun loadAllProductIdsCounts(): List<ProductIdsCount> =
         productsIdsCountDataSource.loadAll().map {
@@ -21,7 +24,10 @@ class DefaultProductIdsCountRepository(
     override fun removedProductsId(productId: Int): Int = productsIdsCountDataSource.removedProductsId(productId)
 
     override fun plusProductsIdCount(productId: Int) {
-        val foundProductsIdCount = productsIdsCountDataSource.findByProductId(productId).toDomain()
+        val foundProductsIdCount =
+            productsIdsCountDataSource.findByProductId(productId)?.toDomain() ?: throw NoSuchElementException(
+                "no such product id $productId in shopping cart repository",
+            )
         productsIdsCountDataSource.plusProductsIdCount(foundProductsIdCount.productId)
     }
 
