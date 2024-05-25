@@ -1,6 +1,7 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.domain.repository.cart.CartRepository
 import kotlin.math.min
 
 class FakeCartRepository : CartRepository {

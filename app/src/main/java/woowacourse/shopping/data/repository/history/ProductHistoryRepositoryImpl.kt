@@ -3,7 +3,7 @@ package woowacourse.shopping.data.repository.history
 import woowacourse.shopping.data.database.history.ProductHistoryDao
 import woowacourse.shopping.data.model.history.ProductHistory
 import woowacourse.shopping.data.model.history.RecentProduct
-import woowacourse.shopping.domain.repository.ProductHistoryRepository
+import woowacourse.shopping.domain.repository.history.ProductHistoryRepository
 
 class ProductHistoryRepositoryImpl(
     private val historyDao: ProductHistoryDao,

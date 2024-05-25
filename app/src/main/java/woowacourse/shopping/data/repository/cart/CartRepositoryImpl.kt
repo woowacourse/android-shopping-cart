@@ -8,7 +8,7 @@ import woowacourse.shopping.data.model.cart.CartedProduct
 import woowacourse.shopping.data.util.convertJsonToList
 import woowacourse.shopping.data.util.convertJsonToObject
 import woowacourse.shopping.data.util.convertToJson
-import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.cart.CartRepository
 
 class CartRepositoryImpl(
     private val baseUrl: String = BASE_URL.dropLast(1),

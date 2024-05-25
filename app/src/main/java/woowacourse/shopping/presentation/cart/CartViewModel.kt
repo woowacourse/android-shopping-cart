@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.cart.CartedProduct
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.cart.CartRepository
+import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.presentation.home.ProductQuantity
 import woowacourse.shopping.presentation.home.QuantityListener
 import java.util.Collections.replaceAll

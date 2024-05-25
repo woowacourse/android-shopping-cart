@@ -5,7 +5,7 @@ import okhttp3.Request
 import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.data.util.convertJsonToList
 import woowacourse.shopping.data.util.convertJsonToObject
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.product.ProductRepository
 
 class ProductRepositoryImpl(
     private val baseUrl: String = BASE_URL.dropLast(1),
