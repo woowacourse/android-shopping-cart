@@ -8,6 +8,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyViewedProductsRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
@@ -22,6 +23,10 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
                 ShoppingItemsRepositoryImpl(
                     (application as ShoppingApplication).shoppingDatabase,
                     (application as ShoppingApplication).cartDatabase,
+                ),
+            recentlyViewedProductsRepository =
+                RecentlyViewedProductsRepositoryImpl(
+                    (application as ShoppingApplication).recentlyProductDatabase,
                 ),
             productId = productId,
         )
@@ -57,7 +62,10 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
         val modifiedProductIds = setOf(productId)
         val resultIntent =
             Intent().apply {
-                putExtra(CartActivity.EXTRA_KEY_MODIFIED_PRODUCT_IDS, modifiedProductIds.toLongArray())
+                putExtra(
+                    CartActivity.EXTRA_KEY_MODIFIED_PRODUCT_IDS,
+                    modifiedProductIds.toLongArray(),
+                )
             }
         setResult(RESULT_OK, resultIntent)
         finish()
