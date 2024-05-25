@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.utils.Event
 
 class MainViewModel : ViewModel() {
     private val _updateProductEvent = MutableLiveData<Event<ProductUpdate>>()

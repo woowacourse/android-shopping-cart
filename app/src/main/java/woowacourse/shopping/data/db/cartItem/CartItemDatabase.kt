@@ -8,9 +8,7 @@ import androidx.room.TypeConverters
 import woowacourse.shopping.data.model.CartItemEntity
 
 @Database(
-    entities = [
-        CartItemEntity::class,
-    ],
+    entities = [CartItemEntity::class],
     version = 1,
 )
 @TypeConverters(CartItemConverters::class)

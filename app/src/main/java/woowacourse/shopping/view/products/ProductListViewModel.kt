@@ -8,8 +8,8 @@ import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentViewedItemRepository
+import woowacourse.shopping.utils.Event
 import woowacourse.shopping.view.CountActionHandler
-import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.ProductUpdate
 
 class ProductListViewModel(

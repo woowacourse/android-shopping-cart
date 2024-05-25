@@ -7,8 +7,8 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.utils.Event
 import woowacourse.shopping.view.CountActionHandler
-import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.ProductUpdate
 import kotlin.concurrent.thread
 

@@ -8,9 +8,9 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentViewedItemRepository
+import woowacourse.shopping.utils.Event
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.CountActionHandler
-import woowacourse.shopping.view.Event
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
