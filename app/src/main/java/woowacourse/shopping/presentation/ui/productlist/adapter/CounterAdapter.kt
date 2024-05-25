@@ -9,7 +9,6 @@ fun View.shrinkSize(count: Int) {
 
 @BindingAdapter("hideIfCountLessThanZero")
 fun View.hideIfCountLessThanZero(count: Int) {
-    println("hide")
     if (count <= 0) {
         visibility = View.GONE
     } else {
@@ -19,7 +18,6 @@ fun View.hideIfCountLessThanZero(count: Int) {
 
 @BindingAdapter("showIfCountLessThanZero")
 fun View.showIfCountLessThanZero(count: Int) {
-    println("show")
     if (count <= 0) {
         visibility = View.VISIBLE
     } else {

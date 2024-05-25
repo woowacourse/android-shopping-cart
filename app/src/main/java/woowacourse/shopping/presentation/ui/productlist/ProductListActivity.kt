@@ -1,12 +1,12 @@
 package woowacourse.shopping.presentation.ui.productlist
 
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.databinding.ProductListMenuLayoutBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
@@ -65,6 +65,9 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
                         this,
                         navigateAction.productId,
                     )
+
+                is ProductListNavigateAction.NavigateToShoppingCart ->
+                    ShoppingCartActivity.startActivity(this)
             }
         }
 
@@ -81,15 +84,14 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.product_list_menu_items, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_shopping_card -> ShoppingCartActivity.startActivity(this)
-        }
+        val menuItem = menu.findItem(R.id.menu_shopping_cart)
+        val menuBinding = ProductListMenuLayoutBinding.inflate(layoutInflater)
+        menuBinding.handler = viewModel
+        menuBinding.vm = viewModel
+        menuBinding.lifecycleOwner = this
+        menuItem.setActionView(menuBinding.root)
         return true
     }
 }

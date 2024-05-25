@@ -13,6 +13,7 @@
     <!--    장바구니-->
     <string name="cart_title">Cart</string>
     <string name="shopping_cart_title">장바구니</string>
+    <string name="shopping_cart_quantity_title">장바구니 개수</string>
     <string name="tv_pre_page_title"><![CDATA[<]]></string>
     <string name="tv_next_page_title"><![CDATA[>]]></string>
 

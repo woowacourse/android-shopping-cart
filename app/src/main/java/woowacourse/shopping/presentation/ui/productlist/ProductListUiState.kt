@@ -7,5 +7,6 @@ import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUi
 data class ProductListUiState(
     val pagingProduct: PagingProduct? = null,
     val orders: List<Order>? = null,
+    val orderSum: Int? = null,
     val pagingProductUiModel: PagingProductUiModel? = null,
 )

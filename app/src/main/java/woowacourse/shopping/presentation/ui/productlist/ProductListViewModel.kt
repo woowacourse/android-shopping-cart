@@ -35,6 +35,10 @@ class ProductListViewModel(
         _navigateAction.emit(ProductListNavigateAction.NavigateToProductDetail(productId = productId))
     }
 
+    override fun onClickShoppingCart() {
+        _navigateAction.emit(ProductListNavigateAction.NavigateToShoppingCart)
+    }
+
     override fun onClickLoadMoreButton() {
         _uiState.value?.let { state ->
             state.pagingProduct?.let { pagingProduct ->
@@ -94,7 +98,8 @@ class ProductListViewModel(
 
     private fun getOrders() {
         val orders = shoppingCartRepository.getOrders()
-        _uiState.value = _uiState.value?.copy(orders = orders)
+        val orderSum = orders.map { it.quantity }.sum()
+        _uiState.value = _uiState.value?.copy(orders = orders, orderSum = orderSum)
     }
 
     private fun makeUiModels() {

@@ -8,4 +8,6 @@ interface ProductListActionHandler {
     fun onClickPlusOrderButton(productId: Int)
 
     fun onClickMinusOrderButton(productId: Int)
+
+    fun onClickShoppingCart()
 }
