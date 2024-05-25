@@ -58,6 +58,18 @@ class DetailActivity : AppCompatActivity() {
     private fun observeEvents() {
         viewModel.message.observe(this) { event ->
             if (event.hasBeenHandled) return@observe
+            setResult(
+                RESULT_OK,
+                Intent().putExtra(
+                    "quantities",
+                    arrayListOf(
+                        ProductQuantity(
+                            productId,
+                            viewModel.productInformation.value?.quantity ?: -1,
+                        ),
+                    ),
+                ),
+            )
             showToastMessage(
                 getString(
                     event.getContentIfNotHandled()?.stringResourceId ?: return@observe,
@@ -90,18 +102,6 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun navigateBackToMain() {
-        setResult(
-            RESULT_OK,
-            Intent().putExtra(
-                "quantities",
-                arrayListOf(
-                    ProductQuantity(
-                        productId,
-                        viewModel.productInformation.value?.quantity ?: -1,
-                    ),
-                ),
-            ),
-        )
         finish()
     }
 

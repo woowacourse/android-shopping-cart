@@ -40,7 +40,10 @@ class HomeActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val quantities =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getParcelableArrayListExtra("quantities", ProductQuantity::class.java)
+                        result.data?.getParcelableArrayListExtra(
+                            "quantities",
+                            ProductQuantity::class.java,
+                        )
                     } else {
                         result.data?.getParcelableArrayListExtra("quantities")
                     }
