@@ -6,8 +6,7 @@ import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 class FakeShoppingCartProductIdDataSource(
     private val data: MutableList<ProductIdsCountData> = mutableListOf(),
 ) : ShoppingCartProductIdDataSource {
-    override fun findByProductId(productId: Int): ProductIdsCountData =
-        data.find { it.productId == productId } ?: throw NoSuchElementException()
+    override fun findByProductId(productId: Int): ProductIdsCountData? = data.find { it.productId == productId }
 
     override fun loadAll(): List<ProductIdsCountData> = data
 
