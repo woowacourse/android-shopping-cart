@@ -3,13 +3,13 @@ package woowacourse.shopping.ui.cart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.model.ProductData
 import woowacourse.shopping.databinding.HolderCartBinding
+import woowacourse.shopping.domain.model.Product
 
 class CartItemRecyclerViewAdapter(
     private val onProductItemClickListener: OnProductItemClickListener,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
-    private var products: List<ProductData> = emptyList()
+    private var products: List<Product> = emptyList()
 
     private lateinit var recyclerView: RecyclerView
 
@@ -35,7 +35,7 @@ class CartItemRecyclerViewAdapter(
 
     override fun getItemCount(): Int = products.size
 
-    fun updateData(newData: List<ProductData>) {
+    fun updateData(newData: List<Product>) {
         val oldSize = products.size
         this.products = newData.toList()
         if (newData.isEmpty()) {

@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.UniversalViewModelFactory
+import woowacourse.shopping.data.source.DummyProductsDataSource
+import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentCartListBinding
-import woowacourse.shopping.domain.repository.DummyShoppingCartItemRepository
+import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 
 class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null
@@ -19,8 +20,9 @@ class ShoppingCartFragment : Fragment() {
     private val factory: UniversalViewModelFactory =
         UniversalViewModelFactory {
             ShoppingCartViewModel(
-                DummyShoppingCartItemRepository(
-                    NumberPagingStrategy(countPerLoad = 5),
+                DefaultShoppingProductRepository(
+                    productsSource = DummyProductsDataSource(),
+                    cartSource = DummyShoppingCartProductIdDataSource(),
                 ),
             )
         }
@@ -56,6 +58,11 @@ class ShoppingCartFragment : Fragment() {
         initNavigation()
         observeDeletedItem()
         observeItemsInCurrentPage()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadAll()
     }
 
     private fun initNavigation() {
