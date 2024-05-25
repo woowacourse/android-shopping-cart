@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.productdetail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -42,7 +41,6 @@ class ProductDetailViewModel(
         thread {
             productRepository.findProductById(id).onSuccess { product ->
                 _uiState.value?.let { state ->
-                    Log.d("ttt", state.toString())
                     if (state.isLastProductPage) {
                         _uiState.postValue(state.copy(product = product, isAddToCart = false))
                         insertProductHistory(product)
