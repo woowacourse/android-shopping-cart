@@ -109,7 +109,7 @@ class ProductListViewModel(
         }
     }
 
-    private fun addCartItem(product: Product)  {
+    private fun addCartItem(product: Product) {
         shoppingCartRepository.addCartItem(product)
         product.updateCartItemCount(DEFAULT_CART_ITEM_COUNT)
         product.updateItemSelector(true)
@@ -135,7 +135,7 @@ class ProductListViewModel(
         _cartItemCount.value = shoppingCartRepository.getTotalCartItemCount()
     }
 
-    private fun increaseTotalCount()  {
+    private fun increaseTotalCount() {
         _cartItemCount.value = _cartItemCount.value?.plus(DEFAULT_CART_ITEM_COUNT)
     }
 

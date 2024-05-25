@@ -50,7 +50,7 @@ class MockProductService {
     private fun makeServerRequest(
         body: String,
         requestUrl: String,
-    ): Request  {
+    ): Request {
         val server = MockWebServer()
         openServer(server, body)
         return Request.Builder()
@@ -61,19 +61,19 @@ class MockProductService {
     private fun openServer(
         server: MockWebServer,
         body: String,
-    )  {
+    ) {
         server.enqueue(MockResponse().setBody(body).setResponseCode(200))
     }
 
     private fun makeServerUrl(
         server: MockWebServer,
         requestUrl: String,
-    ): String  {
+    ): String {
         val serverUrl = server.url(MOCK_SERVER_PATH).toString()
         return "${serverUrl}$requestUrl"
     }
 
-    private fun makeResponse(serverRequest: Request): Response  {
+    private fun makeResponse(serverRequest: Request): Response {
         return client.newCall(serverRequest).execute()
     }
 

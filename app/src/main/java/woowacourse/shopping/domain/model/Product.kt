@@ -8,11 +8,11 @@ data class Product(
     val cartItemCounter: CartItemCounter = CartItemCounter(),
     val itemSelector: ItemSelector = ItemSelector(),
 ) {
-    fun updateCartItemCount(newCount: Int)  {
+    fun updateCartItemCount(newCount: Int) {
         cartItemCounter.updateCount(newCount)
     }
 
-    fun updateItemSelector(isSelected: Boolean)  {
+    fun updateItemSelector(isSelected: Boolean) {
         when (isSelected) {
             true -> itemSelector.selectItem()
             false -> itemSelector.unSelectItem()

@@ -6,15 +6,15 @@ data class CartItemResult(
     val cartItemId: Long,
     val counter: CartItemCounter,
 ) {
-    fun increaseCount()  {
+    fun increaseCount() {
         counter.increase()
     }
 
-    fun decreaseCount(): ChangeCartItemResultState  {
+    fun decreaseCount(): ChangeCartItemResultState {
         return counter.decrease()
     }
 
-    fun updateCount(newCount: Int)  {
+    fun updateCount(newCount: Int) {
         counter.updateCount(newCount)
     }
 }
