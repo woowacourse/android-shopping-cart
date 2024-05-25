@@ -6,11 +6,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
-import woowacourse.shopping.data.dao.ProductDao
 import woowacourse.shopping.data.dao.RecentProductDao
 import woowacourse.shopping.data.dao.ShoppingCartItemDao
 import woowacourse.shopping.data.database.ShoppingDataBase
-import woowacourse.shopping.data.entity.ProductEntity
 import woowacourse.shopping.data.entity.RecentProductEntity
 import woowacourse.shopping.data.entity.ShoppingCartItemEntity
 import woowacourse.shopping.fixture.context
@@ -18,7 +16,6 @@ import java.io.IOException
 import java.time.LocalDateTime
 
 class ShoppingDataBaseTest {
-    private lateinit var productDao: ProductDao
     private lateinit var recentProductDao: RecentProductDao
     private lateinit var shoppingCartItemDao: ShoppingCartItemDao
 
@@ -30,7 +27,6 @@ class ShoppingDataBaseTest {
             Room.inMemoryDatabaseBuilder(
                 context, ShoppingDataBase::class.java,
             ).build()
-        productDao = db.productDao()
         recentProductDao = db.recentProductDao()
         shoppingCartItemDao = db.shoppingCartItemDao()
     }
@@ -62,7 +58,7 @@ class ShoppingDataBaseTest {
         assertThat(ShoppingCartItemEntity.STUB.totalQuantity).isEqualTo(1)
 
         // given
-        shoppingCartItemDao.increaseCount(ShoppingCartItemEntity.STUB.product.id, 2)
+        shoppingCartItemDao.increaseCount(ShoppingCartItemEntity.STUB.productId, 2)
 
         // then
         val actual = shoppingCartItemDao.shoppingCartItems().first()
@@ -103,8 +99,8 @@ class ShoppingDataBaseTest {
 
     companion object {
         private val RECENT_PRODUCT_STUB_A =
-            RecentProductEntity(1, ProductEntity.STUB, LocalDateTime.now())
+            RecentProductEntity(1, LocalDateTime.now())
         private val RECENT_PRODUCT_STUB_B =
-            RecentProductEntity(2, ProductEntity.STUB, LocalDateTime.now())
+            RecentProductEntity(2, LocalDateTime.now())
     }
 }
