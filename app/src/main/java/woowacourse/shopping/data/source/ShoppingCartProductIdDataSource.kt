@@ -3,7 +3,7 @@ package woowacourse.shopping.data.source
 import woowacourse.shopping.data.model.ProductIdsCountData
 
 interface ShoppingCartProductIdDataSource {
-    fun findByProductId(productId: Int): ProductIdsCountData
+    fun findByProductId(productId: Int): ProductIdsCountData?
 
     fun loadAll(): List<ProductIdsCountData>
 

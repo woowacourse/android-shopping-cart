@@ -51,7 +51,7 @@ class DummyShoppingCartProductIdDataSourceTest {
         source.plusProductsIdCount(productsIdCountData.productId)
 
         // then
-        val actual = source.findByProductId(productsIdCountData.productId).quantity
+        val actual = source.findByProductId(productsIdCountData.productId)?.quantity
         assertThat(actual).isEqualTo(11)
     }
 
@@ -65,7 +65,7 @@ class DummyShoppingCartProductIdDataSourceTest {
         source.minusProductsIdCount(productsIdCountData.productId)
 
         // then
-        val actual = source.findByProductId(productsIdCountData.productId).quantity
+        val actual = source.findByProductId(productsIdCountData.productId)?.quantity
         assertThat(actual).isEqualTo(9)
     }
 
