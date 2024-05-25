@@ -1,28 +1,28 @@
-package woowacourse.shopping.data.db
+package woowacourse.shopping.local.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import woowacourse.shopping.data.dao.ShoppingCartDao
-import woowacourse.shopping.data.model.local.CartProductEntity
+import woowacourse.shopping.local.dao.ProductHistoryDao
+import woowacourse.shopping.local.model.ProductHistoryEntity
 
-@Database(entities = [CartProductEntity::class], version = 1)
+@Database(entities = [ProductHistoryEntity::class], version = 1)
 @TypeConverters(ProductHistoryTypeConverters::class)
-abstract class ShoppingCartDatabase : RoomDatabase() {
-    abstract fun dao(): ShoppingCartDao
+abstract class ProductHistoryDatabase : RoomDatabase() {
+    abstract fun dao(): ProductHistoryDao
 
     companion object {
         @Volatile
-        private var instance: ShoppingCartDatabase? = null
-        private const val DATABASE_NAME = "shopping-cart-database"
+        private var instance: ProductHistoryDatabase? = null
+        private const val DATABASE_NAME = "product-history-database"
 
-        fun getDatabase(context: Context): ShoppingCartDatabase {
+        fun getDatabase(context: Context): ProductHistoryDatabase {
             return instance ?: synchronized(this) {
                 Room.databaseBuilder(
                     context,
-                    ShoppingCartDatabase::class.java,
+                    ProductHistoryDatabase::class.java,
                     DATABASE_NAME,
                 )
                     .fallbackToDestructiveMigration()

@@ -1,11 +1,11 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.model.local.CartProductEntity
-import woowacourse.shopping.data.model.local.ProductHistoryEntity
-import woowacourse.shopping.data.model.remote.ProductResponse
+import woowacourse.shopping.data.model.local.CartProductDto
+import woowacourse.shopping.data.model.local.ProductHistoryDto
+import woowacourse.shopping.data.model.remote.ProductDto
 import woowacourse.shopping.domain.model.Product
 
-fun CartProductEntity.toDomain(): Product {
+fun CartProductDto.toDomain(): Product {
     return Product(
         id = this.productId,
         name = this.name,
@@ -15,7 +15,7 @@ fun CartProductEntity.toDomain(): Product {
     )
 }
 
-fun ProductResponse.toDomain(): Product {
+fun ProductDto.toDomain(): Product {
     return Product(
         id = this.id,
         name = this.name,
@@ -25,7 +25,7 @@ fun ProductResponse.toDomain(): Product {
     )
 }
 
-fun ProductHistoryEntity.toDomain(): Product {
+fun ProductHistoryDto.toDomain(): Product {
     return Product(
         id = this.productId,
         name = this.name,

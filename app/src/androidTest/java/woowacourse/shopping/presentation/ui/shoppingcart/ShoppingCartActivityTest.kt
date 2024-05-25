@@ -20,9 +20,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.data.api.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.data.db.ShoppingCartDatabase
 import woowacourse.shopping.data.repsoitory.local.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.local.db.ShoppingCartDatabase
 import woowacourse.shopping.presentation.ui.utils.RecyclerViewItemCountAssertion
 import kotlin.concurrent.thread
 

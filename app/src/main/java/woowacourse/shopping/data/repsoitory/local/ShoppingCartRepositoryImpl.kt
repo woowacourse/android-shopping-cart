@@ -1,13 +1,12 @@
 package woowacourse.shopping.data.repsoitory.local
 
-import woowacourse.shopping.data.dao.ShoppingCartDao
+import woowacourse.shopping.data.datasource.local.ShoppingCartDataSource
 import woowacourse.shopping.data.mapper.toDomain
-import woowacourse.shopping.data.model.local.CartProductEntity
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
-import java.time.LocalDateTime
 
-class ShoppingCartRepositoryImpl(private val dao: ShoppingCartDao) : ShoppingCartRepository {
+class ShoppingCartRepositoryImpl(private val dataSource: ShoppingCartDataSource) :
+    ShoppingCartRepository {
     override fun insertCartProduct(
         productId: Long,
         name: String,
@@ -15,57 +14,35 @@ class ShoppingCartRepositoryImpl(private val dao: ShoppingCartDao) : ShoppingCar
         quantity: Int,
         imageUrl: String,
     ): Result<Unit> =
-        runCatching {
-            val cartProductEntity =
-                CartProductEntity(
-                    productId = productId,
-                    name = name,
-                    price = price,
-                    quantity = quantity,
-                    imageUrl = imageUrl,
-                    createAt = LocalDateTime.now(),
-                )
-            dao.insertCartProduct(cartProductEntity = cartProductEntity)
-        }
+        dataSource.insertCartProduct(
+            productId = productId,
+            name = name,
+            price = price,
+            quantity = quantity,
+            imageUrl = imageUrl,
+        )
 
     override fun findCartProduct(productId: Long): Result<Product> =
-        runCatching {
-            dao.findCartProduct(productId = productId).toDomain()
-        }
+        dataSource.findCartProduct(productId = productId).mapCatching { it.toDomain() }
 
     override fun updateCartProduct(
         productId: Long,
         quantity: Int,
-    ): Result<Unit> =
-        runCatching {
-            dao.updateCartProduct(productId = productId, quantity = quantity)
-        }
+    ): Result<Unit> = dataSource.updateCartProduct(productId = productId, quantity = quantity)
 
     override fun getCartProductsPaged(
         page: Int,
         pageSize: Int,
     ): Result<List<Product>> =
-        runCatching {
-            dao.getCartProductsPaged(page = page, pageSize = pageSize).map { it.toDomain() }
-        }
+        dataSource.getCartProductsPaged(page = page, pageSize = pageSize)
+            .mapCatching { result -> result.map { it.toDomain() } }
 
     override fun getAllCartProducts(): Result<List<Product>> =
-        runCatching {
-            dao.getAllCartProducts().map { it.toDomain() }
-        }
+        dataSource.getAllCartProducts().mapCatching { result -> result.map { it.toDomain() } }
 
-    override fun getCartProductsTotal(): Result<Int> =
-        runCatching {
-            dao.getCartProductsTotal()
-        }
+    override fun getCartProductsTotal(): Result<Int> = dataSource.getCartProductsTotal()
 
-    override fun deleteCartProduct(productId: Long): Result<Unit> =
-        runCatching {
-            dao.deleteCartProduct(productId = productId)
-        }
+    override fun deleteCartProduct(productId: Long): Result<Unit> = dataSource.deleteCartProduct(productId = productId)
 
-    override fun deleteAllCartProducts(): Result<Unit> =
-        runCatching {
-            dao.deleteAllCartProduct()
-        }
+    override fun deleteAllCartProducts(): Result<Unit> = dataSource.deleteAllCartProducts()
 }

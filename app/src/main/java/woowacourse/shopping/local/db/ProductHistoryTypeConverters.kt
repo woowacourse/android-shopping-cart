@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.db
+package woowacourse.shopping.local.db
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
