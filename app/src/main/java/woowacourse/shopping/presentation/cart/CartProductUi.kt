@@ -1,14 +1,28 @@
 package woowacourse.shopping.presentation.cart
 
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.presentation.shopping.detail.ProductUi
-import woowacourse.shopping.presentation.shopping.toUiModel
+import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
+import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 
 data class CartProductUi(
-    val product: ProductUi,
+    val product: ShoppingUiModel.Product,
     val count: Int,
-)
+    var isVisible: Boolean = false
+) {
+    init {
+        isVisible = product.count > 0 || isVisible
+    }
+}
 
-fun CartProduct.toUiModel(): CartProductUi {
-    return CartProductUi(product.toUiModel(), count)
+fun CartProduct.toUiModel(isVisible: Boolean): CartProductUi {
+    return CartProductUi(product.toShoppingUiModel(isVisible), product.count)
+}
+
+fun CartProductUi.increaseCount(): CartProductUi {
+    return copy(count = (count + 1))
+}
+
+fun CartProductUi.decreaseCount(): CartProductUi {
+    val item = copy(count = (count - 1).coerceAtLeast(0))
+    return item
 }

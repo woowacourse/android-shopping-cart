@@ -6,7 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
-class CartAdapter(private val onClickDeleteBtn: (product: CartProductUi) -> Unit) :
+class CartAdapter(
+    private val onClickDeleteBtn: (product: CartProductUi) -> Unit,
+    private val onClickPlusBtn: (product: CartProductUi) -> Unit,
+    private val onClickMinusBtn: (product: CartProductUi) -> Unit,
+) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: List<CartProductUi> = emptyList()
     private val updateHelper: ItemUpdateHelper<CartProductUi> =
@@ -30,7 +34,7 @@ class CartAdapter(private val onClickDeleteBtn: (product: CartProductUi) -> Unit
                 parent,
                 false,
             )
-        return CartViewHolder(binding, onClickDeleteBtn)
+        return CartViewHolder(binding, onClickDeleteBtn, onClickPlusBtn, onClickMinusBtn)
     }
 
     override fun onBindViewHolder(
@@ -49,12 +53,20 @@ class CartAdapter(private val onClickDeleteBtn: (product: CartProductUi) -> Unit
     class CartViewHolder(
         private val binding: ItemCartProductBinding,
         private val onClickDeleteBtn: (product: CartProductUi) -> Unit,
+        private val onClickPlusBtn: (product: CartProductUi) -> Unit,
+        private val onClickMinusBtn: (product: CartProductUi) -> Unit,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
             binding.ivCartItemDelete.setOnClickListener {
                 onClickDeleteBtn(product)
+            }
+            binding.itemProductCount.btnPlus.setOnClickListener {
+                onClickPlusBtn(product)
+            }
+            binding.itemProductCount.btnMinus.setOnClickListener {
+                onClickMinusBtn(product)
             }
         }
     }

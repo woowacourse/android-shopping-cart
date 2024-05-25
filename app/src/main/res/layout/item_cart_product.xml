@@ -7,10 +7,6 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.presentation.shopping.product.ShoppingUiModel.Product" />
-
-        <variable
             name="cartProduct"
             type="woowacourse.shopping.presentation.cart.CartProductUi" />
     </data>
@@ -79,7 +75,7 @@
                 android:layout_marginEnd="14dp"
                 app:layout_constraintBottom_toTopOf="@+id/tv_cart_product_price"
                 app:layout_constraintEnd_toEndOf="parent"
-                bind:product="@{product}" />
+                bind:product="@{cartProduct.product}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

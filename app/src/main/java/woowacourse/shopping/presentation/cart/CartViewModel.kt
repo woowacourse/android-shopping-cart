@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,9 @@ class CartViewModel(
     private val cachedProducts = mutableMapOf<Int, List<CartProductUi>>()
     val products: LiveData<List<CartProductUi>> =
         _currentPage.map { page ->
-            cartRepository.cartProducts(page).map { it.toUiModel() }
+            cartRepository.cartProducts(page).map {
+                it.toUiModel(true)
+            }
         }
     val canLoadPrevPage: LiveData<Boolean> =
         _currentPage.map { page ->
@@ -33,6 +36,22 @@ class CartViewModel(
             cartRepository.deleteCartProduct(item.product.id)
             refreshCurrentPage()
         }
+    }
+
+    fun increaseCount(item: CartProductUi) {
+        val updateItem = item.increaseCount()
+        Log.d("cart increase", "${updateItem.count}")
+        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
+        refreshCurrentPage()
+    }
+
+    fun decreaseCount(item: CartProductUi) {
+        val updateItem = item.decreaseCount()
+        when (item.product.count == 1) {
+            true -> deleteProduct(item)
+            false -> cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
+        }
+        refreshCurrentPage()
     }
 
     fun moveToNextPage() {
