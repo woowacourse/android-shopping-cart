@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
@@ -14,10 +13,6 @@ class DetailViewModel(
     private val shoppingRepository: ShoppingItemsRepository,
     private val productId: Long,
 ) : ViewModel(), DetailEventHandler, DetailCounterHandler {
-    private val _product = MutableLiveData<Product>()
-    val product: LiveData<Product>
-        get() = _product
-
     private val _shoppingProduct = MutableLiveData<ShoppingProduct>()
     val shoppingProduct: LiveData<ShoppingProduct>
         get() = _shoppingProduct
@@ -31,14 +26,8 @@ class DetailViewModel(
         get() = _addCartItem
 
     init {
-//        loadProductData()
         loadShoppingProductData()
     }
-/*
-    private fun loadProductData() {
-        val product = shoppingRepository.findProductItem(productId)
-        _product.value = product ?: return
-    }*/
 
     private fun loadShoppingProductData() {
         val shoppingProduct =

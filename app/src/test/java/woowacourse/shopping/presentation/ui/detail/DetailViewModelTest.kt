@@ -34,11 +34,11 @@ class DetailViewModelTest {
 
     @Test
     fun `선택된 상품의 상세 정보를 가져온다`() {
-        val actual = viewModel.product.getOrAwaitValue()
+        val actual = viewModel.shoppingProduct.getOrAwaitValue()
 
-        assertThat(actual.name).isEqualTo("[든든] 동원 스위트콘1")
-        assertThat(actual.price).isEqualTo(99800L)
-        assertThat(actual.imageUrl).isEqualTo("https://url.kr/fr947z")
+        assertThat(actual.product.name).isEqualTo("[든든] 동원 스위트콘1")
+        assertThat(actual.product.price).isEqualTo(99800L)
+        assertThat(actual.product.imageUrl).isEqualTo("https://url.kr/fr947z")
     }
 
     @Test
@@ -51,7 +51,7 @@ class DetailViewModelTest {
     @Test
     fun `상품을 장바구니에 담으면 장바구니의 사이즈가 증가한다`() {
         viewModel.createShoppingCartItem()
-        viewModel.product.getOrAwaitValue()
+        viewModel.shoppingProduct.getOrAwaitValue()
         val actual = testCartRepository.size()
 
         assertThat(actual).isEqualTo(1)

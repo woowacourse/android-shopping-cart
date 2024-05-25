@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="count"
-            type="woowacourse.shopping.domain.model.Count" />
-
-        <variable
             name="countHandler"
             type="woowacourse.shopping.presentation.ui.counter.DefaultCounterHandler" />
 
@@ -55,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="fitXY"
-            app:imageUrl="@{viewModel.product.imageUrl}"
+            app:imageUrl="@{viewModel.shoppingProduct.product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
             tools:layout_editor_absoluteX="-157dp"
             tools:src="@drawable/ic_launcher_background" />
@@ -65,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_margin="18dp"
-            android:text="@{viewModel.product.name}"
+            android:text="@{viewModel.shoppingProduct.product.name}"
             android:textColor="@color/black"
             android:textSize="24dp"
             android:textStyle="bold"
@@ -91,7 +87,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/btn_quantity"
             app:layout_constraintBottom_toBottomOf="@id/btn_quantity"
-            app:price="@{viewModel.product.price*viewModel.count.amount}"
+            app:price="@{viewModel.shoppingProduct.product.price*viewModel.shoppingProduct.quantity}"
             tools:text="99,800원" />
 
         <include
@@ -102,7 +98,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
             app:countHandler="@{countHandler}"
-            app:count="@{count}"
+            app:shoppingProduct="@{viewModel.shoppingProduct}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -114,7 +110,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:onClick="@{() -> viewModel.addCartItem(viewModel.product.id)}"
+            android:onClick="@{() -> viewModel.addCartItem(viewModel.shoppingProduct.product.id)}"
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20dp"
