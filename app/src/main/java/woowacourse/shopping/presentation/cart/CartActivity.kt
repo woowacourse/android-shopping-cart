@@ -10,7 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
 import woowacourse.shopping.data.repository.DefaultCartRepository
-import woowacourse.shopping.data.repository.`Default ProductRepository`
+import woowacourse.shopping.data.repository.DefaultProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.db.cart.CartDatabase
 import woowacourse.shopping.presentation.cart.adapter.CartAdapter
@@ -55,14 +55,14 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
                             CartDatabase.getInstance(this),
                         ),
                     ),
-                    `Default ProductRepository`(DefaultProductDataSource),
+                    DefaultProductRepository(DefaultProductDataSource),
                 ),
             )[CartViewModel::class.java]
     }
 
     private fun initBinding() {
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.cartViewModel = viewModel
         binding.adapter = adapter
     }
 

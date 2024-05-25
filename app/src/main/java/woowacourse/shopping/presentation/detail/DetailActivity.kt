@@ -17,7 +17,7 @@ import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
 import woowacourse.shopping.data.repository.DefaultCartRepository
 import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
-import woowacourse.shopping.data.repository.`Default ProductRepository`
+import woowacourse.shopping.data.repository.DefaultProductRepository
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.db.cart.CartDatabase
 import woowacourse.shopping.db.producthistory.ProductHistoryDatabase
@@ -29,13 +29,17 @@ class DetailActivity : AppCompatActivity() {
         ActivityDetailBinding.inflate(layoutInflater)
     }
     private lateinit var viewModel: DetailViewModel
+    private val productId by lazy {
+        intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
+    }
+    private val showRecent by lazy {
+        intent.getBooleanExtra(EXTRA_SHOW_RECENT, DEFAULT_SHOW_RECENT)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
-        val showRecent = intent.getBooleanExtra(EXTRA_SHOW_RESULT, DEFAULT_SHOW_RESULT)
         initViewModel(productId, showRecent)
         initObserver()
         initBinding()
@@ -47,7 +51,7 @@ class DetailActivity : AppCompatActivity() {
             ViewModelProvider(
                 this,
                 DetailViewModelFactory(
-                    `Default ProductRepository`(DefaultProductDataSource),
+                    DefaultProductRepository(DefaultProductDataSource),
                     DefaultCartRepository(
                         DefaultCartDataSource(
                             CartDatabase.getInstance(this),
@@ -74,7 +78,7 @@ class DetailActivity : AppCompatActivity() {
                 ).show()
 
                 val resultIntent = Intent()
-                resultIntent.putExtra(EXTRA_DETAIL_CART_ITEM, productId)
+                resultIntent.putExtra(EXTRA_DETAIL_PRODUCT_ID, productId)
                 setResult(DETAIL_RESULT_OK, resultIntent)
             }
         }
@@ -119,10 +123,10 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
-        private const val EXTRA_SHOW_RESULT = "extra_show_result"
+        private const val EXTRA_SHOW_RECENT = "extra_show_recent"
         private const val DEFAULT_PRODUCT_ID = -1L
-        private const val DEFAULT_SHOW_RESULT = true
-        const val EXTRA_DETAIL_CART_ITEM = "extra_detail_cart_item"
+        private const val DEFAULT_SHOW_RECENT = true
+        const val EXTRA_DETAIL_PRODUCT_ID = "extra_detail_product_id"
         const val DETAIL_RESULT_OK = 1000
 
         fun newIntent(
@@ -140,7 +144,7 @@ class DetailActivity : AppCompatActivity() {
         ): Intent {
             return Intent(context, DetailActivity::class.java)
                 .putExtra(EXTRA_PRODUCT_ID, productId)
-                .putExtra(EXTRA_SHOW_RESULT, showRecent)
+                .putExtra(EXTRA_SHOW_RECENT, showRecent)
                 .setFlags(flag)
         }
     }
@@ -151,9 +155,9 @@ fun CardView.setRecentProductVisibility(
     productName: String?,
     showRecent: Boolean,
 ) {
-    if (productName != null && showRecent) {
-        visibility = View.VISIBLE
+    visibility = if (productName != null && showRecent) {
+        View.VISIBLE
     } else {
-        visibility = View.GONE
+        View.GONE
     }
 }

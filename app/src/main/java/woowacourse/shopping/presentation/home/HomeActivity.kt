@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
 import woowacourse.shopping.data.repository.DefaultCartRepository
-import woowacourse.shopping.data.repository.`Default ProductRepository`
+import woowacourse.shopping.data.repository.DefaultProductRepository
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.db.cart.CartDatabase
 import woowacourse.shopping.presentation.cart.CartActivity
@@ -16,7 +16,7 @@ import woowacourse.shopping.presentation.cart.CartActivity.Companion.CART_RESULT
 import woowacourse.shopping.presentation.cart.CartActivity.Companion.EXTRA_CART_ITEMS
 import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.detail.DetailActivity.Companion.DETAIL_RESULT_OK
-import woowacourse.shopping.presentation.detail.DetailActivity.Companion.EXTRA_DETAIL_CART_ITEM
+import woowacourse.shopping.presentation.detail.DetailActivity.Companion.EXTRA_DETAIL_PRODUCT_ID
 import woowacourse.shopping.presentation.home.adapter.ProductAdapter
 import woowacourse.shopping.presentation.home.adapter.ProductsGridLayoutManager
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == DETAIL_RESULT_OK) {
-                val productId = result?.data?.getLongExtra(EXTRA_DETAIL_CART_ITEM, 0)
+                val productId = result?.data?.getLongExtra(EXTRA_DETAIL_PRODUCT_ID, DEFAULT_DETAIL_PRODUCT_ID)
 
                 viewModel.updateOrder(productId!!)
             }
@@ -55,7 +55,7 @@ class HomeActivity : AppCompatActivity() {
         ViewModelProvider(
             this,
             HomeViewModelFactory(
-                `Default ProductRepository`(DefaultProductDataSource),
+                DefaultProductRepository(DefaultProductDataSource),
                 DefaultCartRepository(DefaultCartDataSource(CartDatabase.getInstance(this))),
             ),
         )[HomeViewModel::class.java]
@@ -85,7 +85,7 @@ class HomeActivity : AppCompatActivity() {
                 spanSizeLookup = ProductsGridLayoutManager(adapter)
             }
         binding.productAdapter = adapter
-        binding.viewModel = viewModel
+        binding.homeViewModel = viewModel
         binding.homeActionHandler = viewModel
         binding.lifecycleOwner = this
     }
@@ -119,5 +119,9 @@ class HomeActivity : AppCompatActivity() {
     private fun initToolBar() {
         setSupportActionBar(binding.toolbarHome)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    companion object {
+        private const val DEFAULT_DETAIL_PRODUCT_ID = -1L
     }
 }
