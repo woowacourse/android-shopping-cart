@@ -13,7 +13,7 @@ class DetailViewModelFactory(
     private val cartRepository: CartRepository,
     private val historyRepository: ProductHistoryRepository,
     private val productId: Long,
-    private val isLastlyViewed: Boolean,
+    private val lastlyViewedProductId: Long,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(
         modelClass: Class<T>,
@@ -25,7 +25,7 @@ class DetailViewModelFactory(
                 cartRepository,
                 historyRepository,
                 productId,
-                isLastlyViewed,
+                lastlyViewedProductId,
                 extras.createSavedStateHandle(),
             ) as T
         } else {

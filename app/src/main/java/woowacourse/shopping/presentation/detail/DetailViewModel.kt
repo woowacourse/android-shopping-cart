@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.history.ProductHistory
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.domain.repository.cart.CartRepository
@@ -22,7 +23,7 @@ class DetailViewModel(
     private val cartRepository: CartRepository,
     private val historyRepository: ProductHistoryRepository,
     id: Long,
-    val isLastlyViewed: Boolean,
+    lastViewedProductId: Long,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), QuantityListener {
     private val _productInformation: MutableLiveData<CartableProduct> = MutableLiveData()
@@ -49,7 +50,7 @@ class DetailViewModel(
         } else {
             loadProductInformation(productId)
         }
-        if (!isLastlyViewed) {
+        if (id != lastViewedProductId) {
             updateLastlyViewedProduct()
         }
     }
@@ -72,7 +73,13 @@ class DetailViewModel(
 
     fun navigateToProductDetail(id: Long) {
         thread {
-            _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, true)))
+            _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, id)))
+        }
+    }
+
+    fun navigateBack(id: Long) {
+        thread {
+            historyRepository.addProductHistory(ProductHistory(productId = id))
         }
     }
 

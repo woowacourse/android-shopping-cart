@@ -99,7 +99,7 @@ class HomeActivity : AppCompatActivity() {
                 DetailActivity.newIntent(
                     this,
                     data?.productId ?: return@observe,
-                    data.isLastlyViewed,
+                    data.lastlyViewedProductId,
                 ),
             )
         }

@@ -99,9 +99,9 @@ class HomeViewModel(
     override fun navigateToProductDetail(id: Long) {
         thread {
             val lastlyViewedId = productHistoryRepository.fetchLatestHistory().product.id
-            productHistoryRepository.addProductHistory(ProductHistory(productId = id))
+//            productHistoryRepository.addProductHistory(ProductHistory(productId = id))
             loadHistory()
-            _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, id == lastlyViewedId)))
+            _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
         }
     }
 
@@ -168,5 +168,5 @@ class HomeViewModel(
 
 data class DetailNavigationData(
     val productId: Long,
-    val isLastlyViewed: Boolean,
+    val lastlyViewedProductId: Long,
 )

@@ -5,13 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
+import com.google.android.material.card.MaterialCardView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.home.ProductQuantity
 
@@ -22,8 +27,8 @@ class DetailActivity : AppCompatActivity() {
     private val productId by lazy {
         intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
     }
-    private val isLastlyViewed by lazy {
-        intent.getBooleanExtra(EXTRA_LASTLY_VIEWED, false)
+    private val lastlyViewedProductId by lazy {
+        intent.getLongExtra(EXTRA_LASTLY_VIEWED, DEFAULT_PRODUCT_ID)
     }
     private val viewModel: DetailViewModel by viewModels {
         val application = application as ShoppingApplication
@@ -32,7 +37,7 @@ class DetailActivity : AppCompatActivity() {
             application.cartRepository,
             application.productHistoryRepository,
             productId,
-            isLastlyViewed,
+            lastlyViewedProductId,
         )
     }
 
@@ -82,7 +87,7 @@ class DetailActivity : AppCompatActivity() {
                 newIntent(
                     this,
                     data?.productId ?: return@observe,
-                    data.isLastlyViewed,
+                    data.lastlyViewedProductId,
                 )
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
@@ -102,6 +107,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun navigateBackToMain() {
+        viewModel.navigateBack(id = productId)
         finish()
     }
 
@@ -125,11 +131,20 @@ class DetailActivity : AppCompatActivity() {
         fun newIntent(
             context: Context,
             productId: Long,
-            isLastlyViewed: Boolean = false,
+            lastlyViewedProductId: Long,
         ): Intent {
             return Intent(context, DetailActivity::class.java)
                 .putExtra(EXTRA_PRODUCT_ID, productId)
-                .putExtra(EXTRA_LASTLY_VIEWED, isLastlyViewed)
+                .putExtra(EXTRA_LASTLY_VIEWED, lastlyViewedProductId)
         }
+    }
+}
+
+@BindingAdapter("shopping:lastProductAvailability")
+fun MaterialCardView.setLastViewedProductAvailability(recentProduct: RecentProduct?) {
+    visibility = if (recentProduct == null) {
+        View.GONE
+    } else {
+        View.VISIBLE
     }
 }

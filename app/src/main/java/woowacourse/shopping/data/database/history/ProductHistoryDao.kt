@@ -23,6 +23,6 @@ interface ProductHistoryDao {
     @Upsert
     fun insertProductHistory(productHistory: ProductHistory): Long
 
-    @Query("SELECT * FROM product_history ORDER BY productId DESC LIMIT 1")
+    @Query("SELECT * FROM product_history ORDER BY id DESC LIMIT 1")
     fun getLastProduct(): RecentProduct
 }
