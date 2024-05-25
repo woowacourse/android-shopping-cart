@@ -1,267 +1,368 @@
 package woowacourse.shopping.productList
 
-import androidx.lifecycle.MutableLiveData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.data.model.toDomain
+import woowacourse.shopping.data.source.ProductDataSource
+import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 import woowacourse.shopping.domain.model.ProductCountEvent
-import woowacourse.shopping.domain.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
+import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.repository.FakeShoppingCartProductIdDataSource
-import woowacourse.shopping.repository.FakeShoppingProductsRepository
+import woowacourse.shopping.source.FakeProductDataSource
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
-import woowacourse.shopping.testfixture.productsIdCountTestFixture
-import woowacourse.shopping.ui.productList.ProductListViewModel
+import woowacourse.shopping.ui.productList.ProductListViewModel2
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
-    private lateinit var viewModel: ProductListViewModel
+    private lateinit var productSource: ProductDataSource
+    private lateinit var cartSource: ShoppingCartProductIdDataSource
+    private lateinit var repository: ShoppingProductsRepository
+    private lateinit var viewmodel: ProductListViewModel2
 
     @Test
-    fun `데이터 20개 로드`() {
+    fun `장바구니에 아무것도 들어가 있지 않을 때 상품 20개 로드`() {
         // given
-        val repo =
-            FakeShoppingProductsRepository(
-                productsTestFixture(20),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(60).toMutableList(),
             )
-        viewModel =
-            ProductListViewModel(
-                productsRepository = repo,
-                _currentPage = MutableLiveData(1),
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = mutableListOf(),
             )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
+
+        // when (init)
 
         // then
-        assertThat(viewModel.loadedProducts.getOrAwaitValue()).isEqualTo(productsTestFixture(20))
+        val loadedProducts = viewmodel.loadedProducts
+        assertThat(loadedProducts.getOrAwaitValue()).isEqualTo(
+            productsTestFixture(20).map { it.toDomain(0) },
+        )
     }
 
     @Test
-    fun `데이터 40개 로드`() {
+    fun `장바구니에 아무것도 들어가 있지 않을 때 상품 40개 로드`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository =
-                    FakeShoppingProductsRepository(
-                        productsTestFixture(40),
-                    ),
-                _currentPage = MutableLiveData(1),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(60).toMutableList(),
             )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = mutableListOf(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
 
         // when
-        viewModel.loadNextPageProducts()
+        viewmodel.loadNextPageProducts()
 
         // then
-        assertThat(viewModel.loadedProducts.getOrAwaitValue()).isEqualTo(productsTestFixture(40))
+        val loadedProducts = viewmodel.loadedProducts
+        assertThat(loadedProducts.getOrAwaitValue()).isEqualTo(
+            productsTestFixture(40).map { it.toDomain(0) },
+        )
     }
 
     @Test
-    fun `총 데이터가 15 개일 때 현재 페이지는 1페이지이다`() {
-        // givne
-        viewModel =
-            ProductListViewModel(
-                productsRepository =
-                    FakeShoppingProductsRepository(
-                        productsTestFixture(15),
-                    ),
-                _currentPage = MutableLiveData(1),
-            )
-
-        // then
-        assertThat(viewModel.currentPage.getOrAwaitValue()).isEqualTo(1)
-    }
-
-    @Test
-    fun `총 데이터가 21 개일 때 데이터를 두번 로드하면 2페이지이다`() {
+    fun `총 데이터가 15개일 때 현재 페이지는 1페이지`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository =
-                    FakeShoppingProductsRepository(
-                        productsTestFixture(21),
-                    ),
-                _currentPage = MutableLiveData(1),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(15).toMutableList(),
             )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = mutableListOf(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
+
+        // when (init)
+
+        // then
+        val currentPage = viewmodel.currentPage
+        assertThat(currentPage.getOrAwaitValue()).isEqualTo(1)
+    }
+
+    @Test
+    fun `총 데이터가 20개일 때 첫 페이지가 마지막 페이지이다`() {
+        // given
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(15).toMutableList(),
+            )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = mutableListOf(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
+
+        // when (init)
+
+        // then
+        val isLastPage = viewmodel.isLastPage.value
+        assertThat(isLastPage).isTrue
+    }
+
+    @Test
+    fun `총 데이터가 21개일 대 첫 페이지가 마지막 페이지가 아니다`() {
+        // given
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
+            )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = mutableListOf(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
+
+        // when (init)
+
+        // then
+        val isLastPage = viewmodel.isLastPage.getOrAwaitValue()
+        assertThat(isLastPage).isFalse
+    }
+
+    @Test
+    fun `총 데이터가 21개일 때 두번째 페이지가 마지막 페이지이다`() {
+        // given
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
+            )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = mutableListOf(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
 
         // when
-        viewModel.loadNextPageProducts()
+        viewmodel.loadNextPageProducts()
 
         // then
-        assertThat(viewModel.currentPage.getOrAwaitValue()).isEqualTo(2)
+        assertThat(viewmodel.isLastPage.getOrAwaitValue()).isTrue
     }
 
     @Test
-    fun `총 데이터가 20 개 일때 첫 페이지가 마지막 페이지이다`() {
+    fun `장바구니에 담긴 상품들의 개수를 로드`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository =
-                    FakeShoppingProductsRepository(
-                        productsTestFixture(20),
-                    ),
-                _currentPage = MutableLiveData(1),
+        // given
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
             )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(10).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
+
+        // when (init)
 
         // then
-        assertThat(viewModel.isLastPage.getOrAwaitValue()).isTrue
+        assertThat(viewmodel.cartProductTotalCount.getOrAwaitValue()).isEqualTo(10)
     }
 
     @Test
-    fun `총 데이터가 21 개 일때 첫 페이지가 마지막 페이지가 아니다`() {
+    fun `장바구니에 상품을 담고 장바구니에 담긴 상품들의 개수를 로드`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository =
-                    FakeShoppingProductsRepository(
-                        productsTestFixture(21),
-                    ),
-                _currentPage = MutableLiveData(1),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
             )
-
-        // then
-        assertThat(viewModel.isLastPage.getOrAwaitValue()).isFalse
-    }
-
-    @Test
-    fun `총 데이터가 21 개 일때 두번째 페이지가 마지막 페이지이다`() {
-        // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository =
-                    FakeShoppingProductsRepository(
-                        productsTestFixture(21),
-                    ),
-                _currentPage = MutableLiveData(1),
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(10).toMutableList(),
             )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
 
         // when
-        viewModel.loadNextPageProducts()
+        viewmodel.onIncrease(productId = 13)
 
         // then
-        assertThat(viewModel.isLastPage.getOrAwaitValue()).isTrue
+        // 추가된 상품 검사
+        val event = viewmodel.productsEvent.getOrAwaitValue()
+        assertThat(event).isEqualTo(ProductCountEvent.ProductCountCountChanged(13, 1))
+
+        // 장바구니에 있는 상품 개수 검사
+        assertThat(viewmodel.cartProductTotalCount.getOrAwaitValue()).isEqualTo(11)
     }
 
     @Test
-    fun `장바구니에 담긴 상품들을 로드한다`() {
+    fun `장바구니에 있던 상품의 개수를 1 추가하고 로드된 상품 검사`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
-                productIdsCountRepository =
-                    DefaultProductIdsCountRepository(
-                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10).toMutableList()),
-                    ),
-                _currentPage = MutableLiveData(1),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
             )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(5).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
 
         // when
-        viewModel.loadProductIdsCount()
+        viewmodel.onIncrease(productId = 3)
 
         // then
-        assertThat(viewModel.productIdsCount.getOrAwaitValue()).isEqualTo(productsIdCountTestFixture(10))
+        // 증가된 상품 검사
+        val event = viewmodel.productsEvent.getOrAwaitValue()
+        assertThat(event).isEqualTo(ProductCountEvent.ProductCountCountChanged(3, 2))
+
+        // 모든 상품 로드 검사
+        val loadedProducts = viewmodel.loadedProducts.getOrAwaitValue()
+        assertThat(loadedProducts).isEqualTo(
+            List(20) {
+                when (it) {
+                    3 -> productTestFixture(it).toDomain(2)
+                    in (0..4) -> productTestFixture(it).toDomain(1)
+                    else -> productTestFixture(it).toDomain(0)
+                }
+            },
+        )
     }
 
     @Test
-    fun `상품 배경을 클릭하면 해당 상품 id 를 저장`() {
+    fun `장바구니에 있던 상품의 수량 1 감소시킬 때 원래 개수가 1이면 완전히 제거됨`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
-                productIdsCountRepository =
-                    DefaultProductIdsCountRepository(
-                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10).toMutableList()),
-                    ),
-                _currentPage = MutableLiveData(1),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
             )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(5).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
 
         // when
-        viewModel.onClick(3)
+        viewmodel.onDecrease(productId = 3)
 
         // then
-        assertThat(viewModel.detailProductDestinationId.getValue()).isEqualTo(3)
+        val actual = viewmodel.productsEvent.getOrAwaitValue()
+        val expected = ProductCountEvent.ProductCountCleared(3)
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun `장바구니 상품 개수가 0 인 상품에 대해 상품 증가를 클릭하면 1이 된 상태가 된다`() {
+    fun `장바구니에 있던 상품의 수량 1 감소`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
-                productIdsCountRepository =
-                    DefaultProductIdsCountRepository(
-                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(0).toMutableList()),
-                    ),
-                _currentPage = MutableLiveData(1),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
             )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 5, quantity = 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
 
         // when
-        viewModel.onIncrease(3)
+        viewmodel.onDecrease(productId = 3)
 
         // then
-        val productCountEvent = viewModel.productsEvent.getOrAwaitValue()
-        assertThat(productCountEvent).isEqualTo(ProductCountEvent.ProductCountCountChanged(3, 1))
+        val actualEvent = viewmodel.productsEvent.getOrAwaitValue()
+        val expectedEvent = ProductCountEvent.ProductCountCountChanged(3, 1)
+        assertThat(actualEvent).isEqualTo(expectedEvent)
+
+        val actualProducts = viewmodel.loadedProducts.getOrAwaitValue()
+        val expectedProducts =
+            List(20) {
+                when (it) {
+                    3 -> productTestFixture(it).toDomain(1)
+                    in (0 until 5) -> productTestFixture(it).toDomain(2)
+                    else -> productTestFixture(it).toDomain(0)
+                }
+            }
+        assertThat(actualProducts).isEqualTo(expectedProducts)
     }
 
     @Test
-    fun `장바구니 상품 개수가 1 인 상품에 대해 상품 증가를 클릭하면 1이 된 상태가 된다`() {
+    fun `상품 상세로 이동하기 위한 id 저장`() {
         // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
-                productIdsCountRepository =
-                    DefaultProductIdsCountRepository(
-                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10, 1).toMutableList()),
-                    ),
-                _currentPage = MutableLiveData(1),
+        productSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(21).toMutableList(),
             )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(5).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productSource,
+                cartSource,
+            )
+        viewmodel = ProductListViewModel2(repository)
 
         // when
-        viewModel.onIncrease(3)
+        viewmodel.onClick(productId = 3)
 
         // then
-        val productCountEvent = viewModel.productsEvent.getOrAwaitValue()
-        assertThat(productCountEvent).isEqualTo(ProductCountEvent.ProductCountCountChanged(3, 2))
-    }
-
-    @Test
-    fun `장바구니 상품 개수가 1인 상품에 대해 상품 감소를 클릭하면 없어짐 상태가 된다`() {
-        // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
-                productIdsCountRepository =
-                    DefaultProductIdsCountRepository(
-                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10, 1).toMutableList()),
-                    ),
-                _currentPage = MutableLiveData(1),
-            )
-
-        // when
-        viewModel.onDecrease(3)
-
-        // then
-        val productCountEvent = viewModel.productsEvent.getOrAwaitValue()
-        assertThat(productCountEvent).isEqualTo(ProductCountEvent.ProductCountCleared(3))
-    }
-
-    @Test
-    fun `장바구니 상품 개수가 2 인 상품에 대해 상품 감소를 클릭하면 1이 된 상태가 된다`() {
-        // given
-        viewModel =
-            ProductListViewModel(
-                productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
-                productIdsCountRepository =
-                    DefaultProductIdsCountRepository(
-                        FakeShoppingCartProductIdDataSource(productsIdCountDataTestFixture(10, 2).toMutableList()),
-                    ),
-                _currentPage = MutableLiveData(1),
-            )
-
-        // when
-        viewModel.onDecrease(3)
-
-        // then
-        val productCountEvent = viewModel.productsEvent.getOrAwaitValue()
-        assertThat(productCountEvent).isEqualTo(ProductCountEvent.ProductCountCountChanged(3, 1))
+        val productDetailId = viewmodel.detailProductDestinationId.getValue()
+        val expected = 3
+        assertThat(productDetailId).isEqualTo(expected)
     }
 }
