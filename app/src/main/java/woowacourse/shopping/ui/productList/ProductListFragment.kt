@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.productList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -47,8 +46,9 @@ class ProductListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater)
-        binding.productDetailList.adapter = adapter
         binding.vm = viewModel
+        binding.lifecycleOwner = this
+        binding.productDetailList.adapter = adapter
 
         showLoadMoreButton()
         return binding.root
@@ -90,11 +90,16 @@ class ProductListFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.productListToolbar.setOnMenuItemClickListener(::navigateToMenuItem)
-
+        observeNavigationShoppingCart()
         observeLoadedProducts()
         observeDetailProductDestination()
         observeProductEvent()
+    }
+
+    fun observeNavigationShoppingCart() {
+        viewModel.shoppingCartDestination.observe(viewLifecycleOwner) {
+            navigateToShoppingCart()
+        }
     }
 
     private fun observeLoadedProducts() {
@@ -132,16 +137,8 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    private fun navigateToMenuItem(it: MenuItem) =
-        when (it.itemId) {
-            R.id.action_cart -> navigateToShoppingCart()
-
-            else -> false
-        }
-
-    private fun navigateToShoppingCart(): Boolean {
+    private fun navigateToShoppingCart() {
         navigateToFragment(ShoppingCartFragment())
-        return true
     }
 
     private fun navigateToProductDetail(id: Int) = navigateToFragment(ProductDetailFragment.newInstance(id))

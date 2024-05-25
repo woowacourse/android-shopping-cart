@@ -22,10 +22,7 @@ class DefaultShoppingProductRepository(
 
     override fun isFinalPage(page: Int): Boolean = productsSource.isFinalPage(page)
 
-    override fun shoppingCartProductQuantity(): Int =
-        cartSource.loadAll().sumOf {
-            it.quantity
-        }
+    override fun shoppingCartProductQuantity(): Int = cartSource.loadAll().sumOf { it.quantity }
 
     private fun productQuantity(productId: Int) = cartSource.findByProductId(productId)?.quantity ?: 0
 

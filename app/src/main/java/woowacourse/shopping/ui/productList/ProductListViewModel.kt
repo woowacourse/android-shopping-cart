@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productList
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,9 +20,7 @@ class ProductListViewModel(
     val currentPage: LiveData<Int> get() = _currentPage
 
     private val _loadedProducts: MutableLiveData<List<Product>> =
-        MutableLiveData(
-            productsRepository.loadAllProducts(currentPage.value ?: currentPageIsNullException()),
-        )
+        MutableLiveData(emptyList())
     val loadedProducts: LiveData<List<Product>> get() = _loadedProducts
 
     private val _cartProductTotalCount: MutableLiveData<Int> =
@@ -38,13 +37,22 @@ class ProductListViewModel(
 
     private val _productsEvent: MutableLiveData<ProductCountEvent> =
         MutableLiveData(ProductCountEvent.ProductCountAllCleared)
+    val productsEvent: LiveData<ProductCountEvent> = _productsEvent
 
     private var _detailProductDestinationId: MutableSingleLiveData<Int> = MutableSingleLiveData()
     val detailProductDestinationId: SingleLiveData<Int> get() = _detailProductDestinationId
 
-    val productsEvent: LiveData<ProductCountEvent> = _productsEvent
+    private var _shoppingCartDestination: MutableSingleLiveData<Boolean> = MutableSingleLiveData()
+    val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
+
+    init {
+        _loadedProducts.value = productsRepository.loadAllProducts(currentPage.value ?: currentPageIsNullException())
+        _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
+        _isLastPage.value = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
+    }
 
     fun loadNextPageProducts() {
+        Log.d(TAG, "loadNextPageProducts called : currentPage : ${currentPage.value}")
         if (isLastPage.value == true) return
         _currentPage.value = _currentPage.value?.plus(PAGE_MOVE_COUNT)
         _isLastPage.value = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
@@ -58,11 +66,18 @@ class ProductListViewModel(
         _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
     }
 
+    fun navigateToShoppingCart() {
+        Log.d(TAG, "navigateToShoppingCart: called")
+        _shoppingCartDestination.setValue(true)
+    }
+
     override fun onClick(productId: Int) {
+        Log.d(TAG, "onClick: called productId : $productId")
         _detailProductDestinationId.setValue(productId)
     }
 
     override fun onIncrease(productId: Int) {
+        Log.d(TAG, "onIncrease: called productId : $productId")
         try {
             productsRepository.increaseShoppingCartProduct(productId)
         } catch (e: NoSuchElementException) {
@@ -80,10 +95,12 @@ class ProductListViewModel(
                     }
                 }
             _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
+            Log.d(TAG, "onIncrease: cartProductTotalCount : ${cartProductTotalCount.value}")
         }
     }
 
     override fun onDecrease(productId: Int) {
+        Log.d(TAG, "onDecrease: called")
         productsRepository.decreaseShoppingCartProduct(productId)
         val product = productsRepository.loadProduct(productId)
         if (productRemoved(product, productId)) return
@@ -108,7 +125,16 @@ class ProductListViewModel(
         if (product.quantity == 0) {
             productsRepository.removeShoppingCartProduct(productId)
             _productsEvent.value = ProductCountEvent.ProductCountCleared(productId)
-            _loadedProducts.value = currentPage.value?.let { productsRepository.loadAllProducts(it) }
+
+            _loadedProducts.value =
+                _loadedProducts.value?.map {
+                    if (it.id == productId) {
+                        it.copy(quantity = 0)
+                    } else {
+                        it
+                    }
+                }
+
             _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
             return true
         }
@@ -116,7 +142,7 @@ class ProductListViewModel(
     }
 
     companion object {
-        private const val TAG = "ProductListViewModel2"
+        private const val TAG = "ProductListViewModel"
         private const val FIRST_PAGE = 1
         private const val PAGE_MOVE_COUNT = 1
     }
