@@ -5,7 +5,11 @@ import woowacourse.shopping.data.model.ProductIdsCountData
 interface ShoppingCartProductIdDataSource {
     fun findByProductId(productId: Int): ProductIdsCountData?
 
+    fun loadPaged(page: Int): List<ProductIdsCountData>
+
     fun loadAll(): List<ProductIdsCountData>
+
+    fun isFinalPage(page: Int): Boolean
 
     fun addedNewProductsId(productIdsCountData: ProductIdsCountData): Int
 
