@@ -130,14 +130,15 @@
             android:background="@drawable/shopping_cart_item_gridview"
             app:layout_constraintBottom_toTopOf="@id/btn_put_cart"
             app:layout_constraintLeft_toLeftOf="@id/tv_detail_price"
-            app:layout_constraintRight_toRightOf="@id/btn_quantity_control">
+            app:layout_constraintRight_toRightOf="@id/btn_quantity_control"
+            app:viewVisibility="@{viewModel.isMostRecentProductVisible}">
 
             <TextView
                 android:id="@+id/tv_recent_viewed_product_title"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
                 android:text="마지막으로 본 상품"
                 android:textColor="@color/green_300"
                 android:textSize="12dp"
@@ -149,25 +150,34 @@
                 android:id="@+id/tv_recent_viewed_product_name"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="@{() -> viewModel.onRecentProductClick()}"
+                android:text="@{viewModel.mostRecentProduct.productName}"
                 android:textColor="@color/gray_500"
                 android:textSize="18dp"
-                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="@id/tv_recent_viewed_product_title"
                 app:layout_constraintTop_toBottomOf="@+id/tv_recent_viewed_product_title"
-                tools:text="PET보틀-정사각형(500ml)" />
+                app:viewVisibility="@{viewModel.isMostRecentProductVisible}"
+                tools:text="PET보틀-정사각형(500ml)"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/tv_recent_viewed_product_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_marginTop="8dp"
-                android:text="마지막으로 본 상품이 존재하지 않습니다."
-                android:textColor="@color/gray_500"
-                android:textSize="18dp"
-                android:visibility="gone"
-                app:layout_constraintLeft_toLeftOf="@id/tv_recent_viewed_product_title"
-                app:layout_constraintTop_toBottomOf="@+id/tv_recent_viewed_product_title" />
+                android:text="텅!"
+                android:textColor="@color/black"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:viewVisibility="@{!viewModel.isMostRecentProductVisible}"
+                tools:visibility="gone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

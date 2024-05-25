@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
         HomeViewModelFactory(
             ShoppingRepositoryImpl(),
             CartRepositoryImpl(cartDatabase),
-            RecentProductRepositoryImpl(recentProductDatabase)
+            RecentProductRepositoryImpl(recentProductDatabase),
         )
     }
 

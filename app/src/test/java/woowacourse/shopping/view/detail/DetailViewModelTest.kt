@@ -26,7 +26,7 @@ class DetailViewModelTest {
             name = "1 대전 장인약과",
             price = 10000,
             imageUrl =
-            "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
                     "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
                     "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
                     "G%2FIMG_5278.jpg&type=sc960_832",
@@ -48,9 +48,9 @@ class DetailViewModelTest {
         assertThat(actual?.price).isEqualTo(10000)
         assertThat(actual?.imageUrl).isEqualTo(
             "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
-                    "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
-                    "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
-                    "G%2FIMG_5278.jpg&type=sc960_832",
+                "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
+                "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
+                "G%2FIMG_5278.jpg&type=sc960_832",
         )
     }
 

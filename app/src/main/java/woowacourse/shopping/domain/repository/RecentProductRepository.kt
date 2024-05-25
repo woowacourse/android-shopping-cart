@@ -10,7 +10,7 @@ interface RecentProductRepository {
 
     fun findOrNullByProductId(productId: Long): RecentProduct?
 
-    fun findMostRecentProduct(): RecentProduct
+    fun findMostRecentProduct(): RecentProduct?
 
     fun findAll(limit: Int): List<RecentProduct>
 

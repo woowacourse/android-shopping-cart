@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.CartRepository.Companion.DEFAULT_QUANTITY
 import woowacourse.shopping.domain.repository.RecentProductRepository
@@ -27,9 +28,22 @@ class DetailViewModel(
     val product: LiveData<Product>
         get() = _product
 
+    private val _mostRecentProduct: MutableLiveData<RecentProduct?> = MutableLiveData()
+    val mostRecentProduct: LiveData<RecentProduct?>
+        get() = _mostRecentProduct
+
+    private val _isMostRecentProductVisible = MutableLiveData<Boolean>()
+
+    val isMostRecentProductVisible: LiveData<Boolean>
+        get() = _isMostRecentProductVisible
+
     private val _navigateToCart = MutableLiveData<Event<Boolean>>()
     val navigateToCart: LiveData<Event<Boolean>>
         get() = _navigateToCart
+
+    private val _navigateToRecentDetail = MutableLiveData<Event<Boolean>>()
+    val navigateToRecentDetail: LiveData<Event<Boolean>>
+        get() = _navigateToRecentDetail
 
     private val _isFinishButtonClicked = MutableLiveData<Event<Boolean>>()
     val isFinishButtonClicked: LiveData<Event<Boolean>>
@@ -68,15 +82,28 @@ class DetailViewModel(
         }
     }
 
-    fun saveRecentProduct() {
+    fun saveRecentProduct(isMostRecentProductClicked: Boolean) {
+        _mostRecentProduct.value = recentProductRepository.findMostRecentProduct()
         val currentProduct = product.value ?: return
         recentProductRepository.save(currentProduct)
+        updateRecentProductVisible(isMostRecentProductClicked)
+    }
+
+    fun updateRecentProductVisible(isMostRecentProductClicked: Boolean) {
+        _isMostRecentProductVisible.value =
+            if (mostRecentProduct.value == null || product.value?.id == mostRecentProduct.value?.productId) false
+            else !isMostRecentProductClicked
     }
 
     override fun onPutCartButtonClick() {
         val currentQuantity = cartRepository.productQuantity(productId)
         saveCartItem(currentQuantity + (quantity.value ?: DEFAULT_QUANTITY))
         _navigateToCart.value = Event(true)
+    }
+
+    override fun onRecentProductClick() {
+        _isMostRecentProductVisible.value = false
+        _navigateToRecentDetail.value = Event(true)
     }
 
     override fun onQuantityPlusButtonClick(productId: Long) {

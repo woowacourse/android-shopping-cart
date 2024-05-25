@@ -19,6 +19,12 @@ import woowacourse.shopping.view.state.UIState
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
+    private val isMostRecentProductClicked: Boolean by lazy {
+        intent.getBooleanExtra(
+            IS_MOST_RECENT_PRODUCT_CLICKED,
+            DEFAULT_IS_MOST_RECENT_PRODUCT_CLICKED,
+        )
+    }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
             cartRepository = CartRepositoryImpl(cartDatabase),
@@ -34,7 +40,12 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpDataBinding()
         observeViewModel()
-        viewModel.saveRecentProduct()
+        viewModel.saveRecentProduct(isMostRecentProductClicked)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.updateRecentProductVisible(isMostRecentProductClicked)
     }
 
     private fun setUpDataBinding() {
@@ -57,6 +68,12 @@ class DetailActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.navigateToRecentDetail.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                navigateToDetail()
+            }
+        }
+
         viewModel.isFinishButtonClicked.observe(this) {
             it.getContentIfNotHandled()?.let {
                 finish()
@@ -68,6 +85,17 @@ class DetailActivity : AppCompatActivity() {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
+    private fun navigateToDetail() {
+        val recentProduct = viewModel.mostRecentProduct.value ?: return
+        startActivity(
+            createIntent(
+                this,
+                recentProduct.productId,
+                true
+            ),
+        )
+    }
+
     private fun putCartItem() {
         Toast.makeText(this, PUR_CART_MESSAGE, Toast.LENGTH_SHORT).show()
         startActivity(CartActivity.createIntent(context = this))
@@ -77,13 +105,18 @@ class DetailActivity : AppCompatActivity() {
         private const val PUR_CART_MESSAGE = "장바구니에 상품이 추가되었습니다!"
         const val PRODUCT_ID = "product_id"
         const val INVALID_PRODUCT_ID = -1L
+        private const val IS_MOST_RECENT_PRODUCT_CLICKED = "is_most_recent_product_clicked"
+        private const val DEFAULT_IS_MOST_RECENT_PRODUCT_CLICKED = false
 
         fun createIntent(
             context: Context,
             productId: Long,
+            isMostRecentProductClicked: Boolean = DEFAULT_IS_MOST_RECENT_PRODUCT_CLICKED,
         ): Intent {
             return Intent(context, DetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, productId)
+                putExtra(IS_MOST_RECENT_PRODUCT_CLICKED, isMostRecentProductClicked)
+                flags = Intent.FLAG_ACTIVITY_NO_HISTORY
             }
         }
     }

@@ -19,7 +19,7 @@ class DetailViewModelFactory(
                 cartRepository = cartRepository,
                 shoppingRepository = shoppingRepository,
                 recentProductRepository = recentProductRepository,
-                productId = productId
+                productId = productId,
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

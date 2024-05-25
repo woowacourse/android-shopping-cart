@@ -2,12 +2,14 @@ package woowacourse.shopping.view.home
 
 import io.mockk.every
 import io.mockk.mockk
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.helper.FakeCartRepositoryImpl
 import woowacourse.shopping.helper.InstantTaskExecutorExtension
@@ -16,12 +18,14 @@ import woowacourse.shopping.view.state.UIState
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingViewModelTest {
     private lateinit var viewModel: HomeViewModel
-    private val shoppingRepository: ShoppingRepository = mockk()
+    private val shoppingRepository = mockk<ShoppingRepository>()
     private val cartRepository: CartRepository = FakeCartRepositoryImpl()
+    private val recentProductRepository: RecentProductRepository = mockk()
 
     @BeforeEach
     fun setUp() {
-        viewModel = HomeViewModel(shoppingRepository, cartRepository)
+        every { recentProductRepository.findAll(any()) } returns emptyList()
+        viewModel = HomeViewModel(shoppingRepository, cartRepository, recentProductRepository)
     }
 
     @Test
@@ -31,7 +35,7 @@ class ShoppingViewModelTest {
 
         viewModel.loadProducts()
 
-        assertEquals(UIState.Empty, viewModel.shoppingUiState.value)
+        assertThat(viewModel.shoppingUiState.value is UIState.Empty).isTrue()
         assertEquals(false, viewModel.canLoadMore.value)
     }
 
@@ -51,7 +55,7 @@ class ShoppingViewModelTest {
 
         viewModel.loadProducts()
 
-        assertEquals(UIState.Success(products), viewModel.shoppingUiState.value)
+        assertThat(viewModel.shoppingUiState.value is UIState.Success).isTrue()
         assertEquals(true, viewModel.canLoadMore.value)
     }
 

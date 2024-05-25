@@ -17,11 +17,11 @@ import woowacourse.shopping.view.state.UIState
 class HomeViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
 ) :
     ViewModel(),
-    HomeClickListener,
-    QuantityClickListener {
+        HomeClickListener,
+        QuantityClickListener {
     private val _shoppingUiState = MutableLiveData<UIState<List<ProductItem>>>(UIState.Empty)
     val shoppingUiState: LiveData<UIState<List<ProductItem>>>
         get() = _shoppingUiState

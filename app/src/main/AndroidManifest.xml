@@ -18,13 +18,11 @@
         <activity
             android:name=".view.cart.CartActivity"
             android:exported="false"
-            android:noHistory="true"
             android:theme="@style/Theme.Shopping" />
         <activity
             android:name=".view.detail.DetailActivity"
             android:exported="false"
             android:label=""
-            android:noHistory="true"
             android:theme="@style/Theme.Shopping" />
         <activity
             android:name=".view.home.HomeActivity"

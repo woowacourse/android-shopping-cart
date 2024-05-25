@@ -11,7 +11,7 @@ data class RecentProductEntity(
     val productId: Long,
     val productName: String,
     val imageUrl: String,
-    val dateTime: String
+    val dateTime: String,
 )
 
 fun RecentProductEntity.toRecentProduct(): RecentProduct {
@@ -19,6 +19,6 @@ fun RecentProductEntity.toRecentProduct(): RecentProduct {
         productId = this.productId,
         productName = this.productName,
         imageUrl = this.imageUrl,
-        dateTime = LocalDateTime.parse(dateTime)
+        dateTime = LocalDateTime.parse(dateTime),
     )
 }

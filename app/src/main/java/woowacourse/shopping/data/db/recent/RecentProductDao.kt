@@ -16,9 +16,7 @@ interface RecentProductDao {
     )
 
     @Query("SELECT * FROM recent_products WHERE productId = :productId")
-    fun findByProductId(
-        productId: Long
-    ): RecentProductEntity?
+    fun findByProductId(productId: Long): RecentProductEntity?
 
     @Query("SELECT * FROM recent_products ORDER BY dateTime DESC LIMIT 1")
     fun findMostRecentProduct(): RecentProductEntity?

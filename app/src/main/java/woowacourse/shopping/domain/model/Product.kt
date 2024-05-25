@@ -27,7 +27,6 @@ fun Product.toRecentProductEntity(): RecentProductEntity {
         productId = this.id,
         productName = this.name,
         imageUrl = this.imageUrl,
-        dateTime = localDateTime
+        dateTime = localDateTime,
     )
 }
-

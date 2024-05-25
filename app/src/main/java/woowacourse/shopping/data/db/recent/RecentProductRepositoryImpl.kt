@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 class RecentProductRepositoryImpl(recentProductDatabase: RecentProductDatabase) :
     RecentProductRepository {
     private val dao = recentProductDatabase.recentProductDao()
+
     override fun save(product: Product) {
         if (findOrNullByProductId(product.id) != null) {
             update(product.id)
@@ -33,12 +34,12 @@ class RecentProductRepositoryImpl(recentProductDatabase: RecentProductDatabase) 
         return recentProductEntity?.toRecentProduct()
     }
 
-    override fun findMostRecentProduct(): RecentProduct {
+    override fun findMostRecentProduct(): RecentProduct? {
         var recentProduct: RecentProductEntity? = null
         threadAction {
             recentProduct = dao.findMostRecentProduct()
         }
-        return recentProduct?.toRecentProduct() ?: throw IllegalArgumentException("데이터가 존재하지 않습니다.")
+        return recentProduct?.toRecentProduct()
     }
 
     override fun findAll(limit: Int): List<RecentProduct> {
