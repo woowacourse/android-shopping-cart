@@ -9,11 +9,11 @@
 
         <variable
             name="onClick"
-            type="woowacourse.shopping.productlist.ProductListClickAction" />
+            type="woowacourse.shopping.productlist.uimodel.ProductListClickAction" />
 
         <variable
             name="product"
-            type="woowacourse.shopping.productlist.ProductUiModel" />
+            type="woowacourse.shopping.productlist.uimodel.ProductUiModel" />
 
     </data>
 

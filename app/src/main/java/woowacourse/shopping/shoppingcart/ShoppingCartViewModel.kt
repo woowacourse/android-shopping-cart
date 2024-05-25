@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.QuantityUpdate
+import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModels
+import woowacourse.shopping.shoppingcart.uimodel.LoadCartItemState
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(

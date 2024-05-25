@@ -7,11 +7,11 @@
 
         <variable
             name="cartItem"
-            type="woowacourse.shopping.shoppingcart.CartItemUiModel" />
+            type="woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel" />
 
         <variable
             name="onClick"
-            type="woowacourse.shopping.shoppingcart.ShoppingCartClickAction" />
+            type="woowacourse.shopping.shoppingcart.uimodel.ShoppingCartClickAction" />
 
     </data>
 

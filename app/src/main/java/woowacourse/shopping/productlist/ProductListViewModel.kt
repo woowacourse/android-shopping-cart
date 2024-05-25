@@ -10,7 +10,11 @@ import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.productlist.LoadProductState.ShowProducts
+import woowacourse.shopping.productlist.uimodel.LoadProductState
+import woowacourse.shopping.productlist.uimodel.LoadProductState.ShowProducts
+import woowacourse.shopping.productlist.uimodel.ProductUiModel
+import woowacourse.shopping.productlist.uimodel.ProductUiModels
+import woowacourse.shopping.productlist.uimodel.RecentProductUiModel
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,

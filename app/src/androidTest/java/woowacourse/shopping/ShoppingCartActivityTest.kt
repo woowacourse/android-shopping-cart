@@ -9,7 +9,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.productlist.uimodel.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.shoppingcart.ShoppingCartAdapter
 

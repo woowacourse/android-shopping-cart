@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
+import woowacourse.shopping.productlist.uimodel.ProductListClickAction
+import woowacourse.shopping.productlist.uimodel.RecentProductUiModel
 import woowacourse.shopping.util.imageUrlToSrc
 
 class RecentProductAdapter(

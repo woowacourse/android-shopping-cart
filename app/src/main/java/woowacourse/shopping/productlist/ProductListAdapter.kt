@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListBinding
+import woowacourse.shopping.productlist.uimodel.ProductListClickAction
+import woowacourse.shopping.productlist.uimodel.ProductUiModel
 import woowacourse.shopping.util.imageUrlToSrc
 
 class ProductListAdapter(

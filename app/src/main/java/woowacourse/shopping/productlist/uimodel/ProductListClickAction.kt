@@ -1,4 +1,4 @@
-package woowacourse.shopping.productlist
+package woowacourse.shopping.productlist.uimodel
 
 import woowacourse.shopping.util.CartItemCountClickAction
 

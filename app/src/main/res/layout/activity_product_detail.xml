@@ -11,11 +11,11 @@
 
         <variable
             name="countResult"
-            type="woowacourse.shopping.productdetail.CountResultUiModel" />
+            type="woowacourse.shopping.productdetail.uimodel.CountResultUiModel" />
 
         <variable
             name="onClick"
-            type="woowacourse.shopping.productdetail.ProductDetailClickAction" />
+            type="woowacourse.shopping.productdetail.uimodel.ProductDetailClickAction" />
 
     </data>
 

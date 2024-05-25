@@ -9,8 +9,8 @@ import woowacourse.shopping.DummyProductRepository
 import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.productlist.toProductUiModel
-import woowacourse.shopping.shoppingcart.LoadCartItemState
 import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
+import woowacourse.shopping.shoppingcart.uimodel.LoadCartItemState
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
 import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
 

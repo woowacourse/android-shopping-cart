@@ -12,6 +12,9 @@ import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.productdetail.uimodel.CountState
+import woowacourse.shopping.productdetail.uimodel.ProductDetailClickAction
+import woowacourse.shopping.productdetail.uimodel.RecentProductState
 import woowacourse.shopping.productlist.ProductListActivity
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.imageUrlToSrc

@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.productlist.uimodel.LoadProductState
+import woowacourse.shopping.productlist.uimodel.ProductListClickAction
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.showToastMessage

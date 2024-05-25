@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel
+import woowacourse.shopping.shoppingcart.uimodel.ShoppingCartClickAction
 import woowacourse.shopping.util.imageUrlToSrc
 
 class ShoppingCartAdapter(

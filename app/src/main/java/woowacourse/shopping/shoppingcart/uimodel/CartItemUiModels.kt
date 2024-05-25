@@ -1,4 +1,4 @@
-package woowacourse.shopping.shoppingcart
+package woowacourse.shopping.shoppingcart.uimodel
 
 data class CartItemUiModels(
     val items: List<CartItemUiModel>,

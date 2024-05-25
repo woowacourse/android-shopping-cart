@@ -11,6 +11,9 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.productdetail.uimodel.CountResultUiModel
+import woowacourse.shopping.productdetail.uimodel.CountState
+import woowacourse.shopping.productdetail.uimodel.RecentProductState
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import java.time.LocalDateTime
