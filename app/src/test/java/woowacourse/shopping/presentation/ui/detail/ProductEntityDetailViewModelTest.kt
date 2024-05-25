@@ -31,14 +31,14 @@ class ProductEntityDetailViewModelTest {
     @Test
     fun `loadById로 특정 상품의 데이터를 가져온다`() {
         every { productRepository.findById(any()) } returns Result.success(product)
-        viewModel.loadById(0)
+        viewModel.findById(0)
         Assertions.assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Success(product))
     }
 
     @Test
     fun `loadById로 특정 상품의 데이터를 가져오기 실패하면 Error state로 전환한다`() {
         every { productRepository.findById(any()) } returns Result.failure(Throwable())
-        viewModel.loadById(0)
+        viewModel.findById(0)
         Assertions.assertEquals(viewModel.errorHandler.getOrAwaitValue(1).peekContent(), PRODUCT_NOT_FOUND)
     }
 

@@ -2,6 +2,7 @@ package woowacourse.shopping.data.local
 
 import woowacourse.shopping.data.local.entity.CartEntity
 import woowacourse.shopping.data.local.entity.CartProductEntity
+import woowacourse.shopping.domain.CartProduct
 
 interface LocalDataSource {
 
@@ -9,7 +10,9 @@ interface LocalDataSource {
 
     fun findCartByPaging(offset: Int, pageSize: Int): List<CartProductEntity>
 
+    fun findProductById(id: Long): CartProductEntity?
+
     fun saveCart(cartEntity: CartEntity): Long
 
-    fun deleteCart(cartId: Long): Long
+    fun deleteCart(id: Long): Long
 }

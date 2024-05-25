@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="cartProduct"
             type="woowacourse.shopping.domain.CartProduct" />
@@ -35,8 +36,23 @@
             android:layout_height="wrap_content"
             app:cartProduct="@{cartProduct}"
             app:shoppingActionHandler="@{shoppingActionHandler}"
+            android:visibility="@{cartProduct.quantity > 0 ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toBottomOf="@id/img_item"
             app:layout_constraintRight_toRightOf="@id/img_item"/>
+
+        <ImageView
+            android:id="@+id/iv_plus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_white_plus"
+            app:layout_constraintBottom_toBottomOf="@id/img_item"
+            app:layout_constraintRight_toRightOf="@id/img_item"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:onClick="@{() -> shoppingActionHandler.onPlus(cartProduct)}"
+            android:visibility="@{cartProduct.quantity == 0 ? View.VISIBLE : View.GONE }"
+            />
 
 
         <TextView

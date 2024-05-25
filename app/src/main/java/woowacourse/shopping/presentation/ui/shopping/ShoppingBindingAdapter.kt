@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
-import woowacourse.shopping.presentation.ui.detail.setProductSrc
 
 @BindingAdapter("productUrl")
 fun ImageView.setProductUrl(url: String) {

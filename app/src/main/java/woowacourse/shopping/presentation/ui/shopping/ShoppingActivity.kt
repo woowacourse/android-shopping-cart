@@ -1,14 +1,19 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import android.content.Intent
+import android.os.Build
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.ui.UpdateUiModel
 import woowacourse.shopping.presentation.ui.ViewModelFactory
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
@@ -22,6 +27,9 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
     private val adapter: ShoppingAdapter by lazy { ShoppingAdapter(this,  viewModel) }
+
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
 
     override fun initStartView() {
         initAdapter()
@@ -39,6 +47,23 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val updatedProducts =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        result.data?.getParcelableExtra(
+                            EXTRA_UPDATED_PRODUCT,
+                            UpdateUiModel::class.java,
+                        )
+                    } else {
+                        result.data?.getParcelableExtra(EXTRA_UPDATED_PRODUCT)
+                    }
+                updatedProducts?.let {
+                    viewModel.updateCartProducts(it)
+                }
+            }
+            }
     }
 
     private fun initAdapter() {
@@ -70,7 +95,9 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     override fun onClick(productId: Long) {
-        ProductDetailActivity.start(this, productId)
+        activityResultLauncher.launch(
+            ProductDetailActivity.createIntent(this, productId)
+        )
     }
 
     override fun loadMore() {
@@ -79,5 +106,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     companion object {
         const val GRIDLAYOUT_COL = 2
+        const val EXTRA_UPDATED_PRODUCT = "updatedProduct"
     }
 }

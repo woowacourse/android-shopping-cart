@@ -17,7 +17,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(ProductDetailViewModel::class.java) -> {
-                ProductDetailViewModel(DummyProductRepository(), DummyProductCartRepository) as T
+                ProductDetailViewModel(RepositoryImpl(RoomDataSource(AppDatabase.instance?.cartProductDao() ?: throw IllegalStateException("DB is not initialized")))) as T
             }
 
             modelClass.isAssignableFrom(ShoppingViewModel::class.java) -> {

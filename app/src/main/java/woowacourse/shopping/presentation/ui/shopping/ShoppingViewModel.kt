@@ -3,12 +3,12 @@ package woowacourse.shopping.presentation.ui.shopping
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.local.entity.CartProductEntity
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Repository
-import woowacourse.shopping.presentation.ui.ErrorEventState
+import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.ui.UpdateUiModel
 import kotlin.concurrent.thread
 
 class ShoppingViewModel(private val repository: Repository) :
@@ -18,8 +18,8 @@ class ShoppingViewModel(private val repository: Repository) :
     private val _products = MutableLiveData<UiState<List<CartProduct>>>(UiState.None)
     val products: LiveData<UiState<List<CartProduct>>> get() = _products
 
-    private val _errorHandler = MutableLiveData<ErrorEventState<String>>()
-    val errorHandler: LiveData<ErrorEventState<String>> get() = _errorHandler
+    private val _errorHandler = MutableLiveData<EventState<String>>()
+    val errorHandler: LiveData<EventState<String>> get() = _errorHandler
 
     fun loadProductByOffset() {
         thread {
@@ -33,7 +33,7 @@ class ShoppingViewModel(private val repository: Repository) :
                 }
                 offSet++
             }.onFailure {
-                _errorHandler.value = ErrorEventState(LOAD_ERROR)
+                _errorHandler.value = EventState(LOAD_ERROR)
             }
         }
     }
@@ -54,7 +54,7 @@ class ShoppingViewModel(private val repository: Repository) :
                     _products.postValue(UiState.Success(cartProducts))
                 }
                 .onFailure {
-                    _errorHandler.postValue(ErrorEventState("아이템 증가 오류"))
+                    _errorHandler.postValue(EventState("아이템 증가 오류"))
                 }
         }
     }
@@ -65,18 +65,18 @@ class ShoppingViewModel(private val repository: Repository) :
             val index = cartProducts.indexOfFirst { it.productId == cartProduct.productId }
             cartProducts[index].minusQuantity()
 
-            if(cartProducts[index].quantity != null) {
+            if(cartProducts[index].quantity > 0) {
                 repository.saveCart(
                     Cart(
                         cartProducts[index].productId,
-                        cartProducts[index].quantity!!
+                        cartProducts[index].quantity
                     )
                 )
                     .onSuccess {
                         _products.postValue(UiState.Success(cartProducts))
                     }
                     .onFailure {
-                        _errorHandler.postValue(ErrorEventState("아이템 증가 오류"))
+                        _errorHandler.postValue(EventState("아이템 증가 오류"))
                     }
             } else {
                 repository.deleteCart(
@@ -84,9 +84,19 @@ class ShoppingViewModel(private val repository: Repository) :
                 ).onSuccess {
                     _products.postValue(UiState.Success(cartProducts))
                 }.onFailure {
-                    _errorHandler.postValue(ErrorEventState("아이템 증가 오류"))
+                    _errorHandler.postValue(EventState("아이템 증가 오류"))
                 }
             }
         }
+    }
+
+    fun updateCartProducts(updateUiModel: UpdateUiModel) {
+        val cartProducts = (_products.value as UiState.Success).data.map { it.copy() }
+        updateUiModel.updatedItems.forEach { updatedItem ->
+            // 해당 productId를 갖는 제품을 찾아서 수량을 업데이트
+            val cartProductToUpdate = cartProducts.find { it.productId == updatedItem.key }
+            cartProductToUpdate?.quantity = updatedItem.value.quantity
+        }
+        _products.value = UiState.Success(cartProducts)
     }
 }

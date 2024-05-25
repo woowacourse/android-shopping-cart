@@ -16,11 +16,15 @@ class RepositoryImpl(private val localDataSource: LocalDataSource): Repository {
         localDataSource.findCartByPaging(offset, pageSize).map { it.toDomain() }
     }
 
+    override fun findProductById(id: Long): Result<CartProduct?> = runCatching {
+        localDataSource.findProductById(id)?.toDomain()
+    }
+
     override fun saveCart(cart: Cart): Result<Long> = runCatching {
         localDataSource.saveCart(cart.toEntity())
     }
 
-    override fun deleteCart(cartId: Long): Result<Long> = runCatching {
-        localDataSource.deleteCart(cartId)
+    override fun deleteCart(id: Long): Result<Long> = runCatching {
+        localDataSource.deleteCart(id)
     }
 }

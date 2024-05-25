@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Repository
-import woowacourse.shopping.presentation.ui.ErrorEventState
+import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
 import kotlin.concurrent.thread
 
@@ -20,8 +20,8 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
 
     val carts: LiveData<UiState<List<CartProduct>>> get() = _carts
 
-    private val _errorHandler = MutableLiveData<ErrorEventState<String>>()
-    val errorHandler: LiveData<ErrorEventState<String>> get() = _errorHandler
+    private val _errorHandler = MutableLiveData<EventState<String>>()
+    val errorHandler: LiveData<EventState<String>> get() = _errorHandler
 
 //    init {
 //        getItemCount()
@@ -32,7 +32,7 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
             repository.findCartByPaging(offSet, PAGE_SIZE).onSuccess {
                 _carts.postValue(UiState.Success(it))
             }.onFailure {
-                _errorHandler.value = ErrorEventState(CART_LOAD_ERROR)
+                _errorHandler.value = EventState(CART_LOAD_ERROR)
             }
         }
     }

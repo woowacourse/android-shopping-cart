@@ -26,6 +26,13 @@ interface CartProductDao {
     )
     fun findCartByPaging(offset: Int, pageSize: Int): List<CartProductEntity>
 
+    @Query(
+        "SELECT productentity.id AS productId, productentity.name, productentity.imgUrl, productentity.price, cartentity.quantity " +
+                "FROM productentity LEFT JOIN cartentity ON productentity.id = cartentity.productId " +
+                "WHERE id = :id"
+    )
+    fun findProductById(id: Long): CartProductEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveProduct(productEntity: ProductEntity)
 

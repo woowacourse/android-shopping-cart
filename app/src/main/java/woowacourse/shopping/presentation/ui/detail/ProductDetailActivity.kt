@@ -9,8 +9,10 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.ui.EventObserver
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity.Companion.EXTRA_UPDATED_PRODUCT
 
 class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
@@ -19,23 +21,19 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+        binding.shoppingActionHandler = viewModel
 
         title = getString(R.string.detail_title)
 
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
 
-        viewModel.loadById(id)
-        viewModel.products.observe(this) { state ->
+        viewModel.findById(id)
+        viewModel.product.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
                 is UiState.Success -> {
-                    binding.tvAddCart.setOnClickListener {
-                        finish()
-                        viewModel.saveCartItem(state.data)
-                    }
+                    binding.cartProduct = state.data
                 }
             }
         }
@@ -44,6 +42,18 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        viewModel.cartHandler.observe(this, EventObserver {
+            intent.apply {
+                putExtra(
+                    EXTRA_UPDATED_PRODUCT,
+                    it
+                )
+            }.run {
+                setResult(RESULT_OK, this)
+                this@ProductDetailActivity.finish()
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,13 +69,12 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
 
-        fun start(
+        fun createIntent(
             context: Context,
             productId: Long,
-        ) {
-            Intent(context, ProductDetailActivity::class.java).apply {
+        ): Intent {
+            return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT_ID, productId)
-                context.startActivity(this)
             }
         }
     }

@@ -1,21 +1,24 @@
 package woowacourse.shopping.domain
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class CartProduct(
     val productId: Long,
     val name: String,
     val imgUrl: String,
     val price: Long,
-    var quantity: Int?
-) {
+    var quantity: Int
+): Parcelable {
 
     fun plusQuantity() {
-        quantity = if(quantity == null) 1 else quantity?.plus(1)
+        quantity = quantity.plus(1)
     }
 
     fun minusQuantity() {
-        quantity = if (quantity == 1) null else quantity?.minus(1)
+        if(quantity > 0) quantity = quantity.minus(1)
     }
 }

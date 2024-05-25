@@ -7,7 +7,9 @@ interface Repository {
 
     fun findCartByPaging(offset: Int, pageSize: Int): Result<List<CartProduct>>
 
+    fun findProductById(id: Long): Result<CartProduct?>
+
     fun saveCart(cart: Cart): Result<Long>
 
-    fun deleteCart(cartId: Long): Result<Long>
+    fun deleteCart(id: Long): Result<Long>
 }
