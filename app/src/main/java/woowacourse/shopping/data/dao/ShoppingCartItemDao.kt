@@ -10,6 +10,9 @@ interface ShoppingCartItemDao {
     @Insert
     fun insert(shoppingCartItem: ShoppingCartItemEntity)
 
+    @Insert
+    fun insertAll(shoppingCartItems: List<ShoppingCartItemEntity>)
+
     @Query("UPDATE shopping_cart_item SET totalQuantity = totalQuantity + :quantity WHERE product_id = :productId")
     fun increaseCount(
         productId: Long,
@@ -27,4 +30,10 @@ interface ShoppingCartItemDao {
 
     @Query("SELECT * FROM shopping_cart_item")
     fun shoppingCartItems(): List<ShoppingCartItemEntity>
+
+    @Query("SELECT * FROM shopping_cart_item LIMIT :pageSize OFFSET :pageIndex")
+    fun shoppingCartItems(
+        pageSize: Int,
+        pageIndex: Int,
+    ): List<ShoppingCartItemEntity>
 }

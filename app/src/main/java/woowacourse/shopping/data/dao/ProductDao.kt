@@ -18,4 +18,10 @@ interface ProductDao {
 
     @Query("SELECT * FROM product WHERE id = :productId")
     fun productById(productId: Long): ProductEntity
+
+    @Query("SELECT * FROM product LIMIT :pageSize OFFSET :pageIndex")
+    fun shoppingCartItems(
+        pageSize: Int,
+        pageIndex: Int,
+    ): List<ProductEntity>
 }
