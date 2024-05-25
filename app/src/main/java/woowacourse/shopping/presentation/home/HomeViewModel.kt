@@ -19,6 +19,7 @@ class HomeViewModel(
     private val productHistoryRepository: ProductHistoryRepository,
 ) : ViewModel(), HomeItemEventListener, QuantityListener {
     private var page: Int = 0
+    private var nextPageProducts: List<CartableProduct> = emptyList()
 
     private val _products: MutableLiveData<List<CartableProduct>> =
         MutableLiveData<List<CartableProduct>>(emptyList())
@@ -29,7 +30,8 @@ class HomeViewModel(
     val loadStatus: LiveData<LoadStatus>
         get() = _loadStatus
 
-    private val _navigateToDetailEvent: MutableLiveData<Event<DetailNavigationData>> = MutableLiveData()
+    private val _navigateToDetailEvent: MutableLiveData<Event<DetailNavigationData>> =
+        MutableLiveData()
     val navigateToDetailEvent: LiveData<Event<DetailNavigationData>>
         get() = _navigateToDetailEvent
 
@@ -63,15 +65,18 @@ class HomeViewModel(
                     loadingAvailable = false,
                 ),
             )
-            _products.postValue(products.value?.plus(productRepository.fetchSinglePage(page++)))
-            products.value?.let {
-                _loadStatus.postValue(
-                    loadStatus.value?.copy(
-                        loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
-                        isLoadingPage = false,
-                    ),
-                )
+            val currentPageData = nextPageProducts.ifEmpty {
+                productRepository.fetchSinglePage(page)
             }
+            nextPageProducts = productRepository.fetchSinglePage(++page)
+            _products.postValue(products.value?.plus(currentPageData))
+            val isLoadingAvailable = nextPageProducts.isNotEmpty()
+            _loadStatus.postValue(
+                loadStatus.value?.copy(
+                    loadingAvailable = isLoadingAvailable,
+                    isLoadingPage = false,
+                ),
+            )
             _totalQuantity.postValue(
                 cartRepository.fetchTotalCount(),
             )

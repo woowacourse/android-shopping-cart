@@ -22,8 +22,6 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<CartableProduct> {
     private var products: List<CartableProduct> = emptyList()
     private var loadStatus: LoadStatus = LoadStatus()
-//    private var homeItems: List<CartableProduct> = emptyList()
-//    private var historyProducts: List<RecentProduct> = emptyList()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -36,12 +34,6 @@ class ProductAdapter(
     ): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-//            TYPE_HISTORY -> {
-//                val binding: ItemProductHistoryListBinding =
-//                    DataBindingUtil.inflate(layoutInflater, R.layout.item_product_history_list, parent, false)
-//                HistoryViewHolder(binding, historyProducts, homeItemClickListener)
-//            }
-
             TYPE_PRODUCT -> {
                 val binding: ItemProductBinding =
                     DataBindingUtil.inflate(layoutInflater, R.layout.item_product, parent, false)
@@ -80,10 +72,13 @@ class ProductAdapter(
     }
 
     override fun setData(data: List<CartableProduct>) {
-//        val previousSize = products.size
+        val previousSize = products.size
         products = data
-        notifyDataSetChanged()
-//        notifyItemRangeInserted(previousSize, data.size - previousSize)
+        if (previousSize != data.size) {
+            notifyItemRangeInserted(previousSize, data.size)
+        } else {
+            notifyDataSetChanged()
+        }
     }
 
     fun updateLoadStatus(loadStatus: LoadStatus) {
@@ -119,22 +114,9 @@ class ProductAdapter(
         }
     }
 
-//    class HistoryViewHolder(
-//        binding: ItemProductHistoryListBinding,
-//        historyProducts: List<RecentProduct>,
-//        homeItemClickListener: HomeItemEventListener,
-//    ) : RecyclerView.ViewHolder(binding.root) {
-//        init {
-//            binding.adapter = HistoryAdapter(homeItemClickListener)
-//            binding.executePendingBindings()
-//        }
-//    }
-
     companion object {
         const val TYPE_PRODUCT = 1000
         const val TYPE_LOAD = 1001
-
-//        const val TYPE_HISTORY = 1002
         private const val EXCEPTION_ILLEGAL_VIEW_TYPE = "유효하지 않은 뷰 타입입니다."
     }
 }
