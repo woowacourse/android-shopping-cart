@@ -55,7 +55,7 @@ class ShoppingCartViewModelTest {
                 ),
             )
         // when
-        cartViewModel.plusPage()
+        cartViewModel.moveToNextPage()
         // then
         verify(exactly = 1) { cartRepository.cartProducts(nextPage, PAGE_SIZE) }
         cartViewModel.currentPage.getOrAwaitValue() shouldBe nextPage
