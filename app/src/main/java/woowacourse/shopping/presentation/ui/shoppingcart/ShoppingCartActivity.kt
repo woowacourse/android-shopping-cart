@@ -12,7 +12,6 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
-import woowacourse.shopping.presentation.ui.error.ErrorActivity
 import woowacourse.shopping.presentation.ui.productlist.ProductListActivity
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.CartProductsAdapter
 
@@ -76,16 +75,6 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
                     finish()
                 }
             }
-        }
-
-        viewModel.error.observeEvent(this) { errorState ->
-            val intent =
-                ErrorActivity.getIntent(
-                    this,
-                    errorState.title,
-                    errorState.description,
-                )
-            startActivity(intent)
         }
     }
 

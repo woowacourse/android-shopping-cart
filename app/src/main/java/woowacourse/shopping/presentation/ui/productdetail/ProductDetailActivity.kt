@@ -12,7 +12,6 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
-import woowacourse.shopping.presentation.ui.error.ErrorActivity
 import woowacourse.shopping.presentation.ui.productlist.ProductListActivity
 
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
@@ -83,16 +82,6 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
                         anchorView = binding.tvAddToCart
                     }
             }
-        }
-
-        viewModel.error.observeEvent(this) { errorState ->
-            val intent =
-                ErrorActivity.getIntent(
-                    this,
-                    errorState.title,
-                    errorState.description,
-                )
-            startActivity(intent)
         }
     }
 
