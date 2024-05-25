@@ -98,7 +98,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="10,000원"
-                android:text="@{@string/format_price(cartedProduct.product.price)}"
+                android:text="@{@string/format_price(cartedProduct.product.price * cartedProduct.cartItem.quantity)}"
                 android:gravity="end"
                 android:maxLines="1"
                 android:ellipsize="end"
