@@ -11,4 +11,5 @@
     <string name="product_detail_price_header">가격</string>
     <string name="product_list_page_title_text">Shopping</string>
     <string name="product_list_more_data_button">더보기</string>
+    <string name="product_list_page_recent_title">최근 본 상품</string>
 </resources>

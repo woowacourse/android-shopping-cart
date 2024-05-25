@@ -17,6 +17,7 @@ import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
 import woowacourse.shopping.view.products.adapter.ProductItemType.Companion.LOAD_MORE_VIEW_TYPE
+import woowacourse.shopping.view.products.recentproduct.RecentProductAdapter
 
 class ProductsListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
@@ -72,6 +73,12 @@ class ProductsListFragment : Fragment() {
                 }
             }
         binding.rvProducts.layoutManager = layoutManager
+
+        val recentProductAdapter =
+            RecentProductAdapter(
+                productListActionHandler = productListViewModel,
+            )
+        binding.rvRecentProducts.adapter = recentProductAdapter
     }
 
     private fun observeData() {
