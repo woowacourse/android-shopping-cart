@@ -9,6 +9,7 @@ import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.GetLastProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
@@ -27,8 +28,8 @@ class ProductDetailViewModel(
     private val _isAddSuccess: MutableSingleLiveData<Boolean> = MutableSingleLiveData(false)
     val isAddSuccess: SingleLiveData<Boolean> get() = _isAddSuccess
 
-    private val _recentProductState: MutableLiveData<GetLastProduct> = MutableLiveData()
-    val recentProductState: LiveData<GetLastProduct> get() = _recentProductState
+    private val _recentProductState: MutableLiveData<RecentProductState> = MutableLiveData()
+    val recentProductState: LiveData<RecentProductState> get() = _recentProductState
 
     private fun currentCountResult(): CountResultUiModel = _countState.value?.countResult ?: error("초기화 이후에 메서드를 실행해주세요")
 
@@ -93,13 +94,25 @@ class ProductDetailViewModel(
         }
     }
 
-    fun loadRecentProduct()  {
+    fun loadRecentProduct() {
         runCatching {
             productRepository.lastRecentProduct()
-        }.onSuccess {
-            _recentProductState.value = it
+        }.onSuccess { state ->
+            when (state) {
+                is GetLastProduct.Success,
+                -> _recentProductState.value = isSameProduct(state.value)
+                GetLastProduct.Fail,
+                -> _recentProductState.value = RecentProductState.NoRecentProduct
+            }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
     }
+
+    private fun isSameProduct(recent: RecentProduct): RecentProductState =
+        if (recent.product.id == currentProduct().id) {
+            RecentProductState.Same
+        } else {
+            RecentProductState.Show(recent.name, recent.product.id)
+        }
 }

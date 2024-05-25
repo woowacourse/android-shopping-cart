@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.GetLastProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.productlist.ProductListActivity
 import woowacourse.shopping.util.ViewModelFactory
@@ -32,36 +31,36 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
         binding.lifecycleOwner = this
         binding.onClick = this
         binding.productId = productId
-        showProductDetail(productId)
+        showProductDetail()
         onBackPressedCallbackInit()
         loadRecentProduct()
+        navigateToProductList()
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        navigateToProductList(productId)
     }
 
-    private fun loadRecentProduct()  {
+    private fun loadRecentProduct() {
         viewModel.loadRecentProduct()
         viewModel.recentProductState.observe(this) { state ->
             when (state) {
-                is GetLastProduct.Success -> binding.tvProductDetailLastProductName.text = state.value.name
-                GetLastProduct.Fail -> binding.containerProductDetailLastProduct.isVisible = false
+                is RecentProductState.NoRecentProduct, RecentProductState.Same,
+                -> binding.containerProductDetailLastProduct.isVisible = false
+
+                is RecentProductState.Show,
+                -> binding.tvProductDetailLastProductName.text = state.name
             }
         }
     }
 
-    private fun navigateToProductList(productId: Long) {
+    private fun navigateToProductList() {
         viewModel.isAddSuccess.observe(this) { isSuccess ->
             if (isSuccess) {
-                val intent = ProductListActivity.changedProductIntent(this, longArrayOf(productId))
-                this.setResult(RESULT_OK, intent)
-                this.finish()
+                updateInfoChangeAndFinish()
             }
         }
     }
 
-    private fun showProductDetail(productId: Long) {
+    private fun showProductDetail() {
         viewModel.loadProductDetail(productId)
         viewModel.product.observe(this) {
             showProductDetailView(it)
@@ -92,16 +91,22 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_product_detail_close -> {
-                updateInfoChange()
-            }
+            R.id.menu_product_detail_close -> updateInfoChangeAndFinish()
             else -> {}
         }
         return true
     }
 
-    override fun onAddCartClickAction() {
+    override fun onAddCartClicked() {
         viewModel.addProductToCart()
+    }
+
+    override fun onLastProductClicked() {
+        val state = viewModel.recentProductState.value
+        if (state is RecentProductState.Show) {
+            startActivity(newInstance(this, state.id))
+            finish()
+        }
     }
 
     override fun onPlusCountClicked(id: Long) {
@@ -116,16 +121,15 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
         onBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    updateInfoChange()
+                    updateInfoChangeAndFinish()
                 }
             }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
-    private fun updateInfoChange()  {
+    private fun updateInfoChangeAndFinish() {
         viewModel.updateRecentProduct(productId)
-        val intent =
-            ProductListActivity.recentInstance(this@ProductDetailActivity, true)
+        val intent = ProductListActivity.recentInstance(this@ProductDetailActivity, true)
         setResult(RESULT_OK, intent)
         finish()
     }

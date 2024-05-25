@@ -92,6 +92,7 @@
             android:layout_marginHorizontal="18dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="29dp"
+            android:onClick="@{() -> onClick.onLastProductClicked()}"
             app:layout_constraintStart_toStartOf="parent"
             android:orientation="vertical"
             android:paddingVertical="16dp"
@@ -127,7 +128,7 @@
             android:layout_height="wrap_content"
             android:background="@color/emerald"
             android:fontFamily="@font/roboto_bold"
-            android:onClick="@{() -> onClick.onAddCartClickAction()}"
+            android:onClick="@{() -> onClick.onAddCartClicked()}"
             android:text="@string/product_detail_add_cart_btn"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent" />
