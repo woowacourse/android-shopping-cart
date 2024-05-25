@@ -9,9 +9,9 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.productlist.uimodel.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.shoppingcart.ShoppingCartAdapter
+import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel
 
 class ShoppingCartActivityTest {
     @get:Rule
@@ -24,7 +24,7 @@ class ShoppingCartActivityTest {
         activityRule.scenario.onActivity { activity ->
             val items =
                 listOf(
-                    ProductUiModel(
+                    CartItemUiModel(
                         0,
                         "[든든] 동원 스위트콘",
                         99800,

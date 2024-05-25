@@ -5,11 +5,11 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.DummyProductRepository
-import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.productlist.toProductUiModel
+import woowacourse.shopping.repository.DummyProductRepository
+import woowacourse.shopping.repository.DummyShoppingRepository
 import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
+import woowacourse.shopping.shoppingcart.toShoppingCartUiModel
 import woowacourse.shopping.shoppingcart.uimodel.LoadCartItemState
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
 import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
@@ -50,7 +50,7 @@ class ShoppingCartViewModelTest {
         val actual = viewModel.loadState.getOrAwaitValue() as LoadCartItemState.InitView
 
         // then
-        assertThat(actual.result).containsExactly(DummyProductRepository.productById(0).toProductUiModel(0))
+        assertThat(actual.currentCartItems.items).containsExactly(DummyShoppingRepository.cartItemByProductId(0).toShoppingCartUiModel())
     }
 
     @Test
@@ -58,7 +58,7 @@ class ShoppingCartViewModelTest {
         // when
         viewModel.loadCartItems()
         val previous = viewModel.loadState.getOrAwaitValue() as LoadCartItemState.InitView
-        assertThat(previous.result.size).isEqualTo(1)
+        assertThat(previous.currentCartItems.items.size).isEqualTo(1)
 
         // given
         viewModel.deleteCartItem(STUB_PRODUCT_ID)
@@ -66,7 +66,7 @@ class ShoppingCartViewModelTest {
         // then
         viewModel.loadCartItems()
         val actual = viewModel.loadState.getOrAwaitValue() as LoadCartItemState.InitView
-        assertThat(actual.result).hasSize(0)
+        assertThat(actual.currentCartItems.items).hasSize(0)
     }
 
     companion object {

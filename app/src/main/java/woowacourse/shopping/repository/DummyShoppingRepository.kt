@@ -94,4 +94,8 @@ object DummyShoppingRepository : ShoppingRepository {
                 if (it.id == users.first().id) it.copy(shoppingCart = updatedShoppingCart) else it
             }
     }
+
+    fun clear()  {
+        updateShoppingCart(ShoppingCart(emptyList()))
+    }
 }
