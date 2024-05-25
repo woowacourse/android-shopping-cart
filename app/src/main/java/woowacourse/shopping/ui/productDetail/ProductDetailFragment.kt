@@ -45,10 +45,10 @@ class ProductDetailFragment : Fragment() {
                     ProductDetailViewModel(
                         productId = it.getInt(PRODUCT_ID),
                         shoppingProductsRepository =
-                        DefaultShoppingProductRepository(
-                            DummyProductsDataSource(),
-                            DummyShoppingCartProductIdDataSource(),
-                        ),
+                            DefaultShoppingProductRepository(
+                                DummyProductsDataSource(),
+                                DummyShoppingCartProductIdDataSource(),
+                            ),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]

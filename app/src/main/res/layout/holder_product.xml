@@ -16,7 +16,7 @@
 
         <variable
             name="onItemChargeListener"
-            type="woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter.OnItemQuantityChangeListener" />
+            type="woowacourse.shopping.ui.OnItemQuantityChangeListener" />
 
     </data>
 

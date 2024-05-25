@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
-import woowacourse.shopping.ui.productList.ProductRecyclerViewAdapter
+import woowacourse.shopping.ui.OnItemQuantityChangeListener
 
 class ProductDetailViewModel(
     private val productId: Int,
     private val shoppingProductsRepository: ShoppingProductsRepository,
-) : ViewModel(), ProductRecyclerViewAdapter.OnItemQuantityChangeListener {
+) : ViewModel(), OnItemQuantityChangeListener {
     private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
     val currentProduct: LiveData<Product> get() = _currentProduct
 

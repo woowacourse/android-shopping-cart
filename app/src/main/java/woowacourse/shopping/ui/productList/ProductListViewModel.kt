@@ -10,13 +10,13 @@ import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.ui.OnItemQuantityChangeListener
 
 class ProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
 ) : ViewModel(),
-    ProductRecyclerViewAdapter.OnProductItemClickListener,
-    ProductRecyclerViewAdapter.OnItemQuantityChangeListener {
+    ProductRecyclerViewAdapter.OnProductItemClickListener, OnItemQuantityChangeListener {
     val currentPage: LiveData<Int> get() = _currentPage
 
     private val _loadedProducts: MutableLiveData<List<Product>> =
