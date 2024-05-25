@@ -102,11 +102,51 @@
             android:layout_marginEnd="@dimen/detail_content_horizontal_margin"
             app:count="@{viewModel.quantity}"
             app:countActionHandler="@{countActionHandler}"
-            app:product="@{viewModel.product}"
             app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_detail_product_price"
-            app:layout_constraintTop_toTopOf="@id/tv_detail_product_price" />
+            app:layout_constraintTop_toTopOf="@id/tv_detail_product_price"
+            app:product="@{viewModel.product}" />
+
+        <View
+            android:id="@+id/vw_recent_product_background"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="16dp"
+            android:background="@drawable/shape_rounded_border"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_product_price"
+            app:layout_constraintVertical_bias="0.523" />
+
+        <TextView
+            android:id="@+id/tv_recent_product_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_recent_product_title"
+            android:textColor="@color/primary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_recent_product_info"
+            app:layout_constraintEnd_toEndOf="@id/vw_recent_product_background"
+            app:layout_constraintStart_toStartOf="@id/vw_recent_product_background"
+            app:layout_constraintTop_toTopOf="@id/vw_recent_product_background" />
+
+        <TextView
+            android:id="@+id/tv_recent_product_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/vw_recent_product_background"
+            app:layout_constraintEnd_toEndOf="@id/tv_recent_product_title"
+            app:layout_constraintStart_toStartOf="@id/tv_recent_product_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_recent_product_title"
+            tools:text="상품 이름" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"
