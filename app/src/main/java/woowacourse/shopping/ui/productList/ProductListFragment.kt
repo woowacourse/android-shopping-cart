@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.productList
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -9,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.data.source.DummyProductsDataSource
+import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.domain.model.ProductCountEvent
+import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
 
@@ -24,9 +27,11 @@ class ProductListFragment : Fragment() {
     private val factory: UniversalViewModelFactory =
         UniversalViewModelFactory {
             ProductListViewModel(
-                DummyProductsDataSource(
-                    NumberPagingStrategy(countPerLoad = 20),
-                ),
+                productsRepository =
+                    DefaultShoppingProductRepository(
+                        productsSource = DummyProductsDataSource(),
+                        cartSource = DummyShoppingCartProductIdDataSource(),
+                    ),
             )
         }
 
@@ -99,6 +104,23 @@ class ProductListFragment : Fragment() {
     }
 
     private fun observeDetailProductDestination() {
+        viewModel.productsEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is ProductCountEvent.ProductCountAllCleared ->
+                    Log.d(TAG, "observeDetailProductDestination: ProductCountAllCleared")
+
+                is ProductCountEvent.ProductCountCleared ->
+                    Log.d(TAG, "observeDetailProductDestination: ProductCountCleared")
+
+                is ProductCountEvent.ProductCountCountChanged ->
+                    Log.d(
+                        TAG,
+                        "observeDetailProductDestination: ProductCountChanged " +
+                            "id: ${event.productId} count: ${event.count}",
+                    )
+            }
+        }
+
         viewModel.detailProductDestinationId.observe(viewLifecycleOwner) { productId ->
             navigateToProductDetail(productId)
         }
