@@ -12,12 +12,25 @@ class RecentProducts(items: Collection<RecentProduct>) {
             _items.remove(_items.first())
         }
         _items.add(element)
-        return _items.toList().let(::RecentProducts)
+        return _items.let(::RecentProducts)
     }
 
     fun sortedRecentProduct(): List<RecentProduct> = _items.sortedByDescending { it.localDateTime }
 
+    fun lastRecentProduct(): GetLastProduct =
+        if (_items.isNotEmpty()) {
+            GetLastProduct.Success(_items.last())
+        } else {
+            GetLastProduct.Fail
+        }
+
     companion object {
         private const val MAX_SIZE = 10
     }
+}
+
+sealed interface GetLastProduct {
+    data class Success(val value: RecentProduct) : GetLastProduct
+
+    data object Fail : GetLastProduct
 }

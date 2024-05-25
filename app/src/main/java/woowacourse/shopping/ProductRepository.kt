@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import woowacourse.shopping.domain.GetLastProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import java.time.LocalDateTime
@@ -22,4 +23,6 @@ interface ProductRepository {
         productId: Long,
         localDateTime: LocalDateTime,
     )
+
+    fun lastRecentProduct(): GetLastProduct
 }
