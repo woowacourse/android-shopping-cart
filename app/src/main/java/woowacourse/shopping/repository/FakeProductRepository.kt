@@ -1,3 +1,0 @@
-package woowacourse.shopping.repository
-
-class FakeProductRepository
