@@ -46,7 +46,15 @@ class ProductListViewModel(
     val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
 
     fun loadAll() {
-        _loadedProducts.value = productsRepository.loadAllProducts(currentPage.value ?: currentPageIsNullException())
+        if (_loadedProducts.value?.isEmpty() == true) {
+            val result = productsRepository.loadAllProducts(currentPage.value ?: currentPageIsNullException())
+
+            _loadedProducts.value =
+                _loadedProducts.value?.toMutableList()?.apply {
+                    addAll(result)
+                }
+        }
+
         _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
         _isLastPage.value = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
     }
