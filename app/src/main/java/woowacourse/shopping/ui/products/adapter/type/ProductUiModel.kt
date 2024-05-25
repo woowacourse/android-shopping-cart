@@ -1,8 +1,7 @@
-package woowacourse.shopping.ui.products
+package woowacourse.shopping.ui.products.adapter.type
 
 import woowacourse.shopping.data.product.entity.Product
 import woowacourse.shopping.model.Quantity
-import woowacourse.shopping.ui.products.adapter.ProductsViewType
 
 data class ProductUiModel(
     val productId: Long,

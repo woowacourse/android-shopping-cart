@@ -7,7 +7,7 @@ import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.ui.products.ProductUiModel
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 
 class CartViewModel(
     private val productRepository: ProductRepository,
@@ -86,33 +86,32 @@ class CartViewModel(
 
     fun increaseQuantity(productId: Long) {
         cartRepository.increaseQuantity(productId)
-        val index = _productUiModels.value?.indexOfFirst { it.productId == productId } ?: return
+        val position = productUiModelsPosition(productId) ?: return
         _productUiModels.value =
             _productUiModels.value?.apply {
-                var changedQuantity = this[index].quantity
-                this[index] = this[index].copy(quantity = ++changedQuantity)
+                var changedQuantity = this[position].quantity
+                this[position] = this[position].copy(quantity = ++changedQuantity)
             }
     }
 
     fun decreaseQuantity(productId: Long) {
-        val decreaseQuantityPosition =
-            _productUiModels.value?.indexOfFirst { it.productId == productId } ?: return
         cartRepository.decreaseQuantity(productId)
+        val position = productUiModelsPosition(productId) ?: return
         runCatching {
             cartRepository.find(productId)
         }.onSuccess {
             _productUiModels.value =
                 _productUiModels.value?.apply {
-                    val changedProductUiModel = this[decreaseQuantityPosition]
-                    var changedQuantity = changedProductUiModel.quantity
-                    this[decreaseQuantityPosition] = changedProductUiModel.copy(quantity = --changedQuantity)
+                    var changedQuantity = this[position].quantity
+                    this[position] = this[position].copy(quantity = --changedQuantity)
                 }
         }.onFailure {
-            _productUiModels.value =
-                _productUiModels.value?.also {
-                    it.removeAt(decreaseQuantityPosition)
-                }
+            _productUiModels.value = _productUiModels.value?.also { it.removeAt(position) }
         }
+    }
+
+    private fun productUiModelsPosition(productId: Long): Int? {
+        return _productUiModels.value?.indexOfFirst { it.productId == productId }
     }
 
     companion object {

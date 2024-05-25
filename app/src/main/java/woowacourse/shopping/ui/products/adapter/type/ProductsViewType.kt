@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products.adapter
+package woowacourse.shopping.ui.products.adapter.type
 
 import java.lang.IllegalArgumentException
 

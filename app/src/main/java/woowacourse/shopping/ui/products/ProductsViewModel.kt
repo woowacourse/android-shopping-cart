@@ -9,7 +9,8 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.product.entity.Product
 import woowacourse.shopping.data.recent.entity.RecentProduct
-import woowacourse.shopping.ui.products.recent.RecentProductUiModel
+import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import kotlin.math.ceil
 
 class ProductsViewModel(

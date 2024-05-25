@@ -2,7 +2,7 @@ package woowacourse.shopping.ui.cart.adapter
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.ui.products.ProductUiModel
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.utils.AddCartQuantityBundle
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity

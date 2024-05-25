@@ -8,9 +8,8 @@ import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.data.product.entity.Product
-import woowacourse.shopping.ui.products.ProductUiModel
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.utils.AddCartQuantityBundle
 
 class ProductDetailViewModel(
@@ -61,10 +60,13 @@ class ProductDetailViewModel(
                 _productLoadError.value = Event(Unit)
             }.getOrNull() ?: return
 
-        _productUiModel.value =
-            runCatching { cartRepository.find(product.id) }
-                .map { ProductUiModel.from(product, it.quantity) }
-                .getOrElse { ProductUiModel.from(product) }
+        _productUiModel.value = product.toProductUiModel()
+    }
+
+    private fun Product.toProductUiModel(): ProductUiModel {
+        return runCatching { cartRepository.find(id) }
+            .map { ProductUiModel.from(this, it.quantity) }
+            .getOrElse { ProductUiModel.from(this) }
     }
 
     private fun loadLastRecentProduct() {
@@ -77,17 +79,10 @@ class ProductDetailViewModel(
         recentProductRepository.save(productId)
     }
 
-    private fun CartItem.toProductUiModel(): ProductUiModel {
-        return runCatching { cartRepository.find(product.id) }
-            .map { ProductUiModel.from(product, it.quantity) }
-            .getOrElse { ProductUiModel.from(product) }
-    }
-
     fun addCartProduct() {
         runCatching {
             val productUiModel = _productUiModel.value ?: return
             cartRepository.changeQuantity(productUiModel.productId, productUiModel.quantity)
-            cartRepository.find(productUiModel.productId).toProductUiModel()
         }.onSuccess {
             _isSuccessAddCart.value = Event(true)
         }.onFailure {

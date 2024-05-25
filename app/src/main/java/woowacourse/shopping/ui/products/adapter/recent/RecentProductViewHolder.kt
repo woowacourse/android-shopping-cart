@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products.recent
+package woowacourse.shopping.ui.products.adapter.recent
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import woowacourse.shopping.databinding.ItemRecentProductBinding

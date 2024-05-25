@@ -7,7 +7,7 @@
 
         <variable
             name="productUiModel"
-            type="woowacourse.shopping.ui.products.ProductUiModel" />
+            type="woowacourse.shopping.ui.products.adapter.type.ProductUiModel" />
 
         <variable
             name="addCartQuantityBundle"

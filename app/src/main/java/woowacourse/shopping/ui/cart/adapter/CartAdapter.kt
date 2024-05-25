@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.ui.products.ProductUiModel
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
@@ -37,9 +37,7 @@ class CartAdapter(
         )
     }
 
-    override fun getItemCount(): Int {
-        return products.size
-    }
+    override fun getItemCount(): Int = products.size
 
     fun updateCartItems(updatedProducts: List<ProductUiModel>) {
         val newProducts = updatedProducts.subtract(products.toSet())

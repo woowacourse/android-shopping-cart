@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products.recent
+package woowacourse.shopping.ui.products.adapter.recent
 
 data class RecentProductUiModel(
     val productId: Long,

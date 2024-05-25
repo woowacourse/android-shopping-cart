@@ -3,15 +3,14 @@ package woowacourse.shopping.ui.products.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
-import woowacourse.shopping.ui.products.ProductUiModel
-import woowacourse.shopping.ui.products.ProductsView
-import woowacourse.shopping.ui.products.RecentProductsUiModel
-import woowacourse.shopping.ui.products.recent.OnClickRecentProductItem
-import woowacourse.shopping.ui.products.recent.RecentProductUiModel
-import woowacourse.shopping.ui.products.recent.RecentProductsViewHolder
+import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
+import woowacourse.shopping.ui.products.adapter.recent.OnClickRecentProductItem
+import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
+import woowacourse.shopping.ui.products.adapter.type.ProductsView
+import woowacourse.shopping.ui.products.adapter.type.ProductsViewType
+import woowacourse.shopping.ui.products.adapter.type.RecentProductsUiModel
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
@@ -21,51 +20,49 @@ class ProductsAdapter(
     private val onIncreaseProductQuantity: OnIncreaseProductQuantity,
     private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
 ) :
-    RecyclerView.Adapter<ViewHolder>() {
+    RecyclerView.Adapter<ProductsViewHolder>() {
     private val productsViews: MutableList<ProductsView> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ViewHolder {
+    ): ProductsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val productsViewType = ProductsViewType.from(viewType)
         return when (productsViewType) {
             ProductsViewType.RECENT_PRODUCTS -> {
                 val binding = ItemRecentProductsBinding.inflate(inflater, parent, false)
-                RecentProductsViewHolder(binding, onClickRecentProductItem)
+                ProductsViewHolder.RecentProductsViewHolder(binding, onClickRecentProductItem)
             }
 
             ProductsViewType.PRODUCTS_UI_MODEL -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ProductsViewHolder(binding)
+                ProductsViewHolder.ProductViewHolder(binding)
             }
         }
     }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
+        holder: ProductsViewHolder,
         position: Int,
     ) {
-        when (productsViews[position].viewType) {
-            ProductsViewType.RECENT_PRODUCTS ->
-                (holder as RecentProductsViewHolder).bind(
-                    (productsViews[position] as RecentProductsUiModel).recentProductUiModels,
-                )
+        when (holder) {
+            is ProductsViewHolder.RecentProductsViewHolder -> {
+                holder.bind((productsViews[position] as RecentProductsUiModel).recentProductUiModels)
+            }
 
-            ProductsViewType.PRODUCTS_UI_MODEL ->
-                (holder as ProductsViewHolder).bind(
+            is ProductsViewHolder.ProductViewHolder -> {
+                holder.bind(
                     productsViews[position] as ProductUiModel,
                     onClickProductItem,
                     onIncreaseProductQuantity,
                     onDecreaseProductQuantity,
                 )
+            }
         }
     }
 
-    override fun getItemCount(): Int {
-        return productsViews.size
-    }
+    override fun getItemCount(): Int = productsViews.size
 
     override fun getItemViewType(position: Int): Int = productsViews[position].viewType.type
 
