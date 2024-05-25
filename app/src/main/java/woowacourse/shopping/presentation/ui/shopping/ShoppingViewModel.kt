@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import woowacourse.shopping.domain.model.ProductWithQuantity
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentlyViewedProductsRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.CartQuantityActionHandler
@@ -13,12 +15,16 @@ import woowacourse.shopping.presentation.ui.CartQuantityActionHandler
 class ShoppingViewModel(
     private val shoppingRepository: ShoppingItemsRepository,
     private val cartRepository: CartRepository,
+    private val recentlyViewedProductsRepository: RecentlyViewedProductsRepository,
 ) : ViewModel(), ShoppingActionHandler, CartQuantityActionHandler {
-    private val _currentPage = MutableLiveData(0)
+    private val _currentPage = MutableLiveData<Int>()
     private val currentPage: LiveData<Int> = _currentPage
 
     private val _isProductListEmpty = MutableLiveData(false)
     val isProductListEmpty: LiveData<Boolean> = _isProductListEmpty
+
+    private val _isRecentlyViewedEmpty = MutableLiveData(false)
+    val isRecentlyViewedEmpty: LiveData<Boolean> = _isRecentlyViewedEmpty
 
     private val _navigateToProductDetail = MutableLiveData<Long>()
     val navigateToProductDetail: LiveData<Long> = _navigateToProductDetail
@@ -29,12 +35,18 @@ class ShoppingViewModel(
     private val _updatedProduct = MutableLiveData<UIState<ProductWithQuantity>>()
     val updatedProduct: LiveData<UIState<ProductWithQuantity>> = _updatedProduct
 
+    private val _recentlyViewedProductsState =
+        MutableLiveData<UIState<List<RecentlyViewedProduct>>>()
+    val recentlyViewedProductsState: LiveData<UIState<List<RecentlyViewedProduct>>> =
+        _recentlyViewedProductsState
+
     val productItemsState: LiveData<UIState<List<ProductWithQuantity>>> =
         currentPage.switchMap { page ->
             MutableLiveData<UIState<List<ProductWithQuantity>>>().apply {
                 value =
                     try {
-                        val productList = shoppingRepository.findProductWithQuantityItemsByPage(page, PAGE_SIZE)
+                        val productList =
+                            shoppingRepository.findProductWithQuantityItemsByPage(page, PAGE_SIZE)
                         if (productList.isEmpty()) {
                             _isProductListEmpty.postValue(true)
                             UIState.Empty
@@ -49,11 +61,29 @@ class ShoppingViewModel(
 
     init {
         loadProducts()
+        loadRecentlyViewedProducts()
     }
 
     private fun loadProducts() {
         _currentPage.postValue(0)
         _totalCartItemsCount.postValue(cartRepository.sumQuantity())
+    }
+
+    fun loadRecentlyViewedProducts() {
+        try {
+            val recentlyViewedProducts =
+                recentlyViewedProductsRepository.getRecentlyViewedProducts(
+                    RECENTLY_VIEWED_PRODUCT_SIZE,
+                )
+            if (recentlyViewedProducts.isEmpty()) {
+                _isRecentlyViewedEmpty.postValue(true)
+                _recentlyViewedProductsState.postValue(UIState.Empty)
+            } else {
+                _recentlyViewedProductsState.postValue(UIState.Success(recentlyViewedProducts))
+            }
+        } catch (e: Exception) {
+            _recentlyViewedProductsState.postValue(UIState.Error(e))
+        }
     }
 
     override fun onProductClick(productId: Long) {
@@ -109,6 +139,7 @@ class ShoppingViewModel(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val RECENTLY_VIEWED_PRODUCT_SIZE = 10
         private const val PRODUCT_NOT_FOUND = "상품이 존재하지 않습니다."
     }
 }

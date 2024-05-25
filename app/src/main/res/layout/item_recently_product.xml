@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="actionHandler"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler" />
+
+        <variable
+            name="recentlyViewedProduct"
+            type="woowacourse.shopping.domain.model.RecentlyViewedProduct" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="106dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:onClick="@{() -> actionHandler.onProductClick(recentlyViewedProduct.productId)}"
+        android:padding="6dp">
+
+        <ImageView
+            android:id="@+id/iv_product"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:scaleType="fitXY"
+            app:imageUrl="@{recentlyViewedProduct.imageUrl}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@android:color/holo_green_dark" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="6dp"
+            android:text="@{recentlyViewedProduct.name}"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/iv_product"
+            app:layout_constraintStart_toStartOf="@+id/iv_product"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product"
+            tools:text="PET보틀-정사각형어쩌구저ㄱㅉ" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

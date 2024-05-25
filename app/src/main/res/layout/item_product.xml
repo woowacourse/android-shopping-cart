@@ -31,9 +31,9 @@
             android:id="@+id/iv_product"
             android:layout_width="154dp"
             android:layout_height="154dp"
+            android:scaleType="fitXY"
             app:imageUrl="@{productWithQuantity.product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:color/holo_green_dark" />
@@ -57,15 +57,15 @@
             android:layout_height="45dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_plus"
             android:onClick="@{() -> shoppingActionHandler.onAddToCartButtonClick(productWithQuantity.product.id)}"
+            android:src="@drawable/ic_plus"
             android:visibility="@{productWithQuantity.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_product"
             app:layout_constraintEnd_toEndOf="@+id/iv_product" />
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"

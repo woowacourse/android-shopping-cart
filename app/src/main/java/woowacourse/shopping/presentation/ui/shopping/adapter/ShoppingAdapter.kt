@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.ui.shopping.adapter
 
-import android.util.Log
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -35,19 +35,12 @@ class ShoppingAdapter(
             }
             notifyItemRangeInserted(currentSize, insertedItems.size + if (newItems.size >= PAGE_SIZE) 1 else 0)
         } else {
-            items.forEachIndexed { index, item ->
-                if (item is ShoppingItem.ProductType) {
-                    productPosition[item.productWithQuantity.product.id] = index
-                }
-            }
             notifyItemRangeInserted(currentSize, insertedItems.size)
         }
     }
 
     fun updateItem(newItem: ProductWithQuantity) {
-        Log.d("ShoppingAdapter", "updateItem: $newItem")
         val index: Int? = productPosition[newItem.product.id]
-        Log.d("ShoppingAdapter", "updateItem: $index")
         if (index != null) {
             items[index] = ShoppingItem.ProductType(newItem)
             notifyItemChanged(index)
