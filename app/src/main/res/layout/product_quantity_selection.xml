@@ -7,8 +7,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="count"
-            type="woowacourse.shopping.domain.model.Count" />
+            name="shoppingProduct"
+            type="woowacourse.shopping.domain.model.ShoppingProduct" />
 
         <variable
             name="countHandler"
@@ -38,7 +38,7 @@
             android:layout_height="42dp"
             android:background="@color/white"
             android:gravity="center"
-            android:text="@{String.valueOf(count.amount)}"
+            android:text="@{String.valueOf(shoppingProduct.quantity)}"
             android:textSize="23dp"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"
             app:layout_constraintStart_toEndOf="@id/btn_minus"

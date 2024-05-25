@@ -35,7 +35,6 @@ class DetailActivity : AppCompatActivity() {
     private fun setUpViewModel() {
         binding.viewModel = viewModel
         binding.countHandler = viewModel
-        binding.count = viewModel.count.value
     }
 
     private fun observeViewModel() {
@@ -50,10 +49,6 @@ class DetailActivity : AppCompatActivity() {
             it.getContentIfNotHandled()?.let {
                 finish()
             }
-        }
-
-        viewModel.count.observe(this) {
-            binding.count = it
         }
     }
 

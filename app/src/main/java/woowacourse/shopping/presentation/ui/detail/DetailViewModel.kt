@@ -3,8 +3,8 @@ package woowacourse.shopping.presentation.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.model.Count
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ShoppingProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.event.Event
@@ -18,9 +18,9 @@ class DetailViewModel(
     val product: LiveData<Product>
         get() = _product
 
-    private val _count = MutableLiveData<Count>()
-    val count: LiveData<Count>
-        get() = _count
+    private val _shoppingProduct = MutableLiveData<ShoppingProduct>()
+    val shoppingProduct: LiveData<ShoppingProduct>
+        get() = _shoppingProduct
 
     private val _moveBack = MutableLiveData<Event<Boolean>>()
     val moveBack: LiveData<Event<Boolean>>
@@ -31,18 +31,22 @@ class DetailViewModel(
         get() = _addCartItem
 
     init {
-        loadProductData()
-        loadCountData()
+//        loadProductData()
+        loadShoppingProductData()
     }
-
+/*
     private fun loadProductData() {
-        _product.postValue(shoppingRepository.findProductItem(productId))
-    }
+        val product = shoppingRepository.findProductItem(productId)
+        _product.value = product ?: return
+    }*/
 
-    private fun loadCountData() {
-        val amount = fetchQuantity()
-        val currentCount = Count(amount = amount)
-        _count.value = currentCount
+    private fun loadShoppingProductData() {
+        val shoppingProduct =
+            ShoppingProduct(
+                product = shoppingRepository.findProductItem(productId) ?: return,
+                quantity = fetchQuantity(),
+            )
+        _shoppingProduct.value = shoppingProduct
     }
 
     private fun fetchQuantity(): Int {
@@ -50,8 +54,8 @@ class DetailViewModel(
     }
 
     fun createShoppingCartItem() {
-        val product = product.value ?: return
-        val quantity = count.value?.amount ?: return
+        val product = shoppingProduct.value?.product ?: return
+        val quantity = shoppingProduct.value?.quantity ?: return
         cartRepository.insert(product = product, quantity = quantity)
     }
 
@@ -64,12 +68,12 @@ class DetailViewModel(
     }
 
     override fun increaseCount() {
-        _count.value?.increase()
-        _count.value = _count.value
+        _shoppingProduct.value?.increase()
+        _shoppingProduct.value = _shoppingProduct.value
     }
 
     override fun decreaseCount() {
-        _count.value?.decrease()
-        _count.value = _count.value
+        _shoppingProduct.value?.decrease()
+        _shoppingProduct.value = _shoppingProduct.value
     }
 }
