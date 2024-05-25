@@ -3,9 +3,9 @@ package woowacourse.shopping.data.db.mapper
 import woowacourse.shopping.data.db.model.HistoryEntity
 import woowacourse.shopping.domain.model.History
 
-fun HistoryEntity.toHistory(): History = History(historyId, product.toProduct(), timestamp)
+fun HistoryEntity.toHistory(): History = History(product.toProduct(), timestamp)
 
-fun History.toEntity(): HistoryEntity = HistoryEntity(id, product.toEntity(), timestamp)
+fun History.toEntity(): HistoryEntity = HistoryEntity(product = product.toEntity(), timestamp = timestamp)
 
 fun List<HistoryEntity>.toHistory(): List<History> =
     this.map {

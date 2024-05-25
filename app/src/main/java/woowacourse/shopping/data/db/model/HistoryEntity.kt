@@ -7,8 +7,9 @@ import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["historyId", "productId", "timestamp"], unique = true)])
 data class HistoryEntity(
-    @PrimaryKey(autoGenerate = true) val historyId: Int,
+    @PrimaryKey(autoGenerate = true) val historyId: Int = 0,
     @Embedded
     val product: ProductEntity,
     val timestamp: Long,
-)
+) {
+}
