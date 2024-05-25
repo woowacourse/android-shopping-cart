@@ -1,5 +1,6 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping
 
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.entity.Product
 import kotlin.math.min
 
@@ -7,7 +8,7 @@ class FakeProductRepository(savedProducts: List<Product> = emptyList()) : Produc
     private val products: MutableMap<Long, Product> = savedProducts.associateBy { it.id }.toMutableMap()
 
     override fun find(id: Long): Product {
-        return products[id] ?: throw IllegalArgumentException(INVALID_ID_MESSAGE)
+        return products[id] ?: throw IllegalArgumentException()
     }
 
     override fun findRange(
@@ -20,8 +21,4 @@ class FakeProductRepository(savedProducts: List<Product> = emptyList()) : Produc
     }
 
     override fun totalProductCount(): Int = products.size
-
-    companion object {
-        private const val INVALID_ID_MESSAGE = "해당하는 id의 상품이 존재하지 않습니다."
-    }
 }

@@ -5,8 +5,8 @@ import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.math.min
 
-class DummyCartRepository private constructor() : CartRepository {
-    private val cart: MutableList<CartItem> = mutableListOf()
+class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRepository {
+    private val cart: MutableList<CartItem> = savedCartItems.toMutableList()
     private var id: Long = 0L
 
     override fun increaseQuantity(productId: Long) {
@@ -22,7 +22,7 @@ class DummyCartRepository private constructor() : CartRepository {
 
     override fun decreaseQuantity(productId: Long) {
         val oldCartItem = cart.find { it.productId == productId }
-        oldCartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+        oldCartItem ?: throw IllegalArgumentException()
 
         cart.remove(oldCartItem)
         if (oldCartItem.quantity.count == 1) {
@@ -47,12 +47,12 @@ class DummyCartRepository private constructor() : CartRepository {
 
     override fun deleteCartItem(productId: Long) {
         val deleteCartItem =
-            cart.find { it.productId == productId } ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+            cart.find { it.productId == productId } ?: throw IllegalArgumentException()
         cart.remove(deleteCartItem)
     }
 
     override fun find(productId: Long): CartItem {
-        return cart.find { it.productId == productId } ?: throw IllegalArgumentException(CANNOT_FIND_MESSAGE)
+        return cart.find { it.productId == productId } ?: throw IllegalArgumentException()
     }
 
     override fun findRange(
@@ -65,18 +65,4 @@ class DummyCartRepository private constructor() : CartRepository {
     }
 
     override fun totalCartItemCount(): Int = cart.size
-
-    companion object {
-        private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
-        private const val CANNOT_FIND_MESSAGE = "해당하는 장바구니 상품이 존재하지 않습니다."
-
-        @Volatile
-        private var instance: DummyCartRepository? = null
-
-        fun getInstance(): DummyCartRepository {
-            return instance ?: synchronized(this) {
-                DummyCartRepository()
-            }
-        }
-    }
 }
