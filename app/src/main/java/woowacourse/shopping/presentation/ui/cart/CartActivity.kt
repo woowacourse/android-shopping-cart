@@ -25,12 +25,14 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            viewModel.loadProductByPage(0)
+        }
         binding.cartHandler = this
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         initActionBarTitle()
         initCartAdapter()
-        viewModel.loadProductByPage(0)
         observeErrorEventUpdates()
         observeCartUpdates()
         observeChangedCartProducts()
