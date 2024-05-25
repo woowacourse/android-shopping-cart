@@ -26,6 +26,7 @@ class ProductDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.quantityControlClickListener = viewModel
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         showProductDetail(productId)

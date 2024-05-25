@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.productdetail.ProductDetailViewModel" />
+
+        <variable
+            name="quantityControlClickListener"
+            type="woowacourse.shopping.ViewModelQuantityActions" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -78,6 +82,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="14dp"
+            app:productId="@{viewModel.productUi.id}"
+            app:quantity="@{viewModel.quantityUi}"
+            app:clickListener="@{quantityControlClickListener}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_product_detail"
              />

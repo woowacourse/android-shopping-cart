@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingCartRepository
 import woowacourse.shopping.ProductRepository
+import woowacourse.shopping.ViewModelQuantityActions
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.uimodel.ProductUiModel
 import woowacourse.shopping.uimodel.toProductUiModel
@@ -14,11 +16,15 @@ import woowacourse.shopping.uimodel.toProductUiModel
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
-) : ViewModel() {
+) : ViewModel(), ViewModelQuantityActions {
     private lateinit var product: Product
+    private var quantity: Quantity = Quantity()
 
     private val _productUi: MutableLiveData<ProductUiModel> = MutableLiveData()
     val productUi: LiveData<ProductUiModel> get() = _productUi
+
+    private val _quantityUi: MutableLiveData<Int> = MutableLiveData()
+    val quantityUi: LiveData<Int> get() = _quantityUi
 
     private val _isAddSuccess: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val isAddSuccess: LiveData<Boolean> get() = _isAddSuccess
@@ -32,14 +38,48 @@ class ProductDetailViewModel(
         }.onSuccess {
             product = it
             _productUi.value = it.toProductUiModel()
+            _quantityUi.value = quantity.value
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
     }
 
+    override fun plusQuantity(productId: Long) {
+        runCatching {
+            quantity = quantity.increase()
+            Log.d(this::class.java.simpleName, "${quantity.value}")
+
+        }.onSuccess {
+            _quantityUi.value = quantity.value
+            updateProductPrice()
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    override fun minusQuantity(productId: Long) {
+        runCatching {
+            quantity = quantity.decrease()
+            Log.d(this::class.java.simpleName, "${quantity.value}")
+
+        }.onSuccess {
+            _quantityUi.value = quantity.value
+            updateProductPrice()
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    private fun updateProductPrice() {
+        val updatedPrice = product.price.times(quantity.value)
+        _productUi.value =
+            productUi.value?.copy(price = updatedPrice.value)
+                ?: product.toProductUiModel()
+    }
+
     fun addProductToCart() {
         runCatching {
-            val cartItem = ShoppingCartItem(product)
+            val cartItem = ShoppingCartItem(product, quantity.value)
             val userId = shoppingCartRepository.userId()
             val shoppingCart = shoppingCartRepository.shoppingCart(userId)
             shoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))

@@ -1,50 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="126dp"
-    android:layout_height="42dp"
-    android:gravity="center">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <Button
-        android:id="@+id/button_quantity_minus"
-        android:layout_width="42dp"
+    <data>
+
+        <variable
+            name="productId"
+            type="Long" />
+
+        <variable
+            name="quantity"
+            type="Integer" />
+        
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.ViewModelQuantityActions" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="126dp"
         android:layout_height="42dp"
-        android:background="@drawable/ic_left"
-        android:backgroundTint="@color/white"
-        android:fontFamily="@font/roboto_bold"
-        android:text="-"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/textview_quantity"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:fontFamily="@font/roboto_bold"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:background="@color/white"
-        app:layout_constraintStart_toEndOf="@id/button_quantity_minus"
-        app:layout_constraintEnd_toStartOf="@id/button_quantity_plus"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="3"/>
+        <Button
+            android:id="@+id/button_quantity_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/ic_left"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/roboto_bold"
+            android:text="-"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:onClickListener="@{()->clickListener.minusQuantity(productId)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_quantity_plus"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:background="@drawable/ic_right"
-        android:backgroundTint="@color/white"
-        android:fontFamily="@font/roboto_bold"
-        android:text="+"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textview_quantity"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:text="@{String.valueOf(quantity)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_quantity_plus"
+            app:layout_constraintStart_toEndOf="@id/button_quantity_minus"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="3" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/button_quantity_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/ic_right"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/roboto_bold"
+            android:text="+"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:onClickListener="@{()->clickListener.plusQuantity(productId)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
