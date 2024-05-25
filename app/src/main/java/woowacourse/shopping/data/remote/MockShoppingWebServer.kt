@@ -6,6 +6,7 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.database.CartDao
 import woowacourse.shopping.data.database.ProductDao
+import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.CartedProduct
@@ -14,9 +15,10 @@ import woowacourse.shopping.data.util.convertToJson
 import kotlin.concurrent.thread
 
 class MockShoppingWebServer(
-    private val productDao: ProductDao,
-    private val cartDao: CartDao,
+    database: ShoppingDatabase
 ) {
+    private val productDao: ProductDao = database.productDao()
+    private val cartDao: CartDao = database.cartDao()
     private val mockWebServer = MockWebServer()
     private val dispatcher =
         object : Dispatcher() {
@@ -65,7 +67,10 @@ class MockShoppingWebServer(
                         when (request.method) {
                             "DELETE" -> {
                                 val item =
-                                    convertJsonToObject(request.body.readUtf8(), CartItem::class.java)
+                                    convertJsonToObject(
+                                        request.body.readUtf8(),
+                                        CartItem::class.java
+                                    )
                                 val isSuccessful = deleteCartItem(item)
 
                                 if (isSuccessful) {
@@ -81,7 +86,10 @@ class MockShoppingWebServer(
 
                             "POST" -> {
                                 val item =
-                                    convertJsonToObject(request.body.readUtf8(), CartItem::class.java)
+                                    convertJsonToObject(
+                                        request.body.readUtf8(),
+                                        CartItem::class.java
+                                    )
                                 val isSuccessful = addCartItem(item)
                                 if (isSuccessful) {
                                     MockResponse()

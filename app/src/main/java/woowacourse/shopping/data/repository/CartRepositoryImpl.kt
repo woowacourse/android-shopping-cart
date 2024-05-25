@@ -12,7 +12,6 @@ import woowacourse.shopping.data.util.convertToJson
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
-    shoppingWebServer: MockShoppingWebServer,
     private val baseUrl: String = BASE_URL.dropLast(1),
 ) : CartRepository {
     private val client = OkHttpClient()

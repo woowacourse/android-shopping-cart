@@ -8,9 +8,13 @@ import woowacourse.shopping.data.repository.ProductHistoryRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 
 class ShoppingApplication : Application() {
-    private val database by lazy { ShoppingDatabase.getDatabase(this) }
-    private val server by lazy { MockShoppingWebServer(database.productDao(), database.cartDao()) }
-    val productRepository by lazy { ProductRepositoryImpl(server) }
-    val cartRepository by lazy { CartRepositoryImpl(server) }
+    val database by lazy { ShoppingDatabase.getDatabase(this) }
+    val productRepository by lazy { ProductRepositoryImpl() }
+    val cartRepository by lazy { CartRepositoryImpl() }
     val productHistoryRepository by lazy { ProductHistoryRepositoryImpl(database.productHistoryDao()) }
+
+    override fun onCreate() {
+        super.onCreate()
+        MockShoppingWebServer(database)
+    }
 }
