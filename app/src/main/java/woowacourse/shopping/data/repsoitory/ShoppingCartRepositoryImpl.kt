@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.repsoitory.local
+package woowacourse.shopping.data.repsoitory
 
 import woowacourse.shopping.data.datasource.local.ShoppingCartDataSource
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class ShoppingCartRepositoryImpl(private val dataSource: ShoppingCartDataSource) :
     ShoppingCartRepository {

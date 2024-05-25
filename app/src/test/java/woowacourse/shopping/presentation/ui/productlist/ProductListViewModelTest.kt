@@ -8,12 +8,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.api.DummyData.PRODUCT_LIST
 import woowacourse.shopping.data.mapper.toDomain
-import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
-import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
-import woowacourse.shopping.domain.repository.remote.ProductRepository
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.remote.api.DummyData.PRODUCT_LIST
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 

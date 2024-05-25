@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.ui.shoppingcart.adapter
 
-import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.ui.shoppingcart.PagingCartProduct
 
 class ShoppingCartPagingSource(private val repository: ShoppingCartRepository) {

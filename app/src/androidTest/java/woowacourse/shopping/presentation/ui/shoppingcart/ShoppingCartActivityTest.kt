@@ -19,11 +19,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.api.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.data.repsoitory.local.ShoppingCartRepositoryImpl
-import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.data.repsoitory.ShoppingCartRepositoryImpl
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.local.datasource.ShoppingCartDataSourceImpl
 import woowacourse.shopping.local.db.ShoppingCartDatabase
 import woowacourse.shopping.presentation.ui.utils.RecyclerViewItemCountAssertion
+import woowacourse.shopping.remote.api.DummyData.STUB_PRODUCT_A
 import kotlin.concurrent.thread
 
 @RunWith(AndroidJUnit4::class)
@@ -39,7 +40,8 @@ class ShoppingCartActivityTest {
             ).apply {
                 val context = ApplicationProvider.getApplicationContext<Context>()
                 val db = ShoppingCartDatabase.getDatabase(context)
-                repository = ShoppingCartRepositoryImpl(db.dao())
+                val dataSource = ShoppingCartDataSourceImpl(db.dao())
+                repository = ShoppingCartRepositoryImpl(dataSource)
             },
         )
 

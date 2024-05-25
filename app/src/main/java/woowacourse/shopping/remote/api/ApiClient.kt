@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.api
+package woowacourse.shopping.remote.api
 
 object ApiClient {
     const val BASE_PORT = 12345

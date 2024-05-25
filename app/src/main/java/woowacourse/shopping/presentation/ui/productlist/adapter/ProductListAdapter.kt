@@ -61,6 +61,7 @@ class ProductListAdapter(
 
     fun updateProductList(newPagingProduct: PagingProduct) {
         isLast = newPagingProduct.last
+        if (isLast) notifyItemChanged(currentList.size)
         submitList(newPagingProduct.productList)
     }
 

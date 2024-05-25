@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.api
+package woowacourse.shopping.remote.api
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -6,10 +6,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.mockwebserver.MockWebServer
-import woowacourse.shopping.data.api.ApiClient.BASE_PORT
-import woowacourse.shopping.data.api.ApiClient.GET_FIND_PRODUCT
-import woowacourse.shopping.data.api.ApiClient.GET_PAGING_PRODUCT
-import woowacourse.shopping.data.model.remote.ProductResponse
+import woowacourse.shopping.remote.api.ApiClient.BASE_PORT
+import woowacourse.shopping.remote.api.ApiClient.GET_FIND_PRODUCT
+import woowacourse.shopping.remote.api.ApiClient.GET_PAGING_PRODUCT
+import woowacourse.shopping.remote.model.ProductResponse
 import kotlin.concurrent.thread
 
 class NetworkModule : ApiService {

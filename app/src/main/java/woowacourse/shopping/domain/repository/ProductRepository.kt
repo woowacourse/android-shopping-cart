@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain.repository.remote
+package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.Product
 

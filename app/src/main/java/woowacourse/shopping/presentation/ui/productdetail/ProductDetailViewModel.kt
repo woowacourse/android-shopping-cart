@@ -6,9 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
-import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
-import woowacourse.shopping.domain.repository.remote.ProductRepository
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.base.Event
@@ -40,10 +40,7 @@ class ProductDetailViewModel(
 
     private fun getProduct(id: Long) {
         thread {
-            productRepository.findProductById(id).mapCatching { product ->
-                val carProduct = shoppingCartRepository.findCartProduct(id).getOrNull()
-                carProduct ?: product.copy(quantity = 1)
-            }.onSuccess { product ->
+            productRepository.findProductById(id).onSuccess { product ->
                 _uiState.value?.let { state ->
                     if (state.isLastProductPage) {
                         _uiState.postValue(state.copy(product = product, isAddToCart = false))

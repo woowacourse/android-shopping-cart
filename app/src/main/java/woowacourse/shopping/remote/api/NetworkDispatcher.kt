@@ -1,13 +1,13 @@
-package woowacourse.shopping.data.api
+package woowacourse.shopping.remote.api
 
 import com.google.gson.Gson
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
-import woowacourse.shopping.data.api.ApiClient.CONTENT_KEY
-import woowacourse.shopping.data.api.ApiClient.CONTENT_TYPE
-import woowacourse.shopping.data.api.ApiClient.GET_FIND_PRODUCT_PATH
-import woowacourse.shopping.data.api.ApiClient.GET_PAGING_PRODUCT_PATH
+import woowacourse.shopping.remote.api.ApiClient.CONTENT_KEY
+import woowacourse.shopping.remote.api.ApiClient.CONTENT_TYPE
+import woowacourse.shopping.remote.api.ApiClient.GET_FIND_PRODUCT_PATH
+import woowacourse.shopping.remote.api.ApiClient.GET_PAGING_PRODUCT_PATH
 import kotlin.math.min
 
 object NetworkDispatcher : Dispatcher() {

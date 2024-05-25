@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.api
+package woowacourse.shopping.remote.api
 
-import woowacourse.shopping.data.model.remote.ProductResponse
+import woowacourse.shopping.remote.model.ProductResponse
 
 interface ApiService {
     fun findProductById(id: Long): Result<ProductResponse>
