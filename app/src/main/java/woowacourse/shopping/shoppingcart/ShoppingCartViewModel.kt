@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.QuantityUpdate
+import woowacourse.shopping.repository.ShoppingRepository
 import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModels
 import woowacourse.shopping.shoppingcart.uimodel.LoadCartItemState
 import kotlin.math.ceil

@@ -2,10 +2,10 @@ package woowacourse.shopping.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.DummyProductRepository
-import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.productdetail.ProductDetailViewModel
 import woowacourse.shopping.productlist.ProductListViewModel
+import woowacourse.shopping.repository.DummyProductRepository
+import woowacourse.shopping.repository.DummyShoppingRepository
 import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
 
 class ViewModelFactory : ViewModelProvider.Factory {

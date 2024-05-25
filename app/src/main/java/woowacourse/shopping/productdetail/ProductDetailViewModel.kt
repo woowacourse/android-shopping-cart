@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ProductRepository
-import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.GetLastProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
@@ -14,6 +12,8 @@ import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.productdetail.uimodel.CountResultUiModel
 import woowacourse.shopping.productdetail.uimodel.CountState
 import woowacourse.shopping.productdetail.uimodel.RecentProductState
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.ShoppingRepository
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import java.time.LocalDateTime

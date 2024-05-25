@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.repository
 
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCart
@@ -54,7 +54,7 @@ object DummyShoppingRepository : ShoppingRepository {
     override fun shoppingCartSize(): Int = users.first().shoppingCart.items.size
 
     override fun updateShoppingCart(shoppingCart: ShoppingCart) {
-        this.users =
+        users =
             users.map {
                 if (it.id == users.first().id) it.copy(shoppingCart = shoppingCart) else it
             }
@@ -72,7 +72,7 @@ object DummyShoppingRepository : ShoppingRepository {
     override fun updateCartItem(updatedCartItem: ShoppingCartItem) {
         val shoppingCart = shoppingCart().updateItem(updatedCartItem)
 
-        this.users =
+        users =
             users.map {
                 if (it.id == users.first().id) it.copy(shoppingCart = shoppingCart) else it
             }
@@ -89,7 +89,7 @@ object DummyShoppingRepository : ShoppingRepository {
 
     override fun addCartItem(shoppingCartItem: ShoppingCartItem) {
         val updatedShoppingCart = users.first().shoppingCart.addItem(shoppingCartItem)
-        this.users =
+        users =
             users.map {
                 if (it.id == users.first().id) it.copy(shoppingCart = updatedShoppingCart) else it
             }

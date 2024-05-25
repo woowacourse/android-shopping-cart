@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import woowacourse.shopping.ProductRepository
-import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCartItem
@@ -15,6 +13,8 @@ import woowacourse.shopping.productlist.uimodel.LoadProductState.ShowProducts
 import woowacourse.shopping.productlist.uimodel.ProductUiModel
 import woowacourse.shopping.productlist.uimodel.ProductUiModels
 import woowacourse.shopping.productlist.uimodel.RecentProductUiModel
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.ShoppingRepository
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
