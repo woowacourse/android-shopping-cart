@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping.adapter.recent
+package woowacourse.shopping.view.home.adapter.recent
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.db.shopping.DummyShopping
 import woowacourse.shopping.databinding.ItemRecentViewedProductBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.view.shopping.ShoppingClickListener
+import woowacourse.shopping.view.home.HomeClickListener
 
-class RecentAdapter(private val clickListener: ShoppingClickListener) :
+class RecentAdapter(private val clickListener: HomeClickListener) :
     RecyclerView.Adapter<RecentViewHolder>() {
     private var recentViewedProducts: List<Product> = DummyShopping.items
 

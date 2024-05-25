@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping
+package woowacourse.shopping.view.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,15 +8,15 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.cart.QuantityClickListener
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.ProductItem
+import woowacourse.shopping.view.home.adapter.product.ShoppingItem.ProductItem
 import woowacourse.shopping.view.state.UIState
 
-class ShoppingViewModel(
+class HomeViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
 ) :
     ViewModel(),
-        ShoppingClickListener,
+        HomeClickListener,
         QuantityClickListener {
     private val _shoppingUiState = MutableLiveData<UIState<List<ProductItem>>>(UIState.Empty)
     val shoppingUiState: LiveData<UIState<List<ProductItem>>>

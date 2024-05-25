@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping
+package woowacourse.shopping.view.home
 
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -14,16 +14,16 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 
 @RunWith(AndroidJUnit4::class)
-class ShoppingActivityTest {
+class HomeActivityTest {
     private val intent =
         Intent(
             ApplicationProvider.getApplicationContext(),
-            ShoppingActivity::class.java,
+            HomeActivity::class.java,
         )
 
     @get:Rule
-    val activityRule: ActivityScenarioRule<ShoppingActivity> =
-        ActivityScenarioRule<ShoppingActivity>(intent)
+    val activityRule: ActivityScenarioRule<HomeActivity> =
+        ActivityScenarioRule<HomeActivity>(intent)
 
     @Test
     fun `화면에_상품_목록이_나타난다`() {

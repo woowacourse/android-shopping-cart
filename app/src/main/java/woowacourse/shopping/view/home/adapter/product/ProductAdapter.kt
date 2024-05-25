@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping.adapter.product
+package woowacourse.shopping.view.home.adapter.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreButtonBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.view.cart.QuantityClickListener
-import woowacourse.shopping.view.shopping.ShoppingClickListener
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.Companion.PRODUCT_VIEW_TYPE
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.LoadMoreItem
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.ProductItem
+import woowacourse.shopping.view.home.HomeClickListener
+import woowacourse.shopping.view.home.adapter.product.ShoppingItem.Companion.PRODUCT_VIEW_TYPE
+import woowacourse.shopping.view.home.adapter.product.ShoppingItem.LoadMoreItem
+import woowacourse.shopping.view.home.adapter.product.ShoppingItem.ProductItem
 
 class ProductAdapter(
-    private val shoppingClickListener: ShoppingClickListener,
+    private val homeClickListener: HomeClickListener,
     val quantityClickListener: QuantityClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val shoppingItems: MutableList<ShoppingItem> = mutableListOf()
@@ -39,10 +39,10 @@ class ProductAdapter(
     ) {
         val shoppingItem = shoppingItems[position]
         if (holder is ProductViewHolder && shoppingItem is ProductItem) {
-            holder.bind(shoppingItem, shoppingClickListener, quantityClickListener)
+            holder.bind(shoppingItem, homeClickListener, quantityClickListener)
         }
         if (holder is LoadMoreButtonViewHolder) {
-            holder.bind(shoppingClickListener)
+            holder.bind(homeClickListener)
         }
     }
 

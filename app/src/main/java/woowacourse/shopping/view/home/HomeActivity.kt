@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping
+package woowacourse.shopping.view.home
 
 import android.os.Bundle
 import android.widget.Toast
@@ -9,26 +9,26 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication.Companion.database
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
-import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
-import woowacourse.shopping.view.shopping.adapter.product.ProductAdapter
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
-import woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.ProductItem
-import woowacourse.shopping.view.shopping.adapter.recent.RecentAdapter
+import woowacourse.shopping.view.home.adapter.product.ProductAdapter
+import woowacourse.shopping.view.home.adapter.product.ShoppingItem.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
+import woowacourse.shopping.view.home.adapter.product.ShoppingItem.ProductItem
+import woowacourse.shopping.view.home.adapter.recent.RecentAdapter
 import woowacourse.shopping.view.state.UIState
 
-class ShoppingActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityShoppingBinding
+class HomeActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityHomeBinding
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentAdapter: RecentAdapter
-    private val viewModel: ShoppingViewModel by viewModels {
-        ShoppingViewModelFactory(ShoppingRepositoryImpl(), CartRepositoryImpl(database))
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(ShoppingRepositoryImpl(), CartRepositoryImpl(database))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityShoppingBinding.inflate(layoutInflater)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpAdapter()
         setUpDataBinding()

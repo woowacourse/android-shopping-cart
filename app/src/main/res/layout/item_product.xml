@@ -7,7 +7,7 @@
 
         <variable
             name="shoppingClickListener"
-            type="woowacourse.shopping.view.shopping.ShoppingClickListener" />
+            type="woowacourse.shopping.view.home.HomeClickListener" />
 
         <variable
             name="quantityClickListener"
@@ -15,7 +15,7 @@
 
         <variable
             name="productItem"
-            type="woowacourse.shopping.view.shopping.adapter.product.ShoppingItem.ProductItem" />
+            type="woowacourse.shopping.view.home.adapter.product.ShoppingItem.ProductItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

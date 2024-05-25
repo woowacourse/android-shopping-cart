@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping.adapter.product
+package woowacourse.shopping.view.home.adapter.product
 
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository.Companion.DEFAULT_QUANTITY

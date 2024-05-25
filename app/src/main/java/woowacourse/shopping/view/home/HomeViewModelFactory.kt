@@ -1,18 +1,18 @@
-package woowacourse.shopping.view.shopping
+package woowacourse.shopping.view.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 
-class ShoppingViewModelFactory(
+class HomeViewModelFactory(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ShoppingViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ShoppingViewModel(
+            return HomeViewModel(
                 shoppingRepository = shoppingRepository,
                 cartRepository = cartRepository,
             ) as T

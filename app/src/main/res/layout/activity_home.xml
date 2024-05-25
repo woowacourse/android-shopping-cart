@@ -7,14 +7,14 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.view.shopping.ShoppingViewModel" />
+            type="woowacourse.shopping.view.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/activity_shopping"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.shopping.ShoppingActivity">
+        tools:context=".view.home.HomeActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar_main"
@@ -83,7 +83,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_recent_viewed_products"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="220dp"
                     android:layout_marginStart="24dp"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -106,10 +106,24 @@
                         android:layout_marginTop="8dp"
                         android:orientation="horizontal"
                         android:overScrollMode="never"
+                        android:visibility="visible"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintStart_toStartOf="@id/tv_recent_viewed_products_title"
                         app:layout_constraintTop_toBottomOf="@id/tv_recent_viewed_products_title"
                         tools:listitem="@layout/item_recent_viewed_product" />
+
+                    <TextView
+                        android:id="@+id/rv_recent_viewed_products_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="최근 본 상품이 존재하지 않습니다."
+                        android:textSize="20dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/tv_recent_viewed_products_title"
+                        app:layout_constraintTop_toBottomOf="@id/tv_recent_viewed_products_title" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
@@ -128,6 +142,7 @@
                     app:layout_constraintTop_toBottomOf="@id/divider"
                     app:spanCount="2"
                     tools:itemCount="20"
+
                     tools:layout_editor_absoluteX="0dp"
                     tools:listitem="@layout/item_product" />
 

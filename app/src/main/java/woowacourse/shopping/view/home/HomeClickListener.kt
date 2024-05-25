@@ -1,8 +1,8 @@
-package woowacourse.shopping.view.shopping
+package woowacourse.shopping.view.home
 
 import woowacourse.shopping.domain.model.Product
 
-interface ShoppingClickListener {
+interface HomeClickListener {
     fun onProductClick(productId: Long)
 
     fun onLoadMoreButtonClick()

@@ -3,7 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.db.shopping.DummyShopping
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.view.shopping.ShoppingViewModel
+import woowacourse.shopping.view.home.HomeViewModel
 
 class ShoppingRepositoryImpl : ShoppingRepository {
     private val products: List<Product> = DummyShopping.items
@@ -11,7 +11,7 @@ class ShoppingRepositoryImpl : ShoppingRepository {
 
     override fun findProductsByPage(): List<Product> {
         val fromIndex = offset
-        offset = Integer.min(offset + ShoppingViewModel.PAGE_SIZE, products.size)
+        offset = Integer.min(offset + HomeViewModel.PAGE_SIZE, products.size)
         return products.subList(fromIndex, offset)
     }
 
@@ -20,6 +20,6 @@ class ShoppingRepositoryImpl : ShoppingRepository {
     }
 
     override fun canLoadMore(): Boolean {
-        return !(products.size < ShoppingViewModel.PAGE_SIZE || offset == products.size)
+        return !(products.size < HomeViewModel.PAGE_SIZE || offset == products.size)
     }
 }

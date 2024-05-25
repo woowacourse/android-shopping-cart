@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping
+package woowacourse.shopping.view.home
 
 import io.mockk.every
 import io.mockk.mockk
@@ -15,13 +15,13 @@ import woowacourse.shopping.view.state.UIState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingViewModelTest {
-    private lateinit var viewModel: ShoppingViewModel
+    private lateinit var viewModel: HomeViewModel
     private val shoppingRepository: ShoppingRepository = mockk()
     private val cartRepository: CartRepository = FakeCartRepositoryImpl()
 
     @BeforeEach
     fun setUp() {
-        viewModel = ShoppingViewModel(shoppingRepository, cartRepository)
+        viewModel = HomeViewModel(shoppingRepository, cartRepository)
     }
 
     @Test
