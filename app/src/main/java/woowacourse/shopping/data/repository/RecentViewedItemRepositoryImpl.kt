@@ -10,13 +10,13 @@ import kotlin.concurrent.thread
 class RecentViewedItemRepositoryImpl(context: Context) : RecentViewedItemRepository {
     private val recentViewedItemDao = RecentViewedItemDatabase.getInstance(context).recentViewedItemDao()
 
-    override fun loadAllRecentViewedItems(): List<Product> {
+    override fun loadAllRecentViewedItems(maxItemCount: Int): List<Product> {
         val recentItems = mutableListOf<Product>()
         thread {
             val products = recentViewedItemDao.findAllItemsByMostRecent().map { it.product }
             recentItems.addAll(products)
         }.join()
-        return recentItems
+        return recentItems.take(maxItemCount)
     }
 
     override fun addRecentViewedItem(product: Product) {

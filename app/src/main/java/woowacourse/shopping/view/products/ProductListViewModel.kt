@@ -66,7 +66,7 @@ class ProductListViewModel(
     override fun onProductItemClicked(product: Product) {
         _navigateToDetail.value = Event(product.id)
         recentViewedItemRepository.addRecentViewedItem(product)
-        _recentViewed.value = recentViewedItemRepository.loadAllRecentViewedItems()
+        updateRecentViewedItems()
     }
 
     override fun onShoppingCartButtonClicked() {
@@ -94,7 +94,7 @@ class ProductListViewModel(
     }
 
     fun updateRecentViewedItems() {
-        _recentViewed.value = recentViewedItemRepository.loadAllRecentViewedItems()
+        _recentViewed.value = recentViewedItemRepository.loadAllRecentViewedItems(MAXIMUM_RECENT_VIEWED_ITEMS_COUNT)
     }
 
     companion object {
@@ -102,5 +102,6 @@ class ProductListViewModel(
         const val DEFAULT_QUANTITY = 0
         const val INCREMENT_VALUE = 1
         const val DECREMENT_VALUE = 1
+        const val MAXIMUM_RECENT_VIEWED_ITEMS_COUNT = 10
     }
 }
