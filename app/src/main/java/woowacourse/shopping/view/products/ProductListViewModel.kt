@@ -78,19 +78,21 @@ class ProductListViewModel(
                 cartItemResult.counter.itemCount,
             )
             product.updateCartItemCount(cartItemResult.counter.itemCount)
-            _cartItemCount.value = _cartItemCount.value?.plus(DEFAULT_CART_ITEM_COUNT)
-            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+            product.updateItemSelector(true)
+            increaseTotalCount()
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException -> {
                     shoppingCartRepository.addCartItem(product)
                     product.updateCartItemCount(DEFAULT_CART_ITEM_COUNT)
+                    product.updateItemSelector(true)
+                    increaseTotalCount()
                 }
 
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
-        product.updateItemSelector(true)
+        _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
     }
 
     fun decreaseShoppingCart(product: Product) {
@@ -140,6 +142,10 @@ class ProductListViewModel(
 
     private fun updateTotalCount() {
         _cartItemCount.value = shoppingCartRepository.getTotalCartItemCount()
+    }
+
+    private fun increaseTotalCount(){
+        _cartItemCount.value = _cartItemCount.value?.plus(DEFAULT_CART_ITEM_COUNT)
     }
 
     fun updateProducts(items: Map<Long, Int>) {
