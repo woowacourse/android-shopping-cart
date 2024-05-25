@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
-import woowacourse.shopping.data.model.CartItem
-import woowacourse.shopping.data.model.CartableProduct
-import woowacourse.shopping.data.model.RecentProduct
+import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.history.RecentProduct
+import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository

@@ -3,9 +3,9 @@ package woowacourse.shopping
 import android.app.Application
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.remote.MockShoppingWebServer
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductHistoryRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.cart.CartRepositoryImpl
+import woowacourse.shopping.data.repository.history.ProductHistoryRepositoryImpl
+import woowacourse.shopping.data.repository.product.ProductRepositoryImpl
 
 class ShoppingApplication : Application() {
     val database by lazy { ShoppingDatabase.getDatabase(this) }

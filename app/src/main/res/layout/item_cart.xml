@@ -16,7 +16,7 @@
 
         <variable
             name="cartedProduct"
-            type="woowacourse.shopping.data.model.CartedProduct" />
+            type="woowacourse.shopping.data.model.cart.CartedProduct" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

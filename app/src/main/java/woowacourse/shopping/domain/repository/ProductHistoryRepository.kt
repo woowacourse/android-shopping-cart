@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.data.model.ProductHistory
-import woowacourse.shopping.data.model.RecentProduct
+import woowacourse.shopping.data.model.history.ProductHistory
+import woowacourse.shopping.data.model.history.RecentProduct
 
 interface ProductHistoryRepository {
     fun addProductHistory(productHistory: ProductHistory): Long

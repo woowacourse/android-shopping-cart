@@ -5,9 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import woowacourse.shopping.data.model.CartItem
-import woowacourse.shopping.data.model.Product
-import woowacourse.shopping.data.model.ProductHistory
+import woowacourse.shopping.data.database.cart.CartDao
+import woowacourse.shopping.data.database.history.ProductHistoryDao
+import woowacourse.shopping.data.database.product.PRODUCT_DATA
+import woowacourse.shopping.data.database.product.ProductDao
+import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.history.ProductHistory
+import woowacourse.shopping.data.model.product.Product
 import kotlin.concurrent.thread
 
 @Database(

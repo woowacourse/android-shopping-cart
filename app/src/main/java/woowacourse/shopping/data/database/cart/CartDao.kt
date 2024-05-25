@@ -1,12 +1,12 @@
-package woowacourse.shopping.data.database
+package woowacourse.shopping.data.database.cart
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import woowacourse.shopping.data.model.CartItem
-import woowacourse.shopping.data.model.CartedProduct
+import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.cart.CartedProduct
 
 @Dao
 interface CartDao {

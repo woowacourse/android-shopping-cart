@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.model.RecentProduct
+import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.databinding.ItemProductHistoryBinding
 import woowacourse.shopping.presentation.BindableAdapter
 

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cartableProduct"
-            type="woowacourse.shopping.data.model.CartableProduct" />
+            type="woowacourse.shopping.data.model.product.CartableProduct" />
 
         <variable
             name="quantityListener"

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.model.CartedProduct
+import woowacourse.shopping.data.model.cart.CartedProduct
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.presentation.BindableAdapter
 import woowacourse.shopping.presentation.home.QuantityListener

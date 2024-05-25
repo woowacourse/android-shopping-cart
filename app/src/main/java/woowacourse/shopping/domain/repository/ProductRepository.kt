@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.data.model.CartableProduct
+import woowacourse.shopping.data.model.product.CartableProduct
 
 interface ProductRepository {
     fun fetchSinglePage(page: Int): List<CartableProduct>

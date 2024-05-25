@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.database
+package woowacourse.shopping.data.database.product
 
-import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.data.model.product.Product
 
 val PRODUCT_DATA: List<Product> =
     listOf(

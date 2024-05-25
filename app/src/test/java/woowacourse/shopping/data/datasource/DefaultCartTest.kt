@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.datasource
 
-import io.kotest.assertions.any
 import io.mockk.every
 import io.mockk.mockkObject
 import org.assertj.core.api.Assertions.assertThat
@@ -8,7 +7,7 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.datasource.DefaultCart.addCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.deleteCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.getCartItems
-import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.cart.CartItem
 
 class DefaultCartTest {
     @Test

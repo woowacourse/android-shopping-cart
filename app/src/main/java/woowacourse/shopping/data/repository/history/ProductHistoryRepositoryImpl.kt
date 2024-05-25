@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.history
 
-import woowacourse.shopping.data.database.ProductHistoryDao
-import woowacourse.shopping.data.model.ProductHistory
-import woowacourse.shopping.data.model.RecentProduct
+import woowacourse.shopping.data.database.history.ProductHistoryDao
+import woowacourse.shopping.data.model.history.ProductHistory
+import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 
 class ProductHistoryRepositoryImpl(

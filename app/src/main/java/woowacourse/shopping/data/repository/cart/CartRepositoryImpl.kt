@@ -1,11 +1,10 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.cart
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import woowacourse.shopping.data.model.CartItem
-import woowacourse.shopping.data.model.CartedProduct
-import woowacourse.shopping.data.remote.MockShoppingWebServer
+import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.cart.CartedProduct
 import woowacourse.shopping.data.util.convertJsonToList
 import woowacourse.shopping.data.util.convertJsonToObject
 import woowacourse.shopping.data.util.convertToJson

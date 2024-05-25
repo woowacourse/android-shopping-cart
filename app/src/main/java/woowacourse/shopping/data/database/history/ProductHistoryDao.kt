@@ -1,11 +1,11 @@
-package woowacourse.shopping.data.database
+package woowacourse.shopping.data.database.history
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import woowacourse.shopping.data.model.ProductHistory
-import woowacourse.shopping.data.model.RecentProduct
+import woowacourse.shopping.data.model.history.ProductHistory
+import woowacourse.shopping.data.model.history.RecentProduct
 
 @Dao
 interface ProductHistoryDao {

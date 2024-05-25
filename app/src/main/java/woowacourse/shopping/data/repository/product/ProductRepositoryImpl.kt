@@ -1,9 +1,8 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.product
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import woowacourse.shopping.data.model.CartableProduct
-import woowacourse.shopping.data.remote.MockShoppingWebServer
+import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.data.util.convertJsonToList
 import woowacourse.shopping.data.util.convertJsonToObject
 import woowacourse.shopping.domain.repository.ProductRepository

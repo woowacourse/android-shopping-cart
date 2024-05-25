@@ -4,18 +4,18 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import woowacourse.shopping.data.database.CartDao
-import woowacourse.shopping.data.database.ProductDao
 import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.model.CartItem
-import woowacourse.shopping.data.model.CartableProduct
-import woowacourse.shopping.data.model.CartedProduct
+import woowacourse.shopping.data.database.cart.CartDao
+import woowacourse.shopping.data.database.product.ProductDao
+import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.cart.CartedProduct
+import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.data.util.convertJsonToObject
 import woowacourse.shopping.data.util.convertToJson
 import kotlin.concurrent.thread
 
 class MockShoppingWebServer(
-    database: ShoppingDatabase
+    database: ShoppingDatabase,
 ) {
     private val productDao: ProductDao = database.productDao()
     private val cartDao: CartDao = database.cartDao()
@@ -69,7 +69,7 @@ class MockShoppingWebServer(
                                 val item =
                                     convertJsonToObject(
                                         request.body.readUtf8(),
-                                        CartItem::class.java
+                                        CartItem::class.java,
                                     )
                                 val isSuccessful = deleteCartItem(item)
 
@@ -88,7 +88,7 @@ class MockShoppingWebServer(
                                 val item =
                                     convertJsonToObject(
                                         request.body.readUtf8(),
-                                        CartItem::class.java
+                                        CartItem::class.java,
                                     )
                                 val isSuccessful = addCartItem(item)
                                 if (isSuccessful) {
