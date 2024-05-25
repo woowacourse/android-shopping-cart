@@ -62,16 +62,15 @@ class DetailActivity : AppCompatActivity() {
     private fun observeEvents() {
         viewModel.message.observe(this) { event ->
             if (event.hasBeenHandled) return@observe
+            val quantity = ProductQuantity(
+                productId,
+                viewModel.productInformation.value?.quantity ?: -1,
+            )
             setResult(
                 RESULT_OK,
                 Intent().putExtra(
                     "quantities",
-                    arrayListOf(
-                        ProductQuantity(
-                            productId,
-                            viewModel.productInformation.value?.quantity ?: -1,
-                        ),
-                    ),
+                    arrayListOf(quantity),
                 ),
             )
             showToastMessage(

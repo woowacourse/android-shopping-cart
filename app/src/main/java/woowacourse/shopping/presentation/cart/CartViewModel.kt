@@ -64,6 +64,7 @@ class CartViewModel(
     override fun onCartItemDelete(cartedProduct: CartedProduct) {
         thread {
             cartRepository.removeCartItem(cartedProduct.cartItem)
+            alteredCartItems.add(ProductQuantity(cartedProduct.product.id, 0))
             if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
                 _currentPage.postValue(currentPage.value?.minus(1))
             }
@@ -93,9 +94,11 @@ class CartViewModel(
         productId: Long,
         quantity: Int,
     ) {
+        println(quantity)
         if (quantity < 0) return
         thread {
             val targetItem = productRepository.fetchProduct(productId)
+            println(targetItem)
             if (targetItem.cartItem?.id != null) {
                 if (quantity == 0) {
                     cartRepository.removeCartItem(targetItem.cartItem)

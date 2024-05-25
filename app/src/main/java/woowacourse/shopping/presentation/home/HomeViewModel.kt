@@ -57,7 +57,7 @@ class HomeViewModel(
         loadHistory()
     }
 
-    private fun loadProducts() {
+    fun loadProducts() {
         thread {
             _loadStatus.postValue(
                 loadStatus.value?.copy(
@@ -112,11 +112,16 @@ class HomeViewModel(
         productId: Long,
         quantity: Int,
     ) {
+        println("$productId $quantity")
         if (quantity < 0) return
         thread {
             val targetProduct = productRepository.fetchProduct(productId)
-            if (quantity == 0 && targetProduct.cartItem?.id != null) {
-                cartRepository.removeCartItem(targetProduct.cartItem)
+            println(targetProduct)
+            if (quantity == 0) {
+                if (targetProduct.cartItem?.id != null) {
+                    println("delete available")
+                    cartRepository.removeCartItem(targetProduct.cartItem)
+                }
                 val target =
                     products.value?.map {
                         if (it.product.id == targetProduct.product.id) {
@@ -134,6 +139,8 @@ class HomeViewModel(
                     ),
                 )
             } else {
+                println("delete unavailable")
+
                 if (targetProduct.cartItem?.id != null) {
                     cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
                     targetProduct.cartItem.id
