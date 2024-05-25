@@ -35,6 +35,9 @@ class CartViewModel(
     }
 
     fun deleteCartItem(productId: Long) {
+        checkEmptyLastPage()
+        val isEmptyLastPage = isEmptyLastPage.value ?: return
+        if (isEmptyLastPage) decreasePage()
         cartRepository.deleteCartItem(productId)
         updatePage()
     }

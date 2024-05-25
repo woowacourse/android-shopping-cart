@@ -40,22 +40,14 @@ class CartActivity : AppCompatActivity() {
     private fun initializeCartAdapter() {
         adapter =
             CartAdapter(
-                onClickExit = { deleteCartItem(cartItemId = it) },
-                onClickPlusButton = { cartViewModel.addProduct(it) },
-                onClickMinusButton = { cartViewModel.deleteProduct(it) },
+                onClickExit = { cartViewModel.deleteCartItem(productId = it) },
+                onClickPlusButton = { cartViewModel.addProduct(productId = it) },
+                onClickMinusButton = { cartViewModel.deleteProduct(productId = it) },
             )
         binding.rvCart.adapter = adapter
 
         cartViewModel.cart.observe(this) {
             adapter.updateCart(it)
         }
-    }
-
-    private fun deleteCartItem(cartItemId: Long) {
-        cartViewModel.checkEmptyLastPage()
-        cartViewModel.isEmptyLastPage.observe(this) { isEmptyLastPage ->
-            if (isEmptyLastPage) cartViewModel.decreasePage()
-        }
-        cartViewModel.deleteCartItem(cartItemId)
     }
 }

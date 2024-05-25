@@ -176,8 +176,6 @@ class CartViewModelTest {
         viewModel.increasePage()
         viewModel.deleteCartItem(productId = 6)
 
-        viewModel.checkEmptyLastPage()
-
         val actual = viewModel.isEmptyLastPage.getOrAwaitValue()
         assertThat(actual).isTrue()
     }
