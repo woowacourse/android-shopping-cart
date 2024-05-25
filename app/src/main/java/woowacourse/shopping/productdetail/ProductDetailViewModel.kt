@@ -104,6 +104,7 @@ class ProductDetailViewModel(
             when (state) {
                 is GetLastProduct.Success,
                 -> _recentProductState.value = isSameProduct(state.value)
+
                 GetLastProduct.Fail,
                 -> _recentProductState.value = RecentProductState.NoRecentProduct
             }

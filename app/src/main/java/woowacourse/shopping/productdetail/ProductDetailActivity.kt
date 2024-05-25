@@ -59,7 +59,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
         viewModel.isAddSuccess.observe(this) { isSuccess ->
             if (isSuccess) {
                 viewModel.updateRecentProduct(productId)
-                val intent = ProductListActivity.recentAndChangeProductIntent(this@ProductDetailActivity, longArrayOf(productId), true)
+                val intent =
+                    ProductListActivity.recentAndChangeProductIntent(
+                        this@ProductDetailActivity,
+                        longArrayOf(productId),
+                        true,
+                    )
                 setResult(RESULT_OK, intent)
                 finish()
             }

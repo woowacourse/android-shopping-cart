@@ -43,10 +43,12 @@ class ProductListViewModelTest {
     fun `0부터 19의 위치에 해당하는 데이터에, 20에서 39위치에 해당하는 데이터가 추가되는 형태로 데이터가 들어온다`() {
         // given
         viewModel.initProducts()
-        val firstActual = (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
+        val firstActual =
+            (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
 
         viewModel.loadMoreProducts()
-        val secondActual = (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
+        val secondActual =
+            (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
 
         // then
         assertThat(firstActual).hasSize(20)

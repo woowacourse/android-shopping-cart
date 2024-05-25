@@ -95,7 +95,7 @@ object DummyShoppingRepository : ShoppingRepository {
             }
     }
 
-    fun clear()  {
+    fun clear() {
         updateShoppingCart(ShoppingCart(emptyList()))
     }
 }

@@ -9,8 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="98dp"
-        android:layout_marginHorizontal="4dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp">
 
         <ImageView
             android:id="@+id/iv_recent_product_item"
