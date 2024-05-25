@@ -13,4 +13,6 @@
     <string name="shopping_cart">shopping cart</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+
+    <string name="greater_than_99"><![CDATA[99+]]> </string>
 </resources>

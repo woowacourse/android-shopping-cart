@@ -41,13 +41,16 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="end"
+                android:gravity="center"
                 android:layout_marginEnd="20dp"
-                android:text="@{String.valueOf(vm.cartProductTotalCount)}"
+                android:background="@drawable/circle_background"
+                android:text="@{String.valueOf(vm.cartProductTotalCount > 99 ?  @string/greater_than_99: vm.cartProductTotalCount)}"
                 android:textColor="@color/white"
                 android:textSize="20dp"
+                android:visibility="@{vm.cartProductTotalCount > 0 ? View.VISIBLE : View.GONE}"
                 tools:ignore="SpUsage"
                 tools:text="99" />
 
