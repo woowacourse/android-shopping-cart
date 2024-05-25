@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -11,8 +12,11 @@
 
         <variable
             name="onProductItemClickListener"
-            type="woowacourse.shopping.ui.cart.CartItemRecyclerViewAdapter.OnProductItemClickListener" />
+            type="woowacourse.shopping.ui.OnProductItemClickListener" />
 
+        <variable
+            name="onItemChargeListener"
+            type="woowacourse.shopping.ui.OnItemQuantityChangeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,16 +66,32 @@
             app:layout_constraintTop_toBottomOf="@id/cart_product_name"
             tools:src="@drawable/ic_launcher_background" />
 
+        <include
+            android:id="@+id/cart_product_list_change_button"
+            layout="@layout/item_change_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/cart_product_price"
+            app:layout_constraintEnd_toEndOf="@id/cart_product_delete"
+            app:layout_constraintTop_toTopOf="@id/cart_product_image"
+            bind:itemId="@{product.id}"
+            bind:onItemChargeListener="@{onItemChargeListener}"
+            bind:quantity="@{product.quantity}" />
+
 
         <TextView
             android:id="@+id/cart_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@{@string/price_format(product.price)}"
+            android:text="@{@string/price_format(product.price * product.quantity) }"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/cart_product_image"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/cart_product_delete"
+            app:layout_constraintTop_toBottomOf="@id/cart_product_list_change_button"
             tools:text="상품 가격" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@ package woowacourse.shopping.cart
 
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.ui.cart.ShoppingCartViewModel
 
 // TODO: 변경된 뷰모델로 테스트
 @ExtendWith(InstantTaskExecutorExtension::class)

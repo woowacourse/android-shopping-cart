@@ -32,7 +32,7 @@ class ShoppingCartFragment : Fragment() {
     }
 
     private val adapter: CartItemRecyclerViewAdapter by lazy {
-        CartItemRecyclerViewAdapter(onProductItemClickListener = viewModel)
+        CartItemRecyclerViewAdapter(onProductItemClickListener = viewModel, onItemQuantityChangeListener = viewModel)
     }
 
     override fun onCreateView(
