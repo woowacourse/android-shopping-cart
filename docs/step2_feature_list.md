@@ -34,11 +34,20 @@ Product Api 는 MockServer 를 활용해서 만들어서 실제 서버랑 비슷
 - [x]: Service Test
 - [x]: Injector 만들기
 - [x]: EventBus 만들기
-
-- 최근 본 상품 로직
+- [x]: ShoppingRepository 페이지 기반으로 변경하기
+### 최근 본 상품 로직
 -[x] : DetailView - viewModel 이 생성될 때, 넘겨 받은 id 로 최근 상품으로 저장한다.
 -[x] : DetailView - 마지막 본 상품으로 이동할 때, 최근 상품을 저장한다.
 -[x] : DetailView 마지막 show 전략
   -[x] : 마지막으로 본 상품과 현재 상품이 같으면 마지막 상품 View를 보여주지 않음
   -[x] : 마지막 본 상품이 없을 때 마지막 상품 View를 보여주지 않음
--[x] : 마지막 상품이 안보이면 뒤로 가기하면 상품 목록으로 이동한다. (구현해야함)
+-[x] : 마지막 상품이 안보이면 뒤로 가기하면 상품 목록으로 이동한다.
+
+---
+- [ ]: UiState 도입
+-[ ]: 마지막 상품이 안보이면 시스템 backPressed 시 상품 목록으로 이동한다.
+-[ ]: 각 Fragment 마다 AppBar 만들기 (CustomAppBarLayout 으로 만들어서 사용하기)
+(Activity의 AppBar 에 접근해서 처리하는 것은 부모뷰의 역할을 뺏는 것임, AppBar 가 없는 Fragment 의 경우도 있을 지도?)
+- [ ]: SavedStateHandle 을 사용하여 ViewModel 에서 상태 저장하기
+- [ ]: ViewModel 테스트 작성하기
+- [ ]: Mapper 를 활용하지 않는 곳 적용하기

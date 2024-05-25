@@ -16,9 +16,3 @@
 - [x]: repository 싱글톤으로 바꾸기
 - [x]: Android Resource의 style 도입
 - [x]: ShoppingNavigator 적용
-
-- [ ]: UiState 도입 + 로딩, 실패, 성공 sealed class 로 관리
-- [ ]: Android Resource의 dimen 도입
-- [ ]: SavedStateHandle 을 사용하여 ViewModel 에서 상태 저장하기
-- [ ]: ShoppingRepository 페이지 기반으로 변경하기
-- [ ]: 남은 ViewModel 테스트 작성하기
