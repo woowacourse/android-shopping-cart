@@ -3,6 +3,7 @@ package woowacourse.shopping
 import woowacourse.shopping.domain.ShoppingCart
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.domain.User
+import woowacourse.shopping.productlist.UpdatedQuantity
 import kotlin.math.min
 
 object UserShoppingCartRepository : ShoppingCartRepository {
@@ -45,4 +46,21 @@ object UserShoppingCartRepository : ShoppingCartRepository {
     }
 
     override fun cartTotalItemQuantity(): Int = shoppingCart(userId()).totalItemQuantity()
+
+    override fun cartItemQuantity(): List<UpdatedQuantity> {
+        val cartItems = users.first().shoppingCart.items
+        return cartItems.map { item ->
+            UpdatedQuantity(item.product.id, item.quantity)
+        }
+    }
+
+    override fun cartItemQuantity(productIds: Set<Long>): List<UpdatedQuantity> {
+        val cartItems = users.first().shoppingCart.items
+        val cartItemMap = cartItems.associateBy { it.product.id }
+
+        return productIds.map { id ->
+            val quantity = cartItemMap[id]?.quantity ?: 0
+            UpdatedQuantity(id, quantity)
+        }
+    }
 }

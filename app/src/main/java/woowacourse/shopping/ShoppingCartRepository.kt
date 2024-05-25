@@ -2,6 +2,7 @@ package woowacourse.shopping
 
 import woowacourse.shopping.domain.ShoppingCart
 import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.productlist.UpdatedQuantity
 
 interface ShoppingCartRepository {
     fun userId(): Long
@@ -20,4 +21,8 @@ interface ShoppingCartRepository {
     fun updateShoppingCart(shoppingCart: ShoppingCart)
 
     fun cartTotalItemQuantity(): Int
+
+    fun cartItemQuantity(): List<UpdatedQuantity>
+
+    fun cartItemQuantity(productIds: Set<Long>): List<UpdatedQuantity>
 }
