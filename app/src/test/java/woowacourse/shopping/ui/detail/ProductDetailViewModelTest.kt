@@ -1,24 +1,25 @@
 package woowacourse.shopping.ui.detail
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.data.api.ProductMockWebServer
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.ui.FakeCartDao
-import woowacourse.shopping.ui.FakeProductServerApi
 import woowacourse.shopping.ui.FakeRecentProductDao
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
-    private val productRepository = ProductRepositoryImpl(FakeProductServerApi)
+    private val productRepository = ProductRepositoryImpl(ProductMockWebServer())
     private val recentProductRepository = RecentProductRepositoryImpl.get(FakeRecentProductDao)
     private val cartRepository = CartRepositoryImpl.get(FakeCartDao)
 
@@ -27,6 +28,12 @@ class ProductDetailViewModelTest {
         cartRepository.deleteAll()
         viewModel =
             ProductDetailViewModel(productRepository, recentProductRepository, cartRepository)
+        productRepository.start()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        productRepository.shutdown()
     }
 
     @Test
@@ -37,7 +44,7 @@ class ProductDetailViewModelTest {
         viewModel.loadProduct(0L)
 
         // then
-        assertEquals(viewModel.productWithQuantity.getOrAwaitValue().product.name, "맥북")
+        assertEquals(viewModel.productWithQuantity.getOrAwaitValue().product.name, "맥북0")
     }
 
     @Test
