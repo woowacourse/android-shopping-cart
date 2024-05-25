@@ -31,10 +31,6 @@ class ProductHistoryListAdapter(private val actionHandler: ProductListActionHand
         return position.toLong()
     }
 
-    fun updateProductHistorys(newCartProductList: List<Product>) {
-        submitList(newCartProductList)
-    }
-
     class ProductHistoryViewHolder(
         private val binding: HolderProductHistoryBinding,
         private val actionHandler: ProductListActionHandler,

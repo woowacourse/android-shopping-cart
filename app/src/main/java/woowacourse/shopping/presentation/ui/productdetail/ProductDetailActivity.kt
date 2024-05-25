@@ -99,7 +99,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh(viewModel.id)
+        viewModel.getProduct(viewModel.id)
     }
 
     @SuppressLint("MissingSuperCall")

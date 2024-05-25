@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.productdetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -37,10 +38,11 @@ class ProductDetailViewModel(
         getProduct(id)
     }
 
-    private fun getProduct(id: Long) {
+    fun getProduct(id: Long) {
         thread {
             productRepository.findProductById(id).onSuccess { product ->
                 _uiState.value?.let { state ->
+                    Log.d("ttt", state.toString())
                     if (state.isLastProductPage) {
                         _uiState.postValue(state.copy(product = product, isAddToCart = false))
                         insertProductHistory(product)
@@ -127,19 +129,20 @@ class ProductDetailViewModel(
             }
 
             if (product.id == productHistorys.first().id) {
-                val productHistory =
-                    if (productHistorys.size >= 2) {
-                        productHistorys[1]
-                    } else {
-                        null
-                    }
+                var productHistory: Product? = null
+                var isLastProductPage: Boolean = true
+
+                if (productHistorys.size >= 2) {
+                    productHistory = productHistorys[1]
+                    isLastProductPage = false
+                }
 
                 _uiState.postValue(
                     uiState.value?.copy(
                         product = product,
                         productHistory = productHistory,
                         isAddToCart = false,
-                        isLastProductPage = true,
+                        isLastProductPage = isLastProductPage,
                     ),
                 )
             } else {

@@ -5,6 +5,8 @@ import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.app.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -36,6 +38,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     private val productHistoryListAdapter: ProductHistoryListAdapter by lazy {
         ProductHistoryListAdapter(viewModel)
     }
+    private var scrollPosition = RecyclerView.NO_POSITION
 
     private val filterActivityLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -97,7 +100,15 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         viewModel.uiState.observe(this) { state ->
             productListAdapter.updateProductList(state.pagingProduct)
             productListAdapter.updateProduct(state.recentlyProductPosition)
-            productHistoryListAdapter.updateProductHistorys(state.productHistorys)
+
+            val layoutManager = binding.rvProductHistoryList.layoutManager as LinearLayoutManager
+            scrollPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+            productHistoryListAdapter.submitList(state.productHistorys) {
+                if (scrollPosition != RecyclerView.NO_POSITION) {
+                    layoutManager.scrollToPositionWithOffset(scrollPosition, 0)
+                }
+            }
         }
 
         viewModel.message.observeEvent(this) { message ->
