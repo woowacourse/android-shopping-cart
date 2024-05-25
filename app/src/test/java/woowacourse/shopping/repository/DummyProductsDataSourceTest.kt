@@ -5,20 +5,20 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.data.source.DummyProductsDataSource
-import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.data.source.ProductDataSource
 
 class DummyProductsDataSourceTest {
-    private lateinit var dummyShoppingProductsRepository: ShoppingProductsRepository
+    private lateinit var productDataSource: ProductDataSource
 
     @BeforeEach
     fun setUp() {
-        dummyShoppingProductsRepository = DummyProductsDataSource(NumberPagingStrategy(countPerLoad = 20))
+        productDataSource = DummyProductsDataSource(NumberPagingStrategy(countPerLoad = 20))
     }
 
     @Test
     fun `데이터를 첫 페이지에 20개 로드`() {
-        // giveo
-        val loadedCartItems = dummyShoppingProductsRepository.loadAllProducts(1)
+        // given
+        val loadedCartItems = productDataSource.findByPaged(1)
 
         // then
         assertThat(loadedCartItems.size).isEqualTo(20)
@@ -27,7 +27,7 @@ class DummyProductsDataSourceTest {
     @Test
     fun `데이터를 두 번째 페이지에서 20개 로드`() {
         // given
-        val loadedCartItems = dummyShoppingProductsRepository.loadAllProducts(2)
+        val loadedCartItems = productDataSource.findByPaged(2)
 
         // when
         assertThat(loadedCartItems.size).isEqualTo(20)
@@ -36,13 +36,13 @@ class DummyProductsDataSourceTest {
     @Test
     fun `id로 상품을 찾는다`() {
         // given
-        val findId = 1
+        val productId = 1
 
         // when
-        val product = dummyShoppingProductsRepository.loadProduct(findId)
+        val product = productDataSource.findById(productId)
 
         // then
-        assertThat(product.id).isEqualTo(findId)
+        assertThat(product.id).isEqualTo(productId)
     }
 
     @Test
@@ -51,7 +51,7 @@ class DummyProductsDataSourceTest {
         val page = 2
 
         // when
-        val isFinalPage = dummyShoppingProductsRepository.isFinalPage(page)
+        val isFinalPage = productDataSource.isFinalPage(page)
 
         // then
         assertThat(isFinalPage).isFalse
@@ -63,7 +63,7 @@ class DummyProductsDataSourceTest {
         val page = 3
 
         // when
-        val isFinalPage = dummyShoppingProductsRepository.isFinalPage(page)
+        val isFinalPage = productDataSource.isFinalPage(page)
 
         // then
         assertThat(isFinalPage).isTrue
