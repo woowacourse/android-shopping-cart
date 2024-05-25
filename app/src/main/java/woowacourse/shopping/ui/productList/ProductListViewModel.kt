@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 
-class ProductListViewModel2(
+class ProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
 ) : ViewModel(),

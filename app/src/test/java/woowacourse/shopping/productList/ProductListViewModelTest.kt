@@ -16,14 +16,14 @@ import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.repository.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.source.FakeProductDataSource
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
-import woowacourse.shopping.ui.productList.ProductListViewModel2
+import woowacourse.shopping.ui.productList.ProductListViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
     private lateinit var productSource: ProductDataSource
     private lateinit var cartSource: ShoppingCartProductIdDataSource
     private lateinit var repository: ShoppingProductsRepository
-    private lateinit var viewmodel: ProductListViewModel2
+    private lateinit var viewmodel: ProductListViewModel
 
     @Test
     fun `장바구니에 아무것도 들어가 있지 않을 때 상품 20개 로드`() {
@@ -41,7 +41,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when (init)
 
@@ -68,7 +68,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when
         viewmodel.loadNextPageProducts()
@@ -96,7 +96,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when (init)
 
@@ -121,7 +121,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when (init)
 
@@ -146,7 +146,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when (init)
 
@@ -171,7 +171,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when
         viewmodel.loadNextPageProducts()
@@ -197,7 +197,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when (init)
 
@@ -221,7 +221,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when
         viewmodel.onIncrease(productId = 13)
@@ -251,7 +251,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when
         viewmodel.onIncrease(productId = 3)
@@ -290,7 +290,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when
         viewmodel.onDecrease(productId = 3)
@@ -317,7 +317,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when
         viewmodel.onDecrease(productId = 3)
@@ -355,7 +355,7 @@ class ProductListViewModelTest {
                 productSource,
                 cartSource,
             )
-        viewmodel = ProductListViewModel2(repository)
+        viewmodel = ProductListViewModel(repository)
 
         // when
         viewmodel.onClick(productId = 3)
