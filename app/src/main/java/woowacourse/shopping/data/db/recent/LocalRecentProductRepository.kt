@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.local
+package woowacourse.shopping.data.db.recent
 
-import woowacourse.shopping.data.local.RecentProductEntity.Companion.toEntity
+import woowacourse.shopping.data.db.recent.RecentProductEntity.Companion.toEntity
 import woowacourse.shopping.domain.RecentProductItem
-import woowacourse.shopping.domain.RecentRepository
+import woowacourse.shopping.domain.repository.RecentRepository
 
 class LocalRecentProductRepository(private val dao: RecentProductDao) : RecentRepository {
     override fun loadAll(): Result<List<RecentProductItem>> {

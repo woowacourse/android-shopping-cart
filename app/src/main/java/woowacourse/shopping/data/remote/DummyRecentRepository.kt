@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.remote
 
 import woowacourse.shopping.domain.RecentProductItem
-import woowacourse.shopping.domain.RecentRepository
+import woowacourse.shopping.domain.repository.RecentRepository
 
 object DummyRecentRepository : RecentRepository {
     private val recentProducts: MutableList<RecentProductItem> = mutableListOf()

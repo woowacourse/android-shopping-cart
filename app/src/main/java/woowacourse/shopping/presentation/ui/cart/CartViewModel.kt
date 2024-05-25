@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.domain.ProductListItem.ShoppingProductItem.Companion.joinProductAndCart

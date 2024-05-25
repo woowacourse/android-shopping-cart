@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.local
+package woowacourse.shopping.data.db
 
 import android.content.Context
 import androidx.room.Database
@@ -9,6 +9,10 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import woowacourse.shopping.data.db.cart.CartDao
+import woowacourse.shopping.data.db.cart.CartEntity
+import woowacourse.shopping.data.db.recent.RecentProductDao
+import woowacourse.shopping.data.db.recent.RecentProductEntity
 import woowacourse.shopping.domain.Product
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

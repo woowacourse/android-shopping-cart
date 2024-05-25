@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.domain.RecentRepository
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentRepository
 import woowacourse.shopping.dummyCartProducts
 import woowacourse.shopping.dummyProducts
 import woowacourse.shopping.dummyRecentProducts

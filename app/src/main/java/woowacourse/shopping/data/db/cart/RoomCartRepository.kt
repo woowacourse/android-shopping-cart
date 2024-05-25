@@ -1,11 +1,11 @@
-package woowacourse.shopping.data.local
+package woowacourse.shopping.data.db.cart
 
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread
 
-class LocalCartRepository(private val dao: CartDao) : CartRepository {
+class RoomCartRepository(private val dao: CartDao) : CartRepository {
     override fun modifyQuantity(
         product: Product,
         quantityDelta: Int,

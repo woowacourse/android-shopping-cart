@@ -1,4 +1,7 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.repository
+
+import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.Product
 
 interface CartRepository {
     fun modifyQuantity(

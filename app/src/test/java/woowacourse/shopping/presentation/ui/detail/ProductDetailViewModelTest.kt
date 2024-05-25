@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.cart
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.domain.RecentRepository
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentRepository
 import woowacourse.shopping.dummyRecentProduct
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.UiState
