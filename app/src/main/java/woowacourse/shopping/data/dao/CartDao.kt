@@ -2,12 +2,13 @@ package woowacourse.shopping.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import woowacourse.shopping.data.model.CartItemEntity
 
 @Dao
 interface CartDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cartItemEntity: CartItemEntity)
 
     @Query("UPDATE cart_items SET quantity = :quantity WHERE productId = :productId")
@@ -22,8 +23,8 @@ interface CartDao {
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
     fun findWithProductId(productId: Long): CartItemEntity
 
-    @Query("SELECT * FROM cart_items WHERE id = :id")
-    fun find(id: Long): CartItemEntity
+    @Query("SELECT * FROM cart_items WHERE productId = :productId")
+    fun find(productId: Long): CartItemEntity
 
     @Query("SELECT * FROM cart_items")
     fun findAll(): List<CartItemEntity>
@@ -37,14 +38,8 @@ interface CartDao {
         limit: Int,
     ): List<CartItemEntity>
 
-    @Query("DELETE FROM cart_items WHERE id = :id")
-    fun delete(id: Long)
-
     @Query("DELETE FROM cart_items WHERE productId = :productId")
     fun deleteByProductId(productId: Long)
-
-    @Query("DELETE FROM cart_items")
-    fun deleteAll()
 
     @Query("SELECT quantity FROM cart_items WHERE productId = :productId")
     fun getQuantityByProductId(productId: Long): Int?

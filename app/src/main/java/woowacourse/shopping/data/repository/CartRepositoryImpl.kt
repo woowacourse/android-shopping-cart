@@ -91,15 +91,9 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         return ShoppingCart(cartItems)
     }
 
-    override fun delete(cartItemId: Long) {
+    override fun deleteByProductId(productId: Long) {
         threadAction {
-            dao.delete(cartItemId)
-        }
-    }
-
-    override fun deleteAll() {
-        threadAction {
-            dao.deleteAll()
+            dao.deleteByProductId(productId)
         }
     }
 

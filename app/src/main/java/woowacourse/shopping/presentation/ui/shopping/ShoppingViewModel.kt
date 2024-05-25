@@ -65,6 +65,12 @@ class ShoppingViewModel(
         _currentPage.value = nextPage
     }
 
+    fun updateModifiedProducts(modifiedProductIds: List<Long>) {
+        for (productId in modifiedProductIds) {
+            updateProductWithAction(productId) {}
+        }
+    }
+
     private fun updateProductWithAction(
         productId: Long,
         action: () -> Unit,

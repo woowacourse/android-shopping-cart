@@ -42,8 +42,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     }
 
     private fun observeViewModel() {
-        viewModel.navigateToShoppingCart.observe(this) {
-            navigateToCart()
+        viewModel.addToCart.observe(this) {
+            showMessage(getString(R.string.add_to_cart))
+            navigateToBack()
         }
     }
 
@@ -52,10 +53,14 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun navigateToCart() {
-        startActivity(
-            CartActivity.createIntent(context = this),
-        )
+    private fun navigateToBack() {
+        val modifiedProductIds = setOf(productId)
+        val resultIntent =
+            Intent().apply {
+                putExtra(CartActivity.EXTRA_KEY_MODIFIED_PRODUCT_IDS, modifiedProductIds.toLongArray())
+            }
+        setResult(RESULT_OK, resultIntent)
+        finish()
     }
 
     companion object {

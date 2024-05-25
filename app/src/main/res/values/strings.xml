@@ -6,4 +6,6 @@
     <string name="empty_product_list">상품이 없습니다.</string>
     <string name="load_more">Load More</string>
     <string name="empty_cart">텅!</string>
+    <string name="cart">Cart</string>
+    <string name="add_to_cart">쇼핑 카트에 추가되었습니다!</string>
 </resources>

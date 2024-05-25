@@ -21,16 +21,14 @@ interface CartRepository {
 
     fun size(): Int
 
-    fun findWithProductId(productId: Long): CartItem
-
     fun sumQuantity(): Int
+
+    fun findWithProductId(productId: Long): CartItem
 
     fun findCartItemsByPage(
         page: Int,
         pageSize: Int,
     ): ShoppingCart
 
-    fun delete(cartItemId: Long)
-
-    fun deleteAll()
+    fun deleteByProductId(productId: Long)
 }

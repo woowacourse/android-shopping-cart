@@ -16,8 +16,8 @@ class DetailViewModel(
     private val _productWithQuantity = MutableLiveData<ProductWithQuantity>()
     val productWithQuantity: LiveData<ProductWithQuantity> get() = _productWithQuantity
 
-    private val _navigateToShoppingCart = MutableLiveData<Long>()
-    val navigateToShoppingCart: LiveData<Long> get() = _navigateToShoppingCart
+    private val _addToCart = MutableLiveData<Long>()
+    val addToCart: LiveData<Long> get() = _addToCart
 
     init {
         loadProductData()
@@ -33,7 +33,7 @@ class DetailViewModel(
 
     fun onAddToCartClicked(productId: Long) {
         createShoppingCartItem()
-        _navigateToShoppingCart.postValue(productId)
+        _addToCart.postValue(productId)
     }
 
     private fun createShoppingCartItem() {

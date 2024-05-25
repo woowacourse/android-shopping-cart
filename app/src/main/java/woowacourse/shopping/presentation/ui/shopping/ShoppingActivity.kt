@@ -1,6 +1,8 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.view.Menu
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -12,6 +14,7 @@ import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
+import woowacourse.shopping.presentation.ui.cart.CartActivity.Companion.EXTRA_KEY_MODIFIED_PRODUCT_IDS
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 
@@ -72,9 +75,9 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
         viewModel.productItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
-                is UIState.Empty -> showErrorMessage(getString(R.string.empty_product_list))
+                is UIState.Empty -> showMessage(getString(R.string.empty_product_list))
                 is UIState.Error ->
-                    showErrorMessage(state.exception.message ?: getString(R.string.unknown_error))
+                    showMessage(state.exception.message ?: getString(R.string.unknown_error))
             }
         }
     }
@@ -85,7 +88,7 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
                 is UIState.Success -> adapter.updateItem(state.data)
                 is UIState.Empty -> return@observe
                 is UIState.Error ->
-                    showErrorMessage(
+                    showMessage(
                         state.exception.message ?: getString(R.string.unknown_error),
                     )
             }
@@ -94,7 +97,7 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
 
     private fun observeProductClick() {
         viewModel.navigateToProductDetail.observe(this) { productId ->
-            onProductClick(productId)
+            navigateToDetail(productId)
         }
     }
 
@@ -103,15 +106,22 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
     }
 
     private fun navigateToShoppingCart() {
-        startActivity(CartActivity.createIntent(context = this))
+        val intent = CartActivity.createIntent(this)
+        activityResultLauncher.launch(intent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+    private val activityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val modifiedProductIds = result.data?.getLongArrayExtra(EXTRA_KEY_MODIFIED_PRODUCT_IDS)?.toList() ?: emptyList()
+                if (modifiedProductIds.isNotEmpty()) {
+                    viewModel.updateModifiedProducts(modifiedProductIds)
+                }
+            }
+        }
 
-    private fun onProductClick(productId: Long) {
-        startActivity(DetailActivity.createIntent(this, productId))
+    private fun navigateToDetail(productId: Long) {
+        val intent = DetailActivity.createIntent(this, productId)
+        activityResultLauncher.launch(intent)
     }
 }

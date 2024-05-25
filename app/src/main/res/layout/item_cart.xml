@@ -83,7 +83,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="12dp"
-            android:onClick="@{() -> actionHandler.onDeleteItemClick(cartItem.id)}"
+            android:onClick="@{() -> actionHandler.onDeleteItemClick(cartItem.productId)}"
             android:src="@drawable/ic_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

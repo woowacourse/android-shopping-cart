@@ -31,6 +31,11 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartA
     private val _navigateToProductDetail = MutableLiveData<Long>()
     val navigateToProductDetail: LiveData<Long> = _navigateToProductDetail
 
+    private val _navigateToShopping = MutableLiveData<MutableSet<Long>>()
+    val navigateToShopping: LiveData<MutableSet<Long>> = _navigateToShopping
+
+    private val modifiedProductIds = mutableSetOf<Long>()
+
     private var lastPage: Int = DEFAULT_PAGE
 
     val cartItemsState: LiveData<UIState<List<CartItem>>> =
@@ -77,22 +82,29 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartA
         loadPage(prevPage)
     }
 
+    fun navigateToShopping() {
+        _navigateToShopping.postValue(modifiedProductIds)
+    }
+
     override fun onProductClick(productId: Long) {
         _navigateToProductDetail.postValue(productId)
     }
 
-    override fun onDeleteItemClick(cartItemId: Long) {
-        repository.delete(cartItemId)
+    override fun onDeleteItemClick(productId: Long) {
+        repository.deleteByProductId(productId)
+        modifiedProductIds.add(productId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 
     override fun onPlusButtonClicked(productId: Long) {
         repository.plusQuantity(productId)
+        modifiedProductIds.add(productId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 
     override fun onMinusButtonClicked(productId: Long) {
         repository.minusQuantity(productId)
+        modifiedProductIds.add(productId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 

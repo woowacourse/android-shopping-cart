@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -35,9 +34,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     }
 
     private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarCart
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener {
+        binding.toolbarCart.setOnClickListener {
+            setResult(RESULT_OK)
             finish()
         }
     }
@@ -58,6 +56,17 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
         viewModel.navigateToProductDetail.observe(this) { productId ->
             onProductClick(productId)
         }
+
+        viewModel.navigateToShopping.observe(this) { modifiedProductIds ->
+            if (modifiedProductIds.isNotEmpty()) {
+                val resultIntent =
+                    Intent().apply {
+                        putExtra(EXTRA_KEY_MODIFIED_PRODUCT_IDS, modifiedProductIds.toLongArray())
+                    }
+                setResult(RESULT_OK, resultIntent)
+            }
+            finish()
+        }
     }
 
     private fun showData(data: List<CartItem>) {
@@ -70,7 +79,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     }
 
     private fun showError(errorMessage: String) {
-        showErrorMessage(errorMessage)
+        showMessage(errorMessage)
     }
 
     private fun onProductClick(productId: Long) {
@@ -78,8 +87,12 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     }
 
     companion object {
+        const val EXTRA_KEY_MODIFIED_PRODUCT_IDS = "modifiedProductIds"
+
         fun createIntent(context: Context): Intent {
-            return Intent(context, CartActivity::class.java)
+            return Intent(context, CartActivity::class.java).apply {
+                putExtra(EXTRA_KEY_MODIFIED_PRODUCT_IDS, emptyList<Long>().toLongArray())
+            }
         }
     }
 }
