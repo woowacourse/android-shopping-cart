@@ -14,6 +14,7 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModelFactory
+import woowacourse.shopping.feature.main.QuantityControlListener
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
@@ -26,6 +27,7 @@ class ProductDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         initializeBinding()
         initializeView()
+        initializeQuantityController()
     }
 
     private fun initializeBinding() {
@@ -90,6 +92,19 @@ class ProductDetailActivity : AppCompatActivity() {
                 finish()
             }
             .show()
+    }
+
+    private fun initializeQuantityController() {
+        binding.quantityControlListener =
+            object : QuantityControlListener {
+                override fun addProduct() {
+                    productDetailViewModel.increaseQuantity()
+                }
+
+                override fun deleteProduct() {
+                    productDetailViewModel.decreaseQuantity()
+                }
+            }
     }
 
     companion object {

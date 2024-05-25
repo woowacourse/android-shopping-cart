@@ -7,6 +7,11 @@ interface CartRepository {
 
     fun deleteProduct(productId: Long)
 
+    fun addCartItem(
+        productId: Long,
+        count: Int,
+    )
+
     fun deleteCartItem(productId: Long)
 
     fun deleteAll()
@@ -17,6 +22,8 @@ interface CartRepository {
         page: Int,
         pageSize: Int,
     ): List<CartItem>
+
+    fun find(productId: Long): CartItem?
 
     fun count(): Int
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,6 +9,10 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel" />
+
+        <variable
+            name="quantityControlListener"
+            type="woowacourse.shopping.feature.main.QuantityControlListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{@string/product_price(viewModel.product.price)}"
+            android:text="@{@string/product_price(viewModel.quantity.calculate(viewModel.product.price))}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +87,9 @@
             android:layout_marginEnd="14dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_detail_price"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_product_detail_price" />
+            app:layout_constraintTop_toTopOf="@id/tv_product_detail_price"
+            bind:quantity="@{viewModel.quantity}"
+            bind:quantityControlListener="@{quantityControlListener}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_product_detail_last_viewed_product"
@@ -113,8 +120,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textSize="18sp"
                 android:textColor="@color/gray_500"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_product_detail_last_viewed"
                 tools:text="PET보틀-정사각형(500ml)" />

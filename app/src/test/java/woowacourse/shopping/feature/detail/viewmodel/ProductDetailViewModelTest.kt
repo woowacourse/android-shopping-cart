@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.Executable
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
@@ -73,5 +72,49 @@ class ProductDetailViewModelTest {
 
         val actual = viewModel.isSuccessAddToCart.getOrAwaitValue()
         assertThat(actual).isTrue()
+    }
+
+    @Test
+    fun `장바구니에 담겨 있지 않은 상품이라면 기본 수량은 1이다`() {
+        val productId = productRepository.save(imageUrl, title, price)
+        viewModel.loadProduct(productId)
+
+        val actual = viewModel.quantity.getOrAwaitValue()
+        assertThat(actual.count).isEqualTo(1)
+    }
+
+    @Test
+    fun `장바구니에 담겨 있는 상품이라면 장바구니 수량을 불러온다`() {
+        val productId = productRepository.save(imageUrl, title, price)
+        cartRepository.addCartItem(productId, count = 3)
+        viewModel.loadProduct(productId)
+
+        val actual = viewModel.quantity.getOrAwaitValue()
+        assertThat(actual.count).isEqualTo(3)
+    }
+
+    @Test
+    fun `상품의 수량이 1일 때 상품 수를 증가시키면 상품의 수량은 2가 된다`() {
+        val productId = productRepository.save(imageUrl, title, price)
+        viewModel.loadProduct(productId)
+
+        viewModel.increaseQuantity()
+
+        val actual = viewModel.quantity.getOrAwaitValue()
+        assertThat(actual.count).isEqualTo(2)
+    }
+
+    @Test
+    fun `상품의 수량이 4일 때 상품 수를 감소시키면 상품의 수량은 3이 된다`() {
+        val productId = productRepository.save(imageUrl, title, price)
+        viewModel.loadProduct(productId)
+
+        repeat(3) {
+            viewModel.increaseQuantity()
+        }
+        viewModel.decreaseQuantity()
+
+        val actual = viewModel.quantity.getOrAwaitValue()
+        assertThat(actual.count).isEqualTo(3)
     }
 }

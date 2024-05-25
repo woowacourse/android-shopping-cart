@@ -37,6 +37,20 @@ object CartDummyRepository : CartRepository {
         cart.add(oldCartItem.copy(quantity = --quantity))
     }
 
+    override fun addCartItem(
+        productId: Long,
+        count: Int,
+    ) {
+        val oldCartItem = cart.find { it.product.id == productId }
+        if (oldCartItem == null) {
+            val product: Product = productRepository.find(productId)
+            cart.add(CartItem(id++, product, Quantity(count)))
+            return
+        }
+        cart.remove(oldCartItem)
+        cart.add(oldCartItem.copy(quantity = Quantity(count)))
+    }
+
     override fun deleteCartItem(productId: Long) {
         cart.removeIf { it.product.id == productId }
     }
@@ -57,6 +71,8 @@ object CartDummyRepository : CartRepository {
         val toIndex = min(fromIndex + pageSize, cart.size)
         return cart.subList(fromIndex, toIndex)
     }
+
+    override fun find(productId: Long) = cart.firstOrNull { it.product.id == productId }
 
     override fun count(): Int = cart.size
 }
