@@ -15,11 +15,10 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
+    private lateinit var product: Product
+
     private val _productUi: MutableLiveData<ProductUiModel> = MutableLiveData()
     val productUi: LiveData<ProductUiModel> get() = _productUi
-
-    private val _product: MutableLiveData<Product> = MutableLiveData()
-    val product: LiveData<Product> get() = _product
 
     private val _isAddSuccess: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val isAddSuccess: LiveData<Boolean> get() = _isAddSuccess
@@ -31,7 +30,7 @@ class ProductDetailViewModel(
         runCatching {
             productRepository.productById(productId)
         }.onSuccess {
-            _product.value = it
+            product = it
             _productUi.value = it.toProductUiModel()
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -40,13 +39,12 @@ class ProductDetailViewModel(
 
     fun addProductToCart() {
         runCatching {
-            val product = requireNotNull(_product.value)
             val cartItem = ShoppingCartItem(product)
             val userId = shoppingCartRepository.userId()
             val shoppingCart = shoppingCartRepository.shoppingCart(userId)
             shoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
         }.onSuccess {
-            val productId = requireNotNull(_product.value?.id)
+            val productId = requireNotNull(product.id)
             _addedItems.value = setOf(productId)
             _isAddSuccess.value = true
         }.onFailure {
