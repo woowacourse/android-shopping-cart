@@ -1,6 +1,8 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.CartItemQuantity
+import woowacourse.shopping.model.Product
 
 interface CartRepository {
     fun addProduct(productId: Long)
@@ -24,6 +26,8 @@ interface CartRepository {
     ): List<CartItem>
 
     fun find(productId: Long): CartItem?
+
+    fun findQuantityOfCartItems(products: List<Product>): List<CartItemQuantity>
 
     fun count(): Int
 }

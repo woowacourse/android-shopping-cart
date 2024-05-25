@@ -1,12 +1,15 @@
 package woowacourse.shopping.feature.main
 
 import android.content.Intent
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
@@ -18,7 +21,7 @@ import kotlin.math.min
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(ProductDummyRepository) }
+    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(ProductDummyRepository, CartDummyRepository) }
     private lateinit var adapter: ProductAdapter
     private var page: Int = 0
 
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
+        initializeBinding()
         initializeProductAdapter()
         initializeToolbar()
         initializeSeeMoreButton()
@@ -36,16 +40,27 @@ class MainActivity : AppCompatActivity() {
         updateProducts()
     }
 
+    private fun initializeBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = mainViewModel
+    }
+
     private fun initializeProductAdapter() {
         adapter =
-            ProductAdapter(onClickProductItem = { productId ->
-                navigateToProductDetailView(productId)
-            })
+            ProductAdapter(
+                onClickProductItem = { navigateToProductDetailView(productId = it) },
+                onClickPlusButton = { mainViewModel.addProductToCart(productId = it) },
+                onClickMinusButton = { mainViewModel.deleteProductToCart(productId = it) },
+            )
         binding.rvMainProduct.adapter = adapter
 
-        mainViewModel.products.observe(this) {
-            val changedItemCount = min(it.size, PAGE_SIZE)
-            adapter.updateProducts(it, page++ * PAGE_SIZE, changedItemCount)
+        var changedItemCount = 0
+        mainViewModel.products.observe(this) { products ->
+            changedItemCount = min(products.size, PAGE_SIZE)
+            adapter.updateProducts(products, page++ * PAGE_SIZE, changedItemCount)
+        }
+        mainViewModel.quantities.observe(this) { quantities ->
+            adapter.updateQuantities(quantities, page * PAGE_SIZE, changedItemCount)
         }
     }
 

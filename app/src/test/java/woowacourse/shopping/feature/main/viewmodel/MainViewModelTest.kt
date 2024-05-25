@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.Executable
+import woowacourse.shopping.data.cart.CartDummyRepository
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.feature.InstantTaskExecutorExtension
@@ -18,11 +19,12 @@ import woowacourse.shopping.title
 class MainViewModelTest {
     private lateinit var viewModel: MainViewModel
     private val productRepository: ProductRepository = ProductDummyRepository
+    private val cartRepository: CartRepository = CartDummyRepository
     private val pageSize: Int = 20
 
     @BeforeEach
     fun setUp() {
-        viewModel = MainViewModel(productRepository)
+        viewModel = MainViewModel(productRepository, cartRepository)
         productRepository.deleteAll()
     }
 
@@ -37,10 +39,10 @@ class MainViewModelTest {
         viewModel.loadPage(0, pageSize)
 
         // then
-        val actual = viewModel.products.getOrAwaitValue()
+        val products = viewModel.products.getOrAwaitValue()
         assertAll(
-            { assertThat(actual).hasSize(pageSize) },
-            { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+            { assertThat(products).hasSize(pageSize) },
+            { assertThat(products).isEqualTo(productRepository.findRange(0, pageSize)) },
         )
     }
 
@@ -78,5 +80,32 @@ class MainViewModelTest {
             { assertThat(actual).hasSize(5) },
             { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
         )
+    }
+
+    @Test
+    fun `상품을 장바구니에 2번 담으면 장바구니에 담긴 해당 상품의 수량은 2이다`() {
+        val productId = productRepository.save(imageUrl, title, price)
+        viewModel.loadPage(page = 0, pageSize)
+
+        repeat(2) {
+            viewModel.addProductToCart(productId)
+        }
+
+        val actual = viewModel.quantities.getOrAwaitValue().first { it.productId == productId }
+        assertThat(actual.quantity.count).isEqualTo(2)
+    }
+
+    @Test
+    fun `장바구니에 담긴 한 상품의 수량이 3인 상태에서 상품을 1개 빼면 장바구니에 담긴 해당 상품의 수량은 2이다`() {
+        val productId = productRepository.save(imageUrl, title, price)
+        viewModel.loadPage(page = 0, pageSize)
+        repeat(3) {
+            viewModel.addProductToCart(productId)
+        }
+
+        viewModel.deleteProductToCart(productId)
+
+        val actual = viewModel.quantities.getOrAwaitValue().first { it.productId == productId }
+        assertThat(actual.quantity.count).isEqualTo(2)
     }
 }

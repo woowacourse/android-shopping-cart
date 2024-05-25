@@ -3,6 +3,7 @@ package woowacourse.shopping.data.cart
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.CartItemQuantity
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 import kotlin.math.min
@@ -73,6 +74,19 @@ object CartDummyRepository : CartRepository {
     }
 
     override fun find(productId: Long) = cart.firstOrNull { it.product.id == productId }
+
+    override fun findQuantityOfCartItems(products: List<Product>): List<CartItemQuantity> {
+        val quantities =
+            products.map { product ->
+                val cartItem = cart.find { it.product.id == product.id }
+                if (cartItem == null) {
+                    CartItemQuantity(product.id, Quantity(0))
+                } else {
+                    CartItemQuantity(product.id, cartItem.quantity)
+                }
+            }
+        return quantities
+    }
 
     override fun count(): Int = cart.size
 }
