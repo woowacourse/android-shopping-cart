@@ -11,6 +11,8 @@ sealed interface ShoppingCartEvent {
         data class Success(val productId: Long, val count: Int) : UpdateProductEvent, SuccessEvent
 
         data object Fail : UpdateProductEvent, ErrorState
+
+        data class DELETE(val productId: Long) : UpdateProductEvent,SuccessEvent
     }
 
     sealed interface DeleteShoppingCart : ShoppingCartEvent {

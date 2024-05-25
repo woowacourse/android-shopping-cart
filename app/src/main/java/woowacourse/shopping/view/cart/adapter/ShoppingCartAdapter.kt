@@ -59,4 +59,12 @@ class ShoppingCartAdapter(
             notifyItemChanged(position)
         }
     }
+
+    fun deleteCartItem(productId: Long){
+        val position = productPosition[productId]
+        if (position != null) {
+            notifyItemChanged(position)
+            productPosition.remove(productId)
+        }
+    }
 }

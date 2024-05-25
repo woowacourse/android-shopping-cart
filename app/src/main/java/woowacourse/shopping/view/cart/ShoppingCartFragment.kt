@@ -11,6 +11,7 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_COUNT
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.MainActivityListener
@@ -86,11 +87,21 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
                         cartState.count,
                     )
                 }
+
                 ShoppingCartEvent.DeleteShoppingCart.Success -> {
                     requireContext().makeToast(
                         getString(
                             R.string.delete_cart_item,
                         ),
+                    )
+                }
+
+                is ShoppingCartEvent.UpdateProductEvent.DELETE -> {
+                    adapter.deleteCartItem(cartState.productId)
+
+                    mainActivityListener?.saveUpdateProduct(
+                        cartState.productId,
+                        DEFAULT_ITEM_COUNT,
                     )
                 }
             }

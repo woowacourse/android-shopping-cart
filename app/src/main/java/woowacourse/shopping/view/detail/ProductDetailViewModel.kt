@@ -40,16 +40,12 @@ class ProductDetailViewModel(
         try {
             checkValidProduct(product)
             when (cartItemId) {
-                DEFAULT_CART_ITEM_ID -> {
-                    shoppingCartRepository.addCartItem(product)
-                }
+                DEFAULT_CART_ITEM_ID -> shoppingCartRepository.addCartItem(product)
 
-                else -> {
-                    shoppingCartRepository.updateCartItem(
-                        cartItemId,
-                        product.cartItemCounter.itemCount,
-                    )
-                }
+                else -> shoppingCartRepository.updateCartItem(
+                    cartItemId,
+                    product.cartItemCounter.itemCount,
+                )
             }
             _productDetailEvent.postValue(
                 ProductDetailEvent.AddShoppingCart.Success(
