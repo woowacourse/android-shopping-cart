@@ -5,7 +5,7 @@ import woowacourse.shopping.data.db.recently.RecentlyProductDatabase
 import woowacourse.shopping.data.model.RecentlyProductEntity
 import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.domain.repository.CurrentProductRepository
-import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.utils.exception.NoSuchDataException
 import kotlin.concurrent.thread
 
 class CurrentProductRepositoryImpl(context: Context) : CurrentProductRepository {

@@ -3,7 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.db.product.MockProductService
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.utils.exception.NoSuchDataException
 import kotlin.concurrent.thread
 
 class ProductRepositoryImpl : ProductRepository {

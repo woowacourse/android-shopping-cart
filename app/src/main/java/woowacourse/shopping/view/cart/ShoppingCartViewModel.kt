@@ -11,11 +11,10 @@ import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
-import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.utils.SingleLiveData
 import woowacourse.shopping.view.cart.model.ShoppingCart
 import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
-import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
