@@ -8,11 +8,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.data.model.ProductData" />
-
-        <variable
-            name="quantity"
-            type="int" />
+            type="woowacourse.shopping.domain.model.Product" />
 
         <variable
             name="onProductItemClickListener"
@@ -53,7 +49,7 @@
             app:layout_constraintStart_toStartOf="@id/main_product_list_item_img"
             bind:itemId="@{product.id}"
             bind:onItemChargeListener="@{onItemChargeListener}"
-            bind:quantity="@{quantity}" />
+            bind:quantity="@{product.quantity}" />
 
         <TextView
             android:id="@+id/main_product_list_product_name"
