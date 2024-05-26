@@ -3,7 +3,6 @@ package woowacourse.shopping.data.recent
 import android.content.Context
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
 import woowacourse.shopping.data.shopping.ShoppingDataSource
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 
 class DefaultRecentProductRepository(
@@ -13,8 +12,8 @@ class DefaultRecentProductRepository(
     ),
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
 ) : RecentProductRepository {
-    override fun recentProducts(): List<RecentProduct> {
-        return recentProductDataSource.recentProducts()
+    override fun recentProducts(size: Int): List<RecentProduct> {
+        return recentProductDataSource.recentProducts(size)
     }
 
     override fun addRecentProduct(productId: Long) {

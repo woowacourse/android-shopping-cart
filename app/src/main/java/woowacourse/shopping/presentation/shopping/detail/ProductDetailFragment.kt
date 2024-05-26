@@ -11,6 +11,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
+import woowacourse.shopping.data.recent.DefaultRecentProductRepository
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
@@ -23,6 +24,7 @@ class ProductDetailFragment :
         ProductDetailViewModel.factory(
             DefaultShoppingRepository(),
             DefaultCartRepository(requireContext()),
+            DefaultRecentProductRepository(requireContext()),
             productId,
         )
     }

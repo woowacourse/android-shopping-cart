@@ -6,13 +6,12 @@ import woowacourse.shopping.domain.RecentProduct
 
 class DummyRecentProductDataSource(context: Context) : RecentProductDataSource {
     private val recentProductDao = RecentProductDatabase.getInstance(context).dao()
-    private val PRODUCT_AMOUNT = 10
     private lateinit var recent: List<RecentProductEntity>
     private val products: List<RecentProduct> get() = recent.map { it.toDomainModel() }
 
-    override fun recentProducts(): List<RecentProduct> {
+    override fun recentProducts(size: Int): List<RecentProduct> {
         val thread = Thread {
-            recent = recentProductDao.getRecentProductsByPaging(PRODUCT_AMOUNT)
+            recent = recentProductDao.getRecentProductsByPaging(size)
         }
         thread.start()
         thread.join()

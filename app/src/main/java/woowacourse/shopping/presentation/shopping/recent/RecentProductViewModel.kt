@@ -14,7 +14,7 @@ class RecentProductViewModel(private val recentProductRepository: RecentProductR
     val recentProducts: LiveData<List<RecentProduct>> = _recentProducts
 
     fun loadRecentProducts() {
-        val products = recentProductRepository.recentProducts()
+        val products = recentProductRepository.recentProducts(RECENT_PRODUCTS_SIZE)
         _recentProducts.value = products
     }
 
@@ -23,6 +23,7 @@ class RecentProductViewModel(private val recentProductRepository: RecentProductR
     }
 
     companion object {
+        private const val RECENT_PRODUCTS_SIZE: Int = 10
         fun factory(recentProduct: RecentProductRepository): ViewModelProvider.Factory {
             return BaseViewModelFactory { RecentProductViewModel(recentProduct) }
         }

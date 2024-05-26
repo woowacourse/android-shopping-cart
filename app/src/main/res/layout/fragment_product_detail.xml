@@ -70,6 +70,7 @@
             bind:product="@{vm.product}" />
 
         <LinearLayout
+            isVisible="@{vm.isRecentProductVisible}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
@@ -93,6 +94,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{vm.lastViewedProduct.product.name}"
                 tools:text="PET보틀-정사각형(500ml)" />
         </LinearLayout>
 

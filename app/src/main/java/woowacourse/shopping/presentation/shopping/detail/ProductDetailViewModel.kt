@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shopping.ShoppingRepository
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
@@ -14,6 +17,7 @@ import woowacourse.shopping.presentation.util.SingleLiveEvent
 class ProductDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
+    private val recentProductRepository: RecentProductRepository,
     private val productId: Long,
 ) : ViewModel() {
     private val _product = MutableLiveData<ShoppingUiModel.Product>()
@@ -21,14 +25,30 @@ class ProductDetailViewModel(
 
     private val _isAddedCart = SingleLiveEvent<Boolean>()
     val isAddedCart: LiveData<Boolean> get() = _isAddedCart
+    private val _lastViewedProduct = MutableLiveData<RecentProduct?>()
+    val lastViewedProduct: LiveData<RecentProduct?> get() = _lastViewedProduct
+    private val _onClickedLastViewedProduct = SingleLiveEvent<Long>()
+    val onClickedLastViewedProduct: LiveData<Long> get() = _onClickedLastViewedProduct
+    val isRecentProductVisible: LiveData<Boolean>
+        get() =
+            _product.map {
+                lastViewedProduct.value != null &&
+                        it.id != lastViewedProduct.value?.product?.id
+            }
 
     init {
         loadProduct()
+        loadLastViewedProduct()
     }
 
     private fun loadProduct() {
         val product = shoppingRepository.productById(productId)?.toShoppingUiModel(true) ?: return
         _product.value = product
+    }
+
+    private fun loadLastViewedProduct() {
+        val recentProduct = recentProductRepository.recentProducts(2).last()
+        _lastViewedProduct.value = recentProduct
     }
 
     fun addCartProduct() {
@@ -55,12 +75,14 @@ class ProductDetailViewModel(
         fun factory(
             shoppingRepository: ShoppingRepository,
             cartRepository: CartRepository,
+            recentProductRepository: RecentProductRepository,
             productId: Long,
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory {
                 ProductDetailViewModel(
                     shoppingRepository,
                     cartRepository,
+                    recentProductRepository,
                     productId,
                 )
             }
