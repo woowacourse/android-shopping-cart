@@ -3,12 +3,12 @@ package woowacourse.shopping.presentation.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.domain.ProductListItem.ShoppingProductItem.Companion.joinProductAndCart
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.RecentProductItem
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentRepository
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.util.Event

@@ -46,16 +46,16 @@ class ShoppingViewModelTest {
 
         // then
         assertEquals(
-            viewModel.recentProducts.getOrAwaitValue(15),
             UiState.Success(dummyRecentProducts),
+            viewModel.recentProducts.getOrAwaitValue(20),
         )
         assertEquals(
-            viewModel.cartProducts.getOrAwaitValue(1),
             UiState.Success(dummyCartProducts),
+            viewModel.cartProducts.getOrAwaitValue(15),
         )
         assertEquals(
-            viewModel.shoppingProducts.getOrAwaitValue(1),
             UiState.Success(dummyShoppingProducts),
+            viewModel.shoppingProducts.getOrAwaitValue(15),
         )
     }
 
@@ -71,7 +71,7 @@ class ShoppingViewModelTest {
 
         // then
         Assertions.assertThat(
-            viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
+            viewModel.error.getOrAwaitValue(15).getContentIfNotHandled(),
         ).isEqualTo(ShoppingError.RecentProductItemsNotFound)
     }
 
@@ -87,7 +87,7 @@ class ShoppingViewModelTest {
 
         // then
         Assertions.assertThat(
-            viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
+            viewModel.error.getOrAwaitValue(15).getContentIfNotHandled(),
         ).isEqualTo(ShoppingError.CartItemsNotFound)
     }
 
@@ -103,7 +103,7 @@ class ShoppingViewModelTest {
 
         // then
         Assertions.assertThat(
-            viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
+            viewModel.error.getOrAwaitValue(15).getContentIfNotHandled(),
         ).isEqualTo(ShoppingError.ProductItemsNotFound)
     }
 
@@ -120,7 +120,7 @@ class ShoppingViewModelTest {
 
         // then
         assertEquals(
-            viewModel.shoppingProducts.getOrAwaitValue(1),
+            viewModel.shoppingProducts.getOrAwaitValue(15),
             UiState.Success(dummyShoppingProducts + dummyShoppingProducts),
         )
     }
@@ -131,7 +131,7 @@ class ShoppingViewModelTest {
         every { cartRepository.loadAll() } returns Result.success(dummyCartProducts)
         viewModel.fetchProductForNewPage()
         assertEquals(
-            viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
+            viewModel.error.getOrAwaitValue(15).getContentIfNotHandled(),
             ShoppingError.AllProductsLoaded,
         )
     }

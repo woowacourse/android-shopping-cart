@@ -12,10 +12,10 @@ import woowacourse.shopping.cart
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentRepository
+import woowacourse.shopping.dummyProduct
 import woowacourse.shopping.dummyRecentProduct
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.UiState
-import woowacourse.shopping.product
 import woowacourse.shopping.shoppingProduct
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -35,7 +35,7 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `loadById로 특정 상품의 데이터를 가져온다`() {
-        every { productRepository.loadById(any()) } returns Result.success(product)
+        every { productRepository.loadById(any()) } returns Result.success(dummyProduct)
         every { cartRepository.find(any()) } returns Result.success(cart)
         viewModel.fetchInitialData(0)
         Assertions.assertEquals(
@@ -57,7 +57,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `초기화 후 장바구니에 담기 버튼이 눌리면 상품과 수량을 저장한다`() {
         // given
-        every { productRepository.loadById(any()) } returns Result.success(product)
+        every { productRepository.loadById(any()) } returns Result.success(dummyProduct)
         every { cartRepository.find(any()) } returns Result.success(cart)
         every {
             cartRepository.setQuantity(shoppingProduct.toProduct(), shoppingProduct.quantity)

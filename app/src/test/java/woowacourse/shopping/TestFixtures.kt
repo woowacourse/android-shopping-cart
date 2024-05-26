@@ -17,7 +17,7 @@ val dummyProducts =
         )
     }
 
-val product: Product = dummyProducts.first()
+val dummyProduct: Product = dummyProducts.first()
 
 val dummyRecentProducts =
     listOf(
@@ -47,4 +47,4 @@ val dummyShoppingProducts =
         dummyCartProducts,
     )
 
-val shoppingProduct: ProductListItem.ShoppingProductItem = joinProductAndCart(product, cart)
+val shoppingProduct: ProductListItem.ShoppingProductItem = joinProductAndCart(dummyProduct, cart)

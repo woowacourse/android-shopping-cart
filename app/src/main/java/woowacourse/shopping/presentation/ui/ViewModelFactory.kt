@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.db.AppDatabase
 import woowacourse.shopping.data.db.cart.RoomCartRepository
 import woowacourse.shopping.data.db.recent.LocalRecentProductRepository
-import woowacourse.shopping.data.remote.DummyProductRepository
+import woowacourse.shopping.data.remote.RemoteProductRepositoryImpl
 import woowacourse.shopping.presentation.ui.cart.CartViewModel
 import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel
@@ -17,7 +17,7 @@ class ViewModelFactory() : ViewModelProvider.Factory {
                 val recentDao = AppDatabase.instanceOrNull.recentProductDao()
                 val cartDao = AppDatabase.instanceOrNull.cartDao()
                 ProductDetailViewModel(
-                    DummyProductRepository(),
+                    RemoteProductRepositoryImpl(),
                     RoomCartRepository(cartDao),
                     LocalRecentProductRepository(recentDao),
                 ) as T
@@ -27,6 +27,7 @@ class ViewModelFactory() : ViewModelProvider.Factory {
                 val recentDao = AppDatabase.instanceOrNull.recentProductDao()
                 val cartDao = AppDatabase.instanceOrNull.cartDao()
                 ShoppingViewModel(
+                    productRepository = RemoteProductRepositoryImpl(),
                     recentRepository = LocalRecentProductRepository(recentDao),
                     cartRepository = RoomCartRepository(cartDao),
                 ) as T

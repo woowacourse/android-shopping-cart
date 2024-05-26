@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
 
 class DummyProductRepository : ProductRepository {
-    private val products =
+    val products =
         listOf(
             Product(
                 id = 0L,

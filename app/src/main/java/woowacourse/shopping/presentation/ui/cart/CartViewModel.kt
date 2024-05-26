@@ -122,9 +122,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         val updatedItem =
             cartProducts[productIndex].copy(
                 quantity =
-                (originalQuantity + quantityDelta).coerceAtLeast(
-                    0,
-                ),
+                    (originalQuantity + quantityDelta).coerceAtLeast(
+                        0,
+                    ),
             )
         cartProducts[productIndex] = updatedItem
         _shoppingProducts.value =

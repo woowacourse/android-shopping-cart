@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.remote
 
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.math.min
 
 object DummyCartRepository : CartRepository {

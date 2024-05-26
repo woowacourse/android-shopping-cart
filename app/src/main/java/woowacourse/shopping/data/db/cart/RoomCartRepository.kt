@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.db.cart
 
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
 
 class RoomCartRepository(private val dao: CartDao) : CartRepository {
@@ -101,7 +101,7 @@ class RoomCartRepository(private val dao: CartDao) : CartRepository {
             result =
                 runCatching {
                     val itemCount = dao.countItems()
-                    ((itemCount + (pageSize - 1)) / pageSize - 1).coerceAtLeast(0)
+                    ((itemCount - 1) / pageSize).coerceAtLeast(0)
                 }
         }.join()
         return result ?: throw IllegalArgumentException()
