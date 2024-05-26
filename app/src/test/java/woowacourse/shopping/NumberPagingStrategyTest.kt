@@ -38,7 +38,7 @@ class NumberPagingStrategyTest {
         // then
         val expected =
             productsTestFixture(10) {
-                productTestFixture(it + 20)
+                productTestFixture((it + 20).toLong())
             }
         assertThat(secondLoad).isEqualTo(expected)
     }

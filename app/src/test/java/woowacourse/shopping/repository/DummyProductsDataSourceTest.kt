@@ -36,7 +36,7 @@ class DummyProductsDataSourceTest {
     @Test
     fun `id로 상품을 찾는다`() {
         // given
-        val productId = 1
+        val productId: Long = 1
 
         // when
         val product = productDataSource.findById(productId)

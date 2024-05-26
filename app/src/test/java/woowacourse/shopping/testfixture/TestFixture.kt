@@ -13,7 +13,7 @@ fun productsIdCountDataTestFixture(
     quantity: Int = 1,
 ): List<ProductIdsCountData> =
     List(dataCount) {
-        ProductIdsCountData(it, quantity)
+        ProductIdsCountData(it.toLong(), quantity)
     }
 
 /**
@@ -26,5 +26,5 @@ fun productsIdCountTestFixture(
     quantity: Int = 1,
 ): List<ProductIdsCount> =
     List(dataCount) {
-        ProductIdsCount(it, quantity)
+        ProductIdsCount(it.toLong(), quantity)
     }

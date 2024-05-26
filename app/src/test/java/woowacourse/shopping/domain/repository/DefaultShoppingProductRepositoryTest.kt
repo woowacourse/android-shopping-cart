@@ -43,7 +43,7 @@ class DefaultShoppingProductRepositoryTest {
                 productsTestFixture(count = 10).map { it.toDomain(2) } +
                     productsTestFixture(count = 10) {
                         productTestFixture(
-                            it + 10,
+                            (it + 10).toLong(),
                         )
                     }.map {
                         it.toDomain(

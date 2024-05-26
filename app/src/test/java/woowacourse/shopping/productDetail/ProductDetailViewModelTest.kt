@@ -20,7 +20,7 @@ import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
-    private var productId = -1
+    private var productId: Long = -1
     private lateinit var productsSource: ProductDataSource
     private lateinit var cartSource: ShoppingCartProductIdDataSource
     private lateinit var shoppingProductRepository: ShoppingProductsRepository

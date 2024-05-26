@@ -43,7 +43,8 @@ class ProductListViewModelTest {
             )
         viewmodel = ProductListViewModel(repository)
 
-        // when (init)
+        // when
+        viewmodel.loadAll()
 
         // then
         val loadedProducts = viewmodel.loadedProducts
@@ -71,6 +72,7 @@ class ProductListViewModelTest {
         viewmodel = ProductListViewModel(repository)
 
         // when
+        viewmodel.loadAll()
         viewmodel.loadNextPageProducts()
 
         // then
@@ -98,7 +100,8 @@ class ProductListViewModelTest {
             )
         viewmodel = ProductListViewModel(repository)
 
-        // when (init)
+        // when
+        viewmodel.loadAll()
 
         // then
         val currentPage = viewmodel.currentPage
@@ -123,7 +126,8 @@ class ProductListViewModelTest {
             )
         viewmodel = ProductListViewModel(repository)
 
-        // when (init)
+        // when
+        viewmodel.loadAll()
 
         // then
         val isLastPage = viewmodel.isLastPage.value
@@ -148,7 +152,8 @@ class ProductListViewModelTest {
             )
         viewmodel = ProductListViewModel(repository)
 
-        // when (init)
+        // when
+        viewmodel.loadAll()
 
         // then
         val isLastPage = viewmodel.isLastPage.getOrAwaitValue()
@@ -174,6 +179,7 @@ class ProductListViewModelTest {
         viewmodel = ProductListViewModel(repository)
 
         // when
+        viewmodel.loadAll()
         viewmodel.loadNextPageProducts()
 
         // then
@@ -199,7 +205,8 @@ class ProductListViewModelTest {
             )
         viewmodel = ProductListViewModel(repository)
 
-        // when (init)
+        // when
+        viewmodel.loadAll()
 
         // then
         assertThat(viewmodel.cartProductTotalCount.getOrAwaitValue()).isEqualTo(10)
@@ -224,6 +231,7 @@ class ProductListViewModelTest {
         viewmodel = ProductListViewModel(repository)
 
         // when
+        viewmodel.loadAll()
         viewmodel.onIncrease(productId = 13)
 
         // then
@@ -254,6 +262,7 @@ class ProductListViewModelTest {
         viewmodel = ProductListViewModel(repository)
 
         // when
+        viewmodel.loadAll()
         viewmodel.onIncrease(productId = 3)
 
         // then
@@ -266,9 +275,9 @@ class ProductListViewModelTest {
         assertThat(loadedProducts).isEqualTo(
             List(20) {
                 when (it) {
-                    3 -> productTestFixture(it).toDomain(2)
-                    in (0..4) -> productTestFixture(it).toDomain(1)
-                    else -> productTestFixture(it).toDomain(0)
+                    3 -> productTestFixture(it.toLong()).toDomain(2)
+                    in (0..4) -> productTestFixture(it.toLong()).toDomain(1)
+                    else -> productTestFixture(it.toLong()).toDomain(0)
                 }
             },
         )
@@ -293,6 +302,7 @@ class ProductListViewModelTest {
         viewmodel = ProductListViewModel(repository)
 
         // when
+        viewmodel.loadAll()
         viewmodel.onDecrease(productId = 3)
 
         // then
@@ -320,6 +330,7 @@ class ProductListViewModelTest {
         viewmodel = ProductListViewModel(repository)
 
         // when
+        viewmodel.loadAll()
         viewmodel.onDecrease(productId = 3)
 
         // then
@@ -331,9 +342,9 @@ class ProductListViewModelTest {
         val expectedProducts =
             List(20) {
                 when (it) {
-                    3 -> productTestFixture(it).toDomain(1)
-                    in (0 until 5) -> productTestFixture(it).toDomain(2)
-                    else -> productTestFixture(it).toDomain(0)
+                    3 -> productTestFixture(it.toLong()).toDomain(1)
+                    in (0 until 5) -> productTestFixture(it.toLong()).toDomain(2)
+                    else -> productTestFixture(it.toLong()).toDomain(0)
                 }
             }
         assertThat(actualProducts).isEqualTo(expectedProducts)
@@ -358,11 +369,12 @@ class ProductListViewModelTest {
         viewmodel = ProductListViewModel(repository)
 
         // when
+        viewmodel.loadAll()
         viewmodel.onClick(productId = 3)
 
         // then
         val productDetailId = viewmodel.detailProductDestinationId.getValue()
-        val expected = 3
+        val expected: Long = 3
         assertThat(productDetailId).isEqualTo(expected)
     }
 }

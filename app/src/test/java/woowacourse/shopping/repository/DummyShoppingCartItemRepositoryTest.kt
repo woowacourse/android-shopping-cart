@@ -32,7 +32,7 @@ class DummyShoppingCartItemRepositoryTest {
     fun `데이터를 첫 페이지에 5개의 데이터를 로드한다`() {
         // given
         for (i in 1..5) {
-            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i.toLong()))
         }
 
         // when
@@ -53,7 +53,7 @@ class DummyShoppingCartItemRepositoryTest {
     fun `데이터를 두 번째 페이지에서 5개의 데이터를 로드한다`() {
         // given
         for (i in 1..10) {
-            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i.toLong()))
         }
 
         // when
@@ -74,7 +74,7 @@ class DummyShoppingCartItemRepositoryTest {
     fun `성품 id 에 맞는 상품을 찾는다`() {
         // given
         for (i in 1..10) {
-            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i.toLong()))
         }
 
         // when
@@ -88,7 +88,7 @@ class DummyShoppingCartItemRepositoryTest {
     fun `상품 id 에 맞는 상품을 제거한다`() {
         // given
         for (i in 1..10) {
-            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i.toLong()))
         }
 
         // when
@@ -104,7 +104,7 @@ class DummyShoppingCartItemRepositoryTest {
     fun `상품이 6개일 떄 1 페이지는 마지막 페이지가 아니다`() {
         // given
         for (i in 1..6) {
-            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i.toLong()))
         }
 
         // when
@@ -118,7 +118,7 @@ class DummyShoppingCartItemRepositoryTest {
     fun `상품이 5개 일 때 1페이지는 마지막 페이지이다`() {
         // given
         for (i in 1..5) {
-            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i.toLong()))
         }
 
         // when

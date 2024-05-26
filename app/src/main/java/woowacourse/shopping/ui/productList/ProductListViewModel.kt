@@ -60,7 +60,6 @@ class ProductListViewModel(
     }
 
     fun loadNextPageProducts() {
-        Log.d(TAG, "loadNextPageProducts called : currentPage : ${currentPage.value}")
         if (isLastPage.value == true) return
         _currentPage.value = _currentPage.value?.plus(PAGE_MOVE_COUNT)
         _isLastPage.value = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
@@ -80,12 +79,10 @@ class ProductListViewModel(
     }
 
     override fun onClick(productId: Long) {
-        Log.d(TAG, "onClick: called productId : $productId")
         _detailProductDestinationId.setValue(productId)
     }
 
     override fun onIncrease(productId: Long) {
-        Log.d(TAG, "onIncrease: called productId : $productId")
         try {
             productsRepository.increaseShoppingCartProduct(productId)
         } catch (e: NoSuchElementException) {
@@ -103,12 +100,10 @@ class ProductListViewModel(
                     }
                 }
             _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
-            Log.d(TAG, "onIncrease: cartProductTotalCount : ${cartProductTotalCount.value}")
         }
     }
 
     override fun onDecrease(productId: Long) {
-        Log.d(TAG, "onDecrease: called")
         productsRepository.decreaseShoppingCartProduct(productId)
         val product = productsRepository.loadProduct(productId)
         if (productRemoved(product, productId)) return

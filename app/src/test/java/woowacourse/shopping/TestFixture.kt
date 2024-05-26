@@ -14,11 +14,11 @@ import java.util.concurrent.TimeoutException
 
 fun productsTestFixture(
     count: Int,
-    productFixture: (Int) -> ProductData = { productTestFixture(it) },
+    productFixture: (Int) -> ProductData = { productTestFixture(it.toLong()) },
 ): List<ProductData> = List(count, productFixture)
 
 fun productTestFixture(
-    id: Int,
+    id: Long,
     name: String = "$id name",
     imageUrl: String = "1",
     price: Int = 1,
