@@ -1,20 +1,13 @@
 package woowacourse.shopping.data.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "product")
 data class ProductEntity(
-    @PrimaryKey val id: Long,
-    @ColumnInfo(name = "name") val title: String,
-    @ColumnInfo(name = "price") val price: Int,
-    @ColumnInfo(name = "imageUrl") val imageUrl: String,
+    val id: Long,
+    val title: String,
+    val price: Int,
+    val imageUrl: String,
 ) {
     companion object {
         val STUB_LIST = makeSTUB()
-
-        val STUB = STUB_LIST.first()
 
         private fun makeSTUB(): List<ProductEntity> {
             val products = mutableListOf<ProductEntity>()

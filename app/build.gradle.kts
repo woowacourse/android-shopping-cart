@@ -71,5 +71,9 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     implementation("com.squareup.leakcanary:leakcanary-android:2.14")
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    implementation("com.google.code.gson:gson:2.8.8")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
 }
