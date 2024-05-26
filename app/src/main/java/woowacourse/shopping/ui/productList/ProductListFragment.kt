@@ -29,20 +29,21 @@ class ProductListFragment : Fragment() {
         UniversalViewModelFactory {
             ProductListViewModel(
                 productsRepository =
-                DefaultShoppingProductRepository(
-                    productsSource = DummyProductsDataSource(),
-                    cartSource =
-                    LocalShoppingCartProductIdDataSource(
-                        dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
+                    DefaultShoppingProductRepository(
+                        productsSource = DummyProductsDataSource(),
+                        cartSource =
+                            LocalShoppingCartProductIdDataSource(
+                                dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
+                            ),
                     ),
-                ),
                 productHistoryRepository =
-                DefaultProductHistoryRepository(
-                    productHistoryDataSource = LocalHistoryProductDataSource(
-                        dao = HistoryProductDatabase.database(context = requireContext().applicationContext).dao()
+                    DefaultProductHistoryRepository(
+                        productHistoryDataSource =
+                            LocalHistoryProductDataSource(
+                                dao = HistoryProductDatabase.database(context = requireContext().applicationContext).dao(),
+                            ),
+                        productDataSource = DummyProductsDataSource(),
                     ),
-                    productDataSource = DummyProductsDataSource(),
-                ),
             )
         }
 

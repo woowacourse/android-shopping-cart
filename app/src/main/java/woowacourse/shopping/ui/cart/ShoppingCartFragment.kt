@@ -23,9 +23,9 @@ class ShoppingCartFragment : Fragment() {
                 DefaultShoppingProductRepository(
                     productsSource = DummyProductsDataSource(),
                     cartSource =
-                    LocalShoppingCartProductIdDataSource(
-                        dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
-                    ),
+                        LocalShoppingCartProductIdDataSource(
+                            dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
+                        ),
                 ),
             )
         }

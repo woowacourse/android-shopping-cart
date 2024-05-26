@@ -31,7 +31,6 @@ class HistoryProductDatabaseTest {
         db.close()
     }
 
-
     @Test
     @DisplayName("새로운 HistoryProduct를 추가하면 id를 반환한다.")
     fun testInsert1() {
@@ -41,7 +40,6 @@ class HistoryProductDatabaseTest {
         // then
         assertEquals(1, insertedId)
     }
-
 
     @Test
     @DisplayName("이미 존재하는 HistoryProduct를 추가하면? 예외 던진다.")
@@ -53,7 +51,6 @@ class HistoryProductDatabaseTest {
         // when & then
         assertThrows<SQLiteConstraintException> { dao.insert(HistoryProduct(1)) }
     }
-
 
     @Test
     fun testDelete() {
@@ -68,7 +65,6 @@ class HistoryProductDatabaseTest {
         assertEquals(1, dao.findAll().size)
     }
 
-
     @Test
     fun testFindById() {
         // given
@@ -81,7 +77,6 @@ class HistoryProductDatabaseTest {
         // then
         assertEquals(2L, found?.id)
     }
-
 
     @Test
     fun testFindLatest() {

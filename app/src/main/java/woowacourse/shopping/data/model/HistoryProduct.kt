@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class HistoryProduct(
     @PrimaryKey(autoGenerate = false)
     val id: Long = -1,
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
 )
