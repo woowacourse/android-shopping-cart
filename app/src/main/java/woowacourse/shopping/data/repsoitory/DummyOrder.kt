@@ -12,14 +12,14 @@ object DummyOrder : OrderRepository {
         Order(
             id = 1,
             quantity = 2,
-            product = DummyData.STUB_PRODUCT_A,
+            product = DummyData.STUB_PRODUCT_1,
         )
 
     private val orders: MutableList<Order> =
         mutableListOf(
             order,
-            order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
-            order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
+            order.copy(id = 2, product = DummyData.STUB_PRODUCT_2),
+            order.copy(id = 3, product = DummyData.STUB_PRODUCT_3),
         )
 
     override fun plusOrder(product: Product) {

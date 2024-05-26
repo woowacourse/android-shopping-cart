@@ -7,9 +7,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_B
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_C
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_2
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_3
 import woowacourse.shopping.data.db.AppDatabase
 import woowacourse.shopping.data.db.dao.OrderDao
 import woowacourse.shopping.data.db.mapper.toEntity
@@ -37,18 +37,18 @@ class LocalOrderDataSourceTest {
 
     @Test
     fun `Order를_읽고_쓰기`() {
-        val order = Order(0, 3, STUB_PRODUCT_A).toEntity()
+        val order = Order(0, 3, STUB_PRODUCT_1).toEntity()
         dao.putOrder(order)
-        val actual = dao.getOrderByProductId(STUB_PRODUCT_A.id)
+        val actual = dao.getOrderByProductId(STUB_PRODUCT_1.id)
         val expected = listOf(order)
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `여러_Order를_한번에_불러온다`() {
-        val stubA = OrderEntity(1, 1, STUB_PRODUCT_A.toEntity())
-        val stubB = OrderEntity(2, 1, STUB_PRODUCT_B.toEntity())
-        val stubC = OrderEntity(3, 1, STUB_PRODUCT_C.toEntity())
+        val stubA = OrderEntity(1, 1, STUB_PRODUCT_1.toEntity())
+        val stubB = OrderEntity(2, 1, STUB_PRODUCT_2.toEntity())
+        val stubC = OrderEntity(3, 1, STUB_PRODUCT_3.toEntity())
         dao.putOrder(stubA)
         dao.putOrder(stubB)
         dao.putOrder(stubC)
@@ -61,8 +61,8 @@ class LocalOrderDataSourceTest {
     @Test
     fun `같은_주문을_다시_넣을_경우_새로운_주문_갱신된다`() {
         // given
-        val oldOrder = Order(1, 1, STUB_PRODUCT_A).toEntity()
-        val newOrder = Order(1, 5, STUB_PRODUCT_A).toEntity()
+        val oldOrder = Order(1, 1, STUB_PRODUCT_1).toEntity()
+        val newOrder = Order(1, 5, STUB_PRODUCT_1).toEntity()
         dao.putOrder(oldOrder)
 
         // when

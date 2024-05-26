@@ -68,7 +68,9 @@ class ProductListViewModel(
                             ?: item.productList,
                     isLastPage = item.isLastPage,
                 )
+            println("before:${uiState.value?.pagingProduct?.productList?.size}")
             _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
+            println("after:${uiState.value?.pagingProduct?.productList?.size}")
         }.onFailure { _ ->
             showMessage(MessageProvider.DefaultErrorMessage)
         }

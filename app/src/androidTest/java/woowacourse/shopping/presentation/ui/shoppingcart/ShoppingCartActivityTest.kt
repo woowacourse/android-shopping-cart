@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
 import woowacourse.shopping.data.repsoitory.DummyOrder
 import woowacourse.shopping.domain.repository.OrderRepository
 import woowacourse.shopping.presentation.ui.utils.RecyclerViewItemCountAssertion
@@ -32,7 +32,7 @@ class ShoppingCartActivityTest {
     fun `4개의_상품이_장바구니에_있을_때_페이지_이동_버튼이_안_보인다`() {
         // Given
         repeat(4) {
-            repository.plusOrder(product = STUB_PRODUCT_A)
+            repository.plusOrder(product = STUB_PRODUCT_1)
         }
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
@@ -47,7 +47,7 @@ class ShoppingCartActivityTest {
     fun `5개의_상품이_장바구니에_있을_때_페이지_이동_버튼이_보인다`() {
         // Given
         repeat(5) {
-            repository.plusOrder(product = STUB_PRODUCT_A)
+            repository.plusOrder(product = STUB_PRODUCT_1)
         }
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
@@ -61,7 +61,7 @@ class ShoppingCartActivityTest {
     @Test
     fun `장바구니의_상품이_6개_이상일_때_이전_페이지_버튼이_비활성화_된다`() {
         repeat(6) {
-            repository.plusOrder(product = STUB_PRODUCT_A)
+            repository.plusOrder(product = STUB_PRODUCT_1)
         }
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
@@ -73,7 +73,7 @@ class ShoppingCartActivityTest {
     @Test
     fun `장바구니의_상품이_6개_이상일_때_다음_페이지_버튼이_활성화_된다`() {
         repeat(6) {
-            repository.plusOrder(product = STUB_PRODUCT_A)
+            repository.plusOrder(product = STUB_PRODUCT_1)
         }
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
@@ -85,7 +85,7 @@ class ShoppingCartActivityTest {
     @Test
     fun `장바구니의_상품이_6개_이상일_때_다음_페이지로_이동하면_하나의_상품이_보인다`() {
         repeat(6) {
-            repository.plusOrder(product = STUB_PRODUCT_A)
+            repository.plusOrder(product = STUB_PRODUCT_1)
         }
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
@@ -99,7 +99,7 @@ class ShoppingCartActivityTest {
     @Test
     fun `장바구니에_10개의_상품이_있을_때_다음_페이지로_이동하면_다음_페이지_버튼이_비활성화_된다`() {
         repeat(10) {
-            repository.plusOrder(product = STUB_PRODUCT_A)
+            repository.plusOrder(product = STUB_PRODUCT_1)
         }
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
@@ -113,7 +113,7 @@ class ShoppingCartActivityTest {
     @Test
     fun `장바구니에_10개의_상품이_있을_때_다음_페이지로_이동하면_이전_페이지_버튼이_활성화_된다`() {
         repeat(10) {
-            repository.plusOrder(product = STUB_PRODUCT_A)
+            repository.plusOrder(product = STUB_PRODUCT_1)
         }
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
@@ -126,7 +126,7 @@ class ShoppingCartActivityTest {
 
     @Test
     fun `장바구니의_상품이_있을_때_엑스_버튼을_누르면_장바구니_리스트에서_없어진다`() {
-        repository.plusOrder(product = STUB_PRODUCT_A)
+        repository.plusOrder(product = STUB_PRODUCT_1)
 
         ActivityScenario.launch(ShoppingCartActivity::class.java)
         onView(withId(R.id.iv_closed))

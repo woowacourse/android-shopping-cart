@@ -7,9 +7,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_B
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_C
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_2
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_3
 import woowacourse.shopping.data.db.AppDatabase
 import woowacourse.shopping.data.db.dao.ProductDao
 import woowacourse.shopping.data.db.mapper.toEntity
@@ -32,17 +32,17 @@ class LocalProductDataSourceTest {
 
     @Test
     fun `Product를_쓰고_읽기`() {
-        dao.putProduct(STUB_PRODUCT_A.toEntity())
+        dao.putProduct(STUB_PRODUCT_1.toEntity())
         val actual = dao.findById(1)
-        val expected = STUB_PRODUCT_A.toEntity()
+        val expected = STUB_PRODUCT_1.toEntity()
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `offset과_size로_product_list_찾기`() {
-        val stubA = STUB_PRODUCT_A.toEntity()
-        val stubB = STUB_PRODUCT_B.toEntity()
-        val stubC = STUB_PRODUCT_C.toEntity()
+        val stubA = STUB_PRODUCT_1.toEntity()
+        val stubB = STUB_PRODUCT_2.toEntity()
+        val stubC = STUB_PRODUCT_3.toEntity()
         dao.putProduct(stubA)
         dao.putProduct(stubB)
         dao.putProduct(stubC)

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.DummyData.STUB_HISTORY_A
 import woowacourse.shopping.data.DummyData.STUB_HISTORY_B
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
 import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.OrderRepository
@@ -63,7 +63,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `선택한 상품을 장바구니에 추가한다`() {
         // given
-        every { orderRepository.plusOrder(STUB_PRODUCT_A, 1) } just runs
+        every { orderRepository.plusOrder(STUB_PRODUCT_1, 1) } just runs
 
         // when
         viewModel.onAddToCartButtonClick()

@@ -34,7 +34,7 @@ class ProductListViewModelTest {
     @Test
     fun `상품을 불러온다`() {
         // given
-        every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_A))
+        every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_1))
         every {
             productListRepository.getPagingProduct(
                 0,
@@ -54,7 +54,7 @@ class ProductListViewModelTest {
     @Test
     fun `더보기 버튼을 눌렀을 때 상품을 더 불러온다`() {
         // given
-        every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_A))
+        every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_1))
         val dummyPagingProduct = DummyProductList.getPagingProduct(0, 20).getOrThrow()
         val nextDummyPagingProduct = DummyProductList.getPagingProduct(1, 20).getOrThrow()
 
@@ -107,9 +107,9 @@ class ProductListViewModelTest {
                 20,
             )
         } returns DummyProductList.getPagingProduct(0, 20)
-        every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_A)
-        every { orderRepository.getOrders() } returns listOf(Order(1, 2, DummyData.STUB_PRODUCT_A))
-        every { orderRepository.plusOrder(DummyData.STUB_PRODUCT_A) } just runs
+        every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_1)
+        every { orderRepository.getOrders() } returns listOf(Order(1, 2, DummyData.STUB_PRODUCT_1))
+        every { orderRepository.plusOrder(DummyData.STUB_PRODUCT_1) } just runs
         productListViewModel.initPage()
 
         // when
@@ -117,7 +117,7 @@ class ProductListViewModelTest {
         productListViewModel.onClickPlusOrderButton(1)
 
         // then
-        verify(exactly = 2) { orderRepository.plusOrder(DummyData.STUB_PRODUCT_A) }
+        verify(exactly = 2) { orderRepository.plusOrder(DummyData.STUB_PRODUCT_1) }
         val uiState = productListViewModel.uiState.getOrAwaitValue()
         val actual = uiState.pagingProductUiModel?.productUiModels?.get(0)?.quantity
         val expected = 2
@@ -133,16 +133,16 @@ class ProductListViewModelTest {
                 20,
             )
         } returns DummyProductList.getPagingProduct(0, 20)
-        every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_A)
-        every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_A))
-        every { orderRepository.minusOrder(DummyData.STUB_PRODUCT_A) } just runs
+        every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_1)
+        every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_1))
+        every { orderRepository.minusOrder(DummyData.STUB_PRODUCT_1) } just runs
         productListViewModel.initPage()
 
         // when
         productListViewModel.onClickMinusOrderButton(1)
 
         // then
-        verify(exactly = 1) { orderRepository.minusOrder(DummyData.STUB_PRODUCT_A) }
+        verify(exactly = 1) { orderRepository.minusOrder(DummyData.STUB_PRODUCT_1) }
         val uiState = productListViewModel.uiState.getOrAwaitValue()
         val actual = uiState.orders?.get(0)?.quantity
         val expected = 1

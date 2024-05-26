@@ -10,9 +10,9 @@ import okhttp3.mockwebserver.RecordedRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_B
-import woowacourse.shopping.data.DummyData.STUB_PRODUCT_C
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_2
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_3
 import woowacourse.shopping.data.datasource.product.RemoteProductDataSource
 import woowacourse.shopping.data.remote.api.OkHttpProductApi
 import woowacourse.shopping.data.remote.api.ProductApi
@@ -25,14 +25,14 @@ class RemoteProductDataSourceTest {
     @Test
     fun `하나의 product 읽기`() {
         val actual = remoteProductDataSource.findProductById(1).getOrThrow()
-        val expected = STUB_PRODUCT_A
+        val expected = STUB_PRODUCT_1
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `offset과_size로_product_list_찾기`() {
         val actual = remoteProductDataSource.getOffsetRanged(1, 3).getOrThrow()
-        val expected = listOf(STUB_PRODUCT_A, STUB_PRODUCT_B, STUB_PRODUCT_C)
+        val expected = listOf(STUB_PRODUCT_1, STUB_PRODUCT_2, STUB_PRODUCT_3)
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -48,11 +48,11 @@ class RemoteProductDataSourceTest {
             val mockWebServer = MockWebServer()
             mockWebServer.start(12345)
             val gson = Gson()
-            val products = listOf(STUB_PRODUCT_A, STUB_PRODUCT_B, STUB_PRODUCT_C)
+            val products = listOf(STUB_PRODUCT_1, STUB_PRODUCT_2, STUB_PRODUCT_3)
             val type = object : TypeToken<List<Product>>() {}.type
 
             val productsJson = gson.toJson(products, type)
-            val productJson = gson.toJson(STUB_PRODUCT_A)
+            val productJson = gson.toJson(STUB_PRODUCT_1)
 
             val dispatcher =
                 object : Dispatcher() {

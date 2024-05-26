@@ -45,7 +45,6 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     }
 
     override fun initStartView() {
-        initPage()
         initDataBinding()
         initAdapter()
         initObserve()

@@ -65,7 +65,7 @@ class ProductListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = pagingProductUiModel.productUiModels.size + 1
+    override fun getItemCount(): Int = pagingProductUiModel.productUiModels.size + 2
 
     override fun onBindViewHolder(
         holder: ProductListViewHolder,
@@ -73,7 +73,7 @@ class ProductListAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> {
-                holder.bind(pagingProductUiModel.productUiModels[position])
+                holder.bind(pagingProductUiModel.productUiModels[position - 1])
             }
 
             is LoadMoreViewHolder -> {
@@ -90,14 +90,15 @@ class ProductListAdapter(
         val positionStart = pagingProductUiModel.productUiModels.size
         val positionEnd = newPagingProductUiModel.productUiModels.size
         val itemCount = positionEnd - positionStart
-        notifyItemRangeInserted(positionStart, itemCount)
 
         val diff =
             newPagingProductUiModel.productUiModels - pagingProductUiModel.productUiModels.toSet()
         pagingProductUiModel = newPagingProductUiModel
+        notifyItemRangeInserted(positionStart, itemCount + 1)
+
         newPagingProductUiModel.productUiModels.forEachIndexed { index, productUiModel ->
             if (diff.map { it.product.id }.contains(productUiModel.product.id)) {
-                notifyItemChanged(index)
+                notifyItemChanged(index + 1)
             }
         }
     }
