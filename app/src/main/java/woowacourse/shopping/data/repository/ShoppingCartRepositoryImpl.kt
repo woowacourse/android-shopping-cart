@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.repository
 
 import android.content.Context
-import android.util.Log
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.CartItemResult

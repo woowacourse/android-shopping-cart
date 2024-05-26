@@ -11,7 +11,6 @@ import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.SingleLiveData
-import woowacourse.shopping.utils.exception.AddCartItemException
 import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.cart.model.ShoppingCart
@@ -79,17 +78,17 @@ class ShoppingCartViewModel(
     }
 
     fun increaseCartItem(product: Product) {
-        updateCartItem(product,UpdateCartItemType.INCREASE)
+        updateCartItem(product, UpdateCartItemType.INCREASE)
     }
 
     fun decreaseCartItem(product: Product) {
-        updateCartItem(product,UpdateCartItemType.DECREASE)
+        updateCartItem(product, UpdateCartItemType.DECREASE)
     }
 
     private fun updateCartItem(
         product: Product,
-        updateCartItemType: UpdateCartItemType
-    ){
+        updateCartItemType: UpdateCartItemType,
+    ) {
         try {
             val updateCartItemResult =
                 shoppingCartRepository.updateCartItem(
@@ -102,8 +101,8 @@ class ShoppingCartViewModel(
                     productId = product.id,
                     count = product.cartItemCounter.itemCount,
                 )
-        } catch (e: Exception){
-            when(e){
+        } catch (e: Exception) {
+            when (e) {
                 is NoSuchDataException ->
                     _errorEvent.setValue(ShoppingCartEvent.UpdateProductEvent.Fail)
                 is DeleteCartItemException -> {

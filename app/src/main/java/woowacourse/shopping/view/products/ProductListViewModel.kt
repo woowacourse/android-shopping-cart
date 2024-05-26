@@ -71,11 +71,11 @@ class ProductListViewModel(
     }
 
     fun increaseShoppingCart(product: Product) {
-        updateCarItem(product,UpdateCartItemType.INCREASE)
+        updateCarItem(product, UpdateCartItemType.INCREASE)
     }
 
     fun decreaseShoppingCart(product: Product) {
-        updateCarItem(product,UpdateCartItemType.DECREASE)
+        updateCarItem(product, UpdateCartItemType.DECREASE)
     }
 
     private fun updateCarItem(
@@ -146,7 +146,7 @@ class ProductListViewModel(
         _cartItemCount.value = _cartItemCount.value?.plus(DEFAULT_CART_ITEM_COUNT)
     }
 
-    private fun decreaseTotalCartItemCount(){
+    private fun decreaseTotalCartItemCount() {
         _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
     }
 

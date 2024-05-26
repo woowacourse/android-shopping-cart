@@ -10,7 +10,7 @@ import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.service.ProductService
 
-class MockProductService: ProductService {
+class MockProductService : ProductService {
     private val client = OkHttpClient()
 
     override fun findAll(): List<Product> {
