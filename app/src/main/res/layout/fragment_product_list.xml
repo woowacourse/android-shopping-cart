@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -15,7 +14,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
 
         <androidx.appcompat.widget.Toolbar
@@ -24,9 +23,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:backgroundTint="@color/gray"
-            app:layout_constraintBottom_toTopOf="@+id/product_detail_list"
+            app:layout_constraintBottom_toTopOf="@id/product_latest_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -44,9 +42,9 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:gravity="center"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/circle_background"
+                android:gravity="center"
                 android:text="@{String.valueOf(vm.cartProductTotalCount > 99 ?  @string/greater_than_99: vm.cartProductTotalCount)}"
                 android:textColor="@color/white"
                 android:textSize="20dp"
@@ -66,18 +64,48 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:id="@+id/product_latest_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@{vm.productsHistory.empty ? @string/product_history_empty : @string/products_history}"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/product_latest_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_list_toolbar"
+            tools:ignore="SpUsage"
+            tools:text="최근 본 상품" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/product_latest_list"
+            android:layout_width="0dp"
+            android:layout_height="140dp"
+            android:orientation="horizontal"
+            android:visibility="@{vm.productsHistory.empty ? View.GONE : View.VISIBLE}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/product_detail_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_latest_title"
+            tools:context=".ui.productList.ProductListFragment"
+            tools:itemCount="10"
+            tools:listitem="@layout/holder_product_history" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/product_detail_list"
-            android:name="woowacourse.shopping.productList.ItemFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/load_more_button"
-            app:layout_constraintTop_toBottomOf="@id/product_list_toolbar"
+            app:layout_constraintTop_toBottomOf="@id/product_latest_list"
             app:spanCount="2"
-            tools:context=".ui.productList.ProductListFragment"
             tools:itemCount="20"
             tools:listitem="@layout/holder_product">
 
@@ -90,6 +118,9 @@
             android:onClick="@{() -> vm.loadNextPageProducts()}"
             android:text="@string/load_more_products"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_detail_list"
+            tools:visibility="visible" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -45,7 +45,8 @@ class ProductListFragment : Fragment() {
         ViewModelProvider(this, factory)[ProductListViewModel::class.java]
     }
 
-    private val adapter: ProductRecyclerViewAdapter by lazy { ProductRecyclerViewAdapter(viewModel, viewModel) }
+    private val productsAdapter: ProductRecyclerViewAdapter by lazy { ProductRecyclerViewAdapter(viewModel, viewModel) }
+    private val historyAdapter: ProductHistoryAdapter by lazy { ProductHistoryAdapter(viewModel) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +56,8 @@ class ProductListFragment : Fragment() {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        binding.productDetailList.adapter = adapter
+        binding.productDetailList.adapter = productsAdapter
+        binding.productLatestList.adapter = historyAdapter
 
         showLoadMoreButton()
         return binding.root
@@ -107,6 +109,9 @@ class ProductListFragment : Fragment() {
         observeLoadedProducts()
         observeDetailProductDestination()
         observeProductEvent()
+        viewModel.productsHistory.observe(viewLifecycleOwner) {
+            historyAdapter.update(it)
+        }
     }
 
     fun observeNavigationShoppingCart() {
@@ -117,7 +122,7 @@ class ProductListFragment : Fragment() {
 
     private fun observeLoadedProducts() {
         viewModel.loadedProducts.observe(viewLifecycleOwner) { products ->
-            adapter.updateAllLoadedProducts(products)
+            productsAdapter.updateAllLoadedProducts(products)
         }
     }
 
@@ -146,7 +151,7 @@ class ProductListFragment : Fragment() {
 
     private fun observeProductEvent() {
         viewModel.productsEvent.observe(viewLifecycleOwner) {
-            adapter.updateProductInCart(it)
+            productsAdapter.updateProductInCart(it)
         }
     }
 

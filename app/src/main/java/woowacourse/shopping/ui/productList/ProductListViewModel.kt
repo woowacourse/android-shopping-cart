@@ -85,6 +85,7 @@ class ProductListViewModel(
     }
 
     override fun onClick(productId: Long) {
+        Log.d(TAG, "onClick: called productId: $productId")
         _detailProductDestinationId.setValue(productId)
     }
 

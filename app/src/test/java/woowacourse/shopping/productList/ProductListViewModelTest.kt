@@ -332,9 +332,10 @@ class ProductListViewModelTest {
     @Test
     fun `최근 본 상품 내역 로드`() {
         // given
-        historyDataSource = FakeProductHistorySource(
-            history = ArrayDeque<Long>(listOf(1, 2, 3, 4, 5))
-        )
+        historyDataSource =
+            FakeProductHistorySource(
+                history = ArrayDeque<Long>(listOf(1, 2, 3, 4, 5)),
+            )
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
         viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
 
@@ -346,7 +347,7 @@ class ProductListViewModelTest {
         assertThat(actual).isEqualTo(
             productsTestFixture(5) {
                 productTestFixture(id = it.toLong() + 1)
-            }.map { it.toDomain(0) }
+            }.map { it.toDomain(0) },
         )
     }
 }

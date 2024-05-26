@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="onProductItemClickListener"
+            type="woowacourse.shopping.ui.OnProductItemClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/holder_product_history_img"
+            imageUrl="@{product.imgUrl}"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            app:layout_constraintEnd_toEndOf="@id/holder_product_history_img"
+            app:layout_constraintStart_toStartOf="@id/holder_product_history_img"
+            app:layout_constraintTop_toBottomOf="@id/holder_product_history_img"
+            tools:text="굉장히 긴 이름의 상품명 상품명 상품명 상품명 상품명" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
