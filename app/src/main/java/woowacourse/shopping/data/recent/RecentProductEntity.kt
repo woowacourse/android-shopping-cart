@@ -2,11 +2,12 @@ package woowacourse.shopping.data.recent
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import woowacourse.shopping.data.cart.CartEntity
+import androidx.room.TypeConverters
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 
 @Entity(tableName = "recentProduct")
+@TypeConverters(RecentProductConverters::class)
 data class RecentProductEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
