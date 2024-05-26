@@ -12,11 +12,13 @@ import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.data.source.DummyProductHistoryDataSource
 import woowacourse.shopping.data.source.DummyProductsDataSource
+import woowacourse.shopping.data.source.LocalHistoryProductDataSource
 import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.local.cart.ShoppingCartDatabase
+import woowacourse.shopping.local.history.HistoryProductDatabase
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
@@ -48,20 +50,22 @@ class ProductDetailFragment : Fragment() {
                     ProductDetailViewModel(
                         productId = it.getLong(PRODUCT_ID),
                         shoppingProductsRepository =
-                            DefaultShoppingProductRepository(
-                                productsSource = DummyProductsDataSource(),
-                                cartSource =
-                                    LocalShoppingCartProductIdDataSource(
-                                        dao =
-                                            ShoppingCartDatabase.database(context = requireContext().applicationContext)
-                                                .dao(),
-                                    ),
+                        DefaultShoppingProductRepository(
+                            productsSource = DummyProductsDataSource(),
+                            cartSource =
+                            LocalShoppingCartProductIdDataSource(
+                                dao =
+                                ShoppingCartDatabase.database(context = requireContext().applicationContext)
+                                    .dao(),
                             ),
+                        ),
                         productHistoryRepository =
-                            DefaultProductHistoryRepository(
-                                productHistoryDataSource = DummyProductHistoryDataSource(),
-                                productDataSource = DummyProductsDataSource(),
+                        DefaultProductHistoryRepository(
+                            productHistoryDataSource = LocalHistoryProductDataSource(
+                                dao = HistoryProductDatabase.database(context = requireContext().applicationContext).dao()
                             ),
+                            productDataSource = DummyProductsDataSource(),
+                        ),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]

@@ -1,5 +1,6 @@
 package woowacourse.shopping.domain.repository
 
+import android.util.Log
 import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ProductHistoryDataSource
@@ -11,6 +12,7 @@ class DefaultProductHistoryRepository(
 ) : ProductHistoryRepository {
     override fun saveProductHistory(productId: Long) {
         productHistoryDataSource.saveProductHistory(productId)
+        Log.d(TAG, "saveProductHistory: $productId")
     }
 
     override fun loadAllProductHistory(): List<Product> {

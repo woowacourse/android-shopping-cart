@@ -47,6 +47,7 @@ class ProductDetailViewModel(
             }
 
             productHistoryRepository.saveProductHistory(productId)
+
         }
     }
 

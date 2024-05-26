@@ -39,7 +39,7 @@ class ProductRecyclerViewAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateAllLoadedProducts(newData: List<Product>) {
         Log.d(TAG, "updateAllLoadedProducts: called newData: $newData")
-        this.products = newData.toList()
+        this.products = newData
         notifyDataSetChanged()
     }
 
