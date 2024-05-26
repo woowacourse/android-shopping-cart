@@ -15,14 +15,12 @@ import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDatabase
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
 
 class ProductDetailActivity :
     AppCompatActivity(),
     CartButtonClickListener,
-    CountButtonClickListener,
     MostRecentProductClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
@@ -60,14 +58,6 @@ class ProductDetailActivity :
         }
     }
 
-    override fun plusCount() {
-        viewModel.plusCount()
-    }
-
-    override fun minusCount() {
-        viewModel.minusCount()
-    }
-
     private fun initToolbar() {
         binding.toolbarDetail.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -89,7 +79,6 @@ class ProductDetailActivity :
 
     private fun setOnListener() {
         binding.cartButtonClickListener = this
-        binding.countButtonClickListener = this
         binding.mostRecentProductClickListener = this
     }
 

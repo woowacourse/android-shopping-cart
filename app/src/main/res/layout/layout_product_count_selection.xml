@@ -25,9 +25,9 @@
             android:layout_width="42dp"
             android:layout_height="match_parent"
             android:background="@color/white_no_border_line"
+            android:onClick="@{() -> countButtonClickListener.minusCount()}"
             android:text="@string/minus"
             android:textColor="@color/gray5"
-            android:onClick="@{()->countButtonClickListener.minusCount()}"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -48,8 +48,8 @@
             android:layout_width="42dp"
             android:layout_height="match_parent"
             android:background="@color/white_no_border_line"
+            android:onClick="@{() -> countButtonClickListener.plusCount()}"
             android:text="@string/plus"
-            android:onClick="@{()->countButtonClickListener.plusCount()}"
             android:textColor="@color/gray5"
             android:textSize="22sp"
             android:textStyle="bold" />

@@ -9,6 +9,7 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductRepository
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.utils.Event
 import kotlin.concurrent.thread
 
@@ -16,7 +17,7 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(), CountButtonClickListener {
     private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
     val error: LiveData<Boolean> get() = _error
 
@@ -72,13 +73,13 @@ class ProductDetailViewModel(
         }.join()
     }
 
-    fun plusCount() {
+    override fun plusCount() {
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.inc()
         }
     }
 
-    fun minusCount() {
+    override fun minusCount() {
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.dec()
         }
