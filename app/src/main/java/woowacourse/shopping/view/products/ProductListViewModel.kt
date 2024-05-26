@@ -39,7 +39,7 @@ class ProductListViewModel(
     val errorEvent: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorEvent
 
     init {
-        updateTotalCount()
+        updateTotalCartItemCount()
         loadPagingRecentlyProduct()
     }
 
@@ -131,8 +131,9 @@ class ProductListViewModel(
         }
     }
 
-    private fun updateTotalCount() {
-        _cartItemCount.value = shoppingCartRepository.getTotalCartItemCount()
+    private fun updateTotalCartItemCount() {
+        val totalItemCount =  shoppingCartRepository.getTotalCartItemCount()
+        _cartItemCount.value = totalItemCount
     }
 
     private fun increaseTotalCount() {
@@ -152,6 +153,6 @@ class ProductListViewModel(
                 _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
             }
         }
-        updateTotalCount()
+        updateTotalCartItemCount()
     }
 }
