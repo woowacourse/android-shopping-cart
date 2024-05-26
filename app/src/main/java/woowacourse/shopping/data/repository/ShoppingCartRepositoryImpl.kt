@@ -72,7 +72,6 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
             }
 
             is UpdateCartItemType.UPDATE -> {
-                Log.d("sdlfsdj", updateCartItemType.count.toString())
                 cartItemResult.updateCount(updateCartItemType.count)
             }
         }
@@ -84,7 +83,6 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
                     cartItemResult.counter.itemCount,
                 )
         }.join()
-        Log.d("sdlfsdj", updateDataId.toString())
         if (updateDataId == ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
         return cartItemResult
     }
