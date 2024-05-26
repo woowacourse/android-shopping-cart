@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.productList
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -49,7 +48,6 @@ class ProductListViewModel(
     val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
 
     fun loadAll() {
-        Log.d(TAG, "loadAll: called")
         thread {
             val result: List<Product> = productsRepository.loadAllProducts(currentPage.value!!)
             val totalCartCount = productsRepository.shoppingCartProductQuantity()
@@ -57,7 +55,6 @@ class ProductListViewModel(
             val productHistory = productHistoryRepository.loadAllProductHistory()
 
             uiHandler.post {
-                Log.d(TAG, "loadAll: totalCartCount: $totalCartCount")
                 _loadedProducts.value = result
                 _cartProductTotalCount.value = totalCartCount
                 _isLastPage.value = isLastPage
@@ -88,12 +85,10 @@ class ProductListViewModel(
     }
 
     fun navigateToShoppingCart() {
-        Log.d(TAG, "navigateToShoppingCart: called")
         _shoppingCartDestination.setValue(true)
     }
 
     override fun onClick(productId: Long) {
-        Log.d(TAG, "onClick: called productId: $productId")
         _detailProductDestinationId.setValue(productId)
     }
 
@@ -101,12 +96,9 @@ class ProductListViewModel(
         thread {
             try {
                 productsRepository.increaseShoppingCartProduct(productId)
-                Log.d(TAG, "onIncrease: increaseShoppingCartProduct called")
             } catch (e: NoSuchElementException) {
                 productsRepository.addShoppingCartProduct(productId)
-                Log.d(TAG, "onIncrease: addShoppingCartProduct called")
-            } catch (e: Exception) {
-                Log.d(TAG, "onIncrease: catch Exception")
+            } catch (_: Exception) {
             } finally {
                 val product = productsRepository.loadProduct(productId)
                 val productEvent = ProductCountEvent.ProductCountCountChanged(productId, product.quantity)
@@ -123,8 +115,6 @@ class ProductListViewModel(
                             }
                         }
                     _cartProductTotalCount.value = totalCount
-                    Log.d(TAG, "onIncrease: totalCount: $totalCount")
-                    Log.d(TAG, "onIncrease: cartProductTotalCount: ${cartProductTotalCount.value}")
                 }
             }
         }
@@ -135,11 +125,10 @@ class ProductListViewModel(
             val product = productsRepository.loadProduct(productId)
             productsRepository.decreaseShoppingCartProduct(productId)
 
-            val productEvent: ProductCountEvent
-            if (product.quantity == 1) {
-                productEvent = ProductCountEvent.ProductCountCleared(productId)
+            val productEvent: ProductCountEvent = if (product.quantity == 1) {
+                ProductCountEvent.ProductCountCleared(productId)
             } else {
-                productEvent = ProductCountEvent.ProductCountCountChanged(productId, product.quantity - 1)
+                ProductCountEvent.ProductCountCountChanged(productId, product.quantity - 1)
             }
             val totalCount = productsRepository.shoppingCartProductQuantity()
 
@@ -154,7 +143,6 @@ class ProductListViewModel(
                         }
                     }
                 _cartProductTotalCount.value = totalCount
-                Log.d(TAG, "onDecrease: totalCount: ${cartProductTotalCount.value}")
             }
             return@thread
         }

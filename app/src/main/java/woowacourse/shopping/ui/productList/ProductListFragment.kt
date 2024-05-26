@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.productList
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,7 +70,6 @@ class ProductListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume: called")
         viewModel.loadAll()
     }
 
@@ -128,7 +126,6 @@ class ProductListFragment : Fragment() {
     private fun observeLoadedProducts() {
         viewModel.loadedProducts.observe(viewLifecycleOwner) { products ->
             productsAdapter.updateAllLoadedProducts(products)
-            Log.d(TAG, "observeLoadedProducts: $products")
         }
     }
 

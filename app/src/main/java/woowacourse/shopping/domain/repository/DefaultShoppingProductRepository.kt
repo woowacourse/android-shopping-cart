@@ -1,6 +1,5 @@
 package woowacourse.shopping.domain.repository
 
-import android.util.Log
 import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
@@ -21,8 +20,6 @@ class DefaultShoppingProductRepository(
 
     override fun loadProductsInCart(page: Int): List<Product> {
         val allProductIdsInCart = cartSource.loadPaged(page)
-        Log.d(TAG, "loadProductsInCart: allProductIdsInCart: $allProductIdsInCart")
-
         return allProductIdsInCart.map { productIdsCountData ->
             productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
         }
@@ -40,7 +37,6 @@ class DefaultShoppingProductRepository(
         return try {
             cartSource.findByProductId(productId)?.quantity ?: 0
         } catch (e: NoSuchElementException) {
-            Log.d(TAG, "productQuantity: 카트에서 못찾으면 0개")
             0
         }
     }

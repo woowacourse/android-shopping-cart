@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.source
 
-import android.util.Log
 import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.local.cart.ShoppingCartDao
 
@@ -8,9 +7,7 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
     override fun findByProductId(productId: Long): ProductIdsCountData? = dao.findById(productId)
 
     override fun loadPaged(page: Int): List<ProductIdsCountData> =
-        dao.findPaged(page).also {
-            Log.d(TAG, "loadPaged: $it")
-        }
+        dao.findPaged(page)
 
     override fun loadAll(): List<ProductIdsCountData> = dao.findAll()
 

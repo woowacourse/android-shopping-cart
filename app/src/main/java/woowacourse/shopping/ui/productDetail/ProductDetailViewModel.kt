@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.productDetail
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,9 +32,7 @@ class ProductDetailViewModel(
             val currentProduct = shoppingProductsRepository.loadProduct(id = productId)
             val latestProduct =
                 try {
-                    productHistoryRepository.loadLatestProduct().also {
-                        Log.d(TAG, "loadAll: loadLastestProduct: $it")
-                    }
+                    productHistoryRepository.loadLatestProduct()
                 } catch (e: NoSuchElementException) {
                     Product.NULL
                 }

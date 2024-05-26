@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.cart
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +23,9 @@ class ShoppingCartFragment : Fragment() {
                 DefaultShoppingProductRepository(
                     productsSource = DummyProductsDataSource(),
                     cartSource =
-                        LocalShoppingCartProductIdDataSource(
-                            dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
-                        ),
+                    LocalShoppingCartProductIdDataSource(
+                        dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
+                    ),
                 ),
             )
         }
@@ -83,7 +82,6 @@ class ShoppingCartFragment : Fragment() {
 
     private fun observeItemsInCurrentPage() {
         viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) { products ->
-            Log.d(TAG, "observeItemsInCurrentPage: $products")
             adapter.updateData(products)
         }
     }
