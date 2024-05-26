@@ -3,7 +3,7 @@ package woowacourse.shopping.data.cart
 import woowacourse.shopping.domain.entity.Cart
 import woowacourse.shopping.domain.entity.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.fixtures.product
+import woowacourse.shopping.fixtures.fakeProduct
 
 class FakeCartRepository(
     private var cart: Cart = Cart(),
@@ -38,12 +38,12 @@ class FakeCartRepository(
         productId: Long,
         count: Int,
     ): Result<Long> {
-        cart = cart.add(product(id = productId, name = "오둥이 $productId"))
+        cart = cart.add(fakeProduct(id = productId, name = "오둥이 $productId"))
         return Result.success(productId)
     }
 
     override fun deleteCartProduct(productId: Long): Result<Long> {
-        cart = cart.remove(product(id = productId, name = "오둥이 $productId"))
+        cart = cart.remove(fakeProduct(id = productId, name = "오둥이 $productId"))
         return Result.success(productId)
     }
 

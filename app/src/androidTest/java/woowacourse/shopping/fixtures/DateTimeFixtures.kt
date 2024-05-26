@@ -2,7 +2,7 @@ package woowacourse.shopping.fixtures
 
 import java.time.LocalDateTime
 
-fun dateTime(
+fun fakeDateTime(
     year: Int = 2024,
     month: Int = 5,
     dayOfMonth: Int = 22,

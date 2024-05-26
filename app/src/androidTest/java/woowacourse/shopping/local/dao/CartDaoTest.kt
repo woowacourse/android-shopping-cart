@@ -7,8 +7,8 @@ import io.kotest.matchers.shouldBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
-import woowacourse.shopping.fixtures.cartEntities
-import woowacourse.shopping.fixtures.cartEntity
+import woowacourse.shopping.fixtures.fakeCartEntities
+import woowacourse.shopping.fixtures.fakeCartEntity
 import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.util.testApplicationContext
 
@@ -29,7 +29,7 @@ class CartDaoTest {
     @DisplayName("카트 상품을 저장하고, id 를 반환한다")
     fun insert() {
         // given
-        val cart = cartEntity()
+        val cart = fakeCartEntity()
         val expect = 1L
         // when
         val actual = dao.saveCart(cart)
@@ -44,11 +44,11 @@ class CartDaoTest {
     )
     fun insert_and_load() {
         // given & when
-        val expect = cartEntities(2L, 3L)
+        val expect = fakeCartEntities(2L, 3L)
         // when
-        dao.saveCart(cartEntity(1L))
-        dao.saveCart(cartEntity(2L))
-        dao.saveCart(cartEntity(3L))
+        dao.saveCart(fakeCartEntity(1L))
+        dao.saveCart(fakeCartEntity(2L))
+        dao.saveCart(fakeCartEntity(3L))
         val actual = dao.loadCart(offset = 1, size = 2)
         // then
         actual shouldBe expect
@@ -59,11 +59,11 @@ class CartDaoTest {
     fun insert_and_load2() {
         // given
         val expectSize = 1
-        val expect = listOf(cartEntity(count = 2))
+        val expect = listOf(fakeCartEntity(count = 2))
         // when
-        dao.saveCart(cartEntity(count = 1))
-        dao.saveCart(cartEntity(count = 3))
-        dao.saveCart(cartEntity(count = 2))
+        dao.saveCart(fakeCartEntity(count = 1))
+        dao.saveCart(fakeCartEntity(count = 3))
+        dao.saveCart(fakeCartEntity(count = 2))
         val actual = dao.loadCart(offset = 0, size = 2)
         // then
         actual shouldHaveSize expectSize
@@ -76,7 +76,7 @@ class CartDaoTest {
         // given
         val expectSize = 0
         // when
-        dao.saveCart(cartEntity())
+        dao.saveCart(fakeCartEntity())
         dao.deleteCart(id = 1L)
         val actual = dao.loadCart(offset = 0, size = 1)
         // then
@@ -87,9 +87,9 @@ class CartDaoTest {
     @DisplayName("카트 상품을 3개 저장한 후, 모두 삭제한다.")
     fun insert_and_delete_all() {
         // given & when
-        dao.saveCart(cartEntity(id = 1L))
-        dao.saveCart(cartEntity(id = 2L))
-        dao.saveCart(cartEntity(id = 3L))
+        dao.saveCart(fakeCartEntity(id = 1L))
+        dao.saveCart(fakeCartEntity(id = 2L))
+        dao.saveCart(fakeCartEntity(id = 3L))
         dao.deleteAllCarts()
         val expectSize = 0
         val actual = dao.loadCart(offset = 0, size = 3)

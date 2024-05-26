@@ -2,7 +2,7 @@ package woowacourse.shopping.fixtures
 
 import woowacourse.shopping.remote.model.ProductResponse
 
-fun productResponse(
+fun fakeProductResponse(
     id: Long = 1,
     price: Int = 1000,
     name: String = "상품",
@@ -14,6 +14,6 @@ fun productResponse(
     imageUrl = imageUrl,
 )
 
-fun productResponses(vararg productResponse: ProductResponse) = productResponse.toList()
+fun fakeProductResponses(vararg productResponse: ProductResponse) = productResponse.toList()
 
-fun productResponses(size: Int): List<ProductResponse> = List(size) { productResponse(id = it + 1L) }
+fun fakeProductResponses(size: Int): List<ProductResponse> = List(size) { fakeProductResponse(id = it + 1L) }

@@ -2,7 +2,7 @@ package woowacourse.shopping.fixtures
 
 import woowacourse.shopping.domain.entity.Product
 
-fun product(
+fun fakeProduct(
     id: Long = 1,
     price: Int = 1000,
     name: String = "오둥이 $id",
@@ -16,8 +16,8 @@ fun product(
     )
 }
 
-fun products(size: Int): List<Product> {
+fun fakeProducts(size: Int): List<Product> {
     return List(size) {
-        product(id = (it + 1).toLong(), name = "오둥이 ${it + 1}")
+        fakeProduct(id = (it + 1).toLong(), name = "오둥이 ${it + 1}")
     }
 }
