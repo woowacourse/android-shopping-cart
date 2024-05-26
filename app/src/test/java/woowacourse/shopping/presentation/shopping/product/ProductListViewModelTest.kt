@@ -24,6 +24,7 @@ class ProductListViewModelTest {
     private lateinit var cartRepository: CartRepository
 
     private lateinit var productListViewModel: ProductListViewModel
+    private val uiState get() = productListViewModel.uiState.getOrAwaitValue()
 
     @Test
     @DisplayName("viewModel 이 초기화 될 때 상품이 추가 된다")
@@ -31,9 +32,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel())
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-            Result.success(
-                listOf(product()),
-            )
+                Result.success(
+                    listOf(product()),
+                )
         every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
         every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())
         // when
@@ -43,7 +44,7 @@ class ProductListViewModelTest {
         verify(exactly = 1) { shoppingRepository.canLoadMore(page = 2, size = 20) }
         verify(exactly = 1) { cartRepository.filterCartProducts(listOf(1)) }
         verify(exactly = 1) { shoppingRepository.recentProducts(10) }
-        productListViewModel.products.getOrAwaitValue() shouldBe expectProducts
+        uiState.products shouldBe expectProducts
     }
 
     @Test
@@ -52,9 +53,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel(), ShoppingUiModel.LoadMore)
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-            Result.success(
-                listOf(product()),
-            )
+                Result.success(
+                    listOf(product()),
+                )
         every {
             shoppingRepository.canLoadMore(page = 2, size = 20)
         } returns Result.success(true)
@@ -65,7 +66,7 @@ class ProductListViewModelTest {
         // when
         verify(exactly = 1) { shoppingRepository.products(currentPage = 1, size = 20) }
         verify(exactly = 1) { shoppingRepository.canLoadMore(page = 2, size = 20) }
-        productListViewModel.products.getOrAwaitValue() shouldBe expectProducts
+        uiState.totalProducts shouldBe expectProducts
     }
 
     @Test
@@ -74,9 +75,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel())
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-            Result.success(
-                listOf(product()),
-            )
+                Result.success(
+                    listOf(product()),
+                )
         every { shoppingRepository.canLoadMore(page = 2, size = 20) } returns Result.success(false)
         every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
         every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())
@@ -85,6 +86,6 @@ class ProductListViewModelTest {
         // then
         verify(exactly = 1) { shoppingRepository.products(currentPage = 1, size = 20) }
         verify(exactly = 1) { shoppingRepository.canLoadMore(page = 2, size = 20) }
-        productListViewModel.products.getOrAwaitValue() shouldBe expectProducts
+        uiState.totalProducts shouldBe expectProducts
     }
 }

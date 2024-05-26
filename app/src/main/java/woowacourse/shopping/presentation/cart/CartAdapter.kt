@@ -40,8 +40,6 @@ class CartAdapter(
         holder.bind(products[position])
     }
 
-    override fun getItemId(position: Int): Long = products[position].product.id
-
     fun updateProduct(newProducts: List<CartProductUi>) {
         val oldProducts = products.toList()
         products = newProducts

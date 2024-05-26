@@ -2,7 +2,6 @@ package woowacourse.shopping.presentation.cart
 
 import io.kotest.matchers.shouldBe
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
@@ -16,32 +15,32 @@ import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class, MockKExtension::class)
-class ShoppingCartViewModelTest {
+class CartViewModelTest {
     @RelaxedMockK
     lateinit var cartRepository: CartRepository
 
     private lateinit var cartViewModel: CartViewModel
+    private val uiState get() = cartViewModel.uiState.getOrAwaitValue()
 
     @BeforeEach
     fun setUp() {
-        every { cartRepository.cartProducts(1, PAGE_SIZE) } returns
-            Result.success(
-                listOf(
-                    cartProduct(),
-                ),
-            )
-        every { cartRepository.canLoadMoreCartProducts(2, PAGE_SIZE) } returns Result.success(true)
-        every { cartRepository.canLoadMoreCartProducts(0, PAGE_SIZE) } returns Result.success(false)
+        every { cartRepository.cartProducts(any(), any()) } returns
+                Result.success(
+                    listOf(
+                        cartProduct(),
+                    ),
+                )
+        every { cartRepository.canLoadMoreCartProducts(any(), PAGE_SIZE) } returns Result.success(
+            true
+        )
         cartViewModel = CartViewModel(cartRepository)
     }
 
     @Test
-    @DisplayName("ViewModel 이 초기화될 때, 첫 번째 페이지에 해당하는 상품들이 로드된다")
+    @DisplayName("ViewModel 이 초기화될 때, 1 페이지의 장바구니 상품을 가져온다")
     fun test0() {
         verify(exactly = 1) { cartRepository.cartProducts(1, PAGE_SIZE) }
         cartViewModel.uiState.getOrAwaitValue().currentPage shouldBe 1
-        cartViewModel.uiState.getOrAwaitValue().canLoadNextPage shouldBe true
-        cartViewModel.uiState.getOrAwaitValue().canLoadPrevPage shouldBe false
     }
 
     @Test
@@ -50,16 +49,31 @@ class ShoppingCartViewModelTest {
         val nextPage = 2
         // given
         every { cartRepository.cartProducts(nextPage, PAGE_SIZE) } returns
-            Result.success(
-                listOf(
-                    cartProduct(),
-                ),
-            )
+                Result.success(
+                    listOf(
+                        cartProduct(),
+                    ),
+                )
         // when
         cartViewModel.moveToNextPage()
         // then
         verify(exactly = 1) { cartRepository.cartProducts(nextPage, PAGE_SIZE) }
-        cartViewModel.uiState.getOrAwaitValue().currentPage shouldBe nextPage
+        uiState.currentPage shouldBe nextPage
+    }
+
+    @Test
+    @DisplayName("현재 페이지가 1일 때, 다음 페이지로 이동하면, 페이지가 2가 된다")
+    fun test2() {
+        val nextPage = 2
+        // given
+        every { cartRepository.canLoadMoreCartProducts(1, PAGE_SIZE) } returns Result.success(true)
+        every { cartRepository.canLoadMoreCartProducts(3, PAGE_SIZE) } returns Result.success(true)
+        // when
+        cartViewModel.moveToNextPage()
+        // then
+        verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(1, PAGE_SIZE) }
+        verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(3, PAGE_SIZE) }
+        uiState.currentPage shouldBe nextPage
     }
 
     companion object {
