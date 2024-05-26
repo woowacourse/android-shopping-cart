@@ -39,9 +39,6 @@ class ProductListViewModel(
     }
 
     override fun onClickProduct(productId: Int) {
-        productListRepository.findProductById(productId).onSuccess { product ->
-            putHistory(product)
-        }
         _navigateAction.emit(ProductListNavigateAction.NavigateToProductDetail(productId = productId))
     }
 
@@ -130,11 +127,6 @@ class ProductListViewModel(
     private fun getHistories() {
         val histories = historyRepository.getHistories(HISTORY_SIZE)
         _uiState.postValue(_uiState.value?.copy(histories = histories))
-    }
-
-    private fun putHistory(product: Product) {
-        historyRepository.putProductOnHistory(product)
-        getHistories()
     }
 
     private fun makePagingProductUiModels() {

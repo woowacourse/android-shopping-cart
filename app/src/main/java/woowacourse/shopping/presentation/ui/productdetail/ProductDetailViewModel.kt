@@ -80,8 +80,14 @@ class ProductDetailViewModel(
         }
     }
 
+    fun putHistory() {
+        product.value?.let { historyRepository.putProductOnHistory(it) }
+    }
+
     private fun getHistory() {
-        val history = historyRepository.getHistories(2).getOrNull(1)
+        val history = historyRepository.getHistories(1).firstOrNull()
         _history.value = history
+        println(history)
+        println(product.value)
     }
 }

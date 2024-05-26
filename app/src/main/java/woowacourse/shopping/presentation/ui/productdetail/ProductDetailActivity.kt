@@ -25,6 +25,11 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         )
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.putHistory()
+    }
+
     override val layoutResourceId: Int
         get() = R.layout.activity_product_detail
 
