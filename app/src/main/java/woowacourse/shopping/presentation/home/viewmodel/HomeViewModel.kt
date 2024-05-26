@@ -3,7 +3,9 @@ package woowacourse.shopping.presentation.home.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.home.HomeActionHandler
@@ -13,6 +15,7 @@ import woowacourse.shopping.presentation.util.Event
 class HomeViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val productHistoryRepository: ProductHistoryRepository,
 ) : ViewModel(), HomeActionHandler, CartItemCountHandler {
     private val _totalCartCount: MutableLiveData<Int> = MutableLiveData(0)
     val totalCartCount: LiveData<Int>
@@ -39,8 +42,13 @@ class HomeViewModel(
     val updateOrder: LiveData<Order>
         get() = _updateOrder
 
+    private val _productHistories = MutableLiveData<List<Product>>()
+    val productHistories: LiveData<List<Product>>
+        get() = _productHistories
+
     init {
         loadProducts()
+        loadRecentProducts()
     }
 
     fun loadTotalCartCount() {
@@ -95,6 +103,14 @@ class HomeViewModel(
             )
 
         _isLoadingAvailable.value = productRepository.fetchCurrentPage().isNotEmpty()
+    }
+
+    fun loadRecentProducts() {
+        val recentProducts = productHistoryRepository.getProductHistories()
+
+        val products = recentProducts?.map { productRepository.fetchProduct(it.productId) }
+
+        _productHistories.value = products
     }
 
     override fun onProductItemClick(id: Long) {

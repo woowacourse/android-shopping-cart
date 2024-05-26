@@ -18,6 +18,10 @@
         <variable
             name="productAdapter"
             type="woowacourse.shopping.presentation.home.adapter.ProductAdapter" />
+
+        <variable
+            name="recentProductAdapter"
+            type="woowacourse.shopping.presentation.home.adapter.RecentProductAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,16 +72,60 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_home"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nv_home"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:adapter="@{productAdapter}"
-            android:clipToPadding="false"
-            android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appbar_home"
-            tools:listitem="@layout/item_product" />
+            app:layout_constraintTop_toBottomOf="@+id/appbar_home">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/recent_product_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="최근 본 상품"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recent_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adapter="@{recentProductAdapter}"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_recent_product" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adapter="@{productAdapter}"
+                    android:clipToPadding="false"
+                    android:padding="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/appbar_home"
+                    tools:listitem="@layout/item_product" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

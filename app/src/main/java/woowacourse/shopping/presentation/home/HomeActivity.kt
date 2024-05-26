@@ -5,10 +5,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
+import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase
+import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
 import woowacourse.shopping.data.repository.DefaultCartRepository
+import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.data.repository.DefaultProductRepository
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
@@ -19,6 +23,7 @@ import woowacourse.shopping.presentation.detail.DetailActivity.Companion.DETAIL_
 import woowacourse.shopping.presentation.detail.DetailActivity.Companion.EXTRA_DETAIL_PRODUCT_ID
 import woowacourse.shopping.presentation.home.adapter.ProductAdapter
 import woowacourse.shopping.presentation.home.adapter.ProductsGridLayoutManager
+import woowacourse.shopping.presentation.home.adapter.RecentProductAdapter
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModelFactory
 
@@ -28,7 +33,8 @@ class HomeActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == DETAIL_RESULT_OK) {
-                val productId = result?.data?.getLongExtra(EXTRA_DETAIL_PRODUCT_ID, DEFAULT_DETAIL_PRODUCT_ID)
+                val productId =
+                    result?.data?.getLongExtra(EXTRA_DETAIL_PRODUCT_ID, DEFAULT_DETAIL_PRODUCT_ID)
 
                 viewModel.updateOrder(productId!!)
             }
@@ -57,12 +63,21 @@ class HomeActivity : AppCompatActivity() {
             HomeViewModelFactory(
                 DefaultProductRepository(DefaultProductDataSource),
                 DefaultCartRepository(DefaultCartDataSource(CartDatabase.getInstance(this))),
+                DefaultProductHistoryRepository(
+                    DefaultProductHistoryDataSource(
+                        ProductHistoryDatabase.getInstance(this),
+                    ),
+                ),
             ),
         )[HomeViewModel::class.java]
     }
 
-    private val adapter: ProductAdapter by lazy {
+    private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(viewModel, viewModel)
+    }
+
+    private val recentProductAdapter: RecentProductAdapter by lazy {
+        RecentProductAdapter()
     }
 
     override fun onResume() {
@@ -80,11 +95,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initBinding() {
-        binding.rvHome.layoutManager =
+        binding.rvProduct.layoutManager =
             GridLayoutManager(this, 2).apply {
-                spanSizeLookup = ProductsGridLayoutManager(adapter)
+                spanSizeLookup = ProductsGridLayoutManager(productAdapter)
             }
-        binding.productAdapter = adapter
+        binding.rvRecentProduct.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.productAdapter = productAdapter
+        binding.recentProductAdapter = recentProductAdapter
         binding.homeViewModel = viewModel
         binding.homeActionHandler = viewModel
         binding.lifecycleOwner = this
@@ -92,15 +110,15 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initObserver() {
         viewModel.orders.observe(this) {
-            adapter.addProducts(it)
+            productAdapter.addProducts(it)
         }
 
         viewModel.updateOrder.observe(this) {
-            adapter.updateProduct(it)
+            productAdapter.updateProduct(it)
         }
 
         viewModel.isLoadingAvailable.observe(this) {
-            adapter.updateLoadStatus(it)
+            productAdapter.updateLoadStatus(it)
         }
 
         viewModel.onProductClicked.observe(this) {
@@ -113,6 +131,10 @@ class HomeActivity : AppCompatActivity() {
             it.getContentIfNotHandled()?.let {
                 cartActivityResultLauncher.launch(CartActivity.newIntent(this))
             }
+        }
+
+        viewModel.productHistories.observe(this) {
+            recentProductAdapter.setProducts(it)
         }
     }
 
