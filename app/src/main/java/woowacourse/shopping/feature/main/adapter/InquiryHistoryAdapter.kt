@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemInquiryHistoryBinding
 import woowacourse.shopping.model.InquiryHistory
 
-class InquiryHistoryAdapter : RecyclerView.Adapter<InquiryHistoryViewHolder>() {
+class InquiryHistoryAdapter(
+    private val onClickInquiryHistory: onClickInquiryHistory,
+) : RecyclerView.Adapter<InquiryHistoryViewHolder>() {
     private val inquiryHistories: MutableList<InquiryHistory> = mutableListOf()
 
     override fun onCreateViewHolder(
@@ -25,7 +27,7 @@ class InquiryHistoryAdapter : RecyclerView.Adapter<InquiryHistoryViewHolder>() {
         holder: InquiryHistoryViewHolder,
         position: Int,
     ) {
-        holder.bind(inquiryHistories[position])
+        holder.bind(inquiryHistories[position], onClickInquiryHistory)
     }
 
     @SuppressLint("NotifyDataSetChanged")

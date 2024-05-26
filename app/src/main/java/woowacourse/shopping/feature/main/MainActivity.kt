@@ -62,7 +62,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeInquiryHistoryAdapter() {
-        inquiryHistoryAdapter = InquiryHistoryAdapter()
+        inquiryHistoryAdapter =
+            InquiryHistoryAdapter(
+                onClickInquiryHistory = { navigateToProductDetailView(productId = it) },
+            )
         binding.rvMainRecentViewedProduct.adapter = inquiryHistoryAdapter
 
         mainViewModel.inquiryHistories.observe(this) { inquiryHistories ->
