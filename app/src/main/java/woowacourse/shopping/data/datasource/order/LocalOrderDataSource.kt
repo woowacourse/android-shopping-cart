@@ -39,4 +39,9 @@ class LocalOrderDataSource(
         offset: Int,
         size: Int,
     ): List<Order> = orderDao.findByOffsetAndSize(offset, size).toOrder()
+
+    override fun findByOffsetAndSizeReversed(
+        offset: Int,
+        size: Int,
+    ): List<Order> = orderDao.findByOffsetAndSizeReversed(offset, size).toOrder().reversed()
 }

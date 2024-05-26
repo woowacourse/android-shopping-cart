@@ -24,4 +24,9 @@ interface OrderDataSource {
         offset: Int,
         size: Int,
     ): List<Order>
+
+    fun findByOffsetAndSizeReversed(
+        offset: Int,
+        size: Int,
+    ): List<Order>
 }

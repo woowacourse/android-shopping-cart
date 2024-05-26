@@ -23,9 +23,9 @@ fun TextView.binEmptyTextVisible(orderList: List<Order>?) {
 }
 
 @BindingAdapter("prePageBtnSelect")
-fun TextView.bindPrePageBtnSelect(currentPage: Int?) {
-    currentPage?.let { page ->
-        this.isEnabled = page != 0
+fun TextView.bindPrePageBtnSelect(first: Boolean?) {
+    first?.let { value ->
+        this.isEnabled = value != true
     }
 }
 

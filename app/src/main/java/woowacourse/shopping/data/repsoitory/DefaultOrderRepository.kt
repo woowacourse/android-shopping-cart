@@ -79,15 +79,32 @@ class DefaultOrderRepository(
         }
 
     override fun getPagingOrder(
-        page: Int,
+        lastSeenId: Int,
         pageSize: Int,
     ): Result<PagingOrder> =
         runOnOtherThreadAndReturn {
             runCatching {
-                val orders = localOrderDataSource.findByOffsetAndSize(page, pageSize)
-                val nextOrders = localOrderDataSource.findByOffsetAndSize(page, pageSize)
-                val lastPage = nextOrders.isEmpty()
-                PagingOrder(page, orders, lastPage)
+                val orders = localOrderDataSource.findByOffsetAndSize(lastSeenId, pageSize)
+                val nextOrders = localOrderDataSource.findByOffsetAndSize(lastSeenId, pageSize * 2)
+                val prevOrders = localOrderDataSource.findByOffsetAndSizeReversed(lastSeenId, pageSize)
+                val first = prevOrders.isEmpty()
+                val last = nextOrders.size == orders.size
+                PagingOrder(orders, first, last)
+            }
+        }
+
+    override fun getPagingOrderReversed(
+        lastSeenId: Int,
+        pageSize: Int,
+    ): Result<PagingOrder> =
+        runOnOtherThreadAndReturn {
+            runCatching {
+                val orders = localOrderDataSource.findByOffsetAndSizeReversed(lastSeenId, pageSize)
+                val prevOrders = localOrderDataSource.findByOffsetAndSizeReversed(lastSeenId, pageSize * 2)
+                val nextOrders = localOrderDataSource.findByOffsetAndSize(lastSeenId, pageSize)
+                val first = prevOrders.size == orders.size
+                val last = nextOrders.isEmpty()
+                PagingOrder(orders, first, last)
             }
         }
 

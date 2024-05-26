@@ -95,10 +95,27 @@ object DummyOrder : OrderRepository {
         runCatching {
             val fromIndex = page * pageSize
             val toIndex = min(fromIndex + pageSize, orders.size)
+            val first = toIndex == 0
             val last = toIndex == orders.size
             PagingOrder(
-                currentPage = page,
                 orderList = orders.subList(fromIndex, toIndex),
+                first = first,
+                last = last,
+            )
+        }
+
+    override fun getPagingOrderReversed(
+        page: Int,
+        pageSize: Int,
+    ): Result<PagingOrder> =
+        runCatching {
+            val fromIndex = page * pageSize
+            val toIndex = min(fromIndex + pageSize, orders.size)
+            val first = toIndex == 0
+            val last = toIndex == orders.size
+            PagingOrder(
+                orderList = orders.subList(fromIndex, toIndex),
+                first = first,
                 last = last,
             )
         }

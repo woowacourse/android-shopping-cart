@@ -14,14 +14,28 @@ class ShoppingCartViewModel(
     val uiState: LiveData<ShoppingCartUiState> get() = _uiState
 
     init {
-        getPagingOrder(INIT_PAGE)
+        getPagingOrder(INIT_ID)
     }
 
     private fun getPagingOrder(
-        page: Int,
+        lastSeenId: Int,
         pageSize: Int = PAGE_SIZE,
     ) {
-        orderRepository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
+        orderRepository.getPagingOrder(lastSeenId, pageSize).onSuccess { pagingOrder ->
+            _uiState.value =
+                _uiState.value?.copy(
+                    pagingOrder = pagingOrder,
+                )
+        }.onFailure { _ ->
+            showMessage(MessageProvider.DefaultErrorMessage)
+        }
+    }
+
+    private fun getPagingOrderReversed(
+        lastSeenId: Int,
+        pageSize: Int = PAGE_SIZE,
+    ) {
+        orderRepository.getPagingOrderReversed(lastSeenId, pageSize).onSuccess { pagingOrder ->
             _uiState.value =
                 _uiState.value?.copy(
                     pagingOrder = pagingOrder,
@@ -33,27 +47,24 @@ class ShoppingCartViewModel(
 
     override fun onClickClose(orderId: Int) {
         orderRepository.removeOrder(orderId)
-        uiState.value?.let { state ->
-            state.pagingOrder?.let { pagingOrder ->
-                getPagingOrder(pagingOrder.currentPage)
-            }
-        }
+        refreshPage()
     }
 
     override fun onClickPlusOrderButton(orderId: Int) {
         orderRepository.plusOrder(orderId)
-        uiState.value?.let { state ->
-            state.pagingOrder?.let { pagingOrder ->
-                getPagingOrder(pagingOrder.currentPage)
-            }
-        }
+        refreshPage()
     }
 
     override fun onClickMinusOrderButton(orderId: Int) {
         orderRepository.minusOrder(orderId)
+        refreshPage()
+    }
+
+    private fun refreshPage() {
         uiState.value?.let { state ->
             state.pagingOrder?.let { pagingOrder ->
-                getPagingOrder(pagingOrder.currentPage)
+                val id = pagingOrder.orderList.first().id - 1
+                getPagingOrder(id)
             }
         }
     }
@@ -61,21 +72,31 @@ class ShoppingCartViewModel(
     fun onClickNextPage() {
         uiState.value?.let { state ->
             state.pagingOrder?.let { pagingOrder ->
-                getPagingOrder(pagingOrder.currentPage + 1)
+                val id = pagingOrder.orderList.last().id
+                getPagingOrder(id)
             }
         }
+        _uiState.value =
+            _uiState.value?.copy(
+                currentPage = _uiState.value?.currentPage?.plus(1) ?: 1,
+            )
     }
 
     fun onClickPrePage() {
         uiState.value?.let { state ->
             state.pagingOrder?.let { pagingOrder ->
-                getPagingOrder(pagingOrder.currentPage - 1)
+                val id = pagingOrder.orderList.first().id
+                getPagingOrderReversed(id)
             }
         }
+        _uiState.value =
+            _uiState.value?.copy(
+                currentPage = _uiState.value?.currentPage?.minus(1) ?: 1,
+            )
     }
 
     companion object {
-        const val INIT_PAGE = 0
+        const val INIT_ID = 0
         const val PAGE_SIZE = 5
     }
 }

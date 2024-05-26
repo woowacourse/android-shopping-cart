@@ -30,8 +30,14 @@ interface OrderDao {
     @Query("delete from OrderEntity")
     fun removeAll()
 
-    @Query("select * from OrderEntity where orderId > :offset * :size limit :size")
+    @Query("select * from OrderEntity where orderId > :offset order by orderId limit :size")
     fun findByOffsetAndSize(
+        offset: Int,
+        size: Int,
+    ): List<OrderEntity>
+
+    @Query("select * from OrderEntity where orderId < :offset order by orderId desc limit :size ")
+    fun findByOffsetAndSizeReversed(
         offset: Int,
         size: Int,
     ): List<OrderEntity>

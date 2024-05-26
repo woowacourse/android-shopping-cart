@@ -30,7 +30,12 @@ interface OrderRepository {
     fun getOrders(): List<Order>
 
     fun getPagingOrder(
-        page: Int,
+        lastSeenId: Int,
+        pageSize: Int,
+    ): Result<PagingOrder>
+
+    fun getPagingOrderReversed(
+        lastSeenId: Int,
         pageSize: Int,
     ): Result<PagingOrder>
 

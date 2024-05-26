@@ -45,7 +45,6 @@ class ShoppingCartViewModelTest {
         // then
         val expected =
             PagingOrder(
-                currentPage = 0,
                 orderList =
                     listOf(
                         DummyOrder.order.copy(id = 2, product = DummyData.STUB_PRODUCT_2),
@@ -68,7 +67,6 @@ class ShoppingCartViewModelTest {
         // then
         val expected =
             PagingOrder(
-                currentPage = 1,
                 orderList =
                     listOf(
                         DummyOrder.order.copy(id = 6, product = DummyData.STUB_PRODUCT_3),
@@ -92,7 +90,6 @@ class ShoppingCartViewModelTest {
         // then
         val expected =
             PagingOrder(
-                currentPage = 0,
                 orderList =
                     listOf(
                         DummyOrder.order,
