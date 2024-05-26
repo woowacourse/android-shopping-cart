@@ -22,16 +22,13 @@ class ShoppingCartViewModelTest {
     fun setUp() {
         viewModel = ShoppingCartViewModel(DummyShoppingRepository)
 
-        val cartItem = ShoppingCartItem(DummyProductRepository.productById(STUB_PRODUCT_ID))
-        val shoppingCart = DummyShoppingRepository.shoppingCart()
-        DummyShoppingRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
+        val product = DummyProductRepository.productById(STUB_PRODUCT_ID)
+        DummyShoppingRepository.addCartItem(ShoppingCartItem(product))
     }
 
     @AfterEach
     fun tearDown() {
-        if (DummyShoppingRepository.shoppingCartSize() != 0) {
-            DummyShoppingRepository.deleteShoppingCartItem(STUB_PRODUCT_ID)
-        }
+        DummyShoppingRepository.clear()
     }
 
     @Test

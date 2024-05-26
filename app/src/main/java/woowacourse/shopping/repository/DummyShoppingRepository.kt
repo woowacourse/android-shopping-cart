@@ -48,19 +48,16 @@ object DummyShoppingRepository : ShoppingRepository {
     override fun deleteShoppingCartItem(productId: Long) {
         val shoppingCart = users.first().shoppingCart
         val updatedShoppingCart = shoppingCart.deleteItemById(productId)
-        updateShoppingCart(updatedShoppingCart, productId)
+        updateShoppingCart(updatedShoppingCart)
     }
 
     override fun shoppingCartSize(): Int = users.first().shoppingCart.items.size
 
-    private fun updateShoppingCart(
-        shoppingCart: ShoppingCart,
-        productId: Long,
-    ) {
-        val updatedItem =
-            shoppingCart.items.firstOrNull { it.product.id == productId }
-                ?: error("$productId 에 해당하는 product가 없습니다.")
-        updateCartItem(updatedItem)
+    private fun updateShoppingCart(shoppingCart: ShoppingCart) {
+        users =
+            users.map {
+                if (it.id == users.first().id) it.copy(shoppingCart = shoppingCart) else it
+            }
     }
 
     override fun increasedCartItem(productId: Long): QuantityUpdate {
