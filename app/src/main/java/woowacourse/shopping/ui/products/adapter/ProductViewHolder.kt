@@ -5,19 +5,18 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.StartAddProductClickListener
+import woowacourse.shopping.ui.products.ProductItemClickListener
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    private val itemClickListener: (Long) -> Unit,
+    private val productItemClickListener: ProductItemClickListener,
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(productWithQuantity: ProductWithQuantity) {
         binding.productWithQuantity = productWithQuantity
-        binding.itemLayout.setOnClickListener {
-            itemClickListener(productWithQuantity.product.id)
-        }
+        binding.productItemClickListener = productItemClickListener
         binding.startAddProductClickListener =
             object : StartAddProductClickListener {
                 override fun addProduct() {

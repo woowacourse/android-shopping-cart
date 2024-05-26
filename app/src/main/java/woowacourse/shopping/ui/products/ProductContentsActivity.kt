@@ -22,7 +22,7 @@ import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModelFactory
 import woowacourse.shopping.ui.utils.urlToImage
 
-class ProductContentsActivity : AppCompatActivity() {
+class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
@@ -66,7 +66,7 @@ class ProductContentsActivity : AppCompatActivity() {
         binding.rvProducts.itemAnimator = null
         productAdapter =
             ProductAdapter(
-                { ProductDetailActivity.startActivity(this, it, true) },
+                this,
                 { viewModel.plusCount(it) },
                 { viewModel.minusCount(it) },
             )
@@ -92,6 +92,10 @@ class ProductContentsActivity : AppCompatActivity() {
         viewModel.recentProducts.observe(this) {
             recentProductAdapter.setRecentProducts(it)
         }
+    }
+
+    override fun itemClickListener(productId: Long) {
+        ProductDetailActivity.startActivity(this, productId, true)
     }
 }
 

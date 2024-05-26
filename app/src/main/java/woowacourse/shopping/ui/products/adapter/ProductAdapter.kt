@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.ui.products.ProductItemClickListener
 
 class ProductAdapter(
-    private val itemClickListener: (Long) -> Unit,
+    private val productItemClickListener: ProductItemClickListener,
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
@@ -20,7 +21,7 @@ class ProductAdapter(
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ProductViewHolder(
             binding,
-            itemClickListener,
+            productItemClickListener,
             plusCountClickListener,
             minusCountClickListener,
         )
