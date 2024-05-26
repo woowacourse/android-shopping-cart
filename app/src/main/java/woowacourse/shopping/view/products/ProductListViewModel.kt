@@ -79,6 +79,7 @@ class ProductListViewModel(
             product.updateCartItemCount(updateCartItemResult.counter.itemCount)
             product.updateItemSelector(true)
             increaseTotalCount()
+            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException -> addCartItem(product)
@@ -86,7 +87,6 @@ class ProductListViewModel(
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
-        _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
     }
 
     fun decreaseShoppingCart(product: Product) {
@@ -114,6 +114,7 @@ class ProductListViewModel(
         product.updateCartItemCount(DEFAULT_CART_ITEM_COUNT)
         product.updateItemSelector(true)
         increaseTotalCount()
+        _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
     }
 
     private fun deleteCartItem(product: Product) {
