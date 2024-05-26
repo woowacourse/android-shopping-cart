@@ -117,11 +117,7 @@ class ProductDetailViewModel(
         mostRecentProductId: Long,
         currentProductId: Long,
     ) {
-        if (mostRecentProductId == currentProductId) {
-            _mostRecentProductVisibility.postValue(false)
-            return
-        }
-        _mostRecentProductVisibility.postValue(true)
+        _mostRecentProductVisibility.postValue(mostRecentProductId != currentProductId)
     }
 
     private fun <T> MutableLiveData<Event<T>>.setErrorHandled(value: T?) {
