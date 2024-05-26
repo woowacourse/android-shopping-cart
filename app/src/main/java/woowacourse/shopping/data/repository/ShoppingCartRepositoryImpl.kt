@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.Mapper.toCartItem
 import woowacourse.shopping.utils.Mapper.toCartItemEntity
+import woowacourse.shopping.utils.exception.AddCartItemException
 import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
@@ -52,7 +53,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
             cartItem = cartItemDao.findCartItemByProductId(productId)?.toCartItem()
         }.join()
         return CartItemResult(
-            cartItemId = cartItem?.id ?: throw NoSuchDataException(),
+            cartItemId = cartItem?.id ?: throw AddCartItemException(),
             counter = cartItem?.product?.cartItemCounter ?: throw NoSuchDataException(),
         )
     }
