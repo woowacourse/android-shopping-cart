@@ -17,35 +17,37 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.FakeCartRepository
-import woowacourse.shopping.data.product.FakeProductRepository
+import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.entity.Product
+import woowacourse.shopping.data.product.server.MockWebProductServer
+import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
 import woowacourse.shopping.data.recent.FakeRecentProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.firstProduct
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
 
 @RunWith(AndroidJUnit4::class)
 class ProductDetailActivityTest {
+    private val product: Product = firstProduct
     private lateinit var intent: Intent
 
     @Before
     fun setUp() {
-        val fakeProductRepository = FakeProductRepository(listOf(Product(0L, imageUrl, title, price)))
-        ProductRepository.setInstance(fakeProductRepository)
         RecentProductRepository.setInstance(FakeRecentProductRepository())
         CartRepository.setInstance(FakeCartRepository())
         intent =
             Intent(ApplicationProvider.getApplicationContext(), ProductDetailActivity::class.java)
-                .putExtra("product_id_key", 0L)
+                .putExtra("product_id_key", product.id)
     }
 
     @Test
     fun `상품_제목이_보인다`() {
         ActivityScenario.launch<ProductDetailActivity>(intent)
         onView(withId(R.id.tv_product_detail_title))
-            .check(matches(withText(title)))
+            .check(matches(withText(product.title)))
     }
 
     @Test
@@ -57,7 +59,7 @@ class ProductDetailActivityTest {
     }
 
     @Test
-    fun `1500원_상품을_3개_담으면_상품_가격_4500원이_보인다`() {
+    fun `상품을_3개_담으면_상품_3개의_가격이_보인다`() {
         ActivityScenario.launch<ProductDetailActivity>(intent)
 
         repeat(3) {
@@ -65,7 +67,7 @@ class ProductDetailActivityTest {
                 .perform(click())
         }
 
-        val expected = "%,d원".format(price * 3)
+        val expected = "%,d원".format(product.price * 3)
         onView(withId(R.id.tv_product_detail_price))
             .check(matches(withText(expected)))
     }

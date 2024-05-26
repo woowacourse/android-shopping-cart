@@ -17,11 +17,14 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.FakeProductRepository
+import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.entity.Product
+import woowacourse.shopping.data.product.server.MockWebProductServer
+import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
 import woowacourse.shopping.data.recent.FakeRecentProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.firstProduct
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
@@ -31,8 +34,6 @@ import woowacourse.shopping.ui.products.adapter.ProductsViewHolder
 class ProductsActivityTest {
     @Before
     fun setUp() {
-        val products = List(30) { Product(it.toLong(), imageUrl, "$title $it", price + it) }
-        ProductRepository.setInstance(FakeProductRepository(products))
         RecentProductRepository.setInstance(FakeRecentProductRepository())
     }
 
@@ -48,14 +49,14 @@ class ProductsActivityTest {
 
         onView(withId(R.id.rv_products))
             .perform(scrollToPosition<ProductsViewHolder.ProductViewHolder>(0))
-            .check(matches(hasDescendant(allOf(withText("$title 0"), isDisplayed()))))
+            .check(matches(hasDescendant(allOf(withText(firstProduct.title), isDisplayed()))))
     }
 
     @Test
     fun `상품의_가격이_보인다`() {
         ActivityScenario.launch(ProductsActivity::class.java)
 
-        val expected = "%,d원".format(price)
+        val expected = "%,d원".format(firstProduct.price)
         onView(withId(R.id.rv_products))
             .perform(scrollToPosition<ProductsViewHolder.ProductViewHolder>(0))
             .check(matches(hasDescendant(allOf(withText(expected), isDisplayed()))))

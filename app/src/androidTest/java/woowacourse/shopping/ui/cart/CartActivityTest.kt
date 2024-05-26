@@ -1,36 +1,39 @@
- package woowacourse.shopping.ui.cart
+package woowacourse.shopping.ui.cart
 
- import android.content.pm.ActivityInfo
- import androidx.recyclerview.widget.RecyclerView
- import androidx.test.core.app.ActivityScenario
- import androidx.test.espresso.Espresso.onView
- import androidx.test.espresso.action.ViewActions.click
- import androidx.test.espresso.assertion.ViewAssertions.matches
- import androidx.test.espresso.contrib.RecyclerViewActions
- import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
- import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
- import androidx.test.espresso.matcher.ViewMatchers.isEnabled
- import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
- import androidx.test.espresso.matcher.ViewMatchers.withId
- import androidx.test.espresso.matcher.ViewMatchers.withText
- import androidx.test.ext.junit.runners.AndroidJUnit4
- import org.hamcrest.CoreMatchers.allOf
- import org.hamcrest.CoreMatchers.not
- import org.junit.Test
- import org.junit.runner.RunWith
- import woowacourse.shopping.R
- import woowacourse.shopping.data.cart.CartRepository
- import woowacourse.shopping.data.cart.FakeCartRepository
- import woowacourse.shopping.data.product.FakeProductRepository
- import woowacourse.shopping.data.product.ProductRepository
- import woowacourse.shopping.hasSizeRecyclerView
- import woowacourse.shopping.imageUrl
- import woowacourse.shopping.data.product.entity.Product
- import woowacourse.shopping.price
- import woowacourse.shopping.title
+import android.content.pm.ActivityInfo
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.not
+import org.junit.Test
+import org.junit.runner.RunWith
+import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.FakeCartRepository
+import woowacourse.shopping.data.product.MockWebServerProductRepository
+import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.hasSizeRecyclerView
+import woowacourse.shopping.imageUrl
+import woowacourse.shopping.data.product.entity.Product
+import woowacourse.shopping.data.product.server.MockWebProductServer
+import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
+import woowacourse.shopping.firstProduct
+import woowacourse.shopping.price
+import woowacourse.shopping.title
 
- @RunWith(AndroidJUnit4::class)
- class CartActivityTest {
+@RunWith(AndroidJUnit4::class)
+class CartActivityTest {
     @Test
     fun `장바구니에_상품이_없는_경우_장바구니가_비어있다는_화면이_보인다`() {
         CartRepository.setInstance(FakeCartRepository())
@@ -53,22 +56,22 @@
 
     @Test
     fun `장바구니의_상품_제목이_보인다`() {
-        setUpCart(1, imageUrl, title, price)
+        setUpCart(1)
 
         ActivityScenario.launch(CartActivity::class.java)
 
         onView(withId(R.id.rv_cart))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(0))
-            .check(matches(hasDescendant(allOf(withText(title), isDisplayed()))))
+            .check(matches(hasDescendant(allOf(withText(firstProduct.title), isDisplayed()))))
     }
 
     @Test
     fun `장바구니의_상품_가격이_보인다`() {
-        setUpCart(1, imageUrl, title, price)
+        setUpCart(1)
 
         ActivityScenario.launch(CartActivity::class.java)
 
-        val expected = "%,d원".format(price)
+        val expected = "%,d원".format(firstProduct.price)
         onView(withId(R.id.rv_cart))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(0))
             .check(matches(hasDescendant(allOf(withText(expected), isDisplayed()))))
@@ -170,17 +173,9 @@
             .hasSizeRecyclerView(1)
     }
 
-    private fun setUpCart(
-        cartSize: Int,
-        productImageUrl: String = imageUrl,
-        productTitle: String = title,
-        productPrice: Int = price,
-    ) {
-        val products = List(cartSize) { Product(it.toLong(), productImageUrl, productTitle, productPrice) }
-
-        ProductRepository.setInstance(FakeProductRepository(products))
+    private fun setUpCart(cartSize: Int) {
+        val products = ProductRepository.getInstance().findRange(0, cartSize)
         CartRepository.setInstance(FakeCartRepository())
-
         products.forEach { CartRepository.getInstance().increaseQuantity(it.id) }
     }
- }
+}
