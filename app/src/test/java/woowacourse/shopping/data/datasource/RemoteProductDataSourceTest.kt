@@ -57,7 +57,6 @@ class RemoteProductDataSourceTest {
             val dispatcher =
                 object : Dispatcher() {
                     override fun dispatch(request: RecordedRequest): MockResponse {
-                        println(request.path)
                         return when (request.path) {
                             "/paging-product/3/1" -> {
                                 MockResponse()
