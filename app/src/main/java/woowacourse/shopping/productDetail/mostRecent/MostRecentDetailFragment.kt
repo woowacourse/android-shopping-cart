@@ -1,4 +1,4 @@
-package woowacourse.shopping.productDetail
+package woowacourse.shopping.productDetail.mostRecent
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,18 +8,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.databinding.FragmentProductDetailBinding
+import woowacourse.shopping.databinding.FragmentProductMostResentDetailBinding
 import woowacourse.shopping.listener.OnClickCartItemCounter
 import woowacourse.shopping.model.CartItem
-import woowacourse.shopping.productDetail.mostRecent.MostRecentDetailFragment
 
-class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
-    private val viewModel: ProductDetailViewModel by viewModels {
+class MostRecentDetailFragment : Fragment(), OnClickCartItemCounter {
+    private val viewModel: MostRecentDetailViewModel by viewModels {
         val id = arguments?.getInt("productId") ?: 1
-        ProductDetailViewModel.factory(requireActivity().application, productId = id)
+        MostRecentDetailViewModel.factory(requireActivity().application, productId = id)
     }
 
-    private var _binding: FragmentProductDetailBinding? = null
+    private var _binding: FragmentProductMostResentDetailBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -27,7 +26,7 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentProductDetailBinding.inflate(inflater, container, false)
+        _binding = FragmentProductMostResentDetailBinding.inflate(inflater, container, false)
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.listener = this
@@ -40,12 +39,6 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
     ) {
         super.onViewCreated(view, savedInstanceState)
         binding.productDetailToolbar.setOnMenuItemClickListener { clickXButton(it) }
-
-        viewModel.shouldShowLastViewedProduct.observe(viewLifecycleOwner) {}
-
-        binding.lastViewedProductContainer.setOnClickListener {
-            navigateToLastViewedProduct()
-        }
     }
 
     override fun onDestroyView() {
@@ -69,20 +62,5 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
 
     override fun decreaseQuantity(cartItem: CartItem) {
         viewModel.subtractProductCount()
-    }
-
-    private fun navigateToLastViewedProduct() {
-        val lastViewedProductId = viewModel.lastViewedProduct.value?.id ?: return
-        val fragment =
-            MostRecentDetailFragment().apply {
-                arguments =
-                    Bundle().apply {
-                        putInt("productId", lastViewedProductId)
-                    }
-            }
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 }
