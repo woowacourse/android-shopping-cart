@@ -8,11 +8,12 @@ import okhttp3.Response
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.service.ProductService
 
-class MockProductService {
+class MockProductService: ProductService {
     private val client = OkHttpClient()
 
-    fun findAll(): List<Product> {
+    override fun findAll(): List<Product> {
         val body = Gson().toJson(ProductDatabase.products)
         val serverRequest = makeServerRequest(body, DEFAULT_URL)
         val responseBody = makeResponse(serverRequest).body?.string() ?: return emptyList()
@@ -20,7 +21,7 @@ class MockProductService {
         return Gson().fromJson(responseBody, productType)
     }
 
-    fun findProductById(productId: Long): Product? {
+    override fun findProductById(productId: Long): Product? {
         val product = ProductDatabase.products.find { it.id == productId }
         val body = Gson().toJson(product)
         val serverRequest = makeServerRequest(body, productId.toString())
@@ -29,7 +30,7 @@ class MockProductService {
         return Gson().fromJson(responseBody, Product::class.java)
     }
 
-    fun findPagingProducts(
+    override fun findPagingProducts(
         offset: Int,
         pagingSize: Int,
     ): List<Product> {
