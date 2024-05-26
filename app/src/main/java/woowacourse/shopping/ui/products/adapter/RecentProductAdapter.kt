@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.ui.products.ProductItemClickListener
 
 class RecentProductAdapter(
-    private val itemClickListener: (Long) -> Unit,
+    private val productItemClickListener: ProductItemClickListener,
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
     private val products: MutableList<Product> = mutableListOf()
 
@@ -17,7 +18,7 @@ class RecentProductAdapter(
     ): RecentProductViewHolder {
         val binding =
             ItemRecentProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return RecentProductViewHolder(binding, itemClickListener)
+        return RecentProductViewHolder(binding, productItemClickListener)
     }
 
     override fun getItemCount(): Int = products.size

@@ -9,10 +9,15 @@
             name="product"
             type="woowacourse.shopping.model.Product" />
 
+        <variable
+            name="productItemClickListener"
+            type="woowacourse.shopping.ui.products.ProductItemClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_layout"
+        android:onClick="@{() -> productItemClickListener.itemClickListener(product.id)}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"

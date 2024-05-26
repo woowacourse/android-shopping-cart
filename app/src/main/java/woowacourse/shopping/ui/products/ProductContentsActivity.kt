@@ -75,10 +75,7 @@ class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
 
     private fun setRecentProductAdapter() {
         binding.rvRecentProducts.itemAnimator = null
-        recentProductAdapter =
-            RecentProductAdapter {
-                ProductDetailActivity.startActivity(this, it, true)
-            }
+        recentProductAdapter = RecentProductAdapter(this)
         binding.rvRecentProducts.adapter = recentProductAdapter
     }
 
