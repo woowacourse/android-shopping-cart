@@ -15,7 +15,7 @@ class ProductMockServer {
                 return newInstance
             }
 
-        fun shutDown()  {
+        fun shutDown() {
             instance?.shutdown()
         }
     }

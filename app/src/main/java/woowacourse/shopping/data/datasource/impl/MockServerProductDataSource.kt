@@ -40,7 +40,8 @@ class MockServerProductDataSource(private val mockServer: MockWebServer) : Produ
         var products = emptyList<ProductEntity>()
         thread {
             val request =
-                Request.Builder().url("${mockServer.url("/products/$startPosition/$offset")}").build()
+                Request.Builder().url("${mockServer.url("/products/$startPosition/$offset")}")
+                    .build()
             val response = client.newCall(request).execute()
             val responseBody = response.body?.string() ?: error("주소를 잘못 입력했습니다.")
             val type: Type? = object : TypeToken<List<ProductEntity>>() {}.type

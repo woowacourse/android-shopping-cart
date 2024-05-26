@@ -59,6 +59,6 @@ class DefaultProductRepository(
                 ).also { instance = it }
             }
 
-        fun instance(): DefaultProductRepository = instance ?: error("RoomRepo가 초기화되지 않았습니다.")
+        fun instance(): DefaultProductRepository = instance ?: error("DefaultProductRepository가 초기화되지 않았습니다.")
     }
 }

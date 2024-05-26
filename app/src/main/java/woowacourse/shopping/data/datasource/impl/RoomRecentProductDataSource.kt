@@ -6,7 +6,8 @@ import woowacourse.shopping.data.entity.RecentProductEntity
 import woowacourse.shopping.data.entity.RecentProductEntity.Companion.STUB
 import kotlin.concurrent.thread
 
-class RoomRecentProductDataSource(private val recentDao: RecentProductDao) : RecentProductDataSource {
+class RoomRecentProductDataSource(private val recentDao: RecentProductDao) :
+    RecentProductDataSource {
     override fun insert(recentProduct: RecentProductEntity) {
         thread {
             recentDao.insert(recentProduct)

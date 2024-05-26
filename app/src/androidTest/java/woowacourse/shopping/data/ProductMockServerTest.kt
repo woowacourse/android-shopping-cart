@@ -12,7 +12,8 @@ import woowacourse.shopping.data.service.ProductMockServer
 
 class ProductMockServerTest {
     private val productMockServer: MockWebServer = ProductMockServer.instance(ProductDispatcher())
-    private val mockServerProductDataSource: MockServerProductDataSource = MockServerProductDataSource(productMockServer)
+    private val mockServerProductDataSource: MockServerProductDataSource =
+        MockServerProductDataSource(productMockServer)
 
     @After
     fun tearDown() {

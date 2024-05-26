@@ -12,11 +12,17 @@ class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(ProductDetailViewModel::class.java) -> {
-                ProductDetailViewModel(DefaultProductRepository.instance(), DefaultShoppingRepository.instance()) as T
+                ProductDetailViewModel(
+                    DefaultProductRepository.instance(),
+                    DefaultShoppingRepository.instance(),
+                ) as T
             }
 
             modelClass.isAssignableFrom(ProductListViewModel::class.java) -> {
-                ProductListViewModel(DefaultProductRepository.instance(), DefaultShoppingRepository.instance()) as T
+                ProductListViewModel(
+                    DefaultProductRepository.instance(),
+                    DefaultShoppingRepository.instance(),
+                ) as T
             }
 
             modelClass.isAssignableFrom(ShoppingCartViewModel::class.java) -> {
