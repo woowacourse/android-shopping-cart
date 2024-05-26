@@ -40,7 +40,7 @@ class CartDaoTest {
     @Test
     @DisplayName(
         "3개의 상품을 저장한 후," +
-                "1개의 상품 만큼 건너 뛰고, 2개의 상품을 조회 한다.",
+            "1개의 상품 만큼 건너 뛰고, 2개의 상품을 조회 한다.",
     )
     fun insert_and_load() {
         // given & when

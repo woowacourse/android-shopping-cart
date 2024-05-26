@@ -48,12 +48,14 @@ Product Api 는 MockServer 를 활용해서 만들어서 실제 서버랑 비슷
 - [x]: ProductDetailViewModel UiState 도입
 - [x]: ProductListViewModel UiState 도입
 - [x]: CartFragment 상품 count 증가/감소 test 작성
+- [x]: Mapper 를 활용하지 않는 곳 적용하기
+
+## BackLog
 -[ ]: 마지막 상품이 안보이면 시스템 backPressed 시 상품 목록으로 이동한다.
 -[ ]: 각 Fragment 마다 AppBar 만들기 (CustomAppBarLayout 으로 만들어서 사용하기)
 (Activity의 AppBar 에 접근해서 처리하는 것은 부모뷰의 역할을 뺏는 것임, AppBar 가 없는 Fragment 의 경우도 있을 지도?)
 - [ ]: SavedStateHandle 을 사용하여 ViewModel 에서 상태 저장하기
 - [ ]: ViewModel 테스트 작성하기
-- [ ]: Mapper 를 활용하지 않는 곳 적용하기
 ## 질문
 ```kotlin
 @Test

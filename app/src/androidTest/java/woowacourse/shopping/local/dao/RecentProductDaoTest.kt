@@ -71,7 +71,10 @@ class RecentProductDaoTest {
         actual shouldBe expect
     }
 
-    private fun saveProduct(id: Long, createdTime: LocalDateTime) {
+    private fun saveProduct(
+        id: Long,
+        createdTime: LocalDateTime,
+    ) {
         dao.saveProduct(fakeRecentProductEntity(id, createdTime))
     }
 }

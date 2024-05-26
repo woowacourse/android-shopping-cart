@@ -23,13 +23,20 @@ class FirstAdapter2(private val items: List<Item>) :
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FirstViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): FirstViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(android.R.layout.simple_list_item_1, parent, false)
         return FirstViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: FirstViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: FirstViewHolder,
+        position: Int,
+    ) {
         holder.textView.text = items[position].content
         Log.e("StudyActivity", "KkosangAdapter - id: ${getItemId(position)}")
     }
@@ -37,7 +44,6 @@ class FirstAdapter2(private val items: List<Item>) :
     override fun getItemCount(): Int = items.size
 
     override fun getItemId(position: Int): Long = items[position].id
-
 }
 
 class SecondViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,14 +58,18 @@ class SecondAdapter2(private val items: List<Item>) :
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): SecondViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(android.R.layout.simple_list_item_1, parent, false)
         return SecondViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: SecondViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: SecondViewHolder,
+        position: Int,
+    ) {
         holder.textView.text = items[position].content
         Log.e("StudyActivity", "KkosangAdapter - id: ${getItemId(position)}")
     }
