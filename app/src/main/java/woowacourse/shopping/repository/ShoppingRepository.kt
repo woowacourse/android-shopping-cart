@@ -26,8 +26,6 @@ interface ShoppingRepository {
 
     fun shoppingCartSize(): Int
 
-    fun updateShoppingCart(shoppingCart: ShoppingCart)
-
     fun updateCartItem(updateCartItem: ShoppingCartItem)
 
     fun increasedCartItem(productId: Long): QuantityUpdate

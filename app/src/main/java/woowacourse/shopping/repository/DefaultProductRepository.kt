@@ -32,10 +32,9 @@ class DefaultProductRepository(
         localDateTime: LocalDateTime,
     ) {
         val recent = RecentProductEntity(productId, localDateTime)
-        if (recentProductDataSource.recentProducts().none { recent.productId == it.productId })
-            {
-                recentProductDataSource.insert(recent)
-            }
+        if (recentProductDataSource.recentProducts().none { recent.productId == it.productId }) {
+            recentProductDataSource.insert(recent)
+        }
     }
 
     override fun lastRecentProduct(): GetLastProduct {
