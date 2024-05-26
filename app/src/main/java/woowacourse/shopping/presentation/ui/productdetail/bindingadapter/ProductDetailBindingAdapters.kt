@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.productdetail
+package woowacourse.shopping.presentation.ui.productdetail.bindingadapter
 
 import android.view.View
 import androidx.databinding.BindingAdapter

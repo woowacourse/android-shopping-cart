@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.shoppingcart
+package woowacourse.shopping.presentation.ui.shoppingcart.bindingadapter
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.presentation.common.hideIf
 import woowacourse.shopping.presentation.common.showIf
+import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartViewModel
 
 @BindingAdapter("recyclerViewVisible")
 fun RecyclerView.bindRecyclerViewVisible(orderList: List<Order>?) {
