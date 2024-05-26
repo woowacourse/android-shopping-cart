@@ -57,4 +57,8 @@ class FakeCartRepository : CartRepository {
     override fun removeCartItem(cartItem: CartItem) {
         cartedItems.removeIf { it.cartItem.productId == cartItem.productId }
     }
+
+    override fun removeAll() {
+        cartedItems.clear()
+    }
 }

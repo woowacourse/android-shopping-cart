@@ -25,9 +25,10 @@ import woowacourse.shopping.presentation.home.products.ProductAdapter
 @RunWith(AndroidJUnit4::class)
 class HomeActivityTest {
     @get:Rule
-    val activityScenarioRule = ActivityScenarioRule<HomeActivity>(
-        Intent(ApplicationProvider.getApplicationContext(), HomeActivity::class.java)
-    )
+    val activityScenarioRule =
+        ActivityScenarioRule<HomeActivity>(
+            Intent(ApplicationProvider.getApplicationContext(), HomeActivity::class.java),
+        )
 
     @Test
     fun `스크롤을_끝까지_내렸을_때_더보기_버튼이_나타난다`() {
@@ -97,9 +98,9 @@ class HomeActivityTest {
                 if (view !is RecyclerView) return false
                 val viewHolder = view.findViewHolderForAdapterPosition(position)
                 return viewHolder != null &&
-                        viewHolderClass.isInstance(
-                            viewHolder,
-                        )
+                    viewHolderClass.isInstance(
+                        viewHolder,
+                    )
             }
         }
     }
