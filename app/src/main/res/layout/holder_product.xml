@@ -23,14 +23,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}">
+        android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/main_product_list_item_img"
             imageUrl="@{product.imgUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
-            android:layout_margin="@dimen/text_margin"
             android:importantForAccessibility="no"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintStart_toStartOf="parent"
