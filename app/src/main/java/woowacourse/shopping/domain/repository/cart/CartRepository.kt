@@ -16,4 +16,6 @@ interface CartRepository {
     )
 
     fun removeCartItem(cartItem: CartItem)
+
+    fun removeAll()
 }

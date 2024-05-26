@@ -135,6 +135,29 @@ class MockShoppingWebServer(
                             .setResponseCode(200)
                     }
 
+                    "/cart-item/all" -> {
+                        when (request.method) {
+                            "DELETE" -> {
+                                val isSuccessful = deleteAllCartItem()
+                                if (isSuccessful) {
+                                    MockResponse()
+                                        .setHeader("Content-Type", "application/json")
+                                        .setResponseCode(200)
+                                } else {
+                                    MockResponse()
+                                        .setHeader("Content-Type", "application/json")
+                                        .setResponseCode(400)
+                                }
+                            }
+
+                            else -> {
+                                MockResponse()
+                                    .setHeader("Content-Type", "application/json")
+                                    .setResponseCode(400)
+                            }
+                        }
+                    }
+
                     else -> {
                         MockResponse().setResponseCode(404)
                     }
@@ -199,6 +222,15 @@ class MockShoppingWebServer(
     private fun addCartItem(cartItem: CartItem): Boolean {
         return runCatching {
             cartDao.addCartItem(cartItem)
+            true
+        }.onFailure {
+            return false
+        }.getOrDefault(false)
+    }
+
+    private fun deleteAllCartItem(): Boolean {
+        return runCatching {
+            cartDao.deleteAll()
             true
         }.onFailure {
             return false

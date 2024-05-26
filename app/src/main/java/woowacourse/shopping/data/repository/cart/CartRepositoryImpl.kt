@@ -69,6 +69,15 @@ class CartRepositoryImpl(
         client.newCall(request).execute()
     }
 
+    override fun removeAll() {
+        val request =
+            Request.Builder()
+                .delete()
+                .url("$baseUrl/cart-item/all")
+                .build()
+        client.newCall(request).execute()
+    }
+
     companion object {
         private const val BASE_URL = "http://localhost:12345/"
         private const val PAGE_SIZE = 5
