@@ -12,6 +12,10 @@
         <variable
             name="clickListener"
             type="woowacourse.shopping.shoppingcart.ShoppingCartClickAction" />
+
+        <variable
+            name="quantityControlClickListener"
+            type="woowacourse.shopping.ViewModelQuantityActions" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,16 +31,15 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="18dp"
             android:fontFamily="@font/roboto_bold"
+            android:text="@{cartItemUiModel.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:text="@{cartItemUiModel.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
             android:id="@+id/iv_cart_product"
-            app:loadImage="@{cartItemUiModel.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
@@ -45,6 +48,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_item_cart_name"
             app:layout_constraintTop_toBottomOf="@id/tv_item_cart_name"
+            app:loadImage="@{cartItemUiModel.imageUrl}"
             tools:src="@drawable/ic_launcher_background" />
 
         <ImageButton
@@ -53,23 +57,36 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@android:color/transparent"
+            android:onClickListener="@{()->clickListener.onItemRemoveBtnClicked(cartItemUiModel.id)}"
             android:padding="12dp"
             android:src="@drawable/ic_close"
-            android:onClickListener="@{()->clickListener.onItemRemoveBtnClicked(cartItemUiModel.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray_300" />
+
+        <include
+            android:id="@+id/button_shopping_cart_quantity_control"
+            layout="@layout/button_quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="17dp"
+            app:clickListener="@{quantityControlClickListener}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:productId="@{cartItemUiModel.id}"
+            app:quantity="@{cartItemUiModel.quantity}" />
 
         <TextView
             android:id="@+id/tv_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="10dp"
             android:fontFamily="@font/roboto"
             android:textColor="@color/gray_500"
             app:formattedPrice="@{cartItemUiModel.totalPrice}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_shopping_cart_quantity_control"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
 

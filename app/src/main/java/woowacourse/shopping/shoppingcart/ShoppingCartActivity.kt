@@ -30,7 +30,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         setupToolbar()
         initShoppingCart()
 
-        adapter = ShoppingCartAdapter(this)
+        adapter = ShoppingCartAdapter(this, viewModel)
         binding.rcvShoppingCart.adapter = adapter
 
         updateView()
