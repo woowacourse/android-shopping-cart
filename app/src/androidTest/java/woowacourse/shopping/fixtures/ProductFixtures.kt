@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.entity.Product
 fun product(
     id: Long = 1,
     price: Int = 1000,
-    name: String = "오둥이 1",
+    name: String = "오둥이 $id",
     imageUrl: String = "https://image.com",
 ): Product {
     return Product(
