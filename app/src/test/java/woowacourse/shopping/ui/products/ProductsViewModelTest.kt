@@ -1,53 +1,68 @@
 package woowacourse.shopping.ui.products
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.FakeCartRepository
+import woowacourse.shopping.FakeProductRepository
+import woowacourse.shopping.FakeRecentProductRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.product.FakeProductRepository
+import woowacourse.shopping.cartItem
+import woowacourse.shopping.convertProductUiModel
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.products
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.imageUrl
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.price
-import woowacourse.shopping.title
+import woowacourse.shopping.model.Quantity
+import java.lang.IllegalArgumentException
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductsViewModelTest {
     private lateinit var viewModel: ProductsViewModel
     private lateinit var productRepository: ProductRepository
+    private lateinit var recentProductRepository: RecentProductRepository
+    private lateinit var cartRepository: CartRepository
+
+    @BeforeEach
+    fun setUp() {
+        recentProductRepository = FakeRecentProductRepository()
+        cartRepository = FakeCartRepository()
+    }
 
     @Test
     fun `한 페이지에는 20개의 상품이 있다`() {
         val products = products(20)
         productRepository = FakeProductRepository(products)
-        viewModel = ProductsViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
 
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(20)
-        assertThat(actual).isEqualTo(products.take(20))
+        assertThat(actual).isEqualTo(convertProductUiModel(products, cartRepository).take(20))
     }
 
     @Test
     fun `상품이 40개인 경우 1페이지에서 20개의 상품을 불러온다`() {
         val products = products(40)
         productRepository = FakeProductRepository(products)
-        viewModel = ProductsViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
 
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(20)
-        assertThat(actual).isEqualTo(products.take(20))
+        assertThat(actual).isEqualTo(convertProductUiModel(products, cartRepository).take(20))
     }
 
     @Test
     fun `상품이 5개인 경우 1페이지에서 5개의 상품을 불러온다`() {
         val products = products(5)
         productRepository = FakeProductRepository(products)
-        viewModel = ProductsViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
 
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(5)
-        assertThat(actual).isEqualTo(products.take(5))
+        assertThat(actual).isEqualTo(convertProductUiModel(products, cartRepository).take(5))
     }
 
     @Test
@@ -55,7 +70,7 @@ class ProductsViewModelTest {
         // given
         val products = products(10)
         productRepository = FakeProductRepository(products)
-        viewModel = ProductsViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
 
         // when
         viewModel.changeSeeMoreVisibility(9)
@@ -70,7 +85,7 @@ class ProductsViewModelTest {
         // given
         val products = products(25)
         productRepository = FakeProductRepository(products)
-        viewModel = ProductsViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
 
         // when
         viewModel.changeSeeMoreVisibility(19)
@@ -85,15 +100,15 @@ class ProductsViewModelTest {
         // given
         val products = products(25)
         productRepository = FakeProductRepository(products)
-        viewModel = ProductsViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
 
         // when
         viewModel.loadPage()
 
         // then
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(25)
-        assertThat(actual).isEqualTo(products)
+        assertThat(actual).isEqualTo(convertProductUiModel(products, cartRepository).take(25))
     }
 
     @Test
@@ -101,7 +116,7 @@ class ProductsViewModelTest {
         // given
         val products = products(25)
         productRepository = FakeProductRepository(products)
-        viewModel = ProductsViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
 
         // when
         viewModel.loadPage()
@@ -112,7 +127,69 @@ class ProductsViewModelTest {
         assertThat(actual).isFalse
     }
 
-    private fun products(size: Int): List<Product> {
-        return List(size) { Product(it.toLong(), imageUrl, title, price) }
+    @Test
+    fun `장바구니에 담겨지지 않은 상품의 개수를 증가시키면 장바구니에 담긴다`() {
+        // given
+        val products = products(10)
+        productRepository = FakeProductRepository(products)
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
+
+        // when
+        viewModel.increaseQuantity(0L)
+
+        // then
+        val actual = cartRepository.find(0L)
+        assertThat(actual.quantity).isEqualTo(Quantity(1))
+        assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(1)
+    }
+
+    @Test
+    fun `장바구니에 담겨진 상품의 개수를 3개에서 4개로 증가시킨다`() {
+        // given
+        val products = products(10)
+        productRepository = FakeProductRepository(products)
+        cartRepository = FakeCartRepository(listOf(cartItem(0L, Quantity(3))))
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
+
+        // when
+        viewModel.increaseQuantity(0L)
+
+        // then
+        val actual = cartRepository.find(0L)
+        assertThat(actual.quantity).isEqualTo(Quantity(4))
+        assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(4)
+    }
+
+    @Test
+    fun `장바구니에 1개가 담겨진 상품의 개수를 감소시키면 장바구니에서 삭제된다`() {
+        // given
+        val products = products(10)
+        productRepository = FakeProductRepository(products)
+        cartRepository = FakeCartRepository(listOf(cartItem(0L, Quantity(1))))
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
+
+        // when
+        viewModel.decreaseQuantity(0L)
+
+        // then
+        assertThrows<IllegalArgumentException> { cartRepository.find(0L) }
+        assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(0)
+    }
+
+    @Test
+    fun `장바구니에 담겨진 상품의 개수를 6개에서 5개로 감소시킨다`() {
+        // given
+        val products = products(10)
+        productRepository = FakeProductRepository(products)
+        cartRepository = FakeCartRepository(listOf(cartItem(0L, Quantity(6))))
+        viewModel = ProductsViewModel(productRepository, recentProductRepository, cartRepository)
+
+        // when
+        viewModel.decreaseQuantity(0L)
+
+        // then
+        val actual = cartRepository.find(0L)
+        assertThat(actual.quantity).isEqualTo(Quantity(5))
+        assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(5)
     }
 }

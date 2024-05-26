@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.FakeCartRepository
 import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.cartItem
 import woowacourse.shopping.cartItems
 import woowacourse.shopping.convertProductUiModel
 import woowacourse.shopping.data.cart.CartRepository
@@ -240,7 +241,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담겨있는 상품의 개수를 2개에서 3개로 증가시킨다`() {
         // given
-        val cartItem = CartItem(0L, 0L, Quantity(2))
+        val cartItem = cartItem(0L, Quantity(2))
         val product = product(0L)
         productRepository = FakeProductRepository(listOf(product))
         cartRepository = FakeCartRepository(listOf(cartItem))
@@ -257,7 +258,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담겨있는 상품의 개수를 3개에서 2개로 감소시킨다`() {
         // given
-        val cartItem = CartItem(0L, 0L, Quantity(3))
+        val cartItem = cartItem(0L, Quantity(3))
         val product = product(0L)
         productRepository = FakeProductRepository(listOf(product))
         cartRepository = FakeCartRepository(listOf(cartItem))
@@ -274,7 +275,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담겨있는 상품의 개수를 1개에서 0개로 감소시키는 경우 장바구니에서 상품이 삭제된다`() {
         // given
-        val cartItem = CartItem(0L, 0L, Quantity(1))
+        val cartItem = cartItem(0L, Quantity(1))
         val product = product(0L)
         productRepository = FakeProductRepository(listOf(product))
         cartRepository = FakeCartRepository(listOf(cartItem))
