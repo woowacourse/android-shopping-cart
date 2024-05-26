@@ -5,6 +5,8 @@ interface ProductHistoryDataSource {
 
     fun loadProductHistory(productId: Long): Long?
 
+    fun loadLatestProduct(): Long
+
     fun loadAllProductHistory(): List<Long>
 
     fun deleteAllProductHistory()

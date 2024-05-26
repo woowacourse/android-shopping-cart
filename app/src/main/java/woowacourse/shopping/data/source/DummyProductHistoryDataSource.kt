@@ -15,6 +15,8 @@ class DummyProductHistoryDataSource : ProductHistoryDataSource {
 
     override fun loadProductHistory(productId: Long): Long? = productHistory.find { it == productId }
 
+    override fun loadLatestProduct(): Long = productHistory.last()
+
     override fun loadAllProductHistory(): List<Long> = productHistory
 
     override fun deleteAllProductHistory() {
