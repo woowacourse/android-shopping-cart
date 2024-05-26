@@ -22,35 +22,37 @@ class ProductMockServerTest {
     @Test
     @DisplayName("product 전체를 꺼낼 수 있다")
     fun can_get_all_product_list() {
-//        val productUrl = "/products"
-//        val expectedResponse = Json.encodeToString(ProductEntity.STUB_LIST)
-//
-//        // OkHttpClient 설정 - 타임아웃 설정
-//        val client = OkHttpClient.Builder()
-//            .connectTimeout(4, TimeUnit.SECONDS)
-//            .readTimeout(4, TimeUnit.SECONDS)
-//            .writeTimeout(4, TimeUnit.SECONDS)
-//            .build()
-//
-//        val request =
-//            Request.Builder().url("${shoppingMockServer.url(productUrl)}").build()
-//        val call = client.newCall(request)
-//        val response = call.execute()
-//
-//        val responseBody = response.body?.string()
-//        assertThat(responseBody).isEqualTo(expectedResponse)
-//
-//        val recordedRequest = shoppingMockServer.takeRequest()
-//        assertThat(recordedRequest.path).isEqualTo(productUrl)
-    }
-
-    @Test
-    @DisplayName("product 전체를 꺼낼 수 있다")
-    fun can_get_all_product_list2() {
         // given
         val actual = productService.products()
 
         // then
         assertThat(actual).isEqualTo(STUB_LIST)
+    }
+
+    @Test
+    @DisplayName("10 ~ 14의 위치에 해당하는 product list를 가져올 수 있다")
+    fun can_get_product_list_of_position_that_10_to_14() {
+        // when
+        val startPosition = 10
+        val lastPosition = 14
+
+        // given
+        val actual = productService.productsByOffset(startPosition, 5)
+
+        // then
+        assertThat(actual).isEqualTo(STUB_LIST.subList(startPosition, lastPosition + 1))
+    }
+
+    @Test
+    @DisplayName("productId가 1일 때, productId 1에 해당하는 상품을 가져올 수 있다.")
+    fun can_get_product_That_is_id_is_1() {
+        // when
+        val productId = 1L
+
+        // given
+        val actual = productService.productById(productId)
+
+        // then
+        assertThat(actual).isEqualTo(STUB_LIST.first { it.id == productId })
     }
 }

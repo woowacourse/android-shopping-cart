@@ -41,7 +41,7 @@ class ProductService(private val mockServer: MockWebServer) {
 
     fun productById(productId: Long): ProductEntity {
         val request =
-            Request.Builder().url("${mockServer.url("/products/${productId.toInt()}")}").build()
+            Request.Builder().url("${mockServer.url("/product/${productId.toInt()}")}").build()
         val response = client.newCall(request).execute()
         val responseBody = response.body?.string() ?: error("주소를 잘못 입력했습니다.")
         val type: Type? = object : TypeToken<ProductEntity>() {}.type
