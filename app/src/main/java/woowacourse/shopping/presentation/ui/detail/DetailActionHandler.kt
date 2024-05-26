@@ -5,4 +5,6 @@ import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 
 interface DetailActionHandler : ShoppingActionHandler {
     fun onAddToCart(cartProduct: CartProduct)
+
+    fun onNavigateToDetail(productId: Long)
 }

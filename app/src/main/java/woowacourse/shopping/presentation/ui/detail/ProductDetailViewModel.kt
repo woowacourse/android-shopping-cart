@@ -28,7 +28,11 @@ class ProductDetailViewModel(
     private val _cartHandler = MutableLiveData<EventState<UpdateUiModel>>()
     val cartHandler: LiveData<EventState<UpdateUiModel>> get() = _cartHandler
 
+    private val _navigateHandler = MutableLiveData<EventState<Long>>()
+    val navigateHandler: LiveData<EventState<Long>> get() = _navigateHandler
+
     private val updateUiModel: UpdateUiModel = UpdateUiModel()
+
 
     fun findCartProductById(id: Long) {
         thread {
@@ -84,6 +88,10 @@ class ProductDetailViewModel(
             }
             _cartHandler.postValue(EventState(updateUiModel))
         }
+    }
+
+    override fun onNavigateToDetail(productId: Long) {
+        _navigateHandler.value = EventState(productId)
     }
 
     override fun onPlus(cartProduct: CartProduct) {

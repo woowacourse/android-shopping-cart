@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
@@ -21,6 +22,9 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
+
+        if(intent.getBooleanExtra(EXTRA_OVERLAY, false)) binding.layoutRecent.isVisible = false
+
         binding.shoppingActionHandler = viewModel
 
         title = getString(R.string.detail_title)
@@ -67,6 +71,15 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                 }
             },
         )
+
+        viewModel.navigateHandler.observe(
+            this,
+            EventObserver {
+                ProductDetailActivity.createIntent(this, it).apply {
+                    startActivity(this)
+                }
+            },
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -81,13 +94,16 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
 
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
+        const val EXTRA_OVERLAY = "overlay"
 
         fun createIntent(
             context: Context,
             productId: Long,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra(EXTRA_PRODUCT_ID, productId)
+                if(context is ProductDetailActivity) putExtra(EXTRA_OVERLAY, true)
             }
         }
     }
