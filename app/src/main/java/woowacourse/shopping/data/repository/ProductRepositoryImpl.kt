@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import android.content.Context
 import woowacourse.shopping.data.db.product.ProductDao
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductResponse
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 
@@ -12,15 +13,10 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
     override fun loadPagingProducts(
         offset: Int,
         pagingSize: Int,
-    ): List<Product> {
-        return productDao.findPagingProducts(offset, pagingSize)
-    }
-
-    override fun hasNextProductPage(
-        offset: Int,
-        pagingSize: Int,
-    ): Boolean {
-        return offset + pagingSize < productDao.getProductCount()
+    ): ProductResponse {
+        val pagingData = productDao.findPagingProducts(offset, pagingSize)
+        val hasNext = offset + pagingSize < productDao.getProductCount()
+        return ProductResponse(hasNext, pagingData)
     }
 
     override fun getProduct(productId: Long): Product {

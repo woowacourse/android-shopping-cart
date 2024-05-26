@@ -45,10 +45,7 @@ class ProductListViewModel(
 
     private fun loadPagingProductData() {
         val loadedItems = products.value?.items ?: emptyList()
-        val pagingProducts =
-            productRepository.loadPagingProducts(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
-        val hasNextPage =
-            productRepository.hasNextProductPage(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
+        val (hasNextPage, pagingProducts) = productRepository.loadPagingProducts(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
 
         val cartItems = cartRepository.loadAllCartItems()
         val cartMap = cartItems.associateBy { it.product.id }
