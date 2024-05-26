@@ -49,22 +49,19 @@ class ProductListViewModel(
     val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
 
     fun loadAll() {
+        Log.d(TAG, "loadAll: called")
         thread {
-            if (_loadedProducts.value?.isEmpty() == true) {
-                val result: List<Product> = productsRepository.loadAllProducts(currentPage.value!!)
-                val totalCartCount = productsRepository.shoppingCartProductQuantity()
-                val isLastPage = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
-                val productHistory = productHistoryRepository.loadAllProductHistory()
+            val result: List<Product> = productsRepository.loadAllProducts(currentPage.value!!)
+            val totalCartCount = productsRepository.shoppingCartProductQuantity()
+            val isLastPage = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
+            val productHistory = productHistoryRepository.loadAllProductHistory()
 
-                uiHandler.post {
-                    _loadedProducts.value =
-                        _loadedProducts.value?.toMutableList()?.apply {
-                            addAll(result)
-                        }
-                    _cartProductTotalCount.value = totalCartCount
-                    _isLastPage.value = isLastPage
-                    _productsHistory.value = productHistory
-                }
+            uiHandler.post {
+                Log.d(TAG, "loadAll: totalCartCount: $totalCartCount")
+                _loadedProducts.value = result
+                _cartProductTotalCount.value = totalCartCount
+                _isLastPage.value = isLastPage
+                _productsHistory.value = productHistory
             }
         }
     }
@@ -161,31 +158,6 @@ class ProductListViewModel(
             }
             return@thread
         }
-    }
-
-    private fun productRemoved(
-        product: Product,
-        productId: Long,
-    ): Boolean {
-        if (product.quantity == 0) {
-            productsRepository.removeShoppingCartProduct(productId)
-
-            _productsEvent.value = ProductCountEvent.ProductCountCleared(productId)
-
-            _loadedProducts.value =
-                _loadedProducts.value?.map {
-                    if (it.id == productId) {
-                        it.copy(quantity = 0)
-                    } else {
-                        it
-                    }
-                }
-            thread {
-                _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
-            }
-            return true
-        }
-        return false
     }
 
     companion object {

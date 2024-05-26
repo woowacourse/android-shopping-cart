@@ -111,7 +111,6 @@ class ProductListFragment : Fragment() {
         observeNavigationShoppingCart()
         observeLoadedProducts()
         observeDetailProductDestination()
-        observeProductEvent()
         viewModel.productsHistory.observe(viewLifecycleOwner) {
             historyAdapter.update(it)
         }
@@ -126,18 +125,13 @@ class ProductListFragment : Fragment() {
     private fun observeLoadedProducts() {
         viewModel.loadedProducts.observe(viewLifecycleOwner) { products ->
             productsAdapter.updateAllLoadedProducts(products)
+            Log.d(TAG, "observeLoadedProducts: $products")
         }
     }
 
     private fun observeDetailProductDestination() {
         viewModel.detailProductDestinationId.observe(viewLifecycleOwner) { productId ->
             navigateToProductDetail(productId)
-        }
-    }
-
-    private fun observeProductEvent() {
-        viewModel.productsEvent.observe(viewLifecycleOwner) {
-            productsAdapter.updateProductInCart(it)
         }
     }
 
