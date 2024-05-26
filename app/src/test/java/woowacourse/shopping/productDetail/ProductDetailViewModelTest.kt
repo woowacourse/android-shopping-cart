@@ -7,13 +7,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
+import woowacourse.shopping.data.source.ProductHistoryDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.source.FakeProductDataSource
+import woowacourse.shopping.source.FakeProductHistorySource
 import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
@@ -24,6 +29,9 @@ class ProductDetailViewModelTest {
     private lateinit var productsSource: ProductDataSource
     private lateinit var cartSource: ShoppingCartProductIdDataSource
     private lateinit var shoppingProductRepository: ShoppingProductsRepository
+
+    private lateinit var historyDataSource: ProductHistoryDataSource
+    private lateinit var historyRepository: ProductHistoryRepository
     private lateinit var viewModel: ProductDetailViewModel
 
     /**
@@ -38,6 +46,9 @@ class ProductDetailViewModelTest {
             )
         cartSource = FakeShoppingCartProductIdDataSource(data = mutableListOf())
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
+
+        historyDataSource = FakeProductHistorySource()
+        historyRepository = DefaultProductHistoryRepository(historyDataSource, productsSource)
     }
 
     @Test
@@ -48,7 +59,7 @@ class ProductDetailViewModelTest {
                 data = productsIdCountDataTestFixture(3, 2).toMutableList(),
             )
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository)
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
@@ -64,7 +75,7 @@ class ProductDetailViewModelTest {
         // given
         cartSource = FakeShoppingCartProductIdDataSource(data = mutableListOf())
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository)
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -79,7 +90,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `현재 상품의 개수를 1 에서 더 줄여도 줄어들지 않는다 `() {
         // given
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository)
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -99,7 +110,7 @@ class ProductDetailViewModelTest {
                 data = productsIdCountDataTestFixture(3, 2).toMutableList(),
             )
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository)
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -116,7 +127,7 @@ class ProductDetailViewModelTest {
     fun `현재 상품을 장바구니에 담는다`() {
         // given
         productId = 1
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository)
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -136,7 +147,7 @@ class ProductDetailViewModelTest {
                 data = productsIdCountDataTestFixture(3, 2).toMutableList(),
             )
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository)
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -147,5 +158,35 @@ class ProductDetailViewModelTest {
         val actualProduct = shoppingProductRepository.loadProduct(productId)
         val expectedProduct = productTestFixture(1).toDomain(quantity = 4)
         assertThat(actualProduct).isEqualTo(expectedProduct)
+    }
+
+    @Test
+    fun `최근 상품이 없으면 fake 객체`() {
+        // given
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+
+        // when
+        viewModel.loadAll()
+
+        // then
+        val actualLatestProduct = viewModel.latestProduct.getOrAwaitValue()
+        assertThat(actualLatestProduct).isEqualTo(Product.NULL)
+    }
+
+    @Test
+    fun `최근 상품이 있으면 해당 객체`() {
+        // given
+        historyDataSource = FakeProductHistorySource(
+            history = ArrayDeque<Long>(listOf(1, 2, 3))
+        )
+        historyRepository = DefaultProductHistoryRepository(historyDataSource, productsSource)
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+
+        // when
+        viewModel.loadAll()
+
+        // then
+        val actualLatestProduct = viewModel.latestProduct.getOrAwaitValue()
+        assertThat(actualLatestProduct).isEqualTo(productTestFixture(3).toDomain(0))
     }
 }

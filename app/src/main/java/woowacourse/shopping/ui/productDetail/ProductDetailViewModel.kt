@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 
 class ProductDetailViewModel(
     private val productId: Long,
     private val shoppingProductsRepository: ShoppingProductsRepository,
+    private val productHistoryRepository: ProductHistoryRepository,
 ) : ViewModel(), OnItemQuantityChangeListener {
     private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
     val currentProduct: LiveData<Product> get() = _currentProduct
@@ -17,9 +19,21 @@ class ProductDetailViewModel(
     private val _productCount: MutableLiveData<Int> = MutableLiveData()
     val productCount: LiveData<Int> get() = _productCount
 
+    private val _latestProduct: MutableLiveData<Product> = MutableLiveData()
+    val latestProduct: LiveData<Product> get() = _latestProduct
+
     fun loadAll() {
         _currentProduct.value = shoppingProductsRepository.loadProduct(id = productId)
         _productCount.value = 1
+
+        // 마지막으로 본 상품
+        try {
+            _latestProduct.setValue(productHistoryRepository.loadLatestProduct())
+        } catch (e: NoSuchElementException) {
+            // TODO: 이 때는 최근 상품이 없을 때임
+            _latestProduct.setValue(Product.NULL)
+        }
+        productHistoryRepository.saveProductHistory(productId)
     }
 
     fun addProductToCart() {
