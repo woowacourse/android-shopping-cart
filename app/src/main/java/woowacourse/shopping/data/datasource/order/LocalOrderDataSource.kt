@@ -17,6 +17,13 @@ class LocalOrderDataSource(
         orderDao.putOrder(OrderEntity(quantity = 1, product = product.toEntity()))
     }
 
+    override fun putOrder(
+        product: Product,
+        count: Int,
+    ) {
+        orderDao.putOrder(OrderEntity(quantity = count, product = product.toEntity()))
+    }
+
     override fun getOrders(): List<Order> = orderDao.getOrders().toOrder()
 
     override fun getOrderByProductId(productId: Int): List<Order> = orderDao.getOrderByProductId(productId).toOrder()

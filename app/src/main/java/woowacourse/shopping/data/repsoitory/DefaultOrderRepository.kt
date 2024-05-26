@@ -24,7 +24,9 @@ class DefaultOrderRepository(
         count: Int,
     ) = runOnOtherThread {
         val order = localOrderDataSource.getOrderByProductId(product.id).getOrNull(0)
-        order?.let {
+        if (order == null) {
+            localOrderDataSource.putOrder(product, count)
+        } else {
             localOrderDataSource.putOrder(order.copy(quantity = order.quantity + count))
         }
     }

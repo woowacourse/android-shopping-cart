@@ -8,6 +8,11 @@ interface OrderDataSource {
 
     fun putOrder(product: Product)
 
+    fun putOrder(
+        product: Product,
+        count: Int,
+    )
+
     fun getOrders(): List<Order>
 
     fun getOrderByProductId(productId: Int): List<Order>
