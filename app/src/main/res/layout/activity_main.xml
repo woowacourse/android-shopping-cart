@@ -35,7 +35,8 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:visibility="gone"
+                bind:isVisible="@{viewModel.cartQuantity != 0}"
+                android:text="@{String.valueOf(viewModel.cartQuantity)}"
                 tools:text="1"
                 tools:visibility="visible" />
 

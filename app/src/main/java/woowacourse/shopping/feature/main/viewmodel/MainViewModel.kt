@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.main.viewmodel
 
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +20,9 @@ class MainViewModel(
 
     private val _isSeeMore = MutableLiveData(false)
     val isSeeMore: LiveData<Boolean> get() = _isSeeMore
+
+    private val _cartQuantity = MutableLiveData<Int>()
+    val cartQuantity: LiveData<Int> get() = _cartQuantity
 
     private var page = 0
 
@@ -57,6 +59,9 @@ class MainViewModel(
     private fun updateQuantities() {
         val products = products.value ?: return
         _quantities.value = cartRepository.findQuantityOfCartItems(products)
+
+        val quantities = quantities.value ?: return
+        _cartQuantity.value = quantities.sumOf { it.quantity.count }
     }
 
     companion object {
