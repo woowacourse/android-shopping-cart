@@ -109,6 +109,7 @@ class ProductListViewModel(
         private const val PAGE_SIZE = 20
         private const val INCREMENT_AMOUNT = 1
         private const val START_PAGE = 1
+
         fun factory(
             shoppingRepository: ShoppingRepository,
             cartRepository: CartRepository,
@@ -131,40 +132,53 @@ data class ProductListUiState(
 
     fun addProducts(
         newProducts: List<ShoppingUiModel.Product>,
-        loadMore: List<ShoppingUiModel.LoadMore>
+        loadMore: List<ShoppingUiModel.LoadMore>,
     ): ProductListUiState {
         return copy(
             currentPage = currentPage + 1,
-            totalProducts = products + newProducts + loadMore
+            totalProducts = products + newProducts + loadMore,
         )
     }
 
     fun updateCartProducts(newCartProducts: List<ShoppingUiModel.Product>): ProductListUiState {
-        return copy(totalProducts = products.map { originalProduct ->
-            val newProduct =
-                newCartProducts.find { newProduct -> newProduct.id == originalProduct.id }
-                    ?: return@map originalProduct.copy(count = 0)
-            originalProduct.copy(count = newProduct.count)
-        } + loadMoreModels)
+        return copy(
+            totalProducts =
+                products.map { originalProduct ->
+                    val newProduct =
+                        newCartProducts.find { newProduct -> newProduct.id == originalProduct.id }
+                            ?: return@map originalProduct.copy(count = 0)
+                    originalProduct.copy(count = newProduct.count)
+                } + loadMoreModels,
+        )
     }
 
-    fun increaseProductCount(productId: Long, amount: Int): ProductListUiState =
+    fun increaseProductCount(
+        productId: Long,
+        amount: Int,
+    ): ProductListUiState =
         copy(
-            totalProducts = totalProducts.map {
-                if (it is ShoppingUiModel.Product && it.id == productId) {
-                    it.copy(count = it.count + amount)
-                } else it
-            }
+            totalProducts =
+                totalProducts.map {
+                    if (it is ShoppingUiModel.Product && it.id == productId) {
+                        it.copy(count = it.count + amount)
+                    } else {
+                        it
+                    }
+                },
         )
 
-    fun decreaseProductCount(productId: Long, amount: Int): ProductListUiState {
-        val newProducts = totalProducts.map {
-            if (it is ShoppingUiModel.Product && it.id == productId) {
-                it.copy(count = it.count - amount)
-            } else {
-                it
+    fun decreaseProductCount(
+        productId: Long,
+        amount: Int,
+    ): ProductListUiState {
+        val newProducts =
+            totalProducts.map {
+                if (it is ShoppingUiModel.Product && it.id == productId) {
+                    it.copy(count = it.count - amount)
+                } else {
+                    it
+                }
             }
-        }
         return copy(totalProducts = newProducts)
     }
 

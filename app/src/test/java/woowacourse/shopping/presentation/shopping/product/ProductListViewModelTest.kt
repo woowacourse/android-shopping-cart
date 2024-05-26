@@ -32,9 +32,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel())
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-                Result.success(
-                    listOf(product()),
-                )
+            Result.success(
+                listOf(product()),
+            )
         every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
         every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())
         // when
@@ -53,9 +53,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel(), ShoppingUiModel.LoadMore)
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-                Result.success(
-                    listOf(product()),
-                )
+            Result.success(
+                listOf(product()),
+            )
         every {
             shoppingRepository.canLoadMore(page = 2, size = 20)
         } returns Result.success(true)
@@ -75,9 +75,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel())
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-                Result.success(
-                    listOf(product()),
-                )
+            Result.success(
+                listOf(product()),
+            )
         every { shoppingRepository.canLoadMore(page = 2, size = 20) } returns Result.success(false)
         every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
         every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())

@@ -95,6 +95,7 @@ class ProductDetailViewModel(
 
     companion object {
         private const val INCREMENT_AMOUNT = 1
+
         fun factory(
             cartRepository: CartRepository,
             shoppingRepository: ShoppingRepository,

@@ -25,14 +25,15 @@ class CartViewModelTest {
     @BeforeEach
     fun setUp() {
         every { cartRepository.cartProducts(any(), any()) } returns
-                Result.success(
-                    listOf(
-                        cartProduct(),
-                    ),
-                )
-        every { cartRepository.canLoadMoreCartProducts(any(), PAGE_SIZE) } returns Result.success(
-            true
-        )
+            Result.success(
+                listOf(
+                    cartProduct(),
+                ),
+            )
+        every { cartRepository.canLoadMoreCartProducts(any(), PAGE_SIZE) } returns
+            Result.success(
+                true,
+            )
         cartViewModel = CartViewModel(cartRepository)
     }
 
@@ -49,11 +50,11 @@ class CartViewModelTest {
         val nextPage = 2
         // given
         every { cartRepository.cartProducts(nextPage, PAGE_SIZE) } returns
-                Result.success(
-                    listOf(
-                        cartProduct(),
-                    ),
-                )
+            Result.success(
+                listOf(
+                    cartProduct(),
+                ),
+            )
         // when
         cartViewModel.moveToNextPage()
         // then

@@ -67,29 +67,29 @@ class CartViewModel(
 
     private fun updateUiState(
         products: List<CartProductUi> = _uiState.value?.products ?: emptyList(),
-        currentPage: Int = _uiState.value?.currentPage ?: START_PAGE
+        currentPage: Int = _uiState.value?.currentPage ?: START_PAGE,
     ) {
         val canLoadPrevPage = canLoadMoreCartProducts(currentPage - INCREMENT_AMOUNT)
         val canLoadNextPage = canLoadMoreCartProducts(currentPage + INCREMENT_AMOUNT)
 
-        _uiState.value = CartUiState(
-            products = products,
-            currentPage = currentPage,
-            canLoadPrevPage = canLoadPrevPage,
-            canLoadNextPage = canLoadNextPage
-        )
+        _uiState.value =
+            CartUiState(
+                products = products,
+                currentPage = currentPage,
+                canLoadPrevPage = canLoadPrevPage,
+                canLoadNextPage = canLoadNextPage,
+            )
     }
 
-    private fun updateUiState(
-        newUiState: CartUiState,
-    ) {
+    private fun updateUiState(newUiState: CartUiState) {
         val currentPage = newUiState.currentPage
         val canLoadPrevPage = canLoadMoreCartProducts(currentPage - INCREMENT_AMOUNT)
         val canLoadNextPage = canLoadMoreCartProducts(currentPage + INCREMENT_AMOUNT)
-        _uiState.value = newUiState.copy(
-            canLoadPrevPage = canLoadPrevPage,
-            canLoadNextPage = canLoadNextPage
-        )
+        _uiState.value =
+            newUiState.copy(
+                canLoadPrevPage = canLoadPrevPage,
+                canLoadNextPage = canLoadNextPage,
+            )
     }
 
     private fun loadCartProducts(page: Int) {
