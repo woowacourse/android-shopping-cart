@@ -3,6 +3,7 @@ package woowacourse.shopping.productList
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -21,18 +22,28 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private val _cartItems = MutableLiveData<List<CartItem>>()
     val cartItems: LiveData<List<CartItem>> get() = _cartItems
 
-    private val _loadedProducts: MutableLiveData<List<Product>> =
-        MutableLiveData(loadProducts())
-    val loadedProducts: LiveData<List<Product>>
-        get() = _loadedProducts
+    private val _loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(loadProducts())
+    val loadedProducts: LiveData<List<Product>> get() = _loadedProducts
 
-    private val _recentlyViewedProducts = MutableLiveData<List<Product>>()
+    private val _recentlyViewedEntities = recentlyViewedRepository.getRecentProducts()
+    private val _recentlyViewedProducts = MediatorLiveData<List<Product>>()
     val recentlyViewedProducts: LiveData<List<Product>> get() = _recentlyViewedProducts
 
     init {
         ShoppingCart.initialize(application)
         loadCartItems()
-        loadRecentlyViewedProducts()
+
+        _recentlyViewedProducts.addSource(_cartItems) { updateRecentlyViewedProducts() }
+        _recentlyViewedProducts.addSource(_recentlyViewedEntities) { updateRecentlyViewedProducts() }
+    }
+
+    private fun updateRecentlyViewedProducts() {
+        val cartItemIds = _cartItems.value?.map { it.productId } ?: emptyList()
+        val recentlyViewedEntities = _recentlyViewedEntities.value ?: emptyList()
+        val recentlyViewedProducts = recentlyViewedEntities
+            .filter { it.productId !in cartItemIds }
+            .map { dummyProductStore.findById(it.productId) }
+        _recentlyViewedProducts.value = recentlyViewedProducts
     }
 
     private fun loadCartItems() {
@@ -42,21 +53,9 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun loadRecentlyViewedProducts() {
-        viewModelScope.launch {
-            val recentlyViewedEntities = recentlyViewedRepository.getRecentProducts()
-            val cartItemIds = _cartItems.value?.map { it.productId } ?: emptyList()
-            val recentlyViewedProducts = recentlyViewedEntities
-                .filter { it.productId !in cartItemIds }
-                .map { dummyProductStore.findById(it.productId) }
-            _recentlyViewedProducts.value = recentlyViewedProducts
-        }
-    }
-
     fun addProductToRecentlyViewed(productId: Int) {
         viewModelScope.launch {
             recentlyViewedRepository.addProduct(productId)
-            loadRecentlyViewedProducts()
         }
     }
 
@@ -70,7 +69,6 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             ShoppingCart.addProductToCart(productId)
             loadCartItems()
-            loadRecentlyViewedProducts()
         }
     }
 
@@ -78,7 +76,13 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             ShoppingCart.subtractProductCount(productId)
             loadCartItems()
-            loadRecentlyViewedProducts()
+        }
+    }
+
+    fun deleteCartItem(productId: Int) {
+        viewModelScope.launch {
+            ShoppingCart.deleteProduct(productId)
+            loadCartItems()
         }
     }
 
