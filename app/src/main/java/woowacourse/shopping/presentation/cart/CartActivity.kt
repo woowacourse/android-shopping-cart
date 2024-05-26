@@ -66,7 +66,7 @@ class CartActivity : AppCompatActivity() {
         setResult(
             RESULT_OK,
             Intent().putExtra(
-                "quantities",
+                EXTRA_QUANTITIES,
                 viewModel.alteredCartItems,
             ),
         )
@@ -74,6 +74,8 @@ class CartActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val EXTRA_QUANTITIES = "quantities"
+
         fun newIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }

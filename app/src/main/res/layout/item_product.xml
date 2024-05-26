@@ -28,7 +28,7 @@
         android:padding="8dp">
 
         <ImageView
-            android:id="@+id/iv_product_detail"
+            android:id="@+id/iv_product_item"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
@@ -48,8 +48,8 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
             android:visibility="@{cartableProduct.quantity == 0 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
-            app:layout_constraintEnd_toEndOf="@id/iv_product_detail"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_item"
             shopping:cartableProduct="@{cartableProduct}"
             shopping:quantityListener="@{quantityListener}" />
 
@@ -59,15 +59,15 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
-            app:layout_constraintEnd_toEndOf="@id/iv_product_detail"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_item"
             android:visibility="@{cartableProduct.quantity > 0 ? View.VISIBLE : View.GONE}"
             shopping:productId="@{cartableProduct.product.id}"
             shopping:quantity="@{cartableProduct.quantity}"
             shopping:quantityListener="@{quantityListener}" />
 
         <TextView
-            android:id="@+id/tv_product_title_detail"
+            android:id="@+id/tv_product_title_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
@@ -80,7 +80,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
+            app:layout_constraintTop_toBottomOf="@id/iv_product_item"
             tools:text="오이오이오이오이오이오이오이오이오이오이오이오이오이오이오이오이오이오이" />
 
         <TextView
@@ -94,9 +94,9 @@
             android:textColor="@color/gray_500"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/tv_product_title_detail"
-            app:layout_constraintStart_toStartOf="@id/tv_product_title_detail"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_title_detail"
+            app:layout_constraintEnd_toEndOf="@id/tv_product_title_item"
+            app:layout_constraintStart_toStartOf="@id/tv_product_title_item"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title_item"
             tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
