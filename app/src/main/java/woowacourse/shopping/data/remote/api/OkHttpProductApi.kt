@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import woowacourse.shopping.domain.model.Product
 
-class DefaultProductApi(
+class OkHttpProductApi(
     private val client: OkHttpClient,
 ) : ProductApi {
     private val gson = Gson()
