@@ -33,12 +33,6 @@ class ProductDetailActivity :
     private val productId by lazy { productId() }
     private val lastSeenProductState by lazy { lastSeenProductState() }
 
-    override fun onClickMostRecentProduct() {
-        viewModel.mostRecentProduct.observe(this) {
-            moveToMostRecentProductDetail(this, it.id, false)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,6 +43,12 @@ class ProductDetailActivity :
         observeErrorMessage()
         addRecentProduct()
         observeAddCart()
+    }
+
+    override fun onClickMostRecentProduct() {
+        viewModel.mostRecentProduct.observe(this) {
+            moveToMostRecentProductDetail(this, it.id, false)
+        }
     }
 
     private fun observeAddCart() {
