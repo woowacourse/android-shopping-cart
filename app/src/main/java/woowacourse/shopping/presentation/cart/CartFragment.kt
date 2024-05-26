@@ -71,13 +71,13 @@ class CartFragment :
     private fun initViews() {
         adapter = CartAdapter(cartProductListener())
         binding?.apply {
-            rvShoppingCart.adapter = adapter.apply { setHasStableIds(true) }
+            rvShoppingCart.adapter = adapter
         }
     }
 
     private fun initObservers() {
-        viewModel.products.observe(viewLifecycleOwner) {
-            adapter.updateProduct(it)
+        viewModel.uiState.observe(viewLifecycleOwner) {
+            adapter.updateProduct(it.products)
         }
     }
 
