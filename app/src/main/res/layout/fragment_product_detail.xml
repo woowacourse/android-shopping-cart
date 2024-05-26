@@ -75,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:background="@drawable/shape_retangular_4"
+            android:onClick="@{()->vm.navigateToRecentProduct()}"
             android:orientation="vertical"
             android:paddingHorizontal="18dp"
             android:paddingVertical="16dp"

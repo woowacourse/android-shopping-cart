@@ -49,6 +49,9 @@ class ProductDetailFragment :
                 navigateToShoppingCart()
             }
         }
+        viewModel.onClickedLastViewedProduct.observe(viewLifecycleOwner) { id ->
+            (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
+        }
     }
 
     private fun initAppBar() {
@@ -68,8 +71,11 @@ class ProductDetailFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
-                        return true
+                        if (viewModel.isRecentProductVisible.value == false) {
+                            (requireActivity() as? ShoppingNavigator)?.navigateToProductList(1)
+                        } else {
+                            (requireActivity() as ShoppingNavigator).popBackStack()
+                        }
                     }
                     return false
                 }

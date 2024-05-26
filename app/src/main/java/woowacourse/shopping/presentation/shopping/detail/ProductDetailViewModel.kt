@@ -51,6 +51,11 @@ class ProductDetailViewModel(
         _lastViewedProduct.value = recentProduct
     }
 
+    fun navigateToRecentProduct() {
+        val recentId = _lastViewedProduct.value?.product?.id ?: return
+        _onClickedLastViewedProduct.value = recentId
+    }
+
     fun addCartProduct() {
         val product = _product.value ?: return
         cartRepository.addCartProduct(product.id, 1)
