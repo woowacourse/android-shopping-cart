@@ -23,12 +23,16 @@ class ProductListViewModel(
         MutableLiveData(ProductListUiState())
     val uiState: LiveData<ProductListUiState> get() = _uiState
 
+    private val _pagingProductUiModel: MutableLiveData<PagingProductUiModel> =
+        MutableLiveData()
+    val pagingProductUiModel: LiveData<PagingProductUiModel> get() = _pagingProductUiModel
+
     private val _navigateAction: MutableLiveData<Event<ProductListNavigateAction>> =
         MutableLiveData(null)
     val navigateAction: LiveData<Event<ProductListNavigateAction>> get() = _navigateAction
 
     fun initPage() {
-        getPagingProduct(INIT_PAGE_NUM)
+        initPagingProduct()
         getOrders()
         getHistories()
         makePagingProductUiModels()
@@ -55,6 +59,21 @@ class ProductListViewModel(
         makePagingProductUiModels()
     }
 
+    private fun initPagingProduct(pageSize: Int = PAGING_SIZE) {
+        productListRepository.getPagingProduct(INIT_PAGE_NUM, pageSize).onSuccess { item ->
+            val pagingProduct =
+                PagingProduct(
+                    currentPage = item.currentPage,
+                    productList =
+                        _uiState.value?.pagingProduct?.productList ?: item.productList,
+                    isLastPage = item.isLastPage,
+                )
+            _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
+        }.onFailure { _ ->
+            showMessage(MessageProvider.DefaultErrorMessage)
+        }
+    }
+
     private fun getPagingProduct(
         page: Int,
         pageSize: Int = PAGING_SIZE,
@@ -68,9 +87,7 @@ class ProductListViewModel(
                             ?: item.productList,
                     isLastPage = item.isLastPage,
                 )
-            println("before:${uiState.value?.pagingProduct?.productList?.size}")
             _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
-            println("after:${uiState.value?.pagingProduct?.productList?.size}")
         }.onFailure { _ ->
             showMessage(MessageProvider.DefaultErrorMessage)
         }
@@ -130,7 +147,7 @@ class ProductListViewModel(
             }
         val pagingProductUiModel =
             PagingProductUiModel(pagingProduct.currentPage, uiModels, pagingProduct.isLastPage)
-        _uiState.value = _uiState.value?.copy(pagingProductUiModel = pagingProductUiModel)
+        _pagingProductUiModel.value = pagingProductUiModel
     }
 
     companion object {
