@@ -86,7 +86,7 @@ class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
 
     private fun observeRecentProductItems() {
         viewModel.recentProducts.observe(this) {
-            recentProductAdapter.setRecentProducts(it)
+            recentProductAdapter.submitList(it)
         }
     }
 
