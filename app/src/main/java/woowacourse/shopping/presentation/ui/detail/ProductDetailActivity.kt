@@ -28,7 +28,8 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
 
-        viewModel.findById(id)
+        viewModel.findCartProductById(id)
+        viewModel.findOneRecentProduct()
         viewModel.product.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
@@ -37,6 +38,15 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                 }
             }
         }
+        viewModel.recentProduct.observe(this) { state ->
+            when(state) {
+                is UiState.None -> {}
+                is UiState.Success -> {
+                    binding.recentProduct = state.data
+                }
+            }
+        }
+
         viewModel.errorHandler.observe(this) { event ->
             event.getContentIfNotHandled()?.let { message ->
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

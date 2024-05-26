@@ -20,6 +20,8 @@ interface LocalDataSource {
         limit: Int
     ): List<RecentProductEntity>
 
+    fun findOne(): RecentProductEntity?
+
     fun findProductById(id: Long): CartProductEntity?
 
     fun saveCart(cartEntity: CartEntity): Long

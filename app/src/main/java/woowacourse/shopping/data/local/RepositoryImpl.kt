@@ -29,6 +29,10 @@ class RepositoryImpl(private val localDataSource: LocalDataSource) : Repository 
         localDataSource.findByLimit(limit).map { it.toDomain() }
     }
 
+    override fun findOne(): Result<RecentProduct?> = runCatching{
+        localDataSource.findOne()?.toDomain()
+    }
+
     override fun findProductById(id: Long): Result<CartProduct?> =
         runCatching {
             localDataSource.findProductById(id)?.toDomain()

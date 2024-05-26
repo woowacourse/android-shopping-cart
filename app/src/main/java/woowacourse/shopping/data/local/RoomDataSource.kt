@@ -26,6 +26,10 @@ class RoomDataSource(private val cartProductDao: CartProductDao, private val rec
         return recentProductDao.findByLimit(limit)
     }
 
+    override fun findOne(): RecentProductEntity? {
+        return recentProductDao.findOne()
+    }
+
     override fun findProductById(id: Long): CartProductEntity? {
         return cartProductDao.findProductById(id)
     }

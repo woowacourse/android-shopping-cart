@@ -15,6 +15,8 @@ interface Repository {
         limit: Int
     ): Result<List<RecentProduct>>
 
+    fun findOne(): Result<RecentProduct?>
+
     fun findProductById(id: Long): Result<CartProduct?>
 
     fun saveCart(cart: Cart): Result<Long>

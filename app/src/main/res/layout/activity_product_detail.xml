@@ -9,6 +9,10 @@
             type="woowacourse.shopping.domain.CartProduct" />
 
         <variable
+            name="recentProduct"
+            type="woowacourse.shopping.domain.RecentProduct" />
+
+        <variable
             name="shoppingActionHandler"
             type="woowacourse.shopping.presentation.ui.detail.DetailActionHandler" />
     </data>
@@ -108,5 +112,42 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_name"
             app:layout_constraintTop_toBottomOf="@id/tv_name" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_price_value"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
+            android:padding="15dp"
+            android:background="@drawable/background_cart">
+
+            <TextView
+                android:id="@+id/tv_recent_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#04C09E"
+                android:textStyle="bold"
+                android:text="마지막으로 본 상품"/>
+            <TextView
+                android:id="@+id/tv_recent_product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_recent_title"
+                android:layout_marginTop="5dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="17sp"
+                android:text="@{recentProduct.name}"
+                tools:text="동원참치"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

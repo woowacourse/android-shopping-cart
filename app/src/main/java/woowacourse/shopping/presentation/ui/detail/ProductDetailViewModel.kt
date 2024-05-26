@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Recent
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.Repository
 import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
@@ -18,6 +19,9 @@ class ProductDetailViewModel(
     private val _product = MutableLiveData<UiState<CartProduct>>(UiState.None)
     val product: LiveData<UiState<CartProduct>> get() = _product
 
+    private val _recentProduct = MutableLiveData<UiState<RecentProduct>>(UiState.None)
+    val recentProduct: LiveData<UiState<RecentProduct>> get() = _recentProduct
+
     private val _errorHandler = MutableLiveData<EventState<String>>()
     val errorHandler: LiveData<EventState<String>> get() = _errorHandler
 
@@ -26,7 +30,7 @@ class ProductDetailViewModel(
 
     private val updateUiModel: UpdateUiModel = UpdateUiModel()
 
-    fun findById(id: Long) {
+    fun findCartProductById(id: Long) {
         thread {
             repository.findProductById(id).onSuccess {
                 if (it == null) {
@@ -35,6 +39,17 @@ class ProductDetailViewModel(
                     _product.postValue(UiState.Success(it))
                     saveRecentProduct(it)
                 }
+            }.onFailure {
+                _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
+            }
+        }
+    }
+
+    fun findOneRecentProduct() {
+        thread {
+            repository.findOne().onSuccess {
+                if(it == null) _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
+                else _recentProduct.postValue(UiState.Success(it))
             }.onFailure {
                 _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
             }
