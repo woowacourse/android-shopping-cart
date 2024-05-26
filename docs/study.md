@@ -72,6 +72,15 @@ ConcatAdapter는 자신에게 할당된 모든 어댑터가
   A,B,A,B,A,B 와 같은 경우는 Multiple ViewType
   AAAAAAABBBBBBBCCCCC 와 같은 경우는 ConcatAdapter를 사용하면 된다.
 
+## setHasStableIds
+
+setHasStableIds(true) 를 사용하면 각각 아이템 position에 지정된 Id를 기준으로
+상황에 따라 onBindViewHolder() 호출을 제외시킨다.
+
+값이 변경된 id만 onBindViewHolder를 호출하거나 호출된 아이템의 id가
+이전 position 아이템에 이미 존재할 시 
+onBindViewHolder 함수를 호출 하지 않고 이전에 같은 id를 가진 뷰를 대신 보여준다!
+
 ## ?? 궁금증
 esspresso 테스트에서 개별 테스트는 모두 통과하는데
 테스트를 모두 실행하면, 실패함... (강제로 그냥 바꿔버림)

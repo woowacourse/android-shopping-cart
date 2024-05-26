@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.cart
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +17,7 @@ import woowacourse.shopping.presentation.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class, MockKExtension::class)
 class ShoppingCartViewModelTest {
-    @MockK
+    @RelaxedMockK
     lateinit var cartRepository: CartRepository
 
     private lateinit var cartViewModel: CartViewModel
@@ -38,9 +39,9 @@ class ShoppingCartViewModelTest {
     @DisplayName("ViewModel 이 초기화될 때, 첫 번째 페이지에 해당하는 상품들이 로드된다")
     fun test0() {
         verify(exactly = 1) { cartRepository.cartProducts(1, PAGE_SIZE) }
-        cartViewModel.currentPage.getOrAwaitValue() shouldBe 1
-        cartViewModel.canLoadNextPage.getOrAwaitValue() shouldBe true
-        cartViewModel.canLoadPrevPage.getOrAwaitValue() shouldBe false
+        cartViewModel.uiState.getOrAwaitValue().currentPage shouldBe 1
+        cartViewModel.uiState.getOrAwaitValue().canLoadNextPage shouldBe true
+        cartViewModel.uiState.getOrAwaitValue().canLoadPrevPage shouldBe false
     }
 
     @Test
@@ -58,7 +59,7 @@ class ShoppingCartViewModelTest {
         cartViewModel.moveToNextPage()
         // then
         verify(exactly = 1) { cartRepository.cartProducts(nextPage, PAGE_SIZE) }
-        cartViewModel.currentPage.getOrAwaitValue() shouldBe nextPage
+        cartViewModel.uiState.getOrAwaitValue().currentPage shouldBe nextPage
     }
 
     companion object {
