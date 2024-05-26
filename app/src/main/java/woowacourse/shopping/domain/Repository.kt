@@ -6,6 +6,11 @@ interface Repository {
         pageSize: Int,
     ): Result<List<CartProduct>>
 
+    fun findProductByPagingWithMock(
+        offset: Int,
+        pageSize: Int,
+    ): Result<List<CartProduct>>
+
     fun findCartByPaging(
         offset: Int,
         pageSize: Int,

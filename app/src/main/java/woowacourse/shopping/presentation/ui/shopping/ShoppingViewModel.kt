@@ -27,7 +27,7 @@ class ShoppingViewModel(private val repository: Repository) :
 
     fun loadProductByOffset() {
         thread {
-            repository.findProductByPaging(offSet, PAGE_SIZE).onSuccess {
+            repository.findProductByPagingWithMock(offSet, PAGE_SIZE).onSuccess {
                 if (_products.value is UiState.None) {
                     _products.postValue(UiState.Success(it))
                 } else {

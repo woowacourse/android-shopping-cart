@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.local.RepositoryImpl
 import woowacourse.shopping.data.local.RoomDataSource
 import woowacourse.shopping.data.local.db.AppDatabase
+import woowacourse.shopping.data.remote.OkHttpDataSource
 import woowacourse.shopping.presentation.ui.cart.CartViewModel
 import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel
@@ -17,6 +18,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
                 ProductDetailViewModel(
                     RepositoryImpl(
                         RoomDataSource(AppDatabase.instance.cartProductDao(), AppDatabase.instance.recentProductDao()),
+                        OkHttpDataSource(AppDatabase.instance.cartProductDao())
                     ),
                 ) as T
             }
@@ -25,6 +27,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
                 ShoppingViewModel(
                     RepositoryImpl(
                         RoomDataSource(AppDatabase.instance.cartProductDao(), AppDatabase.instance.recentProductDao()),
+                        OkHttpDataSource(AppDatabase.instance.cartProductDao())
                     ),
                 ) as T
             }
@@ -33,6 +36,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
                 CartViewModel(
                     RepositoryImpl(
                         RoomDataSource(AppDatabase.instance.cartProductDao(), AppDatabase.instance.recentProductDao()),
+                        OkHttpDataSource(AppDatabase.instance.cartProductDao())
                     ),
                 ) as T
             }
