@@ -4,8 +4,8 @@ import com.google.gson.Gson
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
-import woowacourse.shopping.remote.api.ApiClient.CONTENT_KEY
 import woowacourse.shopping.remote.api.ApiClient.CONTENT_TYPE
+import woowacourse.shopping.remote.api.ApiClient.CONTENT_VALUE
 import woowacourse.shopping.remote.api.ApiClient.GET_FIND_PRODUCT_PATH
 import woowacourse.shopping.remote.api.ApiClient.GET_PAGING_PRODUCT_PATH
 import kotlin.math.min
@@ -24,7 +24,7 @@ class NetworkDispatcher(private val errorListener: ErrorListener) : Dispatcher()
                         ?: throw NoSuchElementException()
 
                 MockResponse()
-                    .setHeader(CONTENT_TYPE, CONTENT_KEY)
+                    .setHeader(CONTENT_TYPE, CONTENT_VALUE)
                     .setResponseCode(200)
                     .setBody(gson.toJson(body))
             }
@@ -41,7 +41,7 @@ class NetworkDispatcher(private val errorListener: ErrorListener) : Dispatcher()
                         val body = DummyData.PRODUCT_LIST.subList(fromIndex, toIndex)
 
                         MockResponse()
-                            .setHeader(CONTENT_TYPE, CONTENT_KEY)
+                            .setHeader(CONTENT_TYPE, CONTENT_VALUE)
                             .setResponseCode(200)
                             .setBody(gson.toJson(body))
                     } else {

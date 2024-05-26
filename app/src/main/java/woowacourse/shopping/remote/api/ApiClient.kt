@@ -11,5 +11,5 @@ object ApiClient {
     const val GET_PAGING_PRODUCT = "$BASE_URL$GET_PAGING_PRODUCT_PATH%d/%d"
 
     const val CONTENT_TYPE = "Content-Type"
-    const val CONTENT_KEY = "application/json"
+    const val CONTENT_VALUE = "application/json"
 }
