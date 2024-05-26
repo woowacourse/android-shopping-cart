@@ -30,9 +30,9 @@ class FakeCartRepository : CartRepository {
                     cartItem.productId,
                     "사과${cartItem.productId + 1}",
                     "image${cartItem.productId + 1}",
-                    1000 * (cartItem.productId.toInt() + 1)
-                )
-            )
+                    1000 * (cartItem.productId.toInt() + 1),
+                ),
+            ),
         )
     }
 
@@ -40,7 +40,10 @@ class FakeCartRepository : CartRepository {
         return cartItems.sumOf { it.quantity }
     }
 
-    override fun updateQuantity(cartItemId: Long, quantity: Int) {
+    override fun updateQuantity(
+        cartItemId: Long,
+        quantity: Int,
+    ) {
         val index = cartedItems.indexOfFirst { it.product.id == cartItemId }
         val existingItem = if (index == -1) null else cartedItems[index]
         if (existingItem != null) {

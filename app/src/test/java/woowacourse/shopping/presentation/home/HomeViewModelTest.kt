@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.home
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -27,11 +26,12 @@ class HomeViewModelTest {
 
     @BeforeEach
     fun setup() {
-        homeViewModel = HomeViewModel(
-            FakeProductRepository(),
-            FakeCartRepository(),
-            FakeProductHistoryRepository()
-        )
+        homeViewModel =
+            HomeViewModel(
+                FakeProductRepository(),
+                FakeCartRepository(),
+                FakeProductHistoryRepository(),
+            )
     }
 
     @Test
@@ -55,8 +55,8 @@ class HomeViewModelTest {
                     RecentProduct(ProductHistory(94, 94), Product(94, "사과94", "image94", 94000)),
                     RecentProduct(ProductHistory(93, 93), Product(93, "사과93", "image93", 93000)),
                     RecentProduct(ProductHistory(92, 92), Product(92, "사과92", "image92", 92000)),
-                    RecentProduct(ProductHistory(91, 91), Product(91, "사과91", "image91", 91000))
-                )
+                    RecentProduct(ProductHistory(91, 91), Product(91, "사과91", "image91", 91000)),
+                ),
             )
         }.join()
     }
@@ -81,11 +81,12 @@ class HomeViewModelTest {
     @Test
     fun `장바구니에 상품을 추가하지 않은 상태에서 수량을 변경시키면 상품을 장바구니에 추가한다`() {
         val cartRepository = mockk<CartRepository>(relaxed = true)
-        val viewModel = HomeViewModel(
-            FakeProductRepository(),
-            cartRepository,
-            mockk<ProductHistoryRepository>(relaxed = true),
-        )
+        val viewModel =
+            HomeViewModel(
+                FakeProductRepository(),
+                cartRepository,
+                mockk<ProductHistoryRepository>(relaxed = true),
+            )
         viewModel.onQuantityChange(12, 11)
         verify { cartRepository.addCartItem(CartItem(null, 12, 11)) }
     }
@@ -93,11 +94,12 @@ class HomeViewModelTest {
     @Test
     fun `장바구니에 상품을 추가한 상태에서 수량을 변경시키면 상품의 수량이 변경된다`() {
         val cartRepository = mockk<CartRepository>(relaxed = true)
-        val viewModel = HomeViewModel(
-            FakeProductRepository(),
-            cartRepository,
-            mockk<ProductHistoryRepository>(relaxed = true),
-        )
+        val viewModel =
+            HomeViewModel(
+                FakeProductRepository(),
+                cartRepository,
+                mockk<ProductHistoryRepository>(relaxed = true),
+            )
         viewModel.onQuantityChange(12, 1)
         viewModel.onQuantityChange(12, 11)
         verify { cartRepository.addCartItem(CartItem(null, 12, 11)) }

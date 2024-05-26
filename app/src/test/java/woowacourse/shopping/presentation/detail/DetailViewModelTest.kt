@@ -26,7 +26,7 @@ class DetailViewModelTest {
                 FakeProductHistoryRepository(),
                 1,
                 2,
-                SavedStateHandle()
+                SavedStateHandle(),
             )
     }
 
@@ -36,14 +36,15 @@ class DetailViewModelTest {
 
         assertThat(productInformation).isEqualTo(
             CartableProduct(
-                product = Product(
-                    id = 1,
-                    name = "사과1",
-                    imageSource = "image1",
-                    price = 1000
-                ),
-                cartItem = null
-            )
+                product =
+                    Product(
+                        id = 1,
+                        name = "사과1",
+                        imageSource = "image1",
+                        price = 1000,
+                    ),
+                cartItem = null,
+            ),
         )
     }
 

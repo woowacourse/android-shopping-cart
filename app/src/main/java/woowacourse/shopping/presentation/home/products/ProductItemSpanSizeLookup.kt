@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.home.products
 
 import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.presentation.home.products.ProductAdapter
 
 class ProductItemSpanSizeLookup(private val productAdapter: ProductAdapter) :
     GridLayoutManager.SpanSizeLookup() {

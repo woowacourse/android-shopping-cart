@@ -1,7 +1,6 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.data.model.product.CartableProduct
-import woowacourse.shopping.data.model.product.Product
 import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.fixture.getFixtureCartableProducts
 import kotlin.math.min

@@ -1,11 +1,8 @@
 package woowacourse.shopping.presentation.detail
 
 import android.content.Intent
-import android.os.IBinder
-import android.view.WindowManager
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Root
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -17,7 +14,6 @@ import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.util.ToastMatcher
 
-
 class DetailActivityTest {
     @get:Rule
     val activityScenarioRule: ActivityScenarioRule<DetailActivity> =
@@ -27,11 +23,11 @@ class DetailActivityTest {
                 DetailActivity::class.java,
             ).putExtra(
                 "extra_product_id",
-                1L
+                1L,
             ).putExtra(
                 "extra_lastly_viewed",
-                2L
-            )
+                2L,
+            ),
         )
 
     @Test
@@ -70,5 +66,3 @@ class DetailActivityTest {
             .inRoot(ToastMatcher().apply { matches(isDisplayed()) })
     }
 }
-
-

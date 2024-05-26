@@ -11,11 +11,11 @@ fun getFixtureCartedProducts(count: Int): List<CartedProduct> =
     List(count) {
         CartedProduct(
             CartItem(it + 1L, it + 1L, 1),
-            Product(it + 1L, "사과${it + 1}", "image${it + 1}", 1000 * (it + 1))
+            Product(it + 1L, "사과${it + 1}", "image${it + 1}", 1000 * (it + 1)),
         )
     }
-fun getFixtureCartItems(cartedProducts: List<CartedProduct>): List<CartItem> =
-    cartedProducts.map(CartedProduct::cartItem)
+
+fun getFixtureCartItems(cartedProducts: List<CartedProduct>): List<CartItem> = cartedProducts.map(CartedProduct::cartItem)
 
 fun getFixtureCartItems(count: Int): List<CartItem> =
     List(count) {
@@ -26,7 +26,7 @@ fun getFixtureCartableProducts(count: Int): List<CartableProduct> =
     List(count) {
         CartableProduct(
             Product(it + 1L, "사과${it + 1}", "image${it + 1}", 1000 * (it + 1)),
-            null
+            null,
         )
     }
 
@@ -38,6 +38,4 @@ fun getFixtureRecentProducts(count: Int): List<RecentProduct> =
         )
     }
 
-fun getFixtureHistoryItems(recentProducts: List<RecentProduct>): List<ProductHistory> =
-    recentProducts.map(RecentProduct::productHistory)
-
+fun getFixtureHistoryItems(recentProducts: List<RecentProduct>): List<ProductHistory> = recentProducts.map(RecentProduct::productHistory)

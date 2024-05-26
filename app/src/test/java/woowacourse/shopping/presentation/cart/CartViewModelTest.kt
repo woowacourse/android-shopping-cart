@@ -36,24 +36,24 @@ class CartViewModelTest {
             listOf(
                 CartedProduct(
                     cartItem = CartItem(id = 1, productId = 1, quantity = 1),
-                    product = Product(id = 1, name = "사과1", imageSource = "image1", price = 1000)
+                    product = Product(id = 1, name = "사과1", imageSource = "image1", price = 1000),
                 ),
                 CartedProduct(
                     cartItem = CartItem(id = 2, productId = 2, quantity = 1),
-                    product = Product(id = 2, name = "사과2", imageSource = "image2", price = 2000)
+                    product = Product(id = 2, name = "사과2", imageSource = "image2", price = 2000),
                 ),
                 CartedProduct(
                     cartItem = CartItem(id = 3, productId = 3, quantity = 1),
-                    product = Product(id = 3, name = "사과3", imageSource = "image3", price = 3000)
+                    product = Product(id = 3, name = "사과3", imageSource = "image3", price = 3000),
                 ),
                 CartedProduct(
                     cartItem = CartItem(id = 4, productId = 4, quantity = 1),
-                    product = Product(id = 4, name = "사과4", imageSource = "image4", price = 4000)
+                    product = Product(id = 4, name = "사과4", imageSource = "image4", price = 4000),
                 ),
                 CartedProduct(
                     cartItem = CartItem(id = 5, productId = 5, quantity = 1),
-                    product = Product(id = 5, name = "사과5", imageSource = "image5", price = 5000)
-                )
+                    product = Product(id = 5, name = "사과5", imageSource = "image5", price = 5000),
+                ),
             ),
         )
     }
@@ -72,7 +72,6 @@ class CartViewModelTest {
         verify { cartRepository.fetchCartItems(1) }
         verify { cartRepository.fetchCartItems(2) }
     }
-
 
     @Test
     fun `장바구니의 이전 페이지를 불러올 수 있다`() {
@@ -100,18 +99,18 @@ class CartViewModelTest {
         viewmodel.onCartItemDelete(
             CartedProduct(
                 cartItem = CartItem(id = 1, productId = 1, quantity = 1),
-                product = Product(id = 1, name = "사과1", imageSource = "image1", price = 1000)
-            )
+                product = Product(id = 1, name = "사과1", imageSource = "image1", price = 1000),
+            ),
         )
         verify { cartRepository.removeCartItem(capture(deletedItem)) }
         assertThat(deletedItem.captured).isEqualTo(
-            CartItem(id = 1, productId = 1, quantity = 1)
+            CartItem(id = 1, productId = 1, quantity = 1),
         )
         verify { cartRepository.fetchCartItems(0) }
         assertThat(viewmodel.alteredCartItems).isEqualTo(
             arrayListOf(
-                ProductQuantity(1, 0)
-            )
+                ProductQuantity(1, 0),
+            ),
         )
     }
 
