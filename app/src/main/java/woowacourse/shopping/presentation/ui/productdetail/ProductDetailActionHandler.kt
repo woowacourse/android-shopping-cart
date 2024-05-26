@@ -4,4 +4,6 @@ interface ProductDetailActionHandler {
     fun onClickPlusOrderButton()
 
     fun onClickMinusOrderButton()
+
+    fun onClickRecentHistory()
 }

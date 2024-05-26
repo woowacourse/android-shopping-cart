@@ -3,7 +3,9 @@ package woowacourse.shopping.presentation.ui.productdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductListRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
@@ -14,6 +16,7 @@ class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val productListRepository: ProductListRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val historyRepository: HistoryRepository,
 ) : BaseViewModel(), ProductDetailActionHandler {
     private val _price: MutableLiveData<Int> = MutableLiveData()
     val price: LiveData<Int> get() = _price
@@ -24,9 +27,13 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
+    private val _history: MutableLiveData<History> = MutableLiveData()
+    val history: LiveData<History> get() = _history
+
     init {
         savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let(::findByProductId)
         getPrice()
+        getHistory()
     }
 
     private fun findByProductId(id: Int) {
@@ -51,22 +58,30 @@ class ProductDetailViewModel(
 
     override fun onClickPlusOrderButton() {
         _quantity.value = _quantity.value?.plus(1)
+        getPrice()
     }
 
     override fun onClickMinusOrderButton() {
         quantity.value?.let { value ->
             if (value > 1) _quantity.value = value - 1
         }
+        getPrice()
     }
 
-    private fun getQuantity(product: Product) {
-        val quantity = shoppingCartRepository.getOrderByProductId(product.id)?.quantity ?: 1
-        _quantity.value = quantity
+    override fun onClickRecentHistory() {
+        _product.value = history.value?.product
+        _quantity.value = 1
+        getPrice()
     }
 
     private fun getPrice() {
         product.value?.price?.let {
             _price.value = quantity.value?.times(it)
         }
+    }
+
+    private fun getHistory() {
+        val history = historyRepository.getHistories(2).getOrNull(1)
+        _history.value = history
     }
 }
