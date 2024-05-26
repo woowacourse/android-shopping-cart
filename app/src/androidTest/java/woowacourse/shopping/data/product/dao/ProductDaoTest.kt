@@ -21,11 +21,12 @@ class ProductDaoTest {
 
     @Before
     fun setUp() {
-        productDataBase = Room.databaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            ProductDataBase::class.java,
-            "products",
-        ).build()
+        productDataBase =
+            Room.databaseBuilder(
+                ApplicationProvider.getApplicationContext(),
+                ProductDataBase::class.java,
+                "products",
+            ).build()
         productDataBase.clearAllTables()
         productDao = productDataBase.productDao()
     }

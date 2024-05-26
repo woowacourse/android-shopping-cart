@@ -10,6 +10,9 @@ import woowacourse.shopping.data.product.dummyProducts
 import woowacourse.shopping.data.product.server.MockWebProductServer
 import woowacourse.shopping.data.product.server.ProductMockWebServerDispatcher
 import woowacourse.shopping.data.product.server.ProductServer
+import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.data.recent.RoomRecentProductRepository
+import woowacourse.shopping.data.recent.database.RecentProductDataBase
 
 class ShoppingCartApplication : Application() {
     private val productServer: ProductServer by lazy { MockWebProductServer(ProductMockWebServerDispatcher(dummyProducts)) }
@@ -18,6 +21,7 @@ class ShoppingCartApplication : Application() {
         super.onCreate()
         productServer.start()
         ProductRepository.setInstance(MockWebServerProductRepository(productServer))
+        RecentProductRepository.setInstance(RoomRecentProductRepository(RecentProductDataBase.instance(this).recentProductDao()),)
         CartRepository.setInstance(RoomCartRepository(CartDataBase.instance(this).cartDao()))
     }
 

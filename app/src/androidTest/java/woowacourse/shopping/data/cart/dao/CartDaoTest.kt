@@ -21,11 +21,12 @@ class CartDaoTest {
 
     @Before
     fun setUp() {
-        cartDataBase = Room.databaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            CartDataBase::class.java,
-            "cart",
-        ).build()
+        cartDataBase =
+            Room.databaseBuilder(
+                ApplicationProvider.getApplicationContext(),
+                CartDataBase::class.java,
+                "cart",
+            ).build()
         cartDataBase.clearAllTables()
         cartDao = cartDataBase.cartDao()
     }

@@ -68,6 +68,7 @@ dependencies {
     androidTestImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.3.0")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
     androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.3.0")
 
     // glide
