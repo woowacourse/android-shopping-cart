@@ -15,8 +15,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.RecentlyViewedProductsRepositoryImpl
+import woowacourse.shopping.data.repository.InMemoryCartRepository
+import woowacourse.shopping.data.repository.InMemoryRecentlyViewedProductsRepository
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.RecentlyViewedProductsRepository
 import woowacourse.shopping.presentation.ui.testProductWithQuantity0
@@ -32,8 +32,8 @@ class ShoppingActivityTest {
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         recentlyViewedProductsRepository =
-            RecentlyViewedProductsRepositoryImpl((context as ShoppingApplication).appDatabase)
-        cartRepository = CartRepositoryImpl((context as ShoppingApplication).appDatabase)
+            InMemoryRecentlyViewedProductsRepository((context as ShoppingApplication).appDatabase)
+        cartRepository = InMemoryCartRepository((context as ShoppingApplication).appDatabase)
     }
 
     @After

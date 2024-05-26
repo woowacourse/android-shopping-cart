@@ -7,9 +7,9 @@ import androidx.activity.viewModels
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.RecentlyViewedProductsRepositoryImpl
-import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
+import woowacourse.shopping.data.repository.DummyShoppingItemsRepository
+import woowacourse.shopping.data.repository.InMemoryCartRepository
+import woowacourse.shopping.data.repository.InMemoryRecentlyViewedProductsRepository
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.ui.cart.CartActivity
@@ -18,9 +18,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
-            ShoppingItemsRepositoryImpl((application as ShoppingApplication).appDatabase),
-            CartRepositoryImpl((application as ShoppingApplication).appDatabase),
-            RecentlyViewedProductsRepositoryImpl((application as ShoppingApplication).appDatabase),
+            DummyShoppingItemsRepository((application as ShoppingApplication).appDatabase),
+            InMemoryCartRepository((application as ShoppingApplication).appDatabase),
+            InMemoryRecentlyViewedProductsRepository((application as ShoppingApplication).appDatabase),
             productId = productId,
         )
     }

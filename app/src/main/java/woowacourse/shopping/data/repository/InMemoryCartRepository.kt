@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class CartRepositoryImpl(database: AppDatabase) : CartRepository {
+class InMemoryCartRepository(database: AppDatabase) : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(productWithQuantity: ProductWithQuantity) {

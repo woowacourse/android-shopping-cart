@@ -6,7 +6,7 @@ import android.view.View
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.InMemoryCartRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.base.BaseActivity
@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = CartRepositoryImpl((application as ShoppingApplication).appDatabase),
+            repository = InMemoryCartRepository((application as ShoppingApplication).appDatabase),
         )
     }
     private lateinit var adapter: CartAdapter

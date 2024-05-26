@@ -93,20 +93,22 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_recently_viewed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="14dp"
                     android:layout_marginBottom="8dp"
-                    android:text="최근 본 상품"
+                    android:text="@string/recently_viewed"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_empty_recently_viewed"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:gravity="center"
-                    android:text="최근 본 상품이 존재하지 않습니다."
+                    android:text="@string/no_recently_viewed"
                     android:visibility="@{viewModel.isRecentlyViewedEmpty ? View.VISIBLE : View.GONE}"
                     tools:visibility="visible" />
 

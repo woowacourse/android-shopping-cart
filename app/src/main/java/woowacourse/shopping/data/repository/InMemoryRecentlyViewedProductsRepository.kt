@@ -7,7 +7,7 @@ import woowacourse.shopping.data.model.RecentlyViewedProductEntity
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.RecentlyViewedProductsRepository
 
-class RecentlyViewedProductsRepositoryImpl(database: AppDatabase) : RecentlyViewedProductsRepository {
+class InMemoryRecentlyViewedProductsRepository(database: AppDatabase) : RecentlyViewedProductsRepository {
     private val recentlyProductDao = database.recentlyProductDao()
 
     override fun insertRecentlyViewedProduct(product: RecentlyViewedProduct) {

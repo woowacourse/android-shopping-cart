@@ -6,7 +6,7 @@ import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class ShoppingItemsRepositoryImpl(database: AppDatabase) : ShoppingItemsRepository {
+class DummyShoppingItemsRepository(database: AppDatabase) : ShoppingItemsRepository {
     private val productDao = database.productDao()
 
     init {

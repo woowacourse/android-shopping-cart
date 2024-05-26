@@ -7,9 +7,9 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.RecentlyViewedProductsRepositoryImpl
-import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
+import woowacourse.shopping.data.repository.DummyShoppingItemsRepository
+import woowacourse.shopping.data.repository.InMemoryCartRepository
+import woowacourse.shopping.data.repository.InMemoryRecentlyViewedProductsRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
@@ -24,9 +24,9 @@ import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity_shopping) {
     private val viewModel: ShoppingViewModel by viewModels {
         ShoppingViewModelFactory(
-            ShoppingItemsRepositoryImpl((application as ShoppingApplication).appDatabase),
-            CartRepositoryImpl((application as ShoppingApplication).appDatabase),
-            RecentlyViewedProductsRepositoryImpl((application as ShoppingApplication).appDatabase),
+            DummyShoppingItemsRepository((application as ShoppingApplication).appDatabase),
+            InMemoryCartRepository((application as ShoppingApplication).appDatabase),
+            InMemoryRecentlyViewedProductsRepository((application as ShoppingApplication).appDatabase),
         )
     }
 

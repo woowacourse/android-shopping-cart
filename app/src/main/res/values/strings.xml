@@ -8,4 +8,6 @@
     <string name="empty_cart">텅!</string>
     <string name="cart">Cart</string>
     <string name="add_to_cart">쇼핑 카트에 추가되었습니다!</string>
+    <string name="recently_viewed">최근 본 상품</string>
+    <string name="no_recently_viewed">최근 본 상품이 존재하지 않습니다.</string>
 </resources>

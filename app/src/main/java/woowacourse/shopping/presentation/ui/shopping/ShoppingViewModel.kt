@@ -79,6 +79,7 @@ class ShoppingViewModel(
                 _isRecentlyViewedEmpty.postValue(true)
                 _recentlyViewedProductsState.postValue(UIState.Empty)
             } else {
+                _isRecentlyViewedEmpty.postValue(false)
                 _recentlyViewedProductsState.postValue(UIState.Success(recentlyViewedProducts))
             }
         } catch (e: Exception) {

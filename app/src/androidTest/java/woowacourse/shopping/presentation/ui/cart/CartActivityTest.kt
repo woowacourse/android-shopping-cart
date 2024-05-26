@@ -13,7 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.InMemoryCartRepository
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.ui.testProductWithQuantity0
 import woowacourse.shopping.presentation.ui.testProductWithQuantity1
@@ -30,7 +30,7 @@ class CartActivityTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        cartRepository = CartRepositoryImpl((context as ShoppingApplication).appDatabase)
+        cartRepository = InMemoryCartRepository((context as ShoppingApplication).appDatabase)
     }
 
     @Test
