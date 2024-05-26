@@ -1,5 +1,7 @@
 package woowacourse.shopping.feature.cart
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +11,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModelFactory
+import woowacourse.shopping.feature.main.MainActivity.Companion.UPDATE_CART_STATUS_KEY
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
@@ -36,6 +39,9 @@ class CartActivity : AppCompatActivity() {
 
     private fun initializeToolbar() {
         binding.toolbarCart.setNavigationOnClickListener {
+            val resultIntent = Intent()
+            resultIntent.putExtra(UPDATE_CART_STATUS_KEY, true)
+            setResult(Activity.RESULT_OK, resultIntent)
             finish()
         }
     }

@@ -1,7 +1,9 @@
 package woowacourse.shopping.feature.main
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,6 +33,31 @@ class MainActivity : AppCompatActivity() {
     private lateinit var inquiryHistoryAdapter: InquiryHistoryAdapter
     private lateinit var productAdapter: ProductAdapter
 
+    // TODO: 수량이 바로 갱신 되지 않는 오류 해결
+    private val cartActivityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val isUpdateCart = result.data?.getBooleanExtra(UPDATE_CART_STATUS_KEY, false)
+//                if (isUpdateCart == true) {
+//                    mainViewModel.loadPage()
+//                }
+            }
+        }
+
+    private val productDetailActivityLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val isLastViewed = result.data?.getBooleanExtra(LAST_VIEWED_PRODUCT_STATUS_KEY, false)
+                if (isLastViewed == true) {
+                    mainViewModel.loadInquiryHistory()
+                }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -58,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToCartView() {
         val intent = Intent(this, CartActivity::class.java)
-        startActivity(intent)
+        cartActivityResultLauncher.launch(intent)
     }
 
     private fun initializeInquiryHistoryAdapter() {
@@ -91,8 +118,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToProductDetailView(productId: Long) {
-        ProductDetailActivity.newIntent(this, productId)
-            .also { startActivity(it) }
+        val intent =
+            Intent(this, ProductDetailActivity::class.java)
+                .putExtra(PRODUCT_ID_KEY, productId)
+        productDetailActivityLauncher.launch(intent)
     }
 
     private fun initializePage() {
@@ -110,5 +139,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         binding.rvMainProduct.addOnScrollListener(onScrollListener)
+    }
+
+    companion object {
+        const val UPDATE_CART_STATUS_KEY = "isUpdateCart"
+        const val LAST_VIEWED_PRODUCT_STATUS_KEY = "isLastViewed"
+        const val PRODUCT_ID_KEY = "product_id_key"
     }
 }

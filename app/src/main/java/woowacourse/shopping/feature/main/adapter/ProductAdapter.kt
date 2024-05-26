@@ -53,7 +53,7 @@ class ProductAdapter(
 
     fun updateQuantities(newQuantities: List<CartItemQuantity>) {
         val positionStart = products.size
-        val itemCount = newQuantities.size + positionStart
+        val itemCount = newQuantities.size - positionStart
         quantities.clear()
         quantities.addAll(newQuantities)
         notifyItemRangeChanged(positionStart, itemCount)

@@ -42,9 +42,10 @@ class MainViewModel(
         val products = products.value ?: emptyList()
         _products.value = products + productRepository.findRange(page++, PAGE_SIZE)
         updateQuantities()
+        updateQuantitySum()
     }
 
-    private fun loadInquiryHistory() {
+    fun loadInquiryHistory() {
         var inquiryHistories = emptyList<InquiryHistory>()
         thread {
             inquiryHistories = inquiryRepository.findAll()
@@ -57,6 +58,7 @@ class MainViewModel(
             cartRepository.addProduct(productId)
         }.join()
         updateQuantities()
+        updateQuantitySum()
     }
 
     fun deleteProductToCart(productId: Long) {
@@ -66,6 +68,7 @@ class MainViewModel(
             }.join()
         }.onSuccess {
             updateQuantities()
+            updateQuantitySum()
         }
     }
 
@@ -83,7 +86,9 @@ class MainViewModel(
             cartItemQuantities = cartRepository.findQuantityOfCartItems(products)
         }.join()
         _quantities.value = cartItemQuantities
+    }
 
+    private fun updateQuantitySum() {
         val quantities = quantities.value ?: return
         _cartQuantity.value = quantities.sumOf { it.quantity.count }
     }

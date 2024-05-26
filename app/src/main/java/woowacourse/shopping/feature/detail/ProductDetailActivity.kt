@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.detail
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -18,6 +17,8 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModelFactory
+import woowacourse.shopping.feature.main.MainActivity.Companion.LAST_VIEWED_PRODUCT_STATUS_KEY
+import woowacourse.shopping.feature.main.MainActivity.Companion.PRODUCT_ID_KEY
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
@@ -54,10 +55,17 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initializeToolbar() {
         binding.toolbarDetail.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.item_exit -> finish()
+                R.id.item_exit -> navigateToMainView()
             }
             false
         }
+    }
+
+    private fun navigateToMainView() {
+        val resultIntent = Intent()
+        resultIntent.putExtra(LAST_VIEWED_PRODUCT_STATUS_KEY, true)
+        setResult(RESULT_OK, resultIntent)
+        finish()
     }
 
     private fun initializeLastViewedProduct() {
@@ -130,17 +138,6 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val PRODUCT_ID_KEY = "product_id_key"
         private const val PRODUCT_ID_DEFAULT_VALUE = -1L
-
-        fun newIntent(
-            context: Context,
-            productId: Long,
-        ): Intent {
-            return Intent(context, ProductDetailActivity::class.java).putExtra(
-                PRODUCT_ID_KEY,
-                productId,
-            )
-        }
     }
 }
