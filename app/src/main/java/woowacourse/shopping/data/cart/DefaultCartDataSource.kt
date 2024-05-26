@@ -67,6 +67,6 @@ class DefaultCartDataSource(
     }
 
     companion object {
-        private const val TIME_OUT = 3L
+        private const val TIME_OUT = 10L
     }
 }
