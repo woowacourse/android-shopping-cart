@@ -117,7 +117,7 @@ class HomeViewModel(
         thread {
             val targetProduct = productRepository.fetchProduct(productId)
             if (quantity == 0) {
-                if (targetProduct.cartItem?.id != null) {
+                if (targetProduct.cartItem != null) {
                     cartRepository.removeCartItem(targetProduct.cartItem)
                 }
                 val target =
