@@ -10,6 +10,9 @@ import woowacourse.shopping.data.model.cart.CartedProduct
 
 @Dao
 interface CartDao {
+    @Upsert
+    fun addCartItem(cartItem: CartItem): Long
+
     @Transaction
     @Query(
         """
@@ -24,9 +27,6 @@ interface CartDao {
     @Query("SELECT SUM(quantity) FROM cart_item")
     fun getTotalQuantity(): Int
 
-    @Upsert
-    fun addCartItem(cartItem: CartItem): Long
-
     @Query("UPDATE cart_item SET quantity = :quantity WHERE id = :cartItemId")
     fun updateQuantity(
         cartItemId: Long,
@@ -34,5 +34,5 @@ interface CartDao {
     )
 
     @Delete
-    fun deleteCartItem(cartItem: CartItem)
+    fun deleteCartItem(cartItem: CartItem): Int
 }

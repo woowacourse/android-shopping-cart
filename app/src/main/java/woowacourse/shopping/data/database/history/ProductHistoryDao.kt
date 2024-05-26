@@ -10,6 +10,18 @@ import woowacourse.shopping.data.model.history.RecentProduct
 
 @Dao
 interface ProductHistoryDao {
+    @Upsert
+    fun insertProductHistory(productHistory: ProductHistory): Long
+
+    @Query("DELETE FROM product_history WHERE productId=:productId")
+    fun deleteProductHistory(productId: Long): Int
+
+    @Transaction
+    fun addProductHistory(productHistory: ProductHistory) {
+        deleteProductHistory(productHistory.productId)
+        insertProductHistory(productHistory)
+    }
+
     @Transaction
     @Query(
         """
@@ -20,18 +32,6 @@ interface ProductHistoryDao {
     """,
     )
     fun getProductHistory(pageSize: Int): List<RecentProduct>
-
-    @Query("DELETE FROM product_history WHERE productId=:productId")
-    fun deleteProductHistory(productId: Long)
-
-    @Upsert
-    fun insertProductHistory(productHistory: ProductHistory): Long
-
-    @Transaction
-    fun addProductHistory(productHistory: ProductHistory) {
-        deleteProductHistory(productHistory.productId)
-        insertProductHistory(productHistory)
-    }
 
     @Query("SELECT * FROM product_history ORDER BY id DESC LIMIT 1")
     fun getLastProduct(): RecentProduct?
