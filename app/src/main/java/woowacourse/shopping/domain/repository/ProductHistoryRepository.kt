@@ -9,5 +9,7 @@ interface ProductHistoryRepository {
 
     fun loadProductHistory(productId: Long): Product
 
+    fun loadLatestProduct(): Product
+
     fun deleteAllProductHistory()
 }

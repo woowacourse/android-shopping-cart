@@ -27,7 +27,16 @@ class DefaultProductHistoryRepository(
         return productDataSource.findById(id).toDomain(quantity = 0)
     }
 
+    override fun loadLatestProduct(): Product {
+        val productId: Long = productHistoryDataSource.loadLatestProduct()
+        return productDataSource.findById(productId).toDomain(quantity = 0)
+    }
+
     override fun deleteAllProductHistory() {
         productHistoryDataSource.deleteAllProductHistory()
+    }
+
+    companion object {
+        private const val TAG = "DefaultProductHistoryRe"
     }
 }
