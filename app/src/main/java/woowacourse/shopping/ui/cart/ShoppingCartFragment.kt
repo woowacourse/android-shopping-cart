@@ -87,6 +87,6 @@ class ShoppingCartFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "ShoppingCartFragment"
+        const val TAG = "ShoppingCartFragment"
     }
 }

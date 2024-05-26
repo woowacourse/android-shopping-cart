@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.productDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +17,7 @@ import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.local.cart.ShoppingCartDatabase
 import woowacourse.shopping.local.history.HistoryProductDatabase
+import woowacourse.shopping.ui.FragmentNavigator
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
@@ -50,24 +50,25 @@ class ProductDetailFragment : Fragment() {
                     ProductDetailViewModel(
                         productId = it.getLong(PRODUCT_ID),
                         shoppingProductsRepository =
-                        DefaultShoppingProductRepository(
-                            productsSource = DummyProductsDataSource(),
-                            cartSource =
-                            LocalShoppingCartProductIdDataSource(
-                                dao =
-                                ShoppingCartDatabase.database(context = requireContext().applicationContext)
-                                    .dao(),
+                            DefaultShoppingProductRepository(
+                                productsSource = DummyProductsDataSource(),
+                                cartSource =
+                                    LocalShoppingCartProductIdDataSource(
+                                        dao =
+                                            ShoppingCartDatabase.database(context = requireContext().applicationContext)
+                                                .dao(),
+                                    ),
                             ),
-                        ),
                         productHistoryRepository =
-                        DefaultProductHistoryRepository(
-                            productHistoryDataSource =
-                            LocalHistoryProductDataSource(
-                                dao = HistoryProductDatabase.database(context = requireContext().applicationContext)
-                                    .dao(),
+                            DefaultProductHistoryRepository(
+                                productHistoryDataSource =
+                                    LocalHistoryProductDataSource(
+                                        dao =
+                                            HistoryProductDatabase.database(context = requireContext().applicationContext)
+                                                .dao(),
+                                    ),
+                                productDataSource = DummyProductsDataSource(),
                             ),
-                            productDataSource = DummyProductsDataSource(),
-                        ),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
@@ -81,7 +82,6 @@ class ProductDetailFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.detailProductDestinationId.observe(viewLifecycleOwner) {
-            Log.d(TAG, "navigateToProductDetail: $it")
             navigateToProductDetail(it)
         }
 
@@ -90,28 +90,17 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-
-    private fun navigateToProductDetail(id: Long) = navigateToFragment(newInstance(id))
-
-    private fun navigateToFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container, fragment)
-            addToBackStack(null)
-            commit()
-        }
-    }
+    private fun navigateToProductDetail(id: Long) = (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
 
     private fun navigateToMenuItem(it: MenuItem) =
         when (it.itemId) {
-            R.id.action_x -> navigateToPreviousFragment()
+            R.id.action_x -> {
+                (requireActivity() as? FragmentNavigator)?.navigateToProductList()
+                true
+            }
 
             else -> false
         }
-
-    private fun navigateToPreviousFragment(): Boolean {
-        parentFragmentManager.popBackStack()
-        return true
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -119,8 +108,8 @@ class ProductDetailFragment : Fragment() {
     }
 
     companion object {
-        private const val PRODUCT_ID = "productId"
-        private const val TAG = "ProductDetailFragment"
+        const val PRODUCT_ID = "productId"
+        const val TAG = "ProductDetailFragment"
 
         fun newInstance(productId: Long): ProductDetailFragment {
             val fragment = ProductDetailFragment()

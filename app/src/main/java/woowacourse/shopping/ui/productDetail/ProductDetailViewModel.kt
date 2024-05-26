@@ -14,7 +14,6 @@ import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
 import kotlin.concurrent.thread
-import kotlin.math.log
 
 class ProductDetailViewModel(
     private val productId: Long,
