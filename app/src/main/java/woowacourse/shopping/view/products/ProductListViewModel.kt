@@ -12,11 +12,11 @@ import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.utils.livedata.MutableSingleLiveData
-import woowacourse.shopping.utils.livedata.SingleLiveData
 import woowacourse.shopping.utils.exception.AddCartItemException
 import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
+import woowacourse.shopping.utils.livedata.MutableSingleLiveData
+import woowacourse.shopping.utils.livedata.SingleLiveData
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
