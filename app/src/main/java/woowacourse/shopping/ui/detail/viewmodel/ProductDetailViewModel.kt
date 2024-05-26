@@ -73,13 +73,13 @@ class ProductDetailViewModel(
         }.join()
     }
 
-    override fun plusCount() {
+    override fun plusCount(productId: Long) {
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.inc()
         }
     }
 
-    override fun minusCount() {
+    override fun minusCount(productId: Long) {
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.dec()
         }

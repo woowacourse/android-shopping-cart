@@ -11,12 +11,8 @@
             type="woowacourse.shopping.model.ProductWithQuantity" />
 
         <variable
-            name="countButtonClickListener"
-            type="woowacourse.shopping.ui.CountButtonClickListener" />
-
-        <variable
-            name="cartItemClickListener"
-            type="woowacourse.shopping.ui.cart.CartItemClickListener" />
+            name="vm"
+            type="woowacourse.shopping.ui.cart.viewmodel.CartViewModel" />
 
     </data>
 
@@ -47,8 +43,8 @@
             android:layout_height="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:onClick="@{() -> vm.removeCartItem(productWithQuantity.product.id)}"
             android:scaleType="fitStart"
-            android:onClick="@{() -> cartItemClickListener.onClickRemoveCartItem(productWithQuantity.product.id)}"
             android:src="@drawable/close_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -76,7 +72,8 @@
             app:layout_constraintBottom_toTopOf="@id/tv_product_price"
             app:layout_constraintEnd_toEndOf="parent"
             bind:count="@{String.valueOf(productWithQuantity.quantity.value)}"
-            bind:countButtonClickListener="@{countButtonClickListener}" />
+            bind:countButtonClickListener="@{vm}"
+            bind:productId="@{productWithQuantity.product.id}" />
 
         <TextView
             android:id="@+id/tv_product_price"

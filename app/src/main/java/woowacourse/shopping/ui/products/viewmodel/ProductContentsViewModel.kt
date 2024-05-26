@@ -13,6 +13,7 @@ import woowacourse.shopping.data.recentproduct.RecentProductRepository
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
+import woowacourse.shopping.ui.CountButtonClickListener
 import kotlin.concurrent.thread
 
 class ProductContentsViewModel(
@@ -20,7 +21,7 @@ class ProductContentsViewModel(
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
 ) :
-    ViewModel() {
+    ViewModel(), CountButtonClickListener {
     private val items = mutableListOf<Product>()
     private val products: MutableLiveData<List<Product>> = MutableLiveData()
 
@@ -75,14 +76,14 @@ class ProductContentsViewModel(
         }.join()
     }
 
-    fun plusCount(productId: Long) {
+    override fun plusCount(productId: Long) {
         thread {
             cartRepository.plusQuantityByProductId(productId)
         }.join()
         loadCartItems()
     }
 
-    fun minusCount(productId: Long) {
+    override fun minusCount(productId: Long) {
         thread {
             cartRepository.minusQuantityByProductId(productId)
         }.join()

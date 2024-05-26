@@ -9,12 +9,13 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.ui.CountButtonClickListener
 import kotlin.concurrent.thread
 
 class CartViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(), CountButtonClickListener {
     private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
     private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
 
@@ -61,14 +62,14 @@ class CartViewModel(
         updatePageState()
     }
 
-    fun plusCount(productId: Long) {
+    override fun plusCount(productId: Long) {
         thread {
             cartRepository.plusQuantityByProductId(productId)
         }.join()
         loadCartItems()
     }
 
-    fun minusCount(productId: Long) {
+    override fun minusCount(productId: Long) {
         thread {
             cartRepository.minusQuantityByProductId(productId)
         }.join()

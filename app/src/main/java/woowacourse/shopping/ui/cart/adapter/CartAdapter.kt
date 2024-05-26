@@ -5,13 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.ProductWithQuantity
-import woowacourse.shopping.ui.cart.CartItemClickListener
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 
 class CartAdapter(
-    private val cartItemClickListener: CartItemClickListener,
-    private val plusCountClickListener: (Long) -> Unit,
-    private val minusCountClickListener: (Long) -> Unit,
+    private val viewModel: CartViewModel,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val productWithQuantities: MutableList<ProductWithQuantity> = mutableListOf()
 
@@ -22,9 +19,7 @@ class CartAdapter(
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CartViewHolder(
             binding,
-            cartItemClickListener,
-            plusCountClickListener,
-            minusCountClickListener,
+            viewModel,
         )
     }
 

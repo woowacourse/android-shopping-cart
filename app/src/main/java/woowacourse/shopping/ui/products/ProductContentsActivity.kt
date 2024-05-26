@@ -67,8 +67,7 @@ class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
         productAdapter =
             ProductAdapter(
                 this,
-                { viewModel.plusCount(it) },
-                { viewModel.minusCount(it) },
+                viewModel,
             )
         binding.rvProducts.adapter = productAdapter
     }

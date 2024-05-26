@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.ui.products.ProductItemClickListener
+import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 
 class ProductAdapter(
     private val productItemClickListener: ProductItemClickListener,
-    private val plusCountClickListener: (Long) -> Unit,
-    private val minusCountClickListener: (Long) -> Unit,
+    private val viewModel: ProductContentsViewModel,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private val productWithQuantities: MutableList<ProductWithQuantity> = mutableListOf()
 
@@ -22,8 +22,7 @@ class ProductAdapter(
         return ProductViewHolder(
             binding,
             productItemClickListener,
-            plusCountClickListener,
-            minusCountClickListener,
+            viewModel,
         )
     }
 

@@ -15,7 +15,7 @@ import woowacourse.shopping.ui.cart.adapter.CartAdapter
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModelFactory
 
-class CartActivity : AppCompatActivity(), CartItemClickListener {
+class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
     private val viewModel: CartViewModel by viewModels {
@@ -54,13 +54,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
 
     private fun setCartAdapter() {
         binding.rvCart.itemAnimator = null
-        adapter =
-            CartAdapter(
-                this,
-                { viewModel.plusCount(it) },
-                { viewModel.minusCount(it) },
-            )
-
+        adapter = CartAdapter(viewModel)
         binding.rvCart.adapter = adapter
     }
 
@@ -69,9 +63,5 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
             Intent(context, CartActivity::class.java).run {
                 context.startActivity(this)
             }
-    }
-
-    override fun onClickRemoveCartItem(productId: Long) {
-        viewModel.removeCartItem(productId)
     }
 }

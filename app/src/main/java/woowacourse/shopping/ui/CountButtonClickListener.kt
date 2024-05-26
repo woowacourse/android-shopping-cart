@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui
 
 interface CountButtonClickListener {
-    fun plusCount()
+    fun plusCount(productId: Long)
 
-    fun minusCount()
+    fun minusCount(productId: Long)
 }
