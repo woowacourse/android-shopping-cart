@@ -48,7 +48,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun observeCartItems() {
         viewModel.productWithQuantity.observe(this) {
-            adapter.setData(it)
+            adapter.submitList(it)
         }
     }
 
