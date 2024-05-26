@@ -34,6 +34,8 @@ class DefaultProductRepository(
         val recent = RecentProductEntity(productId, localDateTime)
         if (recentProductDataSource.recentProducts().none { recent.productId == it.productId }) {
             recentProductDataSource.insert(recent)
+        } else {
+            recentProductDataSource.updateLocalDateTime(productId, localDateTime)
         }
     }
 

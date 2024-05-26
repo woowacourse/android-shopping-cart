@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import woowacourse.shopping.data.entity.RecentProductEntity
+import java.time.LocalDateTime
 
 @Dao
 interface RecentProductDao {
@@ -18,4 +19,10 @@ interface RecentProductDao {
 
     @Query("SELECT * FROM recent_product")
     fun recentProducts(): List<RecentProductEntity>
+
+    @Query("UPDATE recent_product SET look_date_time = :localDateTime WHERE product_id = :productId")
+    fun updateLocalDateTime(
+        productId: Long,
+        localDateTime: LocalDateTime,
+    )
 }

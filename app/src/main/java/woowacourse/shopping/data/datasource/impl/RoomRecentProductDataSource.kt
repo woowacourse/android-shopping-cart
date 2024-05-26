@@ -4,6 +4,7 @@ import woowacourse.shopping.data.dao.RecentProductDao
 import woowacourse.shopping.data.datasource.RecentProductDataSource
 import woowacourse.shopping.data.entity.RecentProductEntity
 import woowacourse.shopping.data.entity.RecentProductEntity.Companion.STUB
+import java.time.LocalDateTime
 import kotlin.concurrent.thread
 
 class RoomRecentProductDataSource(private val recentDao: RecentProductDao) :
@@ -36,5 +37,14 @@ class RoomRecentProductDataSource(private val recentDao: RecentProductDao) :
             recentProducts = recentDao.recentProducts()
         }.join()
         return recentProducts
+    }
+
+    override fun updateLocalDateTime(
+        productId: Long,
+        localDateTime: LocalDateTime,
+    ) {
+        thread {
+            recentDao.updateLocalDateTime(productId, localDateTime)
+        }.join()
     }
 }
