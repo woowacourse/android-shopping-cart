@@ -20,6 +20,10 @@
         <variable
             name="onItemChargeListener"
             type="woowacourse.shopping.ui.OnItemQuantityChangeListener" />
+
+        <variable
+            name="onProductClickListener"
+            type="woowacourse.shopping.ui.OnProductItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,6 +99,7 @@
             currentProductId="@{vm.currentProduct.id}"
             latestProductId="@{vm.latestProduct.id}"
             android:layout_width="0dp"
+            android:onClick="@{() -> onProductClickListener.onClick(vm.latestProduct.id)}"
             android:layout_height="80dp"
             android:layout_marginHorizontal="30dp"
             android:background="@drawable/grey_border"

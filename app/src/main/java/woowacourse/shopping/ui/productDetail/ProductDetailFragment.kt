@@ -38,6 +38,7 @@ class ProductDetailFragment : Fragment() {
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.onItemChargeListener = viewModel
+        binding.onProductClickListener = viewModel
 
         return binding.root
     }
@@ -49,23 +50,24 @@ class ProductDetailFragment : Fragment() {
                     ProductDetailViewModel(
                         productId = it.getLong(PRODUCT_ID),
                         shoppingProductsRepository =
-                            DefaultShoppingProductRepository(
-                                productsSource = DummyProductsDataSource(),
-                                cartSource =
-                                    LocalShoppingCartProductIdDataSource(
-                                        dao =
-                                            ShoppingCartDatabase.database(context = requireContext().applicationContext)
-                                                .dao(),
-                                    ),
+                        DefaultShoppingProductRepository(
+                            productsSource = DummyProductsDataSource(),
+                            cartSource =
+                            LocalShoppingCartProductIdDataSource(
+                                dao =
+                                ShoppingCartDatabase.database(context = requireContext().applicationContext)
+                                    .dao(),
                             ),
+                        ),
                         productHistoryRepository =
-                            DefaultProductHistoryRepository(
-                                productHistoryDataSource =
-                                    LocalHistoryProductDataSource(
-                                        dao = HistoryProductDatabase.database(context = requireContext().applicationContext).dao(),
-                                    ),
-                                productDataSource = DummyProductsDataSource(),
+                        DefaultProductHistoryRepository(
+                            productHistoryDataSource =
+                            LocalHistoryProductDataSource(
+                                dao = HistoryProductDatabase.database(context = requireContext().applicationContext)
+                                    .dao(),
                             ),
+                            productDataSource = DummyProductsDataSource(),
+                        ),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
@@ -78,15 +80,25 @@ class ProductDetailFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: called")
+        viewModel.detailProductDestinationId.observe(viewLifecycleOwner) {
+            Log.d(TAG, "navigateToProductDetail: $it")
+            navigateToProductDetail(it)
+        }
+
         binding.productDetailToolbar.setOnMenuItemClickListener {
             navigateToMenuItem(it)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume: called")
+
+    private fun navigateToProductDetail(id: Long) = navigateToFragment(newInstance(id))
+
+    private fun navigateToFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.container, fragment)
+            addToBackStack(null)
+            commit()
+        }
     }
 
     private fun navigateToMenuItem(it: MenuItem) =

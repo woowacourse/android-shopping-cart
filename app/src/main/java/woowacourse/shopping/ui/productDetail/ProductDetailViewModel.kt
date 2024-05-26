@@ -2,20 +2,25 @@ package woowacourse.shopping.ui.productDetail
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.MutableSingleLiveData
+import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
+import woowacourse.shopping.ui.OnProductItemClickListener
 import kotlin.concurrent.thread
+import kotlin.math.log
 
 class ProductDetailViewModel(
     private val productId: Long,
     private val shoppingProductsRepository: ShoppingProductsRepository,
     private val productHistoryRepository: ProductHistoryRepository,
-) : ViewModel(), OnItemQuantityChangeListener {
+) : ViewModel(), OnItemQuantityChangeListener, OnProductItemClickListener {
     private val uiHandler = Handler(Looper.getMainLooper())
 
     private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
@@ -26,6 +31,9 @@ class ProductDetailViewModel(
 
     private val _latestProduct: MutableLiveData<Product> = MutableLiveData()
     val latestProduct: LiveData<Product> get() = _latestProduct
+
+    private var _detailProductDestinationId: MutableSingleLiveData<Long> = MutableSingleLiveData()
+    val detailProductDestinationId: SingleLiveData<Long> get() = _detailProductDestinationId
 
     fun loadAll() {
         thread {
@@ -67,6 +75,11 @@ class ProductDetailViewModel(
             return
         }
         _productCount.value = _productCount.value?.minus(1)
+    }
+
+    override fun onClick(productId: Long) {
+        Log.d(TAG, "onClick: $productId")
+        _detailProductDestinationId.setValue(productId)
     }
 
     companion object {
