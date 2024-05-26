@@ -9,8 +9,8 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.utils.MutableSingleLiveData
-import woowacourse.shopping.utils.SingleLiveData
+import woowacourse.shopping.utils.livedata.MutableSingleLiveData
+import woowacourse.shopping.utils.livedata.SingleLiveData
 import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.cart.model.ShoppingCart
