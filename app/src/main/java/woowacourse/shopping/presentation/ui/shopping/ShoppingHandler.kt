@@ -6,4 +6,6 @@ interface ShoppingHandler : QuantityHandler {
     fun onProductItemClick(productId: Long)
 
     fun onLoadMoreClick()
+
+    fun onCartMenuItemClick()
 }

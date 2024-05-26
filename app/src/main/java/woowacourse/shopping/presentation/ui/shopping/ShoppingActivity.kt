@@ -2,8 +2,6 @@ package woowacourse.shopping.presentation.ui.shopping
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -58,6 +56,9 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        supportActionBar?.hide()
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         if (savedInstanceState == null) {
             viewModel.loadInitialShoppingItems()
         }
@@ -72,6 +73,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         layoutManager.spanSizeLookup = getSpanManager()
         binding.rvShopping.layoutManager = layoutManager
         binding.rvShopping.adapter = adapter
+        binding.handler = this
     }
 
     private fun getSpanManager() =
@@ -117,14 +119,8 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         )
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.shopping_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onCartMenuItemClick() {
         CartActivity.startWithResult(this, activityResultLauncher)
-        return true
     }
 
     override fun onProductItemClick(productId: Long) {

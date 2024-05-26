@@ -27,6 +27,9 @@ class ShoppingViewModel(
 
     val cartProducts: LiveData<UiState<List<Cart>>> get() = _cartProducts
 
+    private val _cartItemQuantity = MutableLiveData<Int>()
+    val cartItemQuantity: LiveData<Int> get() = _cartItemQuantity
+
     private val _recentProducts = MutableLiveData<UiState<List<RecentProductItem>>>(UiState.None)
 
     val recentProducts: LiveData<UiState<List<RecentProductItem>>> get() = _recentProducts
@@ -58,9 +61,21 @@ class ShoppingViewModel(
     }
 
     private fun fetchInitialCartProducts() {
-        cartRepository.loadAll().onSuccess {
-            _cartProducts.value = UiState.Success(it)
-            fetchInitialProducts(it)
+        cartRepository.loadAll().onSuccess { cartItems ->
+            _cartProducts.value = UiState.Success(cartItems)
+            val totalCartItemsQuantity = cartItems.sumOf { cartItem -> cartItem.quantity }
+            _cartItemQuantity.value = totalCartItemsQuantity
+            fetchInitialProducts(cartItems)
+        }.onFailure {
+            _error.value = Event(ShoppingError.CartItemsNotFound)
+        }
+    }
+
+    private fun fetchCartData() {
+        cartRepository.loadAll().onSuccess { cartItems ->
+            _cartProducts.value = UiState.Success(cartItems)
+            val totalCartItemsQuantity = cartItems.sumOf { cartItem -> cartItem.quantity }
+            _cartItemQuantity.value = totalCartItemsQuantity
         }.onFailure {
             _error.value = Event(ShoppingError.CartItemsNotFound)
         }
@@ -101,6 +116,7 @@ class ShoppingViewModel(
         quantityDelta: Int,
     ) {
         cartRepository.modifyQuantity(product, quantityDelta).onSuccess {
+            fetchCartData()
             modifyShoppingProductQuantity(product.id, quantityDelta)
         }.onFailure {
             _error.value = Event(ShoppingError.CartItemsNotModified)
@@ -124,10 +140,12 @@ class ShoppingViewModel(
         newQuantity: Int,
     ) {
         val productIndex = shoppingProductItems.indexOfFirst { it.id == productId }
-        val updatedProduct =
-            shoppingProductItems[productIndex].copy(quantity = newQuantity)
-        shoppingProductItems[productIndex] = updatedProduct
-        _shoppingProducts.value = UiState.Success(shoppingProductItems)
+        if (productIndex != -1) {
+            val updatedProduct =
+                shoppingProductItems[productIndex].copy(quantity = newQuantity)
+            shoppingProductItems[productIndex] = updatedProduct
+            _shoppingProducts.value = UiState.Success(shoppingProductItems)
+        }
     }
 
     companion object {

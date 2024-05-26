@@ -27,11 +27,12 @@ class MockProductApiService() : ProductApiService {
         startPage: Int,
         pageSize: Int,
     ): List<Product> {
-        val startIdx = startPage * pageSize
+        val startIndex = startPage * pageSize
         val products = DummyProductRepository().products
-        val pagedProducts = products.subList(startIdx, startIdx + pageSize)
+        val pagedProducts = products.drop(startIndex).take(pageSize)
+        if (pagedProducts.isEmpty()) throw NoSuchElementException("상품 데이터를 모두 불러왔습니다")
         val body = gson.toJson(pagedProducts)
-        val serverRequest = makeServerRequest(body, "?startIdx=$startIdx&pageSize=$pageSize")
+        val serverRequest = makeServerRequest(body, "?startIdx=$startIndex&pageSize=$pageSize")
         val response: Response = makeResponse(serverRequest)
         val responseBody = response.body?.string() ?: return emptyList()
         val productType = object : TypeToken<List<Product>>() {}.type

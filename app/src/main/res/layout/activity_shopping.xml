@@ -3,13 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data/>
+    <data>
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingHandler" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel" />
+        />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.ui.shopping.ShoppingActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_grey"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/background_cart"
+            android:backgroundTint="@color/teal_200"
+            android:gravity="center"
+            android:maxLines="1"
+            android:layout_marginStart="-10dp"
+            android:text="@{String.valueOf(viewModel.cartItemQuantity)}"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="@{viewModel.cartItemQuantity == 0 ? 2 : 0}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_cart_count"
+            app:layout_constraintStart_toEndOf="@+id/iv_cart_count"
+            app:layout_constraintTop_toTopOf="@+id/iv_cart_count"
+            tools:text="2" />
+
+        <ImageView
+            android:id="@+id/iv_cart_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:onClick="@{() -> handler.onCartMenuItemClick()}"
+            android:padding="10dp"
+            android:src="@drawable/ic_cart"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_shopping"
@@ -18,7 +80,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:listitem="@layout/item_shopping_product" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
