@@ -6,7 +6,7 @@ import kotlin.math.min
 class FakeProductRepository(
     private val products: List<Product>,
 ) : ProductRepository {
-    override fun fetchSinglePage(page: Int): List<Product> {
+    override fun fetchNextPage(page: Int): List<Product> {
         val fromIndex = page * 20
         val toIndex = min(fromIndex + 20, products.size)
 

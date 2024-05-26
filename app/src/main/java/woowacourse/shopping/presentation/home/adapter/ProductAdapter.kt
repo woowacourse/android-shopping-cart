@@ -1,9 +1,7 @@
 package woowacourse.shopping.presentation.home.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +10,6 @@ import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.home.HomeActionHandler
-import woowacourse.shopping.presentation.uistate.LoadStatus
 import woowacourse.shopping.presentation.uistate.Order
 import java.lang.IllegalArgumentException
 
@@ -22,7 +19,7 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val orders: MutableList<Order> = mutableListOf()
     private val ordersPosition: HashMap<Long, Int> = hashMapOf()
-    private var loadStatus: LoadStatus = LoadStatus()
+    private var isLoadingAvailable: Boolean = true
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -57,7 +54,7 @@ class ProductAdapter(
                 ordersPosition[order.product.id] = position
             }
 
-            is LoadingViewHolder -> holder.bind(loadStatus)
+            is LoadingViewHolder -> holder.bind(isLoadingAvailable)
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
         }
     }
@@ -86,8 +83,8 @@ class ProductAdapter(
         }
     }
 
-    fun updateLoadStatus(loadStatus: LoadStatus) {
-        this.loadStatus = loadStatus
+    fun updateLoadStatus(isLoadingAvailable: Boolean) {
+        this.isLoadingAvailable = isLoadingAvailable
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -109,11 +106,4 @@ fun ImageView.setProductThumbnail(thumbnailUrl: String?) {
     Glide.with(context)
         .load(thumbnailUrl)
         .into(this)
-}
-
-@BindingAdapter("loadStatus")
-fun Button.isLoadingButtonVisible(loadStatus: LoadStatus?) {
-    if (loadStatus == null) return
-    visibility =
-        if (loadStatus.loadingAvailable && !loadStatus.isLoadingPage) View.VISIBLE else View.GONE
 }

@@ -3,7 +3,9 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.data.model.Product
 
 interface ProductRepository {
-    fun fetchSinglePage(page: Int): List<Product>
+    fun fetchCurrentPage(): List<Product>
+
+    fun fetchNextPage(): List<Product>
 
     fun fetchProduct(id: Long): Product
 

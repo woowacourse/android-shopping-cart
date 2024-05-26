@@ -13,14 +13,14 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
-import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
+import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
+import woowacourse.shopping.data.db.cart.CartDatabase
+import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
 import woowacourse.shopping.data.repository.DefaultCartRepository
 import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.data.repository.DefaultProductRepository
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.data.db.cart.CartDatabase
-import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModelFactory
 
@@ -46,7 +46,10 @@ class DetailActivity : AppCompatActivity() {
         initToolBar()
     }
 
-    private fun initViewModel(productId: Long, showRecent: Boolean) {
+    private fun initViewModel(
+        productId: Long,
+        showRecent: Boolean,
+    ) {
         viewModel =
             ViewModelProvider(
                 this,
@@ -90,8 +93,8 @@ class DetailActivity : AppCompatActivity() {
                         this,
                         productId,
                         false,
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    )
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP,
+                    ),
                 )
             }
         }
@@ -155,9 +158,10 @@ fun CardView.setRecentProductVisibility(
     productName: String?,
     showRecent: Boolean,
 ) {
-    visibility = if (productName != null && showRecent) {
-        View.VISIBLE
-    } else {
-        View.GONE
-    }
+    visibility =
+        if (productName != null && showRecent) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
 }

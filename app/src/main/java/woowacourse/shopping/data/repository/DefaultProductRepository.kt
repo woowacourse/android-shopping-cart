@@ -4,9 +4,16 @@ import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class DefaultProductRepository(private val productDataSource: ProductDataSource) : ProductRepository {
-    override fun fetchSinglePage(page: Int): List<Product> {
+class DefaultProductRepository(private val productDataSource: ProductDataSource) :
+    ProductRepository {
+    private var page: Int = 0
+
+    override fun fetchCurrentPage(): List<Product> {
         return productDataSource.getProducts(page, PAGE_SIZE)
+    }
+
+    override fun fetchNextPage(): List<Product> {
+        return productDataSource.getProducts(page++, PAGE_SIZE)
     }
 
     override fun fetchProduct(id: Long): Product {

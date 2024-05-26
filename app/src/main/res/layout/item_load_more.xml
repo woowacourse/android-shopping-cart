@@ -8,8 +8,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="loadStatus"
-            type="woowacourse.shopping.presentation.uistate.LoadStatus" />
+            name="isLoadingAvailable"
+            type="boolean" />
 
         <variable
             name="homeActionHandler"
@@ -27,8 +27,8 @@
             android:layout_marginHorizontal="12dp"
             android:onClick="@{() -> homeActionHandler.onLoadClick()}"
             android:text="@string/home_load_more_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            shopping:loadStatus="@{loadStatus}" />
+            android:visibility="@{isLoadingAvailable == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

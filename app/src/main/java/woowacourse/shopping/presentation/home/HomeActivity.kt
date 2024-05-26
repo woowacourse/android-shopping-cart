@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
+import woowacourse.shopping.data.db.cart.CartDatabase
 import woowacourse.shopping.data.repository.DefaultCartRepository
 import woowacourse.shopping.data.repository.DefaultProductRepository
 import woowacourse.shopping.databinding.ActivityHomeBinding
-import woowacourse.shopping.data.db.cart.CartDatabase
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.cart.CartActivity.Companion.CART_RESULT_OK
 import woowacourse.shopping.presentation.cart.CartActivity.Companion.EXTRA_CART_ITEMS
@@ -99,7 +99,7 @@ class HomeActivity : AppCompatActivity() {
             adapter.updateProduct(it)
         }
 
-        viewModel.loadStatus.observe(this) {
+        viewModel.isLoadingAvailable.observe(this) {
             adapter.updateLoadStatus(it)
         }
 

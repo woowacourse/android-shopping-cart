@@ -7,7 +7,6 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.home.HomeActionHandler
-import woowacourse.shopping.presentation.uistate.LoadStatus
 import woowacourse.shopping.presentation.uistate.Order
 import woowacourse.shopping.presentation.util.Event
 
@@ -15,8 +14,6 @@ class HomeViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel(), HomeActionHandler, CartItemCountHandler {
-    private var page: Int = 0
-
     private val _totalCartCount: MutableLiveData<Int> = MutableLiveData(0)
     val totalCartCount: LiveData<Int>
         get() = _totalCartCount
@@ -26,9 +23,9 @@ class HomeViewModel(
     val orders: LiveData<List<Order>>
         get() = _orders
 
-    private val _loadStatus: MutableLiveData<LoadStatus> = MutableLiveData(LoadStatus())
-    val loadStatus: LiveData<LoadStatus>
-        get() = _loadStatus
+    private val _isLoadingAvailable: MutableLiveData<Boolean> = MutableLiveData(true)
+    val isLoadingAvailable: LiveData<Boolean>
+        get() = _isLoadingAvailable
 
     private val _onProductClicked = MutableLiveData<Event<Long>>()
     val onProductClicked: LiveData<Event<Long>>
@@ -82,12 +79,11 @@ class HomeViewModel(
     }
 
     fun loadProducts() {
-        _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
         val carts = cartRepository.fetchAllCart()
 
         _orders.value =
             orders.value?.plus(
-                productRepository.fetchSinglePage(page++).map { product ->
+                productRepository.fetchNextPage().map { product ->
                     val cart = carts?.find { it.productId == product.id }
 
                     Order(
@@ -98,11 +94,7 @@ class HomeViewModel(
                 },
             )
 
-        _loadStatus.value =
-            loadStatus.value?.copy(
-                loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
-                isLoadingPage = false,
-            )
+        _isLoadingAvailable.value = productRepository.fetchCurrentPage().isNotEmpty()
     }
 
     override fun onProductItemClick(id: Long) {
