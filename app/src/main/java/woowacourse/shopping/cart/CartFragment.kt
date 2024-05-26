@@ -17,7 +17,7 @@ class CartFragment : Fragment(), OnClickCartItemCounter {
             onClickCartItemCounter = this,
             onClick = { deleteItemId ->
                 viewModel.deleteItem(deleteItemId)
-            }
+            },
         )
     }
     private var _binding: FragmentCartListBinding? = null

@@ -95,7 +95,10 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
     }
 
     companion object {
-        fun factory(application: Application, productId: Int): ViewModelProvider.Factory {
+        fun factory(
+            application: Application,
+            productId: Int,
+        ): ViewModelProvider.Factory {
             return BaseViewModelFactory { ProductDetailViewModel(application, productId) }
         }
     }

@@ -8,13 +8,12 @@ import woowacourse.shopping.model.CartItem
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val productId: Int,
-    var quantity: Int
+    var quantity: Int,
 ) {
     fun toCartItem(): CartItem {
         return CartItem(
             productId = this.productId,
-            quantity = this.quantity
+            quantity = this.quantity,
         )
     }
-
 }

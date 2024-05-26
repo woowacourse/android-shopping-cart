@@ -42,9 +42,10 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private fun updateRecentlyViewedProducts() {
         val cartItemIds = _cartItems.value?.map { it.productId } ?: emptyList()
         val recentlyViewedEntities = _recentlyViewedEntities.value ?: emptyList()
-        val recentlyViewedProducts = recentlyViewedEntities
-            .filter { it.productId !in cartItemIds }
-            .map { dummyProductStore.findById(it.productId) }
+        val recentlyViewedProducts =
+            recentlyViewedEntities
+                .filter { it.productId !in cartItemIds }
+                .map { dummyProductStore.findById(it.productId) }
         _recentlyViewedProducts.value = recentlyViewedProducts
     }
 

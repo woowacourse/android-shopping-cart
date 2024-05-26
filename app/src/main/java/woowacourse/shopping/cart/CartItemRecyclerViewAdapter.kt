@@ -42,7 +42,10 @@ class CartItemRecyclerViewAdapter(
     override fun getItemCount(): Int = products.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newProducts: List<Product>, newCartItems: List<CartItem>) {
+    fun updateData(
+        newProducts: List<Product>,
+        newCartItems: List<CartItem>,
+    ) {
         this.products = newProducts
         this.cartItems = newCartItems
         notifyDataSetChanged()
@@ -52,7 +55,10 @@ class CartItemRecyclerViewAdapter(
         val binding: HolderCartBinding,
         private val onClick: (id: Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product, cartItem: CartItem) {
+        fun bind(
+            product: Product,
+            cartItem: CartItem,
+        ) {
             binding.product = product
             binding.cartItem = cartItem
             binding.cartProductDelete.setOnClickListener { onClick(product.id) }

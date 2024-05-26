@@ -75,11 +75,13 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
 
     private fun navigateToLastViewedProduct() {
         val lastViewedProductId = viewModel.lastViewedProduct.value?.id ?: return
-        val fragment = ProductDetailFragment().apply {
-            arguments = Bundle().apply {
-                putInt("productId", lastViewedProductId)
+        val fragment =
+            ProductDetailFragment().apply {
+                arguments =
+                    Bundle().apply {
+                        putInt("productId", lastViewedProductId)
+                    }
             }
-        }
         parentFragmentManager.beginTransaction()
             .replace(R.id.container, fragment)
             .addToBackStack(null)

@@ -18,11 +18,12 @@ class ProductRecyclerViewAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val binding = HolderProductBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding =
+            HolderProductBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return ViewHolder(binding) { id -> onClick(id) }
     }
 
@@ -54,7 +55,10 @@ class ProductRecyclerViewAdapter(
         val binding: HolderProductBinding,
         private val onClick: (id: Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product, cartItem: CartItem) {
+        fun bind(
+            product: Product,
+            cartItem: CartItem,
+        ) {
             binding.product = product
             binding.cartItem = cartItem
             binding.root.setOnClickListener { onClick(product.id) }

@@ -13,46 +13,52 @@ object ShoppingCart {
         database = CartDatabase.getDatabase(context)
     }
 
-    suspend fun getCartItems(): List<CartItem> = withContext(Dispatchers.IO) {
-        database.cartItemDao().getAllCartItems().map { it.toCartItem() }
-    }
-
-    suspend fun addProductToCart(productId: Int) = withContext(Dispatchers.IO) {
-        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
-        if (cartItem != null) {
-            cartItem.quantity++
-            database.cartItemDao().update(cartItem)
-        } else {
-            database.cartItemDao().insert(CartItemEntity(productId = productId, quantity = 1))
+    suspend fun getCartItems(): List<CartItem> =
+        withContext(Dispatchers.IO) {
+            database.cartItemDao().getAllCartItems().map { it.toCartItem() }
         }
-    }
 
-    suspend fun deleteProduct(productId: Int) = withContext(Dispatchers.IO) {
-        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
-        if (cartItem != null) {
-            database.cartItemDao().delete(cartItem)
+    suspend fun addProductToCart(productId: Int) =
+        withContext(Dispatchers.IO) {
+            val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+            if (cartItem != null) {
+                cartItem.quantity++
+                database.cartItemDao().update(cartItem)
+            } else {
+                database.cartItemDao().insert(CartItemEntity(productId = productId, quantity = 1))
+            }
         }
-    }
 
-    suspend fun addProductCount(productId: Int) = withContext(Dispatchers.IO) {
-        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
-        if (cartItem != null) {
-            cartItem.quantity++
-            database.cartItemDao().update(cartItem)
+    suspend fun deleteProduct(productId: Int) =
+        withContext(Dispatchers.IO) {
+            val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+            if (cartItem != null) {
+                database.cartItemDao().delete(cartItem)
+            }
         }
-    }
 
-    suspend fun subtractProductCount(productId: Int) = withContext(Dispatchers.IO) {
-        val cartItem = database.cartItemDao().getCartItemByProductId(productId)
-        if (cartItem != null && cartItem.quantity > 1) {
-            cartItem.quantity--
-            database.cartItemDao().update(cartItem)
-        } else if (cartItem != null && cartItem.quantity == 1) {
-            database.cartItemDao().delete(cartItem)
+    suspend fun addProductCount(productId: Int) =
+        withContext(Dispatchers.IO) {
+            val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+            if (cartItem != null) {
+                cartItem.quantity++
+                database.cartItemDao().update(cartItem)
+            }
         }
-    }
 
-    suspend fun clearCart() = withContext(Dispatchers.IO) {
-        database.cartItemDao().clearCart()
-    }
+    suspend fun subtractProductCount(productId: Int) =
+        withContext(Dispatchers.IO) {
+            val cartItem = database.cartItemDao().getCartItemByProductId(productId)
+            if (cartItem != null && cartItem.quantity > 1) {
+                cartItem.quantity--
+                database.cartItemDao().update(cartItem)
+            } else if (cartItem != null && cartItem.quantity == 1) {
+                database.cartItemDao().delete(cartItem)
+            }
+        }
+
+    suspend fun clearCart() =
+        withContext(Dispatchers.IO) {
+            database.cartItemDao().clearCart()
+        }
 }

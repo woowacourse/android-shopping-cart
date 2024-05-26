@@ -9,7 +9,6 @@ import androidx.room.Update
 
 @Dao
 interface CartItemDao {
-
     @Query("SELECT * FROM cart_items")
     fun getAllCartItems(): List<CartItemEntity>
 

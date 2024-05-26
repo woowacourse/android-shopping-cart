@@ -19,7 +19,6 @@ import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.productDetail.ProductDetailFragment
 
 class ProductListFragment : Fragment(), OnClickCartItemCounter {
-
     private val viewModel: ProductListViewModel by viewModels {
         BaseViewModelFactory { ProductListViewModel(requireActivity().application) }
     }

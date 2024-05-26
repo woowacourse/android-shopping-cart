@@ -4,7 +4,6 @@ import woowacourse.shopping.db.cartItem.CartItemDao
 import woowacourse.shopping.model.CartItem
 
 class CartRepository(private val cartItemDao: CartItemDao) {
-
     private val _allCartItems = MutableLiveData<List<CartItem>>()
     val allCartItems: LiveData<List<CartItem>> = _allCartItems
 

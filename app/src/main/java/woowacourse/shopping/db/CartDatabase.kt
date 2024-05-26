@@ -12,10 +12,11 @@ import woowacourse.shopping.db.recenteProduct.RecentlyViewedProductEntity
 @Database(
     entities = [CartItemEntity::class, RecentlyViewedProductEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class CartDatabase : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
+
     abstract fun recentlyViewedProductDao(): RecentlyViewedProductDao
 
     companion object {
@@ -24,11 +25,12 @@ abstract class CartDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): CartDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    CartDatabase::class.java,
-                    "cart_database"
-                ).build()
+                val instance =
+                    Room.databaseBuilder(
+                        context.applicationContext,
+                        CartDatabase::class.java,
+                        "cart_database",
+                    ).build()
                 INSTANCE = instance
                 instance
             }

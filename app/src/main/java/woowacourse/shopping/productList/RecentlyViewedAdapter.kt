@@ -10,7 +10,6 @@ class RecentlyViewedAdapter(
     private var products: List<Product> = emptyList(),
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<RecentlyViewedAdapter.ViewHolder>() {
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -19,15 +18,15 @@ class RecentlyViewedAdapter(
             HolderProductBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
+                false,
             ),
-            onClick = { id -> onClick(id) }
+            onClick = { id -> onClick(id) },
         )
     }
 
     override fun onBindViewHolder(
         holder: ViewHolder,
-        position: Int
+        position: Int,
     ) {
         val product = products[position]
         holder.bind(product)
@@ -42,9 +41,8 @@ class RecentlyViewedAdapter(
 
     inner class ViewHolder(
         private val binding: HolderProductBinding,
-        private val onClick: (id: Int) -> Unit
+        private val onClick: (id: Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(product: Product) {
             binding.product = product
             binding.root.setOnClickListener { onClick(product.id) }

@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class RecentlyViewedProductEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val productId: Int,
-    val viewedAt: Long
+    val viewedAt: Long,
 )
