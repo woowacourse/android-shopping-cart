@@ -28,17 +28,26 @@
                 android:layout_height="wrap_content"
                 tools:context=".presentation.shopping.ShoppingActivity">
 
-                <com.google.android.material.appbar.MaterialToolbar
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/toolbar_detail"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/gray_500"
-                    android:textSize="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:menu="@menu/detail_menu"
-                    app:titleTextColor="@color/white" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_back"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="25dp"
+                        android:src="@drawable/ic_back"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
                     android:id="@+id/iv_detail_product_image"
@@ -46,7 +55,7 @@
                     android:layout_height="360dp"
                     android:scaleType="fitXY"
                     app:imageUrl="@{viewModel.productWithQuantity.product.imageUrl}"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar_detail"
                     tools:layout_editor_absoluteX="-157dp"
                     tools:src="@drawable/ic_launcher_background" />
 

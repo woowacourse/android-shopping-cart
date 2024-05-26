@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.Menu
 import androidx.activity.viewModels
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.DummyShoppingItemsRepository
@@ -32,9 +31,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     }
 
     private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarDetail
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener {
+        binding.ivBack.setOnClickListener {
             finish()
         }
     }
