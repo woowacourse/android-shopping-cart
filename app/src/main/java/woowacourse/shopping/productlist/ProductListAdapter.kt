@@ -1,5 +1,6 @@
 package woowacourse.shopping.productlist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,20 +20,22 @@ class ProductListAdapter(
         fun onBind(item: ProductUiModel) {
             binding.productUiModel = item
             binding.clickListener = onClick
+            setQuantityButtonVisible(item.quantity)
         }
 
         fun onQuantityChanged(newQuantity: Int) {
             binding.productUiModel = binding.productUiModel?.copy(quantity = newQuantity)
+            setQuantityButtonVisible(newQuantity)
         }
 
-        fun onItemAdded() {
-            binding.buttonProductListAddToCart.visibility = View.GONE
-            binding.buttonProductItemQuantity.visibility = View.VISIBLE
-        }
-
-        fun onItemDeleted() {
-            binding.buttonProductListAddToCart.visibility = View.VISIBLE
-            binding.buttonProductItemQuantity.visibility = View.GONE
+        private fun setQuantityButtonVisible(quantity: Int) {
+            if (quantity > ProductUiModel.PRODUCT_DEFAULT_QUANTITY) {
+                binding.buttonProductListAddToCart.visibility = View.GONE
+                binding.buttonProductItemQuantity.visibility = View.VISIBLE
+            } else if (quantity == ProductUiModel.PRODUCT_DEFAULT_QUANTITY) {
+                binding.buttonProductListAddToCart.visibility = View.VISIBLE
+                binding.buttonProductItemQuantity.visibility = View.GONE
+            }
         }
     }
 
@@ -68,14 +71,6 @@ class ProductListAdapter(
                         holder.onQuantityChanged(items[position].quantity)
                     }
 
-                    ProductListPayload.PRODUCT_ADDED -> {
-                        holder.onItemAdded()
-                    }
-
-                    ProductListPayload.PRODUCT_DELETED -> {
-                        holder.onItemDeleted()
-                    }
-
                     else -> {}
                 }
             }
@@ -92,11 +87,6 @@ class ProductListAdapter(
         productIds.forEach { productId ->
             val updatedPosition = items.indexOfFirst { it.id == productId }
             notifyItemChanged(updatedPosition, ProductListPayload.QUANTITY_CHANGED)
-            if (items[updatedPosition].quantity > ProductUiModel.PRODUCT_DEFAULT_QUANTITY) {
-                notifyItemChanged(updatedPosition, ProductListPayload.PRODUCT_ADDED)
-            } else if (items[updatedPosition].quantity == ProductUiModel.PRODUCT_DEFAULT_QUANTITY) {
-                notifyItemChanged(updatedPosition, ProductListPayload.PRODUCT_DELETED)
-            }
         }
     }
 }
