@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
+import woowacourse.shopping.data.AppDatabase
+import woowacourse.shopping.data.InquiryHistoryLocalRepository
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -19,7 +21,11 @@ import woowacourse.shopping.feature.main.QuantityControlListener
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
     private val productDetailViewModel: ProductDetailViewModel by viewModels {
-        ProductDetailViewModelFactory(ProductDummyRepository, CartDummyRepository)
+        ProductDetailViewModelFactory(
+            ProductDummyRepository,
+            CartDummyRepository,
+            InquiryHistoryLocalRepository(AppDatabase.initialize(this).recentViewedProductDao()),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
