@@ -8,14 +8,14 @@ import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.dummyProducts
 import woowacourse.shopping.data.product.server.MockWebProductServer
-import woowacourse.shopping.data.product.server.ProductMockWebServerDispatcher
+import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
 import woowacourse.shopping.data.product.server.ProductServer
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.recent.RoomRecentProductRepository
 import woowacourse.shopping.data.recent.database.RecentProductDataBase
 
 class ShoppingCartApplication : Application() {
-    private val productServer: ProductServer by lazy { MockWebProductServer(ProductMockWebServerDispatcher(dummyProducts)) }
+    private val productServer: ProductServer by lazy { MockWebProductServer(MockWebProductServerDispatcher(dummyProducts)) }
 
     override fun onCreate() {
         super.onCreate()

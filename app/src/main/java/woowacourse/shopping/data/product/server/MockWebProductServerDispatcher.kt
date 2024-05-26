@@ -13,7 +13,7 @@ import woowacourse.shopping.data.product.server.ProductServerApiUrl.FIND_PRODUCT
 import woowacourse.shopping.data.product.server.ProductServerApiUrl.TOTAL_COUNT_PATH
 import kotlin.math.min
 
-class ProductMockWebServerDispatcher(private val products: List<Product> = dummyProducts) :
+class MockWebProductServerDispatcher(private val products: List<Product> = dummyProducts) :
     Dispatcher() {
     private val gson = Gson()
 

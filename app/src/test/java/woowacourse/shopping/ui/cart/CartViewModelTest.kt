@@ -1,17 +1,21 @@
 package woowacourse.shopping.ui.cart
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.FakeCartRepository
-import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.cartItem
 import woowacourse.shopping.cartItems
 import woowacourse.shopping.convertProductUiModel
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.cart.entity.CartItem
+import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.product.entity.Product
+import woowacourse.shopping.data.product.server.MockWebProductServer
+import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
+import woowacourse.shopping.data.product.server.ProductServer
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.product
@@ -20,14 +24,22 @@ import woowacourse.shopping.products
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
+
     private lateinit var productRepository: ProductRepository
     private lateinit var cartRepository: CartRepository
+
+    private lateinit var productServer: ProductServer
+
+    @AfterEach
+    fun tearDown() {
+        productServer.shutDown()
+    }
 
     @Test
     fun `장바구니에 담긴 상품을 삭제한다`() {
         // given
         val cartItems = cartItems(1)
-        productRepository = FakeProductRepository(products(1))
+        setUpProductRepository(products(1))
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -43,7 +55,7 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(5)
         val products = products(5)
-        productRepository = FakeProductRepository(products)
+        setUpProductRepository(products)
         cartRepository = FakeCartRepository(cartItems)
 
         // when
@@ -60,7 +72,7 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(3)
         val products = products(3)
-        productRepository = FakeProductRepository(products)
+        setUpProductRepository(products)
         cartRepository = FakeCartRepository(cartItems)
 
         // when
@@ -76,7 +88,7 @@ class CartViewModelTest {
     fun `장바구니에 5개의 상품이 있는 경우 페이지 이동 버튼이 보이지 않는다`() {
         // given
         val cartItems = cartItems(5)
-        productRepository = FakeProductRepository(products(5))
+        setUpProductRepository(products(5))
         cartRepository = FakeCartRepository(cartItems)
 
         // when
@@ -92,7 +104,7 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(6)
         val products = products(6)
-        productRepository = FakeProductRepository(products)
+        setUpProductRepository(products)
         cartRepository = FakeCartRepository(cartItems)
 
         // when
@@ -108,7 +120,7 @@ class CartViewModelTest {
     fun `장바구니에 6개의 상품이 있고 1페이지인 경우 다음 페이지로 이동할 수 있다`() {
         // given
         val cartItems = cartItems(6)
-        productRepository = FakeProductRepository(products(6))
+        setUpProductRepository(products(6))
         cartRepository = FakeCartRepository(cartItems)
 
         // when
@@ -123,7 +135,7 @@ class CartViewModelTest {
     fun `장바구니에 6개의 상품이 있고 1페이지인 경우 이전 페이지로 이동할 수 없다`() {
         // given
         val cartItems = cartItems(6)
-        productRepository = FakeProductRepository(products(6))
+        setUpProductRepository(products(6))
         cartRepository = FakeCartRepository(cartItems)
 
         // when
@@ -138,7 +150,7 @@ class CartViewModelTest {
     fun `장바구니에 6개의 상품이 있고 2페이지인 경우 이전 페이지로 이동할 수 있다`() {
         // given
         val cartItems = cartItems(6)
-        productRepository = FakeProductRepository(products(6))
+        setUpProductRepository(products(6))
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -154,7 +166,7 @@ class CartViewModelTest {
     fun `장바구니에 6개의 상품이 있고 2페이지인 경우 다음 페이지로 이동할 수 없다`() {
         // given
         val cartItems = cartItems(6)
-        productRepository = FakeProductRepository(products(6))
+        setUpProductRepository(products(6))
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -171,7 +183,7 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(6)
         val products = products(6)
-        productRepository = FakeProductRepository(products)
+        setUpProductRepository(products(6))
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -189,7 +201,7 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(6)
         val products = products(6)
-        productRepository = FakeProductRepository(products)
+        setUpProductRepository(products)
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(productRepository, cartRepository)
         viewModel.moveNextPage()
@@ -207,7 +219,7 @@ class CartViewModelTest {
     fun `장바구니에 6개의 상품이 있고 2페이지에서 1개의 상품을 삭제하면 1페이지로 이동한다`() {
         // given
         val cartItems = cartItems(6)
-        productRepository = FakeProductRepository(products(6))
+        setUpProductRepository(products(6))
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(productRepository, cartRepository)
         viewModel.moveNextPage()
@@ -225,7 +237,7 @@ class CartViewModelTest {
     fun `장바구니에 1개의 상품이 있고 1개의 상품을 삭제하면 장바구니가 비어있다`() {
         // given
         val cartItems = cartItems(1)
-        productRepository = FakeProductRepository(products(1))
+        setUpProductRepository(products(1))
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -243,7 +255,7 @@ class CartViewModelTest {
         // given
         val cartItem = cartItem(0L, Quantity(2))
         val product = product(0L)
-        productRepository = FakeProductRepository(listOf(product))
+        setUpProductRepository(listOf(product))
         cartRepository = FakeCartRepository(listOf(cartItem))
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -260,7 +272,7 @@ class CartViewModelTest {
         // given
         val cartItem = cartItem(0L, Quantity(3))
         val product = product(0L)
-        productRepository = FakeProductRepository(listOf(product))
+        setUpProductRepository(listOf(product))
         cartRepository = FakeCartRepository(listOf(cartItem))
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -277,7 +289,7 @@ class CartViewModelTest {
         // given
         val cartItem = cartItem(0L, Quantity(1))
         val product = product(0L)
-        productRepository = FakeProductRepository(listOf(product))
+        setUpProductRepository(listOf(product))
         cartRepository = FakeCartRepository(listOf(cartItem))
         viewModel = CartViewModel(productRepository, cartRepository)
 
@@ -287,5 +299,11 @@ class CartViewModelTest {
         // then
         val actual = viewModel.isEmptyCart.getOrAwaitValue()
         assertThat(actual).isTrue
+    }
+
+    private fun setUpProductRepository(products: List<Product>) {
+        productServer = MockWebProductServer(MockWebProductServerDispatcher(products))
+        productServer.start()
+        productRepository = MockWebServerProductRepository(productServer)
     }
 }

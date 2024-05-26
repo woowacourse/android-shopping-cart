@@ -1,15 +1,19 @@
 package woowacourse.shopping.ui.detail
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.FakeCartRepository
-import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.FakeRecentProductRepository
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.product.server.MockWebProductServer
+import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
+import woowacourse.shopping.data.product.server.ProductServer
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.recent.entity.RecentProduct
 import woowacourse.shopping.getOrAwaitValue
@@ -19,14 +23,24 @@ import java.time.LocalDateTime
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
+
     private lateinit var productRepository: ProductRepository
     private lateinit var recentProductRepository: RecentProductRepository
     private val cartRepository: CartRepository = FakeCartRepository()
 
+    private lateinit var productServer: ProductServer
+
     @BeforeEach
     fun setUp() {
-        productRepository = FakeProductRepository(products(2))
+        productServer = MockWebProductServer(MockWebProductServerDispatcher(products(2)))
+        productServer.start()
+        productRepository = MockWebServerProductRepository(productServer)
         recentProductRepository = FakeRecentProductRepository()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        productServer.shutDown()
     }
 
     @Test
@@ -77,7 +91,7 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `마지막으로 본 상품을 불러온다`() {
-        setUpRecentRepository(productId = 1L)
+        setUpRecentProductRepository(productId = 1L)
         viewModel = ProductDetailViewModel(
             0L,
             productRepository,
@@ -106,7 +120,7 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `마지막으로 본 상품이 현재 상품과 동일힌 경우 마지막으로 본 상품이 보이지 않는다`() {
-        setUpRecentRepository(productId = 0L)
+        setUpRecentProductRepository(productId = 0L)
         viewModel = ProductDetailViewModel(
             0L,
             productRepository,
@@ -121,7 +135,7 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `마지막으로 본 상품을 타고 들어온 경우 마지막으로 본 상품이 보이지 않는다`() {
-        setUpRecentRepository(productId = 1L)
+        setUpRecentProductRepository(productId = 1L)
         viewModel = ProductDetailViewModel(
             0L,
             productRepository,
@@ -134,7 +148,7 @@ class ProductDetailViewModelTest {
         assertThat(actual).isFalse
     }
 
-    private fun setUpRecentRepository(productId: Long) {
+    private fun setUpRecentProductRepository(productId: Long) {
         recentProductRepository =
             FakeRecentProductRepository(listOf(RecentProduct(0L, productId, LocalDateTime.now())))
     }
