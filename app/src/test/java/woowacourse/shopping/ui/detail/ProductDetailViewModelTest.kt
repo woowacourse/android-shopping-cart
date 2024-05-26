@@ -53,7 +53,7 @@ class ProductDetailViewModelTest {
         viewModel.loadProduct(0L)
 
         // when
-        viewModel.plusCount()
+        viewModel.plusCount(0L)
         viewModel.addProductToCart()
         val actual = cartRepository.findAll().size
 

@@ -11,10 +11,6 @@
             type="woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel" />
 
         <variable
-            name="cartButtonClickListener"
-            type="woowacourse.shopping.ui.detail.CartButtonClickListener" />
-
-        <variable
             name="mostRecentProductClickListener"
             type="woowacourse.shopping.ui.detail.MostRecentProductClickListener" />
 
@@ -139,7 +135,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_add_product_button"
             android:enabled="@{!vm.error &amp;&amp; !vm.isInvalidCount}"
-            android:onClick="@{()->cartButtonClickListener.onClickAddCartButton()}"
+            android:onClick="@{() -> vm.addProductToCart()}"
             android:text="@string/add_product_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

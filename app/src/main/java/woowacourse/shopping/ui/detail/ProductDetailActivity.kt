@@ -20,7 +20,6 @@ import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
 
 class ProductDetailActivity :
     AppCompatActivity(),
-    CartButtonClickListener,
     MostRecentProductClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
@@ -34,6 +33,12 @@ class ProductDetailActivity :
     private val productId by lazy { productId() }
     private val lastSeenProductState by lazy { lastSeenProductState() }
 
+    override fun onClickMostRecentProduct() {
+        viewModel.mostRecentProduct.observe(this) {
+            moveToMostRecentProductDetail(this, it.id, false)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,20 +47,20 @@ class ProductDetailActivity :
         showProductDetail()
         setOnListener()
         observeErrorMessage()
-        viewModel.addToRecentProduct(productId, lastSeenProductState)
+        addRecentProduct()
+        observeAddCart()
     }
 
-    override fun onClickAddCartButton() {
-        viewModel.addProductToCart()
-        toast?.cancel()
-        toast = Toast.makeText(this, getString(R.string.add_cart_complete), Toast.LENGTH_SHORT)
-        toast?.show()
-    }
-
-    override fun onClickMostRecentProduct() {
-        viewModel.mostRecentProduct.observe(this) {
-            moveToMostRecentProductDetail(this, it.id, false)
+    private fun observeAddCart() {
+        viewModel.addCartComplete.observe(this) {
+            toast?.cancel()
+            toast = Toast.makeText(this, getString(R.string.add_cart_complete), Toast.LENGTH_SHORT)
+            toast?.show()
         }
+    }
+
+    private fun addRecentProduct() {
+        viewModel.addToRecentProduct(productId, lastSeenProductState)
     }
 
     private fun initToolbar() {
@@ -78,7 +83,6 @@ class ProductDetailActivity :
     }
 
     private fun setOnListener() {
-        binding.cartButtonClickListener = this
         binding.mostRecentProductClickListener = this
     }
 

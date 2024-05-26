@@ -63,19 +63,6 @@ class ProductContentsViewModel(
         loadProducts()
     }
 
-    fun loadProducts() {
-        thread {
-            items.addAll(productRepository.getProducts())
-            products.postValue(items)
-        }.join()
-    }
-
-    fun loadCartItems() {
-        thread {
-            cart.postValue(cartRepository.findAll())
-        }.join()
-    }
-
     override fun plusCount(productId: Long) {
         thread {
             cartRepository.plusQuantityByProductId(productId)
@@ -88,6 +75,19 @@ class ProductContentsViewModel(
             cartRepository.minusQuantityByProductId(productId)
         }.join()
         loadCartItems()
+    }
+
+    fun loadProducts() {
+        thread {
+            items.addAll(productRepository.getProducts())
+            products.postValue(items)
+        }.join()
+    }
+
+    fun loadCartItems() {
+        thread {
+            cart.postValue(cartRepository.findAll())
+        }.join()
     }
 
     fun loadRecentProducts() {

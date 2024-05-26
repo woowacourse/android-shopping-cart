@@ -11,6 +11,8 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.utils.Event
+import woowacourse.shopping.ui.utils.MutableSingleLiveData
+import woowacourse.shopping.ui.utils.SingleLiveData
 import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
@@ -38,6 +40,9 @@ class ProductDetailViewModel(
     private val _mostRecentProductVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
     val mostRecentProductVisibility: MutableLiveData<Boolean> get() = _mostRecentProductVisibility
 
+    private val _addCartComplete = MutableSingleLiveData<Unit>()
+    val addCartComplete: SingleLiveData<Unit> get() = _addCartComplete
+
     fun loadProduct(productId: Long) {
         thread {
             runCatching {
@@ -52,27 +57,6 @@ class ProductDetailViewModel(
         }.join()
     }
 
-    fun addProductToCart() {
-        _productWithQuantity.value?.let { productWithQuantity ->
-            repeat(productWithQuantity.quantity.value) {
-                thread {
-                    cartRepository.plusQuantityByProductId(productWithQuantity.product.id)
-                }.join()
-            }
-            loadProduct(productWithQuantity.product.id)
-        }
-    }
-
-    fun addToRecentProduct(
-        productId: Long,
-        lastSeenProductState: Boolean,
-    ) {
-        loadMostRecentProduct(productId, lastSeenProductState)
-        thread {
-            recentProductRepository.insert(productId)
-        }.join()
-    }
-
     override fun plusCount(productId: Long) {
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.inc()
@@ -83,6 +67,28 @@ class ProductDetailViewModel(
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.dec()
         }
+    }
+
+    fun addProductToCart() {
+        _productWithQuantity.value?.let { productWithQuantity ->
+            repeat(productWithQuantity.quantity.value) {
+                thread {
+                    cartRepository.plusQuantityByProductId(productWithQuantity.product.id)
+                }.join()
+            }
+            loadProduct(productWithQuantity.product.id)
+        }
+        _addCartComplete.setValue(Unit)
+    }
+
+    fun addToRecentProduct(
+        productId: Long,
+        lastSeenProductState: Boolean,
+    ) {
+        loadMostRecentProduct(productId, lastSeenProductState)
+        thread {
+            recentProductRepository.insert(productId)
+        }.join()
     }
 
     private fun loadMostRecentProduct(
