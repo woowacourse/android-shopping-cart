@@ -9,7 +9,6 @@ import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
@@ -37,10 +36,6 @@ class ProductListViewModel(
     private var _isLastPage: MutableLiveData<Boolean> = MutableLiveData()
     val isLastPage: LiveData<Boolean> get() = _isLastPage
 
-    private val _productsEvent: MutableLiveData<ProductCountEvent> =
-        MutableLiveData(ProductCountEvent.ProductCountAllCleared)
-    val productsEvent: LiveData<ProductCountEvent> = _productsEvent
-
     private var _detailProductDestinationId: MutableSingleLiveData<Long> = MutableSingleLiveData()
     val detailProductDestinationId: SingleLiveData<Long> get() = _detailProductDestinationId
 
@@ -49,9 +44,10 @@ class ProductListViewModel(
 
     fun loadAll() {
         thread {
-            val result: List<Product> = productsRepository.loadAllProducts(currentPage.value!!)
+            val page = currentPage.value ?: currentPageIsNullException()
+            val result = (FIRST_PAGE..page).flatMap { productsRepository.loadAllProducts(it) }
             val totalCartCount = productsRepository.shoppingCartProductQuantity()
-            val isLastPage = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
+            val isLastPage = productsRepository.isFinalPage(page)
             val productHistory = productHistoryRepository.loadAllProductHistory()
 
             uiHandler.post {
@@ -66,19 +62,16 @@ class ProductListViewModel(
     fun loadNextPageProducts() {
         thread {
             if (isLastPage.value == true) return@thread
-            uiHandler.post {
-                _currentPage.value = _currentPage.value?.plus(PAGE_MOVE_COUNT)
-            }
-            val isLastPage = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
-            val result = productsRepository.loadAllProducts(currentPage.value ?: currentPageIsNullException())
+
+            val nextPage = _currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
+            val isLastPage = productsRepository.isFinalPage(nextPage)
+            val result = productsRepository.loadAllProducts(nextPage)
             val totalCount = productsRepository.shoppingCartProductQuantity()
 
             uiHandler.post {
+                _currentPage.value = nextPage
                 _isLastPage.value = isLastPage
-                _loadedProducts.value =
-                    _loadedProducts.value?.toMutableList()?.apply {
-                        addAll(result)
-                    }
+                _loadedProducts.value = _loadedProducts.value?.toMutableList()?.apply { addAll(result) }
                 _cartProductTotalCount.value = totalCount
             }
         }
@@ -100,12 +93,9 @@ class ProductListViewModel(
                 productsRepository.addShoppingCartProduct(productId)
             } catch (_: Exception) {
             } finally {
-                val product = productsRepository.loadProduct(productId)
-                val productEvent = ProductCountEvent.ProductCountCountChanged(productId, product.quantity)
                 val totalCount = productsRepository.shoppingCartProductQuantity()
 
                 uiHandler.post {
-                    _productsEvent.value = productEvent
                     _loadedProducts.value =
                         _loadedProducts.value?.map {
                             if (it.id == productId) {
@@ -122,18 +112,11 @@ class ProductListViewModel(
 
     override fun onDecrease(productId: Long) {
         thread {
-            val product = productsRepository.loadProduct(productId)
             productsRepository.decreaseShoppingCartProduct(productId)
 
-            val productEvent: ProductCountEvent = if (product.quantity == 1) {
-                ProductCountEvent.ProductCountCleared(productId)
-            } else {
-                ProductCountEvent.ProductCountCountChanged(productId, product.quantity - 1)
-            }
             val totalCount = productsRepository.shoppingCartProductQuantity()
 
             uiHandler.post {
-                _productsEvent.value = productEvent
                 _loadedProducts.value =
                     _loadedProducts.value?.map {
                         if (it.id == productId) {

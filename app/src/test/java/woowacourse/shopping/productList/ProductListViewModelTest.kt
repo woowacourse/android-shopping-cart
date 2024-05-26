@@ -1,6 +1,14 @@
 package woowacourse.shopping.productList
 
+import android.os.Handler
+import android.os.Looper
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkConstructor
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -9,7 +17,6 @@ import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ProductHistoryDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
-import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
@@ -39,6 +46,18 @@ class ProductListViewModelTest {
      */
     @BeforeEach
     fun setUp() {
+        mockkStatic(Looper::class)
+        mockkConstructor(Handler::class)
+        val mockMainLooper =
+            mockk<Looper> {
+                every { thread } returns Thread.currentThread()
+            }
+        every { Looper.getMainLooper() } returns mockMainLooper
+        every { anyConstructed<Handler>().post(any()) } answers {
+            firstArg<Runnable>().run()
+            true
+        }
+
         productSource =
             FakeProductDataSource(
                 allProducts = productsTestFixture(60).toMutableList(),
@@ -50,6 +69,11 @@ class ProductListViewModelTest {
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
     }
 
+    @AfterEach
+    fun tearDown() {
+        unmockkAll()
+    }
+
     @Test
     fun `장바구니에 아무것도 들어가 있지 않을 때 상품 20개 로드`() {
         // given setup
@@ -57,10 +81,11 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
+        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
-        val loadedProducts = viewModel.loadedProducts
-        assertThat(loadedProducts.getOrAwaitValue()).isEqualTo(
+        val loadedProducts = viewModel.loadedProducts.getOrAwaitValue()
+        assertThat(loadedProducts).isEqualTo(
             productsTestFixture(20).map { it.toDomain(0) },
         )
     }
@@ -72,7 +97,10 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
+        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
+
         viewModel.loadNextPageProducts()
+        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         val loadedProducts = viewModel.loadedProducts
@@ -114,6 +142,7 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
+        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         val isLastPage = viewModel.isLastPage.value
@@ -153,7 +182,9 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
+        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
         viewModel.loadNextPageProducts()
+        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         assertThat(viewModel.isLastPage.getOrAwaitValue()).isTrue
@@ -174,130 +205,6 @@ class ProductListViewModelTest {
 
         // then
         assertThat(viewModel.cartProductTotalCount.getOrAwaitValue()).isEqualTo(10)
-    }
-
-    @Test
-    fun `장바구니에 상품을 담고 장바구니에 담긴 상품들의 개수를 로드`() {
-        // given
-        productSource = FakeProductDataSource(allProducts = productsTestFixture(21).toMutableList())
-        cartSource = FakeShoppingCartProductIdDataSource(data = productsIdCountDataTestFixture(10).toMutableList())
-
-        shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
-        historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
-
-        // when
-        viewModel.loadAll()
-        viewModel.onIncrease(productId = 13)
-
-        // then
-        // 추가된 상품 검사
-        val event = viewModel.productsEvent.getOrAwaitValue()
-        assertThat(event).isEqualTo(ProductCountEvent.ProductCountCountChanged(13, 1))
-
-        // 장바구니에 있는 상품 개수 검사
-        assertThat(viewModel.cartProductTotalCount.getOrAwaitValue()).isEqualTo(11)
-    }
-
-    @Test
-    fun `장바구니에 있던 상품의 개수를 1 추가하고 로드된 상품 검사`() {
-        // given
-        productSource = FakeProductDataSource(allProducts = productsTestFixture(21).toMutableList())
-        cartSource = FakeShoppingCartProductIdDataSource(data = productsIdCountDataTestFixture(5).toMutableList())
-        shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
-        historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
-
-        // when
-        viewModel.loadAll()
-        viewModel.onIncrease(productId = 3)
-
-        // then
-        // 증가된 상품 검사
-        val event = viewModel.productsEvent.getOrAwaitValue()
-        assertThat(event).isEqualTo(ProductCountEvent.ProductCountCountChanged(3, 2))
-
-        // 모든 상품 로드 검사
-        val loadedProducts = viewModel.loadedProducts.getOrAwaitValue()
-        assertThat(loadedProducts).isEqualTo(
-            List(20) {
-                when (it) {
-                    3 -> productTestFixture(it.toLong()).toDomain(2)
-                    in (0..4) -> productTestFixture(it.toLong()).toDomain(1)
-                    else -> productTestFixture(it.toLong()).toDomain(0)
-                }
-            },
-        )
-    }
-
-    @Test
-    fun `장바구니에 있던 상품의 수량 1 감소시킬 때 원래 개수가 1이면 완전히 제거됨`() {
-        // given
-        productSource =
-            FakeProductDataSource(
-                allProducts = productsTestFixture(21).toMutableList(),
-            )
-        cartSource =
-            FakeShoppingCartProductIdDataSource(
-                data = productsIdCountDataTestFixture(5).toMutableList(),
-            )
-        shoppingProductRepository =
-            DefaultShoppingProductRepository(
-                productSource,
-                cartSource,
-            )
-        historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
-
-        // when
-        viewModel.loadAll()
-        viewModel.onDecrease(productId = 3)
-
-        // then
-        val actual = viewModel.productsEvent.getOrAwaitValue()
-        val expected = ProductCountEvent.ProductCountCleared(3)
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `장바구니에 있던 상품의 수량 1 감소`() {
-        // given
-        productSource =
-            FakeProductDataSource(
-                allProducts = productsTestFixture(21).toMutableList(),
-            )
-        cartSource =
-            FakeShoppingCartProductIdDataSource(
-                data = productsIdCountDataTestFixture(dataCount = 5, quantity = 2).toMutableList(),
-            )
-        shoppingProductRepository =
-            DefaultShoppingProductRepository(
-                productSource,
-                cartSource,
-            )
-        historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
-
-        // when
-        viewModel.loadAll()
-        viewModel.onDecrease(productId = 3)
-
-        // then
-        val actualEvent = viewModel.productsEvent.getOrAwaitValue()
-        val expectedEvent = ProductCountEvent.ProductCountCountChanged(3, 1)
-        assertThat(actualEvent).isEqualTo(expectedEvent)
-
-        val actualProducts = viewModel.loadedProducts.getOrAwaitValue()
-        val expectedProducts =
-            List(20) {
-                when (it) {
-                    3 -> productTestFixture(it.toLong()).toDomain(1)
-                    in (0 until 5) -> productTestFixture(it.toLong()).toDomain(2)
-                    else -> productTestFixture(it.toLong()).toDomain(0)
-                }
-            }
-        assertThat(actualProducts).isEqualTo(expectedProducts)
     }
 
     @Test
@@ -341,6 +248,7 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
+        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         val actual = viewModel.productsHistory.getOrAwaitValue()

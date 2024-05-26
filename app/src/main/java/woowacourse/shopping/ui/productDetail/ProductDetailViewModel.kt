@@ -21,7 +21,7 @@ class ProductDetailViewModel(
     private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
     val currentProduct: LiveData<Product> get() = _currentProduct
 
-    private val _productCount: MutableLiveData<Int> = MutableLiveData()
+    private val _productCount: MutableLiveData<Int> = MutableLiveData(1)
     val productCount: LiveData<Int> get() = _productCount
 
     private val _latestProduct: MutableLiveData<Product> = MutableLiveData()
@@ -44,7 +44,6 @@ class ProductDetailViewModel(
             }
 
             productHistoryRepository.saveProductHistory(productId)
-
         }
     }
 
