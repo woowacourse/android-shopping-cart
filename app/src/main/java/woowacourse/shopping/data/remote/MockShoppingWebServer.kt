@@ -16,6 +16,7 @@ import kotlin.concurrent.thread
 
 class MockShoppingWebServer(
     database: ShoppingDatabase,
+    port: Int = 12345,
 ) {
     private val productDao: ProductDao = database.productDao()
     private val cartDao: CartDao = database.cartDao()
@@ -143,9 +144,13 @@ class MockShoppingWebServer(
 
     init {
         thread {
-            mockWebServer.start(12345)
+            mockWebServer.start(port)
             mockWebServer.dispatcher = dispatcher
         }
+    }
+
+    fun shutdown() {
+        mockWebServer.shutdown()
     }
 
     private fun getProductsByPage(
