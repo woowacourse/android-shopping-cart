@@ -79,6 +79,7 @@
                     android:text="최근 본 상품"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:visibility="@{vm.recentProducts.isEmpty() ? View.GONE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,6 +92,7 @@
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingBottom="40dp"
+                    android:visibility="@{vm.recentProducts.isEmpty() ? View.GONE : View.VISIBLE}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/tv_product_list_recent_message"
                     tools:listitem="@layout/item_recent_product" />
