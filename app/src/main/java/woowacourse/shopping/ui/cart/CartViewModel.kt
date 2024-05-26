@@ -52,14 +52,14 @@ class CartViewModel(
 
     fun deleteCartItem(productId: Long) {
         cartRepository.deleteCartItem(productId)
-        if (isEmptyLastPage()) {
-            movePreviousPage()
-            return
-        }
         updateDeletedCart(productId)
     }
 
     private fun updateDeletedCart(productId: Long) {
+        if (isEmptyLastPage()) {
+            movePreviousPage()
+            return
+        }
         _productUiModels.value =
             _productUiModels.value?.apply {
                 val productUiModel = find { productId == it.productId }
@@ -106,7 +106,7 @@ class CartViewModel(
                     this[position] = this[position].copy(quantity = --changedQuantity)
                 }
         }.onFailure {
-            _productUiModels.value = _productUiModels.value?.also { it.removeAt(position) }
+            updateDeletedCart(productId)
         }
     }
 
