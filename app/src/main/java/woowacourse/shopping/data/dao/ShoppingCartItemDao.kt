@@ -25,7 +25,7 @@ interface ShoppingCartItemDao {
         quantity: Int,
     )
 
-    @Query("DELETE FROM recent_product WHERE product_id = :productId")
+    @Query("DELETE FROM shopping_cart_item WHERE product_id = :productId")
     fun delete(productId: Long)
 
     @Query("SELECT * FROM shopping_cart_item")
