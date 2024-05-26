@@ -88,20 +88,18 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
                     )
                 }
 
-                ShoppingCartEvent.DeleteShoppingCart.Success -> {
-                    requireContext().makeToast(
-                        getString(
-                            R.string.delete_cart_item,
-                        ),
-                    )
-                }
-
                 is ShoppingCartEvent.UpdateProductEvent.DELETE -> {
                     adapter.deleteCartItem(cartState.productId)
 
                     mainActivityListener?.saveUpdateProduct(
                         cartState.productId,
                         DEFAULT_ITEM_COUNT,
+                    )
+
+                    requireContext().makeToast(
+                        getString(
+                            R.string.delete_cart_item,
+                        ),
                     )
                 }
             }

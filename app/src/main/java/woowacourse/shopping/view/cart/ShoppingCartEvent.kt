@@ -16,7 +16,7 @@ sealed interface ShoppingCartEvent {
     }
 
     sealed interface DeleteShoppingCart : ShoppingCartEvent {
-        data object Success : DeleteShoppingCart, SuccessEvent
+        data object Success : DeleteShoppingCart
 
         data object Fail : DeleteShoppingCart, ErrorState
     }

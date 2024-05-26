@@ -40,7 +40,6 @@ class ShoppingCartViewModel(
         try {
             shoppingCartRepository.deleteCartItem(cartItemId)
             shoppingCart.deleteProduct(cartItemId)
-            _shoppingCartEvent.value = ShoppingCartEvent.DeleteShoppingCart.Success
             _shoppingCartEvent.value =
                 ShoppingCartEvent.UpdateProductEvent.DELETE(productId = productId)
         } catch (e: Exception) {
