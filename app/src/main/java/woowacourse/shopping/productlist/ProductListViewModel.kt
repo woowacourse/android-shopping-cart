@@ -15,6 +15,7 @@ import woowacourse.shopping.productlist.uimodel.ProductUiModels
 import woowacourse.shopping.productlist.uimodel.RecentProductUiModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingRepository
+import kotlin.concurrent.thread
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -42,15 +43,20 @@ class ProductListViewModel(
 
     private fun loadProducts() {
         runCatching {
-            val products =
-                productRepository.products(
-                    currentLoadState().totalProductCount(),
-                    PRODUCTS_OFFSET_SIZE,
-                )
-            val cartItems = shoppingRepository.shoppingCart().items
-            products.map { product ->
-                product.toProductUiModel(productOfCartQuantity(cartItems, product))
-            }.let(::ProductUiModels)
+            var productUiModels = emptyList<ProductUiModel>()
+            thread {
+                val products =
+                    productRepository.products(
+                        currentLoadState().totalProductCount(),
+                        PRODUCTS_OFFSET_SIZE,
+                    )
+                val cartItems = shoppingRepository.shoppingCart().items
+                productUiModels =
+                    products.map { product ->
+                        product.toProductUiModel(productOfCartQuantity(cartItems, product))
+                    }
+            }.join()
+            productUiModels.let(::ProductUiModels)
         }.onSuccess { newProducts ->
             _loadState.value =
                 ShowProducts(newProducts, currentLoadState().addProduct(newProducts.products))
@@ -68,9 +74,10 @@ class ProductListViewModel(
 
     fun addProductToCart(productId: Long) {
         runCatching {
-            val cartItem = ShoppingCartItem(productRepository.productById(productId))
-            val shoppingCart = shoppingRepository.shoppingCart()
-            shoppingRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
+            thread {
+                val product = productRepository.productById(productId)
+                shoppingRepository.addCartItem(ShoppingCartItem(product))
+            }.join()
         }.onSuccess {
             val addedProduct = shoppingRepository.cartItemByProductId(productId).toProductUiModel()
             changeItemCount(addedProduct)
@@ -81,9 +88,12 @@ class ProductListViewModel(
 
     private fun deleteShoppingCart(productId: Long) {
         runCatching {
-            shoppingRepository.deleteShoppingCartItem(productId)
-            productRepository.productById(productId).toProductUiModel(NO_PRODUCT_OF_CART_ITEM)
-        }.onSuccess { updatedProduct ->
+            thread {
+                shoppingRepository.deleteShoppingCartItem(productId)
+            }.join()
+        }.onSuccess {
+            val updatedProduct =
+                productRepository.productById(productId).toProductUiModel(NO_PRODUCT_OF_CART_ITEM)
             changeItemCount(updatedProduct)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -129,11 +139,16 @@ class ProductListViewModel(
 
     fun reloadProductOfInfo(productIds: List<Long>) {
         runCatching {
-            val cartItems = shoppingRepository.cartItemsByProductIds(productIds.toList())
-            val products = productIds.map { productRepository.productById(it) }
-            products.map { product ->
-                product.toProductUiModel(productOfCartQuantity(cartItems, product))
-            }
+            var productsUiModel = emptyList<ProductUiModel>()
+            thread {
+                val cartItems = shoppingRepository.cartItemsByProductIds(productIds.toList())
+                val products = productIds.map { productRepository.productById(it) }
+                productsUiModel =
+                    products.map { product ->
+                        product.toProductUiModel(productOfCartQuantity(cartItems, product))
+                    }
+            }.join()
+            productsUiModel
         }.onSuccess { updatedProducts ->
             _loadState.value =
                 LoadProductState.ChangeItemCount(
