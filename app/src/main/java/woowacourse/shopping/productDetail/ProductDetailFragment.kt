@@ -1,7 +1,6 @@
 package woowacourse.shopping.productDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -41,9 +40,7 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
         super.onViewCreated(view, savedInstanceState)
         binding.productDetailToolbar.setOnMenuItemClickListener { clickXButton(it) }
 
-        viewModel.shouldShowLastViewedProduct.observe(viewLifecycleOwner, { shouldShow ->
-            Log.d("ProductDetailFragment", "shouldShowLastViewedProduct: $shouldShow")
-        })
+        viewModel.shouldShowLastViewedProduct.observe(viewLifecycleOwner) {}
 
         binding.lastViewedProductContainer.setOnClickListener {
             navigateToLastViewedProduct()

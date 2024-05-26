@@ -71,7 +71,7 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
 
     fun addProductToCart() {
         viewModelScope.launch {
-            if (_cartItem.value?.quantity ?: 0 > 0) {
+            if ((_cartItem.value?.quantity ?: 0) > 0) {
                 addProductCount()
             } else {
                 ShoppingCart.addProductToCart(productId)

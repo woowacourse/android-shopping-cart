@@ -56,12 +56,6 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun addProductToRecentlyViewed(productId: Int) {
-        viewModelScope.launch {
-            recentlyViewedRepository.addProduct(productId)
-        }
-    }
-
     fun loadMoreProducts() {
         val newProducts = loadProducts()
         val currentProducts = _loadedProducts.value.orEmpty()

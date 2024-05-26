@@ -56,9 +56,4 @@ object ShoppingCart {
                 database.cartItemDao().delete(cartItem)
             }
         }
-
-    suspend fun clearCart() =
-        withContext(Dispatchers.IO) {
-            database.cartItemDao().clearCart()
-        }
 }
