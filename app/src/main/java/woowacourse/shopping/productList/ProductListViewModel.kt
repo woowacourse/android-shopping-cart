@@ -22,8 +22,10 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private val _cartItems = MutableLiveData<List<CartItem>>()
     val cartItems: LiveData<List<CartItem>> get() = _cartItems
 
-    private val _loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(loadProducts())
-    val loadedProducts: LiveData<List<Product>> get() = _loadedProducts
+    private val _loadedProducts: MutableLiveData<List<Product>> =
+        MutableLiveData(loadProducts())
+    val loadedProducts: LiveData<List<Product>>
+        get() = _loadedProducts
 
     private val _recentlyViewedEntities = recentlyViewedRepository.getRecentProducts()
     private val _recentlyViewedProducts = MediatorLiveData<List<Product>>()
@@ -75,13 +77,6 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     fun decreaseQuantity(productId: Int) {
         viewModelScope.launch {
             ShoppingCart.subtractProductCount(productId)
-            loadCartItems()
-        }
-    }
-
-    fun deleteCartItem(productId: Int) {
-        viewModelScope.launch {
-            ShoppingCart.deleteProduct(productId)
             loadCartItems()
         }
     }

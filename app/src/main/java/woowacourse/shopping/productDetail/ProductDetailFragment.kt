@@ -1,7 +1,7 @@
 package woowacourse.shopping.productDetail
 
-import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +16,7 @@ import woowacourse.shopping.model.CartItem
 class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
     private val viewModel: ProductDetailViewModel by viewModels {
         val id = arguments?.getInt("productId") ?: 1
-        ProductDetailViewModel.factory(application = Application(), productId = id)
+        ProductDetailViewModel.factory(requireActivity().application, productId = id)
     }
 
     private var _binding: FragmentProductDetailBinding? = null
@@ -27,10 +27,9 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentProductDetailBinding.inflate(inflater)
-
+        _binding = FragmentProductDetailBinding.inflate(inflater, container, false)
         binding.vm = viewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.listener = this
         return binding.root
     }
@@ -41,6 +40,14 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
     ) {
         super.onViewCreated(view, savedInstanceState)
         binding.productDetailToolbar.setOnMenuItemClickListener { clickXButton(it) }
+
+        viewModel.shouldShowLastViewedProduct.observe(viewLifecycleOwner, { shouldShow ->
+            Log.d("ProductDetailFragment", "shouldShowLastViewedProduct: $shouldShow")
+        })
+
+        binding.lastViewedProductContainer.setOnClickListener {
+            navigateToLastViewedProduct()
+        }
     }
 
     override fun onDestroyView() {
@@ -64,5 +71,18 @@ class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
 
     override fun decreaseQuantity(cartItem: CartItem) {
         viewModel.subtractProductCount()
+    }
+
+    private fun navigateToLastViewedProduct() {
+        val lastViewedProductId = viewModel.lastViewedProduct.value?.id ?: return
+        val fragment = ProductDetailFragment().apply {
+            arguments = Bundle().apply {
+                putInt("productId", lastViewedProductId)
+            }
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

@@ -77,6 +77,40 @@
             bind:listener="@{listener}"
             tools:text="상품 개수" />
 
+        <!-- 최근 본 상품 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/last_viewed_product_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_detail_product_price"
+            app:visibilityByBoolean="@{vm.shouldShowLastViewedProduct}">
+
+            <TextView
+                android:id="@+id/last_viewed_last_viewed_product_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="마지막으로 본 상품"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/last_viewed_product_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@{vm.lastViewedProduct.name}"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/last_viewed_last_viewed_product_title"
+                tools:text="상품 이름" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"

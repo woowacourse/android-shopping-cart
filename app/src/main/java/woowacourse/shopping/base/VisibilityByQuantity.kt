@@ -15,4 +15,10 @@ object VisibilityByQuantity {
     fun setVisibilityByPlusButton(view: View, quantity: Int) {
         view.visibility = if (quantity > 0) View.GONE else View.VISIBLE
     }
+
+    @JvmStatic
+    @BindingAdapter("app:visibilityByBoolean")
+    fun setVisibilityByBoolean(view: View, isVisible: Boolean) {
+        view.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
 }

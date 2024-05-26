@@ -3,11 +3,13 @@ package woowacourse.shopping.productDetail
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.db.ShoppingCart
+import woowacourse.shopping.db.recenteProduct.RecentlyViewedProductEntity
 import woowacourse.shopping.factory.BaseViewModelFactory
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
@@ -25,9 +27,19 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
     private val _cartItem = MutableLiveData<CartItem>()
     val cartItem: LiveData<CartItem> get() = _cartItem
 
+    private val _lastViewedProduct = MediatorLiveData<Product>()
+    val lastViewedProduct: LiveData<Product> get() = _lastViewedProduct
+
+    private val _shouldShowLastViewedProduct = MutableLiveData<Boolean>()
+    val shouldShowLastViewedProduct: LiveData<Boolean> get() = _shouldShowLastViewedProduct
+
+    private val recentProducts: LiveData<List<RecentlyViewedProductEntity>> =
+        recentlyViewedRepository.getRecentProducts(productId)
+
     init {
         loadCartItem()
         addProductToRecentlyViewed()
+        observeLastViewedProduct()
     }
 
     private fun loadCartItem() {
@@ -40,6 +52,20 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
     private fun addProductToRecentlyViewed() {
         viewModelScope.launch {
             recentlyViewedRepository.addProduct(productId)
+        }
+    }
+
+    private fun observeLastViewedProduct() {
+        _lastViewedProduct.addSource(recentProducts) { lastViewedEntities ->
+            val lastViewedEntity = lastViewedEntities.firstOrNull()
+            if (lastViewedEntity != null) {
+                val lastViewedProduct = productStore.findById(lastViewedEntity.productId)
+                _lastViewedProduct.value = lastViewedProduct
+                val shouldShow = lastViewedProduct.id != productId
+                _shouldShowLastViewedProduct.value = shouldShow
+            } else {
+                _shouldShowLastViewedProduct.value = false
+            }
         }
     }
 
