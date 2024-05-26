@@ -1,0 +1,30 @@
+package woowacourse.shopping.presentation.shopping.recent
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.presentation.base.BaseViewModelFactory
+
+class RecentProductViewModel(private val recentProductRepository: RecentProductRepository) :
+    ViewModel() {
+    private val _recentProducts = MutableLiveData<List<RecentProduct>>(emptyList())
+    val recentProducts: LiveData<List<RecentProduct>> = _recentProducts
+
+    fun loadRecentProducts() {
+        val products = recentProductRepository.recentProducts()
+        _recentProducts.value = products
+    }
+
+    fun addRecentProduct(productId: Long) {
+        recentProductRepository.addRecentProduct(productId)
+    }
+
+    companion object {
+        fun factory(recentProduct: RecentProductRepository): ViewModelProvider.Factory {
+            return BaseViewModelFactory { RecentProductViewModel(recentProduct) }
+        }
+    }
+}

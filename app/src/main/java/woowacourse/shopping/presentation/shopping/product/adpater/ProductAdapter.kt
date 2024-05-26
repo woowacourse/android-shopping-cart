@@ -10,6 +10,7 @@ import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class ProductAdapter(
     private val onClickItem: (id: Long) -> Unit,
+    private val onClickRecentItem: (id: Long) -> Unit,
     private val onPlusItem: () -> Unit,
     private val onClickAddBtn: (id: Long) -> Unit,
     private val onClickMinusBtn: (id: Long) -> Unit,
@@ -50,6 +51,7 @@ class ProductAdapter(
                 ShoppingViewHolder.ProductViewHolder(
                     view,
                     onClickItem,
+                    onClickRecentItem,
                     onClickAddBtn,
                     onClickMinusBtn,
                 )

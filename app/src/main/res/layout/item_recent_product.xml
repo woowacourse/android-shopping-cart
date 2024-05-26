@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="recent"
+            type="woowacourse.shopping.domain.RecentProduct" />
     </data>
 
     <LinearLayout
@@ -13,10 +15,12 @@
         android:orientation="vertical">
 
         <ImageView
+            imageUrl="@{recent.product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="98dp" />
 
         <TextView
+            android:text="@{recent.product.name}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
