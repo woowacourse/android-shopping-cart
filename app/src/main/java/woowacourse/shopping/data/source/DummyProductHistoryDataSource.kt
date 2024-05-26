@@ -2,11 +2,18 @@ package woowacourse.shopping.data.source
 
 class DummyProductHistoryDataSource : ProductHistoryDataSource {
     override fun saveProductHistory(productId: Long) {
+        if (productHistory.contains(productId)) {
+            productHistory.remove(productId)
+        }
+
         if (productHistory.size == MAX_SIZE) {
             productHistory.removeFirst()
         }
+
         productHistory.add(productId)
     }
+
+    override fun loadProductHistory(productId: Long): Long? = productHistory.find { it == productId }
 
     override fun loadAllProductHistory(): List<Long> = productHistory
 
