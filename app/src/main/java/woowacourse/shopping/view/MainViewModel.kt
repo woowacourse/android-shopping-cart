@@ -12,10 +12,10 @@ class MainViewModel : ViewModel() {
     val updateRecentlyProductEvent: SingleLiveData<Unit> get() = _updateRecentlyProductEvent
 
     fun saveUpdateProduct(updateList: Map<Long, Int>) {
-        _updateProductEvent.postValue(updateList)
+        _updateProductEvent.setValue(updateList)
     }
 
     fun saveUpdateRecentlyProduct() {
-        _updateRecentlyProductEvent.postValue(Unit)
+        _updateRecentlyProductEvent.setValue(Unit)
     }
 }

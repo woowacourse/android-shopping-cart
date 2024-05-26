@@ -52,7 +52,7 @@ class ProductDetailViewModel(
                     )
                 }
             }
-            _productDetailEvent.postValue(
+            _productDetailEvent.setValue(
                 ProductDetailEvent.AddShoppingCart.Success(
                     productId = product.id,
                     count = product.cartItemCounter.itemCount,
@@ -61,12 +61,12 @@ class ProductDetailViewModel(
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductDetailEvent.AddShoppingCart.Fail,
                     )
 
                 else ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductDetailEvent.ErrorEvent.NotKnownError,
                     )
             }
@@ -84,12 +84,12 @@ class ProductDetailViewModel(
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductDetailEvent.LoadProductItem.Fail,
                     )
 
                 else ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductDetailEvent.ErrorEvent.NotKnownError,
                     )
             }
@@ -107,7 +107,7 @@ class ProductDetailViewModel(
                 is NoSuchDataException -> CartItemCounter()
 
                 else ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductDetailEvent.ErrorEvent.NotKnownError,
                     )
             }
@@ -161,16 +161,16 @@ class ProductDetailViewModel(
             product.updateCartItemCount(loadItemCounter.itemCount)
             _product.value = product
             _recentlyProduct.value = RecentlyProduct.defaultRecentlyProduct
-            _productDetailEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Success)
+            _productDetailEvent.setValue(ProductDetailEvent.UpdateRecentlyProductItem.Success)
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductDetailEvent.LoadProductItem.Fail,
                     )
 
                 else ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductDetailEvent.ErrorEvent.NotKnownError,
                     )
             }
@@ -181,14 +181,14 @@ class ProductDetailViewModel(
         try {
             val recentlyProduct = recentlyProductRepository.getMostRecentlyProduct()
             _recentlyProduct.value = recentlyProduct
-            _productDetailEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Success)
+            _productDetailEvent.setValue(ProductDetailEvent.UpdateRecentlyProductItem.Success)
             if (recentlyProduct.productId != product.id) {
                 saveRecentlyProduct(product)
             }
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Fail)
-                else -> _errorEvent.postValue(ProductDetailEvent.ErrorEvent.NotKnownError)
+                is NoSuchDataException -> _errorEvent.setValue(ProductDetailEvent.UpdateRecentlyProductItem.Fail)
+                else -> _errorEvent.setValue(ProductDetailEvent.ErrorEvent.NotKnownError)
             }
         }
     }

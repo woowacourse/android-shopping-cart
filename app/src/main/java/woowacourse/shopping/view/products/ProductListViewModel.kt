@@ -52,11 +52,11 @@ class ProductListViewModel(
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ProductListEvent.LoadProductEvent.Fail,
                     )
 
-                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
+                else -> _errorEvent.setValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }
@@ -66,7 +66,7 @@ class ProductListViewModel(
             val pagingData = recentlyProductRepository.getRecentlyProductList()
             _recentlyProducts.value = pagingData
         } catch (e: Exception) {
-            _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
+            _errorEvent.setValue(ProductListEvent.ErrorEvent.NotKnownError)
         }
     }
 
@@ -101,15 +101,15 @@ class ProductListViewModel(
 
                 is UpdateCartItemType.UPDATE -> {}
             }
-            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+            _productListEvent.setValue(ProductListEvent.UpdateProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(ProductListEvent.UpdateProductEvent.Fail)
+                    _errorEvent.setValue(ProductListEvent.UpdateProductEvent.Fail)
 
                 is AddCartItemException -> addCartItem(product)
                 is DeleteCartItemException -> deleteCartItem(product)
-                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
+                else -> _errorEvent.setValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }
@@ -119,20 +119,20 @@ class ProductListViewModel(
         product.updateCartItemCount(DEFAULT_CART_ITEM_COUNT)
         product.updateItemSelector(true)
         increaseTotalCartItemCount()
-        _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+        _productListEvent.setValue(ProductListEvent.UpdateProductEvent.Success(product.id))
     }
 
     private fun deleteCartItem(product: Product) {
         try {
             product.updateItemSelector(false)
             _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
-            _productListEvent.postValue(ProductListEvent.DeleteProductEvent.Success(product.id))
+            _productListEvent.setValue(ProductListEvent.DeleteProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(ProductListEvent.DeleteProductEvent.Fail)
+                    _errorEvent.setValue(ProductListEvent.DeleteProductEvent.Fail)
 
-                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
+                else -> _errorEvent.setValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }
@@ -160,7 +160,7 @@ class ProductListViewModel(
                     product.updateItemSelector(true)
                 }
                 product.updateCartItemCount(count)
-                _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+                _productListEvent.setValue(ProductListEvent.UpdateProductEvent.Success(product.id))
             }
         }
         updateTotalCartItemCount()

@@ -46,12 +46,12 @@ class ShoppingCartViewModel(
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ShoppingCartEvent.DeleteShoppingCart.Fail,
                     )
 
                 else ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ShoppingCartEvent.ErrorState.NotKnownError,
                     )
             }
@@ -66,12 +66,12 @@ class ShoppingCartViewModel(
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ShoppingCartEvent.LoadCartItemList.Fail,
                     )
 
                 else ->
-                    _errorEvent.postValue(
+                    _errorEvent.setValue(
                         ShoppingCartEvent.ErrorState.NotKnownError,
                     )
             }
@@ -105,14 +105,14 @@ class ShoppingCartViewModel(
         } catch (e: Exception){
             when(e){
                 is NoSuchDataException ->
-                    _errorEvent.postValue(ShoppingCartEvent.UpdateProductEvent.Fail)
+                    _errorEvent.setValue(ShoppingCartEvent.UpdateProductEvent.Fail)
                 is DeleteCartItemException -> {
                     deleteShoppingCartItem(
                         e.deleteId,
                         productId = product.id,
                     )
                 }
-                else -> _errorEvent.postValue(ShoppingCartEvent.ErrorState.NotKnownError)
+                else -> _errorEvent.setValue(ShoppingCartEvent.ErrorState.NotKnownError)
             }
         }
     }
