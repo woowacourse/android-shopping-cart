@@ -64,7 +64,7 @@ class ShoppingViewModel(
         loadRecentlyViewedProducts()
     }
 
-    private fun loadProducts() {
+    fun loadProducts() {
         _currentPage.postValue(0)
         _totalCartItemsCount.postValue(cartRepository.sumQuantity())
     }

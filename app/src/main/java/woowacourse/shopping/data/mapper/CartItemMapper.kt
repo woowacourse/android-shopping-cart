@@ -45,3 +45,14 @@ fun ProductWithQuantity.toCartItemEntity(): CartItemEntity {
         quantity = this.quantity,
     )
 }
+
+fun ProductWithQuantity.toCartItem(): CartItem {
+    return CartItem(
+        id = this.product.id,
+        productId = this.product.id,
+        productName = this.product.name,
+        price = this.product.price,
+        imgUrl = this.product.imageUrl,
+        quantity = this.quantity,
+    )
+}

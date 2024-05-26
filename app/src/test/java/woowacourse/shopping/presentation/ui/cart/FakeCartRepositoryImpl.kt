@@ -1,64 +1,64 @@
 package woowacourse.shopping.presentation.ui.cart
 
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.presentation.ui.testCartItem0
 
 class FakeCartRepositoryImpl : CartRepository {
     val cartItems = mutableListOf<CartItem>()
 
-    override fun insert(
-        product: Product,
-        quantity: Int,
-    ) {
+    override fun insert(productWithQuantity: ProductWithQuantity) {
         cartItems.add(
             CartItem(
-                id = product.id,
-                productId = product.id,
-                productName = product.name,
-                price = product.price,
-                imgUrl = product.imageUrl,
-                quantity = quantity,
+                id = productWithQuantity.product.id,
+                productId = productWithQuantity.product.id,
+                productName = productWithQuantity.product.name,
+                price = productWithQuantity.product.price,
+                imgUrl = productWithQuantity.product.imageUrl,
+                quantity = productWithQuantity.quantity,
             ),
         )
     }
 
-    override fun update(
+    override fun getQuantityByProductId(productId: Long): Int? {
+        return cartItems.find { it.productId == productId }?.quantity
+    }
+
+    override fun plusQuantity(
         productId: Long,
         quantity: Int,
     ) {
+        return
+    }
+
+    override fun minusQuantity(
+        productId: Long,
+        quantity: Int,
+    ) {
+        return
     }
 
     override fun size(): Int {
         return cartItems.size
     }
 
-    override fun findOrNullWithProductId(productId: Long): CartItem? {
-        return cartItems.find { it.productId == productId }
+    override fun sumQuantity(): Int {
+        return cartItems.sumOf { it.quantity }
     }
 
-    override fun find(cartItemId: Long): CartItem {
-        return testCartItem0
+    override fun findWithProductId(productId: Long): CartItem {
+        return cartItems.find { it.productId == productId }!!
     }
 
-    override fun findAll(): ShoppingCart {
-        return ShoppingCart(cartItems)
-    }
-
-    override fun findAllPagedItems(
+    override fun findCartItemsByPage(
         page: Int,
         pageSize: Int,
     ): ShoppingCart {
         return ShoppingCart(cartItems)
     }
 
-    override fun delete(cartItemId: Long) {
-        cartItems.removeIf { it.id == cartItemId }
-    }
-
-    override fun deleteAll() {
-        cartItems.clear()
+    override fun deleteByProductId(productId: Long) {
+        cartItems.removeIf { it.productId == productId }
     }
 }
