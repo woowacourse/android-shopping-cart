@@ -41,24 +41,23 @@ class CartViewModel(
     }
 
     fun loadPreviousPageCartItems() {
-        thread {
-            _currentPage.postValue(currentPage.value?.minus(1))
-            loadCurrentPageCartItems()
-        }
+        _currentPage.value = currentPage.value?.minus(1)
+        loadCurrentPageCartItems()
     }
 
     fun loadNextPageCartItems() {
-        thread {
-            _currentPage.postValue(currentPage.value?.plus(1))
-            loadCurrentPageCartItems()
-        }
+        _currentPage.value = currentPage.value?.plus(1)
+        loadCurrentPageCartItems()
     }
 
     fun loadCurrentPageCartItems() {
-        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
-        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
-        setPageInformation()
-        _cartableProducts.postValue(cartItems)
+        thread {
+            val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return@thread)
+            hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return@thread)
+                .isNotEmpty()
+            setPageInformation()
+            _cartableProducts.postValue(cartItems)
+        }
     }
 
     override fun onCartItemDelete(cartedProduct: CartedProduct) {
@@ -79,16 +78,20 @@ class CartViewModel(
         if (quantity < 0) return
         thread {
             val targetItem = productRepository.fetchProduct(productId)
-            if (targetItem.cartItem?.id != null) {
+            if (targetItem.cartItem != null) {
                 if (quantity == 0) {
                     cartRepository.removeCartItem(targetItem.cartItem)
                 } else {
-                    cartRepository.updateQuantity(targetItem.cartItem.id, quantity)
+                    cartRepository.updateQuantity(targetItem.cartItem.id ?: return@thread, quantity)
                 }
                 if (productId !in alteredCartItems.map(ProductQuantity::productId)) {
                     alteredCartItems.add(ProductQuantity(productId, quantity))
                 } else {
-                    replaceAll(alteredCartItems, alteredCartItems.first { it.productId == productId }, ProductQuantity(productId, quantity))
+                    replaceAll(
+                        alteredCartItems,
+                        alteredCartItems.first { it.productId == productId },
+                        ProductQuantity(productId, quantity)
+                    )
                 }
             }
             loadCurrentPageCartItems()
