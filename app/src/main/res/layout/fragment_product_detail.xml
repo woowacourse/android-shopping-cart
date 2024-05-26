@@ -32,7 +32,7 @@
 
                 <ImageView
                     android:id="@+id/iv_product"
-                    imageUrl="@{vm.cartProduct.product.imageUrl}"
+                    imageUrl="@{vm.uiState.cartProduct.product.imageUrl}"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1"
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@{vm.cartProduct.product.name}"
+                    android:text="@{vm.uiState.cartProduct.product.name}"
                     android:theme="@style/H1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginTop="33dp"
-                    android:text="@{@string/price_format(vm.cartProduct.totalPrice)}"
+                    android:text="@{@string/price_format(vm.uiState.cartProduct.totalPrice)}"
                     android:textSize="20sp"
                     android:theme="@style/B2"
                     app:layout_constraintStart_toStartOf="parent"
@@ -82,14 +82,14 @@
                     app:layout_constraintBottom_toBottomOf="@id/tv_product_price"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_product_price"
-                    bind:count="@{vm.cartProduct.count}"
+                    bind:count="@{vm.uiState.cartProduct.count}"
                     bind:counterListener="@{listener}"
-                    bind:id="@{vm.cartProduct.product.id}"
-                    bind:visible="@{vm.cartProduct.visible}"
+                    bind:id="@{vm.uiState.cartProduct.product.id}"
+                    bind:visible="@{vm.uiState.cartProduct.visible}"
                     tools:text="4만원" />
 
                 <LinearLayout
-                    isVisible="@{vm.isRecentProductVisible}"
+                    isVisible="@{vm.uiState.isRecentProductVisible}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="18dp"
@@ -115,7 +115,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{vm.recentProduct.name}"
+                        android:text="@{vm.uiState.recentProduct.name}"
                         tools:text="PET보틀-정사각형(500ml)" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

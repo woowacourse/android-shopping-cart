@@ -23,15 +23,28 @@ class CartViewModel(
     }
 
     fun increaseCartProduct(productId: Long) {
-        val newProduct = _uiState.value?.increaseProductCount(productId, INCREMENT_AMOUNT) ?: return
-        val currentProducts = _uiState.value?.products ?: return
-        updateProductCounts(productId, newProduct, currentProducts)
+        val product = _uiState.value?.findProduct(productId) ?: return
+        cartRepository.updateCartProduct(productId, product.count).onSuccess {
+            val newUiState =
+                _uiState.value?.increaseProductCount(productId, INCREMENT_AMOUNT) ?: return
+            updateUiState(newUiState)
+        }.onFailure {
+            _errorEvent.setValue(CartErrorEvent.UpdateCartProducts)
+        }
     }
 
     fun decreaseCartProduct(productId: Long) {
-        val newProduct = _uiState.value?.decreaseProductCount(productId, INCREMENT_AMOUNT) ?: return
-        val currentProducts = _uiState.value?.products ?: return
-        updateProductCounts(productId, newProduct, currentProducts)
+        val product = _uiState.value?.findProduct(productId) ?: return
+        val uiState = _uiState.value ?: return
+        if (!uiState.canDecreaseProductCount(productId, CART_PRODUCT_COUNT_LIMIT)) {
+            return _errorEvent.setValue(CartErrorEvent.DecreaseCartCountLimit)
+        }
+        cartRepository.updateCartProduct(productId, product.count).onSuccess {
+            val newUiState = uiState.decreaseProductCount(productId, INCREMENT_AMOUNT)
+            updateUiState(newUiState)
+        }.onFailure {
+            _errorEvent.setValue(CartErrorEvent.UpdateCartProducts)
+        }
     }
 
     fun deleteProduct(product: CartProductUi) {
@@ -67,6 +80,18 @@ class CartViewModel(
         )
     }
 
+    private fun updateUiState(
+        newUiState: CartUiState,
+    ) {
+        val currentPage = newUiState.currentPage
+        val canLoadPrevPage = canLoadMoreCartProducts(currentPage - INCREMENT_AMOUNT)
+        val canLoadNextPage = canLoadMoreCartProducts(currentPage + INCREMENT_AMOUNT)
+        _uiState.value = newUiState.copy(
+            canLoadPrevPage = canLoadPrevPage,
+            canLoadNextPage = canLoadNextPage
+        )
+    }
+
     private fun loadCartProducts(page: Int) {
         cartRepository.cartProducts(page, PAGE_SIZE).onSuccess { carts ->
             val newProducts = carts.map { it.toUiModel() }
@@ -90,55 +115,14 @@ class CartViewModel(
         return false
     }
 
-    private fun updateProductCounts(
-        productId: Long,
-        newProduct: CartProductUi,
-        currentProducts: List<CartProductUi>
-    ) {
-        if (newProduct.count <= CART_PRODUCT_COUNT_LIMIT) return _errorEvent.setValue(CartErrorEvent.DecreaseCartCountLimit)
-        cartRepository.updateCartProduct(productId, newProduct.count).onSuccess {
-            val updatedProducts =
-                currentProducts.updateIf(predicate = { it.product.id == productId }) { newProduct }
-            updateUiState(products = updatedProducts)
-        }.onFailure {
-            _errorEvent.setValue(CartErrorEvent.UpdateCartProducts)
-        }
-    }
-
-    private inline fun <T> Iterable<T>.updateIf(
-        predicate: (T) -> Boolean,
-        transform: (T) -> T,
-    ): List<T> {
-        return map { if (predicate(it)) transform(it) else it }
-    }
-
     companion object {
         private const val START_PAGE: Int = 1
         private const val PAGE_SIZE = 5
         private const val INCREMENT_AMOUNT = 1
-        private const val CART_PRODUCT_COUNT_LIMIT = 0
+        private const val CART_PRODUCT_COUNT_LIMIT = 1
 
         fun factory(repository: CartRepository): ViewModelProvider.Factory {
             return BaseViewModelFactory { CartViewModel(repository) }
         }
     }
-}
-
-data class CartUiState(
-    val products: List<CartProductUi>,
-    val currentPage: Int,
-    val canLoadPrevPage: Boolean,
-    val canLoadNextPage: Boolean
-) {
-    fun increaseProductCount(productId: Long, amount: Int): CartProductUi? =
-        products.find { it.product.id == productId }
-            ?.let { it.copy(count = it.count + amount) }
-
-    fun decreaseProductCount(productId: Long, amount: Int): CartProductUi? =
-        products.find { it.product.id == productId }
-            ?.let { it.copy(count = it.count - amount) }
-
-
-    fun deleteProduct(productId: Long): List<CartProductUi> =
-        products.filter { it.product.id != productId }
 }

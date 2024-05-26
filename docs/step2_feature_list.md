@@ -45,6 +45,7 @@ Product Api 는 MockServer 를 활용해서 만들어서 실제 서버랑 비슷
 
 ---
 - [x]: CartFragment UiState 도입
+- [x]: ProductDetailViewModel UiState 도입
 - [x]: CartFragment 상품 count 증가/감소 test 작성
 -[ ]: 마지막 상품이 안보이면 시스템 backPressed 시 상품 목록으로 이동한다.
 -[ ]: 각 Fragment 마다 AppBar 만들기 (CustomAppBarLayout 으로 만들어서 사용하기)

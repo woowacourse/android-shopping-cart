@@ -38,7 +38,7 @@ class ProductDetailFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
+            val id = arguments?.getLong(PRODUCT_ID, -1) ?: return
             viewModel.loadCartProduct(id)
         }
     }
@@ -102,7 +102,7 @@ class ProductDetailFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
-                        if (viewModel.isRecentProductVisible.value == false) {
+                        if (viewModel.uiState.value?.isRecentProductVisible == false) {
                             (requireActivity() as? ShoppingNavigator)?.navigateToProductList(1)
                         } else {
                             (requireActivity() as? ShoppingNavigator)?.popBackStack()
