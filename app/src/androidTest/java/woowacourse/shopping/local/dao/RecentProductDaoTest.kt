@@ -31,9 +31,9 @@ class RecentProductDaoTest {
         // given
         val product = fakeRecentProductEntity(id = 1L)
         // when
-        val expectId = 1L
         val actualId = dao.saveProduct(product)
         // then
+        val expectId = 1L
         actualId shouldBe expectId
     }
 
@@ -44,6 +44,7 @@ class RecentProductDaoTest {
         saveProduct(1L, dateTime().plusDays(1))
         saveProduct(2L, dateTime())
         saveProduct(3L, dateTime().plusDays(2))
+        // then
         val expect =
             fakeRecentProductEntities(
                 fakeRecentProductEntity(3L, dateTime().plusDays(2)),
@@ -51,7 +52,6 @@ class RecentProductDaoTest {
                 fakeRecentProductEntity(2L, dateTime()),
             )
         val actual = dao.loadProducts(3)
-        // then
         actual shouldBe expect
     }
 
@@ -62,12 +62,12 @@ class RecentProductDaoTest {
         saveProduct(1L, dateTime().plusDays(1))
         saveProduct(1L, dateTime())
         saveProduct(1L, dateTime().plusDays(2))
+        // then
         val expect =
             fakeRecentProductEntities(
                 fakeRecentProductEntity(1L, dateTime().plusDays(2)),
             )
         val actual = dao.loadProducts(1)
-        // then
         actual shouldBe expect
     }
 
