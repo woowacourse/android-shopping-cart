@@ -37,6 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private fun showProductDetail() {
         runCatching {
             viewModel.loadProduct(productId)
+            viewModel.loadRecentProduct()
         }.onSuccess {
             viewModel.product.observe(this) {
                 binding.product = it

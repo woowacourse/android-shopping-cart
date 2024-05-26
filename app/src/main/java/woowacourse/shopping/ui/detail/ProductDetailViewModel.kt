@@ -25,9 +25,20 @@ class ProductDetailViewModel(
     private val _itemCount: MutableLiveData<Int> = MutableLiveData(1)
     val itemCount: LiveData<Int> get() = _itemCount
 
+    private val _recentProductVisibility: MutableLiveData<Boolean> = MutableLiveData()
+    val recentProductVisibility: LiveData<Boolean> get() = _recentProductVisibility
+
+    private val _recentProduct: MutableLiveData<Product> = MutableLiveData()
+    val recentProduct: LiveData<Product> get() = _recentProduct
+
     fun loadProduct(productId: Long) {
         _product.value = productDao.find(productId)
         recentProductsRepository.insert(RecentProductEntity(productId, LocalDateTime.now()))
+    }
+
+    fun loadRecentProduct() {
+        _recentProduct.value = recentProductsRepository.getSecondLastData()
+        _recentProductVisibility.value = (_recentProduct.value != null)
     }
 
     fun increaseItemCount() {

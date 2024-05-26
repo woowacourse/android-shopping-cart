@@ -1,7 +1,6 @@
 package woowacourse.shopping.model.data
 
 import android.content.Context
-import android.util.Log
 import woowacourse.shopping.model.Product
 import kotlin.concurrent.thread
 
@@ -18,8 +17,17 @@ class RecentProductsRepository(application: Context) {
             recentProductsEntity.map {
                 ProductsImpl.find(it.productId)
             }
-        Log.d("alsong", "$recentProducts")
         return recentProducts
+    }
+
+    fun getSecondLastData(): Product? {
+        var lastProductEntity: RecentProductEntity? = null
+        thread {
+            lastProductEntity = recentProductDao.getSecondLast()
+        }.join()
+        return lastProductEntity?.let {
+            ProductsImpl.find(it.productId)
+        }
     }
 
     fun insert(entity: RecentProductEntity) {

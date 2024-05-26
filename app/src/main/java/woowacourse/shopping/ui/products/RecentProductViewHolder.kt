@@ -12,7 +12,7 @@ class RecentProductViewHolder(
     fun bind(
         product: Product,
         viewModel: ProductContentsViewModel,
-    )  {
+    ) {
         binding.product = product
         binding.viewModel = viewModel
         binding.lifecycleOwner = lifecycleOwner

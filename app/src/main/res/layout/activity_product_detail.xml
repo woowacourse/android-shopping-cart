@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
@@ -115,7 +115,8 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="29dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_price">
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_price"
+            android:visibility="@{viewModel.recentProductVisibility ? View.VISIBLE : View.INVISIBLE}">
 
             <ImageView
                 android:id="@+id/iv_recent_product_boundary"
@@ -151,7 +152,8 @@
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@id/tv_recent_product"
                 app:layout_constraintTop_toBottomOf="@id/tv_recent_product"
-                tools:text="맥북" />
+                tools:text="맥북"
+                android:text="@{viewModel.recentProduct.name}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button

@@ -30,7 +30,7 @@ class RecentProductAdapter(
         holder.bind(products[position], viewModel)
     }
 
-    fun setData(newProducts: List<Product>)  {
+    fun setData(newProducts: List<Product>) {
         products = newProducts
         notifyItemRangeChanged(0, newProducts.size)
     }

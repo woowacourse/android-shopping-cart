@@ -10,6 +10,9 @@ interface RecentProductDao {
     @Query("SELECT * FROM recentProducts ORDER BY createdTime DESC")
     fun getAll(): List<RecentProductEntity>
 
+    @Query("SELECT * FROM recentProducts ORDER BY createdTime DESC LIMIT 1 OFFSET 1")
+    fun getSecondLast(): RecentProductEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(recentProduct: RecentProductEntity)
 }
