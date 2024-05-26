@@ -39,8 +39,8 @@ class ProductListViewModel(
         MutableLiveData(ProductCountEvent.ProductCountAllCleared)
     val productsEvent: LiveData<ProductCountEvent> = _productsEvent
 
-    private var _detailProductDestinationId: MutableSingleLiveData<Int> = MutableSingleLiveData()
-    val detailProductDestinationId: SingleLiveData<Int> get() = _detailProductDestinationId
+    private var _detailProductDestinationId: MutableSingleLiveData<Long> = MutableSingleLiveData()
+    val detailProductDestinationId: SingleLiveData<Long> get() = _detailProductDestinationId
 
     private var _shoppingCartDestination: MutableSingleLiveData<Boolean> = MutableSingleLiveData()
     val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
@@ -79,12 +79,12 @@ class ProductListViewModel(
         _shoppingCartDestination.setValue(true)
     }
 
-    override fun onClick(productId: Int) {
+    override fun onClick(productId: Long) {
         Log.d(TAG, "onClick: called productId : $productId")
         _detailProductDestinationId.setValue(productId)
     }
 
-    override fun onIncrease(productId: Int) {
+    override fun onIncrease(productId: Long) {
         Log.d(TAG, "onIncrease: called productId : $productId")
         try {
             productsRepository.increaseShoppingCartProduct(productId)
@@ -107,7 +107,7 @@ class ProductListViewModel(
         }
     }
 
-    override fun onDecrease(productId: Int) {
+    override fun onDecrease(productId: Long) {
         Log.d(TAG, "onDecrease: called")
         productsRepository.decreaseShoppingCartProduct(productId)
         val product = productsRepository.loadProduct(productId)
@@ -128,7 +128,7 @@ class ProductListViewModel(
 
     private fun productRemoved(
         product: Product,
-        productId: Int,
+        productId: Long,
     ): Boolean {
         if (product.quantity == 0) {
             productsRepository.removeShoppingCartProduct(productId)

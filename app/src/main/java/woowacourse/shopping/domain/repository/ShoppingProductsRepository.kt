@@ -7,7 +7,7 @@ interface ShoppingProductsRepository {
 
     fun loadProductsInCart(page: Int): List<Product>
 
-    fun loadProduct(id: Int): Product
+    fun loadProduct(id: Long): Product
 
     fun isFinalPage(page: Int): Boolean
 
@@ -15,11 +15,11 @@ interface ShoppingProductsRepository {
 
     fun shoppingCartProductQuantity(): Int
 
-    fun increaseShoppingCartProduct(id: Int)
+    fun increaseShoppingCartProduct(id: Long)
 
-    fun decreaseShoppingCartProduct(id: Int)
+    fun decreaseShoppingCartProduct(id: Long)
 
-    fun addShoppingCartProduct(id: Int)
+    fun addShoppingCartProduct(id: Long)
 
-    fun removeShoppingCartProduct(id: Int)
+    fun removeShoppingCartProduct(id: Long)
 }

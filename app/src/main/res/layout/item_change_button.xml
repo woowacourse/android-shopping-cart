@@ -9,7 +9,7 @@
 
         <variable
             name="itemId"
-            type="int" />
+            type="long"/>
 
         <variable
             name="quantity"

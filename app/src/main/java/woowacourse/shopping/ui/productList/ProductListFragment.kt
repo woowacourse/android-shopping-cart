@@ -147,7 +147,7 @@ class ProductListFragment : Fragment() {
         navigateToFragment(ShoppingCartFragment())
     }
 
-    private fun navigateToProductDetail(id: Int) = navigateToFragment(ProductDetailFragment.newInstance(id))
+    private fun navigateToProductDetail(id: Long) = navigateToFragment(ProductDetailFragment.newInstance(id))
 
     private fun navigateToFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction().apply {

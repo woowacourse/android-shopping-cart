@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.model.toDomain
 class DefaultProductIdsCountRepository(
     private val productsIdsCountDataSource: ShoppingCartProductIdDataSource,
 ) : ProductIdsCountRepository {
-    override fun findByProductId(productId: Int): ProductIdsCount =
+    override fun findByProductId(productId: Long): ProductIdsCount =
         productsIdsCountDataSource.findByProductId(productId)?.toDomain() ?: throw NoSuchElementException(
             "no such product id $productId in shopping cart repository",
         )
@@ -18,12 +18,12 @@ class DefaultProductIdsCountRepository(
             it.toDomain()
         }
 
-    override fun addedProductsId(productIdsCount: ProductIdsCount): Int =
+    override fun addedProductsId(productIdsCount: ProductIdsCount): Long =
         productsIdsCountDataSource.addedNewProductsId(productIdsCount.toData())
 
-    override fun removedProductsId(productId: Int): Int = productsIdsCountDataSource.removedProductsId(productId)
+    override fun removedProductsId(productId: Long): Long = productsIdsCountDataSource.removedProductsId(productId)
 
-    override fun plusProductsIdCount(productId: Int) {
+    override fun plusProductsIdCount(productId: Long) {
         val foundProductsIdCount =
             productsIdsCountDataSource.findByProductId(productId)?.toDomain() ?: throw NoSuchElementException(
                 "no such product id $productId in shopping cart repository",
@@ -31,7 +31,7 @@ class DefaultProductIdsCountRepository(
         productsIdsCountDataSource.plusProductsIdCount(foundProductsIdCount.productId)
     }
 
-    override fun minusProductsIdCount(productId: Int) {
+    override fun minusProductsIdCount(productId: Long) {
         val foundProductsIdCount = findByProductId(productId)
         if (foundProductsIdCount.quantity == 1) {
             productsIdsCountDataSource.removedProductsId(foundProductsIdCount.productId)

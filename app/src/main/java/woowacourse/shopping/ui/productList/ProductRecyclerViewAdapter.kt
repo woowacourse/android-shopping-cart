@@ -60,7 +60,7 @@ class ProductRecyclerViewAdapter(
     // TODO: 최적화
     @SuppressLint("NotifyDataSetChanged")
     private fun updateQuantity(
-        productId: Int,
+        productId: Long,
         quantity: Int,
     ) {
         productsIdCounts.find { it.productId == productId } ?: run {

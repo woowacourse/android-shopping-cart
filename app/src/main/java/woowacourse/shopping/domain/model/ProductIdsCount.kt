@@ -3,7 +3,7 @@ package woowacourse.shopping.domain.model
 import woowacourse.shopping.data.model.ProductIdsCountData
 
 data class ProductIdsCount(
-    val productId: Int,
+    val productId: Long,
     val quantity: Int,
 )
 

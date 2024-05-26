@@ -43,7 +43,7 @@ class ProductDetailFragment : Fragment() {
             factory =
                 UniversalViewModelFactory {
                     ProductDetailViewModel(
-                        productId = it.getInt(PRODUCT_ID),
+                        productId = it.getLong(PRODUCT_ID),
                         shoppingProductsRepository =
                             DefaultShoppingProductRepository(
                                 DummyProductsDataSource(),
@@ -93,9 +93,9 @@ class ProductDetailFragment : Fragment() {
         private const val PRODUCT_ID = "productId"
         private const val TAG = "ProductDetailFragment"
 
-        fun newInstance(productId: Int): ProductDetailFragment {
+        fun newInstance(productId: Long): ProductDetailFragment {
             val fragment = ProductDetailFragment()
-            val bundle = Bundle().apply { putInt(PRODUCT_ID, productId) }
+            val bundle = Bundle().apply { putLong(PRODUCT_ID, productId) }
             fragment.arguments = bundle
             return fragment
         }

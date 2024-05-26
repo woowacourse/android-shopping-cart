@@ -7,8 +7,8 @@ import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
-import woowacourse.shopping.repository.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.source.FakeProductDataSource
+import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 
 class DefaultShoppingProductRepositoryTest {

@@ -3,7 +3,7 @@ package woowacourse.shopping.domain.model
 import woowacourse.shopping.data.model.ProductData
 
 data class Product(
-    val id: Int,
+    val id: Long,
     val imgUrl: String,
     val name: String,
     val price: Int,

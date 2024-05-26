@@ -26,7 +26,7 @@ class DefaultShoppingProductRepository(
         }
     }
 
-    override fun loadProduct(id: Int): Product = productsSource.findById(id).toDomain(productQuantity(id))
+    override fun loadProduct(id: Long): Product = productsSource.findById(id).toDomain(productQuantity(id))
 
     override fun isFinalPage(page: Int): Boolean = productsSource.isFinalPage(page)
 
@@ -34,21 +34,21 @@ class DefaultShoppingProductRepository(
 
     override fun shoppingCartProductQuantity(): Int = cartSource.loadAll().sumOf { it.quantity }
 
-    private fun productQuantity(productId: Int) = cartSource.findByProductId(productId)?.quantity ?: 0
+    private fun productQuantity(productId: Long) = cartSource.findByProductId(productId)?.quantity ?: 0
 
-    override fun increaseShoppingCartProduct(id: Int) {
+    override fun increaseShoppingCartProduct(id: Long) {
         cartSource.plusProductsIdCount(id)
     }
 
-    override fun decreaseShoppingCartProduct(id: Int) {
+    override fun decreaseShoppingCartProduct(id: Long) {
         cartSource.minusProductsIdCount(id)
     }
 
-    override fun addShoppingCartProduct(id: Int) {
+    override fun addShoppingCartProduct(id: Long) {
         cartSource.addedNewProductsId(ProductIdsCountData(id, FIRST_QUANTITY))
     }
 
-    override fun removeShoppingCartProduct(id: Int) {
+    override fun removeShoppingCartProduct(id: Long) {
         cartSource.removedProductsId(id)
     }
 

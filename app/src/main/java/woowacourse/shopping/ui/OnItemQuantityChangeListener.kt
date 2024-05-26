@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui
 
 interface OnItemQuantityChangeListener {
-    fun onIncrease(productId: Int)
+    fun onIncrease(productId: Long)
 
-    fun onDecrease(productId: Int)
+    fun onDecrease(productId: Long)
 }

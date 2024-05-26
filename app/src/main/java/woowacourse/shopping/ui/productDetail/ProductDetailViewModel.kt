@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 
 class ProductDetailViewModel(
-    private val productId: Int,
+    private val productId: Long,
     private val shoppingProductsRepository: ShoppingProductsRepository,
 ) : ViewModel(), OnItemQuantityChangeListener {
     private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
@@ -41,11 +41,11 @@ class ProductDetailViewModel(
         }
     }
 
-    override fun onIncrease(productId: Int) {
+    override fun onIncrease(productId: Long) {
         _productCount.value = _productCount.value?.plus(1)
     }
 
-    override fun onDecrease(productId: Int) {
+    override fun onDecrease(productId: Long) {
         val currentProductCount = _productCount.value
         if (currentProductCount == 1) {
             return

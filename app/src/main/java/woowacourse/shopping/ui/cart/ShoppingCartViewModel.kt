@@ -25,8 +25,8 @@ class ShoppingCartViewModel(
     private var _isLastPage: MutableLiveData<Boolean> = MutableLiveData()
     val isLastPage: LiveData<Boolean> get() = _isLastPage
 
-    private var _deletedItemId: MutableSingleLiveData<Int> = MutableSingleLiveData()
-    val deletedItemId: SingleLiveData<Int> get() = _deletedItemId
+    private var _deletedItemId: MutableSingleLiveData<Long> = MutableSingleLiveData()
+    val deletedItemId: SingleLiveData<Long> get() = _deletedItemId
 
     fun loadAll() {
         _itemsInCurrentPage.value =
@@ -57,7 +57,7 @@ class ShoppingCartViewModel(
             shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
     }
 
-    fun deleteItem(cartItemId: Int) {
+    fun deleteItem(cartItemId: Long) {
         shoppingProductsRepository.removeShoppingCartProduct(cartItemId)
 
         _itemsInCurrentPage.value =
@@ -67,18 +67,18 @@ class ShoppingCartViewModel(
             shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
     }
 
-    override fun onClick(productId: Int) {
+    override fun onClick(productId: Long) {
         _deletedItemId.setValue(productId)
     }
 
-    override fun onIncrease(productId: Int) {
+    override fun onIncrease(productId: Long) {
         Log.d(TAG, "onIncrease: called")
         shoppingProductsRepository.increaseShoppingCartProduct(productId)
         _itemsInCurrentPage.value =
             shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
     }
 
-    override fun onDecrease(productId: Int) {
+    override fun onDecrease(productId: Long) {
         Log.d(TAG, "onDecrease: called")
         val product = shoppingProductsRepository.loadProduct(productId)
         if (product.quantity == 1) {
