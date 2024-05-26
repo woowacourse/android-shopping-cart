@@ -5,11 +5,12 @@ import io.kotest.matchers.shouldBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
-import woowacourse.shopping.fixtures.fakeDateTime
+import woowacourse.shopping.fixtures.dateTime
 import woowacourse.shopping.fixtures.fakeRecentProductEntities
 import woowacourse.shopping.fixtures.fakeRecentProductEntity
 import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.util.testApplicationContext
+import java.time.LocalDateTime
 
 class RecentProductDaoTest {
     private lateinit var dao: RecentProductDao
@@ -40,14 +41,14 @@ class RecentProductDaoTest {
     @DisplayName("최근 본 상품을 3개 저장 하고, 최근 상품 본 상품을 불러올 때, 최신 시간 순으로 정렬 된다.")
     fun `test2`() {
         // given & when
-        dao.saveProduct(fakeRecentProductEntity(1L, fakeDateTime().plusDays(1)))
-        dao.saveProduct(fakeRecentProductEntity(2L, fakeDateTime()))
-        dao.saveProduct(fakeRecentProductEntity(3L, fakeDateTime().plusDays(2)))
+        saveProduct(1L, dateTime().plusDays(1))
+        saveProduct(2L, dateTime())
+        saveProduct(3L, dateTime().plusDays(2))
         val expect =
             fakeRecentProductEntities(
-                fakeRecentProductEntity(3L, fakeDateTime().plusDays(2)),
-                fakeRecentProductEntity(1L, fakeDateTime().plusDays(1)),
-                fakeRecentProductEntity(2L, fakeDateTime()),
+                fakeRecentProductEntity(3L, dateTime().plusDays(2)),
+                fakeRecentProductEntity(1L, dateTime().plusDays(1)),
+                fakeRecentProductEntity(2L, dateTime()),
             )
         val actual = dao.loadProducts(3)
         // then
@@ -58,15 +59,19 @@ class RecentProductDaoTest {
     @DisplayName("중복되는 id를 저장하면, 제일 나중에 저장한 값으로 덮어씌워진다")
     fun `save_duplicate`() {
         // given & when
-        dao.saveProduct(fakeRecentProductEntity(1L, fakeDateTime().plusDays(1)))
-        dao.saveProduct(fakeRecentProductEntity(1L, fakeDateTime()))
-        dao.saveProduct(fakeRecentProductEntity(1L, fakeDateTime().plusDays(2)))
+        saveProduct(1L, dateTime().plusDays(1))
+        saveProduct(1L, dateTime())
+        saveProduct(1L, dateTime().plusDays(2))
         val expect =
             fakeRecentProductEntities(
-                fakeRecentProductEntity(1L, fakeDateTime().plusDays(2)),
+                fakeRecentProductEntity(1L, dateTime().plusDays(2)),
             )
         val actual = dao.loadProducts(1)
         // then
         actual shouldBe expect
+    }
+
+    private fun saveProduct(id: Long, createdTime: LocalDateTime) {
+        dao.saveProduct(fakeRecentProductEntity(id, createdTime))
     }
 }

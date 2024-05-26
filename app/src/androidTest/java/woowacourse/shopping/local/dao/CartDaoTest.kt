@@ -40,15 +40,13 @@ class CartDaoTest {
     @Test
     @DisplayName(
         "3개의 상품을 저장한 후," +
-            "1개의 상품 만큼 건너 뛰고, 2개의 상품을 조회 한다.",
+                "1개의 상품 만큼 건너 뛰고, 2개의 상품을 조회 한다.",
     )
     fun insert_and_load() {
         // given & when
         val expect = fakeCartEntities(2L, 3L)
         // when
-        dao.saveCart(fakeCartEntity(1L))
-        dao.saveCart(fakeCartEntity(2L))
-        dao.saveCart(fakeCartEntity(3L))
+        saveCarts(1L, 2L, 3L)
         val actual = dao.loadCart(offset = 1, size = 2)
         // then
         actual shouldBe expect
@@ -61,9 +59,7 @@ class CartDaoTest {
         val expectSize = 1
         val expect = listOf(fakeCartEntity(count = 2))
         // when
-        dao.saveCart(fakeCartEntity(count = 1))
-        dao.saveCart(fakeCartEntity(count = 3))
-        dao.saveCart(fakeCartEntity(count = 2))
+        saveCarts(1L, 3L, 2L)
         val actual = dao.loadCart(offset = 0, size = 2)
         // then
         actual shouldHaveSize expectSize
@@ -87,24 +83,26 @@ class CartDaoTest {
     @DisplayName("카트 상품을 3개 저장한 후, 모두 삭제한다.")
     fun insert_and_delete_all() {
         // given & when
-        dao.saveCart(fakeCartEntity(id = 1L))
-        dao.saveCart(fakeCartEntity(id = 2L))
-        dao.saveCart(fakeCartEntity(id = 3L))
+        saveCarts(1L, 2L, 3L)
         dao.deleteAllCarts()
-        val expectSize = 0
         val actual = dao.loadCart(offset = 0, size = 3)
         // then
+        val expectSize = 0
         actual shouldHaveSize expectSize
     }
 
     @Test
     @DisplayName("카트에 상품이 없으면, 로드할 수 없다.")
     fun loadCart_empty() {
-        // given
-        val expectSize = 0
         // when
         val actual = dao.canLoadMore(size = 20)
         // then
         actual.shouldBeFalse()
+    }
+
+    private fun saveCarts(vararg id: Long) {
+        id.forEach {
+            dao.saveCart(fakeCartEntity(id = it))
+        }
     }
 }
