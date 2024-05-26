@@ -15,9 +15,7 @@ class CartFragment : Fragment(), OnClickCartItemCounter {
     private val adapter: CartItemRecyclerViewAdapter by lazy {
         CartItemRecyclerViewAdapter(
             onClickCartItemCounter = this,
-            onClick = { deleteItemId ->
-                viewModel.deleteItem(deleteItemId)
-            },
+            onClick = { deleteItemId -> viewModel.deleteItem(deleteItemId) },
         )
     }
     private var _binding: FragmentCartListBinding? = null

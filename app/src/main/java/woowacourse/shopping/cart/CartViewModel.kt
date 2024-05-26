@@ -16,12 +16,13 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val productStore = DummyProductStore()
 
     private var _productIds: List<Int> = listOf()
-    private val productIds: List<Int>
-        get() = _productIds
+    private val productIds: List<Int> get() = _productIds
 
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
+
     private var _itemsInShoppingCartPage: MutableLiveData<MutableList<Product>> = MutableLiveData()
+    val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
 
     private val _cartItems = MutableLiveData<List<CartItem>>()
     val cartItems: LiveData<List<CartItem>> get() = _cartItems
@@ -32,16 +33,6 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         updateItemsInShoppingCart()
     }
 
-    val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
-
-    private fun loadCartItems() {
-        viewModelScope.launch {
-            val cartItemsFromDb = ShoppingCart.getCartItems()
-            _cartItems.value = cartItemsFromDb
-            _productIds = cartItemsFromDb.map { it.productId }
-            updateItemsInShoppingCart()
-        }
-    }
 
     fun deleteItem(productId: Int) {
         viewModelScope.launch {
@@ -65,16 +56,6 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         updateItemsInShoppingCart()
     }
 
-    private fun updateItemsInShoppingCart() {
-        currentPage.value?.let { page ->
-            val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
-            val newItems =
-                productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
-                    .map { productId -> productStore.findById(productId) }
-            _itemsInShoppingCartPage.value = newItems.toMutableList()
-        }
-    }
-
     fun increaseQuantity(productId: Int) {
         viewModelScope.launch {
             ShoppingCart.addProductCount(productId)
@@ -86,6 +67,25 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             ShoppingCart.subtractProductCount(productId)
             loadCartItems()
+        }
+    }
+
+    private fun updateItemsInShoppingCart() {
+        currentPage.value?.let { page ->
+            val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
+            val newItems =
+                productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
+                    .map { productId -> productStore.findById(productId) }
+            _itemsInShoppingCartPage.value = newItems.toMutableList()
+        }
+    }
+
+    private fun loadCartItems() {
+        viewModelScope.launch {
+            val cartItemsFromDb = ShoppingCart.getCartItems()
+            _cartItems.value = cartItemsFromDb
+            _productIds = cartItemsFromDb.map { it.productId }
+            updateItemsInShoppingCart()
         }
     }
 
