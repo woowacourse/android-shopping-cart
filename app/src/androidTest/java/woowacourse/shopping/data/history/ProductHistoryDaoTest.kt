@@ -22,13 +22,14 @@ class ProductHistoryDaoTest {
 
     @Before
     fun setUp() {
-        database = Room
-            .inMemoryDatabaseBuilder(
-                ApplicationProvider.getApplicationContext(),
-                ShoppingDatabase::class.java
-            )
-            .allowMainThreadQueries()
-            .build()
+        database =
+            Room
+                .inMemoryDatabaseBuilder(
+                    ApplicationProvider.getApplicationContext(),
+                    ShoppingDatabase::class.java,
+                )
+                .allowMainThreadQueries()
+                .build()
         productHistoryDao = database.productHistoryDao()
         productDao = database.productDao()
         productDao.addAll(getFixtureProducts(20))
@@ -68,13 +69,13 @@ class ProductHistoryDaoTest {
             listOf(
                 RecentProduct(
                     productHistory = ProductHistory(id = 3, productId = 1),
-                    product = Product(id = 1, name = "사과1", imageSource = "image1", price = 1000)
+                    product = Product(id = 1, name = "사과1", imageSource = "image1", price = 1000),
                 ),
                 RecentProduct(
                     productHistory = ProductHistory(id = 2, productId = 2),
-                    product = Product(id = 2, name = "사과2", imageSource = "image2", price = 2000)
-                )
-            )
+                    product = Product(id = 2, name = "사과2", imageSource = "image2", price = 2000),
+                ),
+            ),
         )
     }
 
@@ -94,25 +95,25 @@ class ProductHistoryDaoTest {
             listOf(
                 RecentProduct(
                     productHistory = ProductHistory(20, 20),
-                    product = Product(20, "사과20", "image20", 20000)
+                    product = Product(20, "사과20", "image20", 20000),
                 ),
                 RecentProduct(
                     productHistory = ProductHistory(19, 19),
-                    product = Product(19, "사과19", "image19", 19000)
+                    product = Product(19, "사과19", "image19", 19000),
                 ),
                 RecentProduct(
                     productHistory = ProductHistory(18, 18),
-                    product = Product(18, "사과18", "image18", 18000)
+                    product = Product(18, "사과18", "image18", 18000),
                 ),
                 RecentProduct(
                     productHistory = ProductHistory(17, 17),
-                    product = Product(17, "사과17", "image17", 17000)
+                    product = Product(17, "사과17", "image17", 17000),
                 ),
                 RecentProduct(
                     productHistory = ProductHistory(16, 16),
-                    product = Product(16, "사과16", "image16", 16000)
+                    product = Product(16, "사과16", "image16", 16000),
                 ),
-            )
+            ),
         )
     }
 
@@ -129,7 +130,7 @@ class ProductHistoryDaoTest {
 
         // then
         assertThat(actualItems).isEqualTo(
-            RecentProduct(ProductHistory(20, 20), Product(20, "사과20", "image20", 20000))
+            RecentProduct(ProductHistory(20, 20), Product(20, "사과20", "image20", 20000)),
         )
     }
 }

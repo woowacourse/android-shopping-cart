@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.cart.CartItem
-import woowacourse.shopping.data.model.history.ProductHistory
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.domain.repository.cart.CartRepository
@@ -57,7 +56,7 @@ class HomeViewModel(
         loadHistory()
     }
 
-    fun loadProducts() {
+    private fun loadProducts() {
         thread {
             _loadStatus.postValue(
                 loadStatus.value?.copy(
@@ -112,14 +111,11 @@ class HomeViewModel(
         productId: Long,
         quantity: Int,
     ) {
-        println("$productId $quantity")
         if (quantity < 0) return
         thread {
             val targetProduct = productRepository.fetchProduct(productId)
-            println(targetProduct)
             if (quantity == 0) {
                 if (targetProduct.cartItem?.id != null) {
-                    println("delete available")
                     cartRepository.removeCartItem(targetProduct.cartItem)
                 }
                 val target =
@@ -139,13 +135,11 @@ class HomeViewModel(
                     ),
                 )
             } else {
-                println("delete unavailable")
-
                 if (targetProduct.cartItem?.id != null) {
                     cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
                     targetProduct.cartItem.id
                 } else {
-                    cartRepository.addCartItem(CartItem(productId = productId))
+                    cartRepository.addCartItem(CartItem(productId = productId, quantity = quantity))
                 }
                 val target =
                     products.value?.map {

@@ -55,7 +55,7 @@ class DetailViewModel(
         }
     }
 
-    fun addToCart(productId: Long) {
+    fun updateCartStatus(productId: Long) {
         thread {
             val targetProduct = productRepository.fetchProduct(productId)
             if (productInformation.value?.quantity == 0 && targetProduct.cartItem?.id != null) {

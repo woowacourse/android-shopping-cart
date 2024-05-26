@@ -18,13 +18,14 @@ class ProductDaoTest {
 
     @Before
     fun setUp() {
-        database = Room
-            .inMemoryDatabaseBuilder(
-                ApplicationProvider.getApplicationContext(),
-                ShoppingDatabase::class.java
-            )
-            .allowMainThreadQueries()
-            .build()
+        database =
+            Room
+                .inMemoryDatabaseBuilder(
+                    ApplicationProvider.getApplicationContext(),
+                    ShoppingDatabase::class.java,
+                )
+                .allowMainThreadQueries()
+                .build()
         productDao = database.productDao()
     }
 
@@ -40,7 +41,7 @@ class ProductDaoTest {
 
         // then
         assertThat(insertedIds).isEqualTo(
-            listOf(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L)
+            listOf(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L),
         )
     }
 
@@ -60,7 +61,7 @@ class ProductDaoTest {
                 CartableProduct(Product(3, "사과3", "image3", 3000)),
                 CartableProduct(Product(4, "사과4", "image4", 4000)),
                 CartableProduct(Product(5, "사과5", "image5", 5000)),
-            )
+            ),
         )
     }
 
@@ -74,7 +75,7 @@ class ProductDaoTest {
 
         // then
         assertThat(products).isEqualTo(
-            CartableProduct(Product(5, "사과5", "image5", 5000))
+            CartableProduct(Product(5, "사과5", "image5", 5000)),
         )
     }
 }

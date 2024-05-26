@@ -47,9 +47,7 @@ class HomeActivity : AppCompatActivity() {
                     } else {
                         result.data?.getParcelableArrayListExtra("quantities")
                     }
-                println(quantities)
                 quantities?.forEach {
-                    println(it)
                     viewModel.onQuantityChange(it.productId, it.quantity)
                 }
             }

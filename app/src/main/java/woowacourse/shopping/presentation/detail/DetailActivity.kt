@@ -62,10 +62,11 @@ class DetailActivity : AppCompatActivity() {
     private fun observeEvents() {
         viewModel.message.observe(this) { event ->
             if (event.hasBeenHandled) return@observe
-            val quantity = ProductQuantity(
-                productId,
-                viewModel.productInformation.value?.quantity ?: -1,
-            )
+            val quantity =
+                ProductQuantity(
+                    productId,
+                    viewModel.productInformation.value?.quantity ?: -1,
+                )
             setResult(
                 RESULT_OK,
                 Intent().putExtra(
@@ -141,9 +142,10 @@ class DetailActivity : AppCompatActivity() {
 
 @BindingAdapter("shopping:lastProductAvailability")
 fun MaterialCardView.setLastViewedProductAvailability(recentProduct: RecentProduct?) {
-    visibility = if (recentProduct == null) {
-        View.GONE
-    } else {
-        View.VISIBLE
-    }
+    visibility =
+        if (recentProduct == null) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
 }

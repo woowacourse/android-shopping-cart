@@ -1,19 +1,21 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.data.model.product.Product
 import woowacourse.shopping.domain.repository.product.ProductRepository
+import woowacourse.shopping.fixture.getFixtureCartableProducts
 import kotlin.math.min
 
 class FakeProductRepository : ProductRepository {
-    private val products: List<Product> = List(100) { Product(it.toLong() + 1, "Product ${it + 1}", "", 1000 * (it + 1)) }
+    private val cartableProducts: List<CartableProduct> = getFixtureCartableProducts(100)
 
-    override fun fetchSinglePage(page: Int): List<Product> {
+    override fun fetchSinglePage(page: Int): List<CartableProduct> {
         val fromIndex = page * 20
-        val toIndex = min(fromIndex + 20, products.size)
-        return products.subList(fromIndex, toIndex)
+        val toIndex = min(fromIndex + 20, cartableProducts.size)
+        return cartableProducts.subList(fromIndex, toIndex)
     }
 
-    override fun fetchProduct(id: Long): Product {
-        return products.first { it.id == id }
+    override fun fetchProduct(id: Long): CartableProduct {
+        return cartableProducts.first { it.product.id == id }
     }
 }

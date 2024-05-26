@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint_900"
-            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.product.id)}"
+            android:onClick="@{() -> detailViewModel.updateCartStatus(detailViewModel.productInformation.product.id)}"
             android:text="@string/detail_add_to_cart_button"
             android:textColor="@color/white"
             android:textSize="20sp"

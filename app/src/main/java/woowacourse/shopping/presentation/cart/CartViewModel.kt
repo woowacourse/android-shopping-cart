@@ -72,6 +72,29 @@ class CartViewModel(
         }
     }
 
+    override fun onQuantityChange(
+        productId: Long,
+        quantity: Int,
+    ) {
+        if (quantity < 0) return
+        thread {
+            val targetItem = productRepository.fetchProduct(productId)
+            if (targetItem.cartItem?.id != null) {
+                if (quantity == 0) {
+                    cartRepository.removeCartItem(targetItem.cartItem)
+                } else {
+                    cartRepository.updateQuantity(targetItem.cartItem.id, quantity)
+                }
+                if (productId !in alteredCartItems.map(ProductQuantity::productId)) {
+                    alteredCartItems.add(ProductQuantity(productId, quantity))
+                } else {
+                    replaceAll(alteredCartItems, alteredCartItems.first { it.productId == productId }, ProductQuantity(productId, quantity))
+                }
+            }
+            loadCurrentPageCartItems()
+        }
+    }
+
     private fun setPageInformation() {
         if (currentPage.value == 0) {
             _pageInformation.postValue(
@@ -89,34 +112,4 @@ class CartViewModel(
             )
         }
     }
-
-    override fun onQuantityChange(
-        productId: Long,
-        quantity: Int,
-    ) {
-        println(quantity)
-        if (quantity < 0) return
-        thread {
-            val targetItem = productRepository.fetchProduct(productId)
-            println(targetItem)
-            if (targetItem.cartItem?.id != null) {
-                if (quantity == 0) {
-                    cartRepository.removeCartItem(targetItem.cartItem)
-                } else {
-                    cartRepository.updateQuantity(targetItem.cartItem.id, quantity)
-                }
-                if (productId !in alteredCartItems.map(ProductQuantity::productId)) {
-                    alteredCartItems.add(ProductQuantity(productId, quantity))
-                } else {
-                    replaceAll(alteredCartItems, alteredCartItems.first { it.productId == productId }, ProductQuantity(productId, quantity))
-                }
-            }
-            loadCurrentPageCartItems()
-        }
-    }
 }
-
-data class PageInformation(
-    val previousPageEnabled: Boolean = false,
-    val nextPageEnabled: Boolean = false,
-)

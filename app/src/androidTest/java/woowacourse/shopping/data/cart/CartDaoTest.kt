@@ -2,7 +2,6 @@ package woowacourse.shopping.data.cart
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import io.kotest.assertions.any
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -23,13 +22,14 @@ class CartDaoTest {
 
     @Before
     fun setUp() {
-        database = Room
-            .inMemoryDatabaseBuilder(
-                ApplicationProvider.getApplicationContext(),
-                ShoppingDatabase::class.java
-            )
-            .allowMainThreadQueries()
-            .build()
+        database =
+            Room
+                .inMemoryDatabaseBuilder(
+                    ApplicationProvider.getApplicationContext(),
+                    ShoppingDatabase::class.java,
+                )
+                .allowMainThreadQueries()
+                .build()
         cartDao = database.cartDao()
         productDao = database.productDao()
         productDao.addAll(getFixtureProducts(100))
@@ -64,25 +64,25 @@ class CartDaoTest {
             listOf(
                 CartedProduct(
                     CartItem(1, 1, 1),
-                    Product(1, "사과1", "image1", 1000)
+                    Product(1, "사과1", "image1", 1000),
                 ),
                 CartedProduct(
                     CartItem(2, 2, 2),
-                    Product(2, "사과2", "image2", 2000)
+                    Product(2, "사과2", "image2", 2000),
                 ),
                 CartedProduct(
                     CartItem(3, 3, 3),
-                    Product(3, "사과3", "image3", 3000)
+                    Product(3, "사과3", "image3", 3000),
                 ),
                 CartedProduct(
                     CartItem(4, 4, 4),
-                    Product(4, "사과4", "image4", 4000)
+                    Product(4, "사과4", "image4", 4000),
                 ),
                 CartedProduct(
                     CartItem(5, 5, 5),
-                    Product(5, "사과5", "image5", 5000)
+                    Product(5, "사과5", "image5", 5000),
                 ),
-            )
+            ),
         )
     }
 
@@ -132,8 +132,8 @@ class CartDaoTest {
         assertThat(actualItems).contains(
             CartedProduct(
                 CartItem(1, 1, 2),
-                Product(1, "사과1", "image1", 1000)
-            )
+                Product(1, "사과1", "image1", 1000),
+            ),
         )
     }
 }
