@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.detail.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,31 +38,29 @@ class DetailViewModel(
     val moveToRecentProductHistory: LiveData<Event<Long>>
         get() = _moveToRecentProductHistory
 
-    private val _showRecent = MutableLiveData<Boolean>()
+    private val _showRecent = MutableLiveData<Boolean>(false)
     val showRecent: LiveData<Boolean>
         get() = _showRecent
 
     init {
         loadProductInformation(productId)
         loadCartItem(productId)
-        getProductHistory()
-        addProductHistory(productId)
-        loadShowRecent(showRecent)
+        getProductHistory(productId, showRecent)
     }
 
-    fun loadShowRecent(showRecent: Boolean) {
-        _showRecent.value = showRecent
-    }
+    fun getProductHistory(
+        productId: Long,
+        showRecent: Boolean,
+    ) {
+        val recentProductId = productHistoryRepository.getMostRecentProductHistory()?.productId
 
-    fun getProductHistory() {
-        val productId = productHistoryRepository.getMostRecentProductHistory()?.productId
-
-        productId?.let {
+        recentProductId?.let {
             _recentProductHistory.value = productRepository.fetchProduct(it)
-        }
-    }
+            _showRecent.value = recentProductId == productId || !showRecent
 
-    fun addProductHistory(productId: Long) {
+            Log.d("HELLO", "getProductHistory: $recentProductId $productId")
+        }
+
         productHistoryRepository.setProductHistory(productId)
     }
 
