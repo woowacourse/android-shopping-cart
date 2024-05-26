@@ -125,7 +125,6 @@ class ProductListViewModel(
     }
 
     fun acceptChangedItems(changedItems: Set<Long>) {
-        Log.d("ActivityResultTest", "ProductListVM $changedItems")
         val updatedQuantities = shoppingCartRepository.cartItemQuantity(changedItems)
         updatedQuantities.forEach { (productId, changedQuantity) ->
             updateUiModelQuantity(productId, changedQuantity)

@@ -47,8 +47,6 @@ class ProductDetailViewModel(
     override fun plusQuantity(productId: Long) {
         runCatching {
             quantity = quantity.increase()
-            Log.d(this::class.java.simpleName, "${quantity.value}")
-
         }.onSuccess {
             _quantityUi.value = quantity.value
             updateProductPrice()
@@ -60,8 +58,6 @@ class ProductDetailViewModel(
     override fun minusQuantity(productId: Long) {
         runCatching {
             quantity = quantity.decrease()
-            Log.d(this::class.java.simpleName, "${quantity.value}")
-
         }.onSuccess {
             _quantityUi.value = quantity.value
             updateProductPrice()
