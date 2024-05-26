@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.database.CartDatabase
+import woowacourse.shopping.data.database.AppDatabase
 import woowacourse.shopping.data.mapper.toCartItemEntity
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.mapper.toNewCartItemEntity
@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class CartRepositoryImpl(database: CartDatabase) : CartRepository {
+class CartRepositoryImpl(database: AppDatabase) : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(productWithQuantity: ProductWithQuantity) {

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import woowacourse.shopping.data.model.ProductEntity
+import woowacourse.shopping.domain.model.ProductWithQuantity
 
 @Dao
 interface ProductDao {
@@ -22,4 +23,27 @@ interface ProductDao {
         offset: Int,
         limit: Int,
     ): List<ProductEntity>
+
+    @Query(
+        """
+        SELECT p.*, COALESCE(c.quantity, 0) as quantity
+        FROM products p
+        LEFT JOIN cart_items c ON p.id = c.productId
+        WHERE p.id = :productId
+    """,
+    )
+    fun getProductWithQuantityById(productId: Long): ProductWithQuantity?
+
+    @Query(
+        """
+        SELECT p.*, COALESCE(c.quantity, 0) as quantity
+        FROM products p
+        LEFT JOIN cart_items c ON p.id = c.productId
+        LIMIT :limit OFFSET :offset
+    """,
+    )
+    fun getProductWithQuantityByPage(
+        limit: Int,
+        offset: Int,
+    ): List<ProductWithQuantity>
 }

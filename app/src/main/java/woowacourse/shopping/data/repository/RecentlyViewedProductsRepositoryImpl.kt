@@ -1,21 +1,18 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.database.RecentlyProductDatabase
+import woowacourse.shopping.data.database.AppDatabase
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.mapper.toEntityModel
 import woowacourse.shopping.data.model.RecentlyViewedProductEntity
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.RecentlyViewedProductsRepository
 
-class RecentlyViewedProductsRepositoryImpl(
-    recentlyProductDatabase: RecentlyProductDatabase,
-) : RecentlyViewedProductsRepository {
-    private val recentlyProductDao = recentlyProductDatabase.recentlyProductDao()
+class RecentlyViewedProductsRepositoryImpl(database: AppDatabase) : RecentlyViewedProductsRepository {
+    private val recentlyProductDao = database.recentlyProductDao()
 
     override fun insertRecentlyViewedProduct(product: RecentlyViewedProduct) {
         threadAction {
-            val existingProduct =
-                recentlyProductDao.findRecentlyViewedProductById(product.productId)
+            val existingProduct = recentlyProductDao.findRecentlyViewedProductById(product.productId)
             if (existingProduct != null) {
                 val updatedProduct = existingProduct.copy(viewedAt = System.currentTimeMillis())
                 recentlyProductDao.insertRecentlyViewedProduct(updatedProduct)

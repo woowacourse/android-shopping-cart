@@ -24,12 +24,9 @@ import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity_shopping) {
     private val viewModel: ShoppingViewModel by viewModels {
         ShoppingViewModelFactory(
-            ShoppingItemsRepositoryImpl(
-                (application as ShoppingApplication).shoppingDatabase,
-                (application as ShoppingApplication).cartDatabase,
-            ),
-            CartRepositoryImpl((application as ShoppingApplication).cartDatabase),
-            RecentlyViewedProductsRepositoryImpl((application as ShoppingApplication).recentlyProductDatabase),
+            ShoppingItemsRepositoryImpl((application as ShoppingApplication).appDatabase),
+            CartRepositoryImpl((application as ShoppingApplication).appDatabase),
+            RecentlyViewedProductsRepositoryImpl((application as ShoppingApplication).appDatabase),
         )
     }
 

@@ -7,8 +7,8 @@ import woowacourse.shopping.domain.repository.RecentlyViewedProductsRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
 class DetailViewModelFactory(
-    private val cartRepository: CartRepository,
     private val shoppingRepository: ShoppingItemsRepository,
+    private val cartRepository: CartRepository,
     private val recentlyViewedProductsRepository: RecentlyViewedProductsRepository,
     private val productId: Long,
 ) : ViewModelProvider.Factory {
@@ -16,8 +16,8 @@ class DetailViewModelFactory(
         if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return DetailViewModel(
-                cartRepository = cartRepository,
                 shoppingRepository = shoppingRepository,
+                cartRepository = cartRepository,
                 recentlyViewedProductsRepository = recentlyViewedProductsRepository,
                 productId = productId,
             ) as T

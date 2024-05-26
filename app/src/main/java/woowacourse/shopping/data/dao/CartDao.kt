@@ -23,9 +23,6 @@ interface CartDao {
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
     fun findWithProductId(productId: Long): CartItemEntity
 
-    @Query("SELECT * FROM cart_items WHERE productId = :productId")
-    fun find(productId: Long): CartItemEntity
-
     @Query("SELECT * FROM cart_items")
     fun findAll(): List<CartItemEntity>
 

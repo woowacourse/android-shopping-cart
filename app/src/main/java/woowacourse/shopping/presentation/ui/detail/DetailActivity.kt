@@ -18,16 +18,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
-            cartRepository = CartRepositoryImpl((application as ShoppingApplication).cartDatabase),
-            shoppingRepository =
-                ShoppingItemsRepositoryImpl(
-                    (application as ShoppingApplication).shoppingDatabase,
-                    (application as ShoppingApplication).cartDatabase,
-                ),
-            recentlyViewedProductsRepository =
-                RecentlyViewedProductsRepositoryImpl(
-                    (application as ShoppingApplication).recentlyProductDatabase,
-                ),
+            ShoppingItemsRepositoryImpl((application as ShoppingApplication).appDatabase),
+            CartRepositoryImpl((application as ShoppingApplication).appDatabase),
+            RecentlyViewedProductsRepositoryImpl((application as ShoppingApplication).appDatabase),
             productId = productId,
         )
     }

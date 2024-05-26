@@ -1,18 +1,13 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.database.CartDatabase
-import woowacourse.shopping.data.database.ProductDatabase
+import woowacourse.shopping.data.database.AppDatabase
 import woowacourse.shopping.data.dummy.DummyShoppingItems
 import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class ShoppingItemsRepositoryImpl(
-    productDatabase: ProductDatabase,
-    cartDatabase: CartDatabase,
-) : ShoppingItemsRepository {
-    private val productDao = productDatabase.productDao()
-    private val cartDao = cartDatabase.cartDao()
+class ShoppingItemsRepositoryImpl(database: AppDatabase) : ShoppingItemsRepository {
+    private val productDao = database.productDao()
 
     init {
         insertProducts(DummyShoppingItems.items)
@@ -27,9 +22,7 @@ class ShoppingItemsRepositoryImpl(
     override fun productWithQuantityItem(productId: Long): ProductWithQuantity? {
         var productItem: ProductWithQuantity? = null
         threadAction {
-            val product = productDao.findWithProductId(productId)
-            val quantity = cartDao.getQuantityByProductId(productId) ?: 0
-            productItem = ProductWithQuantity(product = product, quantity = quantity)
+            productItem = productDao.getProductWithQuantityById(productId)
         }
         return productItem
     }
@@ -42,12 +35,7 @@ class ShoppingItemsRepositoryImpl(
         val offset = page * pageSize
 
         threadAction {
-            val products = productDao.findByPaged(offset = offset, limit = pageSize)
-            productWithQuantities =
-                products.map { product ->
-                    val quantity = cartDao.getQuantityByProductId(product.id) ?: 0
-                    ProductWithQuantity(product = product, quantity = quantity)
-                }
+            productWithQuantities = productDao.getProductWithQuantityByPage(limit = pageSize, offset = offset)
         }
 
         return productWithQuantities
