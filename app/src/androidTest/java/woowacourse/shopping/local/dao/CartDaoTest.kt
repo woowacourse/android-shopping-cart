@@ -55,13 +55,14 @@ class CartDaoTest {
     @Test
     @DisplayName("동일한 id를 가진 상품을 저장 하면, 덮어 씌어진다.")
     fun insert_and_load2() {
-        // given
-        val expectSize = 1
-        val expect = listOf(fakeCartEntity(count = 2))
-        // when
-        saveCarts(1L, 3L, 2L)
+        // given & when
+        dao.saveCart(fakeCartEntity(count = 1))
+        dao.saveCart(fakeCartEntity(count = 3))
+        dao.saveCart(fakeCartEntity(count = 2))
         val actual = dao.loadCart(offset = 0, size = 2)
         // then
+        val expectSize = 1
+        val expect = listOf(fakeCartEntity(count = 2))
         actual shouldHaveSize expectSize
         actual shouldBe expect
     }
