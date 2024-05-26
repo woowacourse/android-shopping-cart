@@ -24,71 +24,62 @@ class MainViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = MainViewModel(productRepository, cartRepository)
         productRepository.deleteAll()
+        cartRepository.deleteCartItem(productId = 0L)
     }
 
     @Test
     fun `한 페이지에는 20개의 상품이 있다`() {
-        // given
-        repeat(pageSize) {
+        repeat(40) {
             productRepository.save(imageUrl, title, price)
         }
-
-        // when
-        viewModel.loadPage(0, pageSize)
+        viewModel = MainViewModel(productRepository, cartRepository)
 
         // then
         val products = viewModel.products.getOrAwaitValue()
         assertAll(
             { assertThat(products).hasSize(pageSize) },
-            { assertThat(products).isEqualTo(productRepository.findRange(0, pageSize)) },
+            { assertThat(products).isEqualTo(productRepository.findRange(page = 0, pageSize)) },
         )
     }
 
     @Test
     fun `상품이 40개인 경우 20개의 상품을 불러온다`() {
-        // given
         repeat(40) {
             productRepository.save(imageUrl, title, price)
         }
-
-        // when
-        viewModel.loadPage(0, pageSize)
+        viewModel = MainViewModel(productRepository, cartRepository)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
         assertAll(
             { assertThat(actual).hasSize(pageSize) },
-            { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+            { assertThat(actual).isEqualTo(productRepository.findRange(page = 0, pageSize)) },
         )
     }
 
     @Test
     fun `상품이 5개인 경우 5개의 상품을 불러온다`() {
-        // given
         repeat(5) {
             productRepository.save(imageUrl, title, price)
         }
-
-        // when
-        viewModel.loadPage(0, pageSize)
+        viewModel = MainViewModel(productRepository, cartRepository)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
         assertAll(
             { assertThat(actual).hasSize(5) },
-            { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+            { assertThat(actual).isEqualTo(productRepository.findRange(page = 0, 20)) },
         )
     }
 
     @Test
     fun `상품을 장바구니에 2번 담으면 장바구니에 담긴 해당 상품의 수량은 2이다`() {
-        val productId = productRepository.save(imageUrl, title, price)
-        viewModel.loadPage(page = 0, pageSize)
+        val productId: Long = productRepository.save(imageUrl, title, price)
+        viewModel = MainViewModel(productRepository, cartRepository)
 
         repeat(2) {
-            viewModel.addProductToCart(productId)
+            viewModel.addProductToCart(productId = productId)
         }
 
         val actual = viewModel.quantities.getOrAwaitValue().first { it.productId == productId }
@@ -97,13 +88,14 @@ class MainViewModelTest {
 
     @Test
     fun `장바구니에 담긴 한 상품의 수량이 3인 상태에서 상품을 1개 빼면 장바구니에 담긴 해당 상품의 수량은 2이다`() {
-        val productId = productRepository.save(imageUrl, title, price)
-        viewModel.loadPage(page = 0, pageSize)
+        val productId: Long = productRepository.save(imageUrl, title, price)
+        viewModel = MainViewModel(productRepository, cartRepository)
+
         repeat(3) {
-            viewModel.addProductToCart(productId)
+            viewModel.addProductToCart(productId = productId)
         }
 
-        viewModel.deleteProductToCart(productId)
+        viewModel.deleteProductToCart(productId = productId)
 
         val actual = viewModel.quantities.getOrAwaitValue().first { it.productId == productId }
         assertThat(actual.quantity.count).isEqualTo(2)

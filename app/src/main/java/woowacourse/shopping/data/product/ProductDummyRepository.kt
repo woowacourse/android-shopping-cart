@@ -31,7 +31,11 @@ object ProductDummyRepository : ProductRepository {
     ): List<Product> {
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, products.size)
-        return products.map { it.value }.subList(fromIndex, toIndex)
+        return if (fromIndex in 0 until toIndex) {
+            products.map { it.value }.subList(fromIndex, toIndex)
+        } else {
+            emptyList()
+        }
     }
 
     override fun save(

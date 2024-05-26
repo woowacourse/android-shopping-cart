@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.main.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -44,21 +43,17 @@ class ProductAdapter(
         return products.size
     }
 
-    fun updateProducts(
-        newProducts: List<Product>,
-        positionStart: Int,
-        itemCount: Int,
-    ) {
+    fun updateProducts(newProducts: List<Product>) {
+        val positionStart = products.size
+        val itemCount = newProducts.size - positionStart
         products.clear()
         products.addAll(newProducts)
         notifyItemRangeChanged(positionStart, itemCount)
     }
 
-    fun updateQuantities(
-        newQuantities: List<CartItemQuantity>,
-        positionStart: Int,
-        itemCount: Int,
-    ) {
+    fun updateQuantities(newQuantities: List<CartItemQuantity>) {
+        val positionStart = products.size
+        val itemCount = newQuantities.size + positionStart
         quantities.clear()
         quantities.addAll(newQuantities)
         notifyItemRangeChanged(positionStart, itemCount)
