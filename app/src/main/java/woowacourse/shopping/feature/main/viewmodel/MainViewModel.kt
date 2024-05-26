@@ -29,7 +29,6 @@ class MainViewModel(
     fun addProductToCart(productId: Long) {
         cartRepository.addProduct(productId)
         updateQuantities()
-        // Log.d("수량: + 버튼 클릭", "view model ${quantities.value?.find { it.productId == productId }?.quantity?.count}")
     }
 
     fun deleteProductToCart(productId: Long) {
@@ -37,13 +36,11 @@ class MainViewModel(
             cartRepository.deleteProduct(productId)
         }.onSuccess {
             updateQuantities()
-            // Log.d("수량: - 버튼 클릭", "view model ${quantities.value?.find { it.productId == productId }?.quantity?.count}")
         }
     }
 
     private fun updateQuantities() {
         val products = products.value ?: return
         _quantities.value = cartRepository.findQuantityOfCartItems(products)
-        // Log.d("수량", "view model ${quantities.value?.map { it.quantity.count }}")
     }
 }

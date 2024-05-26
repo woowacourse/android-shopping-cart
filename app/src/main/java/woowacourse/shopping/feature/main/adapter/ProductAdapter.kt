@@ -33,8 +33,6 @@ class ProductAdapter(
     ) {
         val product = products[position]
         val quantity = quantities[product.id.toInt()]
-        // TODO: 앱 회전 또는 앱 다시 켰을 때 ui quantity 업데이트 되는 오류 해결하기
-        Log.d("수량", "BindViewHolder ${quantity.quantity.count}")
         holder.bind(onClickProductItem, onClickPlusButton, onClickMinusButton, product, quantity) {
             updateQuantity(
                 position,
@@ -61,9 +59,8 @@ class ProductAdapter(
         positionStart: Int,
         itemCount: Int,
     ) {
-        Log.d("수량", "adapter update")
+        quantities.clear()
         quantities.addAll(newQuantities)
-        Log.d("수량", "adapter ${newQuantities.map { it.quantity.count }}")
         notifyItemRangeChanged(positionStart, itemCount)
     }
 
