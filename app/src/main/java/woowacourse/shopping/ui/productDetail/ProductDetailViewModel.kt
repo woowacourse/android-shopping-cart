@@ -1,5 +1,8 @@
 package woowacourse.shopping.ui.productDetail
 
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,12 +10,15 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
+import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val productId: Long,
     private val shoppingProductsRepository: ShoppingProductsRepository,
     private val productHistoryRepository: ProductHistoryRepository,
 ) : ViewModel(), OnItemQuantityChangeListener {
+    private val uiHandler = Handler(Looper.getMainLooper())
+
     private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
     val currentProduct: LiveData<Product> get() = _currentProduct
 
@@ -23,35 +29,34 @@ class ProductDetailViewModel(
     val latestProduct: LiveData<Product> get() = _latestProduct
 
     fun loadAll() {
-        _currentProduct.value = shoppingProductsRepository.loadProduct(id = productId)
-        _productCount.value = 1
+        thread {
+            val currentProduct = shoppingProductsRepository.loadProduct(id = productId)
+            val latestProduct =
+                try {
+                    productHistoryRepository.loadLatestProduct().also {
+                        Log.d(TAG, "loadAll: loadLastestProduct: $it")
+                    }
+                } catch (e: NoSuchElementException) {
+                    Product.NULL
+                }
 
-        // 마지막으로 본 상품
-        try {
-            _latestProduct.setValue(productHistoryRepository.loadLatestProduct())
-        } catch (e: NoSuchElementException) {
-            // TODO: 이 때는 최근 상품이 없을 때임
-            _latestProduct.setValue(Product.NULL)
+            uiHandler.post {
+                _currentProduct.value = currentProduct
+                _productCount.value = 1
+                _latestProduct.value = latestProduct
+            }
+
+            productHistoryRepository.saveProductHistory(productId)
         }
-        productHistoryRepository.saveProductHistory(productId)
     }
 
     fun addProductToCart() {
-        try {
-            // TODO: 상품을 증가시킬 때 특정 수량만큼 추가할 수 있도록 변경해야 함
+        thread {
             repeat(productCount.value!!) {
+                // TODO: 상품을 증가시킬 때 특정 수량만큼 추가할 수 있도록 변경해야 함
                 shoppingProductsRepository.increaseShoppingCartProduct(productId)
+                // TODO: "장바구니에 담겼습니다" 토스트 메시지 띄우기
             }
-
-            // TODO: "이미 장바구니에 담긴 상품이어서 수량을 업데이트했음" 토스트 메시지 띄우기
-        } catch (e: NoSuchElementException) {
-            // TODO: 상품을 추가할 때 특정 수량만큼 추가할 수 있도록 변경해야 함
-            shoppingProductsRepository.addShoppingCartProduct(productId)
-            repeat(productCount.value!! - 1) {
-                shoppingProductsRepository.increaseShoppingCartProduct(productId)
-            }
-
-            // TODO: "장바구니에 담겼습니다" 토스트 메시지 띄우기
         }
     }
 

@@ -1,5 +1,6 @@
 package woowacourse.shopping.domain.repository
 
+import android.util.Log
 import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
@@ -20,6 +21,7 @@ class DefaultShoppingProductRepository(
 
     override fun loadProductsInCart(page: Int): List<Product> {
         val allProductIdsInCart = cartSource.loadPaged(page)
+        Log.d(TAG, "loadProductsInCart: allProductIdsInCart: $allProductIdsInCart")
 
         return allProductIdsInCart.map { productIdsCountData ->
             productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
@@ -34,13 +36,32 @@ class DefaultShoppingProductRepository(
 
     override fun shoppingCartProductQuantity(): Int = cartSource.loadAll().sumOf { it.quantity }
 
-    private fun productQuantity(productId: Long) = cartSource.findByProductId(productId)?.quantity ?: 0
+    private fun productQuantity(productId: Long): Int {
+        return try {
+            cartSource.findByProductId(productId)?.quantity ?: 0
+        } catch (e: NoSuchElementException) {
+            Log.d(TAG, "productQuantity: 카트에서 못찾으면 0개")
+            0
+        }
+    }
 
     override fun increaseShoppingCartProduct(id: Long) {
+        if (cartSource.findByProductId(id) == null) {
+            addShoppingCartProduct(id)
+            return
+        }
+
         cartSource.plusProductsIdCount(id)
     }
 
     override fun decreaseShoppingCartProduct(id: Long) {
+        val data = cartSource.findByProductId(id) ?: return
+
+        if (data.quantity == 1) {
+            removeShoppingCartProduct(id)
+            return
+        }
+
         cartSource.minusProductsIdCount(id)
     }
 
@@ -54,5 +75,6 @@ class DefaultShoppingProductRepository(
 
     companion object {
         private const val FIRST_QUANTITY = 1
+        private const val TAG = "DefaultShoppingProductR"
     }
 }

@@ -13,11 +13,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.data.source.DummyProductHistoryDataSource
 import woowacourse.shopping.data.source.DummyProductsDataSource
-import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
+import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductListBinding
-import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
+import woowacourse.shopping.local.cart.ShoppingCartDatabase
 import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
 
@@ -31,7 +31,10 @@ class ProductListFragment : Fragment() {
                 productsRepository =
                     DefaultShoppingProductRepository(
                         productsSource = DummyProductsDataSource(),
-                        cartSource = DummyShoppingCartProductIdDataSource(),
+                        cartSource =
+                            LocalShoppingCartProductIdDataSource(
+                                dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
+                            ),
                     ),
                 productHistoryRepository =
                     DefaultProductHistoryRepository(
@@ -114,7 +117,7 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    fun observeNavigationShoppingCart() {
+    private fun observeNavigationShoppingCart() {
         viewModel.shoppingCartDestination.observe(viewLifecycleOwner) {
             navigateToShoppingCart()
         }
@@ -127,23 +130,6 @@ class ProductListFragment : Fragment() {
     }
 
     private fun observeDetailProductDestination() {
-        viewModel.productsEvent.observe(viewLifecycleOwner) { event ->
-            when (event) {
-                is ProductCountEvent.ProductCountAllCleared ->
-                    Log.d(TAG, "observeDetailProductDestination: ProductCountAllCleared")
-
-                is ProductCountEvent.ProductCountCleared ->
-                    Log.d(TAG, "observeDetailProductDestination: ProductCountCleared")
-
-                is ProductCountEvent.ProductCountCountChanged ->
-                    Log.d(
-                        TAG,
-                        "observeDetailProductDestination: ProductCountChanged " +
-                            "id: ${event.productId} count: ${event.count}",
-                    )
-            }
-        }
-
         viewModel.detailProductDestinationId.observe(viewLifecycleOwner) { productId ->
             navigateToProductDetail(productId)
         }

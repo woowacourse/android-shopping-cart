@@ -54,7 +54,6 @@ class ShoppingCartDatabaseTest {
         assertEquals(productIdsCountData, found)
     }
 
-
     @Test
     fun testFindAll() {
         // given
@@ -69,7 +68,7 @@ class ShoppingCartDatabaseTest {
         assertAll(
             { assertEquals(ProductIdsCountData(1, 1), findAll[0]) },
             { assertEquals(ProductIdsCountData(2, 2), findAll[1]) },
-            { assertEquals(ProductIdsCountData(3, 3), findAll[2]) }
+            { assertEquals(ProductIdsCountData(3, 3), findAll[2]) },
         )
     }
 
@@ -79,14 +78,12 @@ class ShoppingCartDatabaseTest {
         dao.insert(ProductIdsCountData(1, 1))
         dao.insert(ProductIdsCountData(2, 2))
 
-
         // when
         val count = dao.countAll()
 
         // then
         assertEquals(2, count)
     }
-
 
     @Test
     fun testDelete() {
@@ -101,7 +98,6 @@ class ShoppingCartDatabaseTest {
         val findById = dao.findById(1)
         assertEquals(null, findById)
     }
-
 
     @Test
     fun testUpdate() {

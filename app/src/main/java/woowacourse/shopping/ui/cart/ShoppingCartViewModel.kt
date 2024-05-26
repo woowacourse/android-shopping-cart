@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.cart
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +13,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
+import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
     private val shoppingProductsRepository: ShoppingProductsRepository,
@@ -18,8 +21,9 @@ class ShoppingCartViewModel(
 ) : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private var _itemsInCurrentPage =
-        MutableLiveData<List<Product>>()
+    private val uiHandler = Handler(Looper.getMainLooper())
+
+    private var _itemsInCurrentPage = MutableLiveData<List<Product>>()
     val itemsInCurrentPage: LiveData<List<Product>> get() = _itemsInCurrentPage
 
     private var _isLastPage: MutableLiveData<Boolean> = MutableLiveData()
@@ -29,42 +33,65 @@ class ShoppingCartViewModel(
     val deletedItemId: SingleLiveData<Long> get() = _deletedItemId
 
     fun loadAll() {
-        _itemsInCurrentPage.value =
-            shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
-        _isLastPage.value =
-            shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
+        thread {
+            val currentItems =
+                shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+            val isLastPage =
+                shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
+
+            uiHandler.post {
+                Log.d(TAG, "loadAll: currentItems: $currentItems")
+                _itemsInCurrentPage.value = currentItems
+                _isLastPage.value = isLastPage
+            }
+        }
     }
 
     fun nextPage() {
         if (isLastPage.value == true) return
-
         _currentPage.value = _currentPage.value?.plus(PAGE_MOVE_COUNT)
-        _isLastPage.value =
-            shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
 
-        _itemsInCurrentPage.value =
-            shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+        thread {
+            val isLastPage =
+                shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
+            val currentItems =
+                shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+            uiHandler.post {
+                _isLastPage.value = isLastPage
+                _itemsInCurrentPage.value = currentItems
+            }
+        }
     }
 
     fun previousPage() {
         if (currentPage.value == FIRST_PAGE) return
-
         _currentPage.value = _currentPage.value?.minus(PAGE_MOVE_COUNT)
-        _isLastPage.value =
-            shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
 
-        _itemsInCurrentPage.value =
-            shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+        thread {
+            val isLastPage =
+                shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
+            val currentItems =
+                shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+            uiHandler.post {
+                _isLastPage.value = isLastPage
+                _itemsInCurrentPage.value = currentItems
+            }
+        }
     }
 
     fun deleteItem(cartItemId: Long) {
-        shoppingProductsRepository.removeShoppingCartProduct(cartItemId)
+        thread {
+            shoppingProductsRepository.removeShoppingCartProduct(cartItemId)
+            val currentItems =
+                shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+            val isLastPage =
+                shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
 
-        _itemsInCurrentPage.value =
-            shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
-
-        _isLastPage.value =
-            shoppingProductsRepository.isCartFinalPage(currentPage.value ?: currentPageIsNullException())
+            uiHandler.post {
+                _itemsInCurrentPage.value = currentItems
+                _isLastPage.value = isLastPage
+            }
+        }
     }
 
     override fun onClick(productId: Long) {
@@ -72,23 +99,30 @@ class ShoppingCartViewModel(
     }
 
     override fun onIncrease(productId: Long) {
-        Log.d(TAG, "onIncrease: called")
-        shoppingProductsRepository.increaseShoppingCartProduct(productId)
-        _itemsInCurrentPage.value =
-            shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+        thread {
+            shoppingProductsRepository.increaseShoppingCartProduct(productId)
+            val currentItems =
+                shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+            uiHandler.post {
+                _itemsInCurrentPage.value = currentItems
+            }
+        }
     }
 
     override fun onDecrease(productId: Long) {
-        Log.d(TAG, "onDecrease: called")
-        val product = shoppingProductsRepository.loadProduct(productId)
-        if (product.quantity == 1) {
-            // TODO: 토스트 메시지 수량은 1개 이상이어야 합니다
-            return
-        }
+        thread {
+            val product = shoppingProductsRepository.loadProduct(productId)
+            if (product.quantity == 1) {
+                return@thread
+            }
 
-        shoppingProductsRepository.decreaseShoppingCartProduct(productId)
-        _itemsInCurrentPage.value =
-            shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+            shoppingProductsRepository.decreaseShoppingCartProduct(productId)
+            val currentItems =
+                shoppingProductsRepository.loadProductsInCart(page = currentPage.value ?: currentPageIsNullException())
+            uiHandler.post {
+                _itemsInCurrentPage.value = currentItems
+            }
+        }
     }
 
     companion object {

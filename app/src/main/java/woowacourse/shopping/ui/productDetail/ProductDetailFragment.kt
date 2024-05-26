@@ -12,10 +12,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.data.source.DummyProductHistoryDataSource
 import woowacourse.shopping.data.source.DummyProductsDataSource
-import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
+import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
+import woowacourse.shopping.local.cart.ShoppingCartDatabase
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
@@ -48,8 +49,13 @@ class ProductDetailFragment : Fragment() {
                         productId = it.getLong(PRODUCT_ID),
                         shoppingProductsRepository =
                             DefaultShoppingProductRepository(
-                                DummyProductsDataSource(),
-                                DummyShoppingCartProductIdDataSource(),
+                                productsSource = DummyProductsDataSource(),
+                                cartSource =
+                                    LocalShoppingCartProductIdDataSource(
+                                        dao =
+                                            ShoppingCartDatabase.database(context = requireContext().applicationContext)
+                                                .dao(),
+                                    ),
                             ),
                         productHistoryRepository =
                             DefaultProductHistoryRepository(

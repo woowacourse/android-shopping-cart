@@ -8,7 +8,7 @@ import woowacourse.shopping.R
 @BindingAdapter("imageUrl")
 fun setImageViewResource(
     imageView: ImageView,
-    resUrl: String,
+    resUrl: String?,
 ) {
     Glide.with(imageView.context)
         .load(resUrl)
