@@ -9,12 +9,14 @@ import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductCountEvent
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
 
 class ProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
+    private val productHistoryRepository: ProductHistoryRepository,
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
 ) : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
     val currentPage: LiveData<Int> get() = _currentPage
@@ -22,6 +24,9 @@ class ProductListViewModel(
     private val _loadedProducts: MutableLiveData<List<Product>> =
         MutableLiveData(emptyList())
     val loadedProducts: LiveData<List<Product>> get() = _loadedProducts
+
+    private val _productsHistory: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
+    val productsHistory: LiveData<List<Product>> get() = _productsHistory
 
     private val _cartProductTotalCount: MutableLiveData<Int> =
         MutableLiveData(
@@ -57,6 +62,7 @@ class ProductListViewModel(
 
         _cartProductTotalCount.value = productsRepository.shoppingCartProductQuantity()
         _isLastPage.value = productsRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
+        _productsHistory.value = productHistoryRepository.loadAllProductHistory()
     }
 
     fun loadNextPageProducts() {

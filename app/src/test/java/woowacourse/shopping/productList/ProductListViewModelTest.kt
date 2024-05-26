@@ -328,4 +328,25 @@ class ProductListViewModelTest {
         val expected: Long = 3
         assertThat(productDetailId).isEqualTo(expected)
     }
+
+    @Test
+    fun `최근 본 상품 내역 로드`() {
+        // given
+        historyDataSource = FakeProductHistorySource(
+            history = ArrayDeque<Long>(listOf(1, 2, 3, 4, 5))
+        )
+        historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
+        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+
+        // when
+        viewModel.loadAll()
+
+        // then
+        val actual = viewModel.productsHistory.getOrAwaitValue()
+        assertThat(actual).isEqualTo(
+            productsTestFixture(5) {
+                productTestFixture(id = it.toLong() + 1)
+            }.map { it.toDomain(0) }
+        )
+    }
 }
