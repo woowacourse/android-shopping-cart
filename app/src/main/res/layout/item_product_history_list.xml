@@ -18,7 +18,7 @@
 
         <variable
             name="adapter"
-            type="woowacourse.shopping.presentation.home.HistoryAdapter" />
+            type="woowacourse.shopping.presentation.home.history.HistoryAdapter" />
     </data>
 
     <LinearLayout

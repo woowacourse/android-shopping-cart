@@ -10,7 +10,7 @@
 
         <variable
             name="quantityListener"
-            type="woowacourse.shopping.presentation.home.QuantityListener" />
+            type="woowacourse.shopping.presentation.home.products.QuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

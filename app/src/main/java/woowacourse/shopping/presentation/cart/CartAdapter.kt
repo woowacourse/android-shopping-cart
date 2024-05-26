@@ -8,7 +8,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.model.cart.CartedProduct
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.presentation.BindableAdapter
-import woowacourse.shopping.presentation.home.QuantityListener
+import woowacourse.shopping.presentation.home.products.QuantityListener
 
 class CartAdapter(
     private val cartItemEventListener: CartItemEventListener,

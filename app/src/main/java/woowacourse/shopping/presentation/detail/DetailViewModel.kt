@@ -13,7 +13,7 @@ import woowacourse.shopping.domain.repository.cart.CartRepository
 import woowacourse.shopping.domain.repository.history.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.presentation.home.DetailNavigationData
-import woowacourse.shopping.presentation.home.QuantityListener
+import woowacourse.shopping.presentation.home.products.QuantityListener
 import woowacourse.shopping.presentation.util.Event
 import woowacourse.shopping.presentation.util.StringResource
 import kotlin.concurrent.thread

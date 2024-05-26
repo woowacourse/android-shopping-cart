@@ -1,17 +1,9 @@
 package woowacourse.shopping.presentation.cart
 
-import android.util.Log
-import androidx.lifecycle.Observer
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -24,9 +16,7 @@ import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.domain.repository.cart.CartRepository
 import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.home.ProductQuantity
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
+import woowacourse.shopping.presentation.home.products.ProductQuantity
 import kotlin.concurrent.thread
 
 @ExtendWith(InstantTaskExecutorExtension::class)

@@ -17,7 +17,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.presentation.home.ProductQuantity
+import woowacourse.shopping.presentation.home.products.ProductQuantity
 
 class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {

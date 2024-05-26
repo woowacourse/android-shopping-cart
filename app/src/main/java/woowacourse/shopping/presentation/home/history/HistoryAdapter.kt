@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.home
+package woowacourse.shopping.presentation.home.history
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.databinding.ItemProductHistoryBinding
 import woowacourse.shopping.presentation.BindableAdapter
+import woowacourse.shopping.presentation.home.products.HomeItemEventListener
 
 class HistoryAdapter(
     private val homeItemClickListener: HomeItemEventListener,

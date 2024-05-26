@@ -9,6 +9,8 @@ import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.domain.repository.cart.CartRepository
 import woowacourse.shopping.domain.repository.history.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.product.ProductRepository
+import woowacourse.shopping.presentation.home.products.HomeItemEventListener
+import woowacourse.shopping.presentation.home.products.QuantityListener
 import woowacourse.shopping.presentation.util.Event
 import kotlin.concurrent.thread
 

@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.home
+package woowacourse.shopping.presentation.home.history
 
 import woowacourse.shopping.data.model.history.RecentProduct
 

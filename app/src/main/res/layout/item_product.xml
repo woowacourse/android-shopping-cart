@@ -14,11 +14,11 @@
 
         <variable
             name="homeItemClickListener"
-            type="woowacourse.shopping.presentation.home.HomeItemEventListener" />
+            type="woowacourse.shopping.presentation.home.products.HomeItemEventListener" />
 
         <variable
             name="quantityListener"
-            type="woowacourse.shopping.presentation.home.QuantityListener" />
+            type="woowacourse.shopping.presentation.home.products.QuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

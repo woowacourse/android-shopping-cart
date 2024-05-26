@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.cart.CartedProduct
 import woowacourse.shopping.domain.repository.cart.CartRepository
 import woowacourse.shopping.domain.repository.product.ProductRepository
-import woowacourse.shopping.presentation.home.ProductQuantity
-import woowacourse.shopping.presentation.home.QuantityListener
+import woowacourse.shopping.presentation.home.products.ProductQuantity
+import woowacourse.shopping.presentation.home.products.QuantityListener
 import java.util.Collections.replaceAll
 import kotlin.concurrent.thread
 

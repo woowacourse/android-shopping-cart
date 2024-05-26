@@ -18,6 +18,10 @@ import woowacourse.shopping.databinding.LayoutCartCountBinding
 import woowacourse.shopping.presentation.BindableAdapter
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.home.history.HistoryAdapter
+import woowacourse.shopping.presentation.home.products.ProductAdapter
+import woowacourse.shopping.presentation.home.products.ProductItemSpanSizeLookup
+import woowacourse.shopping.presentation.home.products.ProductQuantity
 
 class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding by lazy {

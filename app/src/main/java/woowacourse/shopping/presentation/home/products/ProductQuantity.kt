@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.home
+package woowacourse.shopping.presentation.home.products
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.home
+package woowacourse.shopping.presentation.home.products
 
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +14,7 @@ import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.BindableAdapter
+import woowacourse.shopping.presentation.home.LoadStatus
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(

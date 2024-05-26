@@ -14,11 +14,11 @@
 
         <variable
             name="historyAdapter"
-            type="woowacourse.shopping.presentation.home.HistoryAdapter" />
+            type="woowacourse.shopping.presentation.home.history.HistoryAdapter" />
 
         <variable
             name="productAdapter"
-            type="woowacourse.shopping.presentation.home.ProductAdapter" />
+            type="woowacourse.shopping.presentation.home.products.ProductAdapter" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
