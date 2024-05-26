@@ -45,11 +45,11 @@ class HomeActivity : AppCompatActivity() {
                 val quantities =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         result.data?.getParcelableArrayListExtra(
-                            "quantities",
+                            EXTRA_QUANTITIES,
                             ProductQuantity::class.java,
                         )
                     } else {
-                        result.data?.getParcelableArrayListExtra("quantities")
+                        result.data?.getParcelableArrayListExtra(EXTRA_QUANTITIES)
                     }
                 quantities?.forEach {
                     viewModel.onQuantityChange(it.productId, it.quantity)
@@ -118,6 +118,11 @@ class HomeActivity : AppCompatActivity() {
         viewModel.changedPosition.observe(this) {
             productAdapter.notifyItemChanged(it.getContentIfNotHandled() ?: return@observe)
         }
+    }
+
+    companion object {
+        private const val EXTRA_VIEWMODEL_FACTORY = "extra_viewmodel_factory"
+        private const val EXTRA_QUANTITIES = "quantities"
     }
 }
 
