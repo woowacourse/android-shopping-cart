@@ -15,4 +15,5 @@
     <string name="plus">+</string>
 
     <string name="greater_than_99"><![CDATA[99+]]> </string>
+    <string name="latest_product_guide">마지막으로 본 상품</string>
 </resources>
