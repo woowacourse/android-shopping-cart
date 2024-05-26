@@ -97,6 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="29dp"
+            bind:isVisible="@{viewModel.product.id != viewModel.lastViewedProduct.product.id}"
             android:background="@drawable/shape_cart_item"
             android:paddingHorizontal="18dp"
             android:paddingVertical="16dp"
@@ -122,6 +123,7 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/gray_500"
                 android:textSize="18sp"
+                android:text="@{viewModel.lastViewedProduct.product.title}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_product_detail_last_viewed"
                 tools:text="PET보틀-정사각형(500ml)" />

@@ -6,4 +6,6 @@ interface InquiryHistoryRepository {
     fun save(inquiryHistory: InquiryHistory)
 
     fun findAll(): List<InquiryHistory>
+
+    fun findLastViewedProduct(): InquiryHistory
 }

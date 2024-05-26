@@ -27,6 +27,13 @@ class ProductDetailViewModel(
     private val _quantity = MutableLiveData<Quantity>()
     val quantity: LiveData<Quantity> get() = _quantity
 
+    private val _lastViewedProduct = MutableLiveData<InquiryHistory>()
+    val lastViewedProduct: LiveData<InquiryHistory> get() = _lastViewedProduct
+
+    init {
+        loadLastViewedProduct()
+    }
+
     fun loadProduct(productId: Long) {
         _product.value = productRepository.find(productId)
         loadQuantity(productId)
@@ -49,6 +56,14 @@ class ProductDetailViewModel(
     fun decreaseQuantity() {
         val quantity = quantity.value ?: return
         _quantity.value = quantity.dec()
+    }
+
+    fun loadLastViewedProduct() {
+        var lastViewedProduct: InquiryHistory? = null
+        thread {
+            lastViewedProduct = inquiryHistoryRepository.findLastViewedProduct()
+        }.join()
+        _lastViewedProduct.value = lastViewedProduct
     }
 
     private fun loadQuantity(productId: Long) {

@@ -25,7 +25,9 @@ class ProductDetailActivity : AppCompatActivity() {
         ProductDetailViewModelFactory(
             ProductDummyRepository,
             CartDummyRepository(CartDatabase.initialize(this).cartDao()),
-            InquiryHistoryLocalRepository(InquiryHistoryDatabase.initialize(this).recentViewedProductDao()),
+            InquiryHistoryLocalRepository(
+                InquiryHistoryDatabase.initialize(this).recentViewedProductDao(),
+            ),
         )
     }
 
@@ -44,6 +46,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun initializeView() {
         initializeToolbar()
+        initializeLastViewedProduct()
         observeAddProductToCart()
         showProduct()
     }
@@ -57,6 +60,24 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun initializeLastViewedProduct() {
+        binding.layoutProductDetailLastViewedProduct.setOnClickListener {
+            navigateToLastViewedProduct()
+        }
+    }
+
+    private fun navigateToLastViewedProduct() {
+        productDetailViewModel.lastViewedProduct.observe(this) { inquiryHistory ->
+            val intent =
+                Intent(this, ProductDetailActivity::class.java).putExtra(
+                    PRODUCT_ID_KEY,
+                    inquiryHistory.product.id,
+                )
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+    }
+
     private fun observeAddProductToCart() {
         productDetailViewModel.isSuccessAddToCart.observe(this) { isSuccessAddToCart ->
             if (isSuccessAddToCart) showAddCartDialog()
@@ -64,17 +85,13 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun showAddCartDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.add_cart_done_title))
+        AlertDialog.Builder(this).setTitle(getString(R.string.add_cart_done_title))
             .setMessage(getString(R.string.add_cart_done_content))
             .setPositiveButton(getString(R.string.common_move)) { _, _ ->
                 navigateToCartView()
-            }
-            .setNegativeButton(getString(R.string.common_cancel)) { dialog, _ ->
+            }.setNegativeButton(getString(R.string.common_cancel)) { dialog, _ ->
                 dialog.dismiss()
-            }
-            .setCancelable(false)
-            .show()
+            }.setCancelable(false).show()
     }
 
     private fun navigateToCartView() {
@@ -93,12 +110,10 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun showErrorSnackBar() {
-        Snackbar
-            .make(binding.root, getString(R.string.common_error), Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(binding.root, getString(R.string.common_error), Snackbar.LENGTH_INDEFINITE)
             .setAction(getString(R.string.common_confirm)) {
                 finish()
-            }
-            .show()
+            }.show()
     }
 
     private fun initializeQuantityController() {
@@ -122,8 +137,10 @@ class ProductDetailActivity : AppCompatActivity() {
             context: Context,
             productId: Long,
         ): Intent {
-            return Intent(context, ProductDetailActivity::class.java)
-                .putExtra(PRODUCT_ID_KEY, productId)
+            return Intent(context, ProductDetailActivity::class.java).putExtra(
+                PRODUCT_ID_KEY,
+                productId,
+            )
         }
     }
 }
