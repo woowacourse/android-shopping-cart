@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
+import woowacourse.shopping.data.source.DummyProductHistoryDataSource
 import woowacourse.shopping.data.source.DummyProductsDataSource
 import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.domain.model.ProductCountEvent
+import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
@@ -30,6 +32,11 @@ class ProductListFragment : Fragment() {
                     DefaultShoppingProductRepository(
                         productsSource = DummyProductsDataSource(),
                         cartSource = DummyShoppingCartProductIdDataSource(),
+                    ),
+                productHistoryRepository =
+                    DefaultProductHistoryRepository(
+                        productHistoryDataSource = DummyProductHistoryDataSource(),
+                        productDataSource = DummyProductsDataSource(),
                     ),
             )
         }

@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
+import woowacourse.shopping.data.source.DummyProductHistoryDataSource
 import woowacourse.shopping.data.source.DummyProductsDataSource
 import woowacourse.shopping.data.source.DummyShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
+import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 
 class ProductDetailFragment : Fragment() {
@@ -48,6 +50,11 @@ class ProductDetailFragment : Fragment() {
                             DefaultShoppingProductRepository(
                                 DummyProductsDataSource(),
                                 DummyShoppingCartProductIdDataSource(),
+                            ),
+                        productHistoryRepository =
+                            DefaultProductHistoryRepository(
+                                productHistoryDataSource = DummyProductHistoryDataSource(),
+                                productDataSource = DummyProductsDataSource(),
                             ),
                     )
                 }

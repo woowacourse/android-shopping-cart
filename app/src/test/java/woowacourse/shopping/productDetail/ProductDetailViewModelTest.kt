@@ -176,9 +176,10 @@ class ProductDetailViewModelTest {
     @Test
     fun `최근 상품이 있으면 해당 객체`() {
         // given
-        historyDataSource = FakeProductHistorySource(
-            history = ArrayDeque<Long>(listOf(1, 2, 3))
-        )
+        historyDataSource =
+            FakeProductHistorySource(
+                history = ArrayDeque<Long>(listOf(1, 2, 3)),
+            )
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productsSource)
         viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
 
