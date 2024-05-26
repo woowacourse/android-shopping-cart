@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.ui.cart.CartItemClickListener
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 
 class CartAdapter(
-    private val itemRemoveClickListener: (Long) -> Unit,
+    private val cartItemClickListener: CartItemClickListener,
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
@@ -21,7 +22,7 @@ class CartAdapter(
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CartViewHolder(
             binding,
-            itemRemoveClickListener,
+            cartItemClickListener,
             plusCountClickListener,
             minusCountClickListener,
         )
@@ -39,7 +40,10 @@ class CartAdapter(
     fun setData(items: List<ProductWithQuantity>) {
         addItems(items)
         if (productWithQuantities.size != CartViewModel.PAGE_SIZE) {
-            notifyItemRangeRemoved(productWithQuantities.size + OFFSET, CartViewModel.PAGE_SIZE - productWithQuantities.size)
+            notifyItemRangeRemoved(
+                productWithQuantities.size + OFFSET,
+                CartViewModel.PAGE_SIZE - productWithQuantities.size,
+            )
         }
         notifyItemRangeChanged(DEFAULT_POSITION, productWithQuantities.size)
     }

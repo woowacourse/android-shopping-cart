@@ -14,6 +14,10 @@
             name="countButtonClickListener"
             type="woowacourse.shopping.ui.CountButtonClickListener" />
 
+        <variable
+            name="cartItemClickListener"
+            type="woowacourse.shopping.ui.cart.CartItemClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +48,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:scaleType="fitStart"
+            android:onClick="@{() -> cartItemClickListener.onClickRemoveCartItem(productWithQuantity.product.id)}"
             android:src="@drawable/close_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

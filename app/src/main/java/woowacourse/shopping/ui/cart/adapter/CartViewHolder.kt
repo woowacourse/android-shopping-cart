@@ -4,19 +4,18 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.ui.CountButtonClickListener
+import woowacourse.shopping.ui.cart.CartItemClickListener
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
-    private val itemRemoveClickListener: (Long) -> Unit,
+    private val cartItemClickListener: CartItemClickListener,
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(productWithQuantity: ProductWithQuantity) {
         binding.productWithQuantity = productWithQuantity
-        binding.ivRemove.setOnClickListener {
-            itemRemoveClickListener(productWithQuantity.product.id)
-        }
+        binding.cartItemClickListener = cartItemClickListener
         binding.countButtonClickListener = countButtonClickListener(productWithQuantity)
     }
 
