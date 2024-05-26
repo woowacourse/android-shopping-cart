@@ -5,6 +5,7 @@ import woowacourse.shopping.data.cart.CartDao
 import kotlin.math.min
 
 object FakeCartDao : CartDao {
+    private const val NOT_UPDATED_FLAG = -1
     private const val OFFSET = 1
     private const val EXCEPTION_INVALID_ID = "Cart not found with id: %d"
     private var id: Long = 0
@@ -53,33 +54,39 @@ object FakeCartDao : CartDao {
     }
 
     override fun plusQuantityByProductId(productId: Long) {
-        val oldProduct = carts.values.find { it.productId == productId }
-        if (oldProduct == null) {
+        val isUpdated = updateQuantityIfProductExists(productId)
+        if (isUpdated == NOT_UPDATED_FLAG) {
             insert(Cart(productId = productId).inc())
             return
         }
-        carts[oldProduct.id] = oldProduct.inc()
-    }
-
-    override fun minusQuantityByProductId(productId: Long) {
-        val oldCart = carts.values.find { it.productId == productId } ?: return
-        if (oldCart.quantity.value == 1) {
-            delete(oldCart.id)
-            return
-        }
-        carts[oldCart.id] = oldCart.dec()
     }
 
     override fun updateQuantityIfProductExists(productId: Long): Int {
-        TODO("Not yet implemented")
+        carts.values.find { it.productId == productId }?.let {
+            carts[it.id] = it.inc()
+            return it.id.toInt()
+        }
+        return NOT_UPDATED_FLAG
+    }
+
+    override fun minusQuantityByProductId(productId: Long) {
+        findByProductId(productId)?.let {
+            if (it.quantity.value > 1) {
+                updateQuantityIfGreaterThanOne(productId)
+                return
+            }
+            delete(it.id)
+        }
     }
 
     override fun findByProductId(productId: Long): Cart? {
-        TODO("Not yet implemented")
+        return carts.values.find { it.productId == productId }
     }
 
     override fun updateQuantityIfGreaterThanOne(productId: Long) {
-        TODO("Not yet implemented")
+        findByProductId(productId)?.let {
+            carts[it.id] = it.dec()
+        }
     }
 
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)
