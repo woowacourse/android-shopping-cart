@@ -47,14 +47,20 @@ class DefaultOrderRepository(
         runOnOtherThread {
             val order = localOrderDataSource.getOrderByProductId(product.id).getOrNull(0)
             order?.let {
-                if (order.quantity > 0) localOrderDataSource.putOrder(order.copy(quantity = order.quantity - 1))
+                when {
+                    order.quantity == 1 -> localOrderDataSource.removeOrder(order)
+                    order.quantity > 0 -> localOrderDataSource.putOrder(order.copy(quantity = order.quantity - 1))
+                }
             }
         }
 
     override fun minusOrder(orderId: Int) =
         runOnOtherThread {
             val order = localOrderDataSource.getOrderById(orderId)
-            if (order.quantity > 0) localOrderDataSource.putOrder(order.copy(quantity = order.quantity - 1))
+            when {
+                order.quantity == 1 -> localOrderDataSource.removeOrder(order)
+                order.quantity > 0 -> localOrderDataSource.putOrder(order.copy(quantity = order.quantity - 1))
+            }
         }
 
     override fun removeOrder(orderId: Int) =
