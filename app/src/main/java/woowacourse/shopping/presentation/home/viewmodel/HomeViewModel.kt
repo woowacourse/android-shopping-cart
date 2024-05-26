@@ -9,7 +9,7 @@ import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.home.HomeActionHandler
 import woowacourse.shopping.presentation.uistate.LoadStatus
 import woowacourse.shopping.presentation.uistate.Order
-import woowacourse.shopping.util.Event
+import woowacourse.shopping.presentation.util.Event
 
 class HomeViewModel(
     private val productRepository: ProductRepository,

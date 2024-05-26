@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.datasourceimpl
 
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.db.cart.Cart
-import woowacourse.shopping.db.cart.CartDatabase
+import woowacourse.shopping.data.db.cart.Cart
+import woowacourse.shopping.data.db.cart.CartDatabase
 import kotlin.concurrent.thread
 import kotlin.math.min
 

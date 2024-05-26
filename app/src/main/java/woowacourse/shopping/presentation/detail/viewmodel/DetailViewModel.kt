@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.action.CartItemCountHandler
-import woowacourse.shopping.util.Event
+import woowacourse.shopping.presentation.util.Event
 
 class DetailViewModel(
     private val productRepository: ProductRepository,

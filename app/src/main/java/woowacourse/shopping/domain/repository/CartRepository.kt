@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.db.cart.Cart
+import woowacourse.shopping.data.db.cart.Cart
 
 interface CartRepository {
     fun fetchAllCart(): List<Cart>?

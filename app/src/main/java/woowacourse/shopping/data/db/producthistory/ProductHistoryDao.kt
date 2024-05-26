@@ -1,4 +1,4 @@
-package woowacourse.shopping.db.producthistory
+package woowacourse.shopping.data.db.producthistory
 
 import androidx.room.Dao
 import androidx.room.Insert

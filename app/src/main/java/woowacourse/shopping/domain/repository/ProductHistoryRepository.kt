@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.db.producthistory.ProductHistory
+import woowacourse.shopping.data.db.producthistory.ProductHistory
 
 interface ProductHistoryRepository {
     fun getProductHistories(): List<ProductHistory>?

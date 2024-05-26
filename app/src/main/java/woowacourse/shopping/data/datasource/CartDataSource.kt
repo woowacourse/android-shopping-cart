@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.db.cart.Cart
+import woowacourse.shopping.data.db.cart.Cart
 
 interface CartDataSource {
     fun getCarts(): List<Cart>?

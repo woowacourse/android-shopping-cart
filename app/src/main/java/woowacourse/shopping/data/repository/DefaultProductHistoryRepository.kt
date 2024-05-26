@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.ProductHistoryDataSource
-import woowacourse.shopping.db.producthistory.ProductHistory
+import woowacourse.shopping.data.db.producthistory.ProductHistory
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 
 class DefaultProductHistoryRepository(

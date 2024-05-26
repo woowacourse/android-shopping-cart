@@ -19,8 +19,8 @@ import woowacourse.shopping.data.repository.DefaultCartRepository
 import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.data.repository.DefaultProductRepository
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.db.cart.CartDatabase
-import woowacourse.shopping.db.producthistory.ProductHistoryDatabase
+import woowacourse.shopping.data.db.cart.CartDatabase
+import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModelFactory
 

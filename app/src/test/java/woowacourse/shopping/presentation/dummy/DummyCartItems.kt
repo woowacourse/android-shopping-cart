@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.dummy
 
-import woowacourse.shopping.db.cart.Cart
+import woowacourse.shopping.data.db.cart.Cart
 
 class DummyCartItems {
     val carts =

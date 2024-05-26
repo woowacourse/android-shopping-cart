@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.datasourceimpl
 
 import woowacourse.shopping.data.datasource.ProductHistoryDataSource
-import woowacourse.shopping.db.producthistory.ProductHistory
-import woowacourse.shopping.db.producthistory.ProductHistoryDatabase
+import woowacourse.shopping.data.db.producthistory.ProductHistory
+import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
 import kotlin.concurrent.thread
 
 class DefaultProductHistoryDataSource(

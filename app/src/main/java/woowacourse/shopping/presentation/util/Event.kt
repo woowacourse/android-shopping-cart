@@ -1,4 +1,4 @@
-package woowacourse.shopping.util
+package woowacourse.shopping.presentation.util
 
 open class Event<out T>(private val content: T) {
     var hasBeenHandled = false
