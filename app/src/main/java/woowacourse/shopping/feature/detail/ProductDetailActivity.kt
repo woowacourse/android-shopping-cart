@@ -8,15 +8,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
-import woowacourse.shopping.data.InquiryHistoryDatabase
-import woowacourse.shopping.data.InquiryHistoryLocalRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryDatabase
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryLocalRepository
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModelFactory
-import woowacourse.shopping.feature.main.QuantityControlListener
+import woowacourse.shopping.common.QuantityControlListener
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }

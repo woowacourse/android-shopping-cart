@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.inquiryhistory
 
 import woowacourse.shopping.model.InquiryHistory
 

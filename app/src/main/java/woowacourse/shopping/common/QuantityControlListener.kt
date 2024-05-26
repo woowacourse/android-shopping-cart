@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.common
 
 interface QuantityControlListener {
     fun addProduct()

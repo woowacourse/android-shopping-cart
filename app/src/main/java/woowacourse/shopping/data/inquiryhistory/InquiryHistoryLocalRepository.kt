@@ -1,6 +1,6 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.inquiryhistory
 
-import woowacourse.shopping.data.InquiryHistoryEntity.Companion.toDomainModel
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryEntity.Companion.toDomainModel
 import woowacourse.shopping.model.InquiryHistory
 import woowacourse.shopping.model.InquiryHistory.Companion.toEntity
 

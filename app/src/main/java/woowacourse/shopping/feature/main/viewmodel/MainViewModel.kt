@@ -3,7 +3,7 @@ package woowacourse.shopping.feature.main.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.InquiryHistoryRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItemQuantity

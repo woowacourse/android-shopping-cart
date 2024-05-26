@@ -6,8 +6,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.InquiryHistoryDatabase
-import woowacourse.shopping.data.InquiryHistoryLocalRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryDatabase
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryLocalRepository
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding

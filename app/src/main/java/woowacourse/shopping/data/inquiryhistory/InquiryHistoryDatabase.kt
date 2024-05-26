@@ -1,10 +1,11 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.inquiryhistory
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import woowacourse.shopping.data.Converters
 
 @Database(entities = [InquiryHistoryEntity::class], version = 1)
 @TypeConverters(Converters::class)

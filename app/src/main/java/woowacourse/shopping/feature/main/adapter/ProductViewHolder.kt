@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.feature.cart.adapter.OnClickMinusButton
 import woowacourse.shopping.feature.cart.adapter.OnClickPlusButton
-import woowacourse.shopping.feature.main.QuantityControlListener
+import woowacourse.shopping.common.QuantityControlListener
 import woowacourse.shopping.model.CartItemQuantity
 import woowacourse.shopping.model.Product
 
