@@ -36,7 +36,7 @@
             android:id="@+id/iv_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> actionHandler.addProductQuantity(product.id, position)}"
+            android:onClick="@{() -> actionHandler.plusProductQuantity(product.id, position)}"
             android:padding="12dp"
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="parent"

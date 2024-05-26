@@ -65,10 +65,6 @@ class ProductListAdapter(
         submitList(newPagingProduct.productList)
     }
 
-    fun updateProduct(position: Int) {
-        notifyItemChanged(position)
-    }
-
     sealed class ProductListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         class ProductViewHolder(
             private val binding: HolderProductBinding,

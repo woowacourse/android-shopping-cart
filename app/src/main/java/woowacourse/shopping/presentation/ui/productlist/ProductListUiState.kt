@@ -5,7 +5,6 @@ import woowacourse.shopping.domain.model.Product
 data class ProductListUiState(
     val pagingProduct: PagingProduct = PagingProduct(),
     val productHistorys: List<Product> = emptyList(),
-    val recentlyProductPosition: Int = 0,
     val cartCount: Int = 0,
 ) {
     val cartTotalCount: Int

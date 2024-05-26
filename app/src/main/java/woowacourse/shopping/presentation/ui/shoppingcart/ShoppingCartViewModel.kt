@@ -7,9 +7,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
-import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
-import woowacourse.shopping.presentation.base.emit
 import woowacourse.shopping.presentation.common.ProductCountHandler
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.ShoppingCartPagingSource
 import kotlin.concurrent.thread
@@ -23,10 +21,6 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     val uiState: LiveData<ShoppingCartUiState> get() = _uiState
 
     private val shoppingCartPagingSource = ShoppingCartPagingSource(repository)
-
-    private val _navigateAction: MutableLiveData<Event<ShoppingCartNavigateAction>> =
-        MutableLiveData(null)
-    val navigateAction: LiveData<Event<ShoppingCartNavigateAction>> get() = _navigateAction
 
     init {
         loadCartProducts(INIT_PAGE)
@@ -42,35 +36,64 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
         }
     }
 
-    override fun addProductQuantity(
+    override fun plusProductQuantity(
         productId: Long,
         position: Int,
     ) {
+        updateProductQuantity(productId = productId, increment = true)
+    }
+
+    override fun minusProductQuantity(
+        productId: Long,
+        position: Int,
+    ) {
+        updateProductQuantity(productId = productId, increment = false)
+    }
+
+    private fun updateProductQuantity(
+        productId: Long,
+        increment: Boolean,
+    ) {
         _uiState.value?.let { state ->
-            val newProductList =
+            val updatedProductList =
                 state.pagingCartProduct.products.map { product ->
                     if (product.id == productId) {
-                        insertCartProduct(product)
-                        state.updatedProducts.addProduct(product.copy(quantity = product.quantity + 1))
-                        product.copy(quantity = product.quantity + 1)
+                        product.updateProduct(increment)
                     } else {
                         product
                     }
                 }
-
             val pagingCartProduct =
-                PagingCartProduct(products = newProductList, last = state.pagingCartProduct.last)
-            _uiState.value = state.copy(pagingCartProduct = pagingCartProduct)
+                PagingCartProduct(
+                    products = updatedProductList,
+                    last = state.pagingCartProduct.last,
+                )
+            _uiState.postValue(
+                state.copy(pagingCartProduct = pagingCartProduct),
+            )
         }
     }
 
-    private fun insertCartProduct(product: Product) {
+    private fun Product.updateProduct(increment: Boolean): Product {
+        val updatedQuantity = if (increment) this.quantity + 1 else this.quantity - 1
+        when {
+            this.quantity == 0 -> insertCartProduct(this, updatedQuantity)
+            updatedQuantity == 0 -> deleteCartProduct(this.id)
+            else -> updateCartProduct(this.id, updatedQuantity)
+        }
+        return this.copy(quantity = updatedQuantity)
+    }
+
+    private fun insertCartProduct(
+        product: Product,
+        quantity: Int,
+    ) {
         thread {
             repository.insertCartProduct(
                 productId = product.id,
                 name = product.name,
                 price = product.price,
-                quantity = product.quantity + 1,
+                quantity = quantity,
                 imageUrl = product.imageUrl,
             ).onFailure {
                 // TODO 예외처리
@@ -78,40 +101,10 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
         }
     }
 
-    override fun minusProductQuantity(
-        productId: Long,
-        position: Int,
-    ) {
-        _uiState.value?.let { state ->
-            val newProductList =
-                state.pagingCartProduct.products.map { product ->
-                    if (product.id == productId) {
-                        if (product.quantity == 1) {
-                            deleteCartProduct(productId)
-                        } else {
-                            updateCartProduct(productId, product.quantity - 1)
-                        }
-                        state.updatedProducts.addProduct(product.copy(quantity = product.quantity - 1))
-                        product.copy(quantity = product.quantity - 1)
-                    } else {
-                        product
-                    }
-                }
-
-            val pagingCartProduct =
-                PagingCartProduct(products = newProductList, last = state.pagingCartProduct.last)
-            _uiState.value = state.copy(pagingCartProduct = pagingCartProduct)
-        }
-    }
-
     override fun deleteCartProduct(productId: Long) {
         thread {
             repository.deleteCartProduct(productId = productId).onSuccess {
                 uiState.value?.let { state ->
-                    val product =
-                        state.pagingCartProduct.products.find { it.id == productId }
-                            ?: throw NoSuchElementException()
-                    state.updatedProducts.addProduct(product.copy(quantity = 0))
                     loadCartProducts(state.pagingCartProduct.currentPage)
                 }
             }.onFailure {
@@ -143,12 +136,6 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     fun loadPreviousPage() {
         uiState.value?.let { state ->
             loadCartProducts(state.pagingCartProduct.currentPage - 1)
-        }
-    }
-
-    fun navigateToProductList() {
-        uiState.value?.let { state ->
-            _navigateAction.emit(ShoppingCartNavigateAction.NavigateToProductList(state.updatedProducts))
         }
     }
 

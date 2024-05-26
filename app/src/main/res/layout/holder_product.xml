@@ -92,7 +92,7 @@
             android:layout_height="48dp"
             android:layout_margin="8dp"
             android:background="@drawable/bg_white_shape_oval"
-            android:onClick="@{() -> productCountHandler.addProductQuantity(product.id, position)}"
+            android:onClick="@{() -> productCountHandler.plusProductQuantity(product.id, position)}"
             android:src="@drawable/ic_plus"
             android:visibility="@{product.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:backgroundTint="@color/white"

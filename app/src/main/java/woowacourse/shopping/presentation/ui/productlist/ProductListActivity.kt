@@ -1,9 +1,5 @@
 package woowacourse.shopping.presentation.ui.productlist
 
-import android.content.Intent
-import android.os.Build
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +15,6 @@ import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapt
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapterManager
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
-import woowacourse.shopping.presentation.ui.shoppingcart.UpdatedProducts
 
 class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
@@ -39,26 +34,6 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         ProductHistoryListAdapter(viewModel)
     }
     private var scrollPosition = RecyclerView.NO_POSITION
-
-    private val filterActivityLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val updatedProducts =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getParcelableExtra(
-                            PUT_EXTRA_UPDATED_PRODUCTS,
-                            UpdatedProducts::class.java,
-                        )
-                    } else {
-                        result.data?.getParcelableExtra(PUT_EXTRA_UPDATED_PRODUCTS)
-                    }
-
-                updatedProducts?.let { products ->
-                    viewModel.updateProducts(products)
-                }
-            }
-            viewModel.getProductHistory()
-        }
 
     override fun initCreateView() {
         initDataBinding()
@@ -85,21 +60,17 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         viewModel.navigateAction.observeEvent(this) { navigateAction ->
             when (navigateAction) {
                 is ProductListNavigateAction.NavigateToProductDetail -> {
-                    val intent =
-                        ProductDetailActivity.getIntent(this, navigateAction.productId)
-                    filterActivityLauncher.launch(intent)
+                    startActivity(ProductDetailActivity.getIntent(this, navigateAction.productId))
                 }
 
                 is ProductListNavigateAction.NavigateToShoppingCart -> {
-                    val intent = ShoppingCartActivity.getIntent(this)
-                    filterActivityLauncher.launch(intent)
+                    startActivity(ShoppingCartActivity.getIntent(this))
                 }
             }
         }
 
         viewModel.uiState.observe(this) { state ->
             productListAdapter.updateProductList(state.pagingProduct)
-            productListAdapter.updateProduct(state.recentlyProductPosition)
 
             val layoutManager = binding.rvProductHistoryList.layoutManager as LinearLayoutManager
             scrollPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
@@ -118,7 +89,8 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         }
     }
 
-    companion object {
-        const val PUT_EXTRA_UPDATED_PRODUCTS = "updatedProducts"
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateProducts()
     }
 }

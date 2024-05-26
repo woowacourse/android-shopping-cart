@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.common
 
 interface ProductCountHandler {
-    fun addProductQuantity(
+    fun plusProductQuantity(
         productId: Long,
         position: Int,
     )

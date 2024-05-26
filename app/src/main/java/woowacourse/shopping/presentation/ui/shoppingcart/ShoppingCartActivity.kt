@@ -1,7 +1,5 @@
 package woowacourse.shopping.presentation.ui.shoppingcart
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
@@ -12,7 +10,6 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
-import woowacourse.shopping.presentation.ui.productlist.ProductListActivity
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.CartProductsAdapter
 
 class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
@@ -59,33 +56,11 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
                 is MessageProvider.DefaultErrorMessage -> showSnackbar(message.getMessage(this))
             }
         }
-
-        viewModel.navigateAction.observeEvent(this) { navigateAction ->
-            when (navigateAction) {
-                is ShoppingCartNavigateAction.NavigateToProductList -> {
-                    val resultIntent =
-                        intent.apply {
-                            putExtra(
-                                ProductListActivity.PUT_EXTRA_UPDATED_PRODUCTS,
-                                navigateAction.updatedProducts,
-                            )
-                        }
-
-                    setResult(Activity.RESULT_OK, resultIntent)
-                    finish()
-                }
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        viewModel.navigateToProductList()
+        finish()
         return true
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        viewModel.navigateToProductList()
     }
 
     companion object {
