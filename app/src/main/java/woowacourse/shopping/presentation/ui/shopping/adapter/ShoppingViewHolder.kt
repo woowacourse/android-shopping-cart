@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.databinding.ItemRecentBinding
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler

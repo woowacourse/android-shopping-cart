@@ -2,6 +2,7 @@ package woowacourse.shopping.data.local
 
 import woowacourse.shopping.data.local.entity.CartEntity
 import woowacourse.shopping.data.local.entity.CartProductEntity
+import woowacourse.shopping.data.local.entity.RecentEntity
 import woowacourse.shopping.data.local.entity.RecentProductEntity
 
 interface LocalDataSource {
@@ -22,6 +23,8 @@ interface LocalDataSource {
     fun findProductById(id: Long): CartProductEntity?
 
     fun saveCart(cartEntity: CartEntity): Long
+
+    fun saveRecent(recentEntity: RecentEntity): Long
 
     fun deleteCart(id: Long): Long
 }

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.databinding.ItemRecentBinding
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
@@ -15,7 +16,14 @@ class ShoppingAdapter(
     private val shoppingActionHandler: ShoppingActionHandler,
 ) : ListAdapter<CartProduct, ShoppingViewHolder>(DIFF_CALLBACK) {
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - LOADING_OFFSET) ShoppingViewType.LoadMore.value else ShoppingViewType.Product.value
+        return when (position) {
+            itemCount - LOADING_OFFSET -> {
+                ShoppingViewType.LoadMore.value
+            }
+            else -> {
+                ShoppingViewType.Product.value
+            }
+        }
     }
 
     override fun onCreateViewHolder(
@@ -44,7 +52,6 @@ class ShoppingAdapter(
             is ShoppingViewHolder.ProductViewHolder -> {
                 holder.bind(getItem(position))
             }
-
             is ShoppingViewHolder.LoadViewHolder -> {
                 holder.bind()
             }

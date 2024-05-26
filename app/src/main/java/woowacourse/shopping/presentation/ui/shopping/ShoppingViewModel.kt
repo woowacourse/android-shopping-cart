@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.Repository
 import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
@@ -17,6 +18,9 @@ class ShoppingViewModel(private val repository: Repository) :
 
     private val _products = MutableLiveData<UiState<List<CartProduct>>>(UiState.None)
     val products: LiveData<UiState<List<CartProduct>>> get() = _products
+
+    private val _recentProducts = MutableLiveData<UiState<List<RecentProduct>>>(UiState.None)
+    val recentProducts: LiveData<UiState<List<RecentProduct>>> get() = _recentProducts
 
     private val _errorHandler = MutableLiveData<EventState<String>>()
     val errorHandler: LiveData<EventState<String>> get() = _errorHandler
@@ -98,5 +102,16 @@ class ShoppingViewModel(private val repository: Repository) :
             cartProductToUpdate?.quantity = updatedItem.value.quantity
         }
         _products.value = UiState.Success(cartProducts)
+    }
+
+
+    fun findAllRecent() {
+        thread {
+            repository.findByLimit(10).onSuccess {
+                _recentProducts.postValue(UiState.Success(it))
+            }.onFailure {
+                _errorHandler.postValue(EventState("최근 아이템 로드 에러"))
+            }
+        }
     }
 }

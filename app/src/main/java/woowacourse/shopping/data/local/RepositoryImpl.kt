@@ -4,6 +4,7 @@ import woowacourse.shopping.data.local.mapper.toDomain
 import woowacourse.shopping.data.local.mapper.toEntity
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Recent
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.Repository
 
@@ -36,6 +37,11 @@ class RepositoryImpl(private val localDataSource: LocalDataSource) : Repository 
     override fun saveCart(cart: Cart): Result<Long> =
         runCatching {
             localDataSource.saveCart(cart.toEntity())
+        }
+
+    override fun saveRecent(recent: Recent): Result<Long> =
+        runCatching {
+            localDataSource.saveRecent(recent.toEntity())
         }
 
     override fun deleteCart(id: Long): Result<Long> =

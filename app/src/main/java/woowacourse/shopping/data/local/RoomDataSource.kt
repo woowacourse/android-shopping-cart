@@ -4,6 +4,7 @@ import woowacourse.shopping.data.local.dao.CartProductDao
 import woowacourse.shopping.data.local.dao.RecentProductDao
 import woowacourse.shopping.data.local.entity.CartEntity
 import woowacourse.shopping.data.local.entity.CartProductEntity
+import woowacourse.shopping.data.local.entity.RecentEntity
 import woowacourse.shopping.data.local.entity.RecentProductEntity
 
 class RoomDataSource(private val cartProductDao: CartProductDao, private val recentProductDao: RecentProductDao) : LocalDataSource {
@@ -32,6 +33,11 @@ class RoomDataSource(private val cartProductDao: CartProductDao, private val rec
     override fun saveCart(cartEntity: CartEntity): Long {
         cartProductDao.saveCart(cartEntity)
         return cartEntity.productId
+    }
+
+    override fun saveRecent(recentEntity: RecentEntity): Long {
+        recentProductDao.saveRecent(recentEntity)
+        return recentEntity.productId
     }
 
     override fun deleteCart(cartId: Long): Long {

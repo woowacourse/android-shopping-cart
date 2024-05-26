@@ -17,6 +17,7 @@ import woowacourse.shopping.presentation.ui.UpdateUiModel
 import woowacourse.shopping.presentation.ui.ViewModelFactory
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
+import woowacourse.shopping.presentation.ui.shopping.adapter.RecentAdapter
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewType
 
@@ -26,18 +27,30 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
-    private val adapter: ShoppingAdapter by lazy { ShoppingAdapter(this, viewModel) }
+    private val shoppingAdapter: ShoppingAdapter by lazy { ShoppingAdapter(this, viewModel) }
+    private val recentAdapter: RecentAdapter by lazy { RecentAdapter(this)}
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun initStartView() {
         initAdapter()
         viewModel.loadProductByOffset()
+        viewModel.findAllRecent()
         viewModel.products.observe(this) {
             when (it) {
                 is UiState.None -> {}
                 is UiState.Success -> {
-                    adapter.updateList(it.data)
+                    shoppingAdapter.updateList(it.data)
+                }
+            }
+        }
+        viewModel.recentProducts.observe(this) {
+            when(it) {
+                is UiState.None -> {}
+                is UiState.Success -> {
+                    recentAdapter.submitList(it.data) {
+                        binding.rvRecents.scrollToPosition(0)
+                    }
                 }
             }
         }
@@ -63,6 +76,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                         viewModel.updateCartProducts(it)
                     }
                 }
+                viewModel.findAllRecent()
             }
     }
 
@@ -70,13 +84,15 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         val layoutManager = GridLayoutManager(this, GRIDLAYOUT_COL)
         layoutManager.spanSizeLookup = spanManager
         binding.rvShopping.layoutManager = layoutManager
-        binding.rvShopping.adapter = adapter
+        binding.rvShopping.adapter = shoppingAdapter
+
+        binding.rvRecents.adapter = recentAdapter
     }
 
     private val spanManager =
         object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (adapter.getItemViewType(position) == ShoppingViewType.Product.value) {
+                return if (shoppingAdapter.getItemViewType(position) == ShoppingViewType.Product.value) {
                     ShoppingViewType.Product.span
                 } else {
                     ShoppingViewType.LoadMore.span

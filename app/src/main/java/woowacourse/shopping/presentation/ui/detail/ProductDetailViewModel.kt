@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Recent
 import woowacourse.shopping.domain.Repository
 import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
@@ -32,6 +33,7 @@ class ProductDetailViewModel(
                     _errorHandler.postValue(EventState(PRODUCT_NOT_FOUND))
                 } else {
                     _product.postValue(UiState.Success(it))
+                    saveRecentProduct(it)
                 }
             }.onFailure {
                 _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
@@ -80,6 +82,21 @@ class ProductDetailViewModel(
         thread {
             cartProduct.minusQuantity()
             _product.postValue(UiState.Success(cartProduct))
+        }
+    }
+
+    fun saveRecentProduct(cartProduct: CartProduct) {
+        thread {
+            repository.saveRecent(
+                Recent(
+                    cartProduct.productId,
+                    System.currentTimeMillis()
+                )
+            ).onSuccess {
+
+            }.onFailure {
+                _errorHandler.postValue(EventState("최근 아이템 추가 에러"))
+            }
         }
     }
 
