@@ -9,7 +9,7 @@ import org.hamcrest.Matchers.not
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.remote.DummyCartRepository
+import woowacourse.shopping.data.dummy.DummyCartRepository
 import woowacourse.shopping.presentation.ui.dummyProduct
 
 @RunWith(AndroidJUnit4::class)
@@ -33,7 +33,7 @@ class CartActivityTest {
 
     @Test
     fun `상품이_5개_초과면_페이지를_이동하는_버튼이_보여진다`() {
-        repeat(6) { index ->
+        repeat(7) { index ->
             DummyCartRepository.modifyQuantity(dummyProduct.copy(id = index.toLong()), 1)
         }
         ActivityScenario.launch(CartActivity::class.java)

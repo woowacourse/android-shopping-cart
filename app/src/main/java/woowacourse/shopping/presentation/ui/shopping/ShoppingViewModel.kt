@@ -3,7 +3,7 @@ package woowacourse.shopping.presentation.ui.shopping
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.remote.DummyProductRepository
+import woowacourse.shopping.data.dummy.DummyProductRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductListItem
@@ -14,7 +14,6 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentRepository
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.util.Event
-import kotlin.concurrent.thread
 
 class ShoppingViewModel(
     private val productRepository: ProductRepository = DummyProductRepository(),
@@ -51,12 +50,10 @@ class ShoppingViewModel(
     }
 
     fun fetchInitialRecentProducts() {
-        thread {
-            recentRepository.loadAll().onSuccess {
-                _recentProducts.postValue(UiState.Success(it))
-            }.onFailure {
-                _error.postValue(Event(ShoppingError.RecentProductItemsNotFound))
-            }
+        recentRepository.loadAll().onSuccess {
+            _recentProducts.value = UiState.Success(it)
+        }.onFailure {
+            _error.value = Event(ShoppingError.RecentProductItemsNotFound)
         }
     }
 
@@ -106,7 +103,7 @@ class ShoppingViewModel(
         cartRepository.modifyQuantity(product, quantityDelta).onSuccess {
             modifyShoppingProductQuantity(product.id, quantityDelta)
         }.onFailure {
-            _error.postValue(Event(ShoppingError.CartItemsNotModified))
+            _error.value = Event(ShoppingError.CartItemsNotModified)
         }
     }
 

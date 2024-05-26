@@ -4,18 +4,10 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.dummyCartProducts
-import woowacourse.shopping.dummyProduct
-import woowacourse.shopping.dummyShoppingProducts
-import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.UiState
-import woowacourse.shopping.presentation.ui.shopping.ShoppingError
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 @ExtendWith(MockKExtension::class)

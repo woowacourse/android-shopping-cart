@@ -9,7 +9,6 @@ import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.domain.ProductListItem.ShoppingProductItem.Companion.joinProductAndCart
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.ui.UiState
-import woowacourse.shopping.presentation.ui.shopping.ShoppingError
 import woowacourse.shopping.presentation.util.Event
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
@@ -27,9 +26,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     private val _currentPage = MutableLiveData(0)
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private val _error = MutableLiveData<Event<ShoppingError>>()
+    private val _error = MutableLiveData<Event<CartError>>()
 
-    val error: LiveData<Event<ShoppingError>> = _error
+    val error: LiveData<Event<CartError>> = _error
 
     private val _shoppingProducts =
         MutableLiveData<UiState<List<ProductListItem.ShoppingProductItem>>>(UiState.None)
@@ -54,7 +53,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
             val originalChangedCartProducts = changedCartProducts.value ?: emptyList()
             _changedCartProducts.value = originalChangedCartProducts.plus(Cart(product, 0))
         }.onFailure {
-            _error.value = Event(ShoppingError.CartItemNotDeleted)
+            _error.value = Event(CartError.CartItemNotDeleted)
         }
         fetchMaxPage()
         updatePageController()
@@ -86,7 +85,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
                     },
                 )
         }.onFailure {
-            _error.value = Event(ShoppingError.CartItemsNotFound)
+            _error.value = Event(CartError.CartItemsNotFound)
         }
     }
 

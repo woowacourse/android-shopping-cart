@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.remote
+package woowacourse.shopping.data.dummy
 
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product

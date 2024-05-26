@@ -51,16 +51,14 @@ class ProductDetailViewModel(
     }
 
     fun loadLastProduct() {
-        thread {
-            recentRepository.loadMostRecent().onSuccess {
-                it?.let {
-                    _lastProduct.postValue(UiState.Success(it))
-                }
-            }.onFailure {
-                _error.value =
-                    Event(DetailError.RecentItemNotFound)
+        recentRepository.loadMostRecent().onSuccess {
+            it?.let {
+                _lastProduct.value = UiState.Success(it)
             }
-        }.join()
+        }.onFailure {
+            _error.value =
+                Event(DetailError.RecentItemNotFound)
+        }
     }
 
     private fun addRecentProduct(product: Product) {

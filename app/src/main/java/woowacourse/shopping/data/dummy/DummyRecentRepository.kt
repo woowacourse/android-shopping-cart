@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.remote
+package woowacourse.shopping.data.dummy
 
 import woowacourse.shopping.domain.RecentProductItem
 import woowacourse.shopping.domain.repository.RecentRepository

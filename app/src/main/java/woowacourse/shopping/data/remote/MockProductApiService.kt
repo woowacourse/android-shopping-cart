@@ -7,6 +7,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import woowacourse.shopping.data.dummy.DummyProductRepository
 import woowacourse.shopping.domain.Product
 
 class MockProductApiService() : ProductApiService {
