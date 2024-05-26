@@ -43,7 +43,14 @@ class ProductDetailViewModel(
             productRepository.productById(productId)
         }.onSuccess {
             _product.value = it
-            _countState.value = CountState.ShowCount(CountResultUiModel(1, it.price))
+            val count = _countState.value?.countResult?.count ?: MINIMUM_COUNT
+            val price = _countState.value?.countResult?.price ?: it.price
+            _countState.value =
+                CountState.ShowCount(
+                    CountResultUiModel(
+                        count, price,
+                    ),
+                )
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -119,4 +126,8 @@ class ProductDetailViewModel(
         } else {
             RecentProductState.Show(recent.name, recent.product.id)
         }
+
+    companion object {
+        private const val MINIMUM_COUNT = 1
+    }
 }
