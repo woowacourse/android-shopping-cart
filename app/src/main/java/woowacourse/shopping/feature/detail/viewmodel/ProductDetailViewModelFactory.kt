@@ -2,8 +2,8 @@ package woowacourse.shopping.feature.detail.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.inquiryhistory.InquiryHistoryRepository
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryRepository
 import woowacourse.shopping.data.product.ProductRepository
 import java.lang.IllegalArgumentException
 

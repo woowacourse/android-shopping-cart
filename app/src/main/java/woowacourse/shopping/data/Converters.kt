@@ -3,6 +3,7 @@ package woowacourse.shopping.data
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Quantity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -29,6 +30,16 @@ class Converters {
     @TypeConverter
     fun jsonToProduct(product: String): Product {
         return gson.fromJson(product, Product::class.java)
+    }
+
+    @TypeConverter
+    fun quantityToJson(quantity: Quantity): String {
+        return gson.toJson(quantity)
+    }
+
+    @TypeConverter
+    fun jsonToQuantity(quantity: String): Quantity {
+        return gson.fromJson(quantity, Quantity::class.java)
     }
 
     companion object {

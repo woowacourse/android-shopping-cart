@@ -1,7 +1,16 @@
 package woowacourse.shopping.model
 
+import woowacourse.shopping.data.cart.CartItemEntity
+
 data class CartItem(
-    val id: Long,
     val product: Product,
     val quantity: Quantity,
-)
+) {
+    companion object {
+        fun CartItem.toEntity() =
+            CartItemEntity(
+                product = product,
+                quantity = quantity,
+            )
+    }
+}

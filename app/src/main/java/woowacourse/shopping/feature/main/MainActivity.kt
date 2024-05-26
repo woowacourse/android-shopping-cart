@@ -6,9 +6,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.cart.CartDatabase
+import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.inquiryhistory.InquiryHistoryDatabase
 import woowacourse.shopping.data.inquiryhistory.InquiryHistoryLocalRepository
-import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModelFactory(
             ProductDummyRepository,
-            CartDummyRepository,
+            CartDummyRepository(CartDatabase.initialize(this).cartDao()),
             InquiryHistoryLocalRepository(InquiryHistoryDatabase.initialize(this).recentViewedProductDao()),
         )
     }

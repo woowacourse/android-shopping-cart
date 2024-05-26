@@ -1,10 +1,12 @@
 package woowacourse.shopping.feature.cart.viewmodel
 
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.feature.InstantTaskExecutorExtension
@@ -13,7 +15,8 @@ import woowacourse.shopping.feature.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
-    private val cartRepository: CartRepository = CartDummyRepository
+    private val cartDao = mockk<CartDao>()
+    private val cartRepository: CartRepository = CartDummyRepository(cartDao)
     private val pageSize: Int = 5
 
     @BeforeEach

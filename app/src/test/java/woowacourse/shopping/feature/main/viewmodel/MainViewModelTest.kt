@@ -1,12 +1,17 @@
 package woowacourse.shopping.feature.main.viewmodel
 
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryDao
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryLocalRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.feature.InstantTaskExecutorExtension
@@ -18,8 +23,11 @@ import woowacourse.shopping.title
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MainViewModelTest {
     private lateinit var viewModel: MainViewModel
+    private val cartDao = mockk<CartDao>()
+    private val inquiryHistoryDao = mockk<InquiryHistoryDao>()
     private val productRepository: ProductRepository = ProductDummyRepository
-    private val cartRepository: CartRepository = CartDummyRepository
+    private val cartRepository: CartRepository = CartDummyRepository(cartDao)
+    private val inquiryHistoryRepository: InquiryHistoryRepository = InquiryHistoryLocalRepository(inquiryHistoryDao)
     private val pageSize: Int = 20
 
     @BeforeEach
@@ -33,7 +41,7 @@ class MainViewModelTest {
         repeat(40) {
             productRepository.save(imageUrl, title, price)
         }
-        viewModel = MainViewModel(productRepository, cartRepository)
+        viewModel = MainViewModel(productRepository, cartRepository, inquiryHistoryRepository)
 
         // then
         val products = viewModel.products.getOrAwaitValue()
@@ -48,7 +56,7 @@ class MainViewModelTest {
         repeat(40) {
             productRepository.save(imageUrl, title, price)
         }
-        viewModel = MainViewModel(productRepository, cartRepository)
+        viewModel = MainViewModel(productRepository, cartRepository, inquiryHistoryRepository)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
@@ -63,7 +71,7 @@ class MainViewModelTest {
         repeat(5) {
             productRepository.save(imageUrl, title, price)
         }
-        viewModel = MainViewModel(productRepository, cartRepository)
+        viewModel = MainViewModel(productRepository, cartRepository, inquiryHistoryRepository)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
@@ -76,7 +84,7 @@ class MainViewModelTest {
     @Test
     fun `상품을 장바구니에 2번 담으면 장바구니에 담긴 해당 상품의 수량은 2이다`() {
         val productId: Long = productRepository.save(imageUrl, title, price)
-        viewModel = MainViewModel(productRepository, cartRepository)
+        viewModel = MainViewModel(productRepository, cartRepository, inquiryHistoryRepository)
 
         repeat(2) {
             viewModel.addProductToCart(productId = productId)
@@ -89,7 +97,7 @@ class MainViewModelTest {
     @Test
     fun `장바구니에 담긴 한 상품의 수량이 3인 상태에서 상품을 1개 빼면 장바구니에 담긴 해당 상품의 수량은 2이다`() {
         val productId: Long = productRepository.save(imageUrl, title, price)
-        viewModel = MainViewModel(productRepository, cartRepository)
+        viewModel = MainViewModel(productRepository, cartRepository, inquiryHistoryRepository)
 
         repeat(3) {
             viewModel.addProductToCart(productId = productId)

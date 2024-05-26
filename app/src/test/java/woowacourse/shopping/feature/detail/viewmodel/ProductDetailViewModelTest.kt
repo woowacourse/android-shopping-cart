@@ -1,13 +1,18 @@
 package woowacourse.shopping.feature.detail.viewmodel
 
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryDao
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryLocalRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.feature.InstantTaskExecutorExtension
@@ -20,12 +25,15 @@ import java.lang.IllegalArgumentException
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
+    private val cartDao = mockk<CartDao>()
+    private val inquiryHistoryDao = mockk<InquiryHistoryDao>()
     private val productRepository: ProductRepository = ProductDummyRepository
-    private val cartRepository: CartRepository = CartDummyRepository
+    private val cartRepository: CartRepository = CartDummyRepository(cartDao)
+    private val inquiryHistoryRepository: InquiryHistoryRepository = InquiryHistoryLocalRepository(inquiryHistoryDao)
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductDetailViewModel(productRepository, cartRepository)
+        viewModel = ProductDetailViewModel(productRepository, cartRepository, inquiryHistoryRepository)
         productRepository.deleteAll()
         cartRepository.deleteAll()
     }

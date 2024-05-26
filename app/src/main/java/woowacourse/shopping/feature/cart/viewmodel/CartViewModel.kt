@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.model.CartItem
+import kotlin.concurrent.thread
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -38,17 +39,27 @@ class CartViewModel(
         checkEmptyLastPage()
         val isEmptyLastPage = isEmptyLastPage.value ?: return
         if (isEmptyLastPage) decreasePage()
-        cartRepository.deleteCartItem(productId)
+        thread {
+            cartRepository.deleteCartItem(productId)
+        }.join()
         updatePage()
     }
 
     fun loadCart(pageSize: Int) {
         val page = currentPage.value ?: return
-        _cart.value = cartRepository.findRange(page, pageSize)
+        var cart = emptyList<CartItem>()
+        thread {
+            cart = cartRepository.findRange(page, pageSize)
+        }.join()
+        _cart.value = cart
     }
 
     fun loadCount() {
-        _cartSize.value = cartRepository.count()
+        var cartSize = 0
+        thread {
+            cartSize = cartRepository.count()
+        }.join()
+        _cartSize.value = cartSize
         updatePageStatus()
     }
 
@@ -69,12 +80,16 @@ class CartViewModel(
     }
 
     fun addProduct(productId: Long) {
-        cartRepository.addProduct(productId)
+        thread {
+            cartRepository.addProduct(productId)
+        }.join()
         updatePage()
     }
 
     fun deleteProduct(productId: Long) {
-        cartRepository.deleteProduct(productId)
+        thread {
+            cartRepository.deleteProduct(productId)
+        }.join()
         updatePage()
     }
 

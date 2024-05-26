@@ -3,8 +3,8 @@ package woowacourse.shopping.feature.main.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.inquiryhistory.InquiryHistoryRepository
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.inquiryhistory.InquiryHistoryRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItemQuantity
 import woowacourse.shopping.model.InquiryHistory
@@ -53,13 +53,17 @@ class MainViewModel(
     }
 
     fun addProductToCart(productId: Long) {
-        cartRepository.addProduct(productId)
+        thread {
+            cartRepository.addProduct(productId)
+        }.join()
         updateQuantities()
     }
 
     fun deleteProductToCart(productId: Long) {
         runCatching {
-            cartRepository.deleteProduct(productId)
+            thread {
+                cartRepository.deleteProduct(productId)
+            }.join()
         }.onSuccess {
             updateQuantities()
         }
@@ -74,7 +78,11 @@ class MainViewModel(
 
     private fun updateQuantities() {
         val products = products.value ?: return
-        _quantities.value = cartRepository.findQuantityOfCartItems(products)
+        var cartItemQuantities = emptyList<CartItemQuantity>()
+        thread {
+            cartItemQuantities = cartRepository.findQuantityOfCartItems(products)
+        }.join()
+        _quantities.value = cartItemQuantities
 
         val quantities = quantities.value ?: return
         _cartQuantity.value = quantities.sumOf { it.quantity.count }
