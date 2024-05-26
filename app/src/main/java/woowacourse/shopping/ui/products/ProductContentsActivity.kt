@@ -80,7 +80,7 @@ class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
 
     private fun observeProductItems() {
         viewModel.productWithQuantity.observe(this) {
-            productAdapter.setData(it)
+            productAdapter.submitList(it)
         }
     }
 
