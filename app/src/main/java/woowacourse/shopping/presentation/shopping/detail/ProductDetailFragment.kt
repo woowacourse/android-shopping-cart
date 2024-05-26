@@ -35,23 +35,8 @@ class ProductDetailFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
         initAppBar()
-        binding?.btnProductCart?.setOnClickListener {
-            viewModel.addCartProduct()
-        }
-        binding?.itemProductCount?.btnPlus?.setOnClickListener {
-            viewModel.increaseCount()
-        }
-        binding?.itemProductCount?.btnMinus?.setOnClickListener {
-            viewModel.decreaseCount()
-        }
-        viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
-            if (isAdded) {
-                navigateToShoppingCart()
-            }
-        }
-        viewModel.onClickedLastViewedProduct.observe(viewLifecycleOwner) { id ->
-            (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
-        }
+        initListeners()
+        initObservers()
     }
 
     private fun initAppBar() {
@@ -82,6 +67,29 @@ class ProductDetailFragment :
             },
             viewLifecycleOwner,
         )
+    }
+
+    private fun initListeners() {
+        binding?.btnProductCart?.setOnClickListener {
+            viewModel.addCartProduct()
+        }
+        binding?.itemProductCount?.btnPlus?.setOnClickListener {
+            viewModel.increaseCount()
+        }
+        binding?.itemProductCount?.btnMinus?.setOnClickListener {
+            viewModel.decreaseCount()
+        }
+    }
+
+    private fun initObservers() {
+        viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
+            if (isAdded) {
+                navigateToShoppingCart()
+            }
+        }
+        viewModel.onClickedLastViewedProduct.observe(viewLifecycleOwner) { id ->
+            (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
+        }
     }
 
     private fun navigateToShoppingCart() {
