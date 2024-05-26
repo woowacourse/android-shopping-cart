@@ -83,7 +83,6 @@ class ProductListFragment :
                         navigateToDetailView(it)
                         recentViewModel.addRecentProduct(it)
                     },
-                    onClickRecentItem = { navigateToDetailView(it) },
                     onPlusItem = { viewModel.loadProducts() },
                     onClickAddBtn = { viewModel.increaseCount(it) },
                     onClickMinusBtn = { viewModel.decreaseCount(it) },

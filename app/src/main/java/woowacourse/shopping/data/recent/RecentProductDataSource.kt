@@ -7,5 +7,4 @@ interface RecentProductDataSource {
     fun recentProducts(): List<RecentProduct>
     fun addRecentProduct(product: Product, viewTime: Long)
     fun lastViewedProduct(): RecentProduct?
-    fun productById(id: Long): Product?
 }

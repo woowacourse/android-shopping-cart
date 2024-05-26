@@ -21,7 +21,7 @@ class DummyRecentProductDataSource(context: Context) : RecentProductDataSource {
 
     override fun addRecentProduct(product: Product, viewTime: Long) {
         val thread = Thread {
-            val existingProduct = productById(product.id)
+            val existingProduct = recentProductDao.getRecentProductById(product.id)
             if (existingProduct != null) {
                 recentProductDao.updateViewTime(product.id, viewTime)
             } else {
@@ -42,9 +42,5 @@ class DummyRecentProductDataSource(context: Context) : RecentProductDataSource {
         thread.start()
         thread.join()
         return result?.toDomainModel()
-    }
-
-    override fun productById(id: Long): Product? {
-        return products.find { it.product.id == id }?.product
     }
 }

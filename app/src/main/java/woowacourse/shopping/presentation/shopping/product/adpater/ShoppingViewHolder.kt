@@ -11,7 +11,6 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class ProductViewHolder(
         private val binding: ItemProductBinding,
         private val onClickItem: (id: Long) -> Unit,
-        private val onClickRecentItem: (id: Long) -> Unit,
         private val onClickAddBtn: (id: Long) -> Unit,
         private val onClickMinusBtn: (id: Long) -> Unit,
     ) : ShoppingViewHolder(binding.root) {
@@ -19,7 +18,6 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.product = product
             binding.root.setOnClickListener {
                 onClickItem(product.id)
-                onClickRecentItem(product.id)
             }
             binding.itemProductCount.btnProductAdd.setOnClickListener {
                 onClickAddBtn(product.id)

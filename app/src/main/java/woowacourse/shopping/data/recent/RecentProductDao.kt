@@ -15,6 +15,9 @@ interface RecentProductDao {
     @Query("SELECT * FROM recentProduct ORDER BY viewTime DESC LIMIT :pageSize")
     fun getRecentProductsByPaging(pageSize: Int): List<RecentProductEntity>
 
+    @Query("SELECT * FROM recentProduct WHERE productId = :productId")
+    fun getRecentProductById(productId: Long): RecentProductEntity?
+
     @Query("UPDATE recentProduct SET viewTime = :viewTime WHERE id = :productId")
     fun updateViewTime(productId: Long, viewTime: Long)
 }
