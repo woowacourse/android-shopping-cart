@@ -5,14 +5,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.datasource.impl.MockServerProductDataSource
 import woowacourse.shopping.data.entity.ProductEntity.Companion.STUB_LIST
 import woowacourse.shopping.data.service.ProductDispatcher
 import woowacourse.shopping.data.service.ProductMockServer
-import woowacourse.shopping.data.service.ProductService
 
 class ProductMockServerTest {
     private val productMockServer: MockWebServer = ProductMockServer.instance(ProductDispatcher())
-    private val productService: ProductService = ProductService(productMockServer)
+    private val mockServerProductDataSource: MockServerProductDataSource = MockServerProductDataSource(productMockServer)
 
     @After
     fun tearDown() {
@@ -23,7 +23,7 @@ class ProductMockServerTest {
     @DisplayName("product 전체를 꺼낼 수 있다")
     fun can_get_all_product_list() {
         // given
-        val actual = productService.products()
+        val actual = mockServerProductDataSource.products()
 
         // then
         assertThat(actual).isEqualTo(STUB_LIST)
@@ -37,7 +37,7 @@ class ProductMockServerTest {
         val lastPosition = 14
 
         // given
-        val actual = productService.productsByOffset(startPosition, 5)
+        val actual = mockServerProductDataSource.productsByOffset(startPosition, 5)
 
         // then
         assertThat(actual).isEqualTo(STUB_LIST.subList(startPosition, lastPosition + 1))
@@ -50,7 +50,7 @@ class ProductMockServerTest {
         val productId = 1L
 
         // given
-        val actual = productService.productById(productId)
+        val actual = mockServerProductDataSource.productById(productId)
 
         // then
         assertThat(actual).isEqualTo(STUB_LIST.first { it.id == productId })

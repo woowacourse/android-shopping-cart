@@ -36,4 +36,16 @@ interface ShoppingCartItemDao {
         pageSize: Int,
         pageIndex: Int,
     ): List<ShoppingCartItemEntity>
+
+    @Query("SELECT COUNT(*) FROM shopping_cart_item")
+    fun itemCount(): Int
+
+    @Query("SELECT *  FROM shopping_cart_item WHERE product_id = :productId")
+    fun cartItemById(productId: Long): ShoppingCartItemEntity?
+
+    @Query("UPDATE shopping_cart_item SET totalQuantity = :newQuantity WHERE product_id = :productId")
+    fun updateTotalQuantity(
+        productId: Long,
+        newQuantity: Int,
+    )
 }
