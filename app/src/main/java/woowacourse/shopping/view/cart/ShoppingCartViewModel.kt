@@ -11,6 +11,7 @@ import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.SingleLiveData
+import woowacourse.shopping.utils.exception.AddCartItemException
 import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.cart.model.ShoppingCart
@@ -78,33 +79,22 @@ class ShoppingCartViewModel(
     }
 
     fun increaseCartItem(product: Product) {
-        try {
-            val updateCartItemResult =
-                shoppingCartRepository.updateCartItem(
-                    product.id,
-                    UpdateCartItemType.INCREASE,
-                )
-            product.updateCartItemCount(updateCartItemResult.counter.itemCount)
-            _shoppingCartEvent.value =
-                ShoppingCartEvent.UpdateProductEvent.Success(
-                    productId = product.id,
-                    count = product.cartItemCounter.itemCount,
-                )
-        } catch (e: Exception) {
-            when (e) {
-                is NoSuchDataException ->
-                    _errorEvent.postValue(ShoppingCartEvent.UpdateProductEvent.Fail)
-                else -> _errorEvent.postValue(ShoppingCartEvent.ErrorState.NotKnownError)
-            }
-        }
+        updateCartItem(product,UpdateCartItemType.INCREASE)
     }
 
     fun decreaseCartItem(product: Product) {
+        updateCartItem(product,UpdateCartItemType.DECREASE)
+    }
+
+    private fun updateCartItem(
+        product: Product,
+        updateCartItemType: UpdateCartItemType
+    ){
         try {
             val updateCartItemResult =
                 shoppingCartRepository.updateCartItem(
                     product.id,
-                    UpdateCartItemType.DECREASE,
+                    updateCartItemType,
                 )
             product.updateCartItemCount(updateCartItemResult.counter.itemCount)
             _shoppingCartEvent.value =
@@ -112,8 +102,8 @@ class ShoppingCartViewModel(
                     productId = product.id,
                     count = product.cartItemCounter.itemCount,
                 )
-        } catch (e: Exception) {
-            when (e) {
+        } catch (e: Exception){
+            when(e){
                 is NoSuchDataException ->
                     _errorEvent.postValue(ShoppingCartEvent.UpdateProductEvent.Fail)
                 is DeleteCartItemException -> {

@@ -14,6 +14,7 @@ import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.SingleLiveData
+import woowacourse.shopping.utils.exception.AddCartItemException
 import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 
@@ -70,39 +71,43 @@ class ProductListViewModel(
     }
 
     fun increaseShoppingCart(product: Product) {
-        try {
-            val updateCartItemResult =
-                shoppingCartRepository.updateCartItem(
-                    product.id,
-                    UpdateCartItemType.INCREASE,
-                )
-            product.updateCartItemCount(updateCartItemResult.counter.itemCount)
-            product.updateItemSelector(true)
-            increaseTotalCount()
-            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
-        } catch (e: Exception) {
-            when (e) {
-                is NoSuchDataException -> addCartItem(product)
-
-                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
-            }
-        }
+        updateCarItem(product,UpdateCartItemType.INCREASE)
     }
 
     fun decreaseShoppingCart(product: Product) {
+        updateCarItem(product,UpdateCartItemType.DECREASE)
+    }
+
+    private fun updateCarItem(
+        product: Product,
+        updateCartItemType: UpdateCartItemType,
+    ) {
         try {
             val updateCartItemResult =
                 shoppingCartRepository.updateCartItem(
                     product.id,
-                    UpdateCartItemType.DECREASE,
+                    updateCartItemType,
                 )
             product.updateCartItemCount(updateCartItemResult.counter.itemCount)
-            _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
+            when (updateCartItemType) {
+                UpdateCartItemType.DECREASE -> {
+                    decreaseTotalCartItemCount()
+                }
+
+                UpdateCartItemType.INCREASE -> {
+                    product.updateItemSelector(true)
+                    increaseTotalCartItemCount()
+                }
+
+                is UpdateCartItemType.UPDATE -> {}
+            }
             _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
                     _errorEvent.postValue(ProductListEvent.UpdateProductEvent.Fail)
+
+                is AddCartItemException -> addCartItem(product)
                 is DeleteCartItemException -> deleteCartItem(product)
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
@@ -113,7 +118,7 @@ class ProductListViewModel(
         shoppingCartRepository.addCartItem(product)
         product.updateCartItemCount(DEFAULT_CART_ITEM_COUNT)
         product.updateItemSelector(true)
-        increaseTotalCount()
+        increaseTotalCartItemCount()
         _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
     }
 
@@ -133,12 +138,16 @@ class ProductListViewModel(
     }
 
     private fun updateTotalCartItemCount() {
-        val totalItemCount =  shoppingCartRepository.getTotalCartItemCount()
+        val totalItemCount = shoppingCartRepository.getTotalCartItemCount()
         _cartItemCount.value = totalItemCount
     }
 
-    private fun increaseTotalCount() {
+    private fun increaseTotalCartItemCount() {
         _cartItemCount.value = _cartItemCount.value?.plus(DEFAULT_CART_ITEM_COUNT)
+    }
+
+    private fun decreaseTotalCartItemCount(){
+        _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
     }
 
     fun updateProducts(items: Map<Long, Int>) {
