@@ -14,8 +14,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication.Companion.cartDatabase
+import woowacourse.shopping.data.db.cart.CartRepository
 import woowacourse.shopping.data.db.cart.CartRepositoryImpl
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.helper.testProduct0
 import woowacourse.shopping.helper.testProduct1
 import woowacourse.shopping.helper.testProduct2

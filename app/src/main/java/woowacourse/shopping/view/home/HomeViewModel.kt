@@ -4,24 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import woowacourse.shopping.data.db.cart.CartRepository
+import woowacourse.shopping.data.db.product.ProductRepository
+import woowacourse.shopping.data.db.recent.RecentProductRepository
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.RecentProductRepository
-import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.cart.QuantityClickListener
 import woowacourse.shopping.view.home.adapter.product.ShoppingItem.ProductItem
 import woowacourse.shopping.view.state.UIState
 
 class HomeViewModel(
-    private val shoppingRepository: ShoppingRepository,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
-) :
-    ViewModel(),
-        HomeClickListener,
-        QuantityClickListener {
+) : ViewModel(), HomeClickListener, QuantityClickListener {
     private val _shoppingUiState = MutableLiveData<UIState<List<ProductItem>>>(UIState.Empty)
     val shoppingUiState: LiveData<UIState<List<ProductItem>>>
         get() = _shoppingUiState
@@ -71,7 +68,7 @@ class HomeViewModel(
 
     fun loadProducts() {
         try {
-            val products = shoppingRepository.findProductsByPage()
+            val products = productRepository.findProductsByPage()
             if (products.isEmpty()) {
                 _shoppingUiState.value = UIState.Empty
             } else {
@@ -80,7 +77,7 @@ class HomeViewModel(
                         val quantity = cartRepository.productQuantity(product.id)
                         ProductItem(product, quantity)
                     }
-                _canLoadMore.value = shoppingRepository.canLoadMore()
+                _canLoadMore.value = productRepository.canLoadMore()
                 _shoppingUiState.value =
                     UIState.Success(loadedProductItems.value?.plus(productItems) ?: emptyList())
                 _loadedProductItems.value = loadedProductItems.value?.plus(productItems)
@@ -98,7 +95,7 @@ class HomeViewModel(
 
         val updatedProductItems =
             cartItems.map { cartItem ->
-                val product = shoppingRepository.findProductById(cartItem.productId)
+                val product = productRepository.findProductById(cartItem.productId) ?: return
                 val quantity = cartRepository.productQuantity(product.id)
                 ProductItem(product, quantity)
             }
@@ -160,7 +157,7 @@ class HomeViewModel(
     }
 
     override fun onQuantityPlusButtonClick(productId: Long) {
-        val product = shoppingRepository.findProductById(productId)
+        val product = productRepository.findProductById(productId) ?: return
         val quantity = cartRepository.productQuantity(product.id) + 1
         _totalQuantity.value = totalQuantity.value?.plus(1)
         cartRepository.save(product, quantity)
@@ -169,7 +166,7 @@ class HomeViewModel(
     }
 
     override fun onQuqntityMinusButtonClick(productId: Long) {
-        val product = shoppingRepository.findProductById(productId)
+        val product = productRepository.findProductById(productId) ?: return
         val cartItem = cartRepository.findOrNullByProductId(productId) ?: return
         val quantity = cartItem.quantity - 1
         _totalQuantity.value = totalQuantity.value?.minus(1)?.coerceAtLeast(0)

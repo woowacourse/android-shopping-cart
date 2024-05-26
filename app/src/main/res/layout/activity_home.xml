@@ -117,6 +117,7 @@
                         android:id="@+id/rv_recent_products_empty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
                         android:text="텅!"
                         android:textColor="@color/black"
                         android:textSize="28dp"

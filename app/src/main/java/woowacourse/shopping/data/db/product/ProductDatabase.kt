@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.db.shopping
+package woowacourse.shopping.data.db.product
 
 import woowacourse.shopping.domain.model.Product
 
-object DummyShopping {
-    val items =
+object ProductDatabase {
+    val products =
         listOf(
             Product(
                 id = 0L,

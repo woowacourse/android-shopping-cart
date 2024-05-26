@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.home.adapter.product
 
+import woowacourse.shopping.data.db.cart.CartRepository.Companion.DEFAULT_QUANTITY
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.CartRepository.Companion.DEFAULT_QUANTITY
 
 sealed class ShoppingItem(open val viewType: Int) {
     data class ProductItem(

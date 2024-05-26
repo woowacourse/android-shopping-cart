@@ -4,19 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import woowacourse.shopping.data.db.cart.CartRepository
+import woowacourse.shopping.data.db.cart.CartRepository.Companion.DEFAULT_QUANTITY
+import woowacourse.shopping.data.db.product.ProductRepository
+import woowacourse.shopping.data.db.recent.RecentProductRepository
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.CartRepository.Companion.DEFAULT_QUANTITY
-import woowacourse.shopping.domain.repository.RecentProductRepository
-import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.cart.QuantityClickListener
 import woowacourse.shopping.view.state.UIState
 
 class DetailViewModel(
     private val cartRepository: CartRepository,
-    private val shoppingRepository: ShoppingRepository,
+    private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val productId: Long,
 ) : ViewModel(), DetailClickListener, QuantityClickListener {
@@ -64,7 +64,7 @@ class DetailViewModel(
 
     private fun loadProduct() {
         try {
-            val productData = shoppingRepository.findProductById(productId)
+            val productData = productRepository.findProductById(productId) ?: return
             _product.value = productData
             _detailUiState.value = UIState.Success(productData)
         } catch (e: Exception) {
@@ -91,8 +91,11 @@ class DetailViewModel(
 
     fun updateRecentProductVisible(isMostRecentProductClicked: Boolean) {
         _isMostRecentProductVisible.value =
-            if (mostRecentProduct.value == null || product.value?.id == mostRecentProduct.value?.productId) false
-            else !isMostRecentProductClicked
+            if (mostRecentProduct.value == null || product.value?.id == mostRecentProduct.value?.productId) {
+                false
+            } else {
+                !isMostRecentProductClicked
+            }
     }
 
     override fun onPutCartButtonClick() {

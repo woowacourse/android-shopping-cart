@@ -59,6 +59,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
+    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.25.3")
@@ -72,6 +74,7 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.25.3")
     androidTestImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.3.0")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
     androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.3.0")
     kapt("androidx.room:room-compiler:2.6.1")
 }

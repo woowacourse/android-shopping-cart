@@ -11,7 +11,7 @@ import woowacourse.shopping.ShoppingApplication.Companion.cartDatabase
 import woowacourse.shopping.ShoppingApplication.Companion.recentProductDatabase
 import woowacourse.shopping.data.db.cart.CartRepositoryImpl
 import woowacourse.shopping.data.db.recent.RecentProductRepositoryImpl
-import woowacourse.shopping.data.db.shopping.ShoppingRepositoryImpl
+import woowacourse.shopping.data.db.shopping.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.state.UIState
@@ -28,7 +28,7 @@ class DetailActivity : AppCompatActivity() {
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
             cartRepository = CartRepositoryImpl(cartDatabase),
-            shoppingRepository = ShoppingRepositoryImpl(),
+            productRepository = ProductRepositoryImpl(),
             recentProductRepository = RecentProductRepositoryImpl(recentProductDatabase),
             productId = productId,
         )
@@ -91,7 +91,7 @@ class DetailActivity : AppCompatActivity() {
             createIntent(
                 this,
                 recentProduct.productId,
-                true
+                true,
             ),
         )
     }

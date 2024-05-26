@@ -10,7 +10,7 @@ import woowacourse.shopping.ShoppingApplication.Companion.cartDatabase
 import woowacourse.shopping.ShoppingApplication.Companion.recentProductDatabase
 import woowacourse.shopping.data.db.cart.CartRepositoryImpl
 import woowacourse.shopping.data.db.recent.RecentProductRepositoryImpl
-import woowacourse.shopping.data.db.shopping.ShoppingRepositoryImpl
+import woowacourse.shopping.data.db.shopping.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
@@ -26,7 +26,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory(
-            ShoppingRepositoryImpl(),
+            ProductRepositoryImpl(),
             CartRepositoryImpl(cartDatabase),
             RecentProductRepositoryImpl(recentProductDatabase),
         )

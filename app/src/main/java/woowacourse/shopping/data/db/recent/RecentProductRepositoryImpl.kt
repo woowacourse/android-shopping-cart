@@ -3,7 +3,6 @@ package woowacourse.shopping.data.db.recent
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.model.toRecentProductEntity
-import woowacourse.shopping.domain.repository.RecentProductRepository
 import java.time.LocalDateTime
 
 class RecentProductRepositoryImpl(recentProductDatabase: RecentProductDatabase) :

@@ -2,12 +2,12 @@ package woowacourse.shopping.view.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.RecentProductRepository
-import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.data.db.cart.CartRepository
+import woowacourse.shopping.data.db.product.ProductRepository
+import woowacourse.shopping.data.db.recent.RecentProductRepository
 
 class HomeViewModelFactory(
-    private val shoppingRepository: ShoppingRepository,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModelProvider.Factory {
@@ -15,7 +15,7 @@ class HomeViewModelFactory(
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return HomeViewModel(
-                shoppingRepository = shoppingRepository,
+                productRepository = productRepository,
                 cartRepository = cartRepository,
                 recentProductRepository = recentProductRepository,
             ) as T

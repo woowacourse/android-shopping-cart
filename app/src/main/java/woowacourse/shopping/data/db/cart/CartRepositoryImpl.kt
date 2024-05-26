@@ -3,7 +3,6 @@ package woowacourse.shopping.data.db.cart
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.toCartItemEntity
-import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(database: CartDatabase) : CartRepository {
     private val dao = database.cartDao()

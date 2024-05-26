@@ -6,10 +6,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.data.db.cart.CartRepository
+import woowacourse.shopping.data.db.product.ProductRepository
+import woowacourse.shopping.data.db.recent.RecentProductRepository
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.RecentProductRepository
-import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.helper.FakeCartRepositoryImpl
 import woowacourse.shopping.helper.InstantTaskExecutorExtension
 
@@ -17,7 +17,7 @@ import woowacourse.shopping.helper.InstantTaskExecutorExtension
 class DetailViewModelTest {
     private lateinit var viewModel: DetailViewModel
     private lateinit var testCartRepository: CartRepository
-    private val shoppingRepository = mockk<ShoppingRepository>()
+    private val productRepository = mockk<ProductRepository>()
     private val recentProductRepository = mockk<RecentProductRepository>()
 
     private val product =
@@ -35,9 +35,9 @@ class DetailViewModelTest {
     @BeforeEach
     fun setUp() {
         testCartRepository = FakeCartRepositoryImpl()
-        every { shoppingRepository.findProductById(any()) } returns product
+        every { productRepository.findProductById(any()) } returns product
         viewModel =
-            DetailViewModel(testCartRepository, shoppingRepository, recentProductRepository, 0L)
+            DetailViewModel(testCartRepository, productRepository, recentProductRepository, 0L)
     }
 
     @Test
