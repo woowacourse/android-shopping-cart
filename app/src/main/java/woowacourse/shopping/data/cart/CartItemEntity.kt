@@ -23,20 +23,3 @@ data class CartItemEntity(
             )
     }
 }
-//
-// @Entity(tableName = "inquiry_history")
-// data class InquiryHistoryEntity(
-//    @ColumnInfo(name = "product") val product: Product,
-//    @ColumnInfo(name = "inquiry_time") val inquiryTime: LocalDateTime,
-// ) {
-//    @PrimaryKey(autoGenerate = true)
-//    var uid: Long = 0L
-//
-//    companion object {
-//        fun InquiryHistoryEntity.toDomainModel() =
-//            InquiryHistory(
-//                product = product,
-//                inquiryTime = inquiryTime,
-//            )
-//    }
-// }
