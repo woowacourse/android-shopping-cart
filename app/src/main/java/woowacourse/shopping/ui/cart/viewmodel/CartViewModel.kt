@@ -78,12 +78,9 @@ class CartViewModel(
 
     private fun productWithQuantity(cart: Cart): ProductWithQuantity {
         lateinit var result: ProductWithQuantity
-        val thread =
-            Thread {
-                result = ProductWithQuantity(productRepository.find(cart.productId), cart.quantity)
-            }
-        thread.start()
-        thread.join()
+        thread {
+            result = ProductWithQuantity(productRepository.find(cart.productId), cart.quantity)
+        }.join()
         return result
     }
 
