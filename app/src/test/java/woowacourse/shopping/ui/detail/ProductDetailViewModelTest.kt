@@ -5,9 +5,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.FakeCartRepository
 import woowacourse.shopping.FakeRecentProductRepository
+import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
@@ -45,13 +45,14 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `상품 id에 맞는 상품을 불러온다`() {
-        viewModel = ProductDetailViewModel(
-            0L,
-            productRepository,
-            recentProductRepository,
-            cartRepository,
-            false,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                0L,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                false,
+            )
 
         val actual = viewModel.productUiModel.getOrAwaitValue()
         assertThat(actual.productId).isEqualTo(0L)
@@ -59,26 +60,28 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `상품 id에 해당하는 상품이 없는 경우 에러가 발생한다`() {
-        viewModel = ProductDetailViewModel(
-            -1L,
-            productRepository,
-            recentProductRepository,
-            cartRepository,
-            false,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                -1L,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                false,
+            )
         assertThat(viewModel.productLoadError.getOrAwaitValue().peekContent()).isNotNull
     }
 
     @Test
     fun `상품을 장바구니에 담는다`() {
         // given
-        viewModel = ProductDetailViewModel(
-            0L,
-            productRepository,
-            recentProductRepository,
-            cartRepository,
-            false,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                0L,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                false,
+            )
 
         // when
         viewModel.addCartProduct()
@@ -92,13 +95,14 @@ class ProductDetailViewModelTest {
     @Test
     fun `마지막으로 본 상품을 불러온다`() {
         setUpRecentProductRepository(productId = 1L)
-        viewModel = ProductDetailViewModel(
-            0L,
-            productRepository,
-            recentProductRepository,
-            cartRepository,
-            false,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                0L,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                false,
+            )
 
         val actual = viewModel.lastRecentProduct.getOrAwaitValue()
         assertThat(actual.productId).isEqualTo(1L)
@@ -106,13 +110,14 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `마지막으로 본 상품이 없는 경우 불러올 수 없다`() {
-        viewModel = ProductDetailViewModel(
-            0L,
-            productRepository,
-            recentProductRepository,
-            cartRepository,
-            false,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                0L,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                false,
+            )
 
         val actual = viewModel.lastRecentProduct.isInitialized
         assertThat(actual).isFalse
@@ -121,13 +126,14 @@ class ProductDetailViewModelTest {
     @Test
     fun `마지막으로 본 상품이 현재 상품과 동일힌 경우 마지막으로 본 상품이 보이지 않는다`() {
         setUpRecentProductRepository(productId = 0L)
-        viewModel = ProductDetailViewModel(
-            0L,
-            productRepository,
-            recentProductRepository,
-            cartRepository,
-            false,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                0L,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                false,
+            )
 
         val actual = viewModel.isVisibleLastRecentProduct.getOrAwaitValue()
         assertThat(actual).isFalse
@@ -136,13 +142,14 @@ class ProductDetailViewModelTest {
     @Test
     fun `마지막으로 본 상품을 타고 들어온 경우 마지막으로 본 상품이 보이지 않는다`() {
         setUpRecentProductRepository(productId = 1L)
-        viewModel = ProductDetailViewModel(
-            0L,
-            productRepository,
-            recentProductRepository,
-            cartRepository,
-            true,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                0L,
+                productRepository,
+                recentProductRepository,
+                cartRepository,
+                true,
+            )
 
         val actual = viewModel.isVisibleLastRecentProduct.getOrAwaitValue()
         assertThat(actual).isFalse

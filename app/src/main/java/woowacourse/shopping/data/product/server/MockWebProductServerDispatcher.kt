@@ -6,11 +6,11 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.product.dummyProducts
 import woowacourse.shopping.data.product.entity.Product
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.CONTENT_KEY
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.CONTENT_TYPE
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.FIND_PRODUCT_PAGE_PATH
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.FIND_PRODUCT_PATH
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.TOTAL_COUNT_PATH
+import woowacourse.shopping.data.product.server.ProductServerApiPath.CONTENT_KEY
+import woowacourse.shopping.data.product.server.ProductServerApiPath.CONTENT_TYPE
+import woowacourse.shopping.data.product.server.ProductServerApiPath.FIND_PRODUCT_PAGE_PATH
+import woowacourse.shopping.data.product.server.ProductServerApiPath.FIND_PRODUCT_PATH
+import woowacourse.shopping.data.product.server.ProductServerApiPath.TOTAL_COUNT_PATH
 import kotlin.math.min
 
 class MockWebProductServerDispatcher(private val products: List<Product> = dummyProducts) :

@@ -16,7 +16,10 @@ fun products(size: Int): List<Product> {
     return List(size) { product(it.toLong()) }
 }
 
-fun cartItem(id: Long, quantity: Quantity = Quantity()): CartItem {
+fun cartItem(
+    id: Long,
+    quantity: Quantity = Quantity(),
+): CartItem {
     return CartItem(id, id, quantity)
 }
 

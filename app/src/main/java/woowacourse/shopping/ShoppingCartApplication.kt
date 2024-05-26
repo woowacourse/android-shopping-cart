@@ -21,7 +21,7 @@ class ShoppingCartApplication : Application() {
         super.onCreate()
         productServer.start()
         ProductRepository.setInstance(MockWebServerProductRepository(productServer))
-        RecentProductRepository.setInstance(RoomRecentProductRepository(RecentProductDataBase.instance(this).recentProductDao()),)
+        RecentProductRepository.setInstance(RoomRecentProductRepository(RecentProductDataBase.instance(this).recentProductDao()))
         CartRepository.setInstance(RoomCartRepository(CartDataBase.instance(this).cartDao()))
     }
 

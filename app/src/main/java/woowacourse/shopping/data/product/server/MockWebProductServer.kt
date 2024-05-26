@@ -2,16 +2,16 @@ package woowacourse.shopping.data.product.server
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlin.concurrent.thread
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.data.product.entity.Product
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.BASE_PORT
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.FIND_PRODUCT_PAGE_URL
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.FIND_PRODUCT_PATH_URL
-import woowacourse.shopping.data.product.server.ProductServerApiUrl.TOTAL_COUNT_URL
+import woowacourse.shopping.data.product.server.ProductServerApiPath.BASE_PORT
+import woowacourse.shopping.data.product.server.ProductServerApiPath.FIND_PRODUCT_PAGE_URL
+import woowacourse.shopping.data.product.server.ProductServerApiPath.FIND_PRODUCT_URL
+import woowacourse.shopping.data.product.server.ProductServerApiPath.TOTAL_COUNT_URL
+import kotlin.concurrent.thread
 
 class MockWebProductServer(private val dispatcher: Dispatcher) :
     ProductServer {
@@ -29,14 +29,17 @@ class MockWebProductServer(private val dispatcher: Dispatcher) :
     override fun findOrNull(id: Long): Product? {
         val request =
             Request.Builder()
-                .url(FIND_PRODUCT_PATH_URL.format(id))
+                .url(FIND_PRODUCT_URL.format(id))
                 .build()
         val response = client.newCall(request).execute()
         val responseBody = response.body?.string()
         return gson.fromJson(responseBody, object : TypeToken<Product>() {}.type)
     }
 
-    override fun findRange(page: Int, pageSize: Int): List<Product> {
+    override fun findRange(
+        page: Int,
+        pageSize: Int,
+    ): List<Product> {
         val request =
             Request.Builder()
                 .url(FIND_PRODUCT_PAGE_URL.format(page, pageSize))

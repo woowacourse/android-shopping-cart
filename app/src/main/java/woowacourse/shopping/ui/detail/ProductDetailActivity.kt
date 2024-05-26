@@ -13,8 +13,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.data.recent.RoomRecentProductRepository
-import woowacourse.shopping.data.recent.database.RecentProductDataBase
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.products.ProductsActivity

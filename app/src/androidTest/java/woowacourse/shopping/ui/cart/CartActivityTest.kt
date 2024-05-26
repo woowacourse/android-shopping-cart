@@ -21,16 +21,9 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.FakeCartRepository
-import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.hasSizeRecyclerView
-import woowacourse.shopping.imageUrl
-import woowacourse.shopping.data.product.entity.Product
-import woowacourse.shopping.data.product.server.MockWebProductServer
-import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
 import woowacourse.shopping.firstProduct
-import woowacourse.shopping.price
-import woowacourse.shopping.title
+import woowacourse.shopping.hasSizeRecyclerView
 
 @RunWith(AndroidJUnit4::class)
 class CartActivityTest {

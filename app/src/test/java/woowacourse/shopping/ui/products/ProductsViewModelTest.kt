@@ -19,9 +19,9 @@ import woowacourse.shopping.data.product.server.MockWebProductServer
 import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
 import woowacourse.shopping.data.product.server.ProductServer
 import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.products
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Quantity
+import woowacourse.shopping.products
 import java.lang.IllegalArgumentException
 
 @ExtendWith(InstantTaskExecutorExtension::class)

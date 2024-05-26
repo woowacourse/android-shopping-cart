@@ -1,11 +1,11 @@
 package woowacourse.shopping.data.product.server
 
-object ProductServerApiUrl {
+object ProductServerApiPath {
     const val BASE_PORT = 12345
     private const val BASE_URL = "http://localhost:$BASE_PORT"
 
     const val FIND_PRODUCT_PATH = "/product/find/"
-    const val FIND_PRODUCT_PATH_URL = "$BASE_URL$FIND_PRODUCT_PATH%s"
+    const val FIND_PRODUCT_URL = "$BASE_URL$FIND_PRODUCT_PATH%s"
 
     const val FIND_PRODUCT_PAGE_PATH = "/products/page/"
     const val FIND_PRODUCT_PAGE_URL = "$BASE_URL$FIND_PRODUCT_PAGE_PATH%d/%d"

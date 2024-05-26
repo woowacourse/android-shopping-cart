@@ -17,17 +17,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.MockWebServerProductRepository
-import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.product.entity.Product
-import woowacourse.shopping.data.product.server.MockWebProductServer
-import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
 import woowacourse.shopping.data.recent.FakeRecentProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.firstProduct
-import woowacourse.shopping.imageUrl
-import woowacourse.shopping.price
-import woowacourse.shopping.title
 import woowacourse.shopping.ui.products.adapter.ProductsViewHolder
 
 @RunWith(AndroidJUnit4::class)
