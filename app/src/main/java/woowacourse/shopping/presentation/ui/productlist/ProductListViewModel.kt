@@ -11,7 +11,6 @@ import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
-import woowacourse.shopping.presentation.common.runOnOtherThread
 import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUiModel
 import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
 
@@ -35,13 +34,12 @@ class ProductListViewModel(
         makePagingProductUiModels()
     }
 
-    override fun onClickProduct(productId: Int) =
-        runOnOtherThread {
-            productListRepository.findProductById(productId).onSuccess { product ->
-                putHistory(product)
-            }
-            _navigateAction.emit(ProductListNavigateAction.NavigateToProductDetail(productId = productId))
+    override fun onClickProduct(productId: Int) {
+        productListRepository.findProductById(productId).onSuccess { product ->
+            putHistory(product)
         }
+        _navigateAction.emit(ProductListNavigateAction.NavigateToProductDetail(productId = productId))
+    }
 
     override fun onClickShoppingCart() {
         _navigateAction.emit(ProductListNavigateAction.NavigateToShoppingCart)

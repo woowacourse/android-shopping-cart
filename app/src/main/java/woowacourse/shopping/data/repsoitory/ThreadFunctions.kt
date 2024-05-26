@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.common
+package woowacourse.shopping.data.repsoitory
 
 import java.util.concurrent.FutureTask
 import kotlin.concurrent.thread
