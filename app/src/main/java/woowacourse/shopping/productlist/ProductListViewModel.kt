@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingCartRepository
 import woowacourse.shopping.ProductRepository
+import woowacourse.shopping.ShoppingCartRepositoryInterface
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.productdetail.SingleLiveEvent
 import woowacourse.shopping.uimodel.ProductUiModel
@@ -13,7 +13,7 @@ import woowacourse.shopping.uimodel.toProductUiModel
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
-    private val shoppingCartRepository: ShoppingCartRepository,
+    private val shoppingCartRepository: ShoppingCartRepositoryInterface,
 ) : ViewModel() {
     private val _productUiModels: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
     val productUiModels: LiveData<List<ProductUiModel>> get() = _productUiModels
@@ -31,16 +31,33 @@ class ProductListViewModel(
 
     init {
         loadProducts(PRODUCTS_START_POSITION)
-        _totalItemQuantity.value = shoppingCartRepository.cartTotalItemQuantity()
+        loadCartItemQuantities()
+    }
+
+    private fun loadCartItemQuantities() {
+        val updatedQuantities = shoppingCartRepository.cartItemQuantity()
+        val ids = mutableSetOf<Long>()
+        updatedQuantities.forEach { (productId, quantity) ->
+            updateUiModelQuantity(productId, quantity)
+            ids.add(productId)
+        }
+        _updatedItemsId.value = ids
+        changeTotalItemQuantity()
     }
 
     fun loadProducts(startPosition: Int) {
         runCatching {
             productRepository.products(startPosition, PRODUCTS_OFFSET_SIZE)
         }.onSuccess { loadedProducts ->
-            val currentUiItems = productUiModels.value ?: emptyList()
-            _productUiModels.value =
-                currentUiItems + loadedProducts.map { it.toProductUiModel() }
+            val currentUiItems = productUiModels.value.orEmpty()
+            val idsToBeUpdated = mutableSetOf<Long>()
+            loadedProducts.forEach {
+                if (updatedItemsId.value?.contains(it.id) == true) {
+                    idsToBeUpdated.add(it.id)
+                }
+            }
+            _productUiModels.value = currentUiItems + loadedProducts.map { it.toProductUiModel() }
+            acceptChangedItems(idsToBeUpdated)
             _currentSize.value = productUiModels.value?.size
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -50,13 +67,9 @@ class ProductListViewModel(
     fun addProductToCart(productId: Long) {
         runCatching {
             val cartItem = ShoppingCartItem(productRepository.productById(productId))
-            val userId = shoppingCartRepository.userId()
-            val shoppingCart = shoppingCartRepository.shoppingCart(userId)
-            shoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
+            shoppingCartRepository.addShoppingCartItem(cartItem.product, cartItem.quantity)
         }.onSuccess {
-            changeTotalItemQuantity()
-            updateUiModelQuantity(productId, PRODUCT_QUANTITY_ONE)
-            _updatedItemsId.value = setOf(productId)
+            updateItemQuantity(productId, PRODUCT_QUANTITY_ONE)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -66,7 +79,13 @@ class ProductListViewModel(
         productId: Long,
         currentQuantity: Int,
     ) {
-        updateItemQuantity(productId, currentQuantity + PRODUCT_QUANTITY_ONE)
+        runCatching {
+            shoppingCartRepository.plusCartItemQuantity(productId)
+        }.onSuccess {
+            updateItemQuantity(productId, currentQuantity + PRODUCT_QUANTITY_ONE)
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
     }
 
     fun minusProductOnCart(
@@ -76,25 +95,13 @@ class ProductListViewModel(
         if (currentQuantity == PRODUCT_QUANTITY_ONE) {
             deleteProductToCart(productId)
         } else {
-            updateItemQuantity(productId, currentQuantity - PRODUCT_QUANTITY_ONE)
-        }
-    }
-
-    private fun updateItemQuantity(
-        productId: Long,
-        newQuantity: Int,
-    ) {
-        runCatching {
-            val cartItem = ShoppingCartItem(productRepository.productById(productId), newQuantity)
-            val userId = shoppingCartRepository.userId()
-            val shoppingCart = shoppingCartRepository.shoppingCart(userId)
-            shoppingCartRepository.updateShoppingCart(shoppingCart.updateItem(cartItem))
-        }.onSuccess {
-            changeTotalItemQuantity()
-            updateUiModelQuantity(productId, newQuantity)
-            _updatedItemsId.value = setOf(productId)
-        }.onFailure {
-            Log.d(this::class.java.simpleName, "$it")
+            runCatching {
+                shoppingCartRepository.minusCartItemQuantity(productId)
+            }.onSuccess {
+                updateItemQuantity(productId, currentQuantity + PRODUCT_QUANTITY_ONE)
+            }.onFailure {
+                Log.d(this::class.java.simpleName, "$it")
+            }
         }
     }
 
@@ -102,12 +109,19 @@ class ProductListViewModel(
         runCatching {
             shoppingCartRepository.deleteShoppingCartItem(productId)
         }.onSuccess {
-            changeTotalItemQuantity()
-            updateUiModelQuantity(productId, ProductUiModel.PRODUCT_DEFAULT_QUANTITY)
-            _updatedItemsId.value = setOf(productId)
+            updateItemQuantity(productId, ProductUiModel.PRODUCT_DEFAULT_QUANTITY)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
+    }
+
+    private fun updateItemQuantity(
+        productId: Long,
+        newQuantity: Int,
+    ) {
+        changeTotalItemQuantity()
+        updateUiModelQuantity(productId, newQuantity)
+        _updatedItemsId.value = updatedItemsId.value.orEmpty() + setOf(productId)
     }
 
     private fun changeTotalItemQuantity() {

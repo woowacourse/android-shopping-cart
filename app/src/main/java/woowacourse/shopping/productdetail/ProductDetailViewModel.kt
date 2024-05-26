@@ -4,18 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingCartRepository
 import woowacourse.shopping.ProductRepository
+import woowacourse.shopping.ShoppingCartRepositoryInterface
 import woowacourse.shopping.ViewModelQuantityActions
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Quantity
-import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.uimodel.ProductUiModel
 import woowacourse.shopping.uimodel.toProductUiModel
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
-    private val shoppingCartRepository: ShoppingCartRepository,
+    private val shoppingCartRepository: ShoppingCartRepositoryInterface,
 ) : ViewModel(), ViewModelQuantityActions {
     private lateinit var product: Product
     private var quantity: Quantity = Quantity()
@@ -75,10 +74,7 @@ class ProductDetailViewModel(
 
     fun addProductToCart() {
         runCatching {
-            val cartItem = ShoppingCartItem(product, quantity.value)
-            val userId = shoppingCartRepository.userId()
-            val shoppingCart = shoppingCartRepository.shoppingCart(userId)
-            shoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
+            shoppingCartRepository.addShoppingCartItem(product, quantity.value)
         }.onSuccess {
             val productId = requireNotNull(product.id)
             _addedItems.value = setOf(productId)

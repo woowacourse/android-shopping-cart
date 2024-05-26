@@ -18,7 +18,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     private lateinit var binding: ActivityShoppingCartBinding
     private lateinit var adapter: ShoppingCartAdapter
 
-    private val viewModel: ShoppingCartViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: ShoppingCartViewModel by viewModels { ViewModelFactory(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

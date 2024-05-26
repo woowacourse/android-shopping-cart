@@ -5,14 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingCartRepository
+import woowacourse.shopping.ShoppingCartRepositoryInterface
 import woowacourse.shopping.ViewModelQuantityActions
 import woowacourse.shopping.uimodel.CartItemUiModel
 import woowacourse.shopping.uimodel.toCartItemUiModel
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(
-    private val repository: ShoppingCartRepository,
+    private val repository: ShoppingCartRepositoryInterface,
 ) : ViewModel(), ViewModelQuantityActions {
     private val _cartItemUiModels: MutableLiveData<List<CartItemUiModel>> = MutableLiveData()
     val cartItemUiModels: LiveData<List<CartItemUiModel>> get() = _cartItemUiModels
@@ -66,7 +66,6 @@ class ShoppingCartViewModel(
             putChangedItem(productId)
         }
     }
-
 
     override fun plusQuantity(productId: Long) {
         runCatching {

@@ -21,7 +21,7 @@ import woowacourse.shopping.util.ViewModelFactory
 class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var adapter: ProductListAdapter
-    private val viewModel: ProductListViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: ProductListViewModel by viewModels { ViewModelFactory(applicationContext) }
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
