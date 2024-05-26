@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.okhttp.api
+package woowacourse.shopping.data.remote.api
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

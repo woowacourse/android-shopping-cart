@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.datasource.product
 
-import woowacourse.shopping.data.okhttp.api.ProductApi
+import woowacourse.shopping.data.remote.api.ProductApi
 import woowacourse.shopping.domain.datasource.ProductDataSource
 import woowacourse.shopping.domain.model.Product
 

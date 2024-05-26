@@ -14,8 +14,8 @@ import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
 import woowacourse.shopping.data.DummyData.STUB_PRODUCT_B
 import woowacourse.shopping.data.DummyData.STUB_PRODUCT_C
 import woowacourse.shopping.data.datasource.product.RemoteProductDataSource
-import woowacourse.shopping.data.okhttp.api.DefaultProductApi
-import woowacourse.shopping.data.okhttp.api.ProductApi
+import woowacourse.shopping.data.remote.api.DefaultProductApi
+import woowacourse.shopping.data.remote.api.ProductApi
 import woowacourse.shopping.domain.model.Product
 
 class RemoteProductDataSourceTest {
