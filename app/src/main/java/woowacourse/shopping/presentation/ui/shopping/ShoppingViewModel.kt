@@ -60,6 +60,16 @@ class ShoppingViewModel(
         }
     }
 
+    fun fetchCartProducts() {
+        cartRepository.loadAll().onSuccess { cartItems ->
+            _cartProducts.value = UiState.Success(cartItems)
+            val totalCartItemsQuantity = cartItems.sumOf { cartItem -> cartItem.quantity }
+            _cartItemQuantity.value = totalCartItemsQuantity
+        }.onFailure {
+            _error.value = Event(ShoppingError.CartItemsNotFound)
+        }
+    }
+
     private fun fetchInitialCartProducts() {
         cartRepository.loadAll().onSuccess { cartItems ->
             _cartProducts.value = UiState.Success(cartItems)

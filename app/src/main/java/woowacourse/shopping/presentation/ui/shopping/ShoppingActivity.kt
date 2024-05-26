@@ -146,6 +146,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     override fun onResume() {
         super.onResume()
         viewModel.fetchInitialRecentProducts()
+        viewModel.fetchCartProducts()
     }
 
     companion object {
