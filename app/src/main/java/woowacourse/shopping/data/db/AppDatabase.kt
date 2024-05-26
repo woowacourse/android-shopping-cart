@@ -6,21 +6,26 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import woowacourse.shopping.data.db.dao.HistoryDao
+import woowacourse.shopping.data.db.dao.OrderDao
 import woowacourse.shopping.data.db.dao.ProductDao
 import woowacourse.shopping.data.db.model.HistoryEntity
+import woowacourse.shopping.data.db.model.OrderEntity
 import woowacourse.shopping.data.db.model.ProductEntity
 
 @Database(
-    version = 1,
+    version = 2,
     entities = [
         ProductEntity::class,
         HistoryEntity::class,
+        OrderEntity::class,
     ],
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
 
     abstract fun historyDao(): HistoryDao
+
+    abstract fun orderDao(): OrderDao
 
     companion object {
         @Volatile
@@ -37,34 +42,12 @@ abstract class AppDatabase : RoomDatabase() {
                         object : Callback() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onOpen(db)
-                                initDb(context)
                             }
                         },
                     ).fallbackToDestructiveMigration().build()
                 dbInstance = instance
                 instance
             }
-        }
-
-        fun initDb(context: Context) {
-            val db = getDatabase(context)
-            Thread {
-                /*
-                with(db.movieDao()) {
-                    insert(Movie.STUB_A.toDto())
-                    insert(Movie.STUB_B.toDto())
-                    insert(Movie.STUB_C.toDto())
-                }
-                with(db.theaterDao()) {
-                    insert(Theater.STUB_A.toDto())
-                    insert(Theater.STUB_B.toDto())
-                    insert(Theater.STUB_C.toDto())
-                }
-                with(db.screeningDao()) {
-                    insertAll(ScreeningRef.getStubList().map { it.toDto() })
-                }
-                 */
-            }.start()
         }
     }
 }

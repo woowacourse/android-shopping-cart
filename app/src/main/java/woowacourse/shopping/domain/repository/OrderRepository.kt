@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.domain.model.PagingOrder
 import woowacourse.shopping.domain.model.Product
 
-interface ShoppingCartRepository {
+interface OrderRepository {
     fun plusOrder(product: Product)
 
     fun plusOrder(
@@ -12,9 +12,9 @@ interface ShoppingCartRepository {
         count: Int,
     )
 
-    fun minusOrder(product: Product)
-
     fun plusOrder(orderId: Int)
+
+    fun minusOrder(product: Product)
 
     fun plusOrder(
         orderId: Int,

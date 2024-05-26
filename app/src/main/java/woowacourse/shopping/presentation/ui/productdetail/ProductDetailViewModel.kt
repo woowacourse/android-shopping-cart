@@ -6,8 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.HistoryRepository
+import woowacourse.shopping.domain.repository.OrderRepository
 import woowacourse.shopping.domain.repository.ProductListRepository
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity.Companion.PUT_EXTRA_PRODUCT_ID
@@ -15,7 +15,7 @@ import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity.
 class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val productListRepository: ProductListRepository,
-    private val shoppingCartRepository: ShoppingCartRepository,
+    private val orderRepository: OrderRepository,
     private val historyRepository: HistoryRepository,
 ) : BaseViewModel(), ProductDetailActionHandler {
     private val _price: MutableLiveData<Int> = MutableLiveData()
@@ -50,7 +50,7 @@ class ProductDetailViewModel(
     fun onAddToCartButtonClick() {
         product.value?.let { product ->
             quantity.value?.let { quantity ->
-                shoppingCartRepository.plusOrder(product, quantity)
+                orderRepository.plusOrder(product, quantity)
             }
             showMessage(ProductDetailMessage.AddToCartSuccessMessage)
         }

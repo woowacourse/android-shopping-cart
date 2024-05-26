@@ -4,10 +4,10 @@ import woowacourse.shopping.data.DummyData
 import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.domain.model.PagingOrder
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.OrderRepository
 import kotlin.math.min
 
-object DummyShoppingCart : ShoppingCartRepository {
+object DummyOrder : OrderRepository {
     val order =
         Order(
             id = 1,

@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.HistoryRepository
+import woowacourse.shopping.domain.repository.OrderRepository
 import woowacourse.shopping.domain.repository.ProductListRepository
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
 
 class ProductListViewModel(
     private val productListRepository: ProductListRepository,
-    private val shoppingCartRepository: ShoppingCartRepository,
+    private val orderRepository: OrderRepository,
     private val historyRepository: HistoryRepository,
 ) : BaseViewModel(), ProductListActionHandler {
     private val _uiState: MutableLiveData<ProductListUiState> =
@@ -86,7 +86,7 @@ class ProductListViewModel(
     }
 
     private fun plusOrder(product: Product) {
-        shoppingCartRepository.plusOrder(product)
+        orderRepository.plusOrder(product)
         getOrders()
     }
 
@@ -100,12 +100,12 @@ class ProductListViewModel(
     }
 
     private fun minusOrder(product: Product) {
-        shoppingCartRepository.minusOrder(product)
+        orderRepository.minusOrder(product)
         getOrders()
     }
 
     private fun getOrders() {
-        val orders = shoppingCartRepository.getOrders()
+        val orders = orderRepository.getOrders()
         val orderSum = orders.sumOf { it.quantity }
         _uiState.value = _uiState.value?.copy(orders = orders, orderSum = orderSum)
     }
@@ -128,7 +128,6 @@ class ProductListViewModel(
                 val quantity = orders.firstOrNull { product.id == it.product.id }?.quantity ?: 0
                 ProductUiModel(product, quantity)
             }
-        println(uiModels)
         val pagingProductUiModel =
             PagingProductUiModel(pagingProduct.currentPage, uiModels, pagingProduct.isLastPage)
         _uiState.value = _uiState.value?.copy(pagingProductUiModel = pagingProductUiModel)

@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.domain.repository.HistoryRepository
+import woowacourse.shopping.domain.repository.OrderRepository
 import woowacourse.shopping.domain.repository.ProductListRepository
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class ProductDetailViewModelFactory(
     private val productListRepository: ProductListRepository,
-    private val shoppingCartRepository: ShoppingCartRepository,
+    private val orderRepository: OrderRepository,
     private val historyRepository: HistoryRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(
@@ -21,7 +21,7 @@ class ProductDetailViewModelFactory(
             ProductDetailViewModel(
                 extras.createSavedStateHandle(),
                 productListRepository,
-                shoppingCartRepository,
+                orderRepository,
                 historyRepository,
             ) as T
         } else {

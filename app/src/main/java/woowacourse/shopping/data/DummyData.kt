@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.domain.model.Product
 
 object DummyData {
@@ -14,4 +15,8 @@ object DummyData {
     const val STUB_IMAGE_URL_C =
         "https://i.namu.wiki/i/fhsBMFdIgnB_D4KHQpaG0n2yk5X26rVpfsYeoIaJxwb3gLbQDJ9C7rgVQEZWKfhUwE0bR_2yT0Y1FCOwkDePJg.webp"
     val STUB_PRODUCT_C = Product(3, "신라면", 15000, STUB_IMAGE_URL_C)
+
+    val STUB_HISTORY_A = History(STUB_PRODUCT_A, 1)
+    val STUB_HISTORY_B = History(STUB_PRODUCT_B, 2)
+    val STUB_HISTORY_C = History(STUB_PRODUCT_C, 3)
 }

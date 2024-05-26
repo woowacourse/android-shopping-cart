@@ -2,12 +2,12 @@ package woowacourse.shopping.presentation.ui.shoppingcart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.OrderRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.MessageProvider
 
 class ShoppingCartViewModel(
-    private val shoppingCartRepository: ShoppingCartRepository,
+    private val orderRepository: OrderRepository,
 ) : BaseViewModel(), ShoppingCartActionHandler {
     private val _uiState: MutableLiveData<ShoppingCartUiState> =
         MutableLiveData(ShoppingCartUiState())
@@ -21,7 +21,7 @@ class ShoppingCartViewModel(
         page: Int,
         pageSize: Int = PAGE_SIZE,
     ) {
-        shoppingCartRepository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
+        orderRepository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
             _uiState.value =
                 _uiState.value?.copy(
                     pagingOrder = pagingOrder,
@@ -32,7 +32,7 @@ class ShoppingCartViewModel(
     }
 
     override fun onClickClose(orderId: Int) {
-        shoppingCartRepository.removeOrder(orderId)
+        orderRepository.removeOrder(orderId)
         uiState.value?.let { state ->
             state.pagingOrder?.let { pagingOrder ->
                 getPagingOrder(pagingOrder.currentPage)
@@ -41,7 +41,7 @@ class ShoppingCartViewModel(
     }
 
     override fun onClickPlusOrderButton(orderId: Int) {
-        shoppingCartRepository.plusOrder(orderId)
+        orderRepository.plusOrder(orderId)
         uiState.value?.let { state ->
             state.pagingOrder?.let { pagingOrder ->
                 getPagingOrder(pagingOrder.currentPage)
@@ -50,7 +50,7 @@ class ShoppingCartViewModel(
     }
 
     override fun onClickMinusOrderButton(orderId: Int) {
-        shoppingCartRepository.minusOrder(orderId)
+        orderRepository.minusOrder(orderId)
         uiState.value?.let { state ->
             state.pagingOrder?.let { pagingOrder ->
                 getPagingOrder(pagingOrder.currentPage)

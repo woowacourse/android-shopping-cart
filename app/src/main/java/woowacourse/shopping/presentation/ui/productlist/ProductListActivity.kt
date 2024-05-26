@@ -4,8 +4,8 @@ import android.view.Menu
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repsoitory.DefaultHistoryRepository
+import woowacourse.shopping.data.repsoitory.DefaultOrderRepository
 import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.databinding.ProductListMenuLayoutBinding
 import woowacourse.shopping.presentation.base.BaseActivity
@@ -23,9 +23,10 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
     private val viewModel: ProductListViewModel by viewModels {
         val localHistoryDataSource = shoppingApplication.localHistoryDataSource
+        val localOrderDataSource = shoppingApplication.localOrderDataSource
         ProductListViewModelFactory(
             DummyProductList,
-            DummyShoppingCart,
+            DefaultOrderRepository(localOrderDataSource),
             DefaultHistoryRepository(localHistoryDataSource),
         )
     }
