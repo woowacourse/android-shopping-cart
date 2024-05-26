@@ -9,5 +9,10 @@ class InquiryHistoryLocalRepository(private val dao: InquiryHistoryDao) : Inquir
         dao.insert(inquiryHistory.toEntity())
     }
 
-    override fun findAll(): List<InquiryHistory> = dao.getAll().map { inquiryHistoryEntity -> inquiryHistoryEntity.toDomainModel() }
+    override fun findAll(): List<InquiryHistory> {
+        val sortedInquiryHistories = dao.getAll().sortedByDescending { it.inquiryTime }
+        val inquiryHistories = sortedInquiryHistories.distinctBy { it.product.id }.take(10)
+
+        return inquiryHistories.map { inquiryHistoryEntity -> inquiryHistoryEntity.toDomainModel() }
+    }
 }

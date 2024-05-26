@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
-import woowacourse.shopping.data.AppDatabase
+import woowacourse.shopping.data.InquiryHistoryDatabase
 import woowacourse.shopping.data.InquiryHistoryLocalRepository
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
@@ -24,7 +24,7 @@ class ProductDetailActivity : AppCompatActivity() {
         ProductDetailViewModelFactory(
             ProductDummyRepository,
             CartDummyRepository,
-            InquiryHistoryLocalRepository(AppDatabase.initialize(this).recentViewedProductDao()),
+            InquiryHistoryLocalRepository(InquiryHistoryDatabase.initialize(this).recentViewedProductDao()),
         )
     }
 

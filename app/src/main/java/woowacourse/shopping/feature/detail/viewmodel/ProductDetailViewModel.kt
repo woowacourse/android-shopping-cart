@@ -29,9 +29,7 @@ class ProductDetailViewModel(
     fun loadProduct(productId: Long) {
         _product.value = productRepository.find(productId)
         loadQuantity(productId)
-        thread {
-            inquiryHistoryRepository.save(InquiryHistory(productId, LocalDateTime.now()))
-        }.join()
+        saveInquiryHistory()
     }
 
     fun addProductToCart(productId: Long) {
@@ -57,5 +55,12 @@ class ProductDetailViewModel(
             return
         }
         _quantity.value = Quantity(cartItem.quantity.count)
+    }
+
+    private fun saveInquiryHistory() {
+        val product = product.value ?: return
+        thread {
+            inquiryHistoryRepository.save(InquiryHistory(product, LocalDateTime.now()))
+        }.join()
     }
 }

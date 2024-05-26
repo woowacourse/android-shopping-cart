@@ -4,22 +4,31 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.InquiryHistoryDatabase
+import woowacourse.shopping.data.InquiryHistoryLocalRepository
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
+import woowacourse.shopping.feature.main.adapter.InquiryHistoryAdapter
 import woowacourse.shopping.feature.main.adapter.ProductAdapter
 import woowacourse.shopping.feature.main.viewmodel.MainViewModel
 import woowacourse.shopping.feature.main.viewmodel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(ProductDummyRepository, CartDummyRepository) }
-    private lateinit var adapter: ProductAdapter
+    private val mainViewModel: MainViewModel by viewModels {
+        MainViewModelFactory(
+            ProductDummyRepository,
+            CartDummyRepository,
+            InquiryHistoryLocalRepository(InquiryHistoryDatabase.initialize(this).recentViewedProductDao()),
+        )
+    }
+    private lateinit var inquiryHistoryAdapter: InquiryHistoryAdapter
+    private lateinit var productAdapter: ProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeView() {
         initializeBinding()
         initializeToolbar()
+        initializeInquiryHistoryAdapter()
         initializeProductAdapter()
         initializePage()
     }
@@ -50,20 +60,29 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun initializeInquiryHistoryAdapter() {
+        inquiryHistoryAdapter = InquiryHistoryAdapter()
+        binding.rvMainRecentViewedProduct.adapter = inquiryHistoryAdapter
+
+        mainViewModel.inquiryHistories.observe(this) { inquiryHistories ->
+            inquiryHistoryAdapter.updateInquiryHistories(inquiryHistories)
+        }
+    }
+
     private fun initializeProductAdapter() {
-        adapter =
+        productAdapter =
             ProductAdapter(
                 onClickProductItem = { navigateToProductDetailView(productId = it) },
                 onClickPlusButton = { mainViewModel.addProductToCart(productId = it) },
                 onClickMinusButton = { mainViewModel.deleteProductToCart(productId = it) },
             )
-        binding.rvMainProduct.adapter = adapter
+        binding.rvMainProduct.adapter = productAdapter
 
         mainViewModel.products.observe(this) { products ->
-            adapter.updateProducts(products)
+            productAdapter.updateProducts(products)
         }
         mainViewModel.quantities.observe(this) { quantities ->
-            adapter.updateQuantities(quantities)
+            productAdapter.updateQuantities(quantities)
         }
     }
 

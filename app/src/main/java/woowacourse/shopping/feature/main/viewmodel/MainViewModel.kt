@@ -3,14 +3,18 @@ package woowacourse.shopping.feature.main.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.InquiryHistoryRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItemQuantity
+import woowacourse.shopping.model.InquiryHistory
 import woowacourse.shopping.model.Product
+import kotlin.concurrent.thread
 
 class MainViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val inquiryRepository: InquiryHistoryRepository,
 ) : ViewModel() {
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> get() = _products
@@ -24,16 +28,28 @@ class MainViewModel(
     private val _cartQuantity = MutableLiveData<Int>()
     val cartQuantity: LiveData<Int> get() = _cartQuantity
 
+    private val _inquiryHistories = MutableLiveData<List<InquiryHistory>>()
+    val inquiryHistories: LiveData<List<InquiryHistory>> get() = _inquiryHistories
+
     private var page = 0
 
     init {
         loadPage()
+        loadInquiryHistory()
     }
 
     fun loadPage() {
         val products = products.value ?: emptyList()
         _products.value = products + productRepository.findRange(page++, PAGE_SIZE)
         updateQuantities()
+    }
+
+    private fun loadInquiryHistory() {
+        var inquiryHistories = emptyList<InquiryHistory>()
+        thread {
+            inquiryHistories = inquiryRepository.findAll()
+        }.join()
+        _inquiryHistories.value = inquiryHistories
     }
 
     fun addProductToCart(productId: Long) {
