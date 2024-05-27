@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.widget.TooltipCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -34,8 +35,10 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     override fun initStartView() {
         initAdapter()
+        supportActionBar?.hide()
         viewModel.loadProductByOffset()
         viewModel.findAllRecent()
+        viewModel.getItemCount()
         viewModel.products.observe(this) {
             when (it) {
                 is UiState.None -> {}
@@ -43,6 +46,9 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                     shoppingAdapter.updateList(it.data)
                 }
             }
+        }
+        viewModel.cartCount.observe(this) {
+            binding.tvCartCount.text = it.toString()
         }
         viewModel.recentProducts.observe(this) {
             when(it) {
@@ -78,6 +84,12 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 }
                 viewModel.findAllRecent()
             }
+
+        binding.ivCart.setOnClickListener {
+            resultLauncher.launch(
+                CartActivity.createIntent(this)
+            )
+        }
     }
 
     private fun initAdapter() {
@@ -99,18 +111,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 }
             }
         }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.shopping_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        resultLauncher.launch(
-            CartActivity.createIntent(this)
-        )
-        return true
-    }
 
     override fun onClick(productId: Long) {
         resultLauncher.launch(

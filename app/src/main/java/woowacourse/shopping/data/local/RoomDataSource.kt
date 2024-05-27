@@ -48,4 +48,8 @@ class RoomDataSource(private val cartProductDao: CartProductDao, private val rec
         cartProductDao.deleteCart(cartId)
         return cartId
     }
+
+    override fun getMaxCartCount(): Int {
+        return cartProductDao.getMaxCartCount()
+    }
 }

@@ -29,4 +29,6 @@ interface Repository {
     fun saveRecent(recent: Recent): Result<Long>
 
     fun deleteCart(id: Long): Result<Long>
+
+    fun getMaxCartCount(): Result<Int>
 }

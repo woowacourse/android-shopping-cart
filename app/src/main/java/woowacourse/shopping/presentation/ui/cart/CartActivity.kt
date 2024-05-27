@@ -30,7 +30,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
         binding.cartActionHandler = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.loadProductByOffset()
+        viewModel.findProductByOffset()
         initObserver()
 
         onBackPressedCallback = object : OnBackPressedCallback(true) {

@@ -10,6 +10,8 @@ import woowacourse.shopping.domain.Repository
 import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.UpdateUiModel
+import woowacourse.shopping.presentation.ui.cart.CartViewModel
+import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
 import kotlin.concurrent.thread
 
 class ShoppingViewModel(private val repository: Repository) :
@@ -18,6 +20,9 @@ class ShoppingViewModel(private val repository: Repository) :
 
     private val _products = MutableLiveData<UiState<List<CartProduct>>>(UiState.None)
     val products: LiveData<UiState<List<CartProduct>>> get() = _products
+
+    private val _cartCount = MutableLiveData<Int>(0)
+    val cartCount: LiveData<Int> get() = _cartCount
 
     private val _recentProducts = MutableLiveData<UiState<List<RecentProduct>>>(UiState.None)
     val recentProducts: LiveData<UiState<List<RecentProduct>>> get() = _recentProducts
@@ -42,6 +47,14 @@ class ShoppingViewModel(private val repository: Repository) :
         }
     }
 
+    fun getItemCount() {
+        thread {
+            repository.getMaxCartCount().onSuccess { maxCount ->
+                _cartCount.postValue(maxCount)
+            }
+        }
+    }
+
     companion object {
         const val LOAD_ERROR = "아이템을 끝까지 불러왔습니다"
         const val PAGE_SIZE = 20
@@ -56,6 +69,7 @@ class ShoppingViewModel(private val repository: Repository) :
             repository.saveCart(Cart(cartProducts[index].productId, cartProducts[index].quantity!!))
                 .onSuccess {
                     _products.postValue(UiState.Success(cartProducts))
+                    getItemCount()
                 }
                 .onFailure {
                     _errorHandler.postValue(EventState("아이템 증가 오류"))
@@ -78,6 +92,7 @@ class ShoppingViewModel(private val repository: Repository) :
                 )
                     .onSuccess {
                         _products.postValue(UiState.Success(cartProducts))
+                        getItemCount()
                     }
                     .onFailure {
                         _errorHandler.postValue(EventState("아이템 증가 오류"))
@@ -87,6 +102,7 @@ class ShoppingViewModel(private val repository: Repository) :
                     cartProducts[index].productId,
                 ).onSuccess {
                     _products.postValue(UiState.Success(cartProducts))
+                    getItemCount()
                 }.onFailure {
                     _errorHandler.postValue(EventState("아이템 증가 오류"))
                 }

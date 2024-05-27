@@ -16,7 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.data.remote.DummyProductCartRepository
-import woowacourse.shopping.presentation.ui.dummyProduct
+import woowacourse.shopping.presentation.ui.cartProduct
 
 @RunWith(AndroidJUnit4::class)
 class CartEntityActivityTest {
@@ -35,7 +35,7 @@ class CartEntityActivityTest {
     @Test
     fun `상품이_5개_이하면_페이지를_이동하는_버튼이_안보인다`() {
         repeat(5) { index ->
-            DummyProductCartRepository.save(dummyProduct.copy(id = index.toLong()))
+            DummyProductCartRepository.save(cartProduct.copy(productId = index.toLong()))
         }
         ActivityScenario.launch(CartActivity::class.java)
         onView(ViewMatchers.withId(R.id.layout_page))

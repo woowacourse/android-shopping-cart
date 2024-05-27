@@ -31,6 +31,12 @@ interface CartProductDao {
     ): List<CartProductEntity>
 
     @Query(
+        "SELECT COUNT(*) " +
+                "FROM cartentity LEFT JOIN productentity ON cartentity.productId = productentity.id "
+    )
+    fun getMaxCartCount(): Int
+
+    @Query(
         "SELECT productentity.id AS productId, productentity.name, productentity.imgUrl, productentity.price, cartentity.quantity " +
             "FROM productentity LEFT JOIN cartentity ON productentity.id = cartentity.productId " +
             "WHERE id = :id",

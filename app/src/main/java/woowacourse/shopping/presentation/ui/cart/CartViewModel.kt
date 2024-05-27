@@ -28,11 +28,11 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
     val updateUiModel: UpdateUiModel = UpdateUiModel()
 
 
-//    init {
-//        getItemCount()
-//    }
+    init {
+        getItemCount()
+    }
 
-    fun loadProductByOffset() {
+    fun findProductByOffset() {
         thread {
             repository.findCartByPaging(offSet, PAGE_SIZE).onSuccess {
                 _carts.postValue(UiState.Success(it))
@@ -41,19 +41,20 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
             }
         }
     }
+    private fun getItemCount() {
+        thread {
+            repository.getMaxCartCount().onSuccess { maxCount ->
+                maxOffset = ((maxCount + PAGE_UPPER_BOUND) / PAGE_SIZE - 1).coerceAtLeast(0)
+            }
+        }
+    }
 
-//    private fun getItemCount() {
-//        repository.getMaxOffset().onSuccess {
-//            maxOffset = it
-//        }
-//    }
-//
     override fun onDelete(cartProduct: CartProduct) {
         thread {
             updateUiModel.add(cartProduct.productId, cartProduct.copy(quantity = 0))
             repository.deleteCart(cartProduct.productId).onSuccess {
-//            getItemCount()
-                loadProductByOffset()
+            getItemCount()
+                findProductByOffset()
             }.onFailure {
                 _errorHandler.value = EventState(CART_DELETE_ERROR)
             }
@@ -63,13 +64,13 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
     override fun onNext() {
         if (offSet == maxOffset) return
         offSet++
-        loadProductByOffset()
+        findProductByOffset()
     }
 
     override fun onPrevious() {
         if (offSet == 0) return
         offSet--
-        loadProductByOffset()
+        findProductByOffset()
     }
 
     override fun onPlus(cartProduct: CartProduct) {

@@ -29,4 +29,6 @@ interface LocalDataSource {
     fun saveRecent(recentEntity: RecentEntity): Long
 
     fun deleteCart(id: Long): Long
+
+    fun getMaxCartCount(): Int
 }

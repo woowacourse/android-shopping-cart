@@ -2,12 +2,14 @@ package woowacourse.shopping.data.local
 
 import woowacourse.shopping.data.local.mapper.toDomain
 import woowacourse.shopping.data.local.mapper.toEntity
+import woowacourse.shopping.data.remote.DummyProductCartRepository
 import woowacourse.shopping.data.remote.RemoteDataSource
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Recent
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.Repository
+import woowacourse.shopping.presentation.ui.cart.CartViewModel
 
 class RepositoryImpl(private val localDataSource: LocalDataSource, private val remoteDataSource: RemoteDataSource) : Repository {
     override fun findProductByPaging(
@@ -61,4 +63,8 @@ class RepositoryImpl(private val localDataSource: LocalDataSource, private val r
         runCatching {
             localDataSource.deleteCart(id)
         }
+
+    override fun getMaxCartCount(): Result<Int> = runCatching {
+        localDataSource.getMaxCartCount()
+    }
 }
