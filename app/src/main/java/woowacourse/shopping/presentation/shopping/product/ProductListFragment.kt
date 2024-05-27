@@ -41,11 +41,14 @@ class ProductListFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadProducts()
-        recentViewModel.loadRecentProducts()
         initAppBar()
         initViews()
         initObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadProducts()
     }
 
     private fun initAppBar() {

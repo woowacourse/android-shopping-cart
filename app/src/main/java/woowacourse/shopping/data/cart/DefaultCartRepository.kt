@@ -10,6 +10,11 @@ class DefaultCartRepository(
     private val cartDataSource: CartDataSource = DefaultCartDataSource(context),
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
 ) : CartRepository {
+
+    override fun totalCartProducts(): List<CartProduct> {
+        return cartDataSource.totalCartProducts()
+    }
+
     override fun cartProducts(currentPage: Int): List<CartProduct> {
         return cartDataSource.loadCartProducts(currentPage)
     }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,9 +13,6 @@ class CartViewModel(
 ) : ViewModel() {
     private val _currentPage = MutableLiveData(START_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
-
-    // todo 캐싱 update
-    private val cachedProducts = mutableMapOf<Int, List<CartProductUi>>()
     val products: LiveData<List<CartProductUi>> =
         _currentPage.map { page ->
             cartRepository.cartProducts(page).map {
@@ -40,17 +36,13 @@ class CartViewModel(
 
     fun increaseCount(item: CartProductUi) {
         val updateItem = item.increaseCount()
-        Log.d("cart increase", "${updateItem.count}")
         cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
         refreshCurrentPage()
     }
 
     fun decreaseCount(item: CartProductUi) {
         val updateItem = item.decreaseCount()
-        when (item.product.count == 1) {
-            true -> deleteProduct(item)
-            false -> cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
-        }
+        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
         refreshCurrentPage()
     }
 

@@ -18,6 +18,19 @@ class DefaultCartDataSource(context: Context) : CartDataSource {
         thread.join()
     }
 
+    override fun totalCartProducts(): List<CartProduct> {
+        var cartItems = listOf<CartProduct>()
+        val thread = Thread {
+            cartItems = cartDao.findAllCartItem().map {
+                it.toCartItem()
+            }
+        }
+        thread.start()
+        thread.join()
+
+        return cartItems
+    }
+
     override fun loadCartProducts(currentPage: Int): List<CartProduct> {
         if ((currentPage - 1) * PRODUCT_AMOUNT >= products.size) return emptyList()
         val startIndex = (currentPage - 1) * PRODUCT_AMOUNT

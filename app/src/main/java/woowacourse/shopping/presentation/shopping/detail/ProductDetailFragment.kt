@@ -39,6 +39,11 @@ class ProductDetailFragment :
         initObservers()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadProduct()
+    }
+
     private fun initAppBar() {
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.apply {
             title = ""

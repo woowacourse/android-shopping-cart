@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shopping.product.adpater
 
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemPlusProductBinding
@@ -28,7 +27,6 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.itemProductCount.btnMinus.setOnClickListener {
                 onClickMinusBtn(product.id)
             }
-            Log.d("item counter", "${product.count}")
         }
     }
 

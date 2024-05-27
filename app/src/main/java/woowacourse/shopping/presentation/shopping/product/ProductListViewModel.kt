@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.shopping.ShoppingRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
+import woowacourse.shopping.presentation.cart.toUiModel
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 
 class ProductListViewModel(
@@ -18,15 +19,28 @@ class ProductListViewModel(
     private var currentPage = 0
 
     fun loadProducts() {
-        val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
-        val loadProducts =
-            shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
-                .map { it.toShoppingUiModel(false) }
+        val currentProducts =
+            _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
+
+        var loadProducts: List<ShoppingUiModel.Product> =
+            currentProducts +
+                    shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
+                        .map { it.toShoppingUiModel(false) }
+
+        val carProducts: List<ShoppingUiModel.Product> =
+            cartRepository.totalCartProducts().map { it.toUiModel(false).product }
+
+        val cartIds = carProducts.map { it.id }
+        loadProducts = loadProducts.map { product ->
+            if (product.id in cartIds) {
+                carProducts.find { product.id == it.id } ?: product
+            } else product
+        }
 
         if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
-            _products.value = currentProducts + loadProducts + ShoppingUiModel.LoadMore
+            _products.postValue(loadProducts + ShoppingUiModel.LoadMore)
         } else {
-            _products.value = currentProducts + loadProducts
+            _products.postValue(loadProducts)
         }
     }
 
@@ -43,8 +57,13 @@ class ProductListViewModel(
         val newProducts = currentProducts.map {
             if (it.id == id) {
                 val newCount = it.count + change
-                addCartProduct(id, newCount)
-                it.copy(count = newCount)
+                val visible = newCount > 0
+                if (newCount == 0) {
+                    cartRepository.deleteCartProduct(id)
+                } else {
+                    addCartProduct(id, newCount)
+                }
+                it.copy(count = newCount, isVisible = visible)
             } else {
                 it
             }

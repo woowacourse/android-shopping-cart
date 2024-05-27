@@ -23,6 +23,5 @@ fun CartProductUi.increaseCount(): CartProductUi {
 }
 
 fun CartProductUi.decreaseCount(): CartProductUi {
-    val item = copy(count = (count - 1).coerceAtLeast(0))
-    return item
+    return copy(count = (count - 1).coerceAtLeast(1))
 }

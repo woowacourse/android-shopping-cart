@@ -13,6 +13,10 @@ class RecentProductViewModel(private val recentProductRepository: RecentProductR
     private val _recentProducts = MutableLiveData<List<RecentProduct>>(emptyList())
     val recentProducts: LiveData<List<RecentProduct>> = _recentProducts
 
+    init {
+        loadRecentProducts()
+    }
+
     fun loadRecentProducts() {
         val products = recentProductRepository.recentProducts(RECENT_PRODUCTS_SIZE)
         _recentProducts.value = products
