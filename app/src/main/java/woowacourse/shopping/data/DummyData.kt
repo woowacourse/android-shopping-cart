@@ -18,7 +18,7 @@ object DummyData {
 
     val STUB_PRODUCT_LIST =
         listOf(STUB_PRODUCT_1, STUB_PRODUCT_2, STUB_PRODUCT_3) +
-            List(20) { STUB_PRODUCT_1.copy(id = it + 4, "홍차$it") }
+            List(60) { STUB_PRODUCT_1.copy(id = it + 4, "홍차$it") }
 
     val STUB_HISTORY_A = History(STUB_PRODUCT_1, 1)
     val STUB_HISTORY_B = History(STUB_PRODUCT_2, 2)
