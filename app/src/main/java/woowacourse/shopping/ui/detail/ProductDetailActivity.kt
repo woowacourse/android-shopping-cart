@@ -48,6 +48,7 @@ class ProductDetailActivity : AppCompatActivity() {
         initializeToolbar()
         initializeAddCartButton()
         initializeProductLoadError()
+        setRequireActivityResult()
     }
 
     private fun initializeToolbar() {
@@ -67,7 +68,6 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel.isSuccessAddCart.observe(this) { isSuccessEvent ->
             val isSuccess = isSuccessEvent.getContentIfNotHandled() ?: return@observe
             if (isSuccess) {
-                setRequireActivityResult()
                 showAddCartSuccessDialog()
             } else {
                 showAddCartFailureToast()
