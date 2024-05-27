@@ -1,8 +1,8 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.CartDatabase
-import woowacourse.shopping.data.RecentProductDatabase
+import woowacourse.shopping.data.database.cart.CartDatabase
+import woowacourse.shopping.data.database.recent.RecentProductDatabase
 
 class ShoppingApplication : Application() {
     lateinit var cartDatabase: CartDatabase

@@ -1,5 +1,6 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
+import woowacourse.shopping.data.database.recent.RecentProductDatabase
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.model.mapper
 import woowacourse.shopping.domain.model.Product

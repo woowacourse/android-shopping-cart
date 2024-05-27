@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
