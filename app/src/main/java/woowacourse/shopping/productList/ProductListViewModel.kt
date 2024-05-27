@@ -10,11 +10,12 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.DummyProductStore
 import woowacourse.shopping.repository.RecentlyViewedRepository
+import woowacourse.shopping.service.MockWebService
+import kotlin.concurrent.thread
 
 class ProductListViewModel(application: Application) : AndroidViewModel(application) {
-    private val dummyProductStore by lazy { DummyProductStore() }
+    private val dummyProductStore by lazy { MockWebService() }
     private var currentIndex = 1
 
     private val recentlyViewedRepository = RecentlyViewedRepository(application)
@@ -42,10 +43,13 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private fun updateRecentlyViewedProducts() {
         val cartItemIds = _cartItems.value?.map { it.productId } ?: emptyList()
         val recentlyViewedEntities = _recentlyViewedEntities.value ?: emptyList()
-        val recentlyViewedProducts =
-            recentlyViewedEntities
-                .filter { it.productId !in cartItemIds }
-                .map { dummyProductStore.findById(it.productId) }
+        var recentlyViewedProducts: List<Product> = emptyList()
+        thread {
+            recentlyViewedProducts =
+                recentlyViewedEntities
+                    .filter { it.productId !in cartItemIds }
+                    .map { dummyProductStore.findProductById(it.productId) }
+        }.join()
         _recentlyViewedProducts.value = recentlyViewedProducts
     }
 
@@ -77,8 +81,12 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun loadProducts(): List<Product> {
-        val result = dummyProductStore.loadDataAsNeeded(currentIndex)
-        currentIndex += COUNT_EACH_LOADING
+        var result = emptyList<Product>()
+        thread {
+            result = MockWebService().findPagingProducts(currentIndex, COUNT_EACH_LOADING)
+            currentIndex += COUNT_EACH_LOADING
+        }.join()
+
         return result
     }
 

@@ -9,11 +9,12 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.DummyProductStore
+import woowacourse.shopping.service.MockWebService
+import kotlin.concurrent.thread
 import kotlin.math.min
 
 class CartViewModel(application: Application) : AndroidViewModel(application) {
-    private val productStore = DummyProductStore()
+    private val productStore = MockWebService()
 
     private var _productIds: List<Int> = listOf()
     private val productIds: List<Int> get() = _productIds
@@ -32,7 +33,6 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         loadCartItems()
         updateItemsInShoppingCart()
     }
-
 
     fun deleteItem(productId: Int) {
         viewModelScope.launch {
@@ -71,13 +71,16 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun updateItemsInShoppingCart() {
-        currentPage.value?.let { page ->
-            val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
-            val newItems =
-                productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
-                    .map { productId -> productStore.findById(productId) }
-            _itemsInShoppingCartPage.value = newItems.toMutableList()
-        }
+        var newItems: List<Product> = emptyList()
+        thread {
+            currentPage.value?.let { page ->
+                val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
+                newItems =
+                    productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
+                        .map { productId -> productStore.findProductById(productId) }
+            }
+        }.join()
+        _itemsInShoppingCartPage.value = newItems.toMutableList()
     }
 
     private fun loadCartItems() {

@@ -11,16 +11,25 @@ import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.factory.BaseViewModelFactory
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.repository.DummyProductStore
 import woowacourse.shopping.repository.RecentlyViewedRepository
+import woowacourse.shopping.service.MockWebService
+import kotlin.concurrent.thread
 
 class MostRecentDetailViewModel(application: Application, val productId: Int) :
     AndroidViewModel(application) {
-    private val productStore = DummyProductStore()
+    private val productStore = MockWebService()
     private val recentlyViewedRepository = RecentlyViewedRepository(application)
 
     val product: Product
-        get() = productStore.findById(productId)
+        get() = getP()
+
+    private fun getP(): Product {
+        var product = Product(0, "", "", 0)
+        thread {
+            product = productStore.findProductById(productId)
+        }.join()
+        return product
+    }
 
     private val _cartItem = MutableLiveData<CartItem>()
     val cartItem: LiveData<CartItem> get() = _cartItem
