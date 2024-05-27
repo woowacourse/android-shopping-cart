@@ -5,6 +5,12 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.presentation.ui.detail.DetailEventHandler" />
+
         <variable
             name="countHandler"
             type="woowacourse.shopping.presentation.ui.counter.DefaultCounterHandler" />
@@ -32,7 +38,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/iv_menu_cart"
+                android:id="@+id/iv_menu_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
@@ -84,9 +90,9 @@
             android:layout_marginStart="18dp"
             android:textColor="@color/black"
             android:textSize="25dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_quantity"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/btn_quantity"
-            app:layout_constraintBottom_toBottomOf="@id/btn_quantity"
             app:price="@{viewModel.shoppingProduct.product.price*viewModel.shoppingProduct.quantity}"
             tools:text="99,800원" />
 
@@ -98,9 +104,40 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
             app:countHandler="@{countHandler}"
-            app:shoppingProduct="@{viewModel.shoppingProduct}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:shoppingProduct="@{viewModel.shoppingProduct}" />
+
+        <LinearLayout
+            android:id="@+id/recent_product_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:background="@drawable/shape_border"
+            android:onClick="@{() -> viewModel.onRecentProductClick(viewModel.recentProduct.productId)}"
+            android:orientation="vertical"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="16dp"
+            android:visibility="@{viewModel.recentProductVisibility == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/btn_put_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_price">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:text="@string/last_view_subject"
+                android:textColor="@color/primary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.recentProduct.productName}"
+                tools:text="PET보틀-정사각형(500ml)" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/btn_put_cart"

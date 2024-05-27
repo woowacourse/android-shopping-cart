@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.ui.cart.CartActivity
@@ -19,6 +20,7 @@ class DetailActivity : AppCompatActivity() {
         DetailViewModelFactory(
             cartRepository = CartRepositoryImpl(ShoppingApplication.getInstance().cartDatabase),
             shoppingRepository = ShoppingItemsRepositoryImpl(),
+            recentProductRepository = RecentProductRepositoryImpl(ShoppingApplication.getInstance().recentProductDatabase),
             productId = productId,
         )
     }
@@ -50,6 +52,22 @@ class DetailActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        viewModel.navigateToDetail.observe(this) {
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
+            }
+        }
+
+        /*viewModel.recentProductVisibility.observe(this) {
+            if (it) {
+                binding.recentProductLayout
+            }
+        }*/
+    }
+
+    private fun navigateToDetail(productId: Long) {
+        startActivity(DetailActivity.createIntent(this, productId))
     }
 
     private fun navigateToCart() {

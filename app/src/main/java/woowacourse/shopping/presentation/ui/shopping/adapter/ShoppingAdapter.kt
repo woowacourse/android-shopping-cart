@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.shopping
+package woowacourse.shopping.presentation.ui.shopping.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,9 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.model.ShoppingProduct
+import woowacourse.shopping.presentation.ui.shopping.ShoppingEventHandler
+import woowacourse.shopping.presentation.ui.shopping.ShoppingItemCountHandler
+import woowacourse.shopping.presentation.ui.shopping.adapter.viewholder.ShoppingViewHolder
 
 class ShoppingAdapter(
     private val shoppingEventHandler: ShoppingEventHandler,

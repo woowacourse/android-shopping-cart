@@ -20,15 +20,23 @@ class RecentProductRepositoryImpl(database: RecentProductDatabase) : RecentProdu
     override fun loadLatest(): RecentProduct? {
         var recentProduct: RecentProduct? = null
         threadAction {
-            recentProduct = dao.loadLatestData()?.toDomainModel()
+            recentProduct = dao.loadLatest()?.toDomainModel()
         }
         return recentProduct
+    }
+
+    override fun loadSecondLatest(): RecentProduct? {
+        var secondRecentProduct: RecentProduct? = null
+        threadAction {
+            secondRecentProduct = dao.loadSecondLatest()?.toDomainModel()
+        }
+        return secondRecentProduct
     }
 
     override fun loadLatestList(): List<RecentProduct> {
         var recentProducts: List<RecentProduct> = emptyList()
         threadAction {
-            recentProducts = dao.loadData().map { it.toDomainModel() }
+            recentProducts = dao.loadLatestList().map { it.toDomainModel() }
         }
         return recentProducts
     }

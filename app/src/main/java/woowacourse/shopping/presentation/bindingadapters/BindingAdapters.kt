@@ -10,7 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.model.ShoppingProduct
-import woowacourse.shopping.presentation.ui.shopping.ShoppingAdapter
+import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 
 @BindingAdapter("app:imageUrl")
 fun loadImage(

@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -17,6 +18,8 @@ import woowacourse.shopping.domain.model.ShoppingProduct
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
+import woowacourse.shopping.presentation.ui.shopping.adapter.RecentProductAdapter
+import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 
 class ShoppingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingBinding
@@ -33,6 +36,7 @@ class ShoppingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpRecyclerView()
@@ -45,6 +49,7 @@ class ShoppingActivity : AppCompatActivity() {
     private fun setUpRecyclerView() {
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
         setUpRecyclerViewAdapter()
+        viewModel.hideLoadMore()
         checkLoadMoreBtnVisibility()
     }
 
@@ -98,18 +103,12 @@ class ShoppingActivity : AppCompatActivity() {
     }
 
     private fun checkLoadMoreBtnVisibility() {
-        binding.rvProductList.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    if (!recyclerView.canScrollVertically(1)) {
-                        viewModel.showLoadMoreByCondition()
-                    } else {
-                        if (dy < 0) viewModel.hideLoadMore()
-                    }
+        binding.nestedScrollView.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { v, _, _, _, _ ->
+                if (!v.canScrollVertically(1)) {
+                    viewModel.showLoadMoreByCondition()
+                } else {
+                    viewModel.hideLoadMore()
                 }
             },
         )

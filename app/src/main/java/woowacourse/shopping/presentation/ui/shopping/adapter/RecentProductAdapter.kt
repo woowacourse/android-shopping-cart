@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.shopping
+package woowacourse.shopping.presentation.ui.shopping.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.presentation.ui.shopping.ShoppingEventHandler
+import woowacourse.shopping.presentation.ui.shopping.adapter.viewholder.RecentViewHolder
 
 class RecentProductAdapter(
     private val onClickProducts: ShoppingEventHandler,

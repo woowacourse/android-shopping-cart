@@ -11,10 +11,13 @@ interface RecentProductDao {
     fun save(recentProductEntity: RecentProductEntity)
 
     @Query("SELECT * FROM recent_products ORDER BY id DESC LIMIT 1")
-    fun loadLatestData(): RecentProductEntity?
+    fun loadLatest(): RecentProductEntity?
+
+    @Query("SELECT * FROM recent_products ORDER BY id DESC LIMIT 1 OFFSET 1")
+    fun loadSecondLatest(): RecentProductEntity?
 
     @Query("SELECT * FROM recent_products DISTICT ORDER BY id DESC LIMIT 10")
-    fun loadData(): List<RecentProductEntity>
+    fun loadLatestList(): List<RecentProductEntity>
 
     @Query("DELETE FROM recent_products WHERE productId = :productId")
     fun deleteWithProductId(productId: Long)

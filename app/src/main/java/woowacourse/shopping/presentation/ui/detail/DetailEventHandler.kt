@@ -4,4 +4,6 @@ interface DetailEventHandler {
     fun addCartItem(productId: Long)
 
     fun moveBack()
+
+    fun onRecentProductClick(productId: Long)
 }

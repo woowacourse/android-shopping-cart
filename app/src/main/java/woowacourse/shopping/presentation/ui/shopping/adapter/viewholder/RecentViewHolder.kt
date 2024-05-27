@@ -1,8 +1,9 @@
-package woowacourse.shopping.presentation.ui.shopping
+package woowacourse.shopping.presentation.ui.shopping.adapter.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.presentation.ui.shopping.ShoppingEventHandler
 
 class RecentViewHolder(
     private val binding: ItemRecentProductBinding,

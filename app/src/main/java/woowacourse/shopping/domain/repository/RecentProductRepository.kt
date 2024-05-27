@@ -8,5 +8,7 @@ interface RecentProductRepository {
 
     fun loadLatest(): RecentProduct?
 
+    fun loadSecondLatest(): RecentProduct?
+
     fun loadLatestList(): List<RecentProduct>
 }
