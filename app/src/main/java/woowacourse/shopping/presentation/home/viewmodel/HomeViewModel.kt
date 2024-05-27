@@ -42,9 +42,9 @@ class HomeViewModel(
     val updateOrder: LiveData<Order>
         get() = _updateOrder
 
-    private val _productHistories = MutableLiveData<List<Product>>()
-    val productHistories: LiveData<List<Product>>
-        get() = _productHistories
+    private val _recentProducts = MutableLiveData<List<Product>>()
+    val recentProducts: LiveData<List<Product>>
+        get() = _recentProducts
 
     init {
         loadProducts()
@@ -74,7 +74,7 @@ class HomeViewModel(
 
         val products = recentProducts?.map { productRepository.fetchProduct(it.productId) }
 
-        _productHistories.value = products
+        _recentProducts.value = products
     }
 
     override fun onProductItemClick(id: Long) {

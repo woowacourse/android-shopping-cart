@@ -128,7 +128,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.productHistories.observe(this) {
+        viewModel.recentProducts.observe(this) {
             recentProductAdapter.setProducts(it)
         }
     }
