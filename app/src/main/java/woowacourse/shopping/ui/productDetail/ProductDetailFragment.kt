@@ -8,11 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
-import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
-import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.ui.FragmentNavigator
 
 class ProductDetailFragment : Fragment() {
@@ -41,24 +38,9 @@ class ProductDetailFragment : Fragment() {
 
     private fun initViewModel() {
         arguments?.let {
-            factory =
-                UniversalViewModelFactory {
-                    ProductDetailViewModel(
-                        productId = it.getLong(PRODUCT_ID),
-                        shoppingProductsRepository =
-                        DefaultShoppingProductRepository(
-                            productsSource = ShoppingApp.productSource,
-                            cartSource = ShoppingApp.cartSource,
-                        ),
-                        productHistoryRepository =
-                        DefaultProductHistoryRepository(
-                            productHistoryDataSource = ShoppingApp.historySource,
-                            productDataSource = ShoppingApp.productSource
-                        ),
-                    )
-                }
-            viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
+            factory = ProductDetailViewModel.factory(productId = it.getLong(PRODUCT_ID))
         }
+        viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         viewModel.loadAll()
     }
 

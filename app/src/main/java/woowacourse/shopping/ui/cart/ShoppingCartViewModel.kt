@@ -6,9 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.MutableSingleLiveData
+import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.SingleLiveData
+import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
@@ -127,5 +130,15 @@ class ShoppingCartViewModel(
         private const val FIRST_PAGE = 1
         private const val PAGE_MOVE_COUNT = 1
         private const val TAG = "ShoppingCartViewModel"
+
+        fun factory(
+            shoppingProductsRepository: ShoppingProductsRepository = DefaultShoppingProductRepository(
+                productsSource = ShoppingApp.productSource,
+                cartSource = ShoppingApp.cartSource,
+            ),
+        ): UniversalViewModelFactory = UniversalViewModelFactory {
+            ShoppingCartViewModel(shoppingProductsRepository)
+        }
+
     }
 }

@@ -6,9 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.MutableSingleLiveData
+import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.SingleLiveData
+import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
+import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
@@ -135,5 +139,18 @@ class ProductListViewModel(
         private const val TAG = "ProductListViewModel"
         private const val FIRST_PAGE = 1
         private const val PAGE_MOVE_COUNT = 1
+
+        fun factory(
+            productRepository: ShoppingProductsRepository = DefaultShoppingProductRepository(
+                ShoppingApp.productSource,
+                ShoppingApp.cartSource
+            ),
+            historyRepository: ProductHistoryRepository = DefaultProductHistoryRepository(
+                ShoppingApp.historySource,
+                ShoppingApp.productSource
+            )
+        ): UniversalViewModelFactory = UniversalViewModelFactory {
+            ProductListViewModel(productRepository, historyRepository)
+        }
     }
 }

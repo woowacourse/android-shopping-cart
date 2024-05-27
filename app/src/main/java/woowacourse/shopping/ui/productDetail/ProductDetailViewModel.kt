@@ -7,8 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.MutableSingleLiveData
+import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.SingleLiveData
+import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
+import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
@@ -83,5 +87,25 @@ class ProductDetailViewModel(
 
     companion object {
         private const val TAG = "ProductDetailViewModel"
+
+        fun factory(
+            productId: Long,
+            shoppingProductsRepository: ShoppingProductsRepository = DefaultShoppingProductRepository(
+                productsSource = ShoppingApp.productSource,
+                cartSource = ShoppingApp.cartSource,
+            ),
+            historyRepository: ProductHistoryRepository = DefaultProductHistoryRepository(
+                productHistoryDataSource = ShoppingApp.historySource,
+                productDataSource = ShoppingApp.productSource
+            )
+        ): UniversalViewModelFactory {
+            return UniversalViewModelFactory {
+                ProductDetailViewModel(
+                    productId = productId,
+                    shoppingProductsRepository = shoppingProductsRepository,
+                    productHistoryRepository = historyRepository
+                )
+            }
+        }
     }
 }

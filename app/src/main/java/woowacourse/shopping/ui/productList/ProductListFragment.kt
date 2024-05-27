@@ -9,11 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductListBinding
-import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
-import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
 
@@ -21,21 +18,8 @@ class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
-    private val factory: UniversalViewModelFactory =
-        UniversalViewModelFactory {
-            ProductListViewModel(
-                productsRepository =
-                DefaultShoppingProductRepository(
-                    productsSource = ShoppingApp.productSource,
-                    cartSource = ShoppingApp.cartSource,
-                ),
-                productHistoryRepository =
-                DefaultProductHistoryRepository(
-                    productHistoryDataSource = ShoppingApp.historySource,
-                    productDataSource = ShoppingApp.productSource,
-                ),
-            )
-        }
+    private val factory: UniversalViewModelFactory = ProductListViewModel.factory()
+
 
     private val viewModel: ProductListViewModel by lazy {
         ViewModelProvider(this, factory)[ProductListViewModel::class.java]
