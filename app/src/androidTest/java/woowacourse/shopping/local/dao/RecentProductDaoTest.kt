@@ -40,17 +40,16 @@ class RecentProductDaoTest {
     @Test
     @DisplayName("최근 본 상품을 3개 저장 하고, 최근 상품 본 상품을 불러올 때, 최신 시간 순으로 정렬 된다.")
     fun `test2`() {
-        // given & when
-        saveProduct(1L, dateTime().plusDays(1))
-        saveProduct(2L, dateTime())
-        saveProduct(3L, dateTime().plusDays(2))
-        // then
-        val expect =
-            fakeRecentProductEntities(
-                fakeRecentProductEntity(3L, dateTime().plusDays(2)),
-                fakeRecentProductEntity(1L, dateTime().plusDays(1)),
-                fakeRecentProductEntity(2L, dateTime()),
-            )
+        // given: 최근 본 상품 3개 저장
+        val given = fakeRecentProductEntities(
+            fakeRecentProductEntity(1L, dateTime().plusDays(1)),
+            fakeRecentProductEntity(2L, dateTime()),
+            fakeRecentProductEntity(3L, dateTime().plusDays(2))
+        )
+        // when : 상품을 저장
+        given.forEach { dao.saveProduct(it) }
+        // then : 상품은 최신 시간순
+        val expect = given.sortedByDescending { it.createdTime }
         val actual = dao.loadProducts(3)
         actual shouldBe expect
     }
