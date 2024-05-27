@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
-import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
 import woowacourse.shopping.presentation.util.EventObserver
@@ -26,8 +25,9 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         checkIsLastViewedProduct()
         initActionBarTitle()
         fetchInitialData()
-        binding.detailHandler = viewModel
-        observeLiveDatas()
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        observeLiveData()
     }
 
     private fun checkIsLastViewedProduct() {
@@ -45,20 +45,9 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         viewModel.fetchInitialData(id)
     }
 
-    private fun observeLiveDatas() {
-        observeLastProductUpdates()
+    private fun observeLiveData() {
         observeErrorEventUpdates()
-        observeProductsUpdates()
         observeMoveEvent()
-    }
-
-    private fun observeLastProductUpdates() {
-        viewModel.lastProduct.observe(this) {
-            when (it) {
-                is UiState.None -> {}
-                is UiState.Success -> binding.lastProduct = it.data
-            }
-        }
     }
 
     private fun observeErrorEventUpdates() {
@@ -68,31 +57,25 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         )
     }
 
-    private fun observeProductsUpdates() {
-        viewModel.shoppingProduct.observe(this) { state ->
-            when (state) {
-                is UiState.None -> {}
-                is UiState.Success -> binding.product = state.data
-            }
-        }
-    }
-
     private fun observeMoveEvent() {
         viewModel.moveEvent.observe(
             this,
             EventObserver {
                 when (it) {
-                    is FromDetailToScreen.ProductDetail -> {
-                        startWithIsLastViewed(this, it.productId)
-                    }
-
-                    is FromDetailToScreen.Shopping -> {
-                        ShoppingActivity.startWithNewProductQuantity(this, it.productId, it.quantity)
-                        finish()
-                    }
+                    is FromDetailToScreen.ProductDetail -> startLastViewedActivity(this, it.productId)
+                    is FromDetailToScreen.Shopping -> moveToShoppingActivity(it)
                 }
             },
         )
+    }
+
+    private fun moveToShoppingActivity(it: FromDetailToScreen.Shopping) {
+        ShoppingActivity.startWithNewProductQuantity(
+            this,
+            it.productId,
+            it.quantity,
+        )
+        finish()
     }
 
     companion object {
@@ -100,7 +83,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         const val EXTRA_NEW_PRODUCT_QUANTITY = "productQuantity"
         private const val EXTRA_IS_LAST_VIEWED_PRODUCT = "isLastViewedProduct"
 
-        fun startWithIsLastViewed(
+        fun startLastViewedActivity(
             context: Context,
             productId: Long,
         ) {

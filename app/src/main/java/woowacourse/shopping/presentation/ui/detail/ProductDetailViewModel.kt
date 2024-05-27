@@ -10,7 +10,6 @@ import woowacourse.shopping.domain.RecentProductItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentRepository
-import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.util.Event
 import java.time.LocalDateTime
 import kotlin.concurrent.thread
@@ -21,11 +20,11 @@ class ProductDetailViewModel(
     private val recentRepository: RecentRepository,
 ) : ViewModel(), DetailHandler {
     private val _shoppingProduct =
-        MutableLiveData<UiState<ProductListItem.ShoppingProductItem>>(UiState.None)
-    val shoppingProduct: LiveData<UiState<ProductListItem.ShoppingProductItem>> get() = _shoppingProduct
+        MutableLiveData<ProductListItem.ShoppingProductItem>()
+    val shoppingProduct: LiveData<ProductListItem.ShoppingProductItem> get() = _shoppingProduct
 
-    private val _lastProduct = MutableLiveData<UiState<RecentProductItem>>()
-    val lastProduct: LiveData<UiState<RecentProductItem>> get() = _lastProduct
+    private val _lastProduct = MutableLiveData<RecentProductItem>()
+    val lastProduct: LiveData<RecentProductItem> get() = _lastProduct
 
     private lateinit var shoppingProductItem: ProductListItem.ShoppingProductItem
 
@@ -52,7 +51,7 @@ class ProductDetailViewModel(
     fun loadLastProduct() {
         recentRepository.loadMostRecent().onSuccess {
             it?.let {
-                _lastProduct.value = UiState.Success(it)
+                _lastProduct.value = it
             }
         }.onFailure {
             _error.value =
@@ -76,7 +75,7 @@ class ProductDetailViewModel(
     private fun loadCartProductById(product: Product) {
         cartRepository.find(product).onSuccess {
             shoppingProductItem = joinProductAndCart(product, it)
-            _shoppingProduct.value = UiState.Success(shoppingProductItem)
+            _shoppingProduct.value = shoppingProductItem
         }.onFailure {
             shoppingProductItem =
                 ProductListItem.ShoppingProductItem(
@@ -86,8 +85,38 @@ class ProductDetailViewModel(
                     price = product.price,
                     quantity = 0,
                 )
-            _shoppingProduct.value = UiState.Success(shoppingProductItem)
+            _shoppingProduct.value = shoppingProductItem
         }
+    }
+
+    override fun onAddCartClick() {
+        cartRepository.setQuantity(shoppingProductItem.toProduct(), shoppingProductItem.quantity)
+            .onSuccess { saveCartItem() }
+            .onFailure { _error.postValue(Event(DetailError.CartItemNotFound)) }
+    }
+
+    fun saveCartItem() {
+        _moveEvent.value =
+            Event(
+                FromDetailToScreen.Shopping(
+                    shoppingProductItem.id,
+                    shoppingProductItem.quantity,
+                ),
+            )
+    }
+
+    override fun onLastViewedProductClick() {
+        lastProduct.value?.let {
+            _moveEvent.value = Event(FromDetailToScreen.ProductDetail(it.productId))
+        }
+    }
+
+    override fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let { updateCartItemQuantity(-1) }
+    }
+
+    override fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let { updateCartItemQuantity(1) }
     }
 
     private fun updateCartItemQuantity(quantityDelta: Int) {
@@ -95,45 +124,6 @@ class ProductDetailViewModel(
         val newShoppingProductItem =
             shoppingProductItem.copy(quantity = (originalQuantity + quantityDelta).coerceAtLeast(0))
         shoppingProductItem = newShoppingProductItem
-        _shoppingProduct.value = UiState.Success(shoppingProductItem)
-    }
-
-    fun saveCartItem() {
-        cartRepository.setQuantity(shoppingProductItem.toProduct(), shoppingProductItem.quantity)
-            .onSuccess {
-                _moveEvent.value =
-                    Event(
-                        FromDetailToScreen.Shopping(
-                            shoppingProductItem.id,
-                            shoppingProductItem.quantity,
-                        ),
-                    )
-            }.onFailure {
-                _error.postValue(Event(DetailError.CartItemNotFound))
-            }
-    }
-
-    override fun onAddCartClick() {
-        saveCartItem()
-    }
-
-    override fun onLastProductClick(product: RecentProductItem) {
-        _moveEvent.value = Event(FromDetailToScreen.ProductDetail(product.productId))
-    }
-
-    override fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
-        item?.let {
-            updateCartItemQuantity(
-                -1,
-            )
-        }
-    }
-
-    override fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
-        item?.let {
-            updateCartItemQuantity(
-                1,
-            )
-        }
+        _shoppingProduct.value = shoppingProductItem
     }
 }

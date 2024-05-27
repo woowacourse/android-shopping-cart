@@ -6,16 +6,8 @@
     <data>
 
         <variable
-            name="lastProduct"
-            type="woowacourse.shopping.domain.RecentProductItem" />
-
-        <variable
-            name="product"
-            type="woowacourse.shopping.domain.ProductListItem.ShoppingProductItem" />
-
-        <variable
-            name="detailHandler"
-            type="woowacourse.shopping.presentation.ui.detail.DetailHandler" />
+            name="viewModel"
+            type="woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel" />
 
     </data>
 
@@ -28,7 +20,7 @@
 
         <ImageView
             android:id="@+id/iv_product"
-            bindLoadImage="@{product.imgUrl}"
+            bindLoadImage="@{viewModel.shoppingProduct.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
@@ -45,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="17dp"
-            android:text="@{product.name}"
+            android:text="@{viewModel.shoppingProduct.name}"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,12 +63,12 @@
             android:layout_marginEnd="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/line"
-            app:product="@{product}"
-            app:quantityHandler="@{detailHandler}" />
+            app:product="@{viewModel.shoppingProduct}"
+            app:quantityHandler="@{viewModel}" />
 
         <TextView
             android:id="@+id/tv_price_value"
-            bindTextFormattedCurrency="@{product.price*product.quantity}"
+            bindTextFormattedCurrency="@{viewModel.shoppingProduct.price * viewModel.shoppingProduct.quantity}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -92,7 +84,7 @@
             android:layout_height="48dp"
             android:background="#04C09E"
             android:gravity="center"
-            android:onClick="@{()->detailHandler.onAddCartClick()}"
+            android:onClick="@{()->viewModel.onAddCartClick()}"
             android:text="@string/add_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -102,14 +94,14 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            currentProduct="@{product}"
-            lastProduct="@{lastProduct}"
+            currentProduct="@{viewModel.shoppingProduct}"
+            lastProduct="@{viewModel.lastProduct}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="29dp"
             android:background="@drawable/radius_4_strock"
-            android:onClick="@{()->detailHandler.onLastProductClick(lastProduct)}"
+            android:onClick="@{()->viewModel.onLastViewedProductClick()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_price_value">
@@ -135,7 +127,7 @@
                 android:layout_marginBottom="16dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{lastProduct.name}"
+                android:text="@{viewModel.lastProduct.name}"
                 android:textColor="@color/dark_grey"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"

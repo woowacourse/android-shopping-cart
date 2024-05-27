@@ -15,7 +15,6 @@ import woowacourse.shopping.domain.repository.RecentRepository
 import woowacourse.shopping.dummyProduct
 import woowacourse.shopping.dummyRecentProduct
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.shoppingProduct
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -37,10 +36,12 @@ class ProductDetailViewModelTest {
     fun `loadById로 특정 상품의 데이터를 가져온다`() {
         every { productRepository.loadById(any()) } returns Result.success(dummyProduct)
         every { cartRepository.find(any()) } returns Result.success(cart)
+        every { recentRepository.add(any()) } returns Result.success(0)
+
         viewModel.fetchInitialData(0)
         Assertions.assertEquals(
             viewModel.shoppingProduct.getOrAwaitValue(1),
-            UiState.Success(shoppingProduct),
+            shoppingProduct,
         )
     }
 
@@ -85,7 +86,7 @@ class ProductDetailViewModelTest {
         // then
         Assertions.assertEquals(
             viewModel.lastProduct.getOrAwaitValue(10),
-            UiState.Success(dummyRecentProduct),
+            dummyRecentProduct,
         )
     }
 
