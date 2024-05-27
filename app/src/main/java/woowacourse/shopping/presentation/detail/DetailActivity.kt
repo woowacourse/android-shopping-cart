@@ -86,7 +86,7 @@ class DetailActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.moveToRecentProductHistory.observe(this) {
+        viewModel.moveToRecentProduct.observe(this) {
             it.getContentIfNotHandled()?.let { productId ->
                 startActivity(
                     newIntentWithFlag(

@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.detail.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,13 +29,13 @@ class DetailViewModel(
     val addComplete: LiveData<Event<Long>>
         get() = _addComplete
 
-    private val _recentProductHistory = MutableLiveData<Product>()
-    val recentProductHistory: LiveData<Product>
-        get() = _recentProductHistory
+    private val _recentProduct = MutableLiveData<Product>()
+    val recentProduct: LiveData<Product>
+        get() = _recentProduct
 
-    private val _moveToRecentProductHistory = MutableLiveData<Event<Long>>()
-    val moveToRecentProductHistory: LiveData<Event<Long>>
-        get() = _moveToRecentProductHistory
+    private val _moveToRecentProduct = MutableLiveData<Event<Long>>()
+    val moveToRecentProduct: LiveData<Event<Long>>
+        get() = _moveToRecentProduct
 
     private val _showRecent = MutableLiveData<Boolean>(false)
     val showRecent: LiveData<Boolean>
@@ -45,23 +44,7 @@ class DetailViewModel(
     init {
         loadProductInformation(productId)
         loadCartItem(productId)
-        getProductHistory(productId, showRecent)
-    }
-
-    fun getProductHistory(
-        productId: Long,
-        showRecent: Boolean,
-    ) {
-        val recentProductId = recentProductRepository.getMostRecentProductHistory()?.productId
-
-        recentProductId?.let {
-            _recentProductHistory.value = productRepository.fetchProduct(it)
-            _showRecent.value = recentProductId == productId || !showRecent
-
-            Log.d("HELLO", "getProductHistory: $recentProductId $productId")
-        }
-
-        recentProductRepository.setProductHistory(productId)
+        getRecentProduct(productId, showRecent)
     }
 
     fun loadProductInformation(id: Long) {
@@ -80,7 +63,7 @@ class DetailViewModel(
     }
 
     fun moveToDetail(id: Long) {
-        _moveToRecentProductHistory.value = Event(id)
+        _moveToRecentProduct.value = Event(id)
     }
 
     override fun onCartItemAdd(id: Long) {
@@ -95,5 +78,19 @@ class DetailViewModel(
 
     private fun loadCartItem(id: Long) {
         _quantity.value = cartRepository.fetchCartItem(id)?.quantity ?: 1
+    }
+
+    private fun getRecentProduct(
+        productId: Long,
+        showRecent: Boolean,
+    ) {
+        val recentProductId = recentProductRepository.getMostRecentProductHistory()?.productId
+
+        recentProductId?.let {
+            _recentProduct.value = productRepository.fetchProduct(it)
+            _showRecent.value = recentProductId == productId || !showRecent
+        }
+
+        recentProductRepository.setProductHistory(productId)
     }
 }
