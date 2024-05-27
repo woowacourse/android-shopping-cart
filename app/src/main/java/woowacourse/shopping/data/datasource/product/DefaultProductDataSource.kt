@@ -1,6 +1,5 @@
-package woowacourse.shopping.data.datasourceimpl
+package woowacourse.shopping.data.datasource.product
 
-import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.local.PRODUCT_DATA
 import woowacourse.shopping.data.model.Product
 import kotlin.math.min
@@ -20,11 +19,7 @@ object DefaultProductDataSource : ProductDataSource {
         return products.subList(fromIndex, toIndex)
     }
 
-    override fun getProductById(id: Long): Product {
-        return products.first { it.id == id }
-    }
+    override fun getProductById(id: Long): Product = products.first { it.id == id }
 
-    override fun getProductByIds(ids: List<Long>): List<Product> {
-        return ids.map { id -> products.first { it.id == id } }
-    }
+    override fun getProductByIds(ids: List<Long>): List<Product> = ids.map { id -> products.first { it.id == id } }
 }

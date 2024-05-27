@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
+import woowacourse.shopping.data.datasource.product.DefaultProductDataSource
 import woowacourse.shopping.data.model.Product
 
 class DefaultProductDataSourceTest {

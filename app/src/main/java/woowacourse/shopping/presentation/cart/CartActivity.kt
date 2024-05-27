@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cart.DefaultCartDataSource
-import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
+import woowacourse.shopping.data.datasource.product.DefaultProductDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase
 import woowacourse.shopping.data.repository.DefaultCartRepository
 import woowacourse.shopping.data.repository.DefaultProductRepository
