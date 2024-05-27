@@ -72,7 +72,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     }
 
     private fun showData(data: List<CartItem>) {
-        adapter.loadData(data)
+        adapter.submitList(data)
     }
 
     private fun showEmptyView() {

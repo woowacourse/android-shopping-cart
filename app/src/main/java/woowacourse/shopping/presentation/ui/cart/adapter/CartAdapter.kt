@@ -2,7 +2,8 @@ package woowacourse.shopping.presentation.ui.cart.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.ui.cart.CartActionHandler
@@ -10,9 +11,7 @@ import woowacourse.shopping.presentation.ui.cart.viewholder.CartViewHolder
 
 class CartAdapter(
     private val actionHandler: CartActionHandler,
-) : RecyclerView.Adapter<CartViewHolder>() {
-    private var cartItems: List<CartItem> = emptyList()
-
+) : ListAdapter<CartItem, CartViewHolder>(CartItemDiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,17 +24,23 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        val cartItem = cartItems[position]
-        return holder.bind(cartItem, actionHandler)
+        val cartItem = getItem(position)
+        holder.bind(cartItem, actionHandler)
+    }
+}
+
+class CartItemDiffCallback : DiffUtil.ItemCallback<CartItem>() {
+    override fun areItemsTheSame(
+        oldItem: CartItem,
+        newItem: CartItem,
+    ): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun getItemCount(): Int {
-        return cartItems.size
-    }
-
-    @Suppress("notifyDataSetChanged")
-    fun loadData(cartItems: List<CartItem>) {
-        this.cartItems = cartItems
-        notifyDataSetChanged()
+    override fun areContentsTheSame(
+        oldItem: CartItem,
+        newItem: CartItem,
+    ): Boolean {
+        return oldItem == newItem
     }
 }
