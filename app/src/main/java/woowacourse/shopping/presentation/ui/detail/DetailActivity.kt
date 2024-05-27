@@ -58,12 +58,6 @@ class DetailActivity : AppCompatActivity() {
                 navigateToDetail(productId)
             }
         }
-
-        /*viewModel.recentProductVisibility.observe(this) {
-            if (it) {
-                binding.recentProductLayout
-            }
-        }*/
     }
 
     private fun navigateToDetail(productId: Long) {
