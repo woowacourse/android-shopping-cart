@@ -46,7 +46,7 @@ class FakeCartRepositoryImpl() : CartRepository {
     }
 
     override fun findQuantityWithProductId(productId: Long): Int {
-        TODO("Not yet implemented")
+        return 0
     }
 
     override fun size(): Int {
@@ -54,7 +54,7 @@ class FakeCartRepositoryImpl() : CartRepository {
     }
 
     override fun sumOfQuantity(): Int {
-        TODO("Not yet implemented")
+        return cartItems.sumOf { it.quantity }
     }
 
     override fun findOrNullWithProductId(productId: Long): CartItem? {

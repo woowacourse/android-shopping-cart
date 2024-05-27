@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.ui.getOrAwaitValue
@@ -17,6 +18,7 @@ class DetailViewModelTest {
     private lateinit var viewModel: DetailViewModel
     private lateinit var testCartRepository: CartRepository
     private val shoppingRepository = mockk<ShoppingItemsRepository>()
+    private var testRecentProductRepository: RecentProductRepository = mockk()
 
     private val product =
         Product.of(
@@ -29,7 +31,9 @@ class DetailViewModelTest {
     fun setUp() {
         testCartRepository = FakeCartRepositoryImpl()
         every { shoppingRepository.findProductItem(any()) } returns product
-        viewModel = DetailViewModel(testCartRepository, shoppingRepository, 0L)
+        every { testRecentProductRepository.loadSecondLatest() } returns null
+
+        viewModel = DetailViewModel(testCartRepository, shoppingRepository, testRecentProductRepository, 0L)
     }
 
     @Test

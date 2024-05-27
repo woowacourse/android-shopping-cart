@@ -1,6 +1,5 @@
 package woowacourse.shopping
 
-import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -18,12 +17,10 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 @RunWith(AndroidJUnit4::class)
 class DetailActivityTest {
     private val intent =
-        Intent(
+        DetailActivity.createIntent(
             ApplicationProvider.getApplicationContext(),
-            DetailActivity::class.java,
-        ).apply {
-            putExtra(DetailActivity.PRODUCT_ID, 0L)
-        }
+            0L,
+        )
 
     @get:Rule
     val activityRule = ActivityScenarioRule<DetailActivity>(intent)
@@ -54,9 +51,9 @@ class DetailActivityTest {
 
     @Test
     fun `X_버튼을_클릭하면_상품_상세_페이지가_종료된다`() {
-        /*onView(withId((R.id.back_action))).perform(click())
+        onView(withId((R.id.iv_menu_back))).perform(click())
         activityRule.scenario.onActivity { activity ->
             assert(activity.isFinishing)
-        }*/
+        }
     }
 }

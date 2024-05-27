@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
@@ -37,6 +38,7 @@ class ShoppingViewModelTest {
 
         every { repository.fetchProductsSize() } returns 100
         every { repository.fetchProductsWithIndex(any(), any()) } returns products
+        every { testRecentProductRepository.loadLatestList() } returns listOf<RecentProduct>()
 
         testCartRepository = FakeCartRepositoryImpl()
 
