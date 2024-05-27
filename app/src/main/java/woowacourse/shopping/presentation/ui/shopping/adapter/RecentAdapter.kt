@@ -27,10 +27,6 @@ class RecentAdapter(
         holder.bind(getItem(position))
     }
 
-    fun updateList(newItems: List<RecentProduct>) {
-        submitList(newItems)
-    }
-
     companion object {
         private val DIFF_CALLBACK =
             object : DiffUtil.ItemCallback<RecentProduct>() {

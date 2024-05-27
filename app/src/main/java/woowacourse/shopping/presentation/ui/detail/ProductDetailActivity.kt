@@ -22,17 +22,18 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-        if (intent.getBooleanExtra(EXTRA_OVERLAY, false)) binding.layoutRecent.isVisible = false
+        title = getString(R.string.detail_title)
 
         binding.detailActionHandler = viewModel
-
-        title = getString(R.string.detail_title)
+        binding.lifecycleOwner = this
 
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
+        initData(id)
+        initObserver()
+    }
 
-        viewModel.findCartProductById(id)
-        viewModel.findOneRecentProduct()
+    private fun initObserver() {
         viewModel.product.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
@@ -43,19 +44,19 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         }
         viewModel.recentProduct.observe(this) { state ->
             when (state) {
-                is UiState.None -> {}
+                is UiState.None -> {
+                    binding.layoutRecent.isVisible = false
+                }
+
                 is UiState.Success -> {
                     binding.recentProduct = state.data
+                    binding.layoutRecent.isVisible = !(intent.getBooleanExtra(EXTRA_OVERLAY, false))
                 }
             }
         }
-
-        viewModel.errorHandler.observe(this) { event ->
-            event.getContentIfNotHandled()?.let { message ->
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
+        viewModel.errorHandler.observe(this, EventObserver {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        })
         viewModel.cartHandler.observe(
             this,
             EventObserver {
@@ -70,15 +71,19 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                 }
             },
         )
-
         viewModel.navigateHandler.observe(
             this,
             EventObserver {
-                ProductDetailActivity.createIntent(this, it).apply {
+                createIntent(this, it).apply {
                     startActivity(this)
                 }
             },
         )
+    }
+
+    private fun initData(id: Long) {
+        viewModel.findCartProductById(id)
+        viewModel.findOneRecentProduct()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -66,7 +66,7 @@ class ShoppingActionActivity : BindingActivity<ActivityShoppingBinding>() {
             when (it) {
                 is UiState.None -> {}
                 is UiState.Success -> {
-                    shoppingAdapter.updateList(it.data)
+                    shoppingAdapter.submitList(it.data)
                 }
             }
         }
@@ -107,7 +107,6 @@ class ShoppingActionActivity : BindingActivity<ActivityShoppingBinding>() {
         layoutManager.spanSizeLookup = spanManager
         binding.rvShopping.layoutManager = layoutManager
         binding.rvShopping.adapter = shoppingAdapter
-
         binding.rvRecents.adapter = recentAdapter
     }
 

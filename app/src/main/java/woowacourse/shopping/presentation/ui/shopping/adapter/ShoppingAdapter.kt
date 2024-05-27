@@ -56,10 +56,6 @@ class ShoppingAdapter(
         }
     }
 
-    fun updateList(newItems: List<CartProduct>) {
-        submitList(newItems)
-    }
-
     override fun getItemCount(): Int {
         return if (currentList.isEmpty()) 0 else currentList.size + LOADING_OFFSET
     }

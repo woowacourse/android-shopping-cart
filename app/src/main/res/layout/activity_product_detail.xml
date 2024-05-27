@@ -58,7 +58,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="17dp"
             tools:text="20,000원"
-            android:text="@{@string/won(cartProduct.price)}"
+            productPrice="@{cartProduct}"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line"
