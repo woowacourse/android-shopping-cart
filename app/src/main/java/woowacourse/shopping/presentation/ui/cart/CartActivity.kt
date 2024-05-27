@@ -94,14 +94,20 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
         viewModel.turnPreviousPage()
     }
 
-    override fun onQuantityControlClick(
-        item: ProductListItem.ShoppingProductItem?,
-        quantityDelta: Int,
-    ) {
+    override fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
         item?.let {
             viewModel.updateCartItemQuantity(
                 item.toProduct(),
-                quantityDelta,
+                -1,
+            )
+        }
+    }
+
+    override fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let {
+            viewModel.updateCartItemQuantity(
+                item.toProduct(),
+                1,
             )
         }
     }

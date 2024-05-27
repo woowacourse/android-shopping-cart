@@ -111,13 +111,18 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         return true
     }
 
-    override fun onQuantityControlClick(
-        item: ProductListItem.ShoppingProductItem?,
-        quantityDelta: Int,
-    ) {
+    override fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
         item?.let {
             viewModel.updateCartItemQuantity(
-                quantityDelta,
+                -1,
+            )
+        }
+    }
+
+    override fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let {
+            viewModel.updateCartItemQuantity(
+                1,
             )
         }
     }

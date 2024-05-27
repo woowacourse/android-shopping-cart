@@ -17,13 +17,15 @@ import woowacourse.shopping.presentation.ui.shopping.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewType
 import woowacourse.shopping.presentation.util.EventObserver
 
-class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHandler {
+class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_shopping
 
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
-    private val adapter: ProductListAdapter = ProductListAdapter(this)
+    private val adapter: ProductListAdapter by lazy {
+        ProductListAdapter(viewModel)
+    }
 
     private val activityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -66,6 +68,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         observeRecentProductUpdates()
         observeProductUpdates()
         observeErrorEventUpdates()
+        observeMoveEvent()
     }
 
     private fun initAdapter() {
@@ -73,7 +76,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         layoutManager.spanSizeLookup = getSpanManager()
         binding.rvShopping.layoutManager = layoutManager
         binding.rvShopping.adapter = adapter
-        binding.handler = this
     }
 
     private fun getSpanManager() =
@@ -119,28 +121,26 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         )
     }
 
-    override fun onCartMenuItemClick() {
-        CartActivity.startWithResult(this, activityResultLauncher)
-    }
+    private fun observeMoveEvent() {
+        viewModel.moveEvent.observe(
+            this,
+            EventObserver {
+                when (it) {
+                    is FromShoppingToScreen.ProductDetail ->
+                        ProductDetailActivity.startWithResultLauncher(
+                            this,
+                            activityResultLauncher,
+                            it.productId,
+                        )
 
-    override fun onProductItemClick(productId: Long) {
-        ProductDetailActivity.startWithResult(this, activityResultLauncher, productId)
-    }
-
-    override fun onLoadMoreClick() {
-        viewModel.fetchProductForNewPage()
-    }
-
-    override fun onQuantityControlClick(
-        item: ProductListItem.ShoppingProductItem?,
-        quantityDelta: Int,
-    ) {
-        item?.let {
-            viewModel.updateCartItemQuantity(
-                item.toProduct(),
-                quantityDelta,
-            )
-        }
+                    is FromShoppingToScreen.Cart ->
+                        CartActivity.startWithResult(
+                            this,
+                            activityResultLauncher,
+                        )
+                }
+            },
+        )
     }
 
     override fun onResume() {

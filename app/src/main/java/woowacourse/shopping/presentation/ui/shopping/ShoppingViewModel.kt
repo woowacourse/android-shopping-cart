@@ -19,8 +19,7 @@ class ShoppingViewModel(
     private val productRepository: ProductRepository = DummyProductRepository(),
     private val recentRepository: RecentRepository,
     private val cartRepository: CartRepository,
-) :
-    ViewModel() {
+) : ViewModel(), ShoppingHandler {
     private var currentPage: Int = 0
 
     private val _cartProducts = MutableLiveData<UiState<List<Cart>>>(UiState.None)
@@ -44,6 +43,10 @@ class ShoppingViewModel(
     private val _error = MutableLiveData<Event<ShoppingError>>()
 
     val error: LiveData<Event<ShoppingError>> get() = _error
+
+    private val _moveEvent = MutableLiveData<Event<FromShoppingToScreen>>()
+
+    val moveEvent: LiveData<Event<FromShoppingToScreen>> get() = _moveEvent
 
     fun loadInitialShoppingItems() {
         if (shoppingProducts.value !is UiState.Success<List<ProductListItem.ShoppingProductItem>>) {
@@ -121,7 +124,7 @@ class ShoppingViewModel(
         _shoppingProducts.value = UiState.Success(shoppingProductItems)
     }
 
-    fun updateCartItemQuantity(
+    private fun updateCartItemQuantity(
         product: Product,
         quantityDelta: Int,
     ) {
@@ -155,6 +158,36 @@ class ShoppingViewModel(
                 shoppingProductItems[productIndex].copy(quantity = newQuantity)
             shoppingProductItems[productIndex] = updatedProduct
             _shoppingProducts.value = UiState.Success(shoppingProductItems)
+        }
+    }
+
+    override fun onProductItemClick(productId: Long) {
+        _moveEvent.value = Event(FromShoppingToScreen.ProductDetail(productId))
+    }
+
+    override fun onCartMenuItemClick() {
+        _moveEvent.value = Event(FromShoppingToScreen.Cart)
+    }
+
+    override fun onLoadMoreClick() {
+        fetchProductForNewPage()
+    }
+
+    override fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let {
+            updateCartItemQuantity(
+                item.toProduct(),
+                -1,
+            )
+        }
+    }
+
+    override fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let {
+            updateCartItemQuantity(
+                item.toProduct(),
+                1,
+            )
         }
     }
 

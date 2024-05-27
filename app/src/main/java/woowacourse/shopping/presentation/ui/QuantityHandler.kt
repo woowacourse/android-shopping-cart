@@ -3,8 +3,7 @@ package woowacourse.shopping.presentation.ui
 import woowacourse.shopping.domain.ProductListItem
 
 interface QuantityHandler {
-    fun onQuantityControlClick(
-        item: ProductListItem.ShoppingProductItem?,
-        quantityDelta: Int,
-    )
+    fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?)
+
+    fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?)
 }
