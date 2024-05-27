@@ -8,7 +8,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import woowacourse.shopping.data.product.database.ProductDataBase
+import woowacourse.shopping.data.ShoppingCartDataBase
 import woowacourse.shopping.data.product.entity.Product
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
@@ -16,7 +16,7 @@ import woowacourse.shopping.title
 
 @RunWith(AndroidJUnit4::class)
 class ProductDaoTest {
-    private lateinit var productDataBase: ProductDataBase
+    private lateinit var productDataBase: ShoppingCartDataBase
     private lateinit var productDao: ProductDao
 
     @Before
@@ -24,7 +24,7 @@ class ProductDaoTest {
         productDataBase =
             Room.databaseBuilder(
                 ApplicationProvider.getApplicationContext(),
-                ProductDataBase::class.java,
+                ShoppingCartDataBase::class.java,
                 "products",
             ).build()
         productDataBase.clearAllTables()

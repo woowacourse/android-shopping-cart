@@ -8,13 +8,13 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import woowacourse.shopping.data.recent.database.RecentProductDataBase
+import woowacourse.shopping.data.ShoppingCartDataBase
 import woowacourse.shopping.data.recent.entity.RecentProduct
 import java.time.LocalDateTime
 
 @RunWith(AndroidJUnit4::class)
 class RecentProductDaoTest {
-    private lateinit var recentProductDataBase: RecentProductDataBase
+    private lateinit var recentProductDataBase: ShoppingCartDataBase
     private lateinit var recentProductDao: RecentProductDao
 
     @Before
@@ -22,7 +22,7 @@ class RecentProductDaoTest {
         recentProductDataBase =
             Room.databaseBuilder(
                 ApplicationProvider.getApplicationContext(),
-                RecentProductDataBase::class.java,
+                ShoppingCartDataBase::class.java,
                 "recent_products",
             ).build()
         recentProductDataBase.clearAllTables()

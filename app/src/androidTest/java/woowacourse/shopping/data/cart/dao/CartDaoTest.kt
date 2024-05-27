@@ -9,32 +9,32 @@ import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import woowacourse.shopping.data.cart.database.CartDataBase
+import woowacourse.shopping.data.ShoppingCartDataBase
 import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 
 @RunWith(AndroidJUnit4::class)
 class CartDaoTest {
-    private lateinit var cartDataBase: CartDataBase
+    private lateinit var shoppingCartDataBase: ShoppingCartDataBase
     private lateinit var cartDao: CartDao
 
     @Before
     fun setUp() {
-        cartDataBase =
+        shoppingCartDataBase =
             Room.databaseBuilder(
                 ApplicationProvider.getApplicationContext(),
-                CartDataBase::class.java,
+                ShoppingCartDataBase::class.java,
                 "cart",
             ).build()
-        cartDataBase.clearAllTables()
-        cartDao = cartDataBase.cartDao()
+        shoppingCartDataBase.clearAllTables()
+        cartDao = shoppingCartDataBase.cartDao()
     }
 
     @After
     fun tearDown() {
-        cartDataBase.clearAllTables()
-        cartDataBase.close()
+        shoppingCartDataBase.clearAllTables()
+        shoppingCartDataBase.close()
     }
 
     @Test
