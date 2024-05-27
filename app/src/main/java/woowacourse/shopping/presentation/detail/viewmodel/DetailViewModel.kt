@@ -6,15 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.util.Event
 
 class DetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-    private val productHistoryRepository: ProductHistoryRepository,
+    private val recentProductRepository: RecentProductRepository,
     productId: Long,
     showRecent: Boolean,
 ) : ViewModel(), CartItemCountHandler {
@@ -52,7 +52,7 @@ class DetailViewModel(
         productId: Long,
         showRecent: Boolean,
     ) {
-        val recentProductId = productHistoryRepository.getMostRecentProductHistory()?.productId
+        val recentProductId = recentProductRepository.getMostRecentProductHistory()?.productId
 
         recentProductId?.let {
             _recentProductHistory.value = productRepository.fetchProduct(it)
@@ -61,7 +61,7 @@ class DetailViewModel(
             Log.d("HELLO", "getProductHistory: $recentProductId $productId")
         }
 
-        productHistoryRepository.setProductHistory(productId)
+        recentProductRepository.setProductHistory(productId)
     }
 
     fun loadProductInformation(id: Long) {

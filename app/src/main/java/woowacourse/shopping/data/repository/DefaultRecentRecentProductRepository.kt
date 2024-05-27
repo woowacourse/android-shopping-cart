@@ -1,17 +1,17 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.recent.RecentProductDataSource
-import woowacourse.shopping.data.db.producthistory.ProductHistory
-import woowacourse.shopping.domain.repository.ProductHistoryRepository
+import woowacourse.shopping.data.db.producthistory.RecentProduct
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
-class DefaultProductHistoryRepository(
+class DefaultRecentRecentProductRepository(
     private val recentProductDataSource: RecentProductDataSource,
-) : ProductHistoryRepository {
-    override fun getProductHistories(): List<ProductHistory>? {
+) : RecentProductRepository {
+    override fun getProductHistories(): List<RecentProduct>? {
         return recentProductDataSource.fetchRecentProducts()
     }
 
-    override fun getMostRecentProductHistory(): ProductHistory? {
+    override fun getMostRecentProductHistory(): RecentProduct? {
         return recentProductDataSource.fetchMostRecentProduct()
     }
 

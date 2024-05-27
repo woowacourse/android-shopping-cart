@@ -1,16 +1,16 @@
 package woowacourse.shopping.data.datasource.recent
 
-import woowacourse.shopping.data.db.producthistory.ProductHistory
-import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
+import woowacourse.shopping.data.db.producthistory.RecentProduct
+import woowacourse.shopping.data.db.producthistory.RecentProductDatabase
 import kotlin.concurrent.thread
 
 class DefaultRecentProductDataSource(
-    productHistoryDatabase: ProductHistoryDatabase,
+    recentProductDatabase: RecentProductDatabase,
 ) : RecentProductDataSource {
-    private val productHistoryDao = productHistoryDatabase.productHistoryDao()
+    private val productHistoryDao = recentProductDatabase.productHistoryDao()
 
-    override fun fetchRecentProducts(): List<ProductHistory>? {
-        var productHistories: List<ProductHistory>? = null
+    override fun fetchRecentProducts(): List<RecentProduct>? {
+        var productHistories: List<RecentProduct>? = null
 
         thread {
             productHistories = productHistoryDao.getAll()
@@ -19,19 +19,19 @@ class DefaultRecentProductDataSource(
         return productHistories
     }
 
-    override fun fetchMostRecentProduct(): ProductHistory? {
-        var productHistory: ProductHistory? = null
+    override fun fetchMostRecentProduct(): RecentProduct? {
+        var recentProduct: RecentProduct? = null
 
         thread {
-            productHistory = productHistoryDao.getMostRecentProductHistory()
+            recentProduct = productHistoryDao.getMostRecentProduct()
         }.join()
 
-        return productHistory
+        return recentProduct
     }
 
     override fun saveRecentProduct(productId: Long) {
         thread {
-            productHistoryDao.insert(ProductHistory(productId = productId))
+            productHistoryDao.insert(RecentProduct(productId = productId))
         }.join()
     }
 }

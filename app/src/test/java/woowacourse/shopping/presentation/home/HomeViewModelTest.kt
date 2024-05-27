@@ -8,7 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
-import woowacourse.shopping.domain.repository.FakeRecentProductRepository
+import woowacourse.shopping.domain.repository.FakeRecentRecentProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.dummy.DummyCartItems
 import woowacourse.shopping.presentation.dummy.DummyProductHistories
@@ -26,7 +26,7 @@ class HomeViewModelTest {
             HomeViewModel(
                 FakeProductRepository(DummyProducts().products),
                 FakeCartRepository(DummyCartItems().carts),
-                FakeRecentProductRepository(DummyProductHistories().productHistories),
+                FakeRecentRecentProductRepository(DummyProductHistories().productHistories),
             )
     }
 

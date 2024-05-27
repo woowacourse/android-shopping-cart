@@ -9,10 +9,10 @@ import woowacourse.shopping.data.datasource.cart.DefaultCartDataSource
 import woowacourse.shopping.data.datasource.product.DefaultProductDataSource
 import woowacourse.shopping.data.datasource.recent.DefaultRecentProductDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase
-import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
+import woowacourse.shopping.data.db.producthistory.RecentProductDatabase
 import woowacourse.shopping.data.repository.DefaultCartRepository
-import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.data.repository.DefaultProductRepository
+import woowacourse.shopping.data.repository.DefaultRecentRecentProductRepository
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.cart.CartActivity.Companion.CART_RESULT_OK
@@ -39,6 +39,7 @@ class HomeActivity : AppCompatActivity() {
                 viewModel.loadTotalCartCount()
                 viewModel.updateOrder(productId)
             }
+            viewModel.loadRecentProducts()
         }
 
     private val cartActivityResultLauncher =
@@ -65,9 +66,9 @@ class HomeActivity : AppCompatActivity() {
             HomeViewModelFactory(
                 DefaultProductRepository(DefaultProductDataSource),
                 DefaultCartRepository(DefaultCartDataSource(CartDatabase.getInstance(this))),
-                DefaultProductHistoryRepository(
+                DefaultRecentRecentProductRepository(
                     DefaultRecentProductDataSource(
-                        ProductHistoryDatabase.getInstance(this),
+                        RecentProductDatabase.getInstance(this),
                     ),
                 ),
             ),

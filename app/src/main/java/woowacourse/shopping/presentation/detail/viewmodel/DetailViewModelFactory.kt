@@ -3,13 +3,13 @@ package woowacourse.shopping.presentation.detail.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class DetailViewModelFactory(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-    private val productHistoryRepository: ProductHistoryRepository,
+    private val recentProductRepository: RecentProductRepository,
     private val productId: Long,
     private val showRecent: Boolean,
 ) : ViewModelProvider.Factory {
@@ -18,7 +18,7 @@ class DetailViewModelFactory(
             DetailViewModel(
                 productRepository,
                 cartRepository,
-                productHistoryRepository,
+                recentProductRepository,
                 productId,
                 showRecent,
             ) as T

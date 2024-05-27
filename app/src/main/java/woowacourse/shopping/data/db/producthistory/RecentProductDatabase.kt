@@ -5,24 +5,24 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ProductHistory::class], version = 1)
-abstract class ProductHistoryDatabase : RoomDatabase() {
-    abstract fun productHistoryDao(): ProductHistoryDao
+@Database(entities = [RecentProduct::class], version = 1)
+abstract class RecentProductDatabase : RoomDatabase() {
+    abstract fun productHistoryDao(): RecentProductDao
 
     companion object {
         @Volatile
-        private var instance: ProductHistoryDatabase? = null
-        private const val PRODUCT_HISTORY_DATABASE = "productHistoryDatabase"
+        private var instance: RecentProductDatabase? = null
+        private const val RECENT_PRODUCT_DATABASE = "recentProductDatabase"
 
-        fun getInstance(context: Context): ProductHistoryDatabase {
+        fun getInstance(context: Context): RecentProductDatabase {
             var instance = instance
 
             if (instance == null) {
                 instance =
                     Room.databaseBuilder(
                         context.applicationContext,
-                        ProductHistoryDatabase::class.java,
-                        PRODUCT_HISTORY_DATABASE,
+                        RecentProductDatabase::class.java,
+                        RECENT_PRODUCT_DATABASE,
                     ).build()
             }
 

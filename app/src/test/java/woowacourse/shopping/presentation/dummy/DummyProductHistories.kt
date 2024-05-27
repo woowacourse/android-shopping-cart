@@ -1,14 +1,14 @@
 package woowacourse.shopping.presentation.dummy
 
-import woowacourse.shopping.data.db.producthistory.ProductHistory
+import woowacourse.shopping.data.db.producthistory.RecentProduct
 
 class DummyProductHistories {
     val productHistories =
         mutableListOf(
-            ProductHistory(1, 1),
-            ProductHistory(2, 2),
-            ProductHistory(3, 3),
-            ProductHistory(4, 4),
-            ProductHistory(5, 5),
+            RecentProduct(1, 1),
+            RecentProduct(2, 2),
+            RecentProduct(3, 3),
+            RecentProduct(4, 4),
+            RecentProduct(5, 5),
         )
 }

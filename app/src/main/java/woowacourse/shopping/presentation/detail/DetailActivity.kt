@@ -16,10 +16,10 @@ import woowacourse.shopping.data.datasource.cart.DefaultCartDataSource
 import woowacourse.shopping.data.datasource.product.DefaultProductDataSource
 import woowacourse.shopping.data.datasource.recent.DefaultRecentProductDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase
-import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
+import woowacourse.shopping.data.db.producthistory.RecentProductDatabase
 import woowacourse.shopping.data.repository.DefaultCartRepository
-import woowacourse.shopping.data.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.data.repository.DefaultProductRepository
+import woowacourse.shopping.data.repository.DefaultRecentRecentProductRepository
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModelFactory
@@ -60,9 +60,9 @@ class DetailActivity : AppCompatActivity() {
                             CartDatabase.getInstance(this),
                         ),
                     ),
-                    DefaultProductHistoryRepository(
+                    DefaultRecentRecentProductRepository(
                         DefaultRecentProductDataSource(
-                            ProductHistoryDatabase.getInstance(this),
+                            RecentProductDatabase.getInstance(this),
                         ),
                     ),
                     productId,

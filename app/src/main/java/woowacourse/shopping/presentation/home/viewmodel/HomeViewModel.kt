@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.home.HomeActionHandler
 import woowacourse.shopping.presentation.uistate.Order
@@ -15,7 +15,7 @@ import woowacourse.shopping.presentation.util.Event
 class HomeViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-    private val productHistoryRepository: ProductHistoryRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel(), HomeActionHandler, CartItemCountHandler {
     private val _totalCartCount: MutableLiveData<Int> = MutableLiveData(0)
     val totalCartCount: LiveData<Int>
@@ -69,6 +69,14 @@ class HomeViewModel(
         }
     }
 
+    fun loadRecentProducts() {
+        val recentProducts = recentProductRepository.getProductHistories()
+
+        val products = recentProducts?.map { productRepository.fetchProduct(it.productId) }
+
+        _productHistories.value = products
+    }
+
     override fun onProductItemClick(id: Long) {
         _onProductClicked.value = Event(id)
     }
@@ -97,14 +105,6 @@ class HomeViewModel(
 
     override fun onLoadClick() {
         loadProducts()
-    }
-
-    private fun loadRecentProducts() {
-        val recentProducts = productHistoryRepository.getProductHistories()
-
-        val products = recentProducts?.map { productRepository.fetchProduct(it.productId) }
-
-        _productHistories.value = products
     }
 
     private fun loadProducts() {
