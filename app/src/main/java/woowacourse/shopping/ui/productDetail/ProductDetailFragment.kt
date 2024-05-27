@@ -10,13 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.data.source.LocalHistoryProductDataSource
-import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
-import woowacourse.shopping.local.cart.ShoppingCartDatabase
-import woowacourse.shopping.local.history.HistoryProductDatabase
 import woowacourse.shopping.ui.FragmentNavigator
 
 class ProductDetailFragment : Fragment() {
@@ -52,21 +48,11 @@ class ProductDetailFragment : Fragment() {
                         shoppingProductsRepository =
                         DefaultShoppingProductRepository(
                             productsSource = ShoppingApp.productSource,
-                            cartSource =
-                            LocalShoppingCartProductIdDataSource(
-                                dao =
-                                ShoppingCartDatabase.database(context = requireContext().applicationContext)
-                                    .dao(),
-                            ),
+                            cartSource = ShoppingApp.cartSource,
                         ),
                         productHistoryRepository =
                         DefaultProductHistoryRepository(
-                            productHistoryDataSource =
-                            LocalHistoryProductDataSource(
-                                dao =
-                                HistoryProductDatabase.database(context = requireContext().applicationContext)
-                                    .dao(),
-                            ),
+                            productHistoryDataSource = ShoppingApp.historySource,
                             productDataSource = ShoppingApp.productSource
                         ),
                     )

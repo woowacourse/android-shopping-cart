@@ -8,10 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentCartListBinding
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
-import woowacourse.shopping.local.cart.ShoppingCartDatabase
 
 class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null
@@ -22,10 +20,7 @@ class ShoppingCartFragment : Fragment() {
             ShoppingCartViewModel(
                 DefaultShoppingProductRepository(
                     productsSource = ShoppingApp.productSource,
-                    cartSource =
-                    LocalShoppingCartProductIdDataSource(
-                        dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
-                    ),
+                    cartSource = ShoppingApp.cartSource,
                 ),
             )
         }
