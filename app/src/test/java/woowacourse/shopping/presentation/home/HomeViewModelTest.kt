@@ -8,8 +8,10 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
+import woowacourse.shopping.domain.repository.FakeRecentProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.dummy.DummyCartItems
+import woowacourse.shopping.presentation.dummy.DummyProductHistories
 import woowacourse.shopping.presentation.dummy.DummyProducts
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
 import woowacourse.shopping.presentation.uistate.Order
@@ -24,31 +26,28 @@ class HomeViewModelTest {
             HomeViewModel(
                 FakeProductRepository(DummyProducts().products),
                 FakeCartRepository(DummyCartItems().carts),
+                FakeRecentProductRepository(DummyProductHistories().productHistories),
             )
     }
 
     @Test
     fun `장바구니 총 갯수를 제공한다`() {
-        homeViewModel.loadTotalCartCount()
-
-        val actualResult = homeViewModel.totalCartCount.getOrAwaitValue()
-
-        assertThat(actualResult).isEqualTo(6)
-    }
-
-    @Test
-    fun `장바구니에 아이템을 추가한다`() {
-        homeViewModel.addCartItem(7)
-
         val actualResult = homeViewModel.totalCartCount.getOrAwaitValue()
 
         assertThat(actualResult).isEqualTo(7)
     }
 
     @Test
-    fun `첫 페이지의 상품 데이터를 제공한다`() {
-        homeViewModel.loadProducts()
+    fun `장바구니에 아이템을 추가한다`() {
+        homeViewModel.onAddCartItem(8)
 
+        val actualResult = homeViewModel.totalCartCount.getOrAwaitValue()
+
+        assertThat(actualResult).isEqualTo(8)
+    }
+
+    @Test
+    fun `첫 페이지의 상품 데이터를 제공한다`() {
         val actualResult = homeViewModel.orders.getOrAwaitValue()
 
         assertThat(actualResult).isEqualTo(
@@ -59,7 +58,7 @@ class HomeViewModelTest {
                 Order(4, 1, Product(4, "Product 4", "", 4000)),
                 Order(5, 1, Product(5, "Product 5", "", 5000)),
                 Order(6, 1, Product(6, "Product 6", "", 6000)),
-                Order(0, 0, Product(7, "Product 7", "", 7000)),
+                Order(7, 1, Product(7, "Product 7", "", 7000)),
             ),
         )
     }

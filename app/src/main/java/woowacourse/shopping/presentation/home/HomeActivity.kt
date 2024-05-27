@@ -5,7 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
@@ -35,8 +34,10 @@ class HomeActivity : AppCompatActivity() {
             if (result.resultCode == DETAIL_RESULT_OK) {
                 val productId =
                     result?.data?.getLongExtra(EXTRA_DETAIL_PRODUCT_ID, DEFAULT_DETAIL_PRODUCT_ID)
+                        ?: throw IllegalArgumentException(EXCEPTION_ILLEGAL_PRODUCT_ID)
 
-                viewModel.updateOrder(productId!!)
+                viewModel.loadTotalCartCount()
+                viewModel.updateOrder(productId)
             }
         }
 
@@ -47,6 +48,7 @@ class HomeActivity : AppCompatActivity() {
             if (result.resultCode == CART_RESULT_OK) {
                 val productIds = result?.data?.getLongArrayExtra(EXTRA_CART_ITEMS)
 
+                viewModel.loadTotalCartCount()
                 productIds?.forEach {
                     viewModel.updateOrder(it)
                 }
@@ -80,11 +82,6 @@ class HomeActivity : AppCompatActivity() {
         RecentProductAdapter()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadTotalCartCount()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -99,12 +96,9 @@ class HomeActivity : AppCompatActivity() {
             GridLayoutManager(this, 2).apply {
                 spanSizeLookup = ProductsGridLayoutManager(productAdapter)
             }
-        binding.rvRecentProduct.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.productAdapter = productAdapter
         binding.recentProductAdapter = recentProductAdapter
         binding.homeViewModel = viewModel
-        binding.homeActionHandler = viewModel
         binding.lifecycleOwner = this
     }
 
@@ -145,5 +139,6 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
         private const val DEFAULT_DETAIL_PRODUCT_ID = -1L
+        private const val EXCEPTION_ILLEGAL_PRODUCT_ID = "존재하지 않는 제품 ID 입니다."
     }
 }

@@ -49,28 +49,11 @@ class HomeViewModel(
     init {
         loadProducts()
         loadRecentProducts()
+        loadTotalCartCount()
     }
 
     fun loadTotalCartCount() {
         _totalCartCount.value = cartRepository.fetchTotalCartCount()
-    }
-
-    fun plusCartItem(productId: Long) {
-        cartRepository.plusCartItem(productId, 1)
-
-        updateOrder(productId)
-    }
-
-    fun minusCartItem(productId: Long) {
-        cartRepository.minusCartItem(productId, 1)
-
-        updateOrder(productId)
-    }
-
-    fun addCartItem(productId: Long) {
-        cartRepository.addCartItem(productId, 1)
-        updateOrder(productId)
-        loadTotalCartCount()
     }
 
     fun updateOrder(productId: Long) {
@@ -86,7 +69,45 @@ class HomeViewModel(
         }
     }
 
-    fun loadProducts() {
+    override fun onProductItemClick(id: Long) {
+        _onProductClicked.value = Event(id)
+    }
+
+    override fun onMoveToCart() {
+        _onCartClicked.value = Event(Unit)
+    }
+
+    override fun onAddCartItem(id: Long) {
+        cartRepository.addCartItem(id, 1)
+        updateOrder(id)
+        loadTotalCartCount()
+    }
+
+    override fun onCartItemAdd(id: Long) {
+        cartRepository.plusCartItem(id, 1)
+
+        updateOrder(id)
+    }
+
+    override fun onCartItemMinus(id: Long) {
+        cartRepository.minusCartItem(id, 1)
+
+        updateOrder(id)
+    }
+
+    override fun onLoadClick() {
+        loadProducts()
+    }
+
+    private fun loadRecentProducts() {
+        val recentProducts = productHistoryRepository.getProductHistories()
+
+        val products = recentProducts?.map { productRepository.fetchProduct(it.productId) }
+
+        _productHistories.value = products
+    }
+
+    private fun loadProducts() {
         val carts = cartRepository.fetchAllCart()
 
         _orders.value =
@@ -103,37 +124,5 @@ class HomeViewModel(
             )
 
         _isLoadingAvailable.value = productRepository.fetchCurrentPage().isNotEmpty()
-    }
-
-    fun loadRecentProducts() {
-        val recentProducts = productHistoryRepository.getProductHistories()
-
-        val products = recentProducts?.map { productRepository.fetchProduct(it.productId) }
-
-        _productHistories.value = products
-    }
-
-    override fun onProductItemClick(id: Long) {
-        _onProductClicked.value = Event(id)
-    }
-
-    override fun onMoveToCart() {
-        _onCartClicked.value = Event(Unit)
-    }
-
-    override fun onAddCartItem(id: Long) {
-        addCartItem(id)
-    }
-
-    override fun onCartItemAdd(id: Long) {
-        plusCartItem(id)
-    }
-
-    override fun onCartItemMinus(id: Long) {
-        minusCartItem(id)
-    }
-
-    override fun onLoadClick() {
-        loadProducts()
     }
 }

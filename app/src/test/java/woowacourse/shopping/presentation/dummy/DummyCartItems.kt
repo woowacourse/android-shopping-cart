@@ -11,5 +11,6 @@ class DummyCartItems {
             Cart(4, 1, 4),
             Cart(5, 1, 5),
             Cart(6, 1, 6),
+            Cart(7, 1, 7),
         )
 }

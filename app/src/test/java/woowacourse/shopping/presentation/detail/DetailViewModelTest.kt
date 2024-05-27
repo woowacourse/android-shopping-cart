@@ -8,9 +8,11 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
+import woowacourse.shopping.domain.repository.FakeRecentProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.presentation.dummy.DummyCartItems
+import woowacourse.shopping.presentation.dummy.DummyProductHistories
 import woowacourse.shopping.presentation.dummy.DummyProducts
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -20,7 +22,13 @@ class DetailViewModelTest {
     @BeforeEach
     fun setUp() {
         detailViewModel =
-            DetailViewModel(FakeProductRepository(DummyProducts().products), FakeCartRepository(DummyCartItems().carts), 1)
+            DetailViewModel(
+                FakeProductRepository(DummyProducts().products),
+                FakeCartRepository(DummyCartItems().carts),
+                FakeRecentProductRepository(DummyProductHistories().productHistories),
+                1,
+                false,
+            )
     }
 
     @Test
