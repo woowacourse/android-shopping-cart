@@ -14,7 +14,6 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.ui.CountButtonClickListener
-import kotlin.concurrent.thread
 
 class ProductContentsViewModel(
     private val productRepository: ProductRepository,
@@ -46,16 +45,8 @@ class ProductContentsViewModel(
     private val _recentProducts: MutableLiveData<List<RecentProduct>> = MutableLiveData()
     val recentProducts: LiveData<List<Product>> =
         _recentProducts.map { recentProducts ->
-            products(recentProducts)
+            recentProducts.map { productRepository.find(it.productId) }
         }
-
-    private fun products(recentProducts: List<RecentProduct>): List<Product> {
-        lateinit var products: List<Product>
-        thread {
-            products = recentProducts.map { productRepository.find(it.productId) }
-        }.join()
-        return products
-    }
 
     init {
         productWithQuantity.addSource(products) { updateProductWithQuantity() }
@@ -64,36 +55,26 @@ class ProductContentsViewModel(
     }
 
     override fun plusCount(productId: Long) {
-        thread {
-            cartRepository.plusQuantityByProductId(productId)
-        }.join()
+        cartRepository.plusQuantityByProductId(productId)
         loadCartItems()
     }
 
     override fun minusCount(productId: Long) {
-        thread {
-            cartRepository.minusQuantityByProductId(productId)
-        }.join()
+        cartRepository.minusQuantityByProductId(productId)
         loadCartItems()
     }
 
     fun loadProducts() {
-        thread {
-            items.addAll(productRepository.getProducts())
-            products.postValue(items)
-        }.join()
+        items.addAll(productRepository.getProducts())
+        products.value = items
     }
 
     fun loadCartItems() {
-        thread {
-            cart.postValue(cartRepository.findAll())
-        }.join()
+        cart.value = cartRepository.findAll()
     }
 
     fun loadRecentProducts() {
-        thread {
-            _recentProducts.postValue(recentProductRepository.findAll())
-        }.join()
+        _recentProducts.value = recentProductRepository.findAll()
     }
 
     private fun updateProductWithQuantity() {

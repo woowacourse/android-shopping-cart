@@ -13,7 +13,6 @@ import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.utils.Event
 import woowacourse.shopping.ui.utils.MutableSingleLiveData
 import woowacourse.shopping.ui.utils.SingleLiveData
-import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -44,17 +43,15 @@ class ProductDetailViewModel(
     val addCartComplete: SingleLiveData<Unit> get() = _addCartComplete
 
     fun loadProduct(productId: Long) {
-        thread {
-            runCatching {
-                productRepository.find(productId)
-            }.onSuccess {
-                _error.postValue(false)
-                _productWithQuantity.postValue(ProductWithQuantity(product = it))
-            }.onFailure {
-                _error.postValue(true)
-                _errorMsg.setErrorHandled(it.message.toString())
-            }
-        }.join()
+        runCatching {
+            productRepository.find(productId)
+        }.onSuccess {
+            _error.value = false
+            _productWithQuantity.value = ProductWithQuantity(product = it)
+        }.onFailure {
+            _error.value = true
+            _errorMsg.setErrorHandled(it.message.toString())
+        }
     }
 
     override fun plusCount(productId: Long) {
@@ -72,9 +69,7 @@ class ProductDetailViewModel(
     fun addProductToCart() {
         _productWithQuantity.value?.let { productWithQuantity ->
             repeat(productWithQuantity.quantity.value) {
-                thread {
-                    cartRepository.plusQuantityByProductId(productWithQuantity.product.id)
-                }.join()
+                cartRepository.plusQuantityByProductId(productWithQuantity.product.id)
             }
             loadProduct(productWithQuantity.product.id)
         }
@@ -86,43 +81,39 @@ class ProductDetailViewModel(
         lastSeenProductState: Boolean,
     ) {
         loadMostRecentProduct(productId, lastSeenProductState)
-        thread {
-            recentProductRepository.insert(productId)
-        }.join()
+        recentProductRepository.insert(productId)
     }
 
     private fun loadMostRecentProduct(
         productId: Long,
         lastSeenProductState: Boolean,
     ) {
-        thread {
-            recentProductRepository.findMostRecentProduct()?.let {
-                runCatching {
-                    productRepository.find(it.productId)
-                }.onSuccess {
-                    _error.postValue(false)
-                    _mostRecentProduct.postValue(it)
-                    if (!lastSeenProductState) return@thread
-                    setMostRecentVisibility(it.id, productId)
-                }.onFailure {
-                    _error.postValue(true)
-                    _mostRecentProductVisibility.postValue(false)
-                    _errorMsg.setErrorHandled(it.message.toString())
-                }
+        recentProductRepository.findMostRecentProduct()?.let {
+            runCatching {
+                productRepository.find(it.productId)
+            }.onSuccess {
+                _error.value = false
+                _mostRecentProduct.value = it
+                if (!lastSeenProductState) return
+                setMostRecentVisibility(it.id, productId)
+            }.onFailure {
+                _error.value = true
+                _mostRecentProductVisibility.value = false
+                _errorMsg.setErrorHandled(it.message.toString())
             }
-        }.join()
+        }
     }
 
     private fun setMostRecentVisibility(
         mostRecentProductId: Long,
         currentProductId: Long,
     ) {
-        _mostRecentProductVisibility.postValue(mostRecentProductId != currentProductId)
+        _mostRecentProductVisibility.value = (mostRecentProductId != currentProductId)
     }
 
     private fun <T> MutableLiveData<Event<T>>.setErrorHandled(value: T?) {
         if (this.value?.hasBeenHandled == false) {
-            value?.let { this.postValue(Event(it)) }
+            value?.let { this.value = Event(it) }
         }
     }
 }

@@ -10,7 +10,6 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.ui.CountButtonClickListener
-import kotlin.concurrent.thread
 
 class CartViewModel(
     private val productRepository: ProductRepository,
@@ -32,7 +31,7 @@ class CartViewModel(
     val productWithQuantity: LiveData<List<ProductWithQuantity>> =
         cart.map { carts ->
             carts.map { cart ->
-                productWithQuantity(cart)
+                ProductWithQuantity(productRepository.find(cart.productId), cart.quantity)
             }
         }
 
@@ -42,11 +41,9 @@ class CartViewModel(
     }
 
     fun removeCartItem(productId: Long) {
-        thread {
-            cartRepository.deleteByProductId(productId)
-            _canMoveNextPage.postValue(cartPageManager.canMoveNextPage(cartRepository.itemSize()))
-            cart.postValue(cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE))
-        }.join()
+        cartRepository.deleteByProductId(productId)
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartRepository.itemSize())
+        cart.value = cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE)
         loadCartItems()
     }
 
@@ -63,39 +60,23 @@ class CartViewModel(
     }
 
     override fun plusCount(productId: Long) {
-        thread {
-            cartRepository.plusQuantityByProductId(productId)
-        }.join()
+        cartRepository.plusQuantityByProductId(productId)
         loadCartItems()
     }
 
     override fun minusCount(productId: Long) {
-        thread {
-            cartRepository.minusQuantityByProductId(productId)
-        }.join()
+        cartRepository.minusQuantityByProductId(productId)
         loadCartItems()
     }
 
-    private fun productWithQuantity(cart: Cart): ProductWithQuantity {
-        lateinit var result: ProductWithQuantity
-        thread {
-            result = ProductWithQuantity(productRepository.find(cart.productId), cart.quantity)
-        }.join()
-        return result
-    }
-
     private fun loadCartItems() {
-        thread {
-            cart.postValue(cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE))
-        }.join()
+        cart.value = cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE)
     }
 
     private fun updatePageState() {
         _pageNumber.value = cartPageManager.pageNum
         _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        thread {
-            _canMoveNextPage.postValue(cartPageManager.canMoveNextPage(cartRepository.itemSize()))
-        }.join()
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartRepository.itemSize())
     }
 
     companion object {

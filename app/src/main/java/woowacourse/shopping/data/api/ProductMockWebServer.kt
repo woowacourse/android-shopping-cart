@@ -6,7 +6,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.model.Product
-import kotlin.concurrent.thread
 
 class ProductMockWebServer : ProductServerApi {
     private val mockWebServer = MockWebServer()
@@ -14,10 +13,8 @@ class ProductMockWebServer : ProductServerApi {
     private val gson = Gson()
 
     override fun start() {
-        thread {
-            mockWebServer.dispatcher = ProductMockWebServerDispatcher
-            mockWebServer.start(12345)
-        }.join()
+        mockWebServer.dispatcher = ProductMockWebServerDispatcher
+        mockWebServer.start(12345)
     }
 
     override fun find(id: Long): Product {
@@ -53,8 +50,6 @@ class ProductMockWebServer : ProductServerApi {
     }
 
     override fun shutdown() {
-        thread {
-            mockWebServer.shutdown()
-        }.join()
+        mockWebServer.shutdown()
     }
 }
