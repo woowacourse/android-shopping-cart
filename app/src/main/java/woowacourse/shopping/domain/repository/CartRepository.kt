@@ -17,17 +17,17 @@ interface CartRepository {
     fun addCartItem(
         productId: Long,
         quantity: Int,
-    ): Long
+    )
 
     fun plusCartItem(
         productId: Long,
         quantity: Int,
-    ): Long
+    )
 
     fun minusCartItem(
         productId: Long,
         quantity: Int,
-    ): Long
+    )
 
-    fun removeAllCartItem(productId: Long): Long
+    fun removeAllCartItem(productId: Long)
 }

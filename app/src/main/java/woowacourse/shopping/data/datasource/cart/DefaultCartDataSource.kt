@@ -1,6 +1,5 @@
-package woowacourse.shopping.data.datasourceimpl
+package woowacourse.shopping.data.datasource.cart
 
-import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.data.db.cart.Cart
 import woowacourse.shopping.data.db.cart.CartDatabase
 import kotlin.concurrent.thread
@@ -21,16 +20,6 @@ class DefaultCartDataSource(
         return carts
     }
 
-    override fun totalCartCount(): Int {
-        var count = 0
-
-        thread {
-            count = cartDao.getAll().size
-        }.join()
-
-        return count
-    }
-
     override fun getCart(productId: Long): Cart? {
         var cart: Cart? = null
 
@@ -39,63 +28,6 @@ class DefaultCartDataSource(
         }.join()
 
         return cart
-    }
-
-    override fun addCart(
-        productId: Long,
-        quantity: Int,
-    ): Long {
-        thread {
-            val cart = cartDao.getCart(productId)
-
-            if (cart == null) {
-                cartDao.insert(Cart(productId = productId, quantity = quantity))
-            } else {
-                cartDao.update(cart.copy(quantity = quantity))
-            }
-        }.join()
-
-        return productId
-    }
-
-    override fun plusCartQuantity(
-        productId: Long,
-        quantity: Int,
-    ): Long {
-        thread {
-            val cart = cartDao.getCart(productId)
-            cart?.let {
-                cartDao.update(cart.copy(quantity = cart.quantity + 1))
-            }
-        }.join()
-        return productId
-    }
-
-    override fun minusCartQuantity(
-        productId: Long,
-        quantity: Int,
-    ): Long {
-        thread {
-            val cart = cartDao.getCart(productId)
-            cart?.let {
-                cartDao.update(cart.copy(quantity = cart.quantity - 1))
-            }
-        }.join()
-        return productId
-    }
-
-    override fun removeCart(productId: Long): Long {
-        thread {
-            val cart = cartDao.getCart(productId)
-            cartDao.delete(cart!!)
-        }.join()
-        return productId
-    }
-
-    override fun removeCarts() {
-        thread {
-            cartDao.deleteAll()
-        }.join()
     }
 
     override fun getCartsByPage(
@@ -113,5 +45,67 @@ class DefaultCartDataSource(
         if (fromIndex > toIndex) return emptyList()
 
         return carts.subList(fromIndex, toIndex)
+    }
+
+    override fun addCart(
+        productId: Long,
+        quantity: Int,
+    ) {
+        thread {
+            val cart = cartDao.getCart(productId)
+
+            if (cart == null) {
+                cartDao.insert(Cart(productId = productId, quantity = quantity))
+            } else {
+                cartDao.update(cart.copy(quantity = quantity))
+            }
+        }.join()
+    }
+
+    override fun removeCart(productId: Long) {
+        thread {
+            val cart = cartDao.getCart(productId)
+            cartDao.delete(cart!!)
+        }.join()
+    }
+
+    override fun removeCarts() {
+        thread {
+            cartDao.deleteAll()
+        }.join()
+    }
+
+    override fun totalCartCount(): Int {
+        var count = 0
+
+        thread {
+            count = cartDao.getAll().size
+        }.join()
+
+        return count
+    }
+
+    override fun plusCartQuantity(
+        productId: Long,
+        quantity: Int,
+    ) {
+        thread {
+            val cart = cartDao.getCart(productId)
+            cart?.let {
+                cartDao.update(cart.copy(quantity = cart.quantity + 1))
+            }
+        }.join()
+    }
+
+    override fun minusCartQuantity(
+        productId: Long,
+        quantity: Int,
+    ) {
+        thread {
+            val cart = cartDao.getCart(productId)
+            cart?.let {
+                cartDao.update(cart.copy(quantity = cart.quantity - 1))
+            }
+        }.join()
     }
 }

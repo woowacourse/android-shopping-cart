@@ -1,11 +1,9 @@
-package woowacourse.shopping.data.datasource
+package woowacourse.shopping.data.datasource.cart
 
 import woowacourse.shopping.data.db.cart.Cart
 
 interface CartDataSource {
     fun getCarts(): List<Cart>?
-
-    fun totalCartCount(): Int
 
     fun getCart(productId: Long): Cart?
 
@@ -17,19 +15,21 @@ interface CartDataSource {
     fun addCart(
         productId: Long,
         quantity: Int,
-    ): Long
+    )
+
+    fun removeCart(productId: Long)
+
+    fun removeCarts()
+
+    fun totalCartCount(): Int
 
     fun plusCartQuantity(
         productId: Long,
         quantity: Int,
-    ): Long
+    )
 
     fun minusCartQuantity(
         productId: Long,
         quantity: Int,
-    ): Long
-
-    fun removeCart(productId: Long): Long
-
-    fun removeCarts()
+    )
 }

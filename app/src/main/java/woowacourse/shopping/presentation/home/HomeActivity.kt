@@ -5,7 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.data.datasourceimpl.DefaultCartDataSource
+import woowacourse.shopping.data.datasource.cart.DefaultCartDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductDataSource
 import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase

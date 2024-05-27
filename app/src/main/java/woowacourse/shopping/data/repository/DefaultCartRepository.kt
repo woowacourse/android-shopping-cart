@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.datasource.CartDataSource
+import woowacourse.shopping.data.datasource.cart.CartDataSource
 import woowacourse.shopping.data.db.cart.Cart
 import woowacourse.shopping.domain.repository.CartRepository
 
@@ -29,25 +29,25 @@ class DefaultCartRepository(
     override fun addCartItem(
         productId: Long,
         quantity: Int,
-    ): Long {
-        return cartDataSource.addCart(productId, quantity)
+    ) {
+        cartDataSource.addCart(productId, quantity)
     }
 
     override fun plusCartItem(
         productId: Long,
         quantity: Int,
-    ): Long {
-        return cartDataSource.plusCartQuantity(productId, quantity)
+    ) {
+        cartDataSource.plusCartQuantity(productId, quantity)
     }
 
     override fun minusCartItem(
         productId: Long,
         quantity: Int,
-    ): Long {
-        return cartDataSource.minusCartQuantity(productId, quantity)
+    ) {
+        cartDataSource.minusCartQuantity(productId, quantity)
     }
 
-    override fun removeAllCartItem(productId: Long): Long {
-        return cartDataSource.removeCart(productId)
+    override fun removeAllCartItem(productId: Long) {
+        cartDataSource.removeCart(productId)
     }
 }
