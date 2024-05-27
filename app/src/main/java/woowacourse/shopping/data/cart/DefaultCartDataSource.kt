@@ -4,7 +4,7 @@ import android.content.Context
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 
-class DummyCartDataSource(context: Context) : CartDataSource {
+class DefaultCartDataSource(context: Context) : CartDataSource {
     private val cartDao = CartDatabase.getInstance(context).dao()
     private val PRODUCT_AMOUNT = 5
     private lateinit var cart: List<CartEntity>

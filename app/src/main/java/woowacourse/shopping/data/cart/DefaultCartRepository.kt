@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.CartProduct
 
 class DefaultCartRepository(
     private val context: Context,
-    private val cartDataSource: CartDataSource = DummyCartDataSource(context),
+    private val cartDataSource: CartDataSource = DefaultCartDataSource(context),
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
 ) : CartRepository {
     override fun cartProducts(currentPage: Int): List<CartProduct> {

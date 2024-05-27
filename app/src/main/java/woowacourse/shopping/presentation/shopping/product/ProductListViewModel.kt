@@ -31,28 +31,18 @@ class ProductListViewModel(
     }
 
     fun increaseCount(id: Long) {
-        val currentProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>() ?: return
-        val newProducts = currentProducts.map {
-            if (it.id == id) {
-                val newCount = it.count + 1
-                addCartProduct(id, newCount)
-                it.copy(count = newCount)
-            } else {
-                it
-            }
-        }
-        if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
-            _products.value = newProducts + ShoppingUiModel.LoadMore
-        } else {
-            _products.value = newProducts
-        }
+        updateProducts(id, +1)
     }
 
     fun decreaseCount(id: Long) {
+        updateProducts(id, -1)
+    }
+
+    private fun updateProducts(id: Long, change: Int) {
         val currentProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>() ?: return
         val newProducts = currentProducts.map {
             if (it.id == id) {
-                val newCount = it.count - 1
+                val newCount = it.count + change
                 addCartProduct(id, newCount)
                 it.copy(count = newCount)
             } else {
@@ -66,7 +56,7 @@ class ProductListViewModel(
         }
     }
 
-    fun addCartProduct(
+    private fun addCartProduct(
         id: Long,
         count: Int,
     ) {

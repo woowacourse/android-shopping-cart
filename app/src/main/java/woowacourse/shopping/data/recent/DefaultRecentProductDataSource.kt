@@ -4,7 +4,7 @@ import android.content.Context
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 
-class DummyRecentProductDataSource(context: Context) : RecentProductDataSource {
+class DefaultRecentProductDataSource(context: Context) : RecentProductDataSource {
     private val recentProductDao = RecentProductDatabase.getInstance(context).dao()
     private lateinit var recent: List<RecentProductEntity>
     private val products: List<RecentProduct> get() = recent.map { it.toDomainModel() }

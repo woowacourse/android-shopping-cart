@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.RecentProduct
 
 class DefaultRecentProductRepository(
     private val context: Context,
-    private val recentProductDataSource: RecentProductDataSource = DummyRecentProductDataSource(
+    private val recentProductDataSource: RecentProductDataSource = DefaultRecentProductDataSource(
         context
     ),
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
