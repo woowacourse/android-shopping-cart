@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.data.repository.RecentViewedItemRepositoryImpl
+import woowacourse.shopping.data.cartItem.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.ShoppingCartFragment

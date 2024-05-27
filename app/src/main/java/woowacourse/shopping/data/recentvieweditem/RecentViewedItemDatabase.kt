@@ -1,11 +1,10 @@
-package woowacourse.shopping.data.db.recentviewedItem
+package woowacourse.shopping.data.recentvieweditem
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import woowacourse.shopping.data.model.RecentViewedItemEntity
 
 @Database(
     entities = [RecentViewedItemEntity::class],

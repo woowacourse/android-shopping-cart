@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import androidx.fragment.app.activityViewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.data.repository.RecentViewedItemRepositoryImpl
+import woowacourse.shopping.data.cartItem.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.MainViewModel

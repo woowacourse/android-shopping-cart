@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.model
+package woowacourse.shopping.data.cartItem
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import woowacourse.shopping.data.db.cartItem.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
+import woowacourse.shopping.data.cartItem.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 

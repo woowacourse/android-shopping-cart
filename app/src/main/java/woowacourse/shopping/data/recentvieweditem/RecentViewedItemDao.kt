@@ -1,10 +1,9 @@
-package woowacourse.shopping.data.db.recentviewedItem
+package woowacourse.shopping.data.recentvieweditem
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import woowacourse.shopping.data.db.recentviewedItem.RecentViewedItemDatabase.Companion.RECENT_VIEWED_ITEM_DB_NAME
-import woowacourse.shopping.data.model.RecentViewedItemEntity
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemDatabase.Companion.RECENT_VIEWED_ITEM_DB_NAME
 import java.time.LocalDateTime
 
 @Dao

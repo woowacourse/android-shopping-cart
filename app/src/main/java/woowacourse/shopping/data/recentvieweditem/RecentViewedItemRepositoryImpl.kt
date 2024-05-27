@@ -1,8 +1,7 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.recentvieweditem
 
 import android.content.Context
-import woowacourse.shopping.data.db.recentviewedItem.RecentViewedItemDatabase
-import woowacourse.shopping.data.model.RecentViewedItemEntity.Companion.makeRecentViewedItemEntity
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemEntity.Companion.makeRecentViewedItemEntity
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.RecentViewedItemRepository
 import java.time.LocalDateTime

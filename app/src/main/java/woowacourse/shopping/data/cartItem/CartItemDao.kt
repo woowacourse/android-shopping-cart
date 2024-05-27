@@ -1,11 +1,10 @@
-package woowacourse.shopping.data.db.cartItem
+package woowacourse.shopping.data.cartItem
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import woowacourse.shopping.data.db.cartItem.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
-import woowacourse.shopping.data.model.CartItemEntity
+import woowacourse.shopping.data.cartItem.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
 
 @Dao
 interface CartItemDao {

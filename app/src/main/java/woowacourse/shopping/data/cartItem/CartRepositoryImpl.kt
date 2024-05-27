@@ -1,8 +1,6 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.cartItem
 
 import android.content.Context
-import woowacourse.shopping.data.db.cartItem.CartItemDatabase
-import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository

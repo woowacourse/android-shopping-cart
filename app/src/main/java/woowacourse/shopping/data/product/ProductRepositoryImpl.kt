@@ -1,7 +1,6 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.product
 
 import android.content.Context
-import woowacourse.shopping.data.db.product.ProductDao
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductResponse
 import woowacourse.shopping.domain.repository.ProductRepository

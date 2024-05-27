@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.db.recentviewedItem
+package woowacourse.shopping.data.recentvieweditem
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

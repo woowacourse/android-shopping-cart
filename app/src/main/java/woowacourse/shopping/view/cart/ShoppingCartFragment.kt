@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.cartItem.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter

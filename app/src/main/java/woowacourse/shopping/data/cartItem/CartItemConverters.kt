@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.db.cartItem
+package woowacourse.shopping.data.cartItem
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

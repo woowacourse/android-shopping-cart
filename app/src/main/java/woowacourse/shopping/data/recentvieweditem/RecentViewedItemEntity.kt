@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.model
+package woowacourse.shopping.data.recentvieweditem
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import woowacourse.shopping.data.db.recentviewedItem.RecentViewedItemDatabase.Companion.RECENT_VIEWED_ITEM_DB_NAME
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemDatabase.Companion.RECENT_VIEWED_ITEM_DB_NAME
 import woowacourse.shopping.domain.model.Product
 import java.time.LocalDateTime
 
