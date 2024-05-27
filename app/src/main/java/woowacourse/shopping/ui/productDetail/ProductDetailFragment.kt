@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.data.source.DummyProductsDataSource
 import woowacourse.shopping.data.source.LocalHistoryProductDataSource
 import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
@@ -51,7 +51,9 @@ class ProductDetailFragment : Fragment() {
                         productId = it.getLong(PRODUCT_ID),
                         shoppingProductsRepository =
                             DefaultShoppingProductRepository(
-                                productsSource = DummyProductsDataSource(),
+                                productsSource =
+                                    (requireActivity().application as? ShoppingApp)?.productSource
+                                        ?: throw IllegalStateException("ProductSource is not initialized"),
                                 cartSource =
                                     LocalShoppingCartProductIdDataSource(
                                         dao =
@@ -67,7 +69,9 @@ class ProductDetailFragment : Fragment() {
                                             HistoryProductDatabase.database(context = requireContext().applicationContext)
                                                 .dao(),
                                     ),
-                                productDataSource = DummyProductsDataSource(),
+                                productDataSource =
+                                    (requireActivity().application as? ShoppingApp)?.productSource
+                                        ?: throw IllegalStateException("ProductSource is not initialized"),
                             ),
                     )
                 }

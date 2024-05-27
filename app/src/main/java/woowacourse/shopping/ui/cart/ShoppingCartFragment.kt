@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.data.source.DummyProductsDataSource
 import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentCartListBinding
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
@@ -21,7 +21,9 @@ class ShoppingCartFragment : Fragment() {
         UniversalViewModelFactory {
             ShoppingCartViewModel(
                 DefaultShoppingProductRepository(
-                    productsSource = DummyProductsDataSource(),
+                    productsSource =
+                        (requireActivity().application as? ShoppingApp)?.productSource
+                            ?: throw IllegalStateException("ProductSource is not initialized"),
                     cartSource =
                         LocalShoppingCartProductIdDataSource(
                             dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),

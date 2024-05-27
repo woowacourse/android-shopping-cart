@@ -19,4 +19,8 @@ class RemoteProductDataSource(
         val count = productApiService.count()
         return page * 20 >= count
     }
+
+    override fun shutDown(): Boolean {
+        return productApiService.shutDown()
+    }
 }

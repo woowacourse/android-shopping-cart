@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.data.source.DummyProductsDataSource
 import woowacourse.shopping.data.source.LocalHistoryProductDataSource
 import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.databinding.FragmentProductListBinding
@@ -30,7 +30,9 @@ class ProductListFragment : Fragment() {
             ProductListViewModel(
                 productsRepository =
                     DefaultShoppingProductRepository(
-                        productsSource = DummyProductsDataSource(),
+                        productsSource =
+                            (requireActivity().application as? ShoppingApp)?.productSource
+                                ?: throw IllegalStateException("ProductSource is not initialized"),
                         cartSource =
                             LocalShoppingCartProductIdDataSource(
                                 dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
@@ -42,7 +44,9 @@ class ProductListFragment : Fragment() {
                             LocalHistoryProductDataSource(
                                 dao = HistoryProductDatabase.database(context = requireContext().applicationContext).dao(),
                             ),
-                        productDataSource = DummyProductsDataSource(),
+                        productDataSource =
+                            (requireActivity().application as? ShoppingApp)?.productSource
+                                ?: throw IllegalStateException("ProductSource is not initialized"),
                     ),
             )
         }

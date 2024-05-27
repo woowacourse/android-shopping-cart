@@ -15,4 +15,9 @@ class FakeProductDataSource(
             ?: throw NoSuchElementException("there is no product with id: $id")
 
     override fun isFinalPage(page: Int): Boolean = pagingStrategy.isFinalPage(page, allProducts)
+
+    override fun shutDown(): Boolean {
+        println("shutDown")
+        return true
+    }
 }

@@ -15,6 +15,11 @@ class DummyProductsDataSource(
 
     override fun isFinalPage(page: Int): Boolean = pagingStrategy.isFinalPage(page, allProducts)
 
+    override fun shutDown(): Boolean {
+        println("shutDown")
+        return true
+    }
+
     companion object {
         private val allProducts =
             List(60) { i ->
