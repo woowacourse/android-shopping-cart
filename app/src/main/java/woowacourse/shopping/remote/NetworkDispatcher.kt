@@ -16,7 +16,7 @@ class NetworkDispatcher : Dispatcher() {
     override fun dispatch(request: RecordedRequest): MockResponse {
         println("request: $request")
         val path = request.path ?: return MockResponse().setResponseCode(404)
-        println("patH: $path")
+        println("path: $path")
 
         return when {
             path.startsWith(GET_PAGING_PRODUCTS_PATH) -> {
@@ -40,7 +40,7 @@ class NetworkDispatcher : Dispatcher() {
 
             path.startsWith(GET_PRODUCT_PATH) -> {
                 val productId = path.removePrefix(GET_PRODUCT_PATH).toLong()
-                println("productId: $productId")
+                println(" now productId: $productId")
 
                 val body =
                     ProductMockWebServer.allProducts.find {

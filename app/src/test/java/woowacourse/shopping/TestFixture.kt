@@ -32,7 +32,7 @@ fun mockProductsTestFixture(
 fun mockProductTestFixture(
     id: Long,
     name: String = "$id 번째 상품 이름",
-    imageUrl: String = "https://zrr.kr/dw6j",
+    imageUrl: String = "https://s3-alpha-sig.figma.com/img/05ef/e578/d81445480aff1872344a6b1b35323488?Expires=1717977600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=jjZ9gCGElFMx8druqQBDkJzs4DH63phHkPxed4C9L3zVCoTV7XpxN58haKoLSFn3QIplsaREj2dUxlfCtym-x5edhFH078DeazrunG99WoKeYnuu2xmxDdSoJ7bckyLltypAUxYF0HQhRobKtSnIuWUQpHpu27lYSuTxsmWmmTrmg1waiPMnZHwaMgFU71Cb54OGn1SvK3Q1dasdhwsELC0wXdqb81wjFQ8fjjiYgfMJ4makKT3Ia6rAC1VF5dnRbHsL1FpGni3RrQ6nxMYjCzp7LVDaa5PCm8g9rGgEGm-AbMwXdenh7ZbZe3W2mbhfmve1V9RcHwSoXqAwD16zWQ__",
     price: Int = id.toInt() * 100,
 ): ProductData = ProductData(id, imageUrl, name, price)
 
