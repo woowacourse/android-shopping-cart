@@ -24,7 +24,10 @@ data class CartEntity(
     }
 
     companion object {
-        fun makeCartEntity(product: Product, count: Int): CartEntity {
+        fun makeCartEntity(
+            product: Product,
+            count: Int,
+        ): CartEntity {
             return CartEntity(product = product, count = count)
         }
     }

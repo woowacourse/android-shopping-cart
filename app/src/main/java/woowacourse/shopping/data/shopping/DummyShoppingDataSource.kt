@@ -29,7 +29,7 @@ object DummyShoppingDataSource : ShoppingDataSource {
                     1000,
                     "꼬상",
                     "https://w7.pngwing.com/pngs/921/264/" +
-                            "png-transparent-chipmunk-chip-n-dale-sticker-the-walt-disney-company-goofy-others.png",
+                        "png-transparent-chipmunk-chip-n-dale-sticker-the-walt-disney-company-goofy-others.png",
                 ),
                 Product(
                     5,
@@ -67,14 +67,18 @@ object DummyShoppingDataSource : ShoppingDataSource {
         return fromIndex < products.size
     }
 
-    override fun updateProductCount(id: Long, count: Int) {
-        val updatedProducts = products.map {
-            if (it.id == id) {
-                it.copy(count = count)
-            } else {
-                it
+    override fun updateProductCount(
+        id: Long,
+        count: Int,
+    ) {
+        val updatedProducts =
+            products.map {
+                if (it.id == id) {
+                    it.copy(count = count)
+                } else {
+                    it
+                }
             }
-        }
         products = updatedProducts
     }
 }

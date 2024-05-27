@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 
 class RecentProductViewModel(private val recentProductRepository: RecentProductRepository) :
@@ -28,6 +28,7 @@ class RecentProductViewModel(private val recentProductRepository: RecentProductR
 
     companion object {
         private const val RECENT_PRODUCTS_SIZE: Int = 10
+
         fun factory(recentProduct: RecentProductRepository): ViewModelProvider.Factory {
             return BaseViewModelFactory { RecentProductViewModel(recentProduct) }
         }

@@ -3,9 +3,9 @@ package woowacourse.shopping.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import woowacourse.shopping.local.converter.RecentProductConverters
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.local.converter.RecentProductConverters
 
 @Entity(tableName = "recentProduct")
 @TypeConverters(RecentProductConverters::class)
@@ -16,13 +16,17 @@ data class RecentProductEntity(
     val productId: Long = product.id,
     val viewTime: Long,
 ) {
-    fun toDomainModel() = RecentProduct(
-        product = product,
-        viewTime = viewTime
-    )
+    fun toDomainModel() =
+        RecentProduct(
+            product = product,
+            viewTime = viewTime,
+        )
 
     companion object {
-        fun makeEntity(product: Product, viewTime: Long): RecentProductEntity {
+        fun makeEntity(
+            product: Product,
+            viewTime: Long,
+        ): RecentProductEntity {
             return RecentProductEntity(product = product, viewTime = viewTime)
         }
     }

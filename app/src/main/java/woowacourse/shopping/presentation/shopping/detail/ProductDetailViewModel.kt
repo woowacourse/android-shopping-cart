@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
@@ -33,7 +33,7 @@ class ProductDetailViewModel(
         get() =
             _product.map {
                 lastViewedProduct.value != null &&
-                        it.id != lastViewedProduct.value?.product?.id
+                    it.id != lastViewedProduct.value?.product?.id
             }
 
     init {

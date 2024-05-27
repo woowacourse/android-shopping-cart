@@ -18,7 +18,6 @@ class CarDaoTest {
     private lateinit var carDao: CarDao
     private lateinit var db: CartDatabase
 
-
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()

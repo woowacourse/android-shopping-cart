@@ -15,5 +15,8 @@ interface ShoppingRepository {
         pageSize: Int,
     ): Boolean
 
-    fun updateCount(id: Long, count: Int)
+    fun updateCount(
+        id: Long,
+        count: Int,
+    )
 }

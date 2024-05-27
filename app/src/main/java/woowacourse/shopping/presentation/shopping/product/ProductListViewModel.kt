@@ -24,18 +24,21 @@ class ProductListViewModel(
 
         var loadProducts: List<ShoppingUiModel.Product> =
             currentProducts +
-                    shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
-                        .map { it.toShoppingUiModel(false) }
+                shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
+                    .map { it.toShoppingUiModel(false) }
 
         val carProducts: List<ShoppingUiModel.Product> =
             cartRepository.totalCartProducts().map { it.toUiModel(false).product }
 
         val cartIds = carProducts.map { it.id }
-        loadProducts = loadProducts.map { product ->
-            if (product.id in cartIds) {
-                carProducts.find { product.id == it.id } ?: product
-            } else product
-        }
+        loadProducts =
+            loadProducts.map { product ->
+                if (product.id in cartIds) {
+                    carProducts.find { product.id == it.id } ?: product
+                } else {
+                    product
+                }
+            }
 
         if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
             _products.postValue(loadProducts + ShoppingUiModel.LoadMore)
@@ -52,22 +55,26 @@ class ProductListViewModel(
         updateProducts(id, -1)
     }
 
-    private fun updateProducts(id: Long, change: Int) {
+    private fun updateProducts(
+        id: Long,
+        change: Int,
+    ) {
         val currentProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>() ?: return
-        val newProducts = currentProducts.map {
-            if (it.id == id) {
-                val newCount = it.count + change
-                val visible = newCount > 0
-                if (newCount == 0) {
-                    cartRepository.deleteCartProduct(id)
+        val newProducts =
+            currentProducts.map {
+                if (it.id == id) {
+                    val newCount = it.count + change
+                    val visible = newCount > 0
+                    if (newCount == 0) {
+                        cartRepository.deleteCartProduct(id)
+                    } else {
+                        addCartProduct(id, newCount)
+                    }
+                    it.copy(count = newCount, isVisible = visible)
                 } else {
-                    addCartProduct(id, newCount)
+                    it
                 }
-                it.copy(count = newCount, isVisible = visible)
-            } else {
-                it
             }
-        }
         if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
             _products.value = newProducts + ShoppingUiModel.LoadMore
         } else {

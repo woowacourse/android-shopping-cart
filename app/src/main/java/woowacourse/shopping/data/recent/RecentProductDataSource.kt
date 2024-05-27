@@ -5,6 +5,11 @@ import woowacourse.shopping.domain.RecentProduct
 
 interface RecentProductDataSource {
     fun recentProducts(size: Int): List<RecentProduct>
-    fun addRecentProduct(product: Product, viewTime: Long)
+
+    fun addRecentProduct(
+        product: Product,
+        viewTime: Long,
+    )
+
     fun lastViewedProduct(): RecentProduct?
 }

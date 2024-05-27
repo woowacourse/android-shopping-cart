@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -15,7 +14,6 @@ fun ImageView.setImage(imgUrl: String?) {
         .error(R.drawable.ic_error_24)
         .into(this)
 }
-
 
 @BindingAdapter("isVisible")
 fun View.setVisible(isVisible: Boolean) {

@@ -12,24 +12,29 @@ class DefaultRecentProductDataSource(context: Context) : RecentProductDataSource
     private val products: List<RecentProduct> get() = recent.map { it.toDomainModel() }
 
     override fun recentProducts(size: Int): List<RecentProduct> {
-        val thread = Thread {
-            recent = recentProductDao.getRecentProductsByPaging(size)
-        }
+        val thread =
+            Thread {
+                recent = recentProductDao.getRecentProductsByPaging(size)
+            }
         thread.start()
         thread.join()
         return products
     }
 
-    override fun addRecentProduct(product: Product, viewTime: Long) {
-        val thread = Thread {
-            val existingProduct = recentProductDao.getRecentProductById(product.id)
-            if (existingProduct != null) {
-                recentProductDao.updateViewTime(product.id, viewTime)
-            } else {
-                val entity = RecentProductEntity.makeEntity(product, viewTime)
-                recentProductDao.saveRecentProduct(entity)
+    override fun addRecentProduct(
+        product: Product,
+        viewTime: Long,
+    ) {
+        val thread =
+            Thread {
+                val existingProduct = recentProductDao.getRecentProductById(product.id)
+                if (existingProduct != null) {
+                    recentProductDao.updateViewTime(product.id, viewTime)
+                } else {
+                    val entity = RecentProductEntity.makeEntity(product, viewTime)
+                    recentProductDao.saveRecentProduct(entity)
+                }
             }
-        }
 
         thread.start()
         thread.join()
@@ -37,9 +42,10 @@ class DefaultRecentProductDataSource(context: Context) : RecentProductDataSource
 
     override fun lastViewedProduct(): RecentProduct? {
         var result: RecentProductEntity? = null
-        val thread = Thread {
-            result = recentProductDao.getRecentProduct()
-        }
+        val thread =
+            Thread {
+                result = recentProductDao.getRecentProduct()
+            }
         thread.start()
         thread.join()
         return result?.toDomainModel()

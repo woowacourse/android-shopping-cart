@@ -7,7 +7,7 @@ import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 data class CartProductUi(
     val product: ShoppingUiModel.Product,
     val count: Int,
-    var isVisible: Boolean = false
+    var isVisible: Boolean = false,
 ) {
     init {
         isVisible = product.count > 0 || isVisible

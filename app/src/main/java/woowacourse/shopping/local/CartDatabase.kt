@@ -19,7 +19,7 @@ abstract class CartDatabase : RoomDatabase() {
             return instance ?: Room.databaseBuilder(
                 context.applicationContext,
                 CartDatabase::class.java,
-                "cart.db"
+                "cart.db",
             ).build()
         }
     }

@@ -7,7 +7,7 @@ sealed class ShoppingUiModel(val viewType: Int) {
         val price: Int,
         val imageUrl: String,
         val count: Int = 0,
-        var isVisible: Boolean = false
+        var isVisible: Boolean = false,
     ) : ShoppingUiModel(ITEM_VIEW_TYPE_PRODUCT) {
         init {
             isVisible = count > 0 || isVisible

@@ -15,5 +15,8 @@ interface ShoppingDataSource {
         pageSize: Int,
     ): Boolean
 
-    fun updateProductCount(id: Long, count: Int)
+    fun updateProductCount(
+        id: Long,
+        count: Int,
+    )
 }

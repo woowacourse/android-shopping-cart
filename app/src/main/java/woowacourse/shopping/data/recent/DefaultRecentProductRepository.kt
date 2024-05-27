@@ -8,9 +8,10 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class DefaultRecentProductRepository(
     private val context: Context,
-    private val recentProductDataSource: RecentProductDataSource = DefaultRecentProductDataSource(
-        context
-    ),
+    private val recentProductDataSource: RecentProductDataSource =
+        DefaultRecentProductDataSource(
+            context,
+        ),
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
 ) : RecentProductRepository {
     override fun recentProducts(size: Int): List<RecentProduct> {

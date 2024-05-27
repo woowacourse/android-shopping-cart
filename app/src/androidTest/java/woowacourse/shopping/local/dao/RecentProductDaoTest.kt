@@ -43,16 +43,18 @@ class RecentProductDaoTest {
     @Test
     fun `최근_본_상품에서_size값을_지정하여_값을_가져_올_수_있다`() {
         // given
-        val item1 = RecentProductEntity(
-            1,
-            Product(0, 1000, "상품1", ""),
-            viewTime = System.currentTimeMillis()
-        )
-        val item2 = RecentProductEntity(
-            2,
-            Product(1, 1000, "상품2", ""),
-            viewTime = System.currentTimeMillis()
-        )
+        val item1 =
+            RecentProductEntity(
+                1,
+                Product(0, 1000, "상품1", ""),
+                viewTime = System.currentTimeMillis(),
+            )
+        val item2 =
+            RecentProductEntity(
+                2,
+                Product(1, 1000, "상품2", ""),
+                viewTime = System.currentTimeMillis(),
+            )
         thread {
             recentProductDao.saveRecentProduct(item1)
             recentProductDao.saveRecentProduct(item2)

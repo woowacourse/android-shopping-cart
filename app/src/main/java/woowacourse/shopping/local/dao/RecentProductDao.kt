@@ -20,5 +20,8 @@ interface RecentProductDao {
     fun getRecentProductById(productId: Long): RecentProductEntity?
 
     @Query("UPDATE recentProduct SET viewTime = :viewTime WHERE id = :productId")
-    fun updateViewTime(productId: Long, viewTime: Long)
+    fun updateViewTime(
+        productId: Long,
+        viewTime: Long,
+    )
 }

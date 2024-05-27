@@ -24,7 +24,10 @@ class DefaultShoppingRepository(
         return shoppingDataSource.canLoadMoreProducts(currentPage, pageSize)
     }
 
-    override fun updateCount(id: Long, count: Int) {
+    override fun updateCount(
+        id: Long,
+        count: Int,
+    ) {
         shoppingDataSource.updateProductCount(id, count)
     }
 }

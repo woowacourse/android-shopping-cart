@@ -19,7 +19,10 @@ class RecentAdapter(private val onClickItem: (id: Long) -> Unit) :
             areContentsTheSame = { oldItem, newItem -> oldItem == newItem },
         )
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecentViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemRecentProductBinding.inflate(layoutInflater, parent, false)
         return RecentViewHolder(binding, onClickItem)
@@ -27,7 +30,10 @@ class RecentAdapter(private val onClickItem: (id: Long) -> Unit) :
 
     override fun getItemCount(): Int = products.size
 
-    override fun onBindViewHolder(holder: RecentViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecentViewHolder,
+        position: Int,
+    ) {
         holder.bind(products[position])
     }
 
