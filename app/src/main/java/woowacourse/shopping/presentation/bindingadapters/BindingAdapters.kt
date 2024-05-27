@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.model.ShoppingProduct
 import woowacourse.shopping.presentation.ui.shopping.ShoppingAdapter
 
 @BindingAdapter("app:imageUrl")
@@ -25,12 +27,32 @@ fun loadImage(
 }
 
 @BindingAdapter("app:product")
-fun setItems(
+fun setShoppingItems(
     recyclerView: RecyclerView,
     products: List<Product>?,
 ) {
     products?.let {
         (recyclerView.adapter as? ShoppingAdapter)?.loadData(it)
+    }
+}
+
+@BindingAdapter("app:shoppingProducts")
+fun setShoppingProductItems(
+    recyclerView: RecyclerView,
+    shoppingProducts: List<ShoppingProduct>?,
+) {
+    shoppingProducts?.let {
+        (recyclerView.adapter as? ShoppingAdapter)?.loadShoppingProductData(it)
+    }
+}
+
+@BindingAdapter("app:recentProducts")
+fun setRecentProductItems(
+    recyclerView: RecyclerView,
+    recentProducts: List<RecentProduct>?,
+) {
+    recentProducts?.let {
+        (recyclerView.adapter as? ShoppingAdapter)?.loadRecentProductData(it)
     }
 }
 
@@ -51,6 +73,26 @@ fun setLoadMoreBtnVisibility(
         view.visibility = View.VISIBLE
     } else {
         view.visibility = View.GONE
+    }
+}
+
+@BindingAdapter("app:shoppingCounterVisibility")
+fun setVisibility(
+    view: View,
+    isVisible: Boolean?,
+) {
+    if (isVisible == true) {
+        if (view is ImageView) {
+            view.visibility = View.GONE
+        } else {
+            view.visibility = View.VISIBLE
+        }
+    } else {
+        if (view is ImageView) {
+            view.visibility = View.VISIBLE
+        } else {
+            view.visibility = View.GONE
+        }
     }
 }
 

@@ -1,12 +1,13 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.model.ShoppingProduct
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.event.Event
 import woowacourse.shopping.presentation.state.UIState
@@ -14,6 +15,7 @@ import woowacourse.shopping.presentation.state.UIState
 class ShoppingViewModel(
     val shoppingItemsRepository: ShoppingItemsRepository,
     val cartItemsRepository: CartRepository,
+    val recentProductRepository: RecentProductRepository,
 ) : ViewModel(), ShoppingEventHandler, ShoppingItemCountHandler {
     private val _products = MutableLiveData<List<Product>>()
 
@@ -23,6 +25,10 @@ class ShoppingViewModel(
     private val _shoppingProducts: MutableLiveData<List<ShoppingProduct>> = MutableLiveData()
     val shoppingProducts: LiveData<List<ShoppingProduct>>
         get() = _shoppingProducts
+
+    private val _recentProducts: MutableLiveData<List<RecentProduct>> = MutableLiveData()
+    val recentProducts: LiveData<List<RecentProduct>>
+        get() = _recentProducts
 
     private val _cartCount = MutableLiveData<Int>(cartItemsRepository.sumOfQuantity())
     val cartCount: LiveData<Int>
@@ -64,6 +70,7 @@ class ShoppingViewModel(
         offset = nextOffSet
         _products.postValue(initialProducts)
         _shoppingProducts.postValue(convertToShoppingProductList(initialProducts))
+        _recentProducts.postValue(recentProductRepository.loadLatestList())
     }
 
     private fun loadProducts(end: Int): List<Product> {
@@ -124,6 +131,13 @@ class ShoppingViewModel(
 
     override fun onProductClick(productId: Long) {
         _navigateToDetail.postValue(Event(productId))
+        val product = shoppingItemsRepository.findProductItem(productId) ?: return
+        updateRecentProducts(product)
+    }
+
+    private fun updateRecentProducts(product: Product) {
+        recentProductRepository.save(product)
+        _recentProducts.value = recentProductRepository.loadLatestList()
     }
 
     override fun updateCartCount() {
@@ -144,14 +158,7 @@ class ShoppingViewModel(
         val product = shoppingItemsRepository.findProductItem(productId) ?: return
 
         cartItemsRepository.insert(product, shoppingProduct?.quantity ?: 1)
-
-        // cartItemsRepository.updateQuantityWithProductId(productId, shoppingProduct?.quantity ?: 1)
         _shoppingProducts.value = _shoppingProducts.value
-        Log.d("crong", "increaseCount: clicked")
-        Log.d("crong", "productId: $productId")
-        Log.d("crong", "increaseCount: ${shoppingProduct?.quantity}")
-        Log.d("crong", "${cartItemsRepository.findQuantityWithProductId(productId)}")
-        // 숫자 업데이트 안되면, count update로직 추가
         updateCartCount()
     }
 
@@ -160,9 +167,6 @@ class ShoppingViewModel(
         shoppingProduct?.decrease()
         val quantity = shoppingProduct?.quantity ?: 0
 
-        Log.d("crong", "decreaseCount: clicked")
-        Log.d("crong", "productId: $productId")
-        Log.d("crong", "decreaseCount: $quantity")
         if (quantity > 0) {
             cartItemsRepository.updateQuantity(productId, shoppingProduct?.quantity ?: 1)
             _shoppingProducts.value = _shoppingProducts.value
@@ -170,8 +174,6 @@ class ShoppingViewModel(
             cartItemsRepository.deleteWithProductId(productId)
             _shoppingProducts.value = _shoppingProducts.value
         }
-        // count 0 일 때, 분기처리
-
         updateCartCount()
     }
 

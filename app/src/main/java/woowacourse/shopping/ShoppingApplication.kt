@@ -2,15 +2,20 @@ package woowacourse.shopping
 
 import android.app.Application
 import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.RecentProductDatabase
 
 class ShoppingApplication : Application() {
-    lateinit var database: CartDatabase
+    lateinit var cartDatabase: CartDatabase
+        private set
+
+    lateinit var recentProductDatabase: RecentProductDatabase
         private set
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        database = CartDatabase.getInstance(instance)
+        cartDatabase = CartDatabase.getInstance(instance)
+        recentProductDatabase = RecentProductDatabase.getInstance(instance)
     }
 
     companion object {

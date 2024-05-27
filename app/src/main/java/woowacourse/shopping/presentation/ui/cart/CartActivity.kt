@@ -18,7 +18,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = CartRepositoryImpl((ShoppingApplication.getInstance().database)),
+            repository = CartRepositoryImpl((ShoppingApplication.getInstance().cartDatabase)),
         )
     }
 

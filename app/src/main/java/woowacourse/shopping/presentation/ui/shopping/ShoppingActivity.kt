@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.RecentProductRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.Product
@@ -19,11 +20,14 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
 class ShoppingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingBinding
-    private lateinit var adapter: ShoppingAdapter
+    private lateinit var shoppingAdapter: ShoppingAdapter
+    private lateinit var recentProductAdapter: RecentProductAdapter
+
     private val viewModel: ShoppingViewModel by viewModels {
         ShoppingViewModelFactory(
-            ShoppingItemsRepositoryImpl(),
-            cartItemsRepository = CartRepositoryImpl(ShoppingApplication.getInstance().database),
+            shoppingItemsRepository = ShoppingItemsRepositoryImpl(),
+            cartItemsRepository = CartRepositoryImpl(ShoppingApplication.getInstance().cartDatabase),
+            recentProductRepository = RecentProductRepositoryImpl(ShoppingApplication.getInstance().recentProductDatabase),
         )
     }
 
@@ -45,12 +49,15 @@ class ShoppingActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerViewAdapter() {
-        adapter = ShoppingAdapter(viewModel, viewModel)
-        binding.rvProductList.adapter = adapter
+        shoppingAdapter = ShoppingAdapter(viewModel, viewModel)
+        recentProductAdapter = RecentProductAdapter(viewModel)
+
+        binding.rvProductList.adapter = shoppingAdapter
+        binding.horizontalView.rvRecentProduct.adapter = recentProductAdapter
 
         try {
             viewModel.products.observe(this) { products ->
-                adapter.loadData(products)
+                shoppingAdapter.loadData(products)
             }
         } catch (exception: Exception) {
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
@@ -82,7 +89,11 @@ class ShoppingActivity : AppCompatActivity() {
         }
 
         viewModel.shoppingProducts.observe(this) {
-            adapter.loadShoppingProductData(it)
+            shoppingAdapter.loadShoppingProductData(it)
+        }
+
+        viewModel.recentProducts.observe(this) {
+            recentProductAdapter.updateProducts(it)
         }
     }
 
@@ -105,8 +116,8 @@ class ShoppingActivity : AppCompatActivity() {
     }
 
     private fun showData(data: List<Product>) {
-        adapter.loadData(data)
-        adapter.loadShoppingProductData(
+        shoppingAdapter.loadData(data)
+        shoppingAdapter.loadShoppingProductData(
             data.map {
                 ShoppingProduct(
                     product = it,

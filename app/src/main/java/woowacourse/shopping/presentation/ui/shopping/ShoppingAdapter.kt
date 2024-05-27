@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.model.ShoppingProduct
 
 class ShoppingAdapter(
@@ -13,6 +14,7 @@ class ShoppingAdapter(
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<Product> = emptyList()
     private var shoppingProducts: List<ShoppingProduct> = emptyList()
+    private var recentProducts: List<RecentProduct> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -42,6 +44,11 @@ class ShoppingAdapter(
 
     fun loadShoppingProductData(shoppingProducts: List<ShoppingProduct>) {
         this.shoppingProducts = shoppingProducts
+        notifyDataSetChanged()
+    }
+
+    fun loadRecentProductData(recentProducts: List<RecentProduct>) {
+        this.recentProducts = recentProducts
         notifyDataSetChanged()
     }
 }
