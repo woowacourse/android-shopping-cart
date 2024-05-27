@@ -47,7 +47,7 @@
                 android:id="@+id/iv_shooping_cart_delete"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:onClick="@{() -> listener.delete(cartProduct)}"
+                android:onClick="@{() -> listener.deleteProduct(cartProduct)}"
                 android:padding="6dp"
                 android:src="@drawable/ic_close_24"
                 app:layout_constraintEnd_toEndOf="parent"

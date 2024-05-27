@@ -69,7 +69,7 @@ class CartFragment :
     }
 
     private fun initViews() {
-        adapter = CartAdapter(cartProductListener())
+        adapter = CartAdapter(viewModel)
         binding?.apply {
             rvShoppingCart.adapter = adapter
         }
@@ -78,6 +78,9 @@ class CartFragment :
     private fun initObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {
             adapter.submitList(it.products)
+        }
+        viewModel.updateCartEvent.observe(viewLifecycleOwner) {
+            eventBusViewModel.sendUpdateCartEvent()
         }
     }
 
@@ -89,25 +92,6 @@ class CartFragment :
                 CartErrorEvent.UpdateCartProducts -> showToast(R.string.error_msg_update_cart_products)
                 CartErrorEvent.DecreaseCartCountLimit -> showToast(R.string.error_msg_decrease_cart_count_limit)
                 CartErrorEvent.DeleteCartProduct -> showToast(R.string.error_msg_delete_cart_product)
-            }
-        }
-    }
-
-    private fun cartProductListener(): CartProductListener {
-        return object : CartProductListener {
-            override fun delete(product: CartProductUi) {
-                viewModel.deleteProduct(product)
-                eventBusViewModel.sendUpdateCartEvent()
-            }
-
-            override fun increaseProductCount(id: Long) {
-                viewModel.increaseCartProduct(id)
-                eventBusViewModel.sendUpdateCartEvent()
-            }
-
-            override fun decreaseProductCount(id: Long) {
-                viewModel.decreaseCartProduct(id)
-                eventBusViewModel.sendUpdateCartEvent()
             }
         }
     }

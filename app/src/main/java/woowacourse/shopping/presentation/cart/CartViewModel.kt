@@ -11,45 +11,49 @@ import woowacourse.shopping.presentation.util.SingleLiveData
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-) : ViewModel() {
-    private val _errorEvent = MutableSingleLiveData<CartErrorEvent>()
-    val errorEvent: SingleLiveData<CartErrorEvent> = _errorEvent
-
+) : ViewModel(), CartProductListener {
     private val _uiState = MutableLiveData<CartUiState>()
     val uiState: LiveData<CartUiState> get() = _uiState
+    private val _errorEvent = MutableSingleLiveData<CartErrorEvent>()
+    val errorEvent: SingleLiveData<CartErrorEvent> = _errorEvent
+    private val _updateCartEvent = MutableSingleLiveData<Unit>()
+    val updateCartEvent: SingleLiveData<Unit> get() = _updateCartEvent
 
     init {
         loadCartProducts(START_PAGE)
     }
 
-    fun increaseCartProduct(productId: Long) {
-        val product = _uiState.value?.findProduct(productId) ?: return
-        cartRepository.updateCartProduct(productId, product.count).onSuccess {
-            val newUiState =
-                _uiState.value?.increaseProductCount(productId, INCREMENT_AMOUNT) ?: return
+    override fun increaseProductCount(id: Long) {
+        val product = _uiState.value?.findProduct(id) ?: return
+        val uiState = _uiState.value ?: return
+        cartRepository.updateCartProduct(id, product.count + INCREMENT_AMOUNT).onSuccess {
+            val newUiState = uiState.increaseProductCount(id, INCREMENT_AMOUNT)
             updateUiState(newUiState)
+            _updateCartEvent.setValue(Unit)
         }.onFailure {
             _errorEvent.setValue(CartErrorEvent.UpdateCartProducts)
         }
     }
 
-    fun decreaseCartProduct(productId: Long) {
-        val product = _uiState.value?.findProduct(productId) ?: return
+    override fun decreaseProductCount(id: Long) {
+        val product = _uiState.value?.findProduct(id) ?: return
         val uiState = _uiState.value ?: return
-        if (!uiState.canDecreaseProductCount(productId, CART_PRODUCT_COUNT_LIMIT)) {
+        if (!uiState.canDecreaseProductCount(id, CART_PRODUCT_COUNT_LIMIT)) {
             return _errorEvent.setValue(CartErrorEvent.DecreaseCartCountLimit)
         }
-        cartRepository.updateCartProduct(productId, product.count).onSuccess {
-            val newUiState = uiState.decreaseProductCount(productId, INCREMENT_AMOUNT)
+        cartRepository.updateCartProduct(id, product.count - INCREMENT_AMOUNT).onSuccess {
+            val newUiState = uiState.decreaseProductCount(id, INCREMENT_AMOUNT)
             updateUiState(newUiState)
+            _updateCartEvent.setValue(Unit)
         }.onFailure {
             _errorEvent.setValue(CartErrorEvent.UpdateCartProducts)
         }
     }
 
-    fun deleteProduct(product: CartProductUi) {
+    override fun deleteProduct(product: CartProductUi) {
         cartRepository.deleteCartProduct(product.product.id).onSuccess {
             refreshCartProducts()
+            _updateCartEvent.setValue(Unit)
         }.onFailure {
             _errorEvent.setValue(CartErrorEvent.DeleteCartProduct)
         }
