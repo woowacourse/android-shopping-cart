@@ -22,7 +22,7 @@ import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModelFactory
 import woowacourse.shopping.ui.utils.urlToImage
 
-class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
+class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
@@ -42,6 +42,7 @@ class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
         initToolbar()
         observeProductItems()
         observeRecentProductItems()
+        moveToProductDetailPage()
     }
 
     override fun onResume() {
@@ -65,16 +66,13 @@ class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
     private fun setProductAdapter() {
         binding.rvProducts.itemAnimator = null
         productAdapter =
-            ProductAdapter(
-                this,
-                viewModel,
-            )
+            ProductAdapter(viewModel)
         binding.rvProducts.adapter = productAdapter
     }
 
     private fun setRecentProductAdapter() {
         binding.rvRecentProducts.itemAnimator = null
-        recentProductAdapter = RecentProductAdapter(this)
+        recentProductAdapter = RecentProductAdapter(viewModel)
         binding.rvRecentProducts.adapter = recentProductAdapter
     }
 
@@ -90,8 +88,10 @@ class ProductContentsActivity : AppCompatActivity(), ProductItemClickListener {
         }
     }
 
-    override fun itemClickListener(productId: Long) {
-        ProductDetailActivity.startActivity(this, productId, true)
+    private fun moveToProductDetailPage() {
+        viewModel.productDetailId.observe(this) {
+            ProductDetailActivity.startActivity(this, it, true)
+        }
     }
 }
 

@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="vm"
+            type="woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
 
@@ -17,10 +21,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_layout"
-        android:onClick="@{() -> productItemClickListener.itemClickListener(product.id)}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
+        android:onClick="@{() -> vm.itemClickListener(product.id)}"
         android:paddingHorizontal="8dp">
 
         <ImageView
@@ -40,9 +44,9 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="7dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
             android:text="@{product.name}"
-            android:gravity="center"
             android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"

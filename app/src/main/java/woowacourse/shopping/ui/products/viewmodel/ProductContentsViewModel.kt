@@ -14,13 +14,16 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.ui.CountButtonClickListener
+import woowacourse.shopping.ui.products.ProductItemClickListener
+import woowacourse.shopping.ui.utils.MutableSingleLiveData
+import woowacourse.shopping.ui.utils.SingleLiveData
 
 class ProductContentsViewModel(
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
 ) :
-    ViewModel(), CountButtonClickListener {
+    ViewModel(), CountButtonClickListener, ProductItemClickListener {
     private val items = mutableListOf<Product>()
     private val products: MutableLiveData<List<Product>> = MutableLiveData()
 
@@ -48,6 +51,9 @@ class ProductContentsViewModel(
             recentProducts.map { productRepository.find(it.productId) }
         }
 
+    private val _productDetailId = MutableSingleLiveData<Long>()
+    val productDetailId: SingleLiveData<Long> get() = _productDetailId
+
     init {
         productWithQuantity.addSource(products) { updateProductWithQuantity() }
         productWithQuantity.addSource(cart) { updateProductWithQuantity() }
@@ -62,6 +68,10 @@ class ProductContentsViewModel(
     override fun minusCount(productId: Long) {
         cartRepository.minusQuantityByProductId(productId)
         loadCartItems()
+    }
+
+    override fun itemClickListener(productId: Long) {
+        _productDetailId.setValue(productId)
     }
 
     fun loadProducts() {

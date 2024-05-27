@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.ui.products.ProductItemClickListener
+import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 
 class RecentProductAdapter(
-    private val productItemClickListener: ProductItemClickListener,
+    private val viewModel: ProductContentsViewModel,
 ) : ListAdapter<Product, RecentProductViewHolder>(RecentProductDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -16,7 +16,7 @@ class RecentProductAdapter(
     ): RecentProductViewHolder {
         val binding =
             ItemRecentProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return RecentProductViewHolder(binding, productItemClickListener)
+        return RecentProductViewHolder(binding, viewModel)
     }
 
     override fun onBindViewHolder(
