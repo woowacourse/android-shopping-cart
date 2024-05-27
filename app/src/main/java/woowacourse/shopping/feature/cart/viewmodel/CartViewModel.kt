@@ -49,7 +49,7 @@ class CartViewModel(
         val page = currentPage.value ?: return
         var cart = emptyList<CartItem>()
         thread {
-            cart = cartRepository.findRange(page, pageSize)
+            cart = cartRepository.findRange(page, pageSize).sortedBy { it.product.id }
         }.join()
         _cart.value = cart
     }
@@ -73,12 +73,6 @@ class CartViewModel(
         updatePage()
     }
 
-    fun checkEmptyLastPage() {
-        val currentPage = currentPage.value ?: return
-        val cartSize = cartSize.value ?: return
-        _isEmptyLastPage.value = currentPage > MIN_PAGE && cartSize % MAX_ITEM_SIZE_PER_PAGE == 1
-    }
-
     fun addProduct(productId: Long) {
         thread {
             cartRepository.addProduct(productId)
@@ -91,6 +85,12 @@ class CartViewModel(
             cartRepository.deleteProduct(productId)
         }.join()
         updatePage()
+    }
+
+    private fun checkEmptyLastPage() {
+        val currentPage = currentPage.value ?: return
+        val cartSize = cartSize.value ?: return
+        _isEmptyLastPage.value = currentPage > MIN_PAGE && cartSize % MAX_ITEM_SIZE_PER_PAGE == 1
     }
 
     private fun updatePageStatus() {
