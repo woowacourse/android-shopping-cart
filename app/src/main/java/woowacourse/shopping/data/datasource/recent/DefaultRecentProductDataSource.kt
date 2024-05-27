@@ -1,16 +1,15 @@
-package woowacourse.shopping.data.datasourceimpl
+package woowacourse.shopping.data.datasource.recent
 
-import woowacourse.shopping.data.datasource.ProductHistoryDataSource
 import woowacourse.shopping.data.db.producthistory.ProductHistory
 import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
 import kotlin.concurrent.thread
 
-class DefaultProductHistoryDataSource(
+class DefaultRecentProductDataSource(
     productHistoryDatabase: ProductHistoryDatabase,
-) : ProductHistoryDataSource {
+) : RecentProductDataSource {
     private val productHistoryDao = productHistoryDatabase.productHistoryDao()
 
-    override fun fetchProductHistories(): List<ProductHistory>? {
+    override fun fetchRecentProducts(): List<ProductHistory>? {
         var productHistories: List<ProductHistory>? = null
 
         thread {
@@ -20,7 +19,7 @@ class DefaultProductHistoryDataSource(
         return productHistories
     }
 
-    override fun fetchMostRecentProductHistory(): ProductHistory? {
+    override fun fetchMostRecentProduct(): ProductHistory? {
         var productHistory: ProductHistory? = null
 
         thread {
@@ -30,7 +29,7 @@ class DefaultProductHistoryDataSource(
         return productHistory
     }
 
-    override fun saveProductHistory(productId: Long) {
+    override fun saveRecentProduct(productId: Long) {
         thread {
             productHistoryDao.insert(ProductHistory(productId = productId))
         }.join()

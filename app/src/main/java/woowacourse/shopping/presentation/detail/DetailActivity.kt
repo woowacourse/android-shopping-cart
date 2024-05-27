@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cart.DefaultCartDataSource
 import woowacourse.shopping.data.datasource.product.DefaultProductDataSource
-import woowacourse.shopping.data.datasourceimpl.DefaultProductHistoryDataSource
+import woowacourse.shopping.data.datasource.recent.DefaultRecentProductDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase
 import woowacourse.shopping.data.db.producthistory.ProductHistoryDatabase
 import woowacourse.shopping.data.repository.DefaultCartRepository
@@ -61,7 +61,7 @@ class DetailActivity : AppCompatActivity() {
                         ),
                     ),
                     DefaultProductHistoryRepository(
-                        DefaultProductHistoryDataSource(
+                        DefaultRecentProductDataSource(
                             ProductHistoryDatabase.getInstance(this),
                         ),
                     ),
