@@ -75,4 +75,5 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
     implementation("androidx.fragment:fragment-ktx:1.3.6")
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
