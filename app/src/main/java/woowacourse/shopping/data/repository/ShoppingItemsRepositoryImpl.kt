@@ -35,7 +35,7 @@ class ShoppingItemsRepositoryImpl(
     override fun fetchProductsSize(): Int {
         var size = 0
         threadAction {
-            size = mockProductService.findProductsSize()
+            size = mockProductService.fetchProductsSize()
         }
         return size
     }
@@ -46,7 +46,7 @@ class ShoppingItemsRepositoryImpl(
     ): List<Product> {
         var products = emptyList<Product>()
         threadAction {
-            products = mockProductService.findPagingProducts(start, end - start)
+            products = mockProductService.loadPagingProducts(start, end - start)
         }
         return products
     }

@@ -14,7 +14,7 @@ class MockProductService : ProductService {
     private val client = OkHttpClient()
     private val productsJson: String = Gson().toJson(ProductDatabase.products)
 
-    override fun findProductsSize(): Int {
+    override fun fetchProductsSize(): Int {
         val size = ProductDatabase.products.size
         val server = MockWebServer()
         server.enqueue(MockResponse().setBody(Gson().toJson(size)).setResponseCode(200))
@@ -58,7 +58,7 @@ class MockProductService : ProductService {
         return Gson().fromJson(responseBody, Product::class.java)
     }
 
-    override fun findPagingProducts(
+    override fun loadPagingProducts(
         offset: Int,
         pagingSize: Int,
     ): List<Product> {
