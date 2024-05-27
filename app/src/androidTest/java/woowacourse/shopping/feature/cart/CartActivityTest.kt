@@ -17,17 +17,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.RecyclerViewItemCountAssertion
-import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.local.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
-import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.product.remote.ProductService
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
 
 @RunWith(AndroidJUnit4::class)
 class CartActivityTest {
-    private val productRepository: ProductRepository = ProductDummyRepository
+    private val productRepository: ProductService = ProductDummyRepository
     private val cartRepository: CartRepository = CartDummyRepository
 
     @Before

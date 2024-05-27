@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.cart.CartDao
-import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.local.CartDao
+import woowacourse.shopping.data.cart.local.CartDummyRepository
 import woowacourse.shopping.feature.InstantTaskExecutorExtension
 import woowacourse.shopping.feature.getOrAwaitValue
 

@@ -1,6 +1,6 @@
 package woowacourse.shopping.model
 
-import woowacourse.shopping.data.inquiryhistory.InquiryHistoryEntity
+import woowacourse.shopping.data.inquiryhistory.local.InquiryHistoryEntity
 import java.time.LocalDateTime
 
 data class InquiryHistory(

@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.cart.CartDatabase
-import woowacourse.shopping.data.cart.CartDummyRepository
+import woowacourse.shopping.data.cart.local.CartDatabase
+import woowacourse.shopping.data.cart.local.CartDummyRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModel

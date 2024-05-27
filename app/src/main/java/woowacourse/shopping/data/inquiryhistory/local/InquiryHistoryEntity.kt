@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.inquiryhistory
+package woowacourse.shopping.data.inquiryhistory.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

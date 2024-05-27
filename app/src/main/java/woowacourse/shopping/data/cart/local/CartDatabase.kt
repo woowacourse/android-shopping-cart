@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.inquiryhistory
+package woowacourse.shopping.data.cart.local
 
 import android.content.Context
 import androidx.room.Database
@@ -7,17 +7,17 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import woowacourse.shopping.data.Converters
 
-@Database(entities = [InquiryHistoryEntity::class], version = 1)
+@Database(entities = [CartItemEntity::class], version = 1)
 @TypeConverters(Converters::class)
-abstract class InquiryHistoryDatabase : RoomDatabase() {
-    abstract fun recentViewedProductDao(): InquiryHistoryDao
+abstract class CartDatabase : RoomDatabase() {
+    abstract fun cartDao(): CartDao
 
     companion object {
         fun initialize(context: Context) =
             Room.databaseBuilder(
                 context,
-                InquiryHistoryDatabase::class.java,
-                "inquiry_history",
+                CartDatabase::class.java,
+                "cart",
             ).build()
     }
 }

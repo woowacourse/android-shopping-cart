@@ -1,10 +1,11 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.product.remote
 
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
+import woowacourse.shopping.data.product.dummyProducts
 import woowacourse.shopping.model.Product
 import kotlin.math.min
 

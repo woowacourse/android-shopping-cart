@@ -1,9 +1,10 @@
-package woowacourse.shopping.data.cart
+package woowacourse.shopping.data.cart.local
 
-import woowacourse.shopping.data.cart.CartItemEntity.Companion.toDomainModel
-import woowacourse.shopping.data.product.ProductClient
-import woowacourse.shopping.data.product.ProductRemoteRepository
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.local.CartItemEntity.Companion.toDomainModel
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.product.remote.ProductClient
+import woowacourse.shopping.data.product.remote.ProductRemoteRepository
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.CartItem.Companion.toEntity
 import woowacourse.shopping.model.CartItemQuantity

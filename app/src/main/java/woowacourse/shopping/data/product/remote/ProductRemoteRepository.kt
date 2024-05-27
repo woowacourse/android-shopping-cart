@@ -1,5 +1,6 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.product.remote
 
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Product
 
 class ProductRemoteRepository(private val productService: ProductService) : ProductRepository {

@@ -1,6 +1,6 @@
 package woowacourse.shopping.model
 
-import woowacourse.shopping.data.cart.CartItemEntity
+import woowacourse.shopping.data.cart.local.CartItemEntity
 
 data class CartItem(
     val product: Product,
