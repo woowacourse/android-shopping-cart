@@ -18,8 +18,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.TestFixture.makeCartItemEntity
-import woowacourse.shopping.data.db.cartItem.CartItemDao
-import woowacourse.shopping.data.db.cartItem.CartItemDatabase
+import woowacourse.shopping.data.cartItem.CartItemDao
+import woowacourse.shopping.data.cartItem.CartItemDatabase
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import kotlin.concurrent.thread
 
