@@ -1,7 +1,9 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -34,6 +36,15 @@ class ShoppingActivity : AppCompatActivity() {
         )
     }
 
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val name = result.data?.getStringExtra(KEY)
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -44,6 +55,11 @@ class ShoppingActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         observeViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.reloadProducts()
     }
 
     private fun setUpRecyclerView() {
@@ -132,9 +148,14 @@ class ShoppingActivity : AppCompatActivity() {
 
     private fun navigateToCart() {
         startActivity(CartActivity.createIntent(context = this))
+        // activityResultLauncher.launch(CartActivity.createIntent(context = this))
     }
 
     private fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
+    }
+
+    companion object {
+        const val KEY = "reload_needed"
     }
 }

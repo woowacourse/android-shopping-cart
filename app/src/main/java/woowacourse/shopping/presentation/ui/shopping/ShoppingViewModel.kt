@@ -63,6 +63,11 @@ class ShoppingViewModel(
         hideLoadMore()
     }
 
+    fun reloadProducts() {
+        _shoppingProducts.value = loadProducts(end = offset).mapperToShoppingProductList()
+        _cartCount.value = cartItemsRepository.sumOfQuantity()
+    }
+
     private fun initializeProducts() {
         val nextOffSet = calculateNextOffset()
         val initialProducts = loadProducts(nextOffSet)
@@ -86,6 +91,10 @@ class ShoppingViewModel(
 
     private fun convertToShoppingProductList(products: List<Product>): List<ShoppingProduct> {
         return products.map { createShoppingProduct(it) }
+    }
+
+    private fun List<Product>.mapperToShoppingProductList(): List<ShoppingProduct> {
+        return this.map { createShoppingProduct(it) }
     }
 
     private fun createShoppingProduct(product: Product): ShoppingProduct {
