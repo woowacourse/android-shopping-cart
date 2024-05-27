@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.products
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -10,14 +11,20 @@ import woowacourse.shopping.model.data.GALAXY_BOOK
 import woowacourse.shopping.model.data.GRAM
 import woowacourse.shopping.model.data.IPHONE
 import woowacourse.shopping.model.data.MAC_BOOK
+import woowacourse.shopping.model.data.ProductMockWebServer
+import woowacourse.shopping.model.data.ProductRepositoryImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.ui.FakeOrderDao
+import woowacourse.shopping.ui.FakeRecentProductDao
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductContentsViewModelTest {
     private lateinit var viewModel: ProductContentsViewModel
+    private val productRepository = ProductRepositoryImpl(ProductMockWebServer())
 
     @BeforeEach
     fun setUp() {
+        productRepository.start()
         ProductsImpl.deleteAll()
         repeat(100) {
             ProductsImpl.save(MAC_BOOK.copy(name = "맥북$it"))
@@ -25,7 +32,12 @@ class ProductContentsViewModelTest {
             ProductsImpl.save(GALAXY_BOOK.copy(name = "갤럭시북$it"))
             ProductsImpl.save(GRAM.copy(name = "그램$it"))
         }
-        viewModel = ProductContentsViewModel(ProductsImpl)
+        viewModel = ProductContentsViewModel(ProductsImpl, FakeOrderDao, FakeRecentProductDao)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        productRepository.shutdown()
     }
 
     @Test
