@@ -32,11 +32,15 @@ class ShoppingActionActivity : BindingActivity<ActivityShoppingBinding>() {
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun initStartView() {
-        supportActionBar?.hide()
+        initTitle()
         initAdapter()
         initData()
         initObserver()
         initLauncher()
+    }
+
+    private fun initTitle() {
+        supportActionBar?.hide()
     }
 
     private fun initLauncher() {

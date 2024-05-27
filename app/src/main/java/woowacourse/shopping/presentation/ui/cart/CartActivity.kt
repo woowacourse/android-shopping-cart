@@ -29,9 +29,12 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
         binding.cartActionHandler = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.findProductByOffset()
+        initData()
         initObserver()
+        initBackPressed()
+    }
 
+    private fun initBackPressed() {
         onBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
@@ -48,6 +51,10 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
             }
         // 뒤로 가기 콜백을 추가
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+    private fun initData() {
+        viewModel.findProductByOffset()
     }
 
     private fun initObserver() {

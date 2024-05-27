@@ -22,7 +22,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-        title = getString(R.string.detail_title)
+        initTitle()
 
         binding.detailActionHandler = viewModel
         binding.lifecycleOwner = this
@@ -31,6 +31,10 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         if (id == -1L) finish()
         initData(id)
         initObserver()
+    }
+
+    private fun initTitle() {
+        title = getString(R.string.detail_title)
     }
 
     private fun initObserver() {
