@@ -14,8 +14,8 @@ class CartViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _productUiModels = MutableLiveData<MutableList<ProductUiModel>>()
-    val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels.map { it.toList() }
+    private val _productUiModels = MutableLiveData<List<ProductUiModel>>(emptyList())
+    val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels
 
     private val totalCartCount = MutableLiveData<Int>(INITIALIZE_CART_SIZE)
 
@@ -39,7 +39,7 @@ class CartViewModel(
     private fun loadCart() {
         val page = _page.value ?: INITIALIZE_PAGE
         val cart = cartRepository.findRange(page, PAGE_SIZE)
-        _productUiModels.value = cart.toProductUiModels().toMutableList()
+        _productUiModels.value = cart.toProductUiModels()
         loadTotalCartCount()
     }
 
@@ -65,11 +65,9 @@ class CartViewModel(
             movePreviousPage()
             return
         }
-        _productUiModels.value =
-            _productUiModels.value?.apply {
-                val productUiModel = find { productId == it.productId }
-                remove(productUiModel)
-            }
+        val products = _productUiModels.value ?: return
+        val deletedProduct = products.find { productId == it.productId } ?: return
+        _productUiModels.value = products - deletedProduct
         totalCartCount.value = totalCartCount.value?.minus(1)
     }
 
@@ -93,25 +91,23 @@ class CartViewModel(
         _changedCartEvent.value = Event(Unit)
         cartRepository.increaseQuantity(productId)
         val position = findProductUiModelsPosition(productId) ?: return
-        _productUiModels.value =
-            _productUiModels.value?.apply {
-                var changedQuantity = this[position].quantity
-                this[position] = this[position].copy(quantity = ++changedQuantity)
-            }
+        val productUiModels = _productUiModels.value?.toMutableList() ?: return
+        var changedQuantity = productUiModels[position].quantity
+        productUiModels[position] = productUiModels[position].copy(quantity = ++changedQuantity)
+        _productUiModels.value = productUiModels
     }
 
     fun decreaseQuantity(productId: Long) {
         _changedCartEvent.value = Event(Unit)
         cartRepository.decreaseQuantity(productId)
-        val position = findProductUiModelsPosition(productId) ?: return
         runCatching {
             cartRepository.find(productId)
         }.onSuccess {
-            _productUiModels.value =
-                _productUiModels.value?.apply {
-                    var changedQuantity = this[position].quantity
-                    this[position] = this[position].copy(quantity = --changedQuantity)
-                }
+            val position = findProductUiModelsPosition(productId) ?: return
+            val productUiModels = _productUiModels.value?.toMutableList() ?: return
+            var changedQuantity = productUiModels[position].quantity
+            productUiModels[position] = productUiModels[position].copy(quantity = --changedQuantity)
+            _productUiModels.value = productUiModels
         }.onFailure {
             updateDeletedCart(productId)
         }

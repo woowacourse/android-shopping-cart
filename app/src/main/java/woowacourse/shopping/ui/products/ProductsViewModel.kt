@@ -18,8 +18,8 @@ class ProductsViewModel(
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _productUiModels = MutableLiveData<MutableList<ProductUiModel>>(mutableListOf())
-    val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels.map { it.toList() }
+    private val _productUiModels = MutableLiveData<List<ProductUiModel>>(emptyList())
+    val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels
 
     private val _showLoadMore = MutableLiveData<Boolean>(false)
     val showLoadMore: LiveData<Boolean> get() = _showLoadMore
@@ -41,13 +41,13 @@ class ProductsViewModel(
     fun loadPage() {
         val currentProductsUiModel = _productUiModels.value ?: emptyList()
         val products = productRepository.findRange(page++, PAGE_SIZE)
-        _productUiModels.value = (currentProductsUiModel + products.toProductUiModels()).toMutableList()
+        _productUiModels.value = (currentProductsUiModel + products.toProductUiModels())
         _showLoadMore.value = false
     }
 
     fun loadProducts() {
         val products = _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
-        _productUiModels.value = products.toProductUiModels().toMutableList()
+        _productUiModels.value = products.toProductUiModels()
     }
 
     fun loadProduct(productId: Long) {
@@ -111,9 +111,10 @@ class ProductsViewModel(
         productId: Long,
         newProductUiModel: ProductUiModel,
     ) {
-        val productUiModels = _productUiModels.value ?: return
-        val index = productUiModels.indexOfFirst { it.productId == productId }
-        _productUiModels.value = productUiModels.apply { this[index] = newProductUiModel }
+        val productUiModels = _productUiModels.value?.toMutableList() ?: return
+        val position = productUiModels.indexOfFirst { it.productId == productId }
+        productUiModels[position] = newProductUiModel
+        _productUiModels.value = productUiModels
     }
 
     companion object {
