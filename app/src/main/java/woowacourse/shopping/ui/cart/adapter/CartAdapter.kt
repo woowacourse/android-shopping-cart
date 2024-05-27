@@ -1,9 +1,9 @@
 package woowacourse.shopping.ui.cart.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
@@ -13,9 +13,7 @@ class CartAdapter(
     private val onClickExit: OnClickExit,
     private val onIncreaseProductQuantity: OnIncreaseProductQuantity,
     private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
-) : RecyclerView.Adapter<CartViewHolder>() {
-    private val products: MutableList<ProductUiModel> = mutableListOf()
-
+) : ListAdapter<ProductUiModel, CartViewHolder>(diffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -30,50 +28,29 @@ class CartAdapter(
         position: Int,
     ) {
         holder.bind(
-            products[position],
+            getItem(position),
             onClickExit,
             onIncreaseProductQuantity,
             onDecreaseProductQuantity,
         )
     }
 
-    override fun getItemCount(): Int = products.size
+    companion object {
+        private val diffCallback =
+            object : DiffUtil.ItemCallback<ProductUiModel>() {
+                override fun areItemsTheSame(
+                    oldItem: ProductUiModel,
+                    newItem: ProductUiModel,
+                ): Boolean {
+                    return oldItem.productId == newItem.productId
+                }
 
-    fun updateCartItems(updatedProducts: List<ProductUiModel>) {
-        val newProducts = updatedProducts.subtract(products.toSet())
-        if (newProducts.size == updatedProducts.size) {
-            changeAllProduct(newProducts)
-            return
-        }
-
-        if (products.size > updatedProducts.size) {
-            val oldProducts = products.subtract(updatedProducts.toSet())
-            oldProducts.forEach { deleteProduct(it) }
-        }
-
-        newProducts.forEach { changeProduct(it) }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun changeAllProduct(newProducts: Set<ProductUiModel>) {
-        products.clear()
-        products.addAll(newProducts)
-        notifyDataSetChanged()
-    }
-
-    private fun deleteProduct(oldProduct: ProductUiModel) {
-        val position = findProductPosition(oldProduct.productId)
-        products.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    private fun changeProduct(newProduct: ProductUiModel) {
-        val position = findProductPosition(newProduct.productId)
-        products[position] = newProduct
-        notifyItemChanged(position)
-    }
-
-    private fun findProductPosition(productId: Long): Int {
-        return products.indexOfFirst { it.productId == productId }
+                override fun areContentsTheSame(
+                    oldItem: ProductUiModel,
+                    newItem: ProductUiModel,
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }

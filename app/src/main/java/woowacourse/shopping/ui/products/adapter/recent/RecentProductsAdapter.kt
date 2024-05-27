@@ -2,13 +2,12 @@ package woowacourse.shopping.ui.products.adapter.recent
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 
 class RecentProductsAdapter(private val onClickRecentProductItem: OnClickRecentProductItem) :
-    RecyclerView.Adapter<RecentProductViewHolder>() {
-    private var recentProductUiModels: MutableList<RecentProductUiModel> = mutableListOf()
-
+    ListAdapter<RecentProductUiModel, RecentProductViewHolder>(diffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -18,42 +17,29 @@ class RecentProductsAdapter(private val onClickRecentProductItem: OnClickRecentP
         return RecentProductViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = recentProductUiModels.size
-
     override fun onBindViewHolder(
         holder: RecentProductViewHolder,
         position: Int,
     ) {
-        holder.bind(recentProductUiModels[position], onClickRecentProductItem)
+        holder.bind(getItem(position), onClickRecentProductItem)
     }
 
-    fun updateRecentProduct(recentProducts: List<RecentProductUiModel>) {
-        recentProducts.forEachIndexed { position, recentProduct ->
-            if (position >= recentProductUiModels.size) {
-                insertRangeRecentProducts(recentProducts, position)
-                return@forEachIndexed
+    companion object {
+        private val diffCallback =
+            object : DiffUtil.ItemCallback<RecentProductUiModel>() {
+                override fun areItemsTheSame(
+                    oldItem: RecentProductUiModel,
+                    newItem: RecentProductUiModel,
+                ): Boolean {
+                    return oldItem.productId == newItem.productId
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: RecentProductUiModel,
+                    newItem: RecentProductUiModel,
+                ): Boolean {
+                    return oldItem == newItem
+                }
             }
-            changeRecentProduct(recentProduct, position)
-        }
-    }
-
-    private fun insertRangeRecentProducts(
-        newRecentProducts: List<RecentProductUiModel>,
-        startPosition: Int,
-    ) {
-        val insertedRecentProduct = newRecentProducts.subList(startPosition, newRecentProducts.size)
-        recentProductUiModels.addAll(insertedRecentProduct)
-        notifyItemRangeInserted(startPosition, newRecentProducts.size - recentProductUiModels.size)
-    }
-
-    private fun changeRecentProduct(
-        newRecentProduct: RecentProductUiModel,
-        position: Int,
-    ) {
-        if (newRecentProduct == recentProductUiModels[position]) {
-            return
-        }
-        recentProductUiModels[position] = newRecentProduct
-        notifyItemChanged(position)
     }
 }

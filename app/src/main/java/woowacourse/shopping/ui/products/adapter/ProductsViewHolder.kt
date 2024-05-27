@@ -49,7 +49,7 @@ sealed class ProductsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         fun bind(recentProducts: List<RecentProductUiModel>) {
-            adapter.updateRecentProduct(recentProducts)
+            adapter.submitList(recentProducts)
         }
     }
 }
