@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.productlist.RecentlyViewedProductsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="216dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/textview_recently_viewed_products_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/roboto_bold"
+            android:text="최근 본 상품"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_recently_viewed_products"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="false"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_recently_viewed_product"
+            app:layout_constraintTop_toBottomOf="@id/textview_recently_viewed_products_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{viewModel.isEmptyList ? View.INVISIBLE : View.VISIBLE}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:text="최근에 본 상품이 없습니다."
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textview_recently_viewed_products_title"
+            android:visibility="@{viewModel.isEmptyList ? View.VISIBLE : View.GONE}"/>
+
+        <View
+            android:id="@+id/divider_recently_viewed_products"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerview_recently_viewed_products"
+            android:background="@color/gray_300" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

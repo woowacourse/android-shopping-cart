@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="viewModel"
@@ -12,6 +13,14 @@
         <variable
             name="quantityControlClickListener"
             type="woowacourse.shopping.ViewModelQuantityActions" />
+
+        <variable
+            name="isLatestViewedProductVisible"
+            type="Boolean" />
+
+        <variable
+            name="recentProductClickListener"
+            type="woowacourse.shopping.productlist.RecentlyViewedProductsClickAction" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,6 +97,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_product_detail"
              />
+
+        <include
+            layout="@layout/layout_latest_viewed_product"
+            android:id="@+id/button_product_detail_latest_product"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_product_detail_quantity_control"
+            android:visibility="@{isLatestViewedProductVisible ? View.VISIBLE : View.GONE}"
+            app:clickListener="@{recentProductClickListener}"
+            app:productUiModel="@{viewModel.latestViewedProduct}"/>
 
         <Button
             android:id="@+id/btn_product_detail_add_cart"

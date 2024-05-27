@@ -18,7 +18,8 @@ import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.ViewModelFactory
 
-class ProductListActivity : AppCompatActivity(), ProductListClickAction {
+class ProductListActivity : AppCompatActivity(), ProductListClickAction,
+    RecentlyViewedProductsClickAction {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var adapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels { ViewModelFactory(applicationContext) }
@@ -37,6 +38,12 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         setLoadMoreButtonAction()
         setupToolBar()
         signUpActivityResults()
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.recently_viewed_products_list, RecentlyViewedProductsFragment())
+                .commit()
+        }
     }
 
     private fun attachAdapter() {
@@ -78,6 +85,13 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
                         )
                     } ?: ChangedItemsId(setOf())
                 updateResultData(changedItems.ids)
+                val latestViewedProductId =
+                    result.data?.getLongExtra(EXTRA_LATEST_VIEWED_PRODUCT_ID, -1L)
+                if (latestViewedProductId != null && latestViewedProductId >= 0) {
+                    val fragment =
+                        supportFragmentManager.findFragmentById(R.id.recently_viewed_products_list) as RecentlyViewedProductsFragment
+                    fragment.onUpdateLatestViewedProduct(latestViewedProductId)
+                }
             }
         }
     }
@@ -132,5 +146,17 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     override fun onMinusButtonClicked(id: Long, currentQuantity: Int) {
         viewModel.minusProductOnCart(id, currentQuantity)
+    }
+
+    override fun onRecentProductClicked(id: Long?) {
+        id?.let {
+            val intent = ProductDetailActivity.newInstance(this, id)
+            intent.apply { putExtra(ProductDetailActivity.EXTRA_RECENT_PRODUCT_CLICKED, true) }
+            activityResultLauncher.launch(intent)
+        }
+    }
+
+    companion object {
+        const val EXTRA_LATEST_VIEWED_PRODUCT_ID = "latestViewedProductId"
     }
 }

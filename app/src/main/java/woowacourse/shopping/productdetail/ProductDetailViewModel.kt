@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ProductRepository
+import woowacourse.shopping.RecentlyViewedProductRepositoryInterface
 import woowacourse.shopping.ShoppingCartRepositoryInterface
 import woowacourse.shopping.ViewModelQuantityActions
 import woowacourse.shopping.domain.Product
@@ -15,6 +16,7 @@ import woowacourse.shopping.uimodel.toProductUiModel
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepositoryInterface,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepositoryInterface
 ) : ViewModel(), ViewModelQuantityActions {
     private lateinit var product: Product
     private var quantity: Quantity = Quantity()
@@ -31,6 +33,9 @@ class ProductDetailViewModel(
     private val _addedItems: MutableLiveData<Set<Long>> = MutableLiveData()
     val addedItems: LiveData<Set<Long>> get() = _addedItems
 
+    private val _latestViewedProduct: MutableLiveData<ProductUiModel> = MutableLiveData()
+    val latestViewedProduct: LiveData<ProductUiModel> get() = _latestViewedProduct
+
     fun loadProductDetail(productId: Long) {
         runCatching {
             productRepository.productById(productId)
@@ -38,8 +43,32 @@ class ProductDetailViewModel(
             product = it
             _productUi.value = it.toProductUiModel()
             _quantityUi.value = quantity.value
+            addToRecentlyViewedProduct(productId)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    private fun addToRecentlyViewedProduct(productId: Long) {
+        runCatching {
+            val product = productRepository.productById(productId)
+            recentlyViewedProductRepository.addRecentlyViewedProduct(product)
+        }.onSuccess {
+            Log.d(this::class.java.simpleName, "Successfully add to recent list: id=$productId")
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    fun showLatestViewedProduct(recentProductClicked: Boolean) {
+        if (!recentProductClicked) {
+            runCatching {
+                recentlyViewedProductRepository.lastlyViewedProduct()
+            }.onSuccess {
+                _latestViewedProduct.value = it?.toProductUiModel()
+            }.onFailure {
+                Log.d(this::class.java.simpleName, "$it")
+            }
         }
     }
 
