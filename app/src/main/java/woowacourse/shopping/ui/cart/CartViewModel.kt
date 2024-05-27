@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.data.product.ProductRepository
@@ -28,6 +29,9 @@ class CartViewModel(
     val hasNextPage: LiveData<Boolean> = maxPage.map { (_page.value ?: INITIALIZE_PAGE) < it }
     val isEmptyCart: LiveData<Boolean> = _productUiModels.map { it.isEmpty() }
 
+    private val _changedCartEvent = MutableLiveData<Event<Unit>>()
+    val changedCartEvent: LiveData<Event<Unit>> = _changedCartEvent
+
     init {
         loadCart()
     }
@@ -51,6 +55,7 @@ class CartViewModel(
     }
 
     fun deleteCartItem(productId: Long) {
+        _changedCartEvent.value = Event(Unit)
         cartRepository.deleteCartItem(productId)
         updateDeletedCart(productId)
     }
@@ -85,6 +90,7 @@ class CartViewModel(
     }
 
     fun increaseQuantity(productId: Long) {
+        _changedCartEvent.value = Event(Unit)
         cartRepository.increaseQuantity(productId)
         val position = findProductUiModelsPosition(productId) ?: return
         _productUiModels.value =
@@ -95,6 +101,7 @@ class CartViewModel(
     }
 
     fun decreaseQuantity(productId: Long) {
+        _changedCartEvent.value = Event(Unit)
         cartRepository.decreaseQuantity(productId)
         val position = findProductUiModelsPosition(productId) ?: return
         runCatching {
