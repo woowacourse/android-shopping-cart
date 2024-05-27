@@ -13,7 +13,7 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cart.DefaultCartDataSource
-import woowacourse.shopping.data.datasource.product.DefaultProductDataSource
+import woowacourse.shopping.data.datasource.product.RemoteProductDataSource
 import woowacourse.shopping.data.datasource.recent.DefaultRecentProductDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase
 import woowacourse.shopping.data.db.producthistory.RecentProductDatabase
@@ -54,7 +54,7 @@ class DetailActivity : AppCompatActivity() {
             ViewModelProvider(
                 this,
                 DetailViewModelFactory(
-                    DefaultProductRepository(DefaultProductDataSource),
+                    DefaultProductRepository(RemoteProductDataSource()),
                     DefaultCartRepository(
                         DefaultCartDataSource(
                             CartDatabase.getInstance(this),

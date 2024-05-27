@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.data.datasource.cart.DefaultCartDataSource
-import woowacourse.shopping.data.datasource.product.DefaultProductDataSource
+import woowacourse.shopping.data.datasource.product.RemoteProductDataSource
 import woowacourse.shopping.data.datasource.recent.DefaultRecentProductDataSource
 import woowacourse.shopping.data.db.cart.CartDatabase
 import woowacourse.shopping.data.db.producthistory.RecentProductDatabase
@@ -64,7 +64,7 @@ class HomeActivity : AppCompatActivity() {
         ViewModelProvider(
             this,
             HomeViewModelFactory(
-                DefaultProductRepository(DefaultProductDataSource),
+                DefaultProductRepository(RemoteProductDataSource()),
                 DefaultCartRepository(DefaultCartDataSource(CartDatabase.getInstance(this))),
                 DefaultRecentRecentProductRepository(
                     DefaultRecentProductDataSource(
