@@ -28,7 +28,14 @@ class ProductsActivity : AppCompatActivity() {
             CartRepository.getInstance(),
         )
     }
-    private lateinit var adapter: ProductsAdapter
+    private val adapter by lazy {
+        ProductsAdapter(
+            onClickProductItem = { navigateToProductDetailView(it) },
+            onClickRecentProductItem = { navigateToProductDetailView(it) },
+            onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
+            onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
+        )
+    }
 
     private val productDetailActivityResultLauncher =
         registerForActivityResult(
@@ -71,13 +78,6 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun initializeProductAdapter() {
-        adapter =
-            ProductsAdapter(
-                onClickProductItem = { navigateToProductDetailView(it) },
-                onClickRecentProductItem = { navigateToProductDetailView(it) },
-                onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
-                onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
-            )
         binding.rvProducts.itemAnimator = null
         binding.rvProducts.layoutManager =
             GridLayoutManager(this, PRODUCT_LIST_SPAN_SIZE).apply {
@@ -116,7 +116,8 @@ class ProductsActivity : AppCompatActivity() {
                     dx: Int,
                     dy: Int,
                 ) {
-                    val lastPosition = (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val lastPosition =
+                        (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
                     val productsLastPosition = adapter.findProductsLastPosition(lastPosition)
                     viewModel.changeSeeMoreVisibility(productsLastPosition)
                 }

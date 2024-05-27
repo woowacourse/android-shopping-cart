@@ -13,7 +13,8 @@ import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
 sealed class ProductsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    class ProductViewHolder(private val binding: ItemProductBinding) : ProductsViewHolder(binding.root) {
+    class ProductViewHolder(private val binding: ItemProductBinding) :
+        ProductsViewHolder(binding.root) {
         fun bind(
             productUiModel: ProductUiModel,
             onClickProductItem: OnClickProductItem,
@@ -38,7 +39,9 @@ sealed class ProductsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         binding: ItemRecentProductsBinding,
         onClickRecentProductItem: OnClickRecentProductItem,
     ) : ProductsViewHolder(binding.root) {
-        private val adapter: RecentProductsAdapter = RecentProductsAdapter(onClickRecentProductItem)
+        private val adapter by lazy {
+            RecentProductsAdapter(onClickRecentProductItem = onClickRecentProductItem)
+        }
 
         init {
             binding.rvRecentProduct.itemAnimator = null

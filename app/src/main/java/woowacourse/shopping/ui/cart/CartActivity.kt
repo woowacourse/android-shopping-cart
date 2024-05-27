@@ -19,7 +19,13 @@ class CartActivity : AppCompatActivity() {
             CartRepository.getInstance(),
         )
     }
-    private lateinit var adapter: CartAdapter
+    private val adapter by lazy {
+        CartAdapter(
+            onClickExit = { viewModel.deleteCartItem(it) },
+            onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
+            onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +52,6 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeCartAdapter() {
-        adapter =
-            CartAdapter(
-                onClickExit = { viewModel.deleteCartItem(it) },
-                onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
-                onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
-            )
         binding.rvCart.itemAnimator = null
         binding.rvCart.adapter = adapter
 
