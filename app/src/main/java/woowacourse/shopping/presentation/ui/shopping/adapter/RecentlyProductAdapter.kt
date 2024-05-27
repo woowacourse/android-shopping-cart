@@ -2,7 +2,8 @@ package woowacourse.shopping.presentation.ui.shopping.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemRecentlyProductBinding
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
@@ -10,9 +11,7 @@ import woowacourse.shopping.presentation.ui.shopping.viewholder.RecentlyProductV
 
 class RecentlyProductAdapter(
     private val actionHandler: ShoppingActionHandler,
-) : RecyclerView.Adapter<RecentlyProductViewHolder>() {
-    private var recentlyProductItems: List<RecentlyViewedProduct> = emptyList()
-
+) : ListAdapter<RecentlyViewedProduct, RecentlyProductViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,17 +24,26 @@ class RecentlyProductAdapter(
         holder: RecentlyProductViewHolder,
         position: Int,
     ) {
-        val recentlyViewedProduct = recentlyProductItems[position]
+        val recentlyViewedProduct = getItem(position)
         holder.bind(recentlyViewedProduct, actionHandler)
     }
 
-    override fun getItemCount(): Int {
-        return recentlyProductItems.size
-    }
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<RecentlyViewedProduct>() {
+                override fun areItemsTheSame(
+                    oldItem: RecentlyViewedProduct,
+                    newItem: RecentlyViewedProduct,
+                ): Boolean {
+                    return oldItem.productId == newItem.productId
+                }
 
-    @Suppress("notifyDataSetChanged")
-    fun loadData(recentlyProductItems: List<RecentlyViewedProduct>) {
-        this.recentlyProductItems = recentlyProductItems
-        notifyDataSetChanged()
+                override fun areContentsTheSame(
+                    oldItem: RecentlyViewedProduct,
+                    newItem: RecentlyViewedProduct,
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }

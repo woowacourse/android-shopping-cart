@@ -125,7 +125,7 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
     }
 
     private fun showRecentlyViewedProductData(data: List<RecentlyViewedProduct>) {
-        recentlyProductAdapter.loadData(data)
+        recentlyProductAdapter.submitList(data)
     }
 
     private fun navigateToShoppingCart() {
