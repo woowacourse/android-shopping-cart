@@ -1,7 +1,6 @@
 package woowacourse.shopping.model.data
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -19,9 +18,6 @@ interface OrderDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(order: OrderEntity)
-
-    @Delete
-    fun delete(order: OrderEntity)
 
     @Query("DELETE FROM `orders` WHERE productId = :id")
     fun deleteById(id: Long)
