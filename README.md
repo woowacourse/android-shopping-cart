@@ -49,3 +49,5 @@ DiffUtil을 하나씩 따라가보니 oldData도 이미 변경된 데이터임�
 
 - BindingAdapter Nullable
 데이터가 바인딩 되지 않은 시점에 xml이 로드되면 null이 들어갈 수 있어서 nullable 처리해야 오류 발생을 피할 수 있다.
+
+- 제네릭은 컴파일 타임에 결정되지만, reified는 런타임에 할 수 있도록 해준다

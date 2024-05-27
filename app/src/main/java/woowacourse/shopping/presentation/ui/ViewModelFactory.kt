@@ -29,8 +29,12 @@ class ViewModelFactory : ViewModelProvider.Factory {
             }
 
             else -> {
-                throw IllegalArgumentException()
+                throw IllegalArgumentException(INVALID_VIEWMODEL)
             }
         }
+    }
+
+    companion object {
+        const val INVALID_VIEWMODEL = "뷰모델이 적절하지 않은 케이스입니다."
     }
 }
