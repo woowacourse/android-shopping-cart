@@ -1,12 +1,10 @@
-package woowacourse.shopping.data.db
+package woowacourse.shopping.data.product
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.kotest.matchers.shouldBe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import woowacourse.shopping.data.db.product.ProductDao
-import woowacourse.shopping.data.db.product.ProductDatabase
 import woowacourse.shopping.domain.model.Product
 
 @RunWith(AndroidJUnit4::class)

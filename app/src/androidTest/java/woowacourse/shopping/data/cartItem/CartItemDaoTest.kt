@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.db
+package woowacourse.shopping.data.cartItem
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -10,8 +10,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.TestFixture.deleteAll
 import woowacourse.shopping.TestFixture.makeCartItemEntity
-import woowacourse.shopping.data.db.cartItem.CartItemDao
-import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 
 @RunWith(AndroidJUnit4::class)
 class CartItemDaoTest {
