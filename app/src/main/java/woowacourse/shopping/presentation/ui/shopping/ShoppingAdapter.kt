@@ -5,11 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ShoppingProduct
 
 class ShoppingAdapter(
     private val shoppingEventHandler: ShoppingEventHandler,
+    private val shoppingItemCountHandler: ShoppingItemCountHandler,
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<Product> = emptyList()
+    private var shoppingProducts: List<ShoppingProduct> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -24,7 +27,8 @@ class ShoppingAdapter(
         position: Int,
     ) {
         val product = products[position]
-        return holder.bind(product, shoppingEventHandler)
+        val shoppingProduct = shoppingProducts[position]
+        return holder.bind(product, shoppingProduct, shoppingEventHandler, shoppingItemCountHandler)
     }
 
     override fun getItemCount(): Int {
@@ -33,6 +37,11 @@ class ShoppingAdapter(
 
     fun loadData(products: List<Product>) {
         this.products = products
+        notifyDataSetChanged()
+    }
+
+    fun loadShoppingProductData(shoppingProducts: List<ShoppingProduct>) {
+        this.shoppingProducts = shoppingProducts
         notifyDataSetChanged()
     }
 }

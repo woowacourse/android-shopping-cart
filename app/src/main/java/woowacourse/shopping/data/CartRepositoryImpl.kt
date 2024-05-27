@@ -42,12 +42,37 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         }
     }
 
+    override fun updateQuantityWithProductId(
+        productId: Long,
+        quantity: Int,
+    ) {
+        threadAction {
+            dao.updateQuantityWithProductId(productId, quantity)
+        }
+    }
+
+    override fun findQuantityWithProductId(productId: Long): Int {
+        var quantity = 0
+        threadAction {
+            quantity = dao.findQuantityWithProductId(productId)
+        }
+        return quantity
+    }
+
     override fun size(): Int {
         var size: Int = 0
         threadAction {
             size = dao.size()
         }
         return size
+    }
+
+    override fun sumOfQuantity(): Int {
+        var sum = 0
+        threadAction {
+            sum = dao.sumOfQuantity()
+        }
+        return sum
     }
 
     override fun findOrNullWithProductId(productId: Long): CartItem? {
@@ -95,6 +120,12 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
     override fun delete(cartItemId: Long) {
         threadAction {
             dao.delete(cartItemId)
+        }
+    }
+
+    override fun deleteWithProductId(productId: Long) {
+        threadAction {
+            dao.deleteWithProductId(productId)
         }
     }
 

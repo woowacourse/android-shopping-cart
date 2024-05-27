@@ -56,12 +56,12 @@ class DetailViewModel(
         _moveBack.postValue(Event(true))
     }
 
-    override fun increaseCount() {
+    override fun increaseCount(productId: Long) {
         _shoppingProduct.value?.increase()
         _shoppingProduct.value = _shoppingProduct.value
     }
 
-    override fun decreaseCount() {
+    override fun decreaseCount(productId: Long) {
         _shoppingProduct.value?.decrease()
         _shoppingProduct.value = _shoppingProduct.value
     }

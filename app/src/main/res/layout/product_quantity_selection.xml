@@ -27,7 +27,7 @@
             android:gravity="center"
             android:text="−"
             android:textSize="25dp"
-            android:onClick="@{() -> countHandler.decreaseCount()}"
+            android:onClick="@{() -> countHandler.decreaseCount(shoppingProduct.product.id)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +54,7 @@
             android:gravity="center"
             android:text="+"
             android:textSize="25dp"
-            android:onClick="@{() -> countHandler.increaseCount()}"
+            android:onClick="@{() -> countHandler.increaseCount(shoppingProduct.product.id)}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_quantity"
             app:layout_constraintStart_toEndOf="@+id/tv_quantity"
             app:layout_constraintTop_toTopOf="@+id/tv_quantity" />

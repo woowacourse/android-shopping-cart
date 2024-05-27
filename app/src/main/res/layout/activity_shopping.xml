@@ -8,6 +8,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="countHandler"
+            type="woowacourse.shopping.presentation.ui.counter.DefaultCounterHandler" />
+
+        <variable
             name="viewModel"
             type="woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel" />
     </data>
@@ -43,9 +47,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
+                android:onClick="@{() -> viewModel.onShoppingCartButtonClick()}"
                 android:padding="8dp"
                 android:src="@drawable/ic_cart"
-                android:onClick="@{() -> viewModel.onShoppingCartButtonClick()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_cart_count"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -57,8 +61,9 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/ic_background_circle"
                 android:gravity="center"
+                android:text="@{String.valueOf(viewModel.cartCount)}"
                 android:textColor="@color/white"
-                android:visibility="gone"
+                android:visibility="@{viewModel.cartCount > 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -66,19 +71,44 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_product_list"
-            android:layout_width="match_parent"
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="14dp"
-            android:layout_marginTop="14dp"
             app:layout_constraintBottom_toTopOf="@id/btn_load_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_main"
-            app:product="@{viewModel.products}"
-            tools:itemCount="10"
-            tools:listitem="@layout/item_product" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_main">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/horizontal_view"
+                    layout="@layout/recent_product_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:viewModel="@{viewModel}" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_product_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="14dp"
+                    android:layout_marginTop="14dp"
+                    app:layout_constraintBottom_toTopOf="@id/btn_load_more"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar_main"
+                    app:product="@{viewModel.products}"
+                    app:shoppingProducts="@{viewModel.shoppingProducts}"
+                    tools:itemCount="10"
+                    tools:listitem="@layout/item_product" />
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <TextView
             android:id="@+id/btn_load_more"
@@ -91,11 +121,11 @@
             android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:visibility="@{viewModel.showLoadMore}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_product_list"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:visibility="@{viewModel.showLoadMore}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

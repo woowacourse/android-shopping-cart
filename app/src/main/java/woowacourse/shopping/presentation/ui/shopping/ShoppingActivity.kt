@@ -7,9 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ShoppingProduct
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
@@ -20,6 +23,7 @@ class ShoppingActivity : AppCompatActivity() {
     private val viewModel: ShoppingViewModel by viewModels {
         ShoppingViewModelFactory(
             ShoppingItemsRepositoryImpl(),
+            cartItemsRepository = CartRepositoryImpl(ShoppingApplication.getInstance().database),
         )
     }
 
@@ -41,13 +45,11 @@ class ShoppingActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerViewAdapter() {
-        adapter = ShoppingAdapter(viewModel)
+        adapter = ShoppingAdapter(viewModel, viewModel)
         binding.rvProductList.adapter = adapter
 
         try {
-            viewModel.products.observe(
-                this,
-            ) { products ->
+            viewModel.products.observe(this) { products ->
                 adapter.loadData(products)
             }
         } catch (exception: Exception) {
@@ -78,6 +80,10 @@ class ShoppingActivity : AppCompatActivity() {
                 navigateToCart()
             }
         }
+
+        viewModel.shoppingProducts.observe(this) {
+            adapter.loadShoppingProductData(it)
+        }
     }
 
     private fun checkLoadMoreBtnVisibility() {
@@ -100,6 +106,14 @@ class ShoppingActivity : AppCompatActivity() {
 
     private fun showData(data: List<Product>) {
         adapter.loadData(data)
+        adapter.loadShoppingProductData(
+            data.map {
+                ShoppingProduct(
+                    product = it,
+                    quantity = viewModel.fetchQuantity(it.id),
+                )
+            },
+        )
     }
 
     private fun showError(errorMessage: String) {

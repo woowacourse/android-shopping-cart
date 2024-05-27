@@ -2,7 +2,7 @@ package woowacourse.shopping.domain.model
 
 data class ShoppingProduct(
     val product: Product,
-    var quantity: Int = 1,
+    var quantity: Int = 0,
 ) {
     fun increase() {
         quantity += 1
