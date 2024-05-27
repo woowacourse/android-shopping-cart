@@ -24,6 +24,18 @@ fun productTestFixture(
     price: Int = 1,
 ): ProductData = ProductData(id, imageUrl, name, price)
 
+fun mockProductsTestFixture(
+    count: Int,
+    productFixture: (Int) -> ProductData = { mockProductTestFixture(it.toLong()) },
+): List<ProductData> = List(count, productFixture)
+
+fun mockProductTestFixture(
+    id: Long,
+    name: String = "$id 번째 상품 이름",
+    imageUrl: String = "https://zrr.kr/dw6j",
+    price: Int = id.toInt() * 100,
+): ProductData = ProductData(id, imageUrl, name, price)
+
 fun <T> LiveData<T>.getOrAwaitValue(
     time: Long = 2,
     timeUnit: TimeUnit = TimeUnit.SECONDS,
