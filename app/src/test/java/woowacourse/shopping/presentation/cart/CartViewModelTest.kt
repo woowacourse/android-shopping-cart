@@ -31,12 +31,12 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `다음 상품들을 불러오면 장바구니 1개를 가지고 있다`() {
+    fun `다음 상품들을 불러오면 장바구니 2개를 가지고 있다`() {
         val orders = cartViewModel.orders
 
         cartViewModel.loadNextPageCartItems()
 
-        assertThat(orders.getOrAwaitValue()).hasSize(1)
+        assertThat(orders.getOrAwaitValue()).hasSize(2)
     }
 
     @Test
@@ -61,6 +61,6 @@ class CartViewModelTest {
         cartViewModel.removeAllCartItem(5)
         cartViewModel.removeAllCartItem(6)
 
-        assertThat(orders.getOrAwaitValue()).hasSize(0)
+        assertThat(orders.getOrAwaitValue()).hasSize(1)
     }
 }

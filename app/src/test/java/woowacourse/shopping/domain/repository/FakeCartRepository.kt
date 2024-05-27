@@ -11,15 +11,14 @@ class FakeCartRepository(
     override fun addCartItem(
         productId: Long,
         quantity: Int,
-    ): Long {
-        carts.add(Cart(id, 1, productId))
-        return id++
+    ) {
+        carts.add(Cart(id++, 1, productId))
     }
 
     override fun plusCartItem(
         productId: Long,
         quantity: Int,
-    ): Long {
+    ) {
         val cartItem = carts[productId.toInt() - 1]
 
         println(carts)
@@ -30,25 +29,21 @@ class FakeCartRepository(
             )
 
         println(carts)
-
-        return productId
     }
 
     override fun minusCartItem(
         productId: Long,
         quantity: Int,
-    ): Long {
+    ) {
         val cartItem = carts[productId.toInt() - 1]
         carts[productId.toInt() - 1] =
             cartItem.copy(
                 quantity = cartItem.quantity - 1,
             )
-        return productId
     }
 
-    override fun removeAllCartItem(productId: Long): Long {
+    override fun removeAllCartItem(productId: Long) {
         carts.removeIf { it.id == productId }
-        return productId
     }
 
     override fun fetchAllCart(): List<Cart>? {
