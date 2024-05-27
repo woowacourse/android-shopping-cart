@@ -46,6 +46,7 @@ class ProductsActivity : AppCompatActivity() {
                     result.data?.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
                         ?: return@registerForActivityResult
                 viewModel.loadProduct(changedProductId)
+                viewModel.loadRecentProducts()
             }
         }
 

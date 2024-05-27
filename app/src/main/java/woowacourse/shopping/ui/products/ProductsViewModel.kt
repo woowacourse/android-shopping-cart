@@ -30,12 +30,13 @@ class ProductsViewModel(
     val cartTotalCount: LiveData<Int> =
         _productUiModels.map { it.fold(0) { acc, productUiModel -> acc + productUiModel.quantity.count } }
 
-    val recentProductUiModels: LiveData<List<RecentProductUiModel>?> =
-        _productUiModels.map { recentProductRepository.findRecentProducts().toRecentProductUiModels() }
+    private val _recentProductUiModels = MutableLiveData<List<RecentProductUiModel>?>()
+    val recentProductUiModels: LiveData<List<RecentProductUiModel>?> get() = _recentProductUiModels
 
     init {
         loadPage()
         loadMaxPage()
+        loadRecentProducts()
     }
 
     fun loadPage() {
@@ -66,6 +67,15 @@ class ProductsViewModel(
             .getOrElse { ProductUiModel.from(this) }
     }
 
+    private fun loadMaxPage() {
+        val totalProductCount = productRepository.totalProductCount()
+        maxPage = ceil(totalProductCount.toDouble() / PAGE_SIZE).toInt()
+    }
+
+    fun loadRecentProducts() {
+        _recentProductUiModels.value = recentProductRepository.findRecentProducts().toRecentProductUiModels()
+    }
+
     private fun List<RecentProduct>.toRecentProductUiModels(): List<RecentProductUiModel>? {
         val recentProductsUiModels =
             map {
@@ -73,11 +83,6 @@ class ProductsViewModel(
                 RecentProductUiModel(product.id, product.imageUrl, product.title)
             }
         return recentProductsUiModels.ifEmpty { null }
-    }
-
-    private fun loadMaxPage() {
-        val totalProductCount = productRepository.totalProductCount()
-        maxPage = ceil(totalProductCount.toDouble() / PAGE_SIZE).toInt()
     }
 
     fun changeSeeMoreVisibility(lastPosition: Int) {
