@@ -61,6 +61,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/ic_background_circle"
                 android:gravity="center"
+                android:onClick="@{() -> viewModel.onShoppingCartButtonClick()}"
                 android:text="@{String.valueOf(viewModel.cartCount)}"
                 android:textColor="@color/white"
                 android:visibility="@{viewModel.cartCount > 0 ? View.VISIBLE : View.GONE}"
@@ -82,9 +83,9 @@
 
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <include
                     android:id="@+id/horizontal_view"
