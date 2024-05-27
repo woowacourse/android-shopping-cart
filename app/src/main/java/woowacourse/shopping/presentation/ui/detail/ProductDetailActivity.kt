@@ -86,6 +86,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
             this,
             EventObserver {
                 Intent(applicationContext, ShoppingActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     putExtra(EXTRA_PRODUCT_ID, id)
                     putExtra(EXTRA_NEW_PRODUCT_QUANTITY, it)
                     setResult(RESULT_OK, this)
