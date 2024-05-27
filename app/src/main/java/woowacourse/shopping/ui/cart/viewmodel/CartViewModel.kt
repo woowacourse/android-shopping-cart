@@ -3,12 +3,18 @@ package woowacourse.shopping.ui.cart.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import woowacourse.shopping.data.cart.Cart
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPageManager
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.CartDao
-import kotlin.math.min
+import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.ui.CountButtonClickListener
 
-class CartViewModel(private val cartDao: CartDao) : ViewModel() {
+class CartViewModel(
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+) : ViewModel(), CountButtonClickListener {
     private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
     private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
 
@@ -20,9 +26,14 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     val pageNumber: LiveData<Int> get() = _pageNumber
 
-    private val items: MutableList<Product> = mutableListOf()
-    private val _cart: MutableLiveData<List<Product>> = MutableLiveData()
-    val cart: LiveData<List<Product>> get() = _cart
+    private val cart: MutableLiveData<List<Cart>> = MutableLiveData()
+
+    val productWithQuantity: LiveData<List<ProductWithQuantity>> =
+        cart.map { carts ->
+            carts.map { cart ->
+                ProductWithQuantity(productRepository.find(cart.productId), cart.quantity)
+            }
+        }
 
     init {
         loadCartItems()
@@ -30,10 +41,10 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     }
 
     fun removeCartItem(productId: Long) {
-        cartDao.delete(productId)
-        items.remove(items.find { it.id == productId })
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
-        _cart.value = getProducts()
+        cartRepository.deleteByProductId(productId)
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartRepository.itemSize())
+        cart.value = cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE)
+        loadCartItems()
     }
 
     fun plusPageNum() {
@@ -48,26 +59,27 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
         updatePageState()
     }
 
-    private fun loadCartItems() {
-        items.clear()
-        items.addAll(cartDao.findAll())
-        _cart.value = getProducts()
+    override fun plusCount(productId: Long) {
+        cartRepository.plusQuantityByProductId(productId)
+        loadCartItems()
     }
 
-    private fun getProducts(): List<Product> {
-        val fromIndex = (cartPageManager.pageNum - OFFSET) * PAGE_SIZE
-        val toIndex = min(fromIndex + PAGE_SIZE, items.size)
-        return items.toList().subList(fromIndex, toIndex)
+    override fun minusCount(productId: Long) {
+        cartRepository.minusQuantityByProductId(productId)
+        loadCartItems()
+    }
+
+    private fun loadCartItems() {
+        cart.value = cartRepository.getProducts(cartPageManager.pageNum, PAGE_SIZE)
     }
 
     private fun updatePageState() {
         _pageNumber.value = cartPageManager.pageNum
         _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartRepository.itemSize())
     }
 
     companion object {
         const val PAGE_SIZE = 5
-        private const val OFFSET = 1
     }
 }

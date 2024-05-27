@@ -15,9 +15,11 @@ import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import woowacourse.shopping.FakeCartDao
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.data.cart.Cart
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 
 @RunWith(AndroidJUnit4::class)
@@ -29,7 +31,7 @@ class CartActivityTest {
     fun `화면이_띄워지면_장바구니에_담긴_상품명이_보인다`() {
         onView(withId(R.id.rv_cart))
             .perform(RecyclerViewActions.scrollToPosition<CartViewHolder>(0))
-            .check(matches(hasDescendant(allOf(withText("맥북"), isDisplayed()))))
+            .check(matches(hasDescendant(allOf(withText("맥북0"), isDisplayed()))))
     }
 
     @Test
@@ -92,7 +94,7 @@ class CartActivityTest {
         // then
         onView(withId(R.id.rv_cart))
             .perform(RecyclerViewActions.scrollToPosition<CartViewHolder>(0))
-            .check(matches(hasDescendant(allOf(withText("아이폰"), isDisplayed()))))
+            .check(matches(hasDescendant(allOf(withText("맥북5"), isDisplayed()))))
     }
 
     @Test
@@ -106,7 +108,7 @@ class CartActivityTest {
         // then
         onView(withId(R.id.rv_cart))
             .perform(RecyclerViewActions.scrollToPosition<CartViewHolder>(0))
-            .check(matches(hasDescendant(allOf(withText("5원"), isDisplayed()))))
+            .check(matches(hasDescendant(allOf(withText("100원"), isDisplayed()))))
     }
 
     @Test
@@ -126,16 +128,14 @@ class CartActivityTest {
     }
 
     companion object {
-        private val MAC_BOOK = Product(imageUrl = "", name = "맥북", price = 100)
-        private val IPHONE = Product(imageUrl = "", name = "아이폰", price = 5)
-
         @JvmStatic
         @BeforeClass
         fun setUp() {
             repeat(5) {
-                CartsImpl.save(MAC_BOOK)
+                CartRepositoryImpl.get(FakeCartDao)
+                    .insert(Cart(productId = it.toLong(), quantity = Quantity(1)))
             }
-            CartsImpl.save(IPHONE)
+            CartRepositoryImpl.get(FakeCartDao).insert(Cart(productId = 5L, quantity = Quantity(1)))
         }
     }
 }

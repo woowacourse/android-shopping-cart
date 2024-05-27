@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="count"
+            type="String" />
+
+        <variable
+            name="productId"
+            type="Long" />
+
+        <variable
+            name="countButtonClickListener"
+            type="woowacourse.shopping.ui.CountButtonClickListener" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_minus_product"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:background="@color/white_no_border_line"
+            android:onClick="@{() -> countButtonClickListener.minusCount(productId)}"
+            android:text="@string/minus"
+            android:textColor="@color/gray5"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:background="@color/white_no_border_line"
+            android:gravity="center"
+            android:text="@{count}"
+            android:textColor="@color/gray5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="3" />
+
+        <Button
+            android:id="@+id/btn_plus_product"
+            android:layout_width="42dp"
+            android:layout_height="match_parent"
+            android:background="@color/white_no_border_line"
+            android:onClick="@{() -> countButtonClickListener.plusCount(productId)}"
+            android:text="@string/plus"
+            android:textColor="@color/gray5"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</layout>

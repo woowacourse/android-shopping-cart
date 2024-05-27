@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.Product" />
+
+        <variable
+            name="productItemClickListener"
+            type="woowacourse.shopping.ui.products.ProductItemClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:onClick="@{() -> vm.itemClickListener(product.id)}"
+        android:paddingHorizontal="8dp">
+
+        <ImageView
+            android:id="@+id/iv_product_image"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:scaleType="fitXY"
+            app:imageUrl="@{product.imageUrl}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="7dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_product_image"
+            tools:text="PET보틀- 정사각형" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -3,13 +3,14 @@ package woowacourse.shopping.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.cart.CartDatabase
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.ui.cart.adapter.CartAdapter
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModelFactory
@@ -17,23 +18,20 @@ import woowacourse.shopping.ui.cart.viewmodel.CartViewModelFactory
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
-    private val viewModel: CartViewModel by viewModels { CartViewModelFactory(CartsImpl) }
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            (application as ShoppingApplication).productRepository,
+            CartRepositoryImpl.get(CartDatabase.database().cartDao()),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initBinding()
+        initToolbar()
         setCartAdapter()
         observeCartItems()
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initBinding() {
@@ -42,18 +40,21 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
     }
 
+    private fun initToolbar() {
+        binding.toolbarCart.setNavigationOnClickListener {
+            finish()
+        }
+    }
+
     private fun observeCartItems() {
-        viewModel.cart.observe(this) {
-            adapter.setData(it)
+        viewModel.productWithQuantity.observe(this) {
+            adapter.submitList(it)
         }
     }
 
     private fun setCartAdapter() {
         binding.rvCart.itemAnimator = null
-        adapter =
-            CartAdapter { productId ->
-                viewModel.removeCartItem(productId)
-            }
+        adapter = CartAdapter(viewModel)
         binding.rvCart.adapter = adapter
     }
 

@@ -2,35 +2,29 @@ package woowacourse.shopping.ui.products.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 
 class ProductAdapter(
-    private val itemClickListener: (Long) -> Unit,
-) : RecyclerView.Adapter<ProductViewHolder>() {
-    private val products: MutableList<Product> = mutableListOf()
-
+    private val viewModel: ProductContentsViewModel,
+) : ListAdapter<ProductWithQuantity, ProductViewHolder>(ProductDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ProductViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding, itemClickListener)
+        return ProductViewHolder(
+            binding,
+            viewModel,
+        )
     }
-
-    override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(
         holder: ProductViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
-    }
-
-    fun setData(newProducts: List<Product>) {
-        val positionStart = products.size
-        products.addAll(newProducts)
-        notifyItemRangeInserted(positionStart, newProducts.size)
+        holder.bind(getItem(position))
     }
 }

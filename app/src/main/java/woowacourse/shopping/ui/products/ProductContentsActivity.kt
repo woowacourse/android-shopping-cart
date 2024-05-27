@@ -1,48 +1,60 @@
 package woowacourse.shopping.ui.products
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.cart.CartDatabase
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.recentproduct.RecentProductDatabase
+import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
-import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductAdapter
+import woowacourse.shopping.ui.products.adapter.RecentProductAdapter
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModelFactory
 import woowacourse.shopping.ui.utils.urlToImage
 
 class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
-    private lateinit var adapter: ProductAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel: ProductContentsViewModel by viewModels {
-        ProductContentsViewModelFactory(ProductsImpl)
+        ProductContentsViewModelFactory(
+            (application as ShoppingApplication).productRepository,
+            RecentProductRepositoryImpl.get(RecentProductDatabase.database().recentProductDao()),
+            CartRepositoryImpl.get(CartDatabase.database().cartDao()),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initBinding()
         setProductAdapter()
+        setRecentProductAdapter()
+        initToolbar()
         observeProductItems()
-        loadItems()
-        setOnRecyclerViewScrollListener()
+        observeRecentProductItems()
+        moveToProductDetailPage()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_cart -> CartActivity.startActivity(this)
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadCartItems()
+        viewModel.loadRecentProducts()
+    }
+
+    private fun initToolbar() {
+        binding.ivCart.setOnClickListener {
+            CartActivity.startActivity(this)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initBinding() {
@@ -52,59 +64,43 @@ class ProductContentsActivity : AppCompatActivity() {
     }
 
     private fun setProductAdapter() {
-        adapter =
-            ProductAdapter { productId ->
-                ProductDetailActivity.startActivity(this, productId)
-            }
-        binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
+        productAdapter =
+            ProductAdapter(viewModel)
+        binding.rvProducts.adapter = productAdapter
     }
 
-    private fun loadItems() {
-        viewModel.loadProducts()
+    private fun setRecentProductAdapter() {
+        binding.rvRecentProducts.itemAnimator = null
+        recentProductAdapter = RecentProductAdapter(viewModel)
+        binding.rvRecentProducts.adapter = recentProductAdapter
     }
 
     private fun observeProductItems() {
-        viewModel.products.observe(this) {
-            adapter.setData(it)
+        viewModel.productWithQuantity.observe(this) {
+            productAdapter.submitList(it)
         }
     }
 
-    private fun setOnRecyclerViewScrollListener() {
-        binding.rvProducts.addOnScrollListener(
-            onScrollListener(),
-        )
-    }
-
-    private fun onScrollListener() =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int,
-                dy: Int,
-            ) {
-                super.onScrolled(recyclerView, dx, dy)
-                binding.btnLoadMore.visibility =
-                    if (isLastItemVisible(recyclerView)) View.VISIBLE else View.GONE
-            }
+    private fun observeRecentProductItems() {
+        viewModel.recentProducts.observe(this) {
+            recentProductAdapter.submitList(it)
         }
-
-    private fun isLastItemVisible(recyclerView: RecyclerView) =
-        (recyclerView.layoutManager as GridLayoutManager)
-            .findLastCompletelyVisibleItemPosition() == adapterItemSize()
-
-    private fun adapterItemSize() = adapter.itemCount - OFFSET
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_product_contents, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
-    companion object {
-        private const val OFFSET = 1
+    private fun moveToProductDetailPage() {
+        viewModel.productDetailId.observe(this) {
+            ProductDetailActivity.startActivity(this, it, true)
+        }
     }
 }
 
 @BindingAdapter("imageUrl")
 fun ImageView.bindUrlToImage(imageUrl: String?) {
     urlToImage(context, imageUrl)
+}
+
+@BindingAdapter("isVisible")
+fun View.setIsVisible(isVisible: Boolean) {
+    visibility = if (isVisible) View.VISIBLE else View.GONE
 }

@@ -9,24 +9,19 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.BeforeClass
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.ProductsImpl
 
 @RunWith(AndroidJUnit4::class)
 class ProductDetailActivityTest {
-    private val product: Product = ProductsImpl.find(productId)
-
     private val intent =
         Intent(
             ApplicationProvider.getApplicationContext(),
             ProductDetailActivity::class.java,
         ).run {
-            putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
+            putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, 0L)
         }
 
     @get:Rule
@@ -36,14 +31,14 @@ class ProductDetailActivityTest {
     fun `화면이_띄워지면_상품명이_보인다`() {
         onView(withId(R.id.tv_product_name))
             .check(matches(isDisplayed()))
-            .check(matches(withText(product.name)))
+            .check(matches(withText("맥북0")))
     }
 
     @Test
     fun `화면이_띄워지면_상품_가격이_보인다`() {
         onView(withId(R.id.tv_product_price))
             .check(matches(isDisplayed()))
-            .check(matches(withText("9,000원")))
+            .check(matches(withText("0원")))
     }
 
     @Test
@@ -51,16 +46,5 @@ class ProductDetailActivityTest {
         onView(withId(R.id.btn_add_product))
             .check(matches(isDisplayed()))
             .check(matches(withText("장바구니 담기")))
-    }
-
-    companion object {
-        private val MAC_BOOK = Product(imageUrl = "", name = "맥북1", price = 9000)
-        private var productId = -1L
-
-        @JvmStatic
-        @BeforeClass
-        fun setUp() {
-            productId = ProductsImpl.save(MAC_BOOK)
-        }
     }
 }
