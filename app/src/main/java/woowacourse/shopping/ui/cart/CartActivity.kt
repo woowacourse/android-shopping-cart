@@ -20,11 +20,7 @@ class CartActivity : AppCompatActivity() {
         )
     }
     private val adapter by lazy {
-        CartAdapter(
-            onClickExit = { viewModel.deleteCartItem(it) },
-            onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
-            onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
-        )
+        CartAdapter(viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
