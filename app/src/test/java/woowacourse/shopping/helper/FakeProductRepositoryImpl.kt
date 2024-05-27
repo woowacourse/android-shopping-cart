@@ -5,9 +5,10 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.home.HomeViewModel
 
 class FakeProductRepositoryImpl(
-    private val products: List<Product> = emptyList()
+    private val products: List<Product> = emptyList(),
 ) : ProductRepository {
     private var offset = 0
+
     override fun findProductsByPage(): List<Product> {
         val size = products.size
         val start = offset

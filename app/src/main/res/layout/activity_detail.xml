@@ -124,6 +124,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_recent_viewed_products"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_marginBottom="35dp"

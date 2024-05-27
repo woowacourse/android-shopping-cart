@@ -1,11 +1,10 @@
 package woowacourse.shopping.view.cart
 
-import android.content.Context
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
@@ -25,12 +24,10 @@ import woowacourse.shopping.helper.testProduct5
 
 @RunWith(AndroidJUnit4::class)
 class CartActivityTest {
-    private lateinit var context: Context
     private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUp() {
-        context = ApplicationProvider.getApplicationContext()
         cartRepository = CartRepositoryImpl(cartDatabase)
         cartRepository.deleteAll()
     }
@@ -44,10 +41,10 @@ class CartActivityTest {
     fun `화면에_장바구니_아이템이_비어있다면_텅_화면이_보인다`() {
         ActivityScenario.launch(CartActivity::class.java)
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_empty_cart))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.rv_cart))
-            .check(ViewAssertions.matches(not(ViewMatchers.isDisplayed())))
+        onView(withId(R.id.tv_empty_cart))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.rv_cart))
+            .check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -58,10 +55,10 @@ class CartActivityTest {
 
         ActivityScenario.launch(CartActivity::class.java)
 
-        Espresso.onView(ViewMatchers.withId(R.id.rv_cart))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.tv_empty_cart))
-            .check(ViewAssertions.matches(not(ViewMatchers.isDisplayed())))
+        onView(withId(R.id.rv_cart))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.tv_empty_cart))
+            .check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -72,8 +69,8 @@ class CartActivityTest {
 
         ActivityScenario.launch(CartActivity::class.java)
 
-        Espresso.onView(ViewMatchers.withId(R.id.page_layout))
-            .check(ViewAssertions.matches(not(ViewMatchers.isDisplayed())))
+        onView(withId(R.id.page_layout))
+            .check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -87,7 +84,16 @@ class CartActivityTest {
 
         ActivityScenario.launch(CartActivity::class.java)
 
-        Espresso.onView(ViewMatchers.withId(R.id.page_layout))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.page_layout))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun `화면에_수량_조절_버튼이_보인다`() {
+        cartRepository.save(testProduct0, 1)
+        ActivityScenario.launch(CartActivity::class.java)
+
+        onView(withId(R.id.btn_quantity_control))
+            .check(matches(isDisplayed()))
     }
 }

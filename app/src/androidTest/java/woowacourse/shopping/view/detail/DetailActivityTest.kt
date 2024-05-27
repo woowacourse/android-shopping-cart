@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.detail
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -9,13 +10,27 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.db.recent.RecentProductRepository
+import woowacourse.shopping.data.db.recent.RecentProductRepositoryImpl
+import woowacourse.shopping.helper.testProduct0
+import woowacourse.shopping.helper.testProduct1
 
 @RunWith(AndroidJUnit4::class)
 class DetailActivityTest {
+    private lateinit var recentProductRepository: RecentProductRepository
+
+    @Before
+    fun setUp() {
+        recentProductRepository = RecentProductRepositoryImpl(ShoppingApplication.recentProductDatabase)
+        recentProductRepository.deleteAll()
+    }
+
     private val intent =
         DetailActivity.createIntent(ApplicationProvider.getApplicationContext(), 0L)
 
@@ -52,5 +67,16 @@ class DetailActivityTest {
         activityRule.scenario.onActivity { activity ->
             assert(activity.isFinishing)
         }
+    }
+
+    @Test
+    fun `마지막으로_본_상품이_나타난다`() {
+        recentProductRepository.save(testProduct0)
+        recentProductRepository.save(testProduct1)
+
+        ActivityScenario.launch<DetailActivity>(intent)
+
+        onView(withId(R.id.cl_recent_viewed_products))
+            .check(matches(isDisplayed()))
     }
 }

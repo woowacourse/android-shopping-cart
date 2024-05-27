@@ -9,8 +9,10 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.util.Event
 import woowacourse.shopping.view.state.UIState
 
-class CartViewModel(private val cartRepository: CartRepository) : ViewModel(),
-    CartItemClickListener, QuantityClickListener {
+class CartViewModel(private val cartRepository: CartRepository) :
+    ViewModel(),
+    CartItemClickListener,
+    QuantityClickListener {
     private var lastPage: Int = DEFAULT_PAGE
 
     private val _cartUiState = MutableLiveData<UIState<List<CartItem>>>(UIState.Empty)

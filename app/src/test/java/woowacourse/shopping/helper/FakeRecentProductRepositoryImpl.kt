@@ -8,14 +8,15 @@ import kotlin.math.min
 
 class FakeRecentProductRepositoryImpl : RecentProductRepository {
     private val recentProducts = mutableListOf<RecentProduct>()
+
     override fun save(product: Product) {
         recentProducts.add(
             RecentProduct(
                 productId = product.id,
                 productName = product.name,
                 imageUrl = product.imageUrl,
-                dateTime = LocalDateTime.now()
-            )
+                dateTime = LocalDateTime.now(),
+            ),
         )
     }
 
