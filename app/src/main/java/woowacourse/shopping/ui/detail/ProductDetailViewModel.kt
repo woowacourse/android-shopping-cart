@@ -17,7 +17,7 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
-    private val isNavigatedFromDetailView: Boolean,
+    private val lastSeenProductVisible: Boolean,
 ) : ViewModel() {
     private val _productUiModel = MutableLiveData<ProductUiModel>()
     val productUiModel: LiveData<ProductUiModel> get() = _productUiModel
@@ -44,7 +44,7 @@ class ProductDetailViewModel(
     val lastRecentProduct: LiveData<LastRecentProductUiModel> get() = _lastRecentProduct
 
     val isVisibleLastRecentProduct: LiveData<Boolean> =
-        _lastRecentProduct.map { !isNavigatedFromDetailView && it.productId != _productUiModel.value?.productId }
+        _lastRecentProduct.map { !lastSeenProductVisible && it.productId != _productUiModel.value?.productId }
 
     init {
         loadProduct()

@@ -37,7 +37,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.onClickLastRecentProductListener =
             OnClickLastRecentProductListener { productId ->
-                val intent = newIntent(this@ProductDetailActivity, productId, isNavigatedFromDetailView = true)
+                val intent = newIntent(this@ProductDetailActivity, productId, lastSeenProductVisible = true)
                 startActivity(intent)
                 finish()
             }
@@ -116,8 +116,8 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun isNavigatedFromDetailView(): Boolean {
         return intent.getBooleanExtra(
-            IS_NAVIGATED_FROM_DETAIL_VIEW_KEY,
-            IS_NAVIGATED_FROM_DETAIL_VIEW_DEFAULT_VALUE,
+            LAST_SEEN_PRODUCT_VISIBLE_KEY,
+            LAST_SEEN_PRODUCT_VISIBLE_DEFAULT_VALUE,
         )
     }
 
@@ -129,17 +129,17 @@ class ProductDetailActivity : AppCompatActivity() {
     companion object {
         private const val PRODUCT_ID_KEY = "product_id_key"
         private const val PRODUCT_ID_DEFAULT_VALUE = -1L
-        private const val IS_NAVIGATED_FROM_DETAIL_VIEW_KEY = "is_navigated_from_detail_view"
-        private const val IS_NAVIGATED_FROM_DETAIL_VIEW_DEFAULT_VALUE = false
+        private const val LAST_SEEN_PRODUCT_VISIBLE_KEY = "last_seen_product_visible"
+        private const val LAST_SEEN_PRODUCT_VISIBLE_DEFAULT_VALUE = false
 
         fun newIntent(
             context: Context,
             productId: Long,
-            isNavigatedFromDetailView: Boolean = false,
+            lastSeenProductVisible: Boolean = false,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java)
                 .putExtra(PRODUCT_ID_KEY, productId)
-                .putExtra(IS_NAVIGATED_FROM_DETAIL_VIEW_KEY, isNavigatedFromDetailView)
+                .putExtra(LAST_SEEN_PRODUCT_VISIBLE_KEY, lastSeenProductVisible)
         }
     }
 }
