@@ -3,11 +3,13 @@ package woowacourse.shopping.ui.products
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
@@ -72,6 +74,10 @@ class ProductsActivity : AppCompatActivity() {
         initializeProductAdapter()
         initializeToolbar()
         initializePage()
+        viewModel.pageLoadError.observe(this) {
+            it.getContentIfNotHandled() ?: return@observe
+            Toast.makeText(this, R.string.load_page_error, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun initializeProductAdapter() {

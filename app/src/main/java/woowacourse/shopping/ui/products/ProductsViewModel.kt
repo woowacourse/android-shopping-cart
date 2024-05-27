@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.entity.Product
@@ -33,6 +34,9 @@ class ProductsViewModel(
     private val _recentProductUiModels = MutableLiveData<List<RecentProductUiModel>?>()
     val recentProductUiModels: LiveData<List<RecentProductUiModel>?> get() = _recentProductUiModels
 
+    private val _pageLoadError = MutableLiveData<Event<Unit>>()
+    val pageLoadError: LiveData<Event<Unit>> get() = _pageLoadError
+
     init {
         loadPage()
         loadMaxPage()
@@ -40,14 +44,26 @@ class ProductsViewModel(
     }
 
     fun loadPage() {
-        val currentProductsUiModel = _productUiModels.value ?: emptyList()
-        val products = productRepository.findRange(page++, PAGE_SIZE)
-        _productUiModels.value = (currentProductsUiModel + products.toProductUiModels())
-        _showLoadMore.value = false
+        page = nextPage(page)
+    }
+
+    private fun nextPage(page: Int): Int {
+        val productUiModels = _productUiModels.value ?: emptyList()
+        runCatching {
+            productRepository.findRange(page, PAGE_SIZE)
+        }.onSuccess { products ->
+            _productUiModels.value = (productUiModels + products.toProductUiModels())
+            _showLoadMore.value = false
+            return page + 1
+        }.onFailure {
+            _pageLoadError.value = Event(Unit)
+        }
+        return page
     }
 
     fun loadProducts() {
-        val products = _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
+        val products =
+            _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
         _productUiModels.value = products.toProductUiModels()
     }
 
@@ -73,7 +89,8 @@ class ProductsViewModel(
     }
 
     fun loadRecentProducts() {
-        _recentProductUiModels.value = recentProductRepository.findRecentProducts().toRecentProductUiModels()
+        _recentProductUiModels.value =
+            recentProductRepository.findRecentProducts().toRecentProductUiModels()
     }
 
     private fun List<RecentProduct>.toRecentProductUiModels(): List<RecentProductUiModel>? {

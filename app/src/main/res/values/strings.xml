@@ -23,4 +23,6 @@
     <string name="empty_cart">장바구니가 비어있습니다.</string>
     <string name="previous_page">&lt;</string>
     <string name="next_page">&gt;</string>
+
+    <string name="load_page_error">페이지를 불러올 수 없습니다. 다시 시도해 주세요.</string>
 </resources>

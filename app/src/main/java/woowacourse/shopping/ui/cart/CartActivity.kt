@@ -2,8 +2,10 @@ package woowacourse.shopping.ui.cart
 
 import android.app.Activity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -37,10 +39,7 @@ class CartActivity : AppCompatActivity() {
     private fun initializeView() {
         initializeToolbar()
         initializeCartAdapter()
-        viewModel.changedCartEvent.observe(this) {
-            it.getContentIfNotHandled() ?: return@observe
-            setResult(Activity.RESULT_OK)
-        }
+        initializeCartObserveEvent()
     }
 
     private fun initializeToolbar() {
@@ -55,6 +54,18 @@ class CartActivity : AppCompatActivity() {
 
         viewModel.productUiModels.observe(this) {
             adapter.submitList(it)
+        }
+    }
+
+    private fun initializeCartObserveEvent() {
+        viewModel.changedCartEvent.observe(this) {
+            it.getContentIfNotHandled() ?: return@observe
+            setResult(Activity.RESULT_OK)
+        }
+
+        viewModel.pageLoadError.observe(this) {
+            it.getContentIfNotHandled() ?: return@observe
+            Toast.makeText(this, R.string.load_page_error, Toast.LENGTH_SHORT).show()
         }
     }
 }
