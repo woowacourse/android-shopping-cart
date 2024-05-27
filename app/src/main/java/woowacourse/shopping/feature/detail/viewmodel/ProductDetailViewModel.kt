@@ -35,7 +35,11 @@ class ProductDetailViewModel(
     }
 
     fun loadProduct(productId: Long) {
-        _product.value = productRepository.find(productId)
+        var product: Product? = null
+        thread {
+            product = productRepository.find(productId)
+        }.join()
+        _product.value = product
         loadQuantity(productId)
         saveInquiryHistory()
     }
@@ -58,7 +62,7 @@ class ProductDetailViewModel(
         _quantity.value = quantity.dec()
     }
 
-    fun loadLastViewedProduct() {
+    private fun loadLastViewedProduct() {
         var lastViewedProduct: InquiryHistory? = null
         thread {
             lastViewedProduct = inquiryHistoryRepository.findLastViewedProduct()

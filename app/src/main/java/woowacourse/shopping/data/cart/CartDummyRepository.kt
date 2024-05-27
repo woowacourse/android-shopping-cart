@@ -1,23 +1,28 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.data.cart.CartItemEntity.Companion.toDomainModel
-import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.ProductClient
+import woowacourse.shopping.data.product.ProductRemoteRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.CartItem.Companion.toEntity
 import woowacourse.shopping.model.CartItemQuantity
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
+import kotlin.concurrent.thread
 import kotlin.math.min
 
 class CartDummyRepository(private val dao: CartDao) : CartRepository {
-    private val productRepository: ProductRepository = ProductDummyRepository
+    private val productRepository: ProductRepository = ProductRemoteRepository(ProductClient())
 
     override fun addProduct(productId: Long) {
         val oldCartItem = dao.getAll().find { it.product.id == productId }
         if (oldCartItem == null) {
-            val product: Product = productRepository.find(productId)
-            dao.insert(CartItem(product, Quantity()).toEntity())
+            var product: Product? = null
+            thread {
+                product = productRepository.find(productId)
+            }.join()
+            dao.insert(CartItem(product!!, Quantity()).toEntity())
             return
         }
         var quantity = oldCartItem.quantity

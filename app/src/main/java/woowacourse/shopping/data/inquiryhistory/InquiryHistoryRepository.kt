@@ -7,5 +7,5 @@ interface InquiryHistoryRepository {
 
     fun findAll(): List<InquiryHistory>
 
-    fun findLastViewedProduct(): InquiryHistory
+    fun findLastViewedProduct(): InquiryHistory?
 }

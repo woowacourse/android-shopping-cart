@@ -40,7 +40,11 @@ class MainViewModel(
 
     fun loadPage() {
         val products = products.value ?: emptyList()
-        _products.value = products + productRepository.findRange(page++, PAGE_SIZE)
+        var product = emptyList<Product>()
+        thread {
+            product = products + productRepository.findRange(page++, PAGE_SIZE)
+        }.join()
+        _products.value = product
         updateQuantities()
         updateQuantitySum()
     }

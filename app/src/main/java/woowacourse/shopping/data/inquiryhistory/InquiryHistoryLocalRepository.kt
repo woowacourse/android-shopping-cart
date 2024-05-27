@@ -16,8 +16,11 @@ class InquiryHistoryLocalRepository(private val dao: InquiryHistoryDao) : Inquir
         return inquiryHistories.map { inquiryHistoryEntity -> inquiryHistoryEntity.toDomainModel() }
     }
 
-    override fun findLastViewedProduct(): InquiryHistory {
+    override fun findLastViewedProduct(): InquiryHistory? {
         val sortedInquiryHistories = dao.getAll().sortedByDescending { it.inquiryTime }
-        return sortedInquiryHistories.first().toDomainModel()
+        if (sortedInquiryHistories.isNotEmpty()) {
+            return sortedInquiryHistories.first().toDomainModel()
+        }
+        return null
     }
 }

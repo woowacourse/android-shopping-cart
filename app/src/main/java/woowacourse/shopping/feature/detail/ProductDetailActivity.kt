@@ -12,7 +12,8 @@ import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.inquiryhistory.InquiryHistoryDatabase
 import woowacourse.shopping.data.inquiryhistory.InquiryHistoryLocalRepository
-import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.ProductClient
+import woowacourse.shopping.data.product.ProductRemoteRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel
@@ -24,7 +25,7 @@ class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
     private val productDetailViewModel: ProductDetailViewModel by viewModels {
         ProductDetailViewModelFactory(
-            ProductDummyRepository,
+            ProductRemoteRepository(ProductClient()),
             CartDummyRepository(CartDatabase.initialize(this).cartDao()),
             InquiryHistoryLocalRepository(
                 InquiryHistoryDatabase.initialize(this).recentViewedProductDao(),
