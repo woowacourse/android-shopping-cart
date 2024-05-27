@@ -34,7 +34,6 @@ class DetailActivity : AppCompatActivity() {
         DetailViewModelFactory(
             application.productRepository,
             application.cartRepository,
-            application.productHistoryRepository,
             productId,
             lastlyViewedProductId,
         )

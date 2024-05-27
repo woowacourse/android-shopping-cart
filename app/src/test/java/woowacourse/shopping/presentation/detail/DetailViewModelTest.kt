@@ -9,7 +9,6 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.data.model.product.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
-import woowacourse.shopping.domain.repository.FakeProductHistoryRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.getOrAwaitValue
 
@@ -23,7 +22,6 @@ class DetailViewModelTest {
             DetailViewModel(
                 FakeProductRepository(),
                 FakeCartRepository(),
-                FakeProductHistoryRepository(),
                 1,
                 2,
                 SavedStateHandle(),

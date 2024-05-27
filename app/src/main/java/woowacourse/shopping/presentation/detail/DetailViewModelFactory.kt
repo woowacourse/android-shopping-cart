@@ -5,13 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.domain.repository.cart.CartRepository
-import woowacourse.shopping.domain.repository.history.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.product.ProductRepository
 
 class DetailViewModelFactory(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-    private val historyRepository: ProductHistoryRepository,
     private val productId: Long,
     private val lastlyViewedProductId: Long,
 ) : ViewModelProvider.Factory {
@@ -23,7 +21,6 @@ class DetailViewModelFactory(
             DetailViewModel(
                 productRepository,
                 cartRepository,
-                historyRepository,
                 productId,
                 lastlyViewedProductId,
                 extras.createSavedStateHandle(),

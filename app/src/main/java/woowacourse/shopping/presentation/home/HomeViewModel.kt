@@ -7,7 +7,6 @@ import woowacourse.shopping.data.model.cart.CartItem
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.domain.repository.cart.CartRepository
-import woowacourse.shopping.domain.repository.history.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.presentation.home.products.HomeItemEventListener
 import woowacourse.shopping.presentation.home.products.QuantityListener
@@ -17,7 +16,6 @@ import kotlin.concurrent.thread
 class HomeViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-    private val productHistoryRepository: ProductHistoryRepository,
 ) : ViewModel(), HomeItemEventListener, QuantityListener {
     private var page: Int = 0
     private var nextPageProducts: List<CartableProduct> = emptyList()
@@ -88,7 +86,7 @@ class HomeViewModel(
     fun loadHistory() {
         thread {
             _productHistory.postValue(
-                productHistoryRepository.fetchProductHistory(10),
+                productRepository.fetchProductHistory(10),
             )
         }
     }
@@ -99,7 +97,7 @@ class HomeViewModel(
 
     override fun navigateToProductDetail(id: Long) {
         thread {
-            val lastlyViewedId = productHistoryRepository.fetchLatestHistory()?.product?.id
+            val lastlyViewedId = productRepository.fetchLatestHistory()?.product?.id
             loadHistory()
             _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
         }

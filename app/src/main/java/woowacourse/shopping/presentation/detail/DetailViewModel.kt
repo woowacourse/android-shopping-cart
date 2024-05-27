@@ -10,7 +10,6 @@ import woowacourse.shopping.data.model.history.ProductHistory
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.data.model.product.CartableProduct
 import woowacourse.shopping.domain.repository.cart.CartRepository
-import woowacourse.shopping.domain.repository.history.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.presentation.home.DetailNavigationData
 import woowacourse.shopping.presentation.home.products.QuantityListener
@@ -21,7 +20,6 @@ import kotlin.concurrent.thread
 class DetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-    private val historyRepository: ProductHistoryRepository,
     id: Long,
     lastViewedProductId: Long,
     savedStateHandle: SavedStateHandle,
@@ -79,7 +77,7 @@ class DetailViewModel(
 
     fun updateHistory(id: Long) {
         thread {
-            historyRepository.addProductHistory(ProductHistory(productId = id))
+            productRepository.addProductHistory(ProductHistory(productId = id))
         }
     }
 
@@ -103,7 +101,7 @@ class DetailViewModel(
     private fun updateLastlyViewedProduct() {
         thread {
             _lastlyViewedProduct.postValue(
-                historyRepository.fetchLatestHistory(),
+                productRepository.fetchLatestHistory(),
             )
         }
     }

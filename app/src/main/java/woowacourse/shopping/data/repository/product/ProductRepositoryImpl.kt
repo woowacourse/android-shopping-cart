@@ -1,42 +1,33 @@
 package woowacourse.shopping.data.repository.product
 
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import woowacourse.shopping.data.datasource.ProductHistoryDataSource
+import woowacourse.shopping.data.model.history.ProductHistory
+import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.data.model.product.CartableProduct
-import woowacourse.shopping.data.util.convertJsonToList
-import woowacourse.shopping.data.util.convertJsonToObject
+import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.domain.repository.product.ProductRepository
 
 class ProductRepositoryImpl(
-    private val baseUrl: String = BASE_URL.dropLast(1),
+    private val productDataSource: ProductDataSource,
+    private val productHistoryDataSource: ProductHistoryDataSource,
 ) : ProductRepository {
-    private val client = OkHttpClient()
-
     override fun fetchSinglePage(page: Int): List<CartableProduct> {
-        val request =
-            Request.Builder()
-                .url("$baseUrl/products?page=$page&page-size=$PAGE_SIZE")
-                .build()
-        val result = client.newCall(request).execute().body?.string()
-        return convertJsonToList(
-            result ?: "",
-            CartableProduct::class.java,
-        )
+        return productDataSource.fetchSinglePage(page)
     }
 
     override fun fetchProduct(id: Long): CartableProduct {
-        val request =
-            Request.Builder()
-                .url("$baseUrl/product?id=$id")
-                .build()
-        return convertJsonToObject(
-            client.newCall(request).execute().body?.string() ?: "",
-            CartableProduct::class.java,
-        )
+        return productDataSource.fetchProduct(id)
     }
 
-    companion object {
-        private const val BASE_URL = "http://localhost:12345/"
-        private const val PAGE_SIZE = 20
+    override fun addProductHistory(productHistory: ProductHistory) {
+        return productHistoryDataSource.addProductHistory(productHistory)
+    }
+
+    override fun fetchProductHistory(size: Int): List<RecentProduct> {
+        return productHistoryDataSource.fetchProductHistory(size)
+    }
+
+    override fun fetchLatestHistory(): RecentProduct? {
+        return productHistoryDataSource.fetchLatestHistory()
     }
 }

@@ -12,10 +12,8 @@ import woowacourse.shopping.data.model.history.ProductHistory
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.data.model.product.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
-import woowacourse.shopping.domain.repository.FakeProductHistoryRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.domain.repository.cart.CartRepository
-import woowacourse.shopping.domain.repository.history.ProductHistoryRepository
 import woowacourse.shopping.fixture.getFixtureCartableProducts
 import woowacourse.shopping.getOrAwaitValue
 import kotlin.concurrent.thread
@@ -30,7 +28,6 @@ class HomeViewModelTest {
             HomeViewModel(
                 FakeProductRepository(),
                 FakeCartRepository(),
-                FakeProductHistoryRepository(),
             )
     }
 
@@ -85,7 +82,6 @@ class HomeViewModelTest {
             HomeViewModel(
                 FakeProductRepository(),
                 cartRepository,
-                mockk<ProductHistoryRepository>(relaxed = true),
             )
         viewModel.onQuantityChange(12, 11)
         verify { cartRepository.addCartItem(CartItem(null, 12, 11)) }
@@ -98,7 +94,6 @@ class HomeViewModelTest {
             HomeViewModel(
                 FakeProductRepository(),
                 cartRepository,
-                mockk<ProductHistoryRepository>(relaxed = true),
             )
         viewModel.onQuantityChange(12, 1)
         viewModel.onQuantityChange(12, 11)
