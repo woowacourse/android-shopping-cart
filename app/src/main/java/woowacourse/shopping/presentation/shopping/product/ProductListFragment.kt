@@ -99,8 +99,8 @@ class ProductListFragment :
 
     private fun initObservers() {
         viewModel.uiState.observe(viewLifecycleOwner) {
-            productAdapter.updateProducts(it.totalProducts)
-            recentProductAdapter.updateProducts(it.recentProducts)
+            productAdapter.submitList(it.totalProducts)
+            recentProductAdapter.submitList(it.recentProducts)
         }
 
         viewModel.navigateToDetailEvent.observe(viewLifecycleOwner) {

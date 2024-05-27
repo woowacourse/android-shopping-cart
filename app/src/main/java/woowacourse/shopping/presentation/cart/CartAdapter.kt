@@ -2,23 +2,14 @@ package woowacourse.shopping.presentation.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.presentation.util.ItemUpdateHelper
+import woowacourse.shopping.presentation.util.ItemDiffCallback
 
 class CartAdapter(
     private val cartProductListener: CartProductListener,
-) :
-    RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
-    private var products: List<CartProductUi> = emptyList()
-    private val updateHelper: ItemUpdateHelper<CartProductUi> =
-        ItemUpdateHelper<CartProductUi>(
-            adapter = this,
-            areItemsTheSame = { oldItem, newItem -> oldItem.product.id == newItem.product.id },
-            areContentsTheSame = { oldItem, newItem -> oldItem == newItem },
-        )
-
-    override fun getItemCount(): Int = products.size
+) : ListAdapter<CartProductUi, CartAdapter.CartViewHolder>(cartProductComparator) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,13 +28,7 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
-    }
-
-    fun updateProduct(newProducts: List<CartProductUi>) {
-        val oldProducts = products.toList()
-        products = newProducts
-        updateHelper.update(oldProducts, newProducts)
+        holder.bind(currentList[position])
     }
 
     class CartViewHolder(
@@ -55,5 +40,12 @@ class CartAdapter(
             binding.cartProduct = product
             binding.listener = cartProductListener
         }
+    }
+
+    companion object {
+        private val cartProductComparator = ItemDiffCallback<CartProductUi>(
+            onItemsTheSame = { old, new -> old.product.id == new.product.id },
+            onContentsTheSame = { old, new -> old == new },
+        )
     }
 }

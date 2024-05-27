@@ -2,34 +2,20 @@ package woowacourse.shopping.presentation.shopping.product.adpater
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemLoadMoreProductBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.shopping.product.ProductItemListener
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
-import woowacourse.shopping.presentation.util.ItemUpdateHelper
+import woowacourse.shopping.presentation.util.ItemDiffCallback
 
 class ProductAdapter(
     private val listener: ProductItemListener,
 ) :
-    RecyclerView.Adapter<ShoppingViewHolder>() {
-    private var products: List<ShoppingUiModel> = emptyList()
-    private val updateHelper: ItemUpdateHelper<ShoppingUiModel> =
-        ItemUpdateHelper<ShoppingUiModel>(
-            adapter = this,
-            areItemsTheSame = { oldItem, newItem ->
-                if (oldItem is ShoppingUiModel.Product && newItem is ShoppingUiModel.Product) {
-                    return@ItemUpdateHelper (oldItem.id == newItem.id)
-                }
-                return@ItemUpdateHelper false
-            },
-            areContentsTheSame = { oldItem, newItem -> oldItem == newItem },
-        )
-
-    override fun getItemCount(): Int = products.size
+    ListAdapter<ShoppingUiModel, ShoppingViewHolder>(productComparator) {
 
     override fun getItemViewType(position: Int): Int {
-        return products[position].viewType
+        return currentList[position].viewType
     }
 
     override fun onCreateViewHolder(
@@ -62,14 +48,20 @@ class ProductAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ShoppingViewHolder.Product -> holder.bind(products[position] as ShoppingUiModel.Product)
+            is ShoppingViewHolder.Product -> holder.bind(currentList[position] as ShoppingUiModel.Product)
             is ShoppingViewHolder.LoadMore -> holder.bind()
         }
     }
 
-    fun updateProducts(newProducts: List<ShoppingUiModel>) {
-        val oldProducts = products.toList()
-        products = newProducts
-        updateHelper.update(oldProducts, newProducts)
+    companion object {
+        private val productComparator = ItemDiffCallback<ShoppingUiModel>(
+            onItemsTheSame = { old, new ->
+                if (old is ShoppingUiModel.Product && new is ShoppingUiModel.Product) {
+                    return@ItemDiffCallback old.id == new.id
+                }
+                return@ItemDiffCallback false
+            },
+            onContentsTheSame = { old, new -> old == new },
+        )
     }
 }
