@@ -13,7 +13,6 @@ import woowacourse.shopping.data.product.MockWebServerProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.server.MockWebProductServer
 import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
-import woowacourse.shopping.data.product.server.ProductServer
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.recent.entity.RecentProduct
 import woowacourse.shopping.getOrAwaitValue
@@ -28,7 +27,7 @@ class ProductDetailViewModelTest {
     private lateinit var recentProductRepository: RecentProductRepository
     private val cartRepository: CartRepository = FakeCartRepository()
 
-    private lateinit var productServer: ProductServer
+    private lateinit var productServer: MockWebProductServer
 
     @BeforeEach
     fun setUp() {

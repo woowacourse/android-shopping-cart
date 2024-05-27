@@ -13,20 +13,19 @@ import woowacourse.shopping.data.product.server.ProductServerApiPath.FIND_PRODUC
 import woowacourse.shopping.data.product.server.ProductServerApiPath.TOTAL_COUNT_URL
 import kotlin.concurrent.thread
 
-class MockWebProductServer(private val dispatcher: Dispatcher) :
-    ProductServer {
+class MockWebProductServer(private val dispatcher: Dispatcher) {
     private val server: MockWebServer = MockWebServer()
     private val client: OkHttpClient = OkHttpClient.Builder().build()
     private val gson: Gson = Gson()
 
-    override fun start() {
+    fun start() {
         thread {
             server.dispatcher = dispatcher
             server.start(BASE_PORT)
         }.join()
     }
 
-    override fun findOrNull(id: Long): Product? {
+    fun findOrNull(id: Long): Product? {
         val request =
             Request.Builder()
                 .url(FIND_PRODUCT_URL.format(id))
@@ -36,7 +35,7 @@ class MockWebProductServer(private val dispatcher: Dispatcher) :
         return gson.fromJson(responseBody, object : TypeToken<Product>() {}.type)
     }
 
-    override fun findRange(
+    fun findRange(
         page: Int,
         pageSize: Int,
     ): List<Product> {
@@ -49,7 +48,7 @@ class MockWebProductServer(private val dispatcher: Dispatcher) :
         return gson.fromJson(responseBody, object : TypeToken<List<Product>>() {}.type)
     }
 
-    override fun totalCount(): Int {
+    fun totalCount(): Int {
         val request =
             Request.Builder()
                 .url(TOTAL_COUNT_URL)
@@ -59,7 +58,7 @@ class MockWebProductServer(private val dispatcher: Dispatcher) :
         return gson.fromJson(responseBody, object : TypeToken<Int>() {}.type)
     }
 
-    override fun shutDown() {
+    fun shutDown() {
         thread {
             server.shutdown()
         }.join()

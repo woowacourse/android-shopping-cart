@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.product
 
 import woowacourse.shopping.data.product.entity.Product
-import woowacourse.shopping.data.product.server.ProductServer
+import woowacourse.shopping.data.product.server.MockWebProductServer
 import kotlin.concurrent.thread
 
-class MockWebServerProductRepository(private val productServer: ProductServer) :
+class MockWebServerProductRepository(private val productServer: MockWebProductServer) :
     ProductRepository {
     override fun find(id: Long): Product {
         var product: Product? = null

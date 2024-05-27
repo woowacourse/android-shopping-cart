@@ -15,7 +15,6 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.entity.Product
 import woowacourse.shopping.data.product.server.MockWebProductServer
 import woowacourse.shopping.data.product.server.MockWebProductServerDispatcher
-import woowacourse.shopping.data.product.server.ProductServer
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.product
@@ -28,7 +27,7 @@ class CartViewModelTest {
     private lateinit var productRepository: ProductRepository
     private lateinit var cartRepository: CartRepository
 
-    private lateinit var productServer: ProductServer
+    private lateinit var productServer: MockWebProductServer
 
     @AfterEach
     fun tearDown() {
