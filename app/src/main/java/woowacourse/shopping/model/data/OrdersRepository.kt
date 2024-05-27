@@ -25,12 +25,6 @@ class OrdersRepository(private val orderDao: OrderDao) {
         }.join()
     }
 
-    fun deleteAll() {
-        thread {
-            orderDao.deleteAll()
-        }.join()
-    }
-
     fun deleteById(id: Long) {
         thread {
             orderDao.deleteById(id)

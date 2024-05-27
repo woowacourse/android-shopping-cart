@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.detail
 
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -7,17 +9,28 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.OrdersRepository
+import woowacourse.shopping.model.data.ProductMockWebServer
+import woowacourse.shopping.model.data.ProductRepositoryImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.ui.FakeOrderDao
+import woowacourse.shopping.ui.FakeRecentProductDao
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
+    private val productRepository = ProductRepositoryImpl(ProductMockWebServer())
+    private val ordersRepository = OrdersRepository(FakeOrderDao)
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductDetailViewModel(ProductsImpl, CartsImpl)
-        ProductsImpl.deleteAll()
-        CartsImpl.deleteAll()
+        productRepository.start()
+        viewModel = ProductDetailViewModel(ProductsImpl, FakeOrderDao, FakeRecentProductDao)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        productRepository.shutdown()
     }
 
     @Test
@@ -42,7 +55,9 @@ class ProductDetailViewModelTest {
         viewModel.addProductToCart()
 
         // then
-        assertEquals(CartsImpl.find(0), product)
+        val orderEntity = ordersRepository.getById(0)
+        val actual = ProductsImpl.find(orderEntity.productId)
+        assertThat(actual.name).isEqualTo(product.name)
     }
 
     companion object {
