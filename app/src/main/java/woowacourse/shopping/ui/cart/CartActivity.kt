@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.cart
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +8,6 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartAdapter
-import woowacourse.shopping.ui.products.ProductsActivity
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
@@ -41,7 +39,7 @@ class CartActivity : AppCompatActivity() {
         initializeCartAdapter()
         viewModel.changedCartEvent.observe(this) {
             it.getContentIfNotHandled() ?: return@observe
-            setRequireActivityResult()
+            setResult(Activity.RESULT_OK)
         }
     }
 
@@ -58,10 +56,5 @@ class CartActivity : AppCompatActivity() {
         viewModel.productUiModels.observe(this) {
             adapter.submitList(it)
         }
-    }
-
-    private fun setRequireActivityResult() {
-        val resultIntent = Intent().putExtra(ProductsActivity.IS_CHANGED_CART_KEY, true)
-        setResult(Activity.RESULT_OK, resultIntent)
     }
 }
