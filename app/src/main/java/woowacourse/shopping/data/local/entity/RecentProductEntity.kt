@@ -10,5 +10,5 @@ data class RecentProductEntity(
     val name: String,
     val imgUrl: String,
     val price: Long,
-    val createdAt: Long
+    val createdAt: Long,
 )

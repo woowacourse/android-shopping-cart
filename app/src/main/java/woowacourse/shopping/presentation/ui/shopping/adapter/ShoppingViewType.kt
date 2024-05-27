@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.ui.shopping.adapter
 
 enum class ShoppingViewType(val value: Int, val span: Int) {
     Product(0, 1),
-    LoadMore(1, 2)
+    LoadMore(1, 2),
     ;
 
     companion object {

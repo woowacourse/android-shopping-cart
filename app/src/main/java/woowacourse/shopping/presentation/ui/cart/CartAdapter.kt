@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.cart
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,8 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
-import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewHolder
 
 class CartAdapter(
     private val cartActionHandler: CartActionHandler,

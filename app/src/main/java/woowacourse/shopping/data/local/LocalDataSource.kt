@@ -16,9 +16,7 @@ interface LocalDataSource {
         pageSize: Int,
     ): List<CartProductEntity>
 
-    fun findByLimit(
-        limit: Int
-    ): List<RecentProductEntity>
+    fun findByLimit(limit: Int): List<RecentProductEntity>
 
     fun findOne(): RecentProductEntity?
 

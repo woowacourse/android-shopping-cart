@@ -33,7 +33,6 @@ class ProductDetailViewModel(
 
     private val updateUiModel: UpdateUiModel = UpdateUiModel()
 
-
     fun findCartProductById(id: Long) {
         thread {
             repository.findProductById(id).onSuccess {
@@ -52,8 +51,11 @@ class ProductDetailViewModel(
     fun findOneRecentProduct() {
         thread {
             repository.findOne().onSuccess {
-                if(it == null) _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
-                else _recentProduct.postValue(UiState.Success(it))
+                if (it == null) {
+                    _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
+                } else {
+                    _recentProduct.postValue(UiState.Success(it))
+                }
             }.onFailure {
                 _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
             }
@@ -113,10 +115,9 @@ class ProductDetailViewModel(
             repository.saveRecent(
                 Recent(
                     cartProduct.productId,
-                    System.currentTimeMillis()
-                )
+                    System.currentTimeMillis(),
+                ),
             ).onSuccess {
-
             }.onFailure {
                 _errorHandler.postValue(EventState("최근 아이템 추가 에러"))
             }

@@ -16,9 +16,7 @@ interface Repository {
         pageSize: Int,
     ): Result<List<CartProduct>>
 
-    fun findByLimit(
-        limit: Int
-    ): Result<List<RecentProduct>>
+    fun findByLimit(limit: Int): Result<List<RecentProduct>>
 
     fun findOne(): Result<RecentProduct?>
 

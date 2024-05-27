@@ -32,8 +32,10 @@ class CartEntityViewModelTest {
 
     @Test
     fun `카트 아이템을 pageCount개씩 불러온다`() {
-        every { productCartRepository.findCartByPaging(any(), any()) } returns Result.success(
-            cartProducts)
+        every { productCartRepository.findCartByPaging(any(), any()) } returns
+            Result.success(
+                cartProducts,
+            )
         viewModel.findProductByOffset()
         Thread.sleep(1000)
         assertThat(viewModel.carts.getOrAwaitValue()).isEqualTo(UiState.Success(cartProducts))
@@ -51,8 +53,10 @@ class CartEntityViewModelTest {
     fun `데이터를 삭제한 뒤에 새로운 데이터를 불러온다`() {
         every { productCartRepository.deleteCart(any()) } returns Result.success(0)
         every { productCartRepository.getMaxCartCount() } returns Result.success(0)
-        every { productCartRepository.findCartByPaging(any(), any()) } returns Result.success(
-            cartProducts)
+        every { productCartRepository.findCartByPaging(any(), any()) } returns
+            Result.success(
+                cartProducts,
+            )
         viewModel.onDelete(cartProduct)
         Thread.sleep(1000)
         assertThat(viewModel.carts.getOrAwaitValue()).isEqualTo(UiState.Success(cartProducts))

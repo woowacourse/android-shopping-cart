@@ -22,8 +22,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-
-        if(intent.getBooleanExtra(EXTRA_OVERLAY, false)) binding.layoutRecent.isVisible = false
+        if (intent.getBooleanExtra(EXTRA_OVERLAY, false)) binding.layoutRecent.isVisible = false
 
         binding.shoppingActionHandler = viewModel
 
@@ -43,7 +42,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             }
         }
         viewModel.recentProduct.observe(this) { state ->
-            when(state) {
+            when (state) {
                 is UiState.None -> {}
                 is UiState.Success -> {
                     binding.recentProduct = state.data
@@ -103,7 +102,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra(EXTRA_PRODUCT_ID, productId)
-                if(context is ProductDetailActivity) putExtra(EXTRA_OVERLAY, true)
+                if (context is ProductDetailActivity) putExtra(EXTRA_OVERLAY, true)
             }
         }
     }

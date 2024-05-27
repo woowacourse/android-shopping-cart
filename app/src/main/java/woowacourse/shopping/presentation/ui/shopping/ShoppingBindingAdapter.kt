@@ -16,11 +16,11 @@ fun ImageView.setProductUrl(url: String?) {
 }
 
 @BindingAdapter("productCounterVisibility")
-fun View.setProductCounterVisibility(quantity: Int?)  {
+fun View.setProductCounterVisibility(quantity: Int?) {
     this.isVisible = (quantity != null && quantity > 0)
 }
 
 @BindingAdapter("productCartVisibility")
-fun View.setProductCartVisibility(quantity: Int?)  {
+fun View.setProductCartVisibility(quantity: Int?) {
     this.isVisible = (quantity == null)
 }

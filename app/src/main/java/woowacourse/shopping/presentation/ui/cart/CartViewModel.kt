@@ -27,7 +27,6 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
 
     val updateUiModel: UpdateUiModel = UpdateUiModel()
 
-
     init {
         getItemCount()
     }
@@ -41,6 +40,7 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
             }
         }
     }
+
     private fun getItemCount() {
         thread {
             repository.getMaxCartCount().onSuccess { maxCount ->
@@ -53,7 +53,7 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
         thread {
             updateUiModel.add(cartProduct.productId, cartProduct.copy(quantity = 0))
             repository.deleteCart(cartProduct.productId).onSuccess {
-            getItemCount()
+                getItemCount()
                 findProductByOffset()
             }.onFailure {
                 _errorHandler.value = EventState(CART_DELETE_ERROR)
@@ -79,7 +79,6 @@ class CartViewModel(private val repository: Repository) : ViewModel(), CartActio
             val index = cartProducts.indexOfFirst { it.productId == cartProduct.productId }
             cartProducts[index].plusQuantity()
             updateUiModel.add(cartProduct.productId, cartProducts[index])
-
 
             repository.saveCart(Cart(cartProducts[index].productId, cartProducts[index].quantity))
                 .onSuccess {

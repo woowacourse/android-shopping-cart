@@ -4,18 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import woowacourse.shopping.databinding.ItemLoadBinding
-import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentBinding
-import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
 
 class RecentAdapter(
-    private val shoppingHandler: ShoppingHandler
+    private val shoppingHandler: ShoppingHandler,
 ) : ListAdapter<RecentProduct, RecentViewHolder>(DIFF_CALLBACK) {
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

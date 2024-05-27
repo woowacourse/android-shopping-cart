@@ -10,7 +10,7 @@ import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.data.local.dao.CartProductDao
 import woowacourse.shopping.data.local.entity.CartProductEntity
 
-class OkHttpDataSource(private val cartProductDao: CartProductDao): RemoteDataSource {
+class OkHttpDataSource(private val cartProductDao: CartProductDao) : RemoteDataSource {
     private val client: OkHttpClient = OkHttpClient.Builder().build()
     private val gson = Gson()
 
@@ -26,6 +26,7 @@ class OkHttpDataSource(private val cartProductDao: CartProductDao): RemoteDataSo
         val productType = object : TypeToken<List<CartProductEntity>>() {}.type
         return gson.fromJson(responseBody, productType)
     }
+
     private fun makeServerRequest(
         body: String,
         requestUrl: String,

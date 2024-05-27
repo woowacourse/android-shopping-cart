@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class RecentEntity(
     @PrimaryKey
     val productId: Long,
-    val createdAt: Long
+    val createdAt: Long,
 )

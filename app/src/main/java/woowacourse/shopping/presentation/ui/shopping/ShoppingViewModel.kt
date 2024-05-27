@@ -10,8 +10,6 @@ import woowacourse.shopping.domain.Repository
 import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.UpdateUiModel
-import woowacourse.shopping.presentation.ui.cart.CartViewModel
-import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
 import kotlin.concurrent.thread
 
 class ShoppingViewModel(private val repository: Repository) :
@@ -119,7 +117,6 @@ class ShoppingViewModel(private val repository: Repository) :
         }
         _products.value = UiState.Success(cartProducts)
     }
-
 
     fun findAllRecent() {
         thread {

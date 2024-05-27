@@ -8,9 +8,8 @@ import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
 
 class RecentViewHolder(
     private val binding: ItemRecentBinding,
-    private val shoppingHandler: ShoppingHandler
-): RecyclerView.ViewHolder(binding.root)  {
-
+    private val shoppingHandler: ShoppingHandler,
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: RecentProduct) {
         binding.recentProduct = item
         binding.shoppingHandler = shoppingHandler

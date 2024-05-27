@@ -32,7 +32,7 @@ interface CartProductDao {
 
     @Query(
         "SELECT COUNT(*) " +
-                "FROM cartentity LEFT JOIN productentity ON cartentity.productId = productentity.id "
+            "FROM cartentity LEFT JOIN productentity ON cartentity.productId = productentity.id ",
     )
     fun getMaxCartCount(): Int
 

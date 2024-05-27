@@ -2,13 +2,10 @@ package woowacourse.shopping.presentation.ui.shopping
 
 import android.content.Intent
 import android.os.Build
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.widget.TooltipCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -29,7 +26,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
     private val shoppingAdapter: ShoppingAdapter by lazy { ShoppingAdapter(this, viewModel) }
-    private val recentAdapter: RecentAdapter by lazy { RecentAdapter(this)}
+    private val recentAdapter: RecentAdapter by lazy { RecentAdapter(this) }
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
@@ -51,7 +48,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
             binding.tvCartCount.text = it.toString()
         }
         viewModel.recentProducts.observe(this) {
-            when(it) {
+            when (it) {
                 is UiState.None -> {}
                 is UiState.Success -> {
                     recentAdapter.submitList(it.data) {
@@ -87,7 +84,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
         binding.ivCart.setOnClickListener {
             resultLauncher.launch(
-                CartActivity.createIntent(this)
+                CartActivity.createIntent(this),
             )
         }
     }

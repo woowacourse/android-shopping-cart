@@ -23,7 +23,6 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
 
     private lateinit var onBackPressedCallback: OnBackPressedCallback
 
-
     override fun initStartView() {
         initTitle()
         binding.rvCarts.adapter = cartAdapter
@@ -33,19 +32,20 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
         viewModel.findProductByOffset()
         initObserver()
 
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                Intent().apply {
-                    putExtra(
-                        ShoppingActivity.EXTRA_UPDATED_PRODUCT,
-                        viewModel.updateUiModel,
-                    )
-                }.run {
-                    setResult(RESULT_OK, this)
-                    finish()
+        onBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    Intent().apply {
+                        putExtra(
+                            ShoppingActivity.EXTRA_UPDATED_PRODUCT,
+                            viewModel.updateUiModel,
+                        )
+                    }.run {
+                        setResult(RESULT_OK, this)
+                        finish()
+                    }
                 }
             }
-        }
         // 뒤로 가기 콜백을 추가
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
