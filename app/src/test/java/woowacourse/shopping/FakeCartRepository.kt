@@ -32,15 +32,6 @@ class FakeCartRepository(inputs: List<CartItem> = emptyList()) : CartRepository 
         return currentPage < totalPageCount
     }
 
-    override fun updateCartItem(updatedItem: CartItem) {
-        val index = cartItems.indexOfFirst { it.id == updatedItem.id }
-        if (index != -1) {
-            cartItems[index] = updatedItem
-        } else {
-            cartItems.add(updatedItem)
-        }
-    }
-
     override fun loadAllCartItems(): List<CartItem> {
         return cartItems.toList()
     }

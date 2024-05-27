@@ -16,8 +16,6 @@ interface CartRepository {
         itemsPerPage: Int,
     ): Boolean
 
-    fun updateCartItem(updatedItem: CartItem)
-
     fun loadAllCartItems(): List<CartItem>
 
     fun getTotalNumberOfCartItems(): Int

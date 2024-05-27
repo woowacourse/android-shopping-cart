@@ -45,11 +45,6 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         return currentPage < totalPageCount
     }
 
-    override fun updateCartItem(updatedItem: CartItem) {
-        val cartEntity = CartItemEntity.toCartItemEntity(updatedItem)
-        thread { cartItemDao.updateCartItem(cartEntity) }.join()
-    }
-
     override fun loadAllCartItems(): List<CartItem> {
         var cartItems: List<CartItem> = emptyList()
         thread { cartItems = cartItemDao.findAll().map { it.toCartItem() } }.join()
