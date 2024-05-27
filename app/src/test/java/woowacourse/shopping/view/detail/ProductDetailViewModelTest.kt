@@ -17,7 +17,6 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentViewedItemRepository
-import kotlin.concurrent.thread
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
@@ -29,9 +28,7 @@ class ProductDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        thread {
-            MockServer.mockWebServer.start(12345)
-        }.join()
+        MockServer.mockWebServer.start(12345)
 
         cartRepository = FakeCartRepository()
         recentViewedItemRepository = FakeRecentItemRepository()
@@ -48,9 +45,7 @@ class ProductDetailViewModelTest {
 
     @AfterEach
     fun tearDown() {
-        thread {
-            MockServer.mockWebServer.shutdown()
-        }.join()
+        MockServer.mockWebServer.shutdown()
     }
 
     @Test
