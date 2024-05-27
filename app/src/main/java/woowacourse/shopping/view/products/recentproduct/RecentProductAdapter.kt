@@ -38,8 +38,7 @@ class RecentProductAdapter(val productListActionHandler: ProductListActionHandle
         val addedCount = newRecentProducts.size - recentProducts.size
         recentProducts = newRecentProducts
         if (addedCount == 0 && recentProducts.isNotEmpty()) {
-            notifyItemRemoved(recentProducts.size - 1)
-            notifyItemInserted(0)
+            notifyDataSetChanged()
         } else {
             notifyItemRangeInserted(0, addedCount)
         }
