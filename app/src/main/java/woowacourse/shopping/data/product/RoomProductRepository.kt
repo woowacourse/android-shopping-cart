@@ -4,13 +4,10 @@ import woowacourse.shopping.data.product.dao.ProductDao
 import woowacourse.shopping.data.product.entity.Product
 import kotlin.concurrent.thread
 
-class RoomProductRepository(
-    private val productDao: ProductDao,
-    savedProducts: List<Product> = emptyList(),
-) : ProductRepository {
+class RoomProductRepository(private val productDao: ProductDao) : ProductRepository {
     init {
         thread {
-            productDao.insertAll(savedProducts)
+            productDao.insertAll(dummyProducts)
         }
     }
 
