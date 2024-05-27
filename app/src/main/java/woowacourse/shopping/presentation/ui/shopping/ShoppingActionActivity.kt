@@ -48,7 +48,7 @@ class ShoppingActionActivity : BindingActivity<ActivityShoppingBinding>() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     result.data?.getParcelableExtraCompat<UpdateUiModel>(
-                        EXTRA_UPDATED_PRODUCT
+                        EXTRA_UPDATED_PRODUCT,
                     )
                         ?.let {
                             viewModel.updateCartProducts(it)
@@ -87,23 +87,29 @@ class ShoppingActionActivity : BindingActivity<ActivityShoppingBinding>() {
                 }
             }
         }
-        viewModel.errorHandler.observe(this, EventObserver {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-        })
-        viewModel.navigateHandler.observe(this, EventObserver {
-            when(it) {
-                is NavigateUiState.ToDetail -> {
-                    resultLauncher.launch(
-                        ProductDetailActivity.createIntent(this, it.productId),
-                    )
+        viewModel.errorHandler.observe(
+            this,
+            EventObserver {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            },
+        )
+        viewModel.navigateHandler.observe(
+            this,
+            EventObserver {
+                when (it) {
+                    is NavigateUiState.ToDetail -> {
+                        resultLauncher.launch(
+                            ProductDetailActivity.createIntent(this, it.productId),
+                        )
+                    }
+                    is NavigateUiState.ToCart -> {
+                        resultLauncher.launch(
+                            CartActivity.createIntent(this),
+                        )
+                    }
                 }
-                is NavigateUiState.ToCart -> {
-                    resultLauncher.launch(
-                        CartActivity.createIntent(this),
-                    )
-                }
-            }
-        })
+            },
+        )
     }
 
     private fun initAdapter() {

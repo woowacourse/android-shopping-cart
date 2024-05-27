@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.presentation.base.CartCountHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 
 sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {

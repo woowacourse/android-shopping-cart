@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.presentation.base.CartCountHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 
 class ShoppingAdapter(

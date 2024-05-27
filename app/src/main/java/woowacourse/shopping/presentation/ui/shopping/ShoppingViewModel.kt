@@ -7,7 +7,6 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.Repository
-import woowacourse.shopping.presentation.base.CartCountHandler
 import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.UpdateUiModel
@@ -31,7 +30,6 @@ class ShoppingViewModel(private val repository: Repository) :
 
     private val _navigateHandler = MutableLiveData<EventState<NavigateUiState>>()
     val navigateHandler: LiveData<EventState<NavigateUiState>> get() = _navigateHandler
-
 
     fun loadProductByOffset() {
         thread {

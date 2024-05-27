@@ -58,9 +58,12 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                 }
             }
         }
-        viewModel.errorHandler.observe(this, EventObserver {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-        })
+        viewModel.errorHandler.observe(
+            this,
+            EventObserver {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            },
+        )
         viewModel.cartHandler.observe(
             this,
             EventObserver {
