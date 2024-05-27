@@ -50,29 +50,25 @@ class ProductDetailFragment : Fragment() {
                     ProductDetailViewModel(
                         productId = it.getLong(PRODUCT_ID),
                         shoppingProductsRepository =
-                            DefaultShoppingProductRepository(
-                                productsSource =
-                                    (requireActivity().application as? ShoppingApp)?.productSource
-                                        ?: throw IllegalStateException("ProductSource is not initialized"),
-                                cartSource =
-                                    LocalShoppingCartProductIdDataSource(
-                                        dao =
-                                            ShoppingCartDatabase.database(context = requireContext().applicationContext)
-                                                .dao(),
-                                    ),
+                        DefaultShoppingProductRepository(
+                            productsSource = ShoppingApp.productSource,
+                            cartSource =
+                            LocalShoppingCartProductIdDataSource(
+                                dao =
+                                ShoppingCartDatabase.database(context = requireContext().applicationContext)
+                                    .dao(),
                             ),
+                        ),
                         productHistoryRepository =
-                            DefaultProductHistoryRepository(
-                                productHistoryDataSource =
-                                    LocalHistoryProductDataSource(
-                                        dao =
-                                            HistoryProductDatabase.database(context = requireContext().applicationContext)
-                                                .dao(),
-                                    ),
-                                productDataSource =
-                                    (requireActivity().application as? ShoppingApp)?.productSource
-                                        ?: throw IllegalStateException("ProductSource is not initialized"),
+                        DefaultProductHistoryRepository(
+                            productHistoryDataSource =
+                            LocalHistoryProductDataSource(
+                                dao =
+                                HistoryProductDatabase.database(context = requireContext().applicationContext)
+                                    .dao(),
                             ),
+                            productDataSource = ShoppingApp.productSource
+                        ),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
@@ -94,7 +90,8 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-    private fun navigateToProductDetail(id: Long) = (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
+    private fun navigateToProductDetail(id: Long) =
+        (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
 
     private fun navigateToMenuItem(it: MenuItem) =
         when (it.itemId) {

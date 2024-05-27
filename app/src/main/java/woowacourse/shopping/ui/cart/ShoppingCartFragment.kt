@@ -21,13 +21,11 @@ class ShoppingCartFragment : Fragment() {
         UniversalViewModelFactory {
             ShoppingCartViewModel(
                 DefaultShoppingProductRepository(
-                    productsSource =
-                        (requireActivity().application as? ShoppingApp)?.productSource
-                            ?: throw IllegalStateException("ProductSource is not initialized"),
+                    productsSource = ShoppingApp.productSource,
                     cartSource =
-                        LocalShoppingCartProductIdDataSource(
-                            dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
-                        ),
+                    LocalShoppingCartProductIdDataSource(
+                        dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
+                    ),
                 ),
             )
         }

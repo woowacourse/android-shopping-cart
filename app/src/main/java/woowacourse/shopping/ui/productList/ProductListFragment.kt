@@ -29,25 +29,21 @@ class ProductListFragment : Fragment() {
         UniversalViewModelFactory {
             ProductListViewModel(
                 productsRepository =
-                    DefaultShoppingProductRepository(
-                        productsSource =
-                            (requireActivity().application as? ShoppingApp)?.productSource
-                                ?: throw IllegalStateException("ProductSource is not initialized"),
-                        cartSource =
-                            LocalShoppingCartProductIdDataSource(
-                                dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
-                            ),
+                DefaultShoppingProductRepository(
+                    productsSource = ShoppingApp.productSource,
+                    cartSource =
+                    LocalShoppingCartProductIdDataSource(
+                        dao = ShoppingCartDatabase.database(context = requireContext().applicationContext).dao(),
                     ),
+                ),
                 productHistoryRepository =
-                    DefaultProductHistoryRepository(
-                        productHistoryDataSource =
-                            LocalHistoryProductDataSource(
-                                dao = HistoryProductDatabase.database(context = requireContext().applicationContext).dao(),
-                            ),
-                        productDataSource =
-                            (requireActivity().application as? ShoppingApp)?.productSource
-                                ?: throw IllegalStateException("ProductSource is not initialized"),
+                DefaultProductHistoryRepository(
+                    productHistoryDataSource =
+                    LocalHistoryProductDataSource(
+                        dao = HistoryProductDatabase.database(context = requireContext().applicationContext).dao(),
                     ),
+                    productDataSource = ShoppingApp.productSource,
+                ),
             )
         }
 
