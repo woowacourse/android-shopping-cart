@@ -53,7 +53,7 @@ class ShoppingViewModelTest {
 //    @Test
 //    fun `처음 상품 목록을 부를 때 오류가 있다면 Error 상태로 변경한다`() {
 //        // Given
-//        mockWebServer.enqueue(MockResponse().setResponseCode(500))
+//        mockWebServer.enqueue(MockResponse().setResponseCode(404))
 //
 //        // When
 //        viewModel.loadProducts()

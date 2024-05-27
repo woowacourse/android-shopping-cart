@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class InMemoryCartRepository(database: AppDatabase) : CartRepository {
+class InMemoryCartRepository private constructor(database: AppDatabase) : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(productWithQuantity: ProductWithQuantity) {
@@ -86,7 +86,8 @@ class InMemoryCartRepository(database: AppDatabase) : CartRepository {
         var cartItems: List<CartItem> = emptyList()
         val offset = page * pageSize
         threadAction {
-            cartItems = dao.findByPaged(offset = offset, limit = pageSize).map { it.toDomainModel() }
+            cartItems =
+                dao.findByPaged(offset = offset, limit = pageSize).map { it.toDomainModel() }
         }
         return ShoppingCart(cartItems)
     }
@@ -105,5 +106,13 @@ class InMemoryCartRepository(database: AppDatabase) : CartRepository {
 
     companion object {
         private const val PRODUCT_NOT_FOUND = "해당 상품이 카트에 존재하지 않습니다."
+
+        @Volatile
+        private var instance: InMemoryCartRepository? = null
+
+        fun getInstance(database: AppDatabase): InMemoryCartRepository =
+            instance ?: synchronized(this) {
+                instance ?: InMemoryCartRepository(database).also { instance = it }
+            }
     }
 }

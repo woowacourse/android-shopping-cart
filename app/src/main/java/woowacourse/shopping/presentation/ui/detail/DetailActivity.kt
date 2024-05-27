@@ -6,9 +6,6 @@ import android.view.Menu
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.repository.DummyShoppingItemsRepository
-import woowacourse.shopping.data.repository.InMemoryCartRepository
-import woowacourse.shopping.data.repository.InMemoryRecentlyViewedProductsRepository
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.ui.cart.CartActivity
@@ -17,9 +14,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
-            DummyShoppingItemsRepository((application as ShoppingApplication).appDatabase),
-            InMemoryCartRepository((application as ShoppingApplication).appDatabase),
-            InMemoryRecentlyViewedProductsRepository((application as ShoppingApplication).appDatabase),
+            (application as ShoppingApplication).shoppingItemsRepository,
+            (application as ShoppingApplication).cartRepository,
+            (application as ShoppingApplication).recentlyViewedProductsRepository,
             productId = productId,
         )
     }

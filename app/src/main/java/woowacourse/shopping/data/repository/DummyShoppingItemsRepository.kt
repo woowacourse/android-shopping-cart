@@ -6,7 +6,7 @@ import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class DummyShoppingItemsRepository(database: AppDatabase) : ShoppingItemsRepository {
+class DummyShoppingItemsRepository private constructor(database: AppDatabase) : ShoppingItemsRepository {
     private val productDao = database.productDao()
 
     init {
@@ -45,5 +45,14 @@ class DummyShoppingItemsRepository(database: AppDatabase) : ShoppingItemsReposit
         val thread = Thread(action)
         thread.start()
         thread.join()
+    }
+
+    companion object {
+        @Volatile private var instance: DummyShoppingItemsRepository? = null
+
+        fun getInstance(database: AppDatabase): DummyShoppingItemsRepository =
+            instance ?: synchronized(this) {
+                instance ?: DummyShoppingItemsRepository(database).also { instance = it }
+            }
     }
 }

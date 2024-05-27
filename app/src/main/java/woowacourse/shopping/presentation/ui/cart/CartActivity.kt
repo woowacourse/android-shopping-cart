@@ -6,7 +6,6 @@ import android.view.View
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.repository.InMemoryCartRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.base.BaseActivity
@@ -17,7 +16,7 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = InMemoryCartRepository((application as ShoppingApplication).appDatabase),
+            (application as ShoppingApplication).cartRepository,
         )
     }
     private lateinit var adapter: CartAdapter
@@ -50,7 +49,10 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
             when (state) {
                 is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showEmptyView()
-                is UIState.Error -> showError(state.exception.message ?: getString(R.string.unknown_error))
+                is UIState.Error ->
+                    showError(
+                        state.exception.message ?: getString(R.string.unknown_error),
+                    )
             }
         }
         viewModel.navigateToProductDetail.observe(this) { productId ->
