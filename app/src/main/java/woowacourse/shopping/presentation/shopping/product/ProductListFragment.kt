@@ -49,6 +49,7 @@ class ProductListFragment :
     override fun onResume() {
         super.onResume()
         viewModel.loadProducts()
+        recentViewModel.loadRecentProducts()
     }
 
     private fun initAppBar() {
