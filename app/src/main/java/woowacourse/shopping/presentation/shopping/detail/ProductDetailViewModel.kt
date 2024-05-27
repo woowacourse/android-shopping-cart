@@ -41,7 +41,8 @@ class ProductDetailViewModel(
     }
 
     fun loadProduct() {
-        val product = shoppingRepository.productById(productId)?.toShoppingUiModel(true) ?: return
+        val product =
+            shoppingRepository.productById(productId)?.toShoppingUiModel(true) ?: return
         _product.value = product
     }
 
@@ -57,7 +58,7 @@ class ProductDetailViewModel(
 
     fun addCartProduct() {
         val product = _product.value ?: return
-        cartRepository.addCartProduct(product.id, 1)
+        cartRepository.addCartProduct(product.id, product.count)
         _isAddedCart.value = true
     }
 
@@ -65,14 +66,12 @@ class ProductDetailViewModel(
         val product = _product.value ?: return
         val newCount = product.count + 1
         _product.value = product.copy(count = newCount)
-        cartRepository.addCartProduct(product.id, newCount)
     }
 
     fun decreaseCount() {
         val product = _product.value ?: return
-        val newCount = (product.count - 1).coerceAtLeast(0)
+        val newCount = (product.count - 1).coerceAtLeast(1)
         _product.value = product.copy(count = newCount)
-        cartRepository.addCartProduct(product.id, newCount)
     }
 
     companion object {
