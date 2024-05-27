@@ -29,6 +29,7 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
                 var oldQuantity = it.quantity
                 if (oldQuantity.count == 1) {
                     cartDao.delete(productId)
+                    return@thread
                 }
                 cartDao.changeQuantity(productId, --oldQuantity)
             }.onFailure {
