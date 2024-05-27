@@ -5,6 +5,7 @@ import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.domain.model.PagingOrder
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.OrderRepository
+import kotlin.math.max
 import kotlin.math.min
 
 object DummyOrder : OrderRepository {
@@ -77,7 +78,7 @@ object DummyOrder : OrderRepository {
     }
 
     override fun removeOrder(orderId: Int) {
-        orders.removeAt(orderId)
+        orders.removeIf { it.id == orderId }
     }
 
     override fun removeAllOrder() {
@@ -89,13 +90,13 @@ object DummyOrder : OrderRepository {
     }
 
     override fun getPagingOrder(
-        page: Int,
+        lastSeenId: Int,
         pageSize: Int,
     ): Result<PagingOrder> =
         runCatching {
-            val fromIndex = page * pageSize
+            val fromIndex = lastSeenId
             val toIndex = min(fromIndex + pageSize, orders.size)
-            val first = toIndex == 0
+            val first = fromIndex == 0
             val last = toIndex == orders.size
             PagingOrder(
                 orderList = orders.subList(fromIndex, toIndex),
@@ -105,13 +106,13 @@ object DummyOrder : OrderRepository {
         }
 
     override fun getPagingOrderReversed(
-        page: Int,
+        lastSeenId: Int,
         pageSize: Int,
     ): Result<PagingOrder> =
         runCatching {
-            val fromIndex = page * pageSize
-            val toIndex = min(fromIndex + pageSize, orders.size)
-            val first = toIndex == 0
+            val fromIndex = lastSeenId
+            val toIndex = max(fromIndex - pageSize, 0)
+            val first = fromIndex == 0
             val last = toIndex == orders.size
             PagingOrder(
                 orderList = orders.subList(fromIndex, toIndex),

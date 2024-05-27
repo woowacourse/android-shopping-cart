@@ -21,14 +21,10 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     private val adapter: OrderListAdapter by lazy { OrderListAdapter(viewModel) }
 
     override fun initStartView() {
-        initViewModel()
         initActionBar()
         initDataBinding()
         initAdapter()
         initObserve()
-    }
-
-    private fun initViewModel() {
     }
 
     private fun initActionBar() {

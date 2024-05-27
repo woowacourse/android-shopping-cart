@@ -5,11 +5,16 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.HistoryRepository
 
 object DummyHistory : HistoryRepository {
+    private val histories: MutableList<History> = mutableListOf()
+
     override fun putProductOnHistory(product: Product) {
-        TODO("Not yet implemented")
+        val history = History(product, System.currentTimeMillis())
+        histories.add(history)
     }
 
     override fun getHistories(size: Int): List<History> {
-        TODO("Not yet implemented")
+        val from = 0
+        val to = if (size > histories.size) histories.size else size
+        return histories.subList(from, to)
     }
 }

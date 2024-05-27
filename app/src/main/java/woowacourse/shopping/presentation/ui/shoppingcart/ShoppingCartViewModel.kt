@@ -14,6 +14,11 @@ class ShoppingCartViewModel(
     val uiState: LiveData<ShoppingCartUiState> get() = _uiState
 
     init {
+        initPagingOrder()
+    }
+
+    private fun initPagingOrder() {
+        _uiState.value = _uiState.value?.copy(currentPage = 0)
         getPagingOrder(INIT_ID)
     }
 
