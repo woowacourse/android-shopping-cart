@@ -1,11 +1,11 @@
 package woowacourse.shopping.ui.cart
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.CartPage
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.OrderDao
 import woowacourse.shopping.model.data.OrderEntity
 import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
@@ -13,9 +13,9 @@ import kotlin.math.min
 
 class CartViewModel(
     private val productDao: ProductDao,
-    applicationContext: Context,
+    private val orderDao: OrderDao,
 ) : ViewModel() {
-    private val ordersRepository = OrdersRepository(applicationContext)
+    private val ordersRepository = OrdersRepository(orderDao)
 
     private val _cartPage: MutableLiveData<CartPage> = MutableLiveData()
     val cartPage: LiveData<CartPage> get() = _cartPage

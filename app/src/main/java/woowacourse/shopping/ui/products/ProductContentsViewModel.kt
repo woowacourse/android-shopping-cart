@@ -1,26 +1,28 @@
 package woowacourse.shopping.ui.products
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.OrderDao
 import woowacourse.shopping.model.data.OrderEntity
 import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.model.data.RecentProductDao
 import woowacourse.shopping.model.data.RecentProductsRepository
 import kotlin.concurrent.thread
 import kotlin.math.min
 
 class ProductContentsViewModel(
     private val productDao: ProductDao,
-    application: Context,
+    private val orderDao: OrderDao,
+    private val recentProductDao: RecentProductDao,
 ) : ViewModel() {
     private val _recentProducts: MutableLiveData<List<Product>> = MutableLiveData()
     val recentProducts: LiveData<List<Product>> get() = _recentProducts
 
-    private val ordersRepository = OrdersRepository(application)
-    private val recentProductsRepository = RecentProductsRepository(application)
+    private val ordersRepository = OrdersRepository(orderDao)
+    private val recentProductsRepository = RecentProductsRepository(recentProductDao)
 
     private var currentOffset = DEFAULT_OFFSET
     private val items: MutableList<Product> = mutableListOf()

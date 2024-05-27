@@ -1,23 +1,25 @@
 package woowacourse.shopping.ui.detail
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.OrderDao
 import woowacourse.shopping.model.data.OrderEntity
 import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.model.data.RecentProductDao
 import woowacourse.shopping.model.data.RecentProductEntity
 import woowacourse.shopping.model.data.RecentProductsRepository
 import java.time.LocalDateTime
 
 class ProductDetailViewModel(
     private val productDao: ProductDao,
-    applicationContext: Context,
+    private val orderDao: OrderDao,
+    private val recentProductDao: RecentProductDao,
 ) : ViewModel() {
-    private val ordersRepository = OrdersRepository(applicationContext)
-    private val recentProductsRepository = RecentProductsRepository(applicationContext)
+    private val ordersRepository = OrdersRepository(orderDao)
+    private val recentProductsRepository = RecentProductsRepository(recentProductDao)
 
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
 import woowacourse.shopping.databinding.MenuItemLayoutBinding
+import woowacourse.shopping.model.data.AlsongDatabase
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
@@ -20,7 +21,14 @@ class ProductContentsActivity : AppCompatActivity() {
     private lateinit var adapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel by lazy {
-        ViewModelProvider(this, ProductContentsViewModelFactory(ProductsImpl, this.applicationContext))
+        ViewModelProvider(
+            this,
+            ProductContentsViewModelFactory(
+                ProductsImpl,
+                AlsongDatabase.getDatabase(applicationContext).orderDao(),
+                AlsongDatabase.getDatabase(applicationContext).recentProductDao(),
+            ),
+        )
             .get(ProductContentsViewModel::class.java)
     }
 

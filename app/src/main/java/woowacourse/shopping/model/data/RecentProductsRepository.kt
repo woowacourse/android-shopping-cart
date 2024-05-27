@@ -1,13 +1,9 @@
 package woowacourse.shopping.model.data
 
-import android.content.Context
 import woowacourse.shopping.model.Product
 import kotlin.concurrent.thread
 
-class RecentProductsRepository(application: Context) {
-    private val database = AlsongDatabase.getDatabase(application)
-    private val recentProductDao: RecentProductDao = database.recentProductDao()
-
+class RecentProductsRepository(private val recentProductDao: RecentProductDao) {
     fun getAllData(): List<Product> {
         var recentProductsEntity: List<RecentProductEntity> = emptyList()
         thread {
