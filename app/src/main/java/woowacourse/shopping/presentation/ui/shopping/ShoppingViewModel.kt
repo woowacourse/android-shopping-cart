@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.Repository
+import woowacourse.shopping.presentation.base.CartCountHandler
 import woowacourse.shopping.presentation.ui.EventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.UpdateUiModel
@@ -28,6 +29,10 @@ class ShoppingViewModel(private val repository: Repository) :
     private val _errorHandler = MutableLiveData<EventState<String>>()
     val errorHandler: LiveData<EventState<String>> get() = _errorHandler
 
+    private val _navigateHandler = MutableLiveData<EventState<NavigateUiState>>()
+    val navigateHandler: LiveData<EventState<NavigateUiState>> get() = _navigateHandler
+
+
     fun loadProductByOffset() {
         thread {
             repository.findProductByPagingWithMock(offSet, PAGE_SIZE).onSuccess {
@@ -40,7 +45,7 @@ class ShoppingViewModel(private val repository: Repository) :
                 }
                 offSet++
             }.onFailure {
-                _errorHandler.value = EventState(LOAD_ERROR)
+                _errorHandler.postValue(EventState(LOAD_ERROR))
             }
         }
     }
@@ -56,6 +61,18 @@ class ShoppingViewModel(private val repository: Repository) :
     companion object {
         const val LOAD_ERROR = "아이템을 끝까지 불러왔습니다"
         const val PAGE_SIZE = 20
+    }
+
+    override fun onProductClick(productId: Long) {
+        _navigateHandler.value = EventState(NavigateUiState.ToDetail(productId))
+    }
+
+    override fun onCartClick() {
+        _navigateHandler.value = EventState(NavigateUiState.ToCart)
+    }
+
+    override fun loadMore() {
+        loadProductByOffset()
     }
 
     override fun onPlus(cartProduct: CartProduct) {

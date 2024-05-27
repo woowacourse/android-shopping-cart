@@ -12,7 +12,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
-import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActionActivity
 
 class CartActivity : BindingActivity<ActivityCartBinding>() {
     override val layoutResourceId: Int
@@ -37,7 +37,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
                 override fun handleOnBackPressed() {
                     Intent().apply {
                         putExtra(
-                            ShoppingActivity.EXTRA_UPDATED_PRODUCT,
+                            ShoppingActionActivity.EXTRA_UPDATED_PRODUCT,
                             viewModel.updateUiModel,
                         )
                     }.run {

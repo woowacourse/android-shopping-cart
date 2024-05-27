@@ -9,14 +9,14 @@
             type="woowacourse.shopping.domain.RecentProduct" />
         <variable
             name="shoppingHandler"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingHandler" />
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
-        android:onClick="@{() -> shoppingHandler.onClick(recentProduct.productId)}">
+        android:onClick="@{() -> shoppingHandler.onProductClick(recentProduct.productId)}">
 
 
         <ImageView

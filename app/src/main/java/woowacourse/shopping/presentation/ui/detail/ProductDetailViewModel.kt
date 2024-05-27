@@ -52,12 +52,12 @@ class ProductDetailViewModel(
         thread {
             repository.findOne().onSuccess {
                 if (it == null) {
-                    _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
+                    _errorHandler.postValue(EventState(PRODUCT_NOT_FOUND))
                 } else {
                     _recentProduct.postValue(UiState.Success(it))
                 }
             }.onFailure {
-                _errorHandler.value = EventState(PRODUCT_NOT_FOUND)
+                _errorHandler.postValue(EventState(PRODUCT_NOT_FOUND))
             }
         }
     }

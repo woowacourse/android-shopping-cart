@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.presentation.base.CartCountHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
-import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
 
 class ShoppingAdapter(
-    private val shoppingHandler: ShoppingHandler,
     private val shoppingActionHandler: ShoppingActionHandler,
 ) : ListAdapter<CartProduct, ShoppingViewHolder>(DIFF_CALLBACK) {
     override fun getItemViewType(position: Int): Int {
@@ -33,12 +32,12 @@ class ShoppingAdapter(
         return when (ShoppingViewType.of(viewType)) {
             ShoppingViewType.Product -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ShoppingViewHolder.ProductViewHolder(binding, shoppingHandler, shoppingActionHandler)
+                ShoppingViewHolder.ProductViewHolder(binding, shoppingActionHandler)
             }
 
             ShoppingViewType.LoadMore -> {
                 val binding = ItemLoadBinding.inflate(inflater, parent, false)
-                ShoppingViewHolder.LoadViewHolder(binding, shoppingHandler)
+                ShoppingViewHolder.LoadViewHolder(binding, shoppingActionHandler)
             }
         }
     }

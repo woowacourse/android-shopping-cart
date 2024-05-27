@@ -23,7 +23,7 @@ import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewHolder
 @RunWith(AndroidJUnit4::class)
 class ShoppingActivityTest {
     @get:Rule
-    val activityRule = ActivityScenarioRule(ShoppingActivity::class.java)
+    val activityRule = ActivityScenarioRule(ShoppingActionActivity::class.java)
 
     @Test
     fun `상품_목록이_화면에_표시된다`() {

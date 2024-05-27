@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.ui.shopping
 
 import android.content.Intent
-import android.os.Build
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,14 +20,14 @@ import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewType
 import woowacourse.shopping.utils.getParcelableExtraCompat
 
-class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHandler {
+class ShoppingActionActivity : BindingActivity<ActivityShoppingBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_shopping
 
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
-    private val shoppingAdapter: ShoppingAdapter by lazy { ShoppingAdapter(this, viewModel) }
-    private val recentAdapter: RecentAdapter by lazy { RecentAdapter(this) }
+    private val shoppingAdapter: ShoppingAdapter by lazy { ShoppingAdapter(viewModel) }
+    private val recentAdapter: RecentAdapter by lazy { RecentAdapter(viewModel) }
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
@@ -38,12 +37,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         initData()
         initObserver()
         initLauncher()
-
-        binding.ivCart.setOnClickListener {
-            resultLauncher.launch(
-                CartActivity.createIntent(this),
-            )
-        }
     }
 
     private fun initLauncher() {
@@ -68,6 +61,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     private fun initObserver() {
+        binding.shoppingActionHandler = viewModel
         viewModel.products.observe(this) {
             when (it) {
                 is UiState.None -> {}
@@ -92,6 +86,20 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         viewModel.errorHandler.observe(this, EventObserver {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
+        viewModel.navigateHandler.observe(this, EventObserver {
+            when(it) {
+                is NavigateUiState.ToDetail -> {
+                    resultLauncher.launch(
+                        ProductDetailActivity.createIntent(this, it.productId),
+                    )
+                }
+                is NavigateUiState.ToCart -> {
+                    resultLauncher.launch(
+                        CartActivity.createIntent(this),
+                    )
+                }
+            }
+        })
     }
 
     private fun initAdapter() {
@@ -113,16 +121,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 }
             }
         }
-
-    override fun onClick(productId: Long) {
-        resultLauncher.launch(
-            ProductDetailActivity.createIntent(this, productId),
-        )
-    }
-
-    override fun loadMore() {
-        viewModel.loadProductByOffset()
-    }
 
     companion object {
         const val GRIDLAYOUT_COL = 2

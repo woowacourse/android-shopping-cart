@@ -5,13 +5,12 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.presentation.base.CartCountHandler
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
-import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
 
 sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        private val shoppingHandler: ShoppingHandler,
         private val shoppingActionHandler: ShoppingActionHandler,
     ) :
         ShoppingViewHolder(binding.root) {
@@ -19,7 +18,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         init {
             binding.root.setOnClickListener {
-                shoppingHandler.onClick(id)
+                shoppingActionHandler.onProductClick(id)
             }
         }
 
@@ -32,11 +31,11 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     class LoadViewHolder(
         private val binding: ItemLoadBinding,
-        private val shoppingHandler: ShoppingHandler,
+        private val shoppingActionHandler: ShoppingActionHandler,
     ) : ShoppingViewHolder(binding.root) {
         fun bind() {
             binding.btnShowMore.setOnClickListener {
-                shoppingHandler.loadMore()
+                shoppingActionHandler.loadMore()
             }
         }
     }

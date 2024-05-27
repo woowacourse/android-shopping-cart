@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.ui.detail
 
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
+import woowacourse.shopping.presentation.base.CartCountHandler
 
-interface DetailActionHandler : ShoppingActionHandler {
+interface DetailActionHandler : CartCountHandler {
     fun onAddToCart(cartProduct: CartProduct)
 
     fun onNavigateToDetail(productId: Long)

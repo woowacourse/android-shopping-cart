@@ -13,7 +13,7 @@
             type="woowacourse.shopping.domain.RecentProduct" />
 
         <variable
-            name="shoppingActionHandler"
+            name="detailActionHandler"
             type="woowacourse.shopping.presentation.ui.detail.DetailActionHandler" />
     </data>
 
@@ -86,7 +86,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_price_value"
             app:layout_constraintStart_toEndOf="@id/space_mid"
             app:cartProduct="@{cartProduct}"
-            app:shoppingActionHandler="@{shoppingActionHandler}"
+            app:shoppingActionHandler="@{detailActionHandler}"
             />
 
         <TextView
@@ -102,7 +102,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:onClick="@{() -> shoppingActionHandler.onAddToCart(cartProduct)}"/>
+            android:onClick="@{() -> detailActionHandler.onAddToCart(cartProduct)}"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/line"
@@ -125,7 +125,7 @@
             android:layout_marginEnd="15dp"
             android:padding="15dp"
             android:background="@drawable/background_cart"
-            android:onClick="@{() -> shoppingActionHandler.onNavigateToDetail(recentProduct.productId)}">
+            android:onClick="@{() -> detailActionHandler.onNavigateToDetail(recentProduct.productId)}">
 
             <TextView
                 android:id="@+id/tv_recent_title"
