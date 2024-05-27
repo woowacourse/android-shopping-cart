@@ -3,14 +3,10 @@ package woowacourse.shopping.presentation.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.ProductListItem
-import woowacourse.shopping.domain.RecentProductItem
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
@@ -18,7 +14,7 @@ import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
 import woowacourse.shopping.presentation.util.EventObserver
 import kotlin.properties.Delegates
 
-class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), DetailHandler {
+class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_product_detail
 
@@ -30,7 +26,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         checkIsLastViewedProduct()
         initActionBarTitle()
         fetchInitialData()
-        binding.detailHandler = this
+        binding.detailHandler = viewModel
         observeLiveDatas()
     }
 
@@ -53,7 +49,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         observeLastProductUpdates()
         observeErrorEventUpdates()
         observeProductsUpdates()
-        observeCartEventUpdates()
+        observeMoveEvent()
     }
 
     private fun observeLastProductUpdates() {
@@ -81,54 +77,22 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         }
     }
 
-    private fun observeCartEventUpdates() {
-        viewModel.addCartEvent.observe(
+    private fun observeMoveEvent() {
+        viewModel.moveEvent.observe(
             this,
             EventObserver {
-                Intent(applicationContext, ShoppingActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    putExtra(EXTRA_PRODUCT_ID, id)
-                    putExtra(EXTRA_NEW_PRODUCT_QUANTITY, it)
-                    setResult(RESULT_OK, this)
-                    startActivity(this)
+                when (it) {
+                    is FromDetailToScreen.ProductDetail -> {
+                        startWithIsLastViewed(this, it.productId)
+                    }
+
+                    is FromDetailToScreen.Shopping -> {
+                        ShoppingActivity.startWithNewProductQuantity(this, it.productId, it.quantity)
+                        finish()
+                    }
                 }
-                finish()
             },
         )
-    }
-
-    override fun onAddCartClick() {
-        viewModel.saveCartItem()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.detail_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
-        return true
-    }
-
-    override fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
-        item?.let {
-            viewModel.updateCartItemQuantity(
-                -1,
-            )
-        }
-    }
-
-    override fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
-        item?.let {
-            viewModel.updateCartItemQuantity(
-                1,
-            )
-        }
-    }
-
-    override fun onLastProductClick(product: RecentProductItem) {
-        startWithFlag(this, product.productId)
     }
 
     companion object {
@@ -136,7 +100,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         const val EXTRA_NEW_PRODUCT_QUANTITY = "productQuantity"
         private const val EXTRA_IS_LAST_VIEWED_PRODUCT = "isLastViewedProduct"
 
-        fun startWithFlag(
+        fun startWithIsLastViewed(
             context: Context,
             productId: Long,
         ) {
@@ -148,7 +112,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
             }
         }
 
-        fun startWithResult(
+        fun startWithResultLauncher(
             context: Context,
             activityLauncher: ActivityResultLauncher<Intent>,
             productId: Long,

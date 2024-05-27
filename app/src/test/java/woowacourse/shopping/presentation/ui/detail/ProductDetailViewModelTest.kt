@@ -69,8 +69,8 @@ class ProductDetailViewModelTest {
 
         // then
         Assertions.assertEquals(
-            viewModel.addCartEvent.getOrAwaitValue(10).getContentIfNotHandled(),
-            shoppingProduct.quantity,
+            viewModel.moveEvent.getOrAwaitValue(10).getContentIfNotHandled(),
+            FromDetailToScreen.Shopping(shoppingProduct.id, shoppingProduct.quantity),
         )
     }
 

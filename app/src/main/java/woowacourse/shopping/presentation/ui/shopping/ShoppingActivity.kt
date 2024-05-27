@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -151,5 +153,25 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
 
     companion object {
         const val GRIDLAYOUT_COL = 2
+        private const val EXTRA_PRODUCT_ID = "productId"
+        private const val EXTRA_NEW_PRODUCT_QUANTITY = "productQuantity"
+
+        fun startWithNewProductQuantity(
+            context: Context,
+            productId: Long,
+            quantity: Int,
+        ) {
+            if (context is Activity) {
+                Intent(context, ShoppingActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    putExtra(EXTRA_PRODUCT_ID, productId)
+                    putExtra(EXTRA_NEW_PRODUCT_QUANTITY, quantity)
+                    context.setResult(Activity.RESULT_OK, this)
+                    context.startActivity(this)
+                }
+            } else {
+                throw IllegalAccessError("해당 메서드는 액티비티에서 호출해야 합니다")
+            }
+        }
     }
 }
