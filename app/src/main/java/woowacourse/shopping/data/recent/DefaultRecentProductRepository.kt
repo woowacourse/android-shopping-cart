@@ -4,6 +4,7 @@ import android.content.Context
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
 import woowacourse.shopping.data.shopping.ShoppingDataSource
 import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class DefaultRecentProductRepository(
     private val context: Context,

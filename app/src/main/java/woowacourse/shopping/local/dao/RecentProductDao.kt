@@ -1,8 +1,9 @@
-package woowacourse.shopping.data.recent
+package woowacourse.shopping.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import woowacourse.shopping.local.entity.RecentProductEntity
 
 @Dao
 interface RecentProductDao {

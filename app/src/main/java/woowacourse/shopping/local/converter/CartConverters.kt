@@ -1,11 +1,10 @@
-package woowacourse.shopping.data.recent
+package woowacourse.shopping.local.converter
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.RecentProduct
 
-class RecentProductConverters {
+class CartConverters {
     private val gson = Gson()
 
     @TypeConverter

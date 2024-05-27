@@ -3,6 +3,8 @@ package woowacourse.shopping.data.cart
 import android.content.Context
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.local.CartDatabase
+import woowacourse.shopping.local.entity.CartEntity
 
 class DefaultCartDataSource(context: Context) : CartDataSource {
     private val cartDao = CartDatabase.getInstance(context).dao()

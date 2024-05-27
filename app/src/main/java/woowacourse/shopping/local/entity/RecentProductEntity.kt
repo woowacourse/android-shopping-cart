@@ -1,8 +1,9 @@
-package woowacourse.shopping.data.recent
+package woowacourse.shopping.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import woowacourse.shopping.local.converter.RecentProductConverters
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 

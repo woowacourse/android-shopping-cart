@@ -1,10 +1,11 @@
-package woowacourse.shopping.data.cart
+package woowacourse.shopping.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.local.converter.CartConverters
 
 @Entity(tableName = "cart")
 @TypeConverters(CartConverters::class)

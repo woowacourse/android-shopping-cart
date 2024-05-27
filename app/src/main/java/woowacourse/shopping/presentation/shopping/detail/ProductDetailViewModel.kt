@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
-import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.data.shopping.ShoppingRepository
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel

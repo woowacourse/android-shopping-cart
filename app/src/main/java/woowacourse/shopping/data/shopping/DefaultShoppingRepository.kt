@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.shopping
 
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.ShoppingRepository
 
 class DefaultShoppingRepository(
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
