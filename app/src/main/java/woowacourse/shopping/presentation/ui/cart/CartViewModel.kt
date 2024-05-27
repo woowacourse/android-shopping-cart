@@ -10,7 +10,10 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.event.Event
 import woowacourse.shopping.presentation.state.UIState
 
-class CartViewModel(private val repository: CartRepository) : ViewModel(), CartEventHandler, CartItemCountHandler {
+class CartViewModel(private val repository: CartRepository) :
+    ViewModel(),
+    CartEventHandler,
+    CartItemCountHandler {
     private val pageSize = PAGE_SIZE
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
@@ -28,7 +31,8 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartE
     private val _totalItemSize = MutableLiveData<Int>(repository.size())
 
     val totalItemSize: LiveData<Int> = _totalItemSize
-    private val _isPageControlVisible = MutableLiveData<Boolean>(((totalItemSize.value ?: 0) > PAGE_SIZE))
+    private val _isPageControlVisible =
+        MutableLiveData<Boolean>(((totalItemSize.value ?: 0) > PAGE_SIZE))
 
     val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
     private var lastPage: Int = DEFAULT_PAGE

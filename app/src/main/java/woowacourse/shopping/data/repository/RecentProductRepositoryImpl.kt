@@ -1,14 +1,15 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.database.recent.RecentProductDatabase
+import android.content.Context
+import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.model.mapper
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
-class RecentProductRepositoryImpl(database: RecentProductDatabase) : RecentProductRepository {
-    private val dao = database.recentProductDao()
+class RecentProductRepositoryImpl(context: Context) : RecentProductRepository {
+    private val dao = ShoppingDatabase.getInstance(context).recentProductDao()
 
     override fun save(product: Product) {
         threadAction {

@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.CartItem
@@ -18,7 +17,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = CartRepositoryImpl((ShoppingApplication.getInstance().cartDatabase)),
+            repository = CartRepositoryImpl(this),
         )
     }
 
@@ -49,7 +48,7 @@ class CartActivity : AppCompatActivity() {
         viewModel.cartItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data, adapter)
-                is UIState.Empty -> emptyCart()
+                is UIState.Empty -> {} // emptyCart()
                 is UIState.Error ->
                     showError(
                         state.exception.message ?: getString(R.string.unknown_error),

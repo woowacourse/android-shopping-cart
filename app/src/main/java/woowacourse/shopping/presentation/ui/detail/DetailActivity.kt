@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
@@ -18,9 +17,9 @@ class DetailActivity : AppCompatActivity() {
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
-            cartRepository = CartRepositoryImpl(ShoppingApplication.getInstance().cartDatabase),
+            cartRepository = CartRepositoryImpl(this),
             shoppingRepository = ShoppingItemsRepositoryImpl(),
-            recentProductRepository = RecentProductRepositoryImpl(ShoppingApplication.getInstance().recentProductDatabase),
+            recentProductRepository = RecentProductRepositoryImpl(this),
             productId = productId,
         )
     }

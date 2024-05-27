@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.database.cart.CartDatabase
+import android.content.Context
+import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.data.model.mapper
@@ -9,8 +10,8 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class CartRepositoryImpl(database: CartDatabase) : CartRepository {
-    private val dao = database.cartDao()
+class CartRepositoryImpl(context: Context) : CartRepository {
+    private val dao = ShoppingDatabase.getInstance(context).cartDao()
 
     override fun insert(
         product: Product,
