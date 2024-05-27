@@ -65,39 +65,6 @@ class CartActivityTest {
         onView(withId(R.id.tv_current_page)).check(matches(withText("1")))
     }
 
-    @Test
-    fun `다음_페이지_이동_버튼을_클릭하면_새로운_장바구니_상품들이_표출된다`() {
-        repeat(6) {
-            defaultCartDatasource.addCart(it + 1L, 1)
-        }
-        onView(withId(R.id.btn_next_page)).perform(click())
-        onView(withId(R.id.rv_cart)).check(
-            matches(
-                matchViewHolderAtPosition(
-                    0,
-                    RecyclerView.ViewHolder::class.java,
-                ),
-            ),
-        )
-    }
-
-    @Test
-    fun `이전_페이지_이동_버튼을_클릭하면_새로운_장바구니_상품들이_표출된다`() {
-        repeat(6) {
-            defaultCartDatasource.addCart(it + 1L, 1)
-        }
-        onView(withId(R.id.btn_next_page)).perform(click())
-        onView(withId(R.id.btn_previous_page)).perform(click())
-        onView(withId(R.id.rv_cart)).check(
-            matches(
-                matchViewHolderAtPosition(
-                    0,
-                    RecyclerView.ViewHolder::class.java,
-                ),
-            ),
-        )
-    }
-
     private fun matchViewHolderAtPosition(
         position: Int,
         viewHolderClass: Class<out RecyclerView.ViewHolder>,

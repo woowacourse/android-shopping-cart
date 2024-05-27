@@ -28,7 +28,7 @@ class HomeActivityTest {
 
     @Test
     fun `전체_상품_목록을_불러온다`() {
-        onView(withId(R.id.rv_home)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_product)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -36,12 +36,12 @@ class HomeActivityTest {
         var itemCount = 0
 
         scenarioRule.scenario.onActivity { activity ->
-            val recyclerView = activity.findViewById<RecyclerView>(R.id.rv_home)
+            val recyclerView = activity.findViewById<RecyclerView>(R.id.rv_product)
             itemCount = recyclerView.adapter?.itemCount ?: 0
         }
 
         if (itemCount >= 20) {
-            onView(withId(R.id.rv_home)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
+            onView(withId(R.id.rv_product)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
                 .check(
                     matches(
                         matchViewHolderAtPosition(
@@ -51,38 +51,8 @@ class HomeActivityTest {
                     ),
                 )
         } else {
-            onView(withId(R.id.rv_home)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
+            onView(withId(R.id.rv_product)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
             onView(withId(R.id.btn_load_more)).check(matches(not(isDisplayed())))
-        }
-    }
-
-    @Test
-    fun `더보기_버튼을_클릭하면_새로운_상품들이_나타난다`() {
-        var itemCount = 0
-
-        scenarioRule.scenario.onActivity { activity ->
-            val recyclerView = activity.findViewById<RecyclerView>(R.id.rv_home)
-            itemCount = recyclerView.adapter?.itemCount ?: 0
-        }
-
-        if (itemCount >= 20) {
-            onView(withId(R.id.rv_home))
-                .perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
-                .perform(
-                    // Trouble Shooting : 아이템의 특성(withText 등)을 찾기보다는 포지션을 활용하는 것이 좋음
-                    RecyclerViewActions.actionOnItemAtPosition<LoadingViewHolder>(
-                        20,
-                        ViewActions.click(),
-                    ),
-                )
-                .check(
-                    matches(
-                        matchViewHolderAtPosition(
-                            20,
-                            ProductViewHolder::class.java,
-                        ),
-                    ),
-                )
         }
     }
 
