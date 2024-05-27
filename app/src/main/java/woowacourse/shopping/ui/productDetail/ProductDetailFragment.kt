@@ -58,8 +58,7 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-    private fun navigateToProductDetail(id: Long) =
-        (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
+    private fun navigateToProductDetail(id: Long) = (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
 
     private fun navigateToMenuItem(it: MenuItem) =
         when (it.itemId) {

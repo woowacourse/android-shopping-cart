@@ -20,7 +20,6 @@ class ProductListFragment : Fragment() {
 
     private val factory: UniversalViewModelFactory = ProductListViewModel.factory()
 
-
     private val viewModel: ProductListViewModel by lazy {
         ViewModelProvider(this, factory)[ProductListViewModel::class.java]
     }

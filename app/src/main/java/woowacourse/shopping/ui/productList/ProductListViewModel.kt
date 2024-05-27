@@ -141,16 +141,19 @@ class ProductListViewModel(
         private const val PAGE_MOVE_COUNT = 1
 
         fun factory(
-            productRepository: ShoppingProductsRepository = DefaultShoppingProductRepository(
-                ShoppingApp.productSource,
-                ShoppingApp.cartSource
-            ),
-            historyRepository: ProductHistoryRepository = DefaultProductHistoryRepository(
-                ShoppingApp.historySource,
-                ShoppingApp.productSource
-            )
-        ): UniversalViewModelFactory = UniversalViewModelFactory {
-            ProductListViewModel(productRepository, historyRepository)
-        }
+            productRepository: ShoppingProductsRepository =
+                DefaultShoppingProductRepository(
+                    ShoppingApp.productSource,
+                    ShoppingApp.cartSource,
+                ),
+            historyRepository: ProductHistoryRepository =
+                DefaultProductHistoryRepository(
+                    ShoppingApp.historySource,
+                    ShoppingApp.productSource,
+                ),
+        ): UniversalViewModelFactory =
+            UniversalViewModelFactory {
+                ProductListViewModel(productRepository, historyRepository)
+            }
     }
 }

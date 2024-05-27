@@ -81,7 +81,6 @@ class ProductDetailViewModel(
     }
 
     override fun onClick(productId: Long) {
-        Log.d(TAG, "onClick: $productId")
         _detailProductDestinationId.setValue(productId)
     }
 
@@ -90,20 +89,22 @@ class ProductDetailViewModel(
 
         fun factory(
             productId: Long,
-            shoppingProductsRepository: ShoppingProductsRepository = DefaultShoppingProductRepository(
-                productsSource = ShoppingApp.productSource,
-                cartSource = ShoppingApp.cartSource,
-            ),
-            historyRepository: ProductHistoryRepository = DefaultProductHistoryRepository(
-                productHistoryDataSource = ShoppingApp.historySource,
-                productDataSource = ShoppingApp.productSource
-            )
+            shoppingProductsRepository: ShoppingProductsRepository =
+                DefaultShoppingProductRepository(
+                    productsSource = ShoppingApp.productSource,
+                    cartSource = ShoppingApp.cartSource,
+                ),
+            historyRepository: ProductHistoryRepository =
+                DefaultProductHistoryRepository(
+                    productHistoryDataSource = ShoppingApp.historySource,
+                    productDataSource = ShoppingApp.productSource,
+                ),
         ): UniversalViewModelFactory {
             return UniversalViewModelFactory {
                 ProductDetailViewModel(
                     productId = productId,
                     shoppingProductsRepository = shoppingProductsRepository,
-                    productHistoryRepository = historyRepository
+                    productHistoryRepository = historyRepository,
                 )
             }
         }

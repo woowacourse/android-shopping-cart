@@ -23,7 +23,6 @@ class ShoppingApp : Application() {
     private val historyProductDb: HistoryProductDatabase by lazy { HistoryProductDatabase.database(context = this) }
     private val historyProductDao: HistoryProductDao by lazy { historyProductDb.dao() }
 
-
     override fun onCreate() {
         super.onCreate()
         productSource = RemoteProductDataSource(productsApi)
@@ -47,6 +46,5 @@ class ShoppingApp : Application() {
 
         lateinit var historySource: ProductHistoryDataSource
             private set
-
     }
 }

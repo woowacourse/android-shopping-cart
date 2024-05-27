@@ -132,13 +132,14 @@ class ShoppingCartViewModel(
         private const val TAG = "ShoppingCartViewModel"
 
         fun factory(
-            shoppingProductsRepository: ShoppingProductsRepository = DefaultShoppingProductRepository(
-                productsSource = ShoppingApp.productSource,
-                cartSource = ShoppingApp.cartSource,
-            ),
-        ): UniversalViewModelFactory = UniversalViewModelFactory {
-            ShoppingCartViewModel(shoppingProductsRepository)
-        }
-
+            shoppingProductsRepository: ShoppingProductsRepository =
+                DefaultShoppingProductRepository(
+                    productsSource = ShoppingApp.productSource,
+                    cartSource = ShoppingApp.cartSource,
+                ),
+        ): UniversalViewModelFactory =
+            UniversalViewModelFactory {
+                ShoppingCartViewModel(shoppingProductsRepository)
+            }
     }
 }
