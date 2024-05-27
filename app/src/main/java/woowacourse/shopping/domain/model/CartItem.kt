@@ -8,17 +8,14 @@ data class CartItem(
     val productName: String,
     val price: Long,
     val imageUrl: String,
-    private var _quantity: Int,
+    val quantity: Int,
 ) {
-    val quantity: Int
-        get() = _quantity
-
-    fun plusQuantity() {
-        _quantity = this.quantity + 1
+    fun plusQuantity(): CartItem {
+        return copy(quantity = quantity + 1)
     }
 
-    fun minusQuantity() {
-        _quantity = (this.quantity - 1).coerceAtLeast(DEFAULT_QUANTITY)
+    fun minusQuantity(): CartItem {
+        return copy(quantity = (this.quantity - 1).coerceAtLeast(DEFAULT_QUANTITY))
     }
 
     fun totalPrice(): Long = price * quantity

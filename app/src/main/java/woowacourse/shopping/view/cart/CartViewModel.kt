@@ -118,15 +118,15 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel(),
     }
 
     override fun onQuantityPlusButtonClick(productId: Long) {
-        val cartItem = cartRepository.findOrNullByProductId(productId) ?: return
-        cartItem.plusQuantity()
+        var cartItem = cartRepository.findOrNullByProductId(productId) ?: return
+        cartItem = cartItem.plusQuantity()
         cartRepository.update(productId, cartItem.quantity)
         _updatedCartItem.value = cartItem
     }
 
     override fun onQuqntityMinusButtonClick(productId: Long) {
-        val cartItem = cartRepository.findOrNullByProductId(productId) ?: return
-        cartItem.minusQuantity()
+        var cartItem = cartRepository.findOrNullByProductId(productId) ?: return
+        cartItem = cartItem.minusQuantity()
         cartRepository.update(productId, cartItem.quantity)
         _updatedCartItem.value = cartItem
     }

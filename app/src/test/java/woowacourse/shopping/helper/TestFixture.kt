@@ -34,7 +34,7 @@ val testCartItem0 =
         productName = "채채다",
         price = 1000,
         imageUrl = "https://image1.com",
-        _quantity = 1,
+        quantity = 1,
     )
 
 val testCartItem1 =
@@ -44,7 +44,7 @@ val testCartItem1 =
         productName = "악어다",
         price = 1100,
         imageUrl = "https://image1.com",
-        _quantity = 2,
+        quantity = 2,
     )
 
 val testCartItem2 =
@@ -54,5 +54,5 @@ val testCartItem2 =
         productName = "채드다",
         price = 1200,
         imageUrl = "https://image1.com",
-        _quantity = 3,
+        quantity = 3,
     )

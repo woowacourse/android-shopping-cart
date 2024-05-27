@@ -66,7 +66,7 @@ class HomeViewModel(
         _recentProducts.value = recentProductRepository.findAll(RECENT_PRODUCTS_LIMIT)
     }
 
-    fun loadProducts() {
+    private fun loadProducts() {
         try {
             val products = productRepository.findProductsByPage()
             if (products.isEmpty()) {

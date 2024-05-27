@@ -21,6 +21,6 @@ fun CartItemEntity.toCartItem(): CartItem {
         productName = this.productName,
         price = this.price,
         imageUrl = this.imageUrl,
-        _quantity = this.quantity,
+        quantity = quantity
     )
 }
