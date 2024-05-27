@@ -3,9 +3,10 @@ package woowacourse.shopping.helper
 import woowacourse.shopping.data.db.cart.CartRepository
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
+import kotlin.math.min
 
 class FakeCartRepositoryImpl : CartRepository {
-    val cartItems = mutableListOf<CartItem>()
+    private val cartItems = mutableListOf<CartItem>()
 
     override fun save(
         product: Product,
@@ -18,8 +19,8 @@ class FakeCartRepositoryImpl : CartRepository {
                 productName = product.name,
                 price = product.price,
                 imageUrl = product.imageUrl,
-                _quantity = quantity,
-            ),
+                quantity = quantity
+            )
         )
     }
 
@@ -34,15 +35,15 @@ class FakeCartRepositoryImpl : CartRepository {
     }
 
     override fun productQuantity(productId: Long): Int {
-        return 1
+        return cartItems.firstOrNull { it.id == productId }?.quantity ?: 0
     }
 
     override fun findOrNullByProductId(productId: Long): CartItem? {
-        return testCartItem0
+        return cartItems.firstOrNull { it.productId == productId }
     }
 
     override fun find(cartItemId: Long): CartItem {
-        return testCartItem0
+        return cartItems.first { it.id == cartItemId }
     }
 
     override fun findAll(): List<CartItem> {
@@ -53,7 +54,9 @@ class FakeCartRepositoryImpl : CartRepository {
         page: Int,
         pageSize: Int,
     ): List<CartItem> {
-        return cartItems
+        val offset = page * pageSize
+        val min = min(pageSize, cartItems.size)
+        return cartItems.subList(offset, min)
     }
 
     override fun delete(cartItemId: Long) {
