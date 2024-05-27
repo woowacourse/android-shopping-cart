@@ -45,12 +45,12 @@ class ShoppingViewModel(
             MutableLiveData<UIState<List<ProductWithQuantity>>>().apply {
                 value =
                     try {
-                        val productList =
-                            shoppingRepository.findProductWithQuantityItemsByPage(page, PAGE_SIZE)
+                        val productList = shoppingRepository.findProductWithQuantityItemsByPage(page, PAGE_SIZE)
                         if (productList.isEmpty()) {
                             _isProductListEmpty.postValue(true)
                             UIState.Empty
                         } else {
+                            _isProductListEmpty.postValue(false)
                             UIState.Success(productList)
                         }
                     } catch (e: Exception) {
@@ -71,10 +71,7 @@ class ShoppingViewModel(
 
     fun loadRecentlyViewedProducts() {
         try {
-            val recentlyViewedProducts =
-                recentlyViewedProductsRepository.getRecentlyViewedProducts(
-                    RECENTLY_VIEWED_PRODUCT_SIZE,
-                )
+            val recentlyViewedProducts = recentlyViewedProductsRepository.getRecentlyViewedProducts(RECENTLY_VIEWED_PRODUCT_SIZE)
             if (recentlyViewedProducts.isEmpty()) {
                 _isRecentlyViewedEmpty.postValue(true)
                 _recentlyViewedProductsState.postValue(UIState.Empty)
@@ -108,9 +105,7 @@ class ShoppingViewModel(
     ) {
         try {
             action()
-            val productWithQuantityItem =
-                shoppingRepository.productWithQuantityItem(productId)
-                    ?: throw Exception(PRODUCT_NOT_FOUND)
+            val productWithQuantityItem = shoppingRepository.productWithQuantityItem(productId) ?: throw Exception(PRODUCT_NOT_FOUND)
             _updatedProduct.postValue(UIState.Success(productWithQuantityItem))
             _totalCartItemsCount.postValue(cartRepository.sumQuantity())
         } catch (e: Exception) {

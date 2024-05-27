@@ -50,18 +50,18 @@ class ShoppingViewModelTest {
         mockWebServer.shutdown()
     }
 
-//    @Test
-//    fun `처음 상품 목록을 부를 때 오류가 있다면 Error 상태로 변경한다`() {
-//        // Given
-//        mockWebServer.enqueue(MockResponse().setResponseCode(404))
-//
-//        // When
-//        viewModel.loadProducts()
-//
-//        // Then
-//        val state = viewModel.productItemsState.getOrAwaitValue()
-//        assertThat(state).isInstanceOf(UIState.Error::class.java)
-//    }
+    @Test
+    fun `처음 상품 목록을 부를 때 오류가 있다면 Error 상태로 변경한다`() {
+        // Given
+        mockWebServer.enqueue(MockResponse().setResponseCode(500))
+
+        // When
+        viewModel.loadProducts()
+
+        // Then
+        val state = viewModel.productItemsState.getOrAwaitValue()
+        assertThat(state).isInstanceOf(UIState.Error::class.java)
+    }
 
     @Test
     fun `처음 상품 목록을 부를 때 데이터가 없다면 Empty 상태로 변경한다`() {
