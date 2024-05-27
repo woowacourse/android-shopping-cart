@@ -12,15 +12,19 @@ import woowacourse.shopping.remote.api.ApiClient.GET_PAGING_PRODUCT
 import woowacourse.shopping.remote.model.ProductResponse
 import kotlin.concurrent.thread
 
-class NetworkModule(private val errorListener: ErrorListener) : ApiService {
+class NetworkModule : ApiService {
     private val server =
         MockWebServer().apply {
             thread {
-                dispatcher = NetworkDispatcher(errorListener)
+                dispatcher = NetworkDispatcher()
                 start(BASE_PORT)
             }
         }
-    private val client: OkHttpClient = OkHttpClient.Builder().build()
+    private val client: OkHttpClient =
+        OkHttpClient
+            .Builder()
+            .addInterceptor(HttpExceptionInterceptor())
+            .build()
     private val gson = Gson()
 
     override fun findProductById(id: Long): Result<ProductResponse> =

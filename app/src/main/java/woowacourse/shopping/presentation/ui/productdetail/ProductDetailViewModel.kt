@@ -35,6 +35,7 @@ class ProductDetailViewModel(
     fun getProduct() {
         thread {
             productRepository.findProductById(id).onSuccess { product ->
+                hideError()
                 _uiState.value?.let { state ->
                     if (state.isLastProductPage) {
                         _uiState.postValue(state.copy(product = product))
@@ -43,12 +44,19 @@ class ProductDetailViewModel(
                         getProductHistory(product)
                     }
                 }
+            }.onFailure { e ->
+                showError(e)
             }
         }
     }
 
+    override fun retry() {
+        getProduct()
+    }
+
     private fun getProductHistory(product: Product) {
         productHistoryRepository.getProductHistory(2).onSuccess { productHistorys ->
+            hideError()
             val productHistory =
                 if (productHistorys.isNotEmpty() && product.id == productHistorys.first().id) {
                     if (productHistorys.size >= 2) productHistorys[1] else null
@@ -74,7 +82,10 @@ class ProductDetailViewModel(
             }
 
             insertProductHistory(product)
-        }.onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
+        }.onFailure { e ->
+            showError(e)
+            showMessage(MessageProvider.DefaultErrorMessage)
+        }
     }
 
     fun addToCart() {
@@ -88,8 +99,10 @@ class ProductDetailViewModel(
                         quantity = product.quantity,
                         imageUrl = product.imageUrl,
                     ).onSuccess {
+                        hideError()
                         showMessage(ProductDetailMessage.AddToCartSuccessMessage)
-                    }.onFailure {
+                    }.onFailure { e ->
+                        showError(e)
                         showMessage(MessageProvider.DefaultErrorMessage)
                     }
                 }
@@ -126,7 +139,12 @@ class ProductDetailViewModel(
                 name = productValue.name,
                 price = productValue.price,
                 imageUrl = productValue.imageUrl,
-            ).onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
+            ).onSuccess {
+                hideError()
+            }.onFailure { e ->
+                showError(e)
+                showMessage(MessageProvider.DefaultErrorMessage)
+            }
         }
     }
 

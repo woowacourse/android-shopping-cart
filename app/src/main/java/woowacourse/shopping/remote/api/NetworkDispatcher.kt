@@ -10,7 +10,7 @@ import woowacourse.shopping.remote.api.ApiClient.GET_FIND_PRODUCT_PATH
 import woowacourse.shopping.remote.api.ApiClient.GET_PAGING_PRODUCT_PATH
 import kotlin.math.min
 
-class NetworkDispatcher(private val errorListener: ErrorListener) : Dispatcher() {
+class NetworkDispatcher() : Dispatcher() {
     private val gson = Gson()
 
     override fun dispatch(request: RecordedRequest): MockResponse {
@@ -18,15 +18,19 @@ class NetworkDispatcher(private val errorListener: ErrorListener) : Dispatcher()
 
         return when {
             path.startsWith(GET_FIND_PRODUCT_PATH) -> {
-                val productId = path.removePrefix(GET_FIND_PRODUCT_PATH).toLong()
-                val body =
-                    DummyData.PRODUCT_LIST.find { it.id == productId }
-                        ?: throw NoSuchElementException()
+                if (Math.random() > 0.5) {
+                    MockResponse().setResponseCode(500).setBody("Internal Server Error")
+                } else {
+                    val productId = path.removePrefix(GET_FIND_PRODUCT_PATH).toLong()
+                    val body =
+                        DummyData.PRODUCT_LIST.find { it.id == productId }
+                            ?: throw NoSuchElementException()
 
-                MockResponse()
-                    .setHeader(CONTENT_TYPE, CONTENT_VALUE)
-                    .setResponseCode(200)
-                    .setBody(gson.toJson(body))
+                    MockResponse()
+                        .setHeader(CONTENT_TYPE, CONTENT_VALUE)
+                        .setResponseCode(200)
+                        .setBody(gson.toJson(body))
+                }
             }
 
             path.startsWith(GET_PAGING_PRODUCT_PATH) -> {
@@ -40,22 +44,23 @@ class NetworkDispatcher(private val errorListener: ErrorListener) : Dispatcher()
                         val toIndex = min(fromIndex + pageSize, DummyData.PRODUCT_LIST.size)
                         val body = DummyData.PRODUCT_LIST.subList(fromIndex, toIndex)
 
-                        MockResponse()
-                            .setHeader(CONTENT_TYPE, CONTENT_VALUE)
-                            .setResponseCode(200)
-                            .setBody(gson.toJson(body))
+                        if (Math.random() > 0.5) {
+                            MockResponse().setResponseCode(500).setBody("Internal Server Error")
+                        } else {
+                            MockResponse()
+                                .setHeader(CONTENT_TYPE, CONTENT_VALUE)
+                                .setResponseCode(200)
+                                .setBody(gson.toJson(body))
+                        }
                     } else {
-                        errorListener.handleNetworkError()
                         MockResponse().setResponseCode(404)
                     }
                 } else {
-                    errorListener.handleNetworkError()
                     MockResponse().setResponseCode(404)
                 }
             }
 
             else -> {
-                errorListener.handleNetworkError()
                 MockResponse().setResponseCode(404)
             }
         }

@@ -36,7 +36,6 @@ class ProductListPagingSource(
                 Result.success(PagingProduct(products, last))
             },
             onFailure = { e ->
-                last = true
                 Result.failure(e)
             },
         )

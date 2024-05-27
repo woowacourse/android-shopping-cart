@@ -29,10 +29,18 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     private fun loadCartProducts(page: Int) {
         thread {
             shoppingCartPagingSource.load(page).onSuccess { pagingCartProduct ->
+                hideError()
                 _uiState.postValue(_uiState.value?.copy(pagingCartProduct = pagingCartProduct))
-            }.onFailure {
+            }.onFailure { e ->
+                showError(e)
                 showMessage(MessageProvider.DefaultErrorMessage)
             }
+        }
+    }
+
+    override fun retry() {
+        _uiState.value?.let { state ->
+            loadCartProducts(state.pagingCartProduct.currentPage)
         }
     }
 
@@ -95,8 +103,10 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
                 price = product.price,
                 quantity = quantity,
                 imageUrl = product.imageUrl,
-            ).onFailure {
-                // TODO 예외처리
+            ).onSuccess {
+                hideError()
+            }.onFailure { e ->
+                showError(e)
             }
         }
     }
@@ -107,7 +117,10 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
                 uiState.value?.let { state ->
                     loadCartProducts(state.pagingCartProduct.currentPage)
                 }
-            }.onFailure {
+            }.onSuccess {
+                hideError()
+            }.onFailure { e ->
+                showError(e)
                 showMessage(MessageProvider.DefaultErrorMessage)
             }
         }
@@ -121,8 +134,10 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
             repository.updateCartProduct(
                 productId = productId,
                 quantity = quantity,
-            ).onFailure {
-                // TODO 예외처리
+            ).onSuccess {
+                hideError()
+            }.onFailure { e ->
+                showError(e)
             }
         }
     }

@@ -52,11 +52,17 @@ class ProductListViewModel(
                     cartCount = cartCount,
                 )
             }.onSuccess { productListUiState ->
+                hideError()
                 _uiState.postValue(productListUiState)
             }.onFailure { e ->
+                showError(e)
                 showMessage(MessageProvider.DefaultErrorMessage)
             }
         }
+    }
+
+    override fun retry() {
+        loadMoreProducts()
     }
 
     override fun navigateToProductDetail(productId: Long) {
@@ -70,6 +76,7 @@ class ProductListViewModel(
     override fun loadMoreProducts() {
         thread {
             productListPagingSource.load().onSuccess { pagingProduct ->
+                hideError()
                 _uiState.value?.let { state ->
                     val nowPagingProduct =
                         PagingProduct(
@@ -86,6 +93,7 @@ class ProductListViewModel(
                     )
                 }
             }.onFailure { e ->
+                showError(e)
                 showMessage(MessageProvider.DefaultErrorMessage)
             }
         }
@@ -174,8 +182,8 @@ class ProductListViewModel(
                 price = product.price,
                 quantity = quantity,
                 imageUrl = product.imageUrl,
-            ).onFailure {
-                // TODO 예외처리
+            ).onFailure { e ->
+                showError(e)
             }
         }
     }
@@ -184,8 +192,8 @@ class ProductListViewModel(
         thread {
             shoppingCartRepository.deleteCartProduct(
                 productId = productId,
-            ).onFailure {
-                // TODO 예외처리
+            ).onFailure { e ->
+                showError(e)
             }
         }
     }
@@ -198,8 +206,8 @@ class ProductListViewModel(
             shoppingCartRepository.updateCartProduct(
                 productId = productId,
                 quantity = quantity,
-            ).onFailure {
-                // TODO 예외처리
+            ).onFailure { e ->
+                showError(e)
             }
         }
     }

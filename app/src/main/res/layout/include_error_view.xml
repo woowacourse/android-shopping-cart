@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="errorState"
+            type="woowacourse.shopping.presentation.base.ErrorState" />
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.base.BaseViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,6 +27,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/black"
             android:textSize="18sp"
+            android:text="@{errorState.title}"
             app:layout_constraintBottom_toTopOf="@+id/error_description"
             app:layout_constraintEnd_toEndOf="@+id/error_description"
             app:layout_constraintStart_toStartOf="@+id/error_description"
@@ -27,6 +37,7 @@
             android:id="@+id/error_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{errorState.description}"
             android:layout_below="@id/error_title"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
@@ -42,6 +53,7 @@
         <Button
             android:id="@+id/retry_button"
             android:layout_width="wrap_content"
+            android:onClick="@{() -> vm.retry()}"
             android:layout_height="wrap_content"
             android:layout_below="@id/error_description"
             android:layout_marginTop="30dp"
