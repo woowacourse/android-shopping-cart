@@ -108,11 +108,11 @@ class ProductDetailActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
+    private fun getProductId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
 
     private fun showProduct() {
         runCatching {
-            productDetailViewModel.loadProduct(productId())
+            productDetailViewModel.loadProduct(getProductId())
         }.onFailure {
             showErrorSnackBar()
         }
