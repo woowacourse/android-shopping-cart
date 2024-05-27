@@ -24,7 +24,7 @@ object DummyOrder : OrderRepository {
 
     override fun plusOrder(product: Product) {
         val order = orders.find { it.product == product }
-        val id = order?.id ?: (orders[orders.size - 1].id + 1)
+        val id = order?.id ?: (orders.lastOrNull()?.id?.plus(1)) ?: 1
         val quantity = order?.quantity?.plus(1) ?: 1
         orders.removeIf { it.id == id }
         val newOrder = Order(id, quantity, product)

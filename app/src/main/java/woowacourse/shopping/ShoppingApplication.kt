@@ -1,12 +1,13 @@
 package woowacourse.shopping
 
-import android.app.Application
-import woowacourse.shopping.data.datasource.history.LocalHistoryDataSource
-import woowacourse.shopping.data.datasource.order.LocalOrderDataSource
-import woowacourse.shopping.data.db.AppDatabase
+import woowacourse.shopping.presentation.ui.productdetail.ProductDetailViewModelFactory
+import woowacourse.shopping.presentation.ui.productlist.ProductListViewModelFactory
+import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartViewModelFactory
 
-class ShoppingApplication : Application() {
-    val db by lazy { AppDatabase.getDatabase(this) }
-    val localHistoryDataSource by lazy { LocalHistoryDataSource(db.historyDao()) }
-    val localOrderDataSource by lazy { LocalOrderDataSource(db.orderDao()) }
+interface ShoppingApplication {
+    fun shoppingCartViewModelFactory(): ShoppingCartViewModelFactory
+
+    fun productListViewModelFactory(): ProductListViewModelFactory
+
+    fun productDetailViewModelFactory(): ProductDetailViewModelFactory
 }

@@ -3,9 +3,6 @@ package woowacourse.shopping.presentation.ui.productlist
 import android.view.Menu
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.DefaultHistoryRepository
-import woowacourse.shopping.data.repsoitory.DefaultOrderRepository
-import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.databinding.ProductListMenuLayoutBinding
 import woowacourse.shopping.presentation.base.BaseActivity
@@ -22,13 +19,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
 
     private val viewModel: ProductListViewModel by viewModels {
-        val localHistoryDataSource = shoppingApplication.localHistoryDataSource
-        val localOrderDataSource = shoppingApplication.localOrderDataSource
-        ProductListViewModelFactory(
-            DummyProductList,
-            DefaultOrderRepository(localOrderDataSource),
-            DefaultHistoryRepository(localHistoryDataSource),
-        )
+        shoppingApplication.productListViewModelFactory()
     }
 
     private val historyListAdapter: HistoryListAdapter by lazy { HistoryListAdapter(actionHandler = viewModel) }

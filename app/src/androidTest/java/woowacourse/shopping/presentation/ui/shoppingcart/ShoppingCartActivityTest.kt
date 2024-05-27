@@ -9,9 +9,11 @@ import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.mockk.junit5.MockKExtension
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
@@ -20,6 +22,7 @@ import woowacourse.shopping.domain.repository.OrderRepository
 import woowacourse.shopping.presentation.ui.utils.RecyclerViewItemCountAssertion
 
 @RunWith(AndroidJUnit4::class)
+@ExtendWith(MockKExtension::class)
 class ShoppingCartActivityTest {
     private val repository: OrderRepository = DummyOrder
 
