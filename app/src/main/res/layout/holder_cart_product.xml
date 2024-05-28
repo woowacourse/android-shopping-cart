@@ -5,19 +5,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="order"
-            type="woowacourse.shopping.domain.model.Order" />
-
+        <import type="android.view.View"/>
 
         <variable
             name="position"
             type="int" />
 
         <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
             name="actionHandler"
             type="woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActionHandler" />
+
+        <variable
+            name="productCountHandler"
+            type="woowacourse.shopping.presentation.common.ProductCountHandler" />
+
 
     </data>
 
@@ -39,7 +44,7 @@
             android:layout_marginTop="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{order.product.name}"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -50,7 +55,7 @@
 
         <ImageView
             android:id="@+id/iv_product_thumbnail"
-            urlToImage="@{order.product.imageUrl}"
+            urlToImage="@{product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
@@ -61,9 +66,23 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
             tools:src="@drawable/img_dummy_product_thumbnail" />
 
+        <include
+            android:id="@+id/include_product_count"
+            layout="@layout/include_product_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="6dp"
+            android:visibility="@{product.quantity == 0 ? View.GONE : View.VISIBLE}"
+            app:actionHandler="@{productCountHandler}"
+            app:layout_constraintBottom_toTopOf="@+id/tv_product_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:position="@{position}"
+            app:product="@{product}" />
+
         <TextView
             android:id="@+id/tv_product_price"
-            priceToCurrency="@{order.product.price}"
+            priceToCurrency="@{product.totalPrice}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
@@ -80,7 +99,7 @@
             android:id="@+id/iv_closed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> actionHandler.removeOrder(order.id)}"
+            android:onClick="@{() -> actionHandler.deleteCartProduct(product.id)}"
             android:padding="20dp"
             android:src="@drawable/ic_close_gray6"
             app:layout_constraintEnd_toEndOf="parent"

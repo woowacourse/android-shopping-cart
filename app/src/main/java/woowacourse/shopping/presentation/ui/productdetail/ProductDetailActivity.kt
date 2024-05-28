@@ -6,7 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.app.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -17,13 +17,14 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         ProductDetailViewModel.factory(
             (application as ShoppingApplication).productRepository,
             (application as ShoppingApplication).shoppingCartRepository,
+            (application as ShoppingApplication).productHistoryRepository,
         )
     }
 
     override val layoutResourceId: Int
         get() = R.layout.activity_product_detail
 
-    override fun initStartView() {
+    override fun initCreateView() {
         initActionBar()
         initDataBinding()
         initObserve()
@@ -37,14 +38,14 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@ProductDetailActivity
+            productCountHandler = viewModel
         }
     }
 
     private fun initObserve() {
         viewModel.message.observeEvent(this) { message ->
             when (message) {
-                is MessageProvider.DefaultErrorMessage ->
-                    showToastMessage(message.getMessage(this))
+                is MessageProvider.DefaultErrorMessage -> showToastMessage(message.getMessage(this))
 
                 is ProductDetailMessage.NoSuchElementErrorMessage ->
                     showToastMessage(message.getMessage(this))
@@ -69,16 +70,21 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getProduct()
+    }
+
     companion object {
         const val PUT_EXTRA_PRODUCT_ID = "product_id"
 
-        fun startActivity(
+        fun getIntent(
             context: Context,
-            id: Int,
-        ) {
-            val intent = Intent(context, ProductDetailActivity::class.java)
-            intent.putExtra(PUT_EXTRA_PRODUCT_ID, id)
-            context.startActivity(intent)
+            id: Long,
+        ): Intent {
+            return Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(PUT_EXTRA_PRODUCT_ID, id)
+            }
         }
     }
 }

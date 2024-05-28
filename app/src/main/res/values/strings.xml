@@ -4,11 +4,15 @@
     <!--    상품 목록-->
     <string name="show_more_products_title">더보기</string>
     <string name="empty_show_more_title">더이상 상품이 없습니다.</string>
+    <string name="empty_product_history">최근 본 상품이 없습니다.</string>
+    <string name="product_history_title">최근 본 상품</string>
 
     <!--    상품 상세-->
     <string name="product_detail_title"></string>
     <string name="detail_price_title">가격</string>
     <string name="product_detail_close_title">닫기</string>
+    <string name="empty_finally_product">마지막으로 본 상품이 없습니다.</string>
+
 
     <!--    장바구니-->
     <string name="cart_title">Cart</string>
@@ -16,6 +20,10 @@
     <string name="tv_pre_page_title"><![CDATA[<]]></string>
     <string name="tv_next_page_title"><![CDATA[>]]></string>
 
+    <!--    에러-->
+    <string name="retry_title">재시도</string>
+    <string name="network_error_title">인터넷 연결이 불안정해요.</string>
+    <string name="network_error_description">Wi-Fi나 셀룰러 데이터 연결 상태를\n확인하고 다시 시도해주세요.</string>
 
     <!--    공통-->
     <string name="price_format_kor"> %,d원</string>

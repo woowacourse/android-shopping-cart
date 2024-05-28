@@ -1,22 +1,31 @@
 package woowacourse.shopping.data.repsoitory
 
+import woowacourse.shopping.data.datasource.local.ShoppingCartDataSource
+import woowacourse.shopping.data.datasource.remote.ProductDataSource
+import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import kotlin.math.min
 
-class ProductRepositoryImpl(private val productList: MutableList<Product>) : ProductRepository {
-    override fun findProductById(id: Int): Result<Product> =
-        runCatching {
-            productList.find { it.id == id } ?: throw NoSuchElementException()
+class ProductRepositoryImpl(
+    private val productDataSource: ProductDataSource,
+    private val shoppingCartDataSource: ShoppingCartDataSource,
+) : ProductRepository {
+    override fun findProductById(id: Long): Result<Product> =
+        productDataSource.findProductById(id).mapCatching { productDto ->
+            val carProduct = shoppingCartDataSource.findCartProduct(id).getOrNull()
+            carProduct?.toDomain() ?: productDto.copy(quantity = INIT_QUANTITY).toDomain()
         }
 
     override fun getPagingProduct(
         page: Int,
         pageSize: Int,
     ): Result<List<Product>> =
-        runCatching {
-            val fromIndex = page * pageSize
-            val toIndex = min(fromIndex + pageSize, productList.size)
-            productList.subList(fromIndex, toIndex)
-        }
+        productDataSource.getPagingProduct(page, pageSize)
+            .mapCatching { result -> result.map { it.toDomain() } }
+
+    override fun shutdown(): Result<Unit> = productDataSource.shutdown()
+
+    companion object {
+        const val INIT_QUANTITY = 1
+    }
 }

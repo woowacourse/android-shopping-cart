@@ -6,13 +6,23 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
+            name="position"
+            type="int" />
+
+        <variable
             name="actionHandler"
             type="woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler" />
+
+        <variable
+            name="productCountHandler"
+            type="woowacourse.shopping.presentation.common.ProductCountHandler" />
 
     </data>
 
@@ -65,6 +75,29 @@
             app:layout_constraintStart_toStartOf="@+id/tv_product_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
             tools:text="10,000원" />
+
+        <include
+            android:id="@+id/include_product_count"
+            layout="@layout/include_product_count"
+            android:visibility="@{product.quantity == 0 ? View.GONE : View.VISIBLE}"
+            app:actionHandler="@{productCountHandler}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_product_thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:position="@{position}"
+            app:product="@{product}" />
+
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_white_shape_oval"
+            android:onClick="@{() -> productCountHandler.plusProductQuantity(product.id, position)}"
+            android:src="@drawable/ic_plus"
+            android:visibility="@{product.quantity == 0 ? View.VISIBLE : View.GONE}"
+            app:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_product_thumbnail"
+            app:layout_constraintEnd_toEndOf="@+id/iv_product_thumbnail" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

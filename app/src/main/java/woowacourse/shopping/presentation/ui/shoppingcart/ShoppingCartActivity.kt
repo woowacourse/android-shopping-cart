@@ -5,12 +5,12 @@ import android.content.Intent
 import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.app.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
-import woowacourse.shopping.presentation.ui.shoppingcart.adapter.OrderListAdapter
+import woowacourse.shopping.presentation.ui.shoppingcart.adapter.CartProductsAdapter
 
 class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_shopping_cart
@@ -19,9 +19,9 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
         ShoppingCartViewModel.factory((application as ShoppingApplication).shoppingCartRepository)
     }
 
-    private val adapter: OrderListAdapter by lazy { OrderListAdapter(viewModel) }
+    private val adapter: CartProductsAdapter by lazy { CartProductsAdapter(viewModel, viewModel) }
 
-    override fun initStartView() {
+    override fun initCreateView() {
         initActionBar()
         initDataBinding()
         initAdapter()
@@ -43,12 +43,12 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     }
 
     private fun initAdapter() {
-        binding.rvOrderList.adapter = adapter
+        binding.rvCartProducts.adapter = adapter
     }
 
     private fun initObserve() {
         viewModel.uiState.observe(this) { uiState ->
-            adapter.updateOrderList(uiState.pagingOrder.orders)
+            adapter.submitList(uiState.pagingCartProduct.products)
         }
 
         viewModel.message.observeEvent(this) { message ->
@@ -64,9 +64,8 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     }
 
     companion object {
-        fun startActivity(context: Context) {
-            val intent = Intent(context, ShoppingCartActivity::class.java)
-            context.startActivity(intent)
+        fun getIntent(context: Context): Intent {
+            return Intent(context, ShoppingCartActivity::class.java)
         }
     }
 }
