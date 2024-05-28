@@ -35,7 +35,9 @@ class ProductListFragment :
     }
 
     private val eventBusViewModel by activityViewModels<ShoppingEventBusViewModel>()
-
+    private val navigator: ShoppingNavigator by lazy {
+        requireActivity() as ShoppingNavigator
+    }
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var concatAdapter: ConcatAdapter
@@ -72,7 +74,7 @@ class ProductListFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_cart) {
-                        (requireActivity() as ShoppingNavigator).navigateToCart()
+                        navigator.navigateToCart()
                         return true
                     }
                     return false
@@ -104,7 +106,7 @@ class ProductListFragment :
         }
 
         viewModel.navigateToDetailEvent.observe(viewLifecycleOwner) {
-            (requireActivity() as ShoppingNavigator).navigateToProductDetail(it)
+            navigator.navigateToProductDetail(it)
         }
 
         eventBusViewModel.updateCartEvent.observe(viewLifecycleOwner) {

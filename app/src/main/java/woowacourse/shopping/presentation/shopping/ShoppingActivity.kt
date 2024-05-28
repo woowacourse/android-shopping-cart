@@ -46,11 +46,12 @@ class ShoppingActivity :
         }
     }
 
-    override fun navigateToProductList(flag: Int) {
-        supportFragmentManager.popBackStack(ProductListFragment.TAG, flag)
+    override fun popBackStack(popUpTo: String, inclusive: Boolean) {
+        val flag = if (inclusive) 0 else 1
+        supportFragmentManager.popBackStack(popUpTo, flag)
     }
 
     override fun popBackStack() {
-        onBackPressedDispatcher.onBackPressed()
+        supportFragmentManager.popBackStack()
     }
 }

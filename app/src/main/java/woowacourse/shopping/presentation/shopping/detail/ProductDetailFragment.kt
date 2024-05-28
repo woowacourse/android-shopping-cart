@@ -17,6 +17,7 @@ import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
+import woowacourse.shopping.presentation.shopping.product.ProductListFragment
 import woowacourse.shopping.presentation.util.showToast
 
 class ProductDetailFragment :
@@ -32,8 +33,10 @@ class ProductDetailFragment :
             shoppingRepository,
         )
     }
-
     private val eventBusViewModel by activityViewModels<ShoppingEventBusViewModel>()
+    private val navigator: ShoppingNavigator by lazy {
+        requireActivity() as ShoppingNavigator
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,10 +70,10 @@ class ProductDetailFragment :
 
     private fun initObservers() {
         viewModel.addCartEvent.observe(viewLifecycleOwner) {
-            (requireActivity() as? ShoppingNavigator)?.navigateToCart()
+            navigator.navigateToCart()
         }
         viewModel.recentProductEvent.observe(viewLifecycleOwner) { id ->
-            (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
+            navigator.navigateToProductDetail(id)
         }
     }
 
@@ -103,9 +106,10 @@ class ProductDetailFragment :
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
                         if (viewModel.uiState.value?.isRecentProductVisible == false) {
-                            (requireActivity() as? ShoppingNavigator)?.navigateToProductList(1)
+                            val tag = ProductListFragment.TAG ?: return false
+                            navigator.popBackStack(tag, false)
                         } else {
-                            (requireActivity() as? ShoppingNavigator)?.popBackStack()
+                            navigator.popBackStack()
                         }
                     }
                     return false
