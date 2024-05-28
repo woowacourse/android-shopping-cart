@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -112,7 +113,7 @@ class HomeActivity : AppCompatActivity() {
             activityResultLauncher.launch(CartActivity.newIntent(this))
         }
         viewModel.products.observe(this) {
-            productAdapter.setData(it)
+            productAdapter.submitList(it)
         }
         viewModel.changedPosition.observe(this) {
             productAdapter.notifyItemChanged(it.getContentIfNotHandled() ?: return@observe)
@@ -120,7 +121,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val EXTRA_VIEWMODEL_FACTORY = "extra_viewmodel_factory"
         private const val EXTRA_QUANTITIES = "quantities"
     }
 }
@@ -128,8 +128,8 @@ class HomeActivity : AppCompatActivity() {
 @BindingAdapter("shopping:data")
 fun <T> RecyclerView.setData(data: List<T>?) {
     if (data == null) return
-    if (adapter is BindableAdapter<*>) {
-        (adapter as BindableAdapter<T>).setData(data)
+    if (adapter is ListAdapter<*, *>) {
+        (adapter as ListAdapter<T, RecyclerView.ViewHolder>).submitList(data)
     }
 }
 

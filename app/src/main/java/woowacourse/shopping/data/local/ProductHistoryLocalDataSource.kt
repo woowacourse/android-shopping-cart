@@ -20,4 +20,3 @@ class ProductHistoryLocalDataSource(
         return historyDao.getLastProduct()
     }
 }
-

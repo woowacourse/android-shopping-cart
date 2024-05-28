@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
@@ -20,8 +21,7 @@ import java.lang.IllegalArgumentException
 class ProductAdapter(
     private val homeItemClickListener: HomeItemEventListener,
     private val quantityListener: QuantityListener,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<CartableProduct> {
-    private var products: List<CartableProduct> = emptyList()
+) : ListAdapter<CartableProduct, RecyclerView.ViewHolder>(ProductDiffUtil) {
     private var loadStatus: LoadStatus = LoadStatus()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -56,27 +56,19 @@ class ProductAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(products[position])
+            is ProductViewHolder -> holder.bind(currentList[position])
             is LoadingViewHolder -> holder.bind(loadStatus)
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
         }
     }
 
-    override fun getItemCount(): Int = products.size + 1
+    override fun getItemCount(): Int = currentList.size + 1
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == products.size) {
+        return if (position == currentList.size) {
             TYPE_LOAD
         } else {
             TYPE_PRODUCT
-        }
-    }
-
-    override fun setData(data: List<CartableProduct>) {
-        val previousSize = products.size
-        products = data
-        if (previousSize != products.size) {
-            notifyItemRangeInserted(previousSize, products.size - previousSize)
         }
     }
 

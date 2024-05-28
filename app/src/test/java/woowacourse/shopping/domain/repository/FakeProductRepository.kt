@@ -18,12 +18,12 @@ class FakeProductRepository : ProductRepository {
             RecentProduct(
                 productHistory = productHistory,
                 product =
-                Product(
-                    productHistory.productId,
-                    "사과${productHistory.productId + 1}",
-                    "image${productHistory.productId + 1}",
-                    1000 * (productHistory.productId.toInt() + 1),
-                ),
+                    Product(
+                        productHistory.productId,
+                        "사과${productHistory.productId + 1}",
+                        "image${productHistory.productId + 1}",
+                        1000 * (productHistory.productId.toInt() + 1),
+                    ),
             ),
         )
     }

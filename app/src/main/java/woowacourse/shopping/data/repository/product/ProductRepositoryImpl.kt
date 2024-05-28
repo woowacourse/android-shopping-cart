@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.repository.product
 
+import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.datasource.ProductHistoryDataSource
 import woowacourse.shopping.data.model.history.ProductHistory
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.data.model.product.CartableProduct
-import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.domain.repository.product.ProductRepository
 
 class ProductRepositoryImpl(

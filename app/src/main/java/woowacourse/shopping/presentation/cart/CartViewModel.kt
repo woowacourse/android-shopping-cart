@@ -53,8 +53,9 @@ class CartViewModel(
     fun loadCurrentPageCartItems() {
         thread {
             val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return@thread)
-            hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return@thread)
-                .isNotEmpty()
+            hasNext =
+                cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return@thread)
+                    .isNotEmpty()
             setPageInformation()
             _cartableProducts.postValue(cartItems)
         }
@@ -90,7 +91,7 @@ class CartViewModel(
                     replaceAll(
                         alteredCartItems,
                         alteredCartItems.first { it.productId == productId },
-                        ProductQuantity(productId, quantity)
+                        ProductQuantity(productId, quantity),
                     )
                 }
             }

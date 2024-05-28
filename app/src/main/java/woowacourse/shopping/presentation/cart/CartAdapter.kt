@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.cart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.model.cart.CartedProduct
@@ -13,9 +14,7 @@ import woowacourse.shopping.presentation.home.products.QuantityListener
 class CartAdapter(
     private val cartItemEventListener: CartItemEventListener,
     private val quantityListener: QuantityListener,
-) : RecyclerView.Adapter<CartAdapter.CartViewHolder>(), BindableAdapter<CartedProduct> {
-    private var orders: List<CartedProduct> = emptyList()
-
+) : ListAdapter<CartedProduct, CartAdapter.CartViewHolder>(CartDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -26,21 +25,13 @@ class CartAdapter(
         return CartViewHolder(binding, cartItemEventListener, quantityListener)
     }
 
-    override fun getItemCount(): Int = orders.size
+    override fun getItemCount(): Int = currentList.size
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(orders[position])
-    }
-
-    override fun setData(data: List<CartedProduct>) {
-        val currentSize = this.orders.size
-        this.orders = data
-        notifyDataSetChanged()
-//        notifyItemRangeRemoved(0, currentSize)
-//        notifyItemRangeInserted(0, this.orders.size)
+        holder.bind(currentList[position])
     }
 
     class CartViewHolder(

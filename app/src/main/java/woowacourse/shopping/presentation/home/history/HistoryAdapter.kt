@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.home.history
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.model.history.RecentProduct
@@ -12,9 +13,7 @@ import woowacourse.shopping.presentation.home.products.HomeItemEventListener
 
 class HistoryAdapter(
     private val homeItemClickListener: HomeItemEventListener,
-) : RecyclerView.Adapter<HistoryAdapter.HistoryItemViewHolder>(), BindableAdapter<RecentProduct> {
-    private var historyItems: List<RecentProduct> = emptyList()
-
+) : ListAdapter<RecentProduct, HistoryAdapter.HistoryItemViewHolder>(HistoryDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         position: Int,
@@ -24,19 +23,13 @@ class HistoryAdapter(
         return HistoryItemViewHolder(binding, homeItemClickListener)
     }
 
-    override fun getItemCount(): Int = historyItems.size
+    override fun getItemCount(): Int = currentList.size
 
     override fun onBindViewHolder(
         holder: HistoryItemViewHolder,
         position: Int,
     ) {
-        holder.bind(historyItems[position])
-    }
-
-    override fun setData(data: List<RecentProduct>) {
-        val previousSize = historyItems.size
-        historyItems = data
-        notifyDataSetChanged()
+        holder.bind(currentList[position])
     }
 
     class HistoryItemViewHolder(

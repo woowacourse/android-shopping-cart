@@ -14,7 +14,7 @@ class ShoppingApplication : Application() {
     val productRepository by lazy {
         ProductRepositoryImpl(
             ProductRemoteDataSource(),
-            ProductHistoryLocalDataSource(database.productHistoryDao())
+            ProductHistoryLocalDataSource(database.productHistoryDao()),
         )
     }
     val cartRepository by lazy { CartRepositoryImpl(CartRemoteDataSource()) }
