@@ -136,14 +136,9 @@ class ShoppingActivity : AppCompatActivity() {
 
     private fun navigateToCart() {
         startActivity(CartActivity.createIntent(context = this))
-        // activityResultLauncher.launch(CartActivity.createIntent(context = this))
     }
 
     private fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
-    }
-
-    companion object {
-        const val KEY = "reload_needed"
     }
 }
