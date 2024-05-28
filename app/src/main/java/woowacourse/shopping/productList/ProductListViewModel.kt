@@ -7,7 +7,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.db.ShoppingCart
+import woowacourse.shopping.db.ShoppingCartDatabase
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.RecentlyViewedRepository
@@ -33,7 +33,7 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     val recentlyViewedProducts: LiveData<List<Product>> get() = _recentlyViewedProducts
 
     init {
-        ShoppingCart.initialize(application)
+        ShoppingCartDatabase.initialize(application)
         loadCartItems()
 
         _recentlyViewedProducts.addSource(_cartItems) { updateRecentlyViewedProducts() }
@@ -55,7 +55,7 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun loadCartItems() {
         viewModelScope.launch {
-            val cartItemsFromDb = ShoppingCart.getCartItems()
+            val cartItemsFromDb = ShoppingCartDatabase.getCartItems()
             _cartItems.value = cartItemsFromDb
         }
     }
@@ -68,14 +68,14 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
 
     fun increaseQuantity(productId: Int) {
         viewModelScope.launch {
-            ShoppingCart.addProductToCart(productId)
+            ShoppingCartDatabase.addProductToCart(productId)
             loadCartItems()
         }
     }
 
     fun decreaseQuantity(productId: Int) {
         viewModelScope.launch {
-            ShoppingCart.subtractProductCount(productId)
+            ShoppingCartDatabase.subtractProductCount(productId)
             loadCartItems()
         }
     }
@@ -83,7 +83,7 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
     private fun loadProducts(): List<Product> {
         var result = emptyList<Product>()
         thread {
-            result = MockWebService().findPagingProducts(currentIndex, COUNT_EACH_LOADING)
+            result = MockWebService().getPagingProducts(currentIndex, COUNT_EACH_LOADING)
             currentIndex += COUNT_EACH_LOADING
         }.join()
 

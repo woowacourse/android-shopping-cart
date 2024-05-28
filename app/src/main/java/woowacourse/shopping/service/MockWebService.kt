@@ -22,7 +22,7 @@ class MockWebService {
         return Gson().fromJson(responseBody, Product::class.java)
     }
 
-    fun findPagingProducts(
+    fun getPagingProducts(
         offset: Int,
         pagingSize: Int,
     ): List<Product> {

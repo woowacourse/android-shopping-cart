@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.db.ShoppingCart
+import woowacourse.shopping.db.ShoppingCartDatabase
 import woowacourse.shopping.factory.BaseViewModelFactory
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
@@ -41,7 +41,7 @@ class MostRecentDetailViewModel(application: Application, val productId: Int) :
 
     private fun loadCartItem() {
         viewModelScope.launch {
-            val cartItems = ShoppingCart.getCartItems()
+            val cartItems = ShoppingCartDatabase.getCartItems()
             _cartItem.value = cartItems.find { it.productId == productId } ?: CartItem(productId, 0)
         }
     }
@@ -57,7 +57,7 @@ class MostRecentDetailViewModel(application: Application, val productId: Int) :
             if ((_cartItem.value?.quantity ?: 0) > 0) {
                 addProductCount()
             } else {
-                ShoppingCart.addProductToCart(productId)
+                ShoppingCartDatabase.addProductToCart(productId)
                 loadCartItem()
             }
         }
@@ -65,14 +65,14 @@ class MostRecentDetailViewModel(application: Application, val productId: Int) :
 
     private fun addProductCount() {
         viewModelScope.launch {
-            ShoppingCart.addProductCount(productId)
+            ShoppingCartDatabase.addProductCount(productId)
             loadCartItem()
         }
     }
 
     fun subtractProductCount() {
         viewModelScope.launch {
-            ShoppingCart.subtractProductCount(productId)
+            ShoppingCartDatabase.subtractProductCount(productId)
             loadCartItem()
         }
     }

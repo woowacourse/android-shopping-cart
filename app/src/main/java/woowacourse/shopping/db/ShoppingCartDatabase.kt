@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import woowacourse.shopping.db.cartItem.CartItemEntity
 import woowacourse.shopping.model.CartItem
 
-object ShoppingCart {
+object ShoppingCartDatabase {
     private lateinit var database: CartDatabase
 
     fun initialize(context: Context) {
