@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.ui.counter
 
-interface DefaultCounterHandler {
+interface CounterHandler {
     fun increaseCount(productId: Long)
 
     fun decreaseCount(productId: Long)

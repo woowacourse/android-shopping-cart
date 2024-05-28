@@ -123,16 +123,16 @@ class CartViewModel(private val repository: CartRepository) :
         _deleteCartItem.postValue(Event(itemId))
     }
 
-    override fun increaseCount(itemId: Long) {
-        val currentQuantity = repository.findWithCartItemId(itemId).quantity
-        repository.updateQuantity(itemId, currentQuantity + 1)
+    override fun increaseCount(productId: Long) {
+        val currentQuantity = repository.findQuantityWithProductId(productId)
+        repository.updateQuantityWithProductId(productId, currentQuantity + 1)
         loadPage()
     }
 
-    override fun decreaseCount(itemId: Long) {
-        val currentQuantity = repository.findWithCartItemId(itemId).quantity
+    override fun decreaseCount(productId: Long) {
+        val currentQuantity = repository.findQuantityWithProductId(productId)
         if (currentQuantity > 1) {
-            repository.updateQuantity(itemId, currentQuantity - 1)
+            repository.updateQuantityWithProductId(productId, currentQuantity - 1)
         }
         loadPage()
     }

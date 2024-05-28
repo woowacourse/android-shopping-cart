@@ -7,7 +7,7 @@
 
         <variable
             name="countHandler"
-            type="woowacourse.shopping.presentation.ui.counter.CartCounterHandler"/>
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler"/>
 
         <variable
             name="eventHandler"

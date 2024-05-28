@@ -9,7 +9,7 @@
 
         <variable
             name="countHandler"
-            type="woowacourse.shopping.presentation.ui.counter.DefaultCounterHandler" />
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler" />
 
         <variable
             name="shoppingProduct"
