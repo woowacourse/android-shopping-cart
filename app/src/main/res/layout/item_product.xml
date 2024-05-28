@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:shopping="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -12,13 +13,13 @@
 
         <variable
             name="listener"
-            type="woowacourse.shopping.presentation.shopping.product.adpater.ShoppingViewHolder.Product.ProductListener" />
+            type="woowacourse.shopping.presentation.shopping.product.ProductItemListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()-> listener.onClickProduct(product.id)}">
+        android:onClick="@{()-> listener.navigateToDetail(product.id)}">
 
         <ImageView
             android:id="@+id/product_image"
@@ -30,6 +31,18 @@
             app:layout_constraintTop_toTopOf="parent"
             shopping:imageUrl="@{product.imageUrl}"
             tools:src="@color/gray500" />
+
+        <include
+            layout="@layout/item_cart_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="@id/product_image"
+            bind:count="@{product.count}"
+            bind:counterListener="@{listener}"
+            bind:id="@{product.id}"
+            bind:visible="@{product.visible}" />
 
         <TextView
             android:id="@+id/product_title"

@@ -45,4 +45,16 @@ class ShoppingActivity :
             addToBackStack(ProductListFragment.TAG)
         }
     }
+
+    override fun popBackStack(
+        popUpTo: String,
+        inclusive: Boolean,
+    ) {
+        val flag = if (inclusive) 0 else 1
+        supportFragmentManager.popBackStack(popUpTo, flag)
+    }
+
+    override fun popBackStack() {
+        supportFragmentManager.popBackStack()
+    }
 }

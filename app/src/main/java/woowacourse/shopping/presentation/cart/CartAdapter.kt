@@ -2,24 +2,14 @@ package woowacourse.shopping.presentation.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.presentation.util.ItemUpdateHelper
+import woowacourse.shopping.presentation.util.ItemDiffCallback
 
 class CartAdapter(
-    private val onDeletedProduct: CartProductListener,
-) :
-    RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
-    private var products: List<CartProductUi> = emptyList()
-    private val updateHelper: ItemUpdateHelper<CartProductUi> =
-        ItemUpdateHelper<CartProductUi>(
-            adapter = this,
-            areItemsTheSame = { oldItem, newItem -> oldItem.product.id == newItem.product.id },
-            areContentsTheSame = { oldItem, newItem -> oldItem == newItem },
-        )
-
-    override fun getItemCount(): Int = products.size
-
+    private val cartProductListener: CartProductListener,
+) : ListAdapter<CartProductUi, CartAdapter.CartViewHolder>(cartProductComparator) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -30,36 +20,32 @@ class CartAdapter(
                 parent,
                 false,
             )
-        return CartViewHolder(binding, onDeletedProduct)
+        return CartViewHolder(binding, cartProductListener)
     }
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
-    }
-
-    override fun getItemId(position: Int): Long = products[position].product.id
-
-    fun updateProduct(newProducts: List<CartProductUi>) {
-        val oldProducts = products.toList()
-        products = newProducts
-        updateHelper.update(oldProducts, newProducts)
+        holder.bind(currentList[position])
     }
 
     class CartViewHolder(
         private val binding: ItemCartProductBinding,
-        private val onDeletedProduct: CartProductListener,
+        private val cartProductListener: CartProductListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
-            binding.listener = onDeletedProduct
+            binding.listener = cartProductListener
         }
     }
 
-    fun interface CartProductListener {
-        fun delete(product: CartProductUi)
+    companion object {
+        private val cartProductComparator =
+            ItemDiffCallback<CartProductUi>(
+                onItemsTheSame = { old, new -> old.product.id == new.product.id },
+                onContentsTheSame = { old, new -> old == new },
+            )
     }
 }

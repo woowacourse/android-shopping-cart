@@ -17,7 +17,7 @@
         android:layout_marginTop="24dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            isVisible="@{vm.products.size() == 0}"
+            isVisible="@{vm.uiState.products.size() == 0}"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -59,10 +59,10 @@
                 android:id="@+id/tv_minus_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@{vm.canLoadPrevPage ? @color/mint : @color/gray500}"
-                android:enabled="@{vm.canLoadPrevPage}"
-                android:onClick="@{()->vm.minusPage()}"
-                android:text="&lt;"
+                android:background="@{vm.uiState.canLoadPrevPage ? @color/mint : @color/gray500}"
+                android:enabled="@{vm.uiState.canLoadPrevPage}"
+                android:onClick="@{()->vm.moveToPrevPage()}"
+                android:text="@string/cart_prev_page"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:theme="@style/H1"
@@ -74,7 +74,7 @@
                 android:id="@+id/tv_current_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:text="@{vm.currentPage.toString()}"
+                android:text="@{String.valueOf(vm.uiState.currentPage)}"
                 android:textAlignment="center"
                 android:theme="@style/H1"
                 app:layout_constraintStart_toEndOf="@id/tv_minus_page"
@@ -85,10 +85,10 @@
                 android:id="@+id/tv_plus_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@{vm.canLoadNextPage ? @color/mint : @color/gray500}"
-                android:enabled="@{vm.canLoadNextPage}"
-                android:onClick="@{()->vm.plusPage()}"
-                android:text="&gt;"
+                android:background="@{vm.uiState.canLoadNextPage ? @color/mint : @color/gray500}"
+                android:enabled="@{vm.uiState.canLoadNextPage}"
+                android:onClick="@{()->vm.moveToNextPage()}"
+                android:text="@string/cart_next_page"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:theme="@style/H1"

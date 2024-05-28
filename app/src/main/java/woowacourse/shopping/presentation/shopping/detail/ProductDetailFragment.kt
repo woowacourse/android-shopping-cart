@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryInjector
@@ -15,23 +16,33 @@ import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
+import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
+import woowacourse.shopping.presentation.shopping.product.ProductListFragment
+import woowacourse.shopping.presentation.util.showToast
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
     private val viewModel by viewModels<ProductDetailViewModel> {
-        val shoppingRepository = ShoppingRepositoryInjector.shoppingRepository()
-        val cartRepository = CartRepositoryInjector.cartRepository()
+        eventBusViewModel.sendUpdateRecentProductEvent()
+        val cartRepository =
+            CartRepositoryInjector.cartRepository(requireContext().applicationContext)
+        val shoppingRepository =
+            ShoppingRepositoryInjector.shoppingRepository(requireContext().applicationContext)
         ProductDetailViewModel.factory(
-            shoppingRepository,
             cartRepository,
+            shoppingRepository,
         )
+    }
+    private val eventBusViewModel by activityViewModels<ShoppingEventBusViewModel>()
+    private val navigator: ShoppingNavigator by lazy {
+        requireActivity() as ShoppingNavigator
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
-            viewModel.loadProduct(id)
+            val id = arguments?.getLong(PRODUCT_ID, -1) ?: return
+            viewModel.loadCartProduct(id)
         }
     }
 
@@ -47,6 +58,7 @@ class ProductDetailFragment :
         initAppBar()
         initListeners()
         initObservers()
+        initErrorEvent()
     }
 
     private fun initListeners() {
@@ -56,8 +68,28 @@ class ProductDetailFragment :
     }
 
     private fun initObservers() {
-        viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
-            if (isAdded) navigateToShoppingCart()
+        viewModel.addCartEvent.observe(viewLifecycleOwner) {
+            navigator.navigateToCart()
+        }
+        viewModel.recentProductEvent.observe(viewLifecycleOwner) { id ->
+            navigator.navigateToProductDetail(id)
+        }
+        viewModel.updateCartEvent.observe(viewLifecycleOwner) {
+            eventBusViewModel.sendUpdateCartEvent()
+        }
+        eventBusViewModel.updateCartEvent.observe(viewLifecycleOwner) {
+            viewModel.refreshCartProduct()
+        }
+    }
+
+    private fun initErrorEvent() {
+        viewModel.errorEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                ProductDetailErrorEvent.LoadCartProduct -> showToast(R.string.error_msg_load_cart_products)
+                ProductDetailErrorEvent.AddCartProduct -> showToast(R.string.error_msg_update_cart_products)
+                ProductDetailErrorEvent.DecreaseCartCount -> showToast(R.string.error_msg_decrease_cart_count_limit)
+                ProductDetailErrorEvent.SaveRecentProduct -> showToast(R.string.error_msg_save_recent_product)
+            }
         }
     }
 
@@ -78,18 +110,18 @@ class ProductDetailFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
-                        return true
+                        if (viewModel.uiState.value?.isRecentProductVisible == false) {
+                            val tag = ProductListFragment.TAG ?: return false
+                            navigator.popBackStack(tag, false)
+                        } else {
+                            navigator.popBackStack()
+                        }
                     }
                     return false
                 }
             },
             viewLifecycleOwner,
         )
-    }
-
-    private fun navigateToShoppingCart() {
-        (requireActivity() as? ShoppingNavigator)?.navigateToCart()
     }
 
     companion object {
