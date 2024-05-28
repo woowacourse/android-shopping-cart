@@ -6,7 +6,7 @@ import woowacourse.shopping.model.CartItem
 
 @Entity(tableName = "cart_items")
 data class CartItemEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) private val id: Int = 0,
     val productId: Int,
     var quantity: Int,
 ) {
