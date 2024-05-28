@@ -1,17 +1,12 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.database.AppDatabase
-import woowacourse.shopping.data.dummy.DummyShoppingItems
 import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
 class DummyShoppingItemsRepository private constructor(database: AppDatabase) : ShoppingItemsRepository {
     private val productDao = database.productDao()
-
-    init {
-        insertProducts(DummyShoppingItems.items)
-    }
 
     override fun insertProducts(products: List<ProductEntity>) {
         threadAction {
