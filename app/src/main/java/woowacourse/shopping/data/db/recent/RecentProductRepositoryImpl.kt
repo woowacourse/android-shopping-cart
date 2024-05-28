@@ -4,7 +4,6 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.model.toRecentProductEntity
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import kotlin.concurrent.thread
 
 class RecentProductRepositoryImpl(recentProductDatabase: RecentProductDatabase) :
@@ -22,10 +21,8 @@ class RecentProductRepositoryImpl(recentProductDatabase: RecentProductDatabase) 
     }
 
     override fun update(productId: Long) {
-        val now = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         thread {
-            dao.update(productId, now.format(formatter))
+            dao.update(productId, LocalDateTime.now().toString())
         }.join()
     }
 
