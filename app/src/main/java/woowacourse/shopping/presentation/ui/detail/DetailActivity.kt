@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
@@ -71,7 +72,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun popUpToast() {
-        Toast.makeText(this, "상품이 장바구니에 담겼습니다.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.item_added_to_cart), Toast.LENGTH_SHORT).show()
     }
 
     companion object {
