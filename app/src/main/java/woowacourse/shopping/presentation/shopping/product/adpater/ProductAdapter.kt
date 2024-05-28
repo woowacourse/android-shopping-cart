@@ -13,7 +13,6 @@ class ProductAdapter(
     private val listener: ProductItemListener,
 ) :
     ListAdapter<ShoppingUiModel, ShoppingViewHolder>(productComparator) {
-
     override fun getItemViewType(position: Int): Int {
         return currentList[position].viewType
     }
@@ -54,14 +53,15 @@ class ProductAdapter(
     }
 
     companion object {
-        private val productComparator = ItemDiffCallback<ShoppingUiModel>(
-            onItemsTheSame = { old, new ->
-                if (old is ShoppingUiModel.Product && new is ShoppingUiModel.Product) {
-                    return@ItemDiffCallback old.id == new.id
-                }
-                return@ItemDiffCallback false
-            },
-            onContentsTheSame = { old, new -> old == new },
-        )
+        private val productComparator =
+            ItemDiffCallback<ShoppingUiModel>(
+                onItemsTheSame = { old, new ->
+                    if (old is ShoppingUiModel.Product && new is ShoppingUiModel.Product) {
+                        return@ItemDiffCallback old.id == new.id
+                    }
+                    return@ItemDiffCallback false
+                },
+                onContentsTheSame = { old, new -> old == new },
+            )
     }
 }

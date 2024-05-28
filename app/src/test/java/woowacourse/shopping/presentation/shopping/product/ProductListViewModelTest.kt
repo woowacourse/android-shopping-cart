@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shopping.product
 
-import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
@@ -9,16 +8,12 @@ import io.mockk.verify
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.common.ioExecutor
 import woowacourse.shopping.domain.product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.util.getOrAwaitValue
-import java.util.concurrent.Callable
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.measureTime
 
 @ExtendWith(InstantTaskExecutorExtension::class, MockKExtension::class)
 class ProductListViewModelTest {
@@ -37,9 +32,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel())
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-                Result.success(
-                    listOf(product()),
-                )
+            Result.success(
+                listOf(product()),
+            )
         every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
         every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())
         // when
@@ -58,9 +53,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel(), ShoppingUiModel.LoadMore)
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-                Result.success(
-                    listOf(product()),
-                )
+            Result.success(
+                listOf(product()),
+            )
         every {
             shoppingRepository.canLoadMore(page = 2, size = 20)
         } returns Result.success(true)
@@ -80,9 +75,9 @@ class ProductListViewModelTest {
         // given
         val expectProducts = listOf(product().toShoppingUiModel())
         every { shoppingRepository.products(currentPage = 1, size = 20) } returns
-                Result.success(
-                    listOf(product()),
-                )
+            Result.success(
+                listOf(product()),
+            )
         every { shoppingRepository.canLoadMore(page = 2, size = 20) } returns Result.success(false)
         every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
         every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())

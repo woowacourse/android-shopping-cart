@@ -5,7 +5,10 @@ interface ShoppingNavigator {
 
     fun navigateToCart()
 
-    fun popBackStack(popUpTo: String, inclusive: Boolean = false)
+    fun popBackStack(
+        popUpTo: String,
+        inclusive: Boolean = false,
+    )
 
     fun popBackStack()
 }

@@ -13,7 +13,6 @@ class RecentProductAdapter(
     private val listener: RecentProductItemListener,
 ) :
     ListAdapter<ProductUi, RecentProductAdapter.RecentProductViewHolder>(productComparator) {
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

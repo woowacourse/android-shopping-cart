@@ -46,7 +46,10 @@ class ShoppingActivity :
         }
     }
 
-    override fun popBackStack(popUpTo: String, inclusive: Boolean) {
+    override fun popBackStack(
+        popUpTo: String,
+        inclusive: Boolean,
+    ) {
         val flag = if (inclusive) 0 else 1
         supportFragmentManager.popBackStack(popUpTo, flag)
     }

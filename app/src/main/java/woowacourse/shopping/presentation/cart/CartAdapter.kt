@@ -10,7 +10,6 @@ import woowacourse.shopping.presentation.util.ItemDiffCallback
 class CartAdapter(
     private val cartProductListener: CartProductListener,
 ) : ListAdapter<CartProductUi, CartAdapter.CartViewHolder>(cartProductComparator) {
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -43,9 +42,10 @@ class CartAdapter(
     }
 
     companion object {
-        private val cartProductComparator = ItemDiffCallback<CartProductUi>(
-            onItemsTheSame = { old, new -> old.product.id == new.product.id },
-            onContentsTheSame = { old, new -> old == new },
-        )
+        private val cartProductComparator =
+            ItemDiffCallback<CartProductUi>(
+                onItemsTheSame = { old, new -> old.product.id == new.product.id },
+                onContentsTheSame = { old, new -> old == new },
+            )
     }
 }

@@ -7,8 +7,6 @@ import woowacourse.shopping.data.shopping.recent.RecentProductDataSource
 import woowacourse.shopping.domain.entity.Product
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import java.time.LocalDateTime
-import java.util.concurrent.CountDownLatch
-import kotlin.concurrent.thread
 
 class DefaultShoppingRepository(
     private val productDataSource: ProductDataSource,
