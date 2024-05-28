@@ -4,6 +4,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.UpdateCartItemResult
 import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
@@ -75,8 +76,8 @@ class MockShoppingCartRepository : ShoppingCartRepository {
     override fun updateCartItem(
         itemId: Long,
         updateCartItemType: UpdateCartItemType,
-    ): CartItemResult {
-        return CartItemResult(0, CartItemCounter())
+    ): UpdateCartItemResult {
+        return UpdateCartItemResult.UPDATED(CartItemResult(0, CartItemCounter()))
     }
 
     override fun getTotalCartItemCount(): Int {

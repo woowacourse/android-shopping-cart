@@ -8,12 +8,11 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFA
 import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_COUNT
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentlyProduct
+import woowacourse.shopping.domain.model.UpdateCartItemResult
 import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.utils.exception.AddCartItemException
-import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.utils.livedata.MutableSingleLiveData
 import woowacourse.shopping.utils.livedata.SingleLiveData
@@ -88,27 +87,30 @@ class ProductListViewModel(
                     product.id,
                     updateCartItemType,
                 )
-            product.updateCartItemCount(updateCartItemResult.counter.itemCount)
-            when (updateCartItemType) {
-                UpdateCartItemType.DECREASE -> {
-                    decreaseTotalCartItemCount()
-                }
+            when (updateCartItemResult) {
+                UpdateCartItemResult.ADD -> addCartItem(product)
+                is UpdateCartItemResult.DELETE -> deleteCartItem(product)
+                is UpdateCartItemResult.UPDATED -> {
+                    product.updateCartItemCount(updateCartItemResult.cartItemResult.counter.itemCount)
+                    when (updateCartItemType) {
+                        UpdateCartItemType.DECREASE -> {
+                            decreaseTotalCartItemCount()
+                        }
 
-                UpdateCartItemType.INCREASE -> {
-                    product.updateItemSelector(true)
-                    increaseTotalCartItemCount()
-                }
+                        UpdateCartItemType.INCREASE -> {
+                            product.updateItemSelector(true)
+                            increaseTotalCartItemCount()
+                        }
 
-                is UpdateCartItemType.UPDATE -> {}
+                        is UpdateCartItemType.UPDATE -> {}
+                    }
+                    _productListEvent.setValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+                }
             }
-            _productListEvent.setValue(ProductListEvent.UpdateProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
                     _errorEvent.setValue(ProductListEvent.UpdateProductEvent.Fail)
-
-                is AddCartItemException -> addCartItem(product)
-                is DeleteCartItemException -> deleteCartItem(product)
                 else -> _errorEvent.setValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
@@ -125,7 +127,7 @@ class ProductListViewModel(
     private fun deleteCartItem(product: Product) {
         try {
             product.updateItemSelector(false)
-            _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
+            decreaseTotalCartItemCount()
             _productListEvent.setValue(ProductListEvent.DeleteProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {

@@ -3,14 +3,15 @@ package woowacourse.shopping.data.repository
 import android.content.Context
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartItem.Companion.DEFAULT_CART_ITEM_ID
+import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.UpdateCartItemResult
 import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.Mapper.toCartItem
 import woowacourse.shopping.utils.Mapper.toCartItemEntity
-import woowacourse.shopping.utils.exception.AddCartItemException
-import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 import kotlin.concurrent.thread
@@ -52,22 +53,28 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
             cartItem = cartItemDao.findCartItemByProductId(productId)?.toCartItem()
         }.join()
         return CartItemResult(
-            cartItemId = cartItem?.id ?: throw AddCartItemException(),
-            counter = cartItem?.product?.cartItemCounter ?: throw NoSuchDataException(),
+            cartItemId = cartItem?.id ?: DEFAULT_CART_ITEM_ID,
+            counter = cartItem?.product?.cartItemCounter ?: CartItemCounter(),
         )
     }
 
     override fun updateCartItem(
         productId: Long,
         updateCartItemType: UpdateCartItemType,
-    ): CartItemResult {
+    ): UpdateCartItemResult {
         val cartItemResult = getCartItemResultFromProductId(productId)
         when (updateCartItemType) {
-            UpdateCartItemType.INCREASE -> cartItemResult.increaseCount()
+            UpdateCartItemType.INCREASE -> {
+                if (cartItemResult.cartItemId == DEFAULT_CART_ITEM_ID) {
+                    return UpdateCartItemResult.ADD
+                } else {
+                    cartItemResult.increaseCount()
+                }
+            }
             UpdateCartItemType.DECREASE -> {
                 if (cartItemResult.decreaseCount() == ChangeCartItemResultState.Fail) {
                     deleteCartItem(cartItemResult.cartItemId)
-                    throw DeleteCartItemException(cartItemResult.cartItemId)
+                    return UpdateCartItemResult.DELETE(cartItemResult.cartItemId)
                 }
             }
 
@@ -84,7 +91,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
                 )
         }.join()
         if (updateDataId == ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
-        return cartItemResult
+        return UpdateCartItemResult.UPDATED(cartItemResult)
     }
 
     override fun getTotalCartItemCount(): Int {
@@ -97,7 +104,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
 
     companion object {
         const val CART_ITEM_LOAD_PAGING_SIZE = 5
-        const val CART_ITEM_PAGE_SIZE = 3
+        const val CART_ITEM_PAGE_SIZE = 5
         const val ERROR_DATA_ID = -1L
         const val ERROR_DELETE_DATA_ID = 0
         const val ERROR_UPDATE_DATA_ID = 0

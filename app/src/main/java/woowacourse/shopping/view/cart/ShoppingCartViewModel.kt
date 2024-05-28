@@ -7,9 +7,9 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.UpdateCartItemResult
 import woowacourse.shopping.domain.model.UpdateCartItemType
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.utils.exception.DeleteCartItemException
 import woowacourse.shopping.utils.exception.NoSuchDataException
 import woowacourse.shopping.utils.livedata.MutableSingleLiveData
 import woowacourse.shopping.utils.livedata.SingleLiveData
@@ -95,22 +95,28 @@ class ShoppingCartViewModel(
                     product.id,
                     updateCartItemType,
                 )
-            product.updateCartItemCount(updateCartItemResult.counter.itemCount)
-            _shoppingCartEvent.value =
-                ShoppingCartEvent.UpdateProductEvent.Success(
-                    productId = product.id,
-                    count = product.cartItemCounter.itemCount,
-                )
+            when (updateCartItemResult) {
+                UpdateCartItemResult.ADD -> throw NoSuchDataException()
+                is UpdateCartItemResult.DELETE ->
+                    deleteShoppingCartItem(
+                        updateCartItemResult.cartItemId,
+                        productId = product.id,
+                    )
+
+                is UpdateCartItemResult.UPDATED -> {
+                    product.updateCartItemCount(updateCartItemResult.cartItemResult.counter.itemCount)
+                    _shoppingCartEvent.value =
+                        ShoppingCartEvent.UpdateProductEvent.Success(
+                            productId = product.id,
+                            count = product.cartItemCounter.itemCount,
+                        )
+                }
+            }
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
                     _errorEvent.setValue(ShoppingCartEvent.UpdateProductEvent.Fail)
-                is DeleteCartItemException -> {
-                    deleteShoppingCartItem(
-                        e.deleteId,
-                        productId = product.id,
-                    )
-                }
+
                 else -> _errorEvent.setValue(ShoppingCartEvent.ErrorState.NotKnownError)
             }
         }
