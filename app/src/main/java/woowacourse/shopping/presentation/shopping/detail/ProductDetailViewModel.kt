@@ -15,9 +15,12 @@ import woowacourse.shopping.presentation.util.SingleLiveData
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
     private val shoppingRepository: ShoppingRepository,
-) : ViewModel() {
+) : ViewModel(), DetailProductListener {
     private val _uiState = MutableLiveData<ProductDetailUiState>(ProductDetailUiState.init())
     val uiState: LiveData<ProductDetailUiState> get() = _uiState
+
+    private val _updateCartEvent = MutableSingleLiveData<Unit>()
+    val updateCartEvent: SingleLiveData<Unit> get() = _updateCartEvent
 
     private val _addCartEvent = MutableSingleLiveData<Unit>()
     val addCartEvent: SingleLiveData<Unit> get() = _addCartEvent
@@ -45,12 +48,17 @@ class ProductDetailViewModel(
         }
     }
 
-    fun increaseProductCount() {
+    fun refreshCartProduct() {
+        val id = _uiState.value?.cartProduct?.product?.id ?: return
+        loadCartProduct(id)
+    }
+
+    override fun increaseProductCount(id: Long) {
         val newUiState = uiState.value?.increaseProductCount(INCREMENT_AMOUNT) ?: return
         _uiState.value = newUiState
     }
 
-    fun decreaseProductCount() {
+    override fun decreaseProductCount(id: Long) {
         if (uiState.value?.canDecreaseProductCount() != true) {
             return _errorEvent.setValue(ProductDetailErrorEvent.DecreaseCartCount)
         }
@@ -58,10 +66,11 @@ class ProductDetailViewModel(
         _uiState.value = newUiState
     }
 
-    fun addCartProduct() {
+    override fun addCartProduct() {
         val cartProduct = uiState.value?.cartProduct ?: return
         cartRepository.updateCartProduct(cartProduct.product.id, cartProduct.count).onSuccess {
             _addCartEvent.setValue(Unit)
+            _updateCartEvent.setValue(Unit)
         }.onFailure {
             _errorEvent.setValue(ProductDetailErrorEvent.AddCartProduct)
         }

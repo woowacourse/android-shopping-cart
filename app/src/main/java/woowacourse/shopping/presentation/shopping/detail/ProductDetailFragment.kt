@@ -54,7 +54,6 @@ class ProductDetailFragment :
         binding?.also {
             it.lifecycleOwner = viewLifecycleOwner
             it.vm = viewModel
-            it.listener = detailItemClickListener()
         }
         initAppBar()
         initListeners()
@@ -74,6 +73,12 @@ class ProductDetailFragment :
         }
         viewModel.recentProductEvent.observe(viewLifecycleOwner) { id ->
             navigator.navigateToProductDetail(id)
+        }
+        viewModel.updateCartEvent.observe(viewLifecycleOwner) {
+            eventBusViewModel.sendUpdateCartEvent()
+        }
+        eventBusViewModel.updateCartEvent.observe(viewLifecycleOwner) {
+            viewModel.refreshCartProduct()
         }
     }
 
@@ -117,23 +122,6 @@ class ProductDetailFragment :
             },
             viewLifecycleOwner,
         )
-    }
-
-    private fun detailItemClickListener(): DetailProductListener {
-        return object : DetailProductListener {
-            override fun addCartProduct() {
-                viewModel.addCartProduct()
-                eventBusViewModel.sendUpdateCartEvent()
-            }
-
-            override fun increaseProductCount(id: Long) {
-                viewModel.increaseProductCount()
-            }
-
-            override fun decreaseProductCount(id: Long) {
-                viewModel.decreaseProductCount()
-            }
-        }
     }
 
     companion object {

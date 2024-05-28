@@ -7,10 +7,6 @@
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.shopping.detail.ProductDetailViewModel" />
-
-        <variable
-            name="listener"
-            type="woowacourse.shopping.presentation.shopping.detail.DetailProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -83,7 +79,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_product_price"
                     bind:count="@{vm.uiState.cartProduct.count}"
-                    bind:counterListener="@{listener}"
+                    bind:counterListener="@{vm}"
                     bind:id="@{vm.uiState.cartProduct.product.id}"
                     bind:visible="@{vm.uiState.cartProduct.visible}"
                     tools:text="4만원" />
@@ -128,7 +124,7 @@
             android:layout_height="wrap_content"
             android:background="@color/mint"
             android:minHeight="0dp"
-            android:onClick="@{() -> listener.addCartProduct()}"
+            android:onClick="@{() -> vm.addCartProduct()}"
             android:paddingVertical="12dp"
             android:text="@string/btn_product_cart"
             android:textColor="@color/white"
