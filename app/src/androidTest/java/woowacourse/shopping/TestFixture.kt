@@ -17,12 +17,14 @@ object TestFixture {
     }
 
     fun makeCartItemEntity(
+        cartItemId: Long,
         productId: Long,
         name: String,
         quantity: Int,
-        price: Int = 10000,
+        price: Int = 10_000,
     ): CartItemEntity {
         return CartItemEntity(
+            id = cartItemId,
             productId = productId,
             product =
                 Product(

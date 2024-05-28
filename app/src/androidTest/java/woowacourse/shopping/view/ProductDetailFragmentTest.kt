@@ -1,7 +1,6 @@
 package woowacourse.shopping.view
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -55,24 +54,24 @@ class ProductDetailFragmentTest {
 
     @Test
     fun `버튼을_누르면_장바구니에_담은_상품의_수량을_증가시킬_수_있다`() {
-        onView(withId(R.id.btn_right)).perform(ViewActions.click())
+        onViewClick(R.id.btn_right)
 
         onView(withId(R.id.tv_count)).check(matches(withText("2")))
     }
 
     @Test
     fun `버튼을_누르면_장바구니에_담은_상품의_수량을_감소시킬_수_있다`() {
-        onView(withId(R.id.btn_right)).perform(ViewActions.click())
-        onView(withId(R.id.btn_right)).perform(ViewActions.click())
+        onViewClick(R.id.btn_right)
+        onViewClick(R.id.btn_right)
 
-        onView(withId(R.id.btn_left)).perform(ViewActions.click())
+        onViewClick(R.id.btn_left)
 
         onView(withId(R.id.tv_count)).check(matches(withText("2")))
     }
 
     @Test
     fun `장바구니에_담은_상품의_수량이_1일_경우에는_버튼을_눌러도_수량을_감소시킬_수_없다`() {
-        onView(withId(R.id.btn_left)).perform(ViewActions.click())
+        onViewClick(R.id.btn_left)
 
         onView(withId(R.id.tv_count)).check(matches(withText("1")))
     }
