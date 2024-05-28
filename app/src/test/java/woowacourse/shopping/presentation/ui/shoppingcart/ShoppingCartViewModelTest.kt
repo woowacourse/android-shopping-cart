@@ -53,6 +53,7 @@ class ShoppingCartViewModelTest {
                         DummyOrder.order.copy(id = 5, product = DummyData.STUB_PRODUCT_2),
                         DummyOrder.order.copy(id = 6, product = DummyData.STUB_PRODUCT_3),
                     ),
+                first = true,
                 last = false,
             )
         assertThat(actual.pagingOrder).isEqualTo(expected)
@@ -75,6 +76,7 @@ class ShoppingCartViewModelTest {
                         DummyOrder.order.copy(id = 9, product = DummyData.STUB_PRODUCT_3),
                         DummyOrder.order.copy(id = 10, product = DummyData.STUB_PRODUCT_1),
                     ),
+                first = false,
                 last = false,
             )
         assertThat(actual.pagingOrder).isEqualTo(expected)
@@ -98,6 +100,7 @@ class ShoppingCartViewModelTest {
                         DummyOrder.order.copy(id = 4, product = DummyData.STUB_PRODUCT_1),
                         DummyOrder.order.copy(id = 5, product = DummyData.STUB_PRODUCT_2),
                     ),
+                first = true,
                 last = false,
             )
         assertThat(actual.pagingOrder).isEqualTo(expected)
