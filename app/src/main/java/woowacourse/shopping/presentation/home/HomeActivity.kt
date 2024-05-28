@@ -115,9 +115,6 @@ class HomeActivity : AppCompatActivity() {
         viewModel.products.observe(this) {
             productAdapter.submitList(it)
         }
-        viewModel.changedPosition.observe(this) {
-            productAdapter.notifyItemChanged(it.getContentIfNotHandled() ?: return@observe)
-        }
     }
 
     companion object {
