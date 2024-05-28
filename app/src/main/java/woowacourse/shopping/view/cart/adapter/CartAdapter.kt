@@ -59,7 +59,7 @@ class CartAdapter(
     fun updateCartItemQuantity(cartItem: CartItem) {
         val position = cartItems.indexOfFirst { it.id == cartItem.id }
         if (position != -1) {
-            (cartItems as MutableList)[position] = cartItem
+            cartItems.toMutableList()[position] = cartItem
             notifyItemChanged(position)
         }
     }
