@@ -36,7 +36,8 @@ class DetailViewModel(
     val lastlyViewedProduct: LiveData<RecentProduct>
         get() = _lastlyViewedProduct
 
-    private val _navigateToDetailEvent: MutableLiveData<Event<DetailNavigationData>> = MutableLiveData()
+    private val _navigateToDetailEvent: MutableLiveData<Event<DetailNavigationData>> =
+        MutableLiveData()
     val navigateToDetailEvent: LiveData<Event<DetailNavigationData>>
         get() = _navigateToDetailEvent
 
@@ -54,31 +55,29 @@ class DetailViewModel(
     }
 
     fun updateCartStatus(productId: Long) {
-        thread {
-            val targetProduct = productRepository.fetchProduct(productId)
-            if (productInformation.value?.quantity == 0 && targetProduct.cartItem?.id != null) {
-                cartRepository.removeCartItem(targetProduct.cartItem)
+        val targetProduct = productRepository.fetchProduct(productId)
+        if (productInformation.value?.quantity == 0 && targetProduct.cartItem?.id != null) {
+            cartRepository.removeCartItem(targetProduct.cartItem)
+        } else {
+            if (targetProduct.cartItem?.id != null) {
+                cartRepository.updateQuantity(
+                    targetProduct.cartItem.id,
+                    productInformation.value?.quantity ?: return
+                )
             } else {
-                if (targetProduct.cartItem?.id != null) {
-                    cartRepository.updateQuantity(targetProduct.cartItem.id, productInformation.value?.quantity ?: return@thread)
-                } else {
-                    cartRepository.addCartItem(CartItem(productId = productId))
-                }
+                cartRepository.addCartItem(CartItem(productId = productId))
             }
-            _message.postValue(Event(StringResource(R.string.message_add_to_cart_complete)))
         }
+        _message.postValue(Event(StringResource(R.string.message_add_to_cart_complete)))
+
     }
 
     fun updateNavigationEvent(id: Long) {
-        thread {
-            _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, id)))
-        }
+        _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, id)))
     }
 
     fun updateHistory(id: Long) {
-        thread {
-            productRepository.addProductHistory(ProductHistory(productId = id))
-        }
+        productRepository.addProductHistory(ProductHistory(productId = id))
     }
 
     override fun onQuantityChange(
@@ -86,24 +85,22 @@ class DetailViewModel(
         quantity: Int,
     ) {
         if (quantity < 0) return
-        _productInformation.value =
+        _productInformation.postValue(
             productInformation.value?.copy(
                 cartItem = CartItem(productId = productId, quantity = quantity),
             )
+        )
     }
 
     private fun loadProductInformation(id: Long) {
-        thread {
-            _productInformation.postValue(productRepository.fetchProduct(id))
-        }
+        _productInformation.postValue(productRepository.fetchProduct(id))
+
     }
 
     private fun updateLastlyViewedProduct() {
-        thread {
-            _lastlyViewedProduct.postValue(
-                productRepository.fetchLatestHistory(),
-            )
-        }
+        _lastlyViewedProduct.postValue(
+            productRepository.fetchLatestHistory(),
+        )
     }
 
     companion object {

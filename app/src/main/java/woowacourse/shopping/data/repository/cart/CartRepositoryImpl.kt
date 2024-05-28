@@ -4,34 +4,51 @@ import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.data.model.cart.CartItem
 import woowacourse.shopping.data.model.cart.CartedProduct
 import woowacourse.shopping.domain.repository.cart.CartRepository
+import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
     override fun fetchCartItems(page: Int): List<CartedProduct> {
-        return cartDataSource.fetchCartItems(page)
+        var products = emptyList<CartedProduct>()
+        thread {
+            products = cartDataSource.fetchCartItems(page)
+        }.join()
+        return products
     }
 
     override fun addCartItem(cartItem: CartItem) {
-        cartDataSource.addCartItem(cartItem)
+        thread {
+            cartDataSource.addCartItem(cartItem)
+        }.join()
     }
 
     override fun fetchTotalCount(): Int {
-        return cartDataSource.fetchTotalCount()
+        var count = 0
+        thread {
+            count = cartDataSource.fetchTotalCount()
+        }.join()
+        return count
     }
 
     override fun updateQuantity(
         cartItemId: Long,
         quantity: Int,
     ) {
-        cartDataSource.updateQuantity(cartItemId, quantity)
+        thread {
+            cartDataSource.updateQuantity(cartItemId, quantity)
+        }.join()
     }
 
     override fun removeCartItem(cartItem: CartItem) {
-        cartDataSource.removeCartItem(cartItem)
+        thread {
+            cartDataSource.removeCartItem(cartItem)
+        }.join()
     }
 
     override fun removeAll() {
-        cartDataSource.removeAll()
+        thread {
+            cartDataSource.removeAll()
+        }.join()
     }
 }

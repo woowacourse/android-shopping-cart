@@ -38,10 +38,6 @@ class HomeViewModel(
     val navigateToCartEvent: LiveData<Event<Unit>>
         get() = _navigateToCartEvent
 
-    private val _changedPosition: MutableLiveData<Event<Int>> = MutableLiveData()
-    val changedPosition: LiveData<Event<Int>>
-        get() = _changedPosition
-
     private val _totalQuantity: MutableLiveData<Int> = MutableLiveData(0)
     val totalQuantity: LiveData<Int>
         get() = _totalQuantity
@@ -57,7 +53,6 @@ class HomeViewModel(
     }
 
     private fun loadProducts() {
-        thread {
             _loadStatus.postValue(
                 loadStatus.value?.copy(
                     isLoadingPage = true,
@@ -80,15 +75,14 @@ class HomeViewModel(
             _totalQuantity.postValue(
                 cartRepository.fetchTotalCount(),
             )
-        }
+
     }
 
     fun loadHistory() {
-        thread {
             _productHistory.postValue(
                 productRepository.fetchProductHistory(10),
             )
-        }
+
     }
 
     fun navigateToCart() {
@@ -96,11 +90,10 @@ class HomeViewModel(
     }
 
     override fun navigateToProductDetail(id: Long) {
-        thread {
             val lastlyViewedId = productRepository.fetchLatestHistory()?.product?.id
             loadHistory()
             _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
-        }
+
     }
 
     override fun loadNextPage() {
@@ -128,12 +121,6 @@ class HomeViewModel(
                         }
                     }
                 _products.postValue(target)
-                _changedPosition.postValue(
-                    Event(
-                        products.value?.indexOfFirst { it.product.id == targetProduct.product.id }
-                            ?: return@thread,
-                    ),
-                )
             } else {
                 if (targetProduct.cartItem?.id != null) {
                     cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
@@ -152,12 +139,6 @@ class HomeViewModel(
                         }
                     }
                 _products.postValue(target)
-                _changedPosition.postValue(
-                    Event(
-                        products.value?.indexOfFirst { it.product.id == productId }
-                            ?: return@thread,
-                    ),
-                )
             }
             _totalQuantity.postValue(
                 cartRepository.fetchTotalCount(),

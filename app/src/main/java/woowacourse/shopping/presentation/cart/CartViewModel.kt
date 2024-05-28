@@ -9,7 +9,6 @@ import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.presentation.home.products.ProductQuantity
 import woowacourse.shopping.presentation.home.products.QuantityListener
 import java.util.Collections.replaceAll
-import kotlin.concurrent.thread
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -35,9 +34,7 @@ class CartViewModel(
     private var hasNext: Boolean = true
 
     init {
-        thread {
-            loadCurrentPageCartItems()
-        }
+        loadCurrentPageCartItems()
     }
 
     fun loadPreviousPageCartItems() {
@@ -51,25 +48,21 @@ class CartViewModel(
     }
 
     fun loadCurrentPageCartItems() {
-        thread {
-            val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return@thread)
-            hasNext =
-                cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return@thread)
-                    .isNotEmpty()
-            setPageInformation()
-            _cartableProducts.postValue(cartItems)
-        }
+        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
+        hasNext =
+            cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return)
+                .isNotEmpty()
+        setPageInformation()
+        _cartableProducts.postValue(cartItems)
     }
 
     override fun onCartItemDelete(cartedProduct: CartedProduct) {
-        thread {
-            cartRepository.removeCartItem(cartedProduct.cartItem)
-            alteredCartItems.add(ProductQuantity(cartedProduct.product.id, 0))
-            if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
-                _currentPage.postValue(currentPage.value?.minus(1))
-            }
-            loadCurrentPageCartItems()
+        cartRepository.removeCartItem(cartedProduct.cartItem)
+        alteredCartItems.add(ProductQuantity(cartedProduct.product.id, 0))
+        if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
+            _currentPage.value = currentPage.value?.minus(1)
         }
+        loadCurrentPageCartItems()
     }
 
     override fun onQuantityChange(
@@ -77,26 +70,24 @@ class CartViewModel(
         quantity: Int,
     ) {
         if (quantity < 0) return
-        thread {
-            val targetItem = productRepository.fetchProduct(productId)
-            if (targetItem.cartItem != null) {
-                if (quantity == 0) {
-                    cartRepository.removeCartItem(targetItem.cartItem)
-                } else {
-                    cartRepository.updateQuantity(targetItem.cartItem.id ?: return@thread, quantity)
-                }
-                if (productId !in alteredCartItems.map(ProductQuantity::productId)) {
-                    alteredCartItems.add(ProductQuantity(productId, quantity))
-                } else {
-                    replaceAll(
-                        alteredCartItems,
-                        alteredCartItems.first { it.productId == productId },
-                        ProductQuantity(productId, quantity),
-                    )
-                }
+        val targetItem = productRepository.fetchProduct(productId)
+        if (targetItem.cartItem != null) {
+            if (quantity == 0) {
+                cartRepository.removeCartItem(targetItem.cartItem)
+            } else {
+                cartRepository.updateQuantity(targetItem.cartItem.id ?: return, quantity)
             }
-            loadCurrentPageCartItems()
+            if (productId !in alteredCartItems.map(ProductQuantity::productId)) {
+                alteredCartItems.add(ProductQuantity(productId, quantity))
+            } else {
+                replaceAll(
+                    alteredCartItems,
+                    alteredCartItems.first { it.productId == productId },
+                    ProductQuantity(productId, quantity),
+                )
+            }
         }
+        loadCurrentPageCartItems()
     }
 
     private fun setPageInformation() {
