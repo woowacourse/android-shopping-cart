@@ -4,15 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="viewModel"
             type="woowacourse.shopping.productdetail.ProductDetailViewModel" />
+
+        <variable
+            name="quantityControlClickListener"
+            type="woowacourse.shopping.ViewModelQuantityActions" />
+
+        <variable
+            name="isLatestViewedProductVisible"
+            type="Boolean" />
+
+        <variable
+            name="recentProductClickListener"
+            type="woowacourse.shopping.productlist.RecentlyViewedProductsClickAction" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbar_product_detail"
+            layout="@layout/base_toolbar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
             android:id="@+id/iv_product_detail_product"
@@ -22,7 +42,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
             app:loadImage="@{viewModel.productUi.imageUrl}"
             tools:src="@drawable/ic_launcher_background" />
 
@@ -51,30 +71,46 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_name" />
 
         <TextView
+            android:id="@+id/tv_product_detail_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto"
-            android:text="@string/product_price_message"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_product_detail" />
-
-        <TextView
-            android:id="@+id/tv_product_detail_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="20dp"
-            android:fontFamily="@font/roboto"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:formattedPrice="@{viewModel.productUi.price}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_product_detail"
             tools:text="10,000원" />
+
+        <include
+            layout="@layout/button_quantity_control"
+            android:id="@+id/button_product_detail_quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="14dp"
+            app:productId="@{viewModel.productUi.id}"
+            app:quantity="@{viewModel.quantityUi}"
+            app:clickListener="@{quantityControlClickListener}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_product_detail"
+             />
+
+        <include
+            layout="@layout/layout_latest_viewed_product"
+            android:id="@+id/button_product_detail_latest_product"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_product_detail_quantity_control"
+            android:visibility="@{isLatestViewedProductVisible ? View.VISIBLE : View.GONE}"
+            app:clickListener="@{recentProductClickListener}"
+            app:productUiModel="@{viewModel.latestViewedProduct}"/>
 
         <Button
             android:id="@+id/btn_product_detail_add_cart"

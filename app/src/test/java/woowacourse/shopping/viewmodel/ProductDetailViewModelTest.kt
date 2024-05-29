@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.DummyShoppingRepository
+import woowacourse.shopping.DummyProductRepository
 import woowacourse.shopping.UserShoppingCartRepository
 import woowacourse.shopping.productdetail.ProductDetailViewModel
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
@@ -16,7 +16,7 @@ class ProductDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductDetailViewModel(DummyShoppingRepository, UserShoppingCartRepository)
+        viewModel = ProductDetailViewModel(DummyProductRepository, UserShoppingCartRepository)
     }
 
     @Test

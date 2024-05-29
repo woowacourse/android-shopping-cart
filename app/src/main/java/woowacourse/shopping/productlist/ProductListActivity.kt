@@ -1,20 +1,29 @@
 package woowacourse.shopping.productlist
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
+import woowacourse.shopping.databinding.ActionLayoutCartIconBinding
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.ViewModelFactory
 
-class ProductListActivity : AppCompatActivity(), ProductListClickAction {
+class ProductListActivity : AppCompatActivity(), ProductListClickAction,
+    RecentlyViewedProductsClickAction {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var adapter: ProductListAdapter
-    private val viewModel: ProductListViewModel by viewModels { ViewModelFactory() }
+    private val viewModel: ProductListViewModel by viewModels { ViewModelFactory(applicationContext) }
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +35,15 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         attachAdapter()
         showProducts()
 
-        binding.btnLoadMoreProducts.setOnClickListener {
-            viewModel.loadProducts(adapter.itemCount)
-        }
+        setLoadMoreButtonAction()
+        setupToolBar()
+        signUpActivityResults()
 
-        supportActionBar?.title = getString(R.string.action_bar_title_product_list_activity)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.recently_viewed_products_list, RecentlyViewedProductsFragment())
+                .commit()
+        }
     }
 
     private fun attachAdapter() {
@@ -42,22 +55,108 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         viewModel.productUiModels.observe(this) { products ->
             adapter.submitList(products)
         }
+        viewModel.updatedItemsId.observe(this) { updatedItemsId ->
+            adapter.updateItems(updatedItemsId)
+        }
+    }
+
+    private fun setLoadMoreButtonAction() {
+        binding.btnLoadMoreProducts.setOnClickListener {
+            viewModel.loadProducts(adapter.itemCount)
+        }
+    }
+
+    private fun setupToolBar() {
+        setSupportActionBar(binding.toolbarProductList as Toolbar)
+        supportActionBar?.title = getString(R.string.action_bar_title_product_list_activity)
+    }
+
+    private fun signUpActivityResults() {
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val changedItems =
+                    result.data?.let {
+                        IntentCompat.getParcelableExtra(
+                            it,
+                            ChangedItemsId.KEY_CHANGED_ITEMS,
+                            ChangedItemsId::class.java,
+                        )
+                    } ?: ChangedItemsId(setOf())
+                updateResultData(changedItems.ids)
+                val latestViewedProductId =
+                    result.data?.getLongExtra(EXTRA_LATEST_VIEWED_PRODUCT_ID, -1L)
+                if (latestViewedProductId != null && latestViewedProductId >= 0) {
+                    val fragment =
+                        supportFragmentManager.findFragmentById(R.id.recently_viewed_products_list) as RecentlyViewedProductsFragment
+                    fragment.onUpdateLatestViewedProduct(latestViewedProductId)
+                }
+            }
+        }
+    }
+
+    private fun updateResultData(changedItems: Set<Long>) {
+        viewModel.acceptChangedItems(changedItems)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.product_list_menu, menu)
+        val menuBinding: ActionLayoutCartIconBinding =
+            ActionLayoutCartIconBinding.inflate(layoutInflater)
+        val menuItem = menu?.findItem(R.id.menu_shopping_cart_nav)
+        menuItem?.actionView = menuBinding.root
+        menuBinding.root.setOnClickListener {
+            if (menuItem != null) {
+                onOptionsItemSelected(menuItem)
+            }
+        }
+
+        viewModel.totalItemQuantity.observe(this) {
+            menuBinding.cartTotalItemQuantity = it
+        }
+
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_shopping_cart_nav -> startActivity(ShoppingCartActivity.newInstance(this))
+            R.id.menu_shopping_cart_nav -> {
+                val intent = ShoppingCartActivity.newInstance(this)
+                activityResultLauncher.launch(intent)
+            }
+
             else -> {}
         }
         return true
     }
 
     override fun onProductClicked(id: Long) {
-        startActivity(ProductDetailActivity.newInstance(this, id))
+        val intent = ProductDetailActivity.newInstance(this, id)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun onAddButtonClicked(id: Long) {
+        viewModel.addProductToCart(id)
+    }
+
+    override fun onPlusButtonClicked(id: Long, currentQuantity: Int) {
+        viewModel.plusProductOnCart(id, currentQuantity)
+    }
+
+    override fun onMinusButtonClicked(id: Long, currentQuantity: Int) {
+        viewModel.minusProductOnCart(id, currentQuantity)
+    }
+
+    override fun onRecentProductClicked(id: Long?) {
+        id?.let {
+            val intent = ProductDetailActivity.newInstance(this, id)
+            intent.apply { putExtra(ProductDetailActivity.EXTRA_RECENT_PRODUCT_CLICKED, true) }
+            activityResultLauncher.launch(intent)
+        }
+    }
+
+    companion object {
+        const val EXTRA_LATEST_VIEWED_PRODUCT_ID = "latestViewedProductId"
     }
 }

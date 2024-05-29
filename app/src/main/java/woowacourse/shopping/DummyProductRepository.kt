@@ -4,19 +4,10 @@ import woowacourse.shopping.domain.ImageUrl
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCart
-import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.domain.User
 import kotlin.math.min
 
-object DummyShoppingRepository : ShoppingRepository {
-    private var users =
-        listOf(
-            User(
-                id = 0L,
-                shoppingCart = ShoppingCart(emptyList()),
-            ),
-        )
-
+object DummyProductRepository : ProductRepository {
     private val products: List<Product>
 
     init {

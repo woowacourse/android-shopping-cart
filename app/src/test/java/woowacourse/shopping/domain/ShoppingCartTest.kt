@@ -51,6 +51,6 @@ class ShoppingCartTest {
         val newShoppingCart = shoppingCart.updateItem(updatedItem)
 
         // then
-        assertThat(newShoppingCart.items[0].totalQuantity).isGreaterThan(shoppingCart.items[0].totalQuantity)
+        assertThat(newShoppingCart.items[0].quantity).isGreaterThan(shoppingCart.items[0].quantity)
     }
 }

@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Shopping" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Shopping" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/emerald</item>
         <item name="colorPrimaryVariant">@color/gray_700</item>
@@ -11,11 +11,13 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <item name="actionBarStyle">@style/actionBarCustomStyle</item>
+        <item name="toolbarStyle">@style/toolBarCustomStyle</item>
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="actionBarCustomStyle" parent="@style/Widget.AppCompat.ActionBar">
+    <style name="toolBarCustomStyle" parent="@style/Widget.AppCompat.Toolbar">
         <item name="background">@color/gray_700</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="iconTint">@color/white</item>
     </style>
 </resources>

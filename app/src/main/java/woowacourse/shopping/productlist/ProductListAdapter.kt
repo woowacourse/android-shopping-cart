@@ -1,6 +1,8 @@
 package woowacourse.shopping.productlist
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductListBinding
@@ -18,6 +20,22 @@ class ProductListAdapter(
         fun onBind(item: ProductUiModel) {
             binding.productUiModel = item
             binding.clickListener = onClick
+            setQuantityButtonVisible(item.quantity)
+        }
+
+        fun onQuantityChanged(newQuantity: Int) {
+            binding.productUiModel = binding.productUiModel?.copy(quantity = newQuantity)
+            setQuantityButtonVisible(newQuantity)
+        }
+
+        private fun setQuantityButtonVisible(quantity: Int) {
+            if (quantity > ProductUiModel.PRODUCT_DEFAULT_QUANTITY) {
+                binding.buttonProductListAddToCart.visibility = View.GONE
+                binding.buttonProductItemQuantity.visibility = View.VISIBLE
+            } else if (quantity == ProductUiModel.PRODUCT_DEFAULT_QUANTITY) {
+                binding.buttonProductListAddToCart.visibility = View.VISIBLE
+                binding.buttonProductItemQuantity.visibility = View.GONE
+            }
         }
     }
 
@@ -36,12 +54,39 @@ class ProductListAdapter(
         holder: ProductListViewHolder,
         position: Int,
     ) {
-        return holder.onBind(items[position])
+        holder.onBind(items[position])
+    }
+
+    override fun onBindViewHolder(
+        holder: ProductListViewHolder,
+        position: Int,
+        payloads: MutableList<Any>,
+    ) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            payloads.forEach { payload ->
+                when (payload) {
+                    ProductListPayload.QUANTITY_CHANGED -> {
+                        holder.onQuantityChanged(items[position].quantity)
+                    }
+
+                    else -> {}
+                }
+            }
+        }
     }
 
     fun submitList(products: List<ProductUiModel>) {
         val previousCount = itemCount
         items = products
         notifyItemRangeInserted(previousCount, products.size - previousCount)
+    }
+
+    fun updateItems(productIds: Set<Long>) {
+        productIds.forEach { productId ->
+            val updatedPosition = items.indexOfFirst { it.id == productId }
+            notifyItemChanged(updatedPosition, ProductListPayload.QUANTITY_CHANGED)
+        }
     }
 }

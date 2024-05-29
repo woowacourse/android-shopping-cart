@@ -1,6 +1,10 @@
 package woowacourse.shopping.domain
 
 data class ShoppingCart(val items: List<ShoppingCartItem>) {
+    fun totalItemQuantity(): Int {
+        return items.sumOf { it.quantity }
+    }
+
     fun updateItem(updatedItem: ShoppingCartItem): ShoppingCart {
         return items.map {
             if (it.product.id == updatedItem.product.id) updatedItem else it
@@ -12,7 +16,7 @@ data class ShoppingCart(val items: List<ShoppingCartItem>) {
         return if (isAlreadyExist) {
             items.map { item ->
                 if (item.product.id == newItem.product.id) {
-                    item.copy(totalQuantity = item.totalQuantity + newItem.totalQuantity)
+                    item.copy(quantity = item.quantity + newItem.quantity)
                 } else {
                     item
                 }

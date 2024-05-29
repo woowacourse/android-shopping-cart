@@ -5,7 +5,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.DummyShoppingRepository
+import woowacourse.shopping.DummyProductRepository
 import woowacourse.shopping.UserShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
@@ -21,7 +21,7 @@ class ShoppingCartViewModelTest {
     fun setUp() {
         viewModel = ShoppingCartViewModel(UserShoppingCartRepository)
 
-        val cartItem = ShoppingCartItem(DummyShoppingRepository.productById(STUB_PRODUCT_ID))
+        val cartItem = ShoppingCartItem(DummyProductRepository.productById(STUB_PRODUCT_ID))
         val shoppingCart = UserShoppingCartRepository.shoppingCart(0)
         UserShoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
     }

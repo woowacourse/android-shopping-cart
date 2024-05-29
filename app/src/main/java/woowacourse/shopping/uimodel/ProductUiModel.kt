@@ -5,4 +5,9 @@ data class ProductUiModel(
     val name: String,
     val price: Int,
     val imageUrl: String,
-)
+    val quantity: Int = PRODUCT_DEFAULT_QUANTITY,
+) {
+    companion object {
+        const val PRODUCT_DEFAULT_QUANTITY = 0
+    }
+}

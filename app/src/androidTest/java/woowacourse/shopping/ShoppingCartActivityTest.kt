@@ -6,11 +6,13 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isClickable
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import io.mockk.mockk
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.shoppingcart.ShoppingCartAdapter
+import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
 import woowacourse.shopping.uimodel.CartItemUiModel
 
 class ShoppingCartActivityTest {
@@ -18,6 +20,7 @@ class ShoppingCartActivityTest {
     val activityRule = ActivityScenarioRule(ShoppingCartActivity::class.java)
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel: ShoppingCartViewModel
 
     @Before
     fun setUp() {
@@ -36,9 +39,9 @@ class ShoppingCartActivityTest {
                             "b4AnFB795ceJ0QsyknH0=",
                     ),
                 )
-
+            viewModel = mockk(relaxed = true)
             recyclerView = activity.findViewById(R.id.rcv_shopping_cart)
-            recyclerView.adapter = ShoppingCartAdapter(activity).apply { this.submitList(items) }
+            recyclerView.adapter = ShoppingCartAdapter(activity, viewModel).apply { this.submitList(items) }
         }
     }
 

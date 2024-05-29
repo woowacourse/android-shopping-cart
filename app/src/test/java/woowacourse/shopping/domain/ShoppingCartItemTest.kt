@@ -14,17 +14,17 @@ class ShoppingCartItemTest {
 
     @Test
     fun `장바구니에 담을 상품의 기본 개수는 1개이다`() {
-        assertThat(shoppingCartItem.totalQuantity).isEqualTo(1)
+        assertThat(shoppingCartItem.quantity).isEqualTo(1)
     }
 
     @Test
     fun `장바구니 아이템의 개수를 1 증가시킬 수 있다`() {
         // given
-        val previousQuantity = shoppingCartItem.totalQuantity
+        val previousQuantity = shoppingCartItem.quantity
 
         // when
         val presentQuantity =
-            (shoppingCartItem.increaseQuantity() as QuantityUpdate.Success).value.totalQuantity
+            (shoppingCartItem.increaseQuantity() as QuantityUpdate.Success).value.quantity
 
         // then
         assertThat(presentQuantity).isGreaterThan(previousQuantity)
@@ -39,11 +39,11 @@ class ShoppingCartItemTest {
 
         // when
         val presentQuantity =
-            (initialItem.decreaseQuantity() as QuantityUpdate.Success).value.totalQuantity
+            (initialItem.decreaseQuantity() as QuantityUpdate.Success).value.quantity
 
         // then
-        assertThat(presentQuantity).isLessThan(initialItem.totalQuantity)
-        assertThat(presentQuantity).isEqualTo(initialItem.totalQuantity - 1)
+        assertThat(presentQuantity).isLessThan(initialItem.quantity)
+        assertThat(presentQuantity).isEqualTo(initialItem.quantity - 1)
     }
 
     @Test
