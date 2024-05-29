@@ -1,17 +1,23 @@
 package woowacourse.shopping.feature.cart
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.cart.CartDummyRepository
+import woowacourse.shopping.data.cart.local.CartDatabase
+import woowacourse.shopping.data.cart.local.CartDummyRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModelFactory
+import woowacourse.shopping.feature.main.MainActivity.Companion.UPDATE_CART_STATUS_KEY
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
-    private val cartViewModel: CartViewModel by viewModels { CartViewModelFactory(CartDummyRepository) }
+    private val cartViewModel: CartViewModel by viewModels {
+        CartViewModelFactory(CartDummyRepository(CartDatabase.initialize(this).cartDao()))
+    }
     private lateinit var adapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,38 +35,28 @@ class CartActivity : AppCompatActivity() {
     private fun initializeView() {
         initializeToolbar()
         initializeCartAdapter()
-        updatePageLayout()
     }
 
     private fun initializeToolbar() {
         binding.toolbarCart.setNavigationOnClickListener {
+            val resultIntent = Intent()
+            resultIntent.putExtra(UPDATE_CART_STATUS_KEY, true)
+            setResult(Activity.RESULT_OK, resultIntent)
             finish()
         }
     }
 
     private fun initializeCartAdapter() {
         adapter =
-            CartAdapter(onClickExit = { deleteCartItem(cartItemId = it) })
+            CartAdapter(
+                onClickExit = { cartViewModel.deleteCartItem(productId = it) },
+                onClickPlusButton = { cartViewModel.addProduct(productId = it) },
+                onClickMinusButton = { cartViewModel.deleteProduct(productId = it) },
+            )
         binding.rvCart.adapter = adapter
 
         cartViewModel.cart.observe(this) {
             adapter.updateCart(it)
-        }
-    }
-
-    private fun deleteCartItem(cartItemId: Long) {
-        cartViewModel.checkEmptyLastPage()
-        cartViewModel.isEmptyLastPage.observe(this) { isEmptyLastPage ->
-            if (isEmptyLastPage) cartViewModel.decreasePage()
-        }
-        cartViewModel.delete(cartItemId)
-    }
-
-    private fun updatePageLayout() {
-        cartViewModel.cartSize.observe(this) {
-            cartViewModel.checkOnlyOnePage()
-            cartViewModel.hasPreviousPage()
-            cartViewModel.hasNextPage()
         }
     }
 }

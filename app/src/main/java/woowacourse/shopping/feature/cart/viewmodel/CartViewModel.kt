@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.model.CartItem
+import kotlin.concurrent.thread
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -34,18 +35,32 @@ class CartViewModel(
         updatePage()
     }
 
-    fun delete(cartItemId: Long) {
-        cartRepository.deleteCartItemAtOnce(cartItemId)
+    fun deleteCartItem(productId: Long) {
+        checkEmptyLastPage()
+        val isEmptyLastPage = isEmptyLastPage.value ?: return
+        if (isEmptyLastPage) decreasePage()
+        thread {
+            cartRepository.deleteCartItem(productId)
+        }.join()
         updatePage()
     }
 
     fun loadCart(pageSize: Int) {
         val page = currentPage.value ?: return
-        _cart.value = cartRepository.findRange(page, pageSize)
+        var cart = emptyList<CartItem>()
+        thread {
+            cart = cartRepository.findRange(page, pageSize).sortedBy { it.product.id }
+        }.join()
+        _cart.value = cart
     }
 
     fun loadCount() {
-        _cartSize.value = cartRepository.count()
+        var cartSize = 0
+        thread {
+            cartSize = cartRepository.count()
+        }.join()
+        _cartSize.value = cartSize
+        updatePageStatus()
     }
 
     fun increasePage() {
@@ -58,26 +73,33 @@ class CartViewModel(
         updatePage()
     }
 
-    fun hasPreviousPage() {
-        val page = currentPage.value ?: return
-        _hasPreviousPage.value = page > MIN_PAGE
+    fun addProduct(productId: Long) {
+        thread {
+            cartRepository.addProduct(productId)
+        }.join()
+        updatePage()
     }
 
-    fun hasNextPage() {
-        val currentPage = currentPage.value ?: return
-        val cartSize = cartSize.value ?: return
-        _hasNextPage.value = currentPage < (cartSize - 1) / MAX_ITEM_SIZE_PER_PAGE
+    fun deleteProduct(productId: Long) {
+        thread {
+            cartRepository.deleteProduct(productId)
+        }.join()
+        updatePage()
     }
 
-    fun checkEmptyLastPage() {
+    private fun checkEmptyLastPage() {
         val currentPage = currentPage.value ?: return
         val cartSize = cartSize.value ?: return
         _isEmptyLastPage.value = currentPage > MIN_PAGE && cartSize % MAX_ITEM_SIZE_PER_PAGE == 1
     }
 
-    fun checkOnlyOnePage() {
+    private fun updatePageStatus() {
+        val currentPage = currentPage.value ?: return
         val cartSize = cartSize.value ?: return
+
         _isOnlyOnePage.value = cartSize <= MAX_ITEM_SIZE_PER_PAGE
+        _hasPreviousPage.value = currentPage > MIN_PAGE
+        _hasNextPage.value = currentPage < (cartSize - 1) / MAX_ITEM_SIZE_PER_PAGE
     }
 
     private fun updatePage() {

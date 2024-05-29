@@ -2,7 +2,10 @@ package woowacourse.shopping.data.product
 
 import woowacourse.shopping.model.Product
 
-val dummyProducts: List<Product> =
+private val products: MutableMap<Long, Product> = mutableMapOf()
+private var id: Long = 0L
+
+val dummy: List<Product> =
     listOf(
         Product(
             0L,
@@ -48,3 +51,22 @@ val dummyProducts: List<Product> =
             9980,
         ),
     )
+
+val dummyProducts: List<Product>
+    get() {
+        repeat(7) { count ->
+            dummy.forEach {
+                save(it.imageUrl, "$count ${it.title}", it.price)
+            }
+        }
+        return products.map { it.value }
+    }
+
+fun save(
+    imageUrl: String,
+    title: String,
+    price: Int,
+): Long {
+    products[id] = Product(id, imageUrl, title, price)
+    return id++
+}

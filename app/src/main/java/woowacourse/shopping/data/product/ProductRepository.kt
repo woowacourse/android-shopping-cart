@@ -11,12 +11,4 @@ interface ProductRepository {
         page: Int,
         pageSize: Int,
     ): List<Product>
-
-    fun save(
-        imageUrl: String,
-        title: String,
-        price: Int,
-    ): Long
-
-    fun deleteAll()
 }

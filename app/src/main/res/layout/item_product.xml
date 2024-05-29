@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
+
+        <variable
+            name="cartItemQuantity"
+            type="woowacourse.shopping.model.CartItemQuantity" />
+
+        <variable
+            name="quantityControlListener"
+            type="woowacourse.shopping.common.QuantityControlListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +36,34 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/img_default_product" />
+
+        <ImageButton
+            android:id="@+id/btn_product_add_to_cart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/ic_oval_plus"
+            android:onClick="@{() -> quantityControlListener.addProduct()}"
+            app:layout_constraintBottom_toBottomOf="@id/include_quantity_control"
+            app:layout_constraintEnd_toEndOf="parent"
+            bind:isVisible="@{cartItemQuantity.quantity.count == 0}" />
+
+        <include
+            android:id="@+id/include_quantity_control"
+            layout="@layout/button_quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            bind:isVisible="@{cartItemQuantity.quantity.count != 0}"
+            bind:quantity="@{cartItemQuantity.quantity}"
+            bind:quantityControlListener="@{quantityControlListener}"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_product_title"
@@ -57,4 +95,5 @@
             tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

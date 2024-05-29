@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,10 +9,13 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel" />
+
+        <variable
+            name="quantityControlListener"
+            type="woowacourse.shopping.common.QuantityControlListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".feature.detail.ProductDetailActivity">
@@ -24,66 +28,126 @@
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/menu_detail" />
 
-        <ImageView
-            android:id="@+id/iv_product_detail"
+        <ScrollView
+            android:id="@+id/sv_product_detail"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:imageUrl="@{viewModel.product.imageUrl}"
-            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_detail" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_detail">
 
-        <TextView
-            android:id="@+id/tv_product_detail_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginTop="16dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{viewModel.product.title}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/divider_product_detail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
-            tools:text="[든든] 동원 스위트콘" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_product_detail"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            app:dividerColor="@color/gray_200"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_detail_title" />
+                <ImageView
+                    android:id="@+id/iv_product_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:imageUrl="@{viewModel.product.imageUrl}"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/img_default_product"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/product_detail_price"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_product_detail" />
+                <TextView
+                    android:id="@+id/tv_product_detail_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="16dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{viewModel.product.title}"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/divider_product_detail"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
+                    tools:text="[든든] 동원 스위트콘" />
 
-        <TextView
-            android:id="@+id/tv_product_detail_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="18dp"
-            android:text="@{@string/product_price(viewModel.product.price)}"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/divider_product_detail"
-            tools:text="99,800원" />
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_product_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    app:dividerColor="@color/gray_200"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_product_detail_title" />
+
+                <TextView
+                    android:id="@+id/tv_product_detail_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@{@string/product_price(viewModel.quantity.calculate(viewModel.product.price))}"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_product_detail"
+                    tools:text="99,800원" />
+
+                <include
+                    android:id="@+id/include_product_detail_quantity_control"
+                    layout="@layout/button_quantity_control"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="14dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_product_detail_price"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_product_detail_price"
+                    bind:quantity="@{viewModel.quantity}"
+                    bind:quantityControlListener="@{quantityControlListener}" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_product_detail_last_viewed_product"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="29dp"
+                    android:layout_marginBottom="150dp"
+                    android:background="@drawable/shape_cart_item"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_product_detail_price"
+                    bind:isVisible="@{viewModel.product.id != viewModel.lastViewedProduct.product.id}">
+
+                    <TextView
+                        android:id="@+id/tv_product_detail_last_viewed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/product_detail_last_viewed_product"
+                        android:textColor="@color/teal_500"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_product_detail_last_viewed_product"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@{viewModel.lastViewedProduct.product.title}"
+                        android:textColor="@color/gray_500"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_product_detail_last_viewed"
+                        tools:text="PET보틀-정사각형(500ml)" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_product_detail_add_cart"

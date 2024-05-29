@@ -1,5 +1,6 @@
 package woowacourse.shopping.common
 
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -18,5 +19,14 @@ object CommonBindingAdapter {
             .fallback(R.drawable.img_default_product)
             .error(R.drawable.img_error_product)
             .into(imageView)
+    }
+
+    @BindingAdapter("isVisible")
+    @JvmStatic
+    fun isVisible(
+        view: View,
+        isVisible: Boolean,
+    ) {
+        view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 }

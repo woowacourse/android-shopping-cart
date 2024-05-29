@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="quantity"
+            type="woowacourse.shopping.model.Quantity" />
+
+        <variable
+            name="quantityControlListener"
+            type="woowacourse.shopping.common.QuantityControlListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_decrease_quantity"
+            style="@style/QuantityButtonStyle"
+            android:onClick="@{() -> quantityControlListener.deleteProduct()}"
+            android:background="@drawable/shape_minus_quantity"
+            android:text="@string/quantity_decrease"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingHorizontal="15dp"
+            android:textColor="@color/gray_500"
+            android:textSize="22sp"
+            android:text="@{String.valueOf(quantity.count)}"
+            app:layout_constraintBottom_toBottomOf="@id/btn_decrease_quantity"
+            app:layout_constraintStart_toEndOf="@id/btn_decrease_quantity"
+            app:layout_constraintTop_toTopOf="@id/btn_decrease_quantity"
+            tools:text="1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_increase_quantity"
+            style="@style/QuantityButtonStyle"
+            android:onClick="@{() -> quantityControlListener.addProduct()}"
+            android:background="@drawable/shape_plus_quantity"
+            android:text="@string/quantity_increase"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_quantity"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
