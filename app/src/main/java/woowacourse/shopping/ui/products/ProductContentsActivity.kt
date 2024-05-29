@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
+import woowacourse.shopping.databinding.MenuItemLayoutBinding
+import woowacourse.shopping.model.data.AlsongDatabase
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
@@ -17,8 +19,16 @@ import woowacourse.shopping.ui.detail.ProductDetailActivity
 class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var adapter: ProductAdapter
+    private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel by lazy {
-        ViewModelProvider(this, ProductContentsViewModelFactory(ProductsImpl))
+        ViewModelProvider(
+            this,
+            ProductContentsViewModelFactory(
+                ProductsImpl,
+                AlsongDatabase.getDatabase(applicationContext).orderDao(),
+                AlsongDatabase.getDatabase(applicationContext).recentProductDao(),
+            ),
+        )
             .get(ProductContentsViewModel::class.java)
     }
 
@@ -28,22 +38,26 @@ class ProductContentsActivity : AppCompatActivity() {
         setContentView(binding.root)
         setProductAdapter()
         observeProductItems()
-        loadItems()
-
+        observeRecentProduct()
         setOnLoadMoreButtonClickListener()
         setOnRecyclerViewScrollListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadProducts()
+        viewModel.loadRecentProducts()
+    }
+
     private fun setProductAdapter() {
         adapter =
-            ProductAdapter { productId ->
+            ProductAdapter(viewModel, this) { productId ->
                 ProductDetailActivity.startActivity(this, productId)
             }
         binding.rvProducts.adapter = adapter
-    }
 
-    private fun loadItems() {
-        viewModel.loadProducts()
+        recentProductAdapter = RecentProductAdapter(viewModel, this)
+        binding.rvRecentProducts.adapter = recentProductAdapter
     }
 
     private fun observeProductItems() {
@@ -52,9 +66,17 @@ class ProductContentsActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeRecentProduct() {
+        viewModel.recentProducts.observe(this) {
+            recentProductAdapter.setData(it)
+        }
+    }
+
     private fun setOnLoadMoreButtonClickListener() {
         binding.btnLoadMore.setOnClickListener {
+            viewModel.renewCurrentOffset()
             viewModel.loadProducts()
+            binding.btnLoadMore.visibility = View.INVISIBLE
         }
     }
 
@@ -84,6 +106,12 @@ class ProductContentsActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_contents, menu)
+        val menuBinding = MenuItemLayoutBinding.inflate(layoutInflater)
+        val menuItem = menu?.findItem(R.id.cart_item_count)
+        menuItem?.setActionView(menuBinding.root)
+        viewModel.totalItemCount.observe(this) {
+            menuBinding.menuItemText.text = it.toString()
+        }
         return super.onCreateOptionsMenu(menu)
     }
 

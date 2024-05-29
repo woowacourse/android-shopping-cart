@@ -3,61 +3,118 @@ package woowacourse.shopping.ui.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.model.CartPageManager
+import woowacourse.shopping.model.CartPage
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.CartDao
+import woowacourse.shopping.model.data.OrderDao
+import woowacourse.shopping.model.data.OrderEntity
+import woowacourse.shopping.model.data.OrdersRepository
+import woowacourse.shopping.model.data.ProductDao
 import kotlin.math.min
 
-class CartViewModel(private val cartDao: CartDao) : ViewModel() {
-    private val cartPageManager by lazy { CartPageManager() }
-    private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
+class CartViewModel(
+    private val productDao: ProductDao,
+    private val orderDao: OrderDao,
+) : ViewModel() {
+    private val ordersRepository = OrdersRepository(orderDao)
 
-    private val _canMoveNextPage: MutableLiveData<Boolean> = MutableLiveData()
-    val canMoveNextPage: LiveData<Boolean> get() = _canMoveNextPage
+    private val _cartPage: MutableLiveData<CartPage> = MutableLiveData()
+    val cartPage: LiveData<CartPage> get() = _cartPage
 
-    private val _canMovePreviousPage: MutableLiveData<Boolean> = MutableLiveData()
-    val canMovePreviousPage: LiveData<Boolean> get() = _canMovePreviousPage
+    private val _cart: MutableLiveData<MutableMap<Long, Product>> = MutableLiveData(mutableMapOf())
+    val cart: LiveData<MutableMap<Long, Product>> get() = _cart
 
-    val pageNumber: LiveData<Int> get() = _pageNumber
+    private val allProducts = productDao.findAll()
 
-    private val _cart: MutableLiveData<List<Product>> = MutableLiveData()
-    val cart: LiveData<List<Product>> get() = _cart
+    private val allOrders get() = ordersRepository.getAllData()
 
-    private val cartItems get() = cartDao.findAll()
+    private val _orderCounts: MutableLiveData<MutableMap<Long, Int>> =
+        MutableLiveData(mutableMapOf())
+    val orderCounts: LiveData<MutableMap<Long, Int>> get() = _orderCounts
+
+    private val _orderPrices: MutableLiveData<MutableMap<Long, Int>> =
+        MutableLiveData(mutableMapOf())
+    val orderPrices: LiveData<MutableMap<Long, Int>> get() = _orderPrices
+
+    val cartItems
+        get() =
+            allOrders.map { orderEntity ->
+                allProducts.first { it.id == orderEntity.productId }
+            }
 
     fun loadCartItems() {
-        _pageNumber.value = cartPageManager.pageNum
-        _cart.value = getProducts()
-        _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
+        _cartPage.value = CartPage()
+        renewCart()
+        _orderCounts.value = getProductsQuantities()
+        _orderPrices.value = getProductsTotalPrices()
     }
 
     fun removeCartItem(productId: Long) {
-        cartDao.delete(productId)
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
-        _cart.value = getProducts()
+        ordersRepository.deleteById(productId)
+        renewCart()
+        val currentPage = _cartPage.value?.number
+        _cartPage.value = CartPage(currentPage ?: -1)
     }
 
     fun plusPageNum() {
-        cartPageManager.plusPageNum()
-        _pageNumber.value = cartPageManager.pageNum
-        _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
-        _cart.value = getProducts()
+        _cartPage.value = _cartPage.value?.plus()
+        renewCart()
     }
 
     fun minusPageNum() {
-        cartPageManager.minusPageNum()
-        _pageNumber.value = cartPageManager.pageNum
-        _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
-        _cart.value = getProducts()
+        _cartPage.value = _cartPage.value?.minus()
+        renewCart()
+    }
+
+    fun increaseItemCount(id: Long) {
+        _orderCounts.value!![id] = _orderCounts.value!![id]!! + 1
+        _orderCounts.value = _orderCounts.value
+        ordersRepository.insert(OrderEntity(id, _orderCounts.value!![id]!!))
+    }
+
+    fun decreaseItemCount(id: Long) {
+        if (_orderCounts.value!![id]!! == 1) {
+            removeCartItem(id)
+            return
+        }
+        _orderCounts.value!![id] = _orderCounts.value!![id]!! - 1
+        _orderCounts.value = _orderCounts.value
+        ordersRepository.insert(OrderEntity(id, _orderCounts.value!![id]!!))
     }
 
     private fun getProducts(): List<Product> {
-        val fromIndex = (cartPageManager.pageNum - OFFSET) * PAGE_SIZE
+        val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
-        return cartItems.toList().subList(fromIndex, toIndex)
+        return cartItems.subList(fromIndex, toIndex)
+    }
+
+    private fun renewCart() {
+        _cart.value!!.clear()
+        getProducts().forEach {
+            _cart.value!![it.id] = it
+        }
+        _cart.value = _cart.value
+    }
+
+    private fun getProductsQuantities(): MutableMap<Long, Int> {
+        val productsQuantities: MutableMap<Long, Int> = mutableMapOf()
+        cartItems.forEach { product ->
+            productsQuantities[product.id] = allOrders.first { it.productId == product.id }.quantity
+        }
+        return productsQuantities
+    }
+
+    private fun getProductsTotalPrices(): MutableMap<Long, Int> {
+        val productsPrices: MutableMap<Long, Int> = mutableMapOf()
+        allProducts.forEach {
+            productsPrices[it.id] = it.price
+        }
+        val productsQuantities = getProductsQuantities()
+        val productsTotalPrices: MutableMap<Long, Int> = mutableMapOf()
+        allOrders.forEach {
+            productsTotalPrices[it.productId] =
+                productsPrices[it.productId]!! * productsQuantities[it.productId]!!
+        }
+        return productsTotalPrices
     }
 
     companion object {

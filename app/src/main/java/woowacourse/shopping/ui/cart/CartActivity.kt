@@ -6,15 +6,21 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.model.data.AlsongDatabase
+import woowacourse.shopping.model.data.ProductsImpl
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
     private val viewModel by lazy {
-        ViewModelProvider(this, CartViewModelFactory(CartsImpl))
+        ViewModelProvider(
+            this,
+            CartViewModelFactory(
+                ProductsImpl,
+                AlsongDatabase.getDatabase(applicationContext).orderDao(),
+            ),
+        )
             .get(CartViewModel::class.java)
     }
 
@@ -25,9 +31,6 @@ class CartActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        setOnPreviousButtonClickListener()
-        setOnNextButtonClickListener()
-
         loadItems()
         setCartAdapter()
 
@@ -36,31 +39,19 @@ class CartActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun setOnNextButtonClickListener() {
-        binding.btnNext.setOnClickListener {
-            viewModel.plusPageNum()
-        }
-    }
-
-    private fun setOnPreviousButtonClickListener() {
-        binding.btnPrevious.setOnClickListener {
-            viewModel.minusPageNum()
-        }
-    }
-
     private fun loadItems() {
         viewModel.loadCartItems()
     }
 
     private fun observeCartItems() {
         viewModel.cart.observe(this) {
-            adapter.setData(it)
+            adapter.setData(it.values.toList())
         }
     }
 
     private fun setCartAdapter() {
         adapter =
-            CartAdapter { productId ->
+            CartAdapter(viewModel, this) { productId ->
                 viewModel.removeCartItem(productId)
             }
         binding.rvCart.adapter = adapter

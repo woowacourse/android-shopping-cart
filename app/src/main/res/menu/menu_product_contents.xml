@@ -8,4 +8,11 @@
         android:title="@string/cart"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/cart_item_count"
+        android:title="total_item_count"
+        android:visible="true"
+        app:actionLayout="@layout/menu_item_layout"
+        app:showAsAction="ifRoom" />
+
 </menu>

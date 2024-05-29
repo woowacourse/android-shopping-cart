@@ -4,37 +4,34 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.model.Product
 
-class ProductAdapter(
+class RecentProductAdapter(
     private val viewModel: ProductContentsViewModel,
     private val lifecycleOwner: LifecycleOwner,
-    private val itemClickListener: (Long) -> Unit,
-) : RecyclerView.Adapter<ProductViewHolder>() {
-    private val products: MutableList<Product> = mutableListOf()
+) : RecyclerView.Adapter<RecentProductViewHolder>() {
+    private var products: List<Product> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder {
-        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding, lifecycleOwner, itemClickListener)
+    ): RecentProductViewHolder {
+        val binding = ItemRecentProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RecentProductViewHolder(binding, lifecycleOwner)
     }
 
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(
-        holder: ProductViewHolder,
+        holder: RecentProductViewHolder,
         position: Int,
     ) {
         holder.bind(products[position], viewModel)
     }
 
     fun setData(newProducts: List<Product>) {
-        val currentProductsSize = products.size
-        products.clear()
-        products.addAll(newProducts)
-        notifyItemRangeInserted(currentProductsSize, newProducts.size)
+        products = newProducts
+        notifyItemRangeChanged(0, newProducts.size)
     }
 }

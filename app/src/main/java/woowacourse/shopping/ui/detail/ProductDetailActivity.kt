@@ -10,14 +10,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.model.data.AlsongDatabase
 import woowacourse.shopping.model.data.ProductsImpl
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
     private val viewModel by lazy {
-        ViewModelProvider(this, ProductDetailViewModelFactory(ProductsImpl, CartsImpl))
+        ViewModelProvider(
+            this,
+            ProductDetailViewModelFactory(
+                ProductsImpl,
+                AlsongDatabase.getDatabase(applicationContext).orderDao(),
+                AlsongDatabase.getDatabase(applicationContext).recentProductDao(),
+            ),
+        )
             .get(ProductDetailViewModel::class.java)
     }
     private val productId by lazy { productId() }
@@ -26,6 +33,7 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.viewModel = viewModel
         showProductDetail()
         setOnCartButtonClickListener()
     }
@@ -37,9 +45,11 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private fun showProductDetail() {
         runCatching {
             viewModel.loadProduct(productId)
+            viewModel.loadRecentProduct()
         }.onSuccess {
             viewModel.product.observe(this) {
                 binding.product = it
+                binding.lifecycleOwner = this
             }
         }.onFailure {
             toast = Toast.makeText(this, it.message, Toast.LENGTH_SHORT)
