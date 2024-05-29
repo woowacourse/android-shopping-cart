@@ -14,20 +14,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shopping"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.ui.cart.CartActivity"
+            android:name=".view.cart.CartActivity"
             android:exported="false"
-            android:noHistory="true"
             android:theme="@style/Theme.Shopping" />
         <activity
-            android:name=".presentation.ui.detail.DetailActivity"
+            android:name=".view.detail.DetailActivity"
             android:exported="false"
             android:label=""
-            android:noHistory="true"
             android:theme="@style/Theme.Shopping" />
         <activity
-            android:name=".presentation.ui.shopping.ShoppingActivity"
+            android:name=".view.home.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

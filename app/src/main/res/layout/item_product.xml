@@ -6,30 +6,61 @@
     <data>
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingClickListener" />
+            name="shoppingClickListener"
+            type="woowacourse.shopping.view.home.HomeClickListener" />
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            name="quantityClickListener"
+            type="woowacourse.shopping.view.cart.QuantityClickListener" />
+
+        <variable
+            name="productItem"
+            type="woowacourse.shopping.view.home.adapter.product.ShoppingItem.ProductItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> clickListener.onProductClick(product.id)}"
-        android:padding="6dp">
+        android:onClick="@{() -> shoppingClickListener.onProductClick(productItem.product.id)}"
+        android:paddingBottom="12dp">
 
         <ImageView
             android:id="@+id/iv_product"
             android:layout_width="154dp"
             android:layout_height="154dp"
             android:layout_marginVertical="12dp"
-            app:imageUrl="@{product.imageUrl}"
+            android:layout_marginEnd="6dp"
+            app:imageUrl="@{productItem.product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:color/holo_green_dark" />
+            tools:src="@drawable/ic_launcher_background" />
+
+        <ImageButton
+            android:id="@+id/btn_add"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape_circle"
+            android:onClick="@{() -> shoppingClickListener.onPlusButtonClick(productItem.product)}"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintRight_toRightOf="@id/iv_product"
+            app:viewVisibility="@{!productItem.quantityControlVisible}" />
+
+        <include
+            android:id="@+id/btn_quantity_control"
+            layout="@layout/btn_quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:clickListener="@{quantityClickListener}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintLeft_toLeftOf="@id/iv_product"
+            app:layout_constraintRight_toRightOf="@id/iv_product"
+            app:productId="@{productItem.product.id}"
+            app:quantity="@{productItem.quantity}"
+            app:viewVisibility="@{productItem.quantityControlVisible}" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -38,13 +69,14 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="6dp"
-            android:text="@{product.name}"
+            android:text="@{productItem.product.name}"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="@id/iv_product"
             app:layout_constraintStart_toStartOf="@id/iv_product"
             app:layout_constraintTop_toBottomOf="@id/iv_product"
-            tools:text="PET보틀-정사각형어쩌구저쩌구" />
+            tools:text="PET보틀-정사각형" />
 
         <TextView
             android:id="@+id/tv_price"
@@ -52,10 +84,12 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingHorizontal="6dp"
             android:textSize="16dp"
+            app:layout_constraintRight_toRightOf="@id/iv_product"
             app:layout_constraintStart_toStartOf="@id/iv_product"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
-            app:price="@{product.price}"
+            app:price="@{productItem.product.price}"
             tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
