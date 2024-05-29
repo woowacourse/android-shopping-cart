@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="onClickCartItemCounter"
+            type="woowacourse.shopping.view.cartcounter.OnClickCartItemCounter" />
+
+        <variable
             name="onClickShoppingCart"
             type="woowacourse.shopping.view.cart.OnClickShoppingCart" />
 
@@ -46,7 +50,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
-            android:onClick="@{()->onClickShoppingCart.clickRemoveCartItem(cartItem.id)}"
+            android:onClick="@{()->onClickShoppingCart.clickRemoveCartItem(cartItem)}"
             android:src="@drawable/ic_close_24"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_item_name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,13 +66,22 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_cart_item_name" />
-
+        <include
+            layout="@layout/product_quantity_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:product = "@{cartItem.product}"
+            app:layout_constraintBottom_toTopOf="@id/tv_cart_item_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_close"
+            app:onClickCartItemCounter="@{onClickCartItemCounter}" />
         <TextView
             android:id="@+id/tv_cart_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:text="@{@string/formatted_price(cartItem.product.price)}"
+            android:text="@{@string/formatted_price(cartItem.product.price * cartItem.product.cartItemCounter.itemCount)}"
             android:textColor="@color/gray_5"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_item_image"
             app:layout_constraintEnd_toEndOf="parent"

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="recentlyProduct"
+            type="woowacourse.shopping.domain.model.RecentlyProduct" />
+
+        <variable
+            name="onClickProduct"
+            type="woowacourse.shopping.view.products.OnClickProducts" />
+    </data>
+
+    <LinearLayout
+        android:onClick="@{()->onClickProduct.clickRecentlyItem(recentlyProduct)}"
+        android:orientation="vertical"
+        android:layout_width="98dp"
+        android:layout_marginEnd="8dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            bindingImageUrl="@{recentlyProduct.imageUrl}"
+            android:layout_width="match_parent"
+            android:layout_height="98dp"/>
+        <TextView
+            android:text="@{recentlyProduct.name}"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:text = "PET보틀"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:paddingTop="7dp"
+            android:paddingHorizontal="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

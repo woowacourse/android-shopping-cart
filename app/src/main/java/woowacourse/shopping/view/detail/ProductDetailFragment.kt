@@ -5,20 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.FragmentChangeListener
+import woowacourse.shopping.utils.exception.NoSuchDataException
+import woowacourse.shopping.view.MainActivityListener
 import woowacourse.shopping.view.ViewModelFactory
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 
-class ProductDetailFragment : Fragment(), OnClickDetail {
-    private var fragmentChangeListener: FragmentChangeListener? = null
+class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter {
+    private var mainActivityListener: MainActivityListener? = null
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
     private val productDetailViewModel: ProductDetailViewModel by lazy {
@@ -27,6 +29,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
                 ProductDetailViewModel(
                     productRepository = ProductRepositoryImpl(),
                     shoppingCartRepository = ShoppingCartRepositoryImpl(requireContext()),
+                    recentlyProductRepository = RecentlyProductRepositoryImpl(requireContext()),
                 )
             }
         viewModelFactory.create(ProductDetailViewModel::class.java)
@@ -34,8 +37,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener) {
-            fragmentChangeListener = context
+        if (context is MainActivityListener) {
+            mainActivityListener = context
         }
     }
 
@@ -59,30 +62,46 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     }
 
     private fun observeData() {
-        productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
-            if (productDetailState == ProductDetailState.AddShoppingCart.Success) {
-                showMessage(
-                    requireContext().getString(
-                        R.string.success_save_data,
-                    ),
-                )
+        productDetailViewModel.productDetailEvent.observe(viewLifecycleOwner) { productDetailState ->
+            when (productDetailState) {
+                is ProductDetailEvent.AddShoppingCart.Success -> {
+                    mainActivityListener?.saveUpdateProduct(
+                        productDetailState.productId,
+                        productDetailState.count,
+                    )
+                    requireContext().makeToast(
+                        getString(R.string.add_cart_text),
+                    )
+                }
+
+                ProductDetailEvent.UpdateRecentlyProductItem.Success -> {
+                    mainActivityListener?.saveUpdateRecentlyProduct()
+                }
             }
         }
-        productDetailViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+
+        productDetailViewModel.errorEvent.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
-                ProductDetailState.AddShoppingCart.Fail ->
-                    showMessage(
-                        requireContext().getString(R.string.error_save_data),
+                ProductDetailEvent.AddShoppingCart.Fail ->
+                    requireContext().makeToast(
+                        getString(R.string.error_save_data),
                     )
 
-                ProductDetailState.LoadProductItem.Fail -> {
-                    showMessage(requireContext().getString(R.string.error_data_load))
+                ProductDetailEvent.LoadProductItem.Fail -> {
+                    requireContext().makeToast(
+                        getString(R.string.error_data_load),
+                    )
                     parentFragmentManager.popBackStack()
                 }
 
-                ProductDetailState.ErrorState.NotKnownError ->
+                ProductDetailEvent.ErrorEvent.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
+                    )
+
+                ProductDetailEvent.UpdateRecentlyProductItem.Fail ->
+                    requireContext().makeToast(
+                        getString(R.string.error_recently_product_item),
                     )
             }
         }
@@ -93,30 +112,49 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     }
 
     private fun loadProduct() {
-        productDetailViewModel.loadProductItem(receiveId())
+        try {
+            productDetailViewModel.loadProductItem(receiveId())
+            productDetailViewModel
+        } catch (e: NoSuchDataException) {
+            requireContext().makeToast(
+                getString(R.string.error_data_load),
+            )
+            clickClose()
+        }
     }
 
     private fun initView() {
         binding.vm = productDetailViewModel
         binding.onClickDetail = this
-        binding.lifecycleOwner = this
+        binding.onClickCartItemCounter = this
+        binding.lifecycleOwner = viewLifecycleOwner
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        fragmentChangeListener = null
+        mainActivityListener = null
     }
 
     override fun clickClose() {
-        fragmentChangeListener?.popFragment()
+        mainActivityListener?.popFragment()
     }
 
     override fun clickAddCart(product: Product) {
         productDetailViewModel.addShoppingCartItem(product)
     }
 
-    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+    override fun clickRecently(recentlyProduct: RecentlyProduct) {
+        productDetailViewModel.updateRecentlyProduct(recentlyProduct)
+    }
+
+    override fun clickIncrease(product: Product) {
+        productDetailViewModel.increaseItemCounter()
+    }
+
+    override fun clickDecrease(product: Product) {
+        productDetailViewModel.decreaseItemCounter()
+    }
 
     companion object {
         fun createBundle(id: Long): Bundle {

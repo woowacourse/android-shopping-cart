@@ -1,4 +1,4 @@
-package woowacourse.shopping.utils
+package woowacourse.shopping.utils.exception
 
 class NoSuchDataException(message: String = DEFAULT_MESSAGE) : Exception(message) {
     companion object {

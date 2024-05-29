@@ -8,28 +8,42 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyProductRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.FragmentChangeListener
+import woowacourse.shopping.view.MainActivityListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
+import woowacourse.shopping.view.products.adapter.RecentlyAdapter
 
-class ProductsListFragment : Fragment(), OnClickProducts {
-    private var fragmentChangeListener: FragmentChangeListener? = null
+class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter {
+    private var mainActivityListener: MainActivityListener? = null
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private val productListViewModel: ProductListViewModel by lazy {
-        val viewModelFactory = ViewModelFactory { ProductListViewModel(ProductRepositoryImpl()) }
+        val viewModelFactory =
+            ViewModelFactory {
+                ProductListViewModel(
+                    productRepository = ProductRepositoryImpl(),
+                    shoppingCartRepository = ShoppingCartRepositoryImpl(requireContext()),
+                    recentlyProductRepository = RecentlyProductRepositoryImpl(requireContext()),
+                )
+            }
         viewModelFactory.create(ProductListViewModel::class.java)
     }
-    private lateinit var adapter: ProductAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentlyAdapter: RecentlyAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener) {
-            fragmentChangeListener = context
+        if (context is MainActivityListener) {
+            mainActivityListener = context
         }
     }
 
@@ -53,39 +67,77 @@ class ProductsListFragment : Fragment(), OnClickProducts {
 
     private fun initView() {
         loadPagingData()
+        binding.vm = productListViewModel
         binding.onClickProduct = this
-        binding.lifecycleOwner = this
-        adapter =
+        binding.lifecycleOwner = viewLifecycleOwner
+        productAdapter =
             ProductAdapter(
                 onClickProducts = this,
-            ) { isLoadLastItem ->
-                binding.isVisible = isLoadLastItem
-            }
-        binding.rvProducts.adapter = adapter
+                onClickCartItemCounter = this,
+            )
+        binding.rvProducts.adapter = productAdapter
+        recentlyAdapter =
+            RecentlyAdapter(
+                onClickProducts = this,
+            )
+        binding.horizontalView.rvRecentlyProduct.adapter = recentlyAdapter
     }
 
     private fun observeData() {
-        productListViewModel.products.observe(viewLifecycleOwner) { products ->
-            adapter.updateProducts(addedProducts = products)
+        productListViewModel.recentlyProducts.observe(viewLifecycleOwner) { recentlyData ->
+            recentlyAdapter.updateProducts(recentlyData)
         }
-        productListViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+
+        productListViewModel.products.observe(viewLifecycleOwner) { products ->
+            productAdapter.updateProducts(addedProducts = products)
+        }
+        productListViewModel.productListEvent.observe(viewLifecycleOwner) { productListEvent ->
+            when (productListEvent) {
+                is ProductListEvent.DeleteProductEvent.Success -> {
+                    requireContext().makeToast(
+                        getString(R.string.delete_cart_item),
+                    )
+                    productAdapter.updateProduct(productListEvent.productId)
+                }
+
+                is ProductListEvent.UpdateProductEvent.Success -> {
+                    productAdapter.updateProduct(productListEvent.productId)
+                }
+            }
+        }
+        productListViewModel.errorEvent.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
-                ProductListState.LoadProductList.Fail ->
+                ProductListEvent.LoadProductEvent.Fail ->
                     requireContext().makeToast(
                         getString(R.string.max_paging_data),
                     )
-                ProductListState.ErrorState.NotKnownError ->
+
+                ProductListEvent.ErrorEvent.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
                     )
+
+                ProductListEvent.UpdateProductEvent.Fail,
+                ProductListEvent.DeleteProductEvent.Fail,
+                ->
+                    requireContext()
+                        .makeToast(
+                            getString(R.string.error_update_cart_item),
+                        )
             }
+        }
+        mainActivityListener?.observeProductList { updatedProducts ->
+            productListViewModel.updateProducts(updatedProducts)
+        }
+        mainActivityListener?.observeRecentlyProduct {
+            productListViewModel.loadPagingRecentlyProduct()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        fragmentChangeListener = null
+        mainActivityListener = null
     }
 
     override fun clickProductItem(productId: Long) {
@@ -93,19 +145,35 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
-        fragmentChangeListener?.changeFragment(productFragment)
+        mainActivityListener?.changeFragment(productFragment)
     }
 
     override fun clickShoppingCart() {
         val shoppingCartFragment = ShoppingCartFragment()
-        fragmentChangeListener?.changeFragment(shoppingCartFragment)
+        mainActivityListener?.changeFragment(shoppingCartFragment)
     }
 
     override fun clickLoadPagingData() {
         loadPagingData()
     }
 
+    override fun clickRecentlyItem(recentlyProduct: RecentlyProduct) {
+        val productFragment =
+            ProductDetailFragment().apply {
+                arguments = ProductDetailFragment.createBundle(recentlyProduct.productId)
+            }
+        mainActivityListener?.changeFragment(productFragment)
+    }
+
     private fun loadPagingData() {
         productListViewModel.loadPagingProduct()
+    }
+
+    override fun clickIncrease(product: Product) {
+        productListViewModel.increaseShoppingCart(product)
+    }
+
+    override fun clickDecrease(product: Product) {
+        productListViewModel.decreaseShoppingCart(product)
     }
 }

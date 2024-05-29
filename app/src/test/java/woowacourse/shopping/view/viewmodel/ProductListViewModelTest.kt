@@ -6,19 +6,26 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.MockProductRepository
+import woowacourse.shopping.MockRecentlyProductRepository
+import woowacourse.shopping.MockShoppingCartRepository
 import woowacourse.shopping.TestFixture.getOrAwaitValue
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.products.ProductListViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
-    private lateinit var repository: ProductRepository
     private lateinit var viewModel: ProductListViewModel
 
     @BeforeEach
     fun setUp() {
-        repository = MockProductRepository()
-        viewModel = ProductListViewModel(repository)
+        val productRepository = MockProductRepository()
+        val shoppingCartRepository = MockShoppingCartRepository()
+        val recentlyProductRepository = MockRecentlyProductRepository()
+        viewModel =
+            ProductListViewModel(
+                productRepository = productRepository,
+                shoppingCartRepository = shoppingCartRepository,
+                recentlyProductRepository = recentlyProductRepository,
+            )
     }
 
     @Test
@@ -28,7 +35,7 @@ class ProductListViewModelTest {
         Assertions.assertThat(before.size).isEqualTo(0)
 
         // when
-        viewModel.loadPagingProduct(3)
+        viewModel.loadPagingProduct()
 
         // then
         val result = viewModel.products.getOrAwaitValue()

@@ -13,6 +13,10 @@
             type="Boolean" />
 
         <variable
+            name="vm"
+            type="woowacourse.shopping.view.products.ProductListViewModel" />
+
+        <variable
             name="onClickProduct"
             type="woowacourse.shopping.view.products.OnClickProducts" />
     </data>
@@ -41,46 +45,79 @@
             app:layout_constraintStart_toStartOf="@id/vw_product_list_top_bar"
             app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
 
-        <ImageButton
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
-            android:onClick="@{()->onClickProduct.clickShoppingCart()}"
-            android:src="@drawable/ic_cart"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
             app:layout_constraintEnd_toEndOf="@id/vw_product_list_top_bar"
-            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
+            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_products"
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:onClick="@{()->onClickProduct.clickShoppingCart()}"
+                android:src="@drawable/ic_cart" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:background="@drawable/ic_background_circle"
+                android:gravity="center"
+                android:text="@{String.valueOf(vm.cartItemCount)}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="@{vm.cartItemCount > 0 ? View.VISIBLE : View.GONE}"
+                tools:text="1" />
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nest_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="14dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/btn_more_product"
-            app:layout_constraintTop_toBottomOf="@id/vw_product_list_top_bar"
-            app:spanCount="2"
-            tools:listitem="@layout/item_product" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_more_product"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_margin="20dp"
-            android:background="@color/primary"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:onClick="@{()->onClickProduct.clickLoadPagingData()}"
-            android:text="더보기"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:visibility="@{isVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_products" />
+            app:layout_constraintTop_toBottomOf="@+id/vw_product_list_top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/horizontal_view"
+                    layout="@layout/recently_product_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:vm="@{vm}" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_products"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="2"
+                    tools:listitem="@layout/item_product" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_more_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_margin="20dp"
+                    android:background="@color/primary"
+                    android:minWidth="0dp"
+                    android:onClick="@{()->onClickProduct.clickLoadPagingData()}"
+                    android:text="더보기"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

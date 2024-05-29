@@ -8,12 +8,15 @@ import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.view.cart.OnClickShoppingCart
 import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 
 class ShoppingCartAdapter(
     private val onClickShoppingCart: OnClickShoppingCart,
+    private val onClickCartItemCounter: OnClickCartItemCounter,
     private val loadLastItem: () -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
+    private var productPosition: HashMap<Long, Int> = hashMapOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,7 +24,7 @@ class ShoppingCartAdapter(
     ): ShoppingCartViewHolder {
         val view =
             ItemShoppingCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingCartViewHolder(view, onClickShoppingCart)
+        return ShoppingCartViewHolder(view, onClickCartItemCounter, onClickShoppingCart)
     }
 
     override fun getItemCount(): Int {
@@ -33,6 +36,8 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = cartItems[position]
+        productPosition[item.product.id] = position
+        item.product.updateItemSelector(true)
         holder.bind(item)
     }
 
@@ -46,5 +51,20 @@ class ShoppingCartAdapter(
         }
         this.cartItems = cartItems
         notifyDataSetChanged()
+    }
+
+    fun updateCartItem(productId: Long) {
+        val position = productPosition[productId]
+        if (position != null) {
+            notifyItemChanged(position)
+        }
+    }
+
+    fun deleteCartItem(productId: Long) {
+        val position = productPosition[productId]
+        if (position != null) {
+            notifyItemChanged(position)
+            productPosition.remove(productId)
+        }
     }
 }

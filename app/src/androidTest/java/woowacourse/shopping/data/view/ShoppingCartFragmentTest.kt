@@ -69,7 +69,7 @@ class ShoppingCartFragmentTest {
     @Test
     fun `장바구니에_담은_상품_가격을_보여준다`() {
         Thread.sleep(1000)
-        onView(withId(R.id.tv_cart_item_price)).check(matches(withText("10,000원")))
+        onView(withId(R.id.tv_cart_item_price)).check(matches(withText("0원")))
     }
 
     @Test

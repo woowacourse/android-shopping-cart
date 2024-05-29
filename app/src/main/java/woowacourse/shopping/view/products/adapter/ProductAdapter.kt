@@ -6,21 +6,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.products.OnClickProducts
 import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 
 class ProductAdapter(
     private val onClickProducts: OnClickProducts,
-    private val isLoadLastItem: (Boolean) -> Unit,
+    private val onClickCartItemCounter: OnClickCartItemCounter,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
+    private val productPosition: HashMap<Long, Int> = hashMapOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ProductViewHolder {
         val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(view, onClickProducts)
+        return ProductViewHolder(view, onClickCartItemCounter, onClickProducts)
     }
 
     override fun getItemCount(): Int {
@@ -33,12 +35,7 @@ class ProductAdapter(
     ) {
         val item = products[position]
         holder.bind(item)
-
-        if (position == itemCount - 1) {
-            isLoadLastItem(true)
-        } else {
-            isLoadLastItem(false)
-        }
+        productPosition[item.id] = position
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -46,5 +43,12 @@ class ProductAdapter(
         val startPosition = products.size
         products = products + addedProducts
         notifyItemRangeInserted(startPosition, addedProducts.size)
+    }
+
+    fun updateProduct(productId: Long) {
+        val position = productPosition[productId]
+        if (position != null) {
+            notifyItemChanged(position)
+        }
     }
 }

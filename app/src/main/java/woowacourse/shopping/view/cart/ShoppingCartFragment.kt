@@ -10,14 +10,18 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_COUNT
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.FragmentChangeListener
+import woowacourse.shopping.view.MainActivityListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
-class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
-    private var fragmentChangeListener: FragmentChangeListener? = null
+class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCounter {
+    private var mainActivityListener: MainActivityListener? = null
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
 
@@ -30,8 +34,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener) {
-            fragmentChangeListener = context
+        if (context is MainActivityListener) {
+            mainActivityListener = context
         }
     }
 
@@ -54,13 +58,14 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun initView() {
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = shoppingCartViewModel
         shoppingCartViewModel.loadPagingCartItemList(CART_ITEM_LOAD_PAGING_SIZE)
         binding.onClickShoppingCart = this
         adapter =
             ShoppingCartAdapter(
                 onClickShoppingCart = this,
+                onClickCartItemCounter = this,
                 loadLastItem = {
                     shoppingCartViewModel.loadPagingCartItemList(CART_ITEM_LOAD_PAGING_SIZE)
                 },
@@ -72,23 +77,56 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) {
             updateRecyclerView()
         }
-        shoppingCartViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+        shoppingCartViewModel.shoppingCartEvent.observe(viewLifecycleOwner) { cartState ->
+            when (cartState) {
+                is ShoppingCartEvent.UpdateProductEvent.Success -> {
+                    adapter.updateCartItem(cartState.productId)
+
+                    mainActivityListener?.saveUpdateProduct(
+                        cartState.productId,
+                        cartState.count,
+                    )
+                }
+
+                is ShoppingCartEvent.UpdateProductEvent.DELETE -> {
+                    adapter.deleteCartItem(cartState.productId)
+
+                    mainActivityListener?.saveUpdateProduct(
+                        cartState.productId,
+                        DEFAULT_ITEM_COUNT,
+                    )
+
+                    requireContext().makeToast(
+                        getString(
+                            R.string.delete_cart_item,
+                        ),
+                    )
+                }
+            }
+        }
+
+        shoppingCartViewModel.errorEvent.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
-                ShoppingCartState.DeleteShoppingCart.Fail ->
+                ShoppingCartEvent.DeleteShoppingCart.Fail ->
                     requireContext().makeToast(
                         getString(
                             R.string.error_delete_data,
                         ),
                     )
 
-                ShoppingCartState.LoadCartItemList.Fail ->
+                ShoppingCartEvent.LoadCartItemList.Fail ->
                     requireContext().makeToast(
                         getString(R.string.max_paging_data),
                     )
 
-                ShoppingCartState.ErrorState.NotKnownError ->
+                ShoppingCartEvent.ErrorState.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
+                    )
+
+                ShoppingCartEvent.UpdateProductEvent.Fail ->
+                    requireContext().makeToast(
+                        getString(R.string.error_update_cart_item),
                     )
             }
         }
@@ -97,11 +135,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        fragmentChangeListener = null
+        mainActivityListener = null
     }
 
     override fun clickBack() {
-        fragmentChangeListener?.popFragment()
+        mainActivityListener?.popFragment()
     }
 
     override fun clickCartItem(productId: Long) {
@@ -109,11 +147,14 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
-        fragmentChangeListener?.changeFragment(productFragment)
+        mainActivityListener?.changeFragment(productFragment)
     }
 
-    override fun clickRemoveCartItem(cartItemId: Long) {
-        shoppingCartViewModel.deleteShoppingCartItem(cartItemId)
+    override fun clickRemoveCartItem(cartItem: CartItem) {
+        shoppingCartViewModel.deleteShoppingCartItem(
+            cartItemId = cartItem.id,
+            productId = cartItem.product.id,
+        )
     }
 
     override fun clickPrevPage() {
@@ -144,5 +185,13 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private fun updateImageButtonColor() {
         binding.onPrevButton = shoppingCartViewModel.isExistPrevPage()
         binding.onNextButton = shoppingCartViewModel.isExistNextPage()
+    }
+
+    override fun clickIncrease(product: Product) {
+        shoppingCartViewModel.increaseCartItem(product)
+    }
+
+    override fun clickDecrease(product: Product) {
+        shoppingCartViewModel.decreaseCartItem(product)
     }
 }
