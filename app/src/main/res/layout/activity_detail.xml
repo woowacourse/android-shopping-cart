@@ -6,13 +6,11 @@
 
     <data>
 
-        <variable
-            name="addCompleteListener"
-            type="woowacourse.shopping.presentation.detail.AddCompleteListener" />
+        <import type="android.view.View" />
 
         <variable
             name="detailViewModel"
-            type="woowacourse.shopping.presentation.detail.DetailViewModel" />
+            type="woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,8 +55,8 @@
             android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/black"
             android:text="@{detailViewModel.productInformation.name}"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,34 +72,80 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_title_detail" />
 
         <TextView
-            android:id="@+id/tv_price_title_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/detail_price_title"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@id/tv_product_title_detail"
-            app:layout_constraintTop_toBottomOf="@id/div_detail" />
-
-        <TextView
             android:id="@+id/tv_price_value_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/format_price(detailViewModel.productInformation.price)}"
             android:layout_marginTop="16dp"
+            android:text="@{@string/format_price(detailViewModel.productInformation.price * detailViewModel.quantity)}"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@id/tv_product_title_detail"
+            app:layout_constraintStart_toStartOf="@id/tv_product_title_detail"
             app:layout_constraintTop_toBottomOf="@id/div_detail"
             tools:text="10,000원" />
 
+        <include
+            layout="@layout/layout_plus_minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:padding="12dp"
+            app:cartItemCountHandler="@{detailViewModel}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_price_value_detail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_price_value_detail"
+            app:productId="@{detailViewModel.productInformation.id}"
+            app:quantity="@{detailViewModel.quantity}" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_last_watch_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="29dp"
+            android:onClick="@{() -> detailViewModel.moveToDetail(detailViewModel.recentProduct.id)}"
+            android:visibility="@{detailViewModel.showRecent ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/tv_price_value_detail"
+            app:strokeColor="@color/gray_500"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_last_watch_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/detail_recent_product"
+                    android:textColor="@color/mint_900"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="18dp"
+                    android:text="@{detailViewModel.recentProduct.name}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tv_last_watch_product"
+                    app:layout_constraintTop_toBottomOf="@id/tv_last_watch_product"
+                    tools:text="PET보틀-정사각형(500ml)" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_to_cart_detail"
-            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.id, addCompleteListener)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint_900"
+            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.id, detailViewModel.quantity)}"
             android:text="@string/detail_add_to_cart_button"
             android:textColor="@color/white"
             android:textSize="20sp"

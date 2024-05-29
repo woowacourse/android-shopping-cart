@@ -8,6 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.cart.viewmodel.CartViewModel
 import woowacourse.shopping.presentation.dummy.DummyCartItems
 import woowacourse.shopping.presentation.dummy.DummyProducts
 
@@ -17,7 +18,7 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        cartViewModel = CartViewModel(FakeCartRepository(DummyCartItems().cartItems), FakeProductRepository(DummyProducts().products))
+        cartViewModel = CartViewModel(FakeCartRepository(DummyCartItems().carts), FakeProductRepository(DummyProducts().products))
     }
 
     @Test
@@ -53,12 +54,12 @@ class CartViewModelTest {
         val orders = cartViewModel.orders
 
         cartViewModel.loadCurrentPageCartItems()
-        cartViewModel.removeCartItem(1)
-        cartViewModel.removeCartItem(2)
-        cartViewModel.removeCartItem(3)
-        cartViewModel.removeCartItem(4)
-        cartViewModel.removeCartItem(5)
-        cartViewModel.removeCartItem(6)
+        cartViewModel.removeAllCartItem(1)
+        cartViewModel.removeAllCartItem(2)
+        cartViewModel.removeAllCartItem(3)
+        cartViewModel.removeAllCartItem(4)
+        cartViewModel.removeAllCartItem(5)
+        cartViewModel.removeAllCartItem(6)
 
         assertThat(orders.getOrAwaitValue()).hasSize(1)
     }

@@ -7,11 +7,11 @@
 
         <variable
             name="adapter"
-            type="woowacourse.shopping.presentation.cart.CartAdapter" />
+            type="woowacourse.shopping.presentation.cart.adapter.CartAdapter" />
 
         <variable
-            name="viewModel"
-            type="woowacourse.shopping.presentation.cart.CartViewModel" />
+            name="cartViewModel"
+            type="woowacourse.shopping.presentation.cart.viewmodel.CartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,8 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/selector_page_navigation_button"
-            android:enabled="@{viewModel.pageInformation.previousPageEnabled}"
-            android:onClick="@{() -> viewModel.loadPreviousPageCartItems()}"
+            android:enabled="@{cartViewModel.pageInformation.previousPageEnabled}"
+            android:onClick="@{() -> cartViewModel.loadPreviousPageCartItems()}"
             android:text="@string/navigation_previous_button"
             android:textColor="@color/white"
             android:textSize="22sp"
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
-            android:text="@{String.valueOf(viewModel.currentPage + 1)}"
+            android:text="@{String.valueOf(cartViewModel.currentPage + 1)}"
             android:textColor="@color/gray_500"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -91,8 +91,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/selector_page_navigation_button"
-            android:enabled="@{viewModel.pageInformation.nextPageEnabled}"
-            android:onClick="@{() -> viewModel.loadNextPageCartItems()}"
+            android:enabled="@{cartViewModel.pageInformation.nextPageEnabled}"
+            android:onClick="@{() -> cartViewModel.loadNextPageCartItems()}"
             android:text="@string/navigation_next_button"
             android:textColor="@color/white"
             android:textSize="22sp"

@@ -6,19 +6,24 @@
 
     <data>
 
-        <variable
-            name="product"
-            type="woowacourse.shopping.data.model.Product" />
+        <import type="android.view.View" />
 
         <variable
-            name="productItemClickListener"
-            type="woowacourse.shopping.presentation.home.ProductItemClickListener" />
+            name="order"
+            type="woowacourse.shopping.presentation.uistate.Order" />
+
+        <variable
+            name="homeActionHandler"
+            type="woowacourse.shopping.presentation.home.HomeActionHandler" />
+
+        <variable
+            name="cartItemCountHandler"
+            type="woowacourse.shopping.presentation.action.CartItemCountHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> productItemClickListener.onProductItemClick(product.id)}"
         android:padding="8dp">
 
         <ImageView
@@ -27,13 +32,40 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/description_thumbnail"
+            android:onClick="@{() -> homeActionHandler.onProductItemClick(order.product.id)}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            shopping:productThumbnail="@{product.imageSource}"
+            shopping:productThumbnail="@{order.product.imageSource}"
             tools:src="@drawable/ic_launcher_background" />
+
+        <ImageView
+            android:id="@+id/iv_round_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> homeActionHandler.onAddCartItem(order.product.id) }"
+            android:src="@drawable/ic_circle_plus"
+            android:visibility="@{order.quantity == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_detail" />
+
+        <include
+            layout="@layout/layout_plus_minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="18dp"
+            android:padding="12dp"
+            android:visibility="@{order.quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:cartItemCountHandler="@{cartItemCountHandler}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:productId="@{order.product.id}"
+            app:quantity="@{order.quantity}" />
 
         <TextView
             android:id="@+id/tv_product_title_detail"
@@ -43,7 +75,7 @@
             android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{order.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -59,7 +91,7 @@
             android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/format_price(product.price)}"
+            android:text="@{@string/format_price(order.product.price)}"
             android:textColor="@color/gray_500"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

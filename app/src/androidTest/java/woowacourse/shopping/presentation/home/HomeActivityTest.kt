@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.home
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -18,6 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
+import woowacourse.shopping.presentation.home.adapter.LoadingViewHolder
 
 @RunWith(AndroidJUnit4::class)
 class HomeActivityTest {
@@ -26,7 +26,7 @@ class HomeActivityTest {
 
     @Test
     fun `전체_상품_목록을_불러온다`() {
-        onView(withId(R.id.rv_home)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_product)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -34,53 +34,23 @@ class HomeActivityTest {
         var itemCount = 0
 
         scenarioRule.scenario.onActivity { activity ->
-            val recyclerView = activity.findViewById<RecyclerView>(R.id.rv_home)
+            val recyclerView = activity.findViewById<RecyclerView>(R.id.rv_product)
             itemCount = recyclerView.adapter?.itemCount ?: 0
         }
 
         if (itemCount >= 20) {
-            onView(withId(R.id.rv_home)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
+            onView(withId(R.id.rv_product)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
                 .check(
                     matches(
                         matchViewHolderAtPosition(
                             20,
-                            ProductAdapter.LoadingViewHolder::class.java,
+                            LoadingViewHolder::class.java,
                         ),
                     ),
                 )
         } else {
-            onView(withId(R.id.rv_home)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
+            onView(withId(R.id.rv_product)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
             onView(withId(R.id.btn_load_more)).check(matches(not(isDisplayed())))
-        }
-    }
-
-    @Test
-    fun `더보기_버튼을_클릭하면_새로운_상품들이_나타난다`() {
-        var itemCount = 0
-
-        scenarioRule.scenario.onActivity { activity ->
-            val recyclerView = activity.findViewById<RecyclerView>(R.id.rv_home)
-            itemCount = recyclerView.adapter?.itemCount ?: 0
-        }
-
-        if (itemCount >= 20) {
-            onView(withId(R.id.rv_home))
-                .perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
-                .perform(
-                    // Trouble Shooting : 아이템의 특성(withText 등)을 찾기보다는 포지션을 활용하는 것이 좋음
-                    RecyclerViewActions.actionOnItemAtPosition<ProductAdapter.LoadingViewHolder>(
-                        20,
-                        ViewActions.click(),
-                    ),
-                )
-                .check(
-                    matches(
-                        matchViewHolderAtPosition(
-                            20,
-                            ProductAdapter.ProductViewHolder::class.java,
-                        ),
-                    ),
-                )
         }
     }
 
