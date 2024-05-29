@@ -87,11 +87,9 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         val existingCartItem = findCartItemEntityByProductId(product.id) ?: throw NoSuchDataException()
         val updatedQuantity = existingCartItem.quantity - decrementAmount
 
-        if (updatedQuantity == 0) {
-            if (allowZero) {
-                deleteCartItem(existingCartItem.id)
-            }
-        } else {
+        if (updatedQuantity == 0 && allowZero) {
+            deleteCartItem(existingCartItem.id)
+        } else if (updatedQuantity > 0) {
             val updatedCartItem = existingCartItem.copy(quantity = updatedQuantity)
             thread { cartItemDao.updateCartItem(updatedCartItem) }.join()
         }
