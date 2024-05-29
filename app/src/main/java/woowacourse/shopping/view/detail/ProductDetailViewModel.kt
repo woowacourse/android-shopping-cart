@@ -40,16 +40,26 @@ class ProductDetailViewModel(
             MutableLiveData(quantityValue * price)
         }
 
-    val lastViewedProduct: Product by lazy {
-        if (lastViewedProductSelected) {
-            Product.INVALID_PRODUCT
-        } else {
-            recentViewedItemRepository.getLastViewedProduct()
-        }
-    }
+    lateinit var lastViewedProduct: Product
 
     init {
         loadProductItem()
+    }
+
+    private fun updateLastViewedProduct() {
+        lastViewedProduct =
+            if (lastViewedProductSelected) {
+                Product.INVALID_PRODUCT
+            } else {
+                recentViewedItemRepository.getLastViewedProduct()
+            }
+    }
+
+    fun saveRecentViewedProduct(onProductSaved: (Product) -> Unit) {
+        updateLastViewedProduct()
+        val recentProduct = product.value ?: return
+        recentViewedItemRepository.saveRecentViewedItem(recentProduct)
+        onProductSaved(recentProduct)
     }
 
     private fun loadProductItem() {
@@ -57,14 +67,7 @@ class ProductDetailViewModel(
     }
 
     override fun onCloseButtonClicked() {
-        var shouldUpdate = false
-        product.value?.let {
-            if (lastViewedProduct.id != it.id) {
-                recentViewedItemRepository.saveRecentViewedItem(it)
-                shouldUpdate = true
-            }
-        }
-        _navigateToBack.value = Event(shouldUpdate)
+        _navigateToBack.value = Event(true)
     }
 
     override fun onAddCartButtonClicked() {

@@ -49,6 +49,7 @@ class ProductDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupDataBinding()
         observeData()
+        updateRecentViewedProduct()
     }
 
     private fun setupDataBinding() {
@@ -70,13 +71,7 @@ class ProductDetailFragment : Fragment() {
         }
 
         productDetailViewModel.navigateToBack.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { shouldUpdate ->
-                if (shouldUpdate) {
-                    productDetailViewModel.product.value?.let { product ->
-                        sharedViewModel.setUpdatedRecentViewedProduct(product)
-                    }
-                }
-
+            it.getContentIfNotHandled()?.let {
                 if (receiveLastViewedSelected()) {
                     parentFragmentManager.popBackStack("detailFragment", POP_BACK_STACK_INCLUSIVE)
                 } else {
@@ -86,9 +81,15 @@ class ProductDetailFragment : Fragment() {
         }
 
         productDetailViewModel.navigateToLastViewedItem.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                navigateToDetail(it)
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
             }
+        }
+    }
+
+    private fun updateRecentViewedProduct() {
+        productDetailViewModel.saveRecentViewedProduct { viewedProduct ->
+            sharedViewModel.setUpdatedRecentViewedProduct(viewedProduct)
         }
     }
 
