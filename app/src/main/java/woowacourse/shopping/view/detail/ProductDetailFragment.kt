@@ -13,7 +13,9 @@ import woowacourse.shopping.data.cartItem.CartItemDatabase
 import woowacourse.shopping.data.cartItem.CartItemLocalDataSource
 import woowacourse.shopping.data.cartItem.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemDatabase
 import woowacourse.shopping.data.recentvieweditem.RecentViewedItemRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedLocalDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.MainViewModel
@@ -28,7 +30,7 @@ class ProductDetailFragment : Fragment() {
             DetailViewModelFactory(
                 ProductRepositoryImpl(requireContext()),
                 CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
-                RecentViewedItemRepositoryImpl(requireContext()),
+                RecentViewedItemRepositoryImpl(RecentViewedLocalDataSource(RecentViewedItemDatabase.getInstance(requireContext()))),
                 receiveProductId(),
                 receiveLastViewedSelected(),
             )

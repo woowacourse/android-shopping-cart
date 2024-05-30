@@ -13,7 +13,9 @@ import woowacourse.shopping.data.cartItem.CartItemDatabase
 import woowacourse.shopping.data.cartItem.CartItemLocalDataSource
 import woowacourse.shopping.data.cartItem.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemDatabase
 import woowacourse.shopping.data.recentvieweditem.RecentViewedItemRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedLocalDataSource
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.ShoppingCartFragment
@@ -32,7 +34,7 @@ class ProductsListFragment : Fragment() {
             ProductListViewModelFactory(
                 ProductRepositoryImpl(requireContext()),
                 CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
-                RecentViewedItemRepositoryImpl(requireContext()),
+                RecentViewedItemRepositoryImpl(RecentViewedLocalDataSource(RecentViewedItemDatabase.getInstance(requireContext()))),
             )
         viewModelFactory.create(ProductListViewModel::class.java)
     }
