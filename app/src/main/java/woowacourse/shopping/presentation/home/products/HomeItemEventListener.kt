@@ -4,4 +4,6 @@ interface HomeItemEventListener {
     fun navigateToProductDetail(id: Long)
 
     fun loadNextPage()
+
+    fun onNavigatedBack(changedIds: LongArray?)
 }

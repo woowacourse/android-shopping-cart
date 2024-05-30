@@ -27,6 +27,7 @@ class CartRepositoryImpl(
         var count = 0
         thread {
             count = cartDataSource.fetchTotalCount()
+            println("count : $count")
         }.join()
         return count
     }

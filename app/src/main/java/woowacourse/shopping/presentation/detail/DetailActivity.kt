@@ -17,7 +17,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.presentation.home.products.ProductQuantity
 
 class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {
@@ -61,16 +60,11 @@ class DetailActivity : AppCompatActivity() {
     private fun observeEvents() {
         viewModel.message.observe(this) { event ->
             if (event.hasBeenHandled) return@observe
-            val quantity =
-                ProductQuantity(
-                    productId,
-                    viewModel.productInformation.value?.quantity ?: -1,
-                )
             setResult(
                 RESULT_OK,
                 Intent().putExtra(
-                    "quantities",
-                    arrayListOf(quantity),
+                    EXTRA_CHANGED_IDS,
+                    arrayOf(productId).toLongArray(),
                 ),
             )
             showToastMessage(
@@ -123,6 +117,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val EXTRA_CHANGED_IDS = "changed_ids"
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
         private const val EXTRA_LASTLY_VIEWED = "extra_lastly_viewed"
         private const val DEFAULT_PRODUCT_ID = -1L

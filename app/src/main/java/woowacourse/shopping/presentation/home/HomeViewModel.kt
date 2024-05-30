@@ -53,36 +53,28 @@ class HomeViewModel(
     }
 
     private fun loadProducts() {
-            _loadStatus.postValue(
-                loadStatus.value?.copy(
-                    isLoadingPage = true,
-                    loadingAvailable = false,
-                ),
+        _loadStatus.value =
+            loadStatus.value?.copy(
+                isLoadingPage = true,
+                loadingAvailable = false,
             )
-            val currentPageData =
-                nextPageProducts.ifEmpty {
-                    productRepository.fetchSinglePage(page)
-                }
-            nextPageProducts = productRepository.fetchSinglePage(++page)
-            _products.postValue(products.value?.plus(currentPageData))
-            val isLoadingAvailable = nextPageProducts.isNotEmpty()
-            _loadStatus.postValue(
-                loadStatus.value?.copy(
-                    loadingAvailable = isLoadingAvailable,
-                    isLoadingPage = false,
-                ),
+        val currentPageData =
+            nextPageProducts.ifEmpty {
+                productRepository.fetchSinglePage(page)
+            }
+        nextPageProducts = productRepository.fetchSinglePage(++page)
+        _products.value = products.value?.plus(currentPageData)
+        val isLoadingAvailable = nextPageProducts.isNotEmpty()
+        _loadStatus.value =
+            loadStatus.value?.copy(
+                loadingAvailable = isLoadingAvailable,
+                isLoadingPage = false,
             )
-            _totalQuantity.postValue(
-                cartRepository.fetchTotalCount(),
-            )
-
+        updateTotalCount()
     }
 
     fun loadHistory() {
-            _productHistory.postValue(
-                productRepository.fetchProductHistory(10),
-            )
-
+        _productHistory.value = productRepository.fetchProductHistory(10)
     }
 
     fun navigateToCart() {
@@ -90,9 +82,9 @@ class HomeViewModel(
     }
 
     override fun navigateToProductDetail(id: Long) {
-            val lastlyViewedId = productRepository.fetchLatestHistory()?.product?.id
-            loadHistory()
-            _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
+        val lastlyViewedId = productRepository.fetchLatestHistory()?.product?.id
+        loadHistory()
+        _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
 
     }
 
@@ -100,49 +92,70 @@ class HomeViewModel(
         loadProducts()
     }
 
+    override fun onNavigatedBack(changedIds: LongArray?) {
+        println("changedId : ${changedIds?.forEach { print("$it ") }}")
+        if (changedIds == null) return
+        changedIds.forEach { id ->
+            val updatedProduct = productRepository.fetchProduct(id)
+            println(updatedProduct)
+            val target =
+                products.value?.map { cartedProduct ->
+                    if (cartedProduct.product.id == id) {
+                        val item =
+                            cartedProduct.copy(cartItem = updatedProduct.cartItem)
+                        println("changed : $item")
+                        item
+                    } else {
+                        cartedProduct
+                    }
+                }
+            _products.value = target
+        }
+        loadHistory()
+        updateTotalCount()
+    }
+
     override fun onQuantityChange(
         productId: Long,
         quantity: Int,
     ) {
         if (quantity < 0) return
-        thread {
-            val targetProduct = productRepository.fetchProduct(productId)
-            if (quantity == 0) {
-                if (targetProduct.cartItem != null) {
-                    cartRepository.removeCartItem(targetProduct.cartItem)
-                }
-                val target =
-                    products.value?.map {
-                        if (it.product.id == targetProduct.product.id) {
-                            val item = it.copy(cartItem = null)
-                            item
-                        } else {
-                            it
-                        }
-                    }
-                _products.postValue(target)
-            } else {
-                if (targetProduct.cartItem?.id != null) {
-                    cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
-                    targetProduct.cartItem.id
-                } else {
-                    cartRepository.addCartItem(CartItem(productId = productId, quantity = quantity))
-                }
-                val target =
-                    products.value?.map {
-                        if (it.product.id == productId) {
-                            val item =
-                                it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
-                            item
-                        } else {
-                            it
-                        }
-                    }
-                _products.postValue(target)
+        val targetProduct = productRepository.fetchProduct(productId)
+        if (quantity == 0) {
+            if (targetProduct.cartItem != null) {
+                cartRepository.removeCartItem(targetProduct.cartItem)
             }
-            _totalQuantity.postValue(
-                cartRepository.fetchTotalCount(),
-            )
+            val target =
+                products.value?.map {
+                    if (it.product.id == targetProduct.product.id) {
+                        val item = it.copy(cartItem = null)
+                        item
+                    } else {
+                        it
+                    }
+                }
+            _products.value = target
+        } else {
+            if (targetProduct.cartItem?.id != null) {
+                cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
+                targetProduct.cartItem.id
+            } else {
+                cartRepository.addCartItem(CartItem(productId = productId, quantity = quantity))
+            }
+            val target =
+                products.value?.map {
+                    if (it.product.id == productId) {
+                        it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
+                    } else {
+                        it
+                    }
+                }
+            _products.value = target
         }
+        updateTotalCount()
+    }
+
+    private fun updateTotalCount() {
+        _totalQuantity.value = cartRepository.fetchTotalCount()
     }
 }

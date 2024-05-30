@@ -28,7 +28,7 @@ class CartViewModel(
     val pageInformation: LiveData<PageInformation>
         get() = _pageInformation
 
-    var alteredCartItems: ArrayList<ProductQuantity> = arrayListOf()
+    var alteredCartItems: Array<Long> = arrayOf()
         private set
 
     private var hasNext: Boolean = true
@@ -58,7 +58,7 @@ class CartViewModel(
 
     override fun onCartItemDelete(cartedProduct: CartedProduct) {
         cartRepository.removeCartItem(cartedProduct.cartItem)
-        alteredCartItems.add(ProductQuantity(cartedProduct.product.id, 0))
+        alteredCartItems += cartedProduct.product.id
         if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
             _currentPage.value = currentPage.value?.minus(1)
         }
@@ -77,14 +77,8 @@ class CartViewModel(
             } else {
                 cartRepository.updateQuantity(targetItem.cartItem.id ?: return, quantity)
             }
-            if (productId !in alteredCartItems.map(ProductQuantity::productId)) {
-                alteredCartItems.add(ProductQuantity(productId, quantity))
-            } else {
-                replaceAll(
-                    alteredCartItems,
-                    alteredCartItems.first { it.productId == productId },
-                    ProductQuantity(productId, quantity),
-                )
+            if (productId !in alteredCartItems) {
+                alteredCartItems += productId
             }
         }
         loadCurrentPageCartItems()
@@ -92,19 +86,17 @@ class CartViewModel(
 
     private fun setPageInformation() {
         if (currentPage.value == 0) {
-            _pageInformation.postValue(
+            _pageInformation.value =
                 pageInformation.value?.copy(
                     previousPageEnabled = false,
                     nextPageEnabled = hasNext,
-                ),
-            )
+                )
         } else {
-            _pageInformation.postValue(
+            _pageInformation.value =
                 pageInformation.value?.copy(
                     previousPageEnabled = true,
                     nextPageEnabled = hasNext,
-                ),
-            )
+                )
         }
     }
 }

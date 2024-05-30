@@ -16,13 +16,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.databinding.LayoutCartCountBinding
-import woowacourse.shopping.presentation.BindableAdapter
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.home.history.HistoryAdapter
 import woowacourse.shopping.presentation.home.products.ProductAdapter
 import woowacourse.shopping.presentation.home.products.ProductItemSpanSizeLookup
-import woowacourse.shopping.presentation.home.products.ProductQuantity
 
 class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding by lazy {
@@ -42,18 +40,13 @@ class HomeActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val quantities =
+                val changedIds =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getParcelableArrayListExtra(
-                            EXTRA_QUANTITIES,
-                            ProductQuantity::class.java,
-                        )
+                        result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
                     } else {
-                        result.data?.getParcelableArrayListExtra(EXTRA_QUANTITIES)
+                        result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
                     }
-                quantities?.forEach {
-                    viewModel.onQuantityChange(it.productId, it.quantity)
-                }
+                viewModel.onNavigatedBack(changedIds = changedIds)
             }
             viewModel.loadHistory()
         }
@@ -118,7 +111,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val EXTRA_QUANTITIES = "quantities"
+        private const val EXTRA_CHANGED_IDS = "changed_ids"
     }
 }
 

@@ -63,18 +63,19 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun navigateBackToMain() {
+        val itemIds = viewModel.alteredCartItems.toLongArray()
         setResult(
             RESULT_OK,
             Intent().putExtra(
-                EXTRA_QUANTITIES,
-                viewModel.alteredCartItems,
+                EXTRA_CHANGED_IDS,
+                itemIds,
             ),
         )
         finish()
     }
 
     companion object {
-        private const val EXTRA_QUANTITIES = "quantities"
+        private const val EXTRA_CHANGED_IDS = "changed_ids"
 
         fun newIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)

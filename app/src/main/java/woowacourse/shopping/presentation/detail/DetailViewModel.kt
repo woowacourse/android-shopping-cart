@@ -59,21 +59,27 @@ class DetailViewModel(
         if (productInformation.value?.quantity == 0 && targetProduct.cartItem?.id != null) {
             cartRepository.removeCartItem(targetProduct.cartItem)
         } else {
+            println(targetProduct.cartItem)
             if (targetProduct.cartItem?.id != null) {
                 cartRepository.updateQuantity(
                     targetProduct.cartItem.id,
                     productInformation.value?.quantity ?: return
                 )
             } else {
-                cartRepository.addCartItem(CartItem(productId = productId))
+                cartRepository.addCartItem(
+                    CartItem(
+                        productId = productId,
+                        quantity = productInformation.value?.quantity ?: return
+                    )
+                )
             }
         }
-        _message.postValue(Event(StringResource(R.string.message_add_to_cart_complete)))
+        _message.value = Event(StringResource(R.string.message_add_to_cart_complete))
 
     }
 
     fun updateNavigationEvent(id: Long) {
-        _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, id)))
+        _navigateToDetailEvent.value = Event(DetailNavigationData(id, id))
     }
 
     fun updateHistory(id: Long) {
@@ -85,22 +91,19 @@ class DetailViewModel(
         quantity: Int,
     ) {
         if (quantity < 0) return
-        _productInformation.postValue(
+        _productInformation.value =
             productInformation.value?.copy(
                 cartItem = CartItem(productId = productId, quantity = quantity),
             )
-        )
     }
 
     private fun loadProductInformation(id: Long) {
-        _productInformation.postValue(productRepository.fetchProduct(id))
-
+        _productInformation.value = productRepository.fetchProduct(id)
     }
 
     private fun updateLastlyViewedProduct() {
-        _lastlyViewedProduct.postValue(
-            productRepository.fetchLatestHistory(),
-        )
+        _lastlyViewedProduct.value =
+            productRepository.fetchLatestHistory()
     }
 
     companion object {
