@@ -9,6 +9,8 @@ class DefaultProductHistoryRepository(
     private val productHistoryDataSource: ProductHistoryDataSource,
     private val productDataSource: ProductDataSource,
 ) : ProductHistoryRepository {
+
+    // ---
     override fun saveProductHistory(productId: Long) {
         productHistoryDataSource.saveProductHistory(productId)
     }
@@ -32,11 +34,28 @@ class DefaultProductHistoryRepository(
         return productDataSource.findById(productId).toDomain(quantity = 0)
     }
 
-    override fun deleteAllProductHistory() {
-        productHistoryDataSource.deleteAllProductHistory()
+
+    override fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit) {
+        productHistoryDataSource.saveProductHistoryAsync(productId, callback)
     }
 
-    companion object {
-        private const val TAG = "DefaultProductHistoryRe"
+    override fun loadLatestProductAsync(callback: (Long) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun loadAllProductHistoryAsync(callback: (List<Product>) -> Unit) {
+        productHistoryDataSource.loadAllProductHistoryAsync { productIds ->
+            val products = productIds.map {
+                productDataSource.findById(it).toDomain(quantity = 0)
+            }
+            callback(products)
+        }
+    }
+
+    override fun loadProductHistoryAsync(productId: Long, callback: (Product) -> Unit) {
+        productHistoryDataSource.loadProductHistoryAsync(productId) { id ->
+            val product = productDataSource.findById(id).toDomain(quantity = 0)
+            callback(product)
+        }
     }
 }

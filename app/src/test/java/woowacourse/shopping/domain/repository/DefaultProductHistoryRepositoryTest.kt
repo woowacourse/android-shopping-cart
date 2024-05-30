@@ -10,6 +10,7 @@ import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.source.FakeProductDataSource
 import woowacourse.shopping.source.FakeProductHistorySource
+import woowacourse.shopping.testfixture.productDomainTestFixture
 
 class DefaultProductHistoryRepositoryTest {
     private lateinit var historySource: ProductHistoryDataSource
@@ -42,6 +43,43 @@ class DefaultProductHistoryRepositoryTest {
     }
 
     @Test
+    fun `상품 검색 async`() {
+        // given setup
+        // when
+        productHistoryRepository.loadProductHistoryAsync(1) { product ->
+            // then
+            assertThat(product).isEqualTo(
+                productTestFixture(1).toDomain(quantity = 0),
+            )
+        }
+    }
+
+    @Test
+    fun `상품 검색 `() {
+        // given setup
+        // when
+        val product = productHistoryRepository.loadLatestProduct()
+
+        // then
+        assertThat(product).isEqualTo(
+            productDomainTestFixture(3)
+        )
+    }
+
+    @Test
+    fun `상품 검색 aync`() {
+        // given setup
+        // when
+        productHistoryRepository.loadLatestProductAsync { product ->
+            // then
+            assertThat(product).isEqualTo(
+                productDomainTestFixture(3)
+            )
+        }
+    }
+
+
+    @Test
     fun `이미 내역에 있는 상품을 저장하려고 하면 저장 안됨`() {
         // given setup
         val product = productTestFixture(3)
@@ -52,6 +90,21 @@ class DefaultProductHistoryRepositoryTest {
         // then
         assertThat(productHistoryRepository.loadAllProductHistory()).hasSize(3)
     }
+
+    @Test
+    fun `이미 내역에 있는 상품을 저장하려고 하면 저장 안됨 aync`() {
+        // given setup
+        val product = productTestFixture(3)
+
+        // when
+        productHistoryRepository.saveProductHistoryAsync(product.id) {
+            // then
+            productHistoryRepository.loadAllProductHistoryAsync { products ->
+                assertThat(products).hasSize(3)
+            }
+        }
+    }
+
 
     @Test
     fun `내역에 없는 상품을 저장`() {
@@ -66,6 +119,20 @@ class DefaultProductHistoryRepositoryTest {
     }
 
     @Test
+    fun `내역에 없는 상품을 저장 async`() {
+        // given setup
+        val product = productTestFixture(5)
+
+        // when
+        productHistoryRepository.saveProductHistoryAsync(product.id) {
+            // then
+            productHistoryRepository.loadAllProductHistoryAsync { products ->
+                assertThat(products).hasSize(4)
+            }
+        }
+    }
+
+    @Test
     fun `상품 모두 로드`() {
         // given setup
 
@@ -74,5 +141,16 @@ class DefaultProductHistoryRepositoryTest {
 
         // then
         assertThat(products).hasSize(3)
+    }
+
+    @Test
+    fun `상품 모두 로드 async`() {
+        // given setup
+
+        // when
+        productHistoryRepository.loadAllProductHistoryAsync { products ->
+            // then
+            assertThat(products).hasSize(3)
+        }
     }
 }

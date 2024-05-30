@@ -1,6 +1,7 @@
 package woowacourse.shopping.source
 
 import woowacourse.shopping.data.source.ProductHistoryDataSource
+import kotlin.concurrent.thread
 
 class FakeProductHistorySource(
     private val history: MutableList<Long> = ArrayDeque(MAX_SIZE),
@@ -27,6 +28,29 @@ class FakeProductHistorySource(
 
     override fun deleteAllProductHistory() {
         history.clear()
+    }
+
+    override fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit) {
+        thread {
+            saveProductHistory(productId)
+            callback(true)
+        }
+    }
+
+    override fun loadProductHistoryAsync(productId: Long, callback: (Long) -> Unit) {
+
+    }
+
+    override fun loadLatestProductAsync(callback: (Long) -> Unit) {
+        thread {
+            callback(loadLatestProduct())
+        }
+    }
+
+    override fun loadAllProductHistoryAsync(callback: (List<Long>) -> Unit) {
+        thread {
+            callback(loadAllProductHistory())
+        }
     }
 
     companion object {

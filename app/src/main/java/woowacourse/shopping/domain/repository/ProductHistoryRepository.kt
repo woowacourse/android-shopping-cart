@@ -11,5 +11,12 @@ interface ProductHistoryRepository {
 
     fun loadLatestProduct(): Product
 
-    fun deleteAllProductHistory()
+    fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit)
+
+    fun loadLatestProductAsync(callback: (Long) -> Unit)
+
+    fun loadAllProductHistoryAsync(callback: (List<Product>) -> Unit)
+
+    fun loadProductHistoryAsync(productId: Long, callback: (Product) -> Unit)
+
 }
