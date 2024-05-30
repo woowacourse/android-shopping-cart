@@ -12,9 +12,9 @@ import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 
 class DefaultShoppingProductRepositoryTest {
-    lateinit var productDataSource: ProductDataSource
-    lateinit var shoppingCartProductIdDataSource: ShoppingCartProductIdDataSource
-    lateinit var repository: ShoppingProductsRepository
+    private lateinit var productDataSource: ProductDataSource
+    private lateinit var shoppingCartProductIdDataSource: ShoppingCartProductIdDataSource
+    private lateinit var repository: ShoppingProductsRepository
 
     @Test
     fun `첫번재 페이지 데이터 로드`() {

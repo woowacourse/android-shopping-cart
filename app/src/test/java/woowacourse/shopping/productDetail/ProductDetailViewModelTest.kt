@@ -30,7 +30,6 @@ import woowacourse.shopping.source.FakeProductHistorySource
 import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
-import kotlin.concurrent.thread
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
