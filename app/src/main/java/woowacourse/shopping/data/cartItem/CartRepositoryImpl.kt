@@ -4,6 +4,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.utils.NoSuchDataException
+import kotlin.concurrent.thread
 
 class CartRepositoryImpl(private val cartItemLocalDataSource: CartItemLocalDataSource) : CartRepository {
     private fun addCartItem(
@@ -21,7 +22,8 @@ class CartRepositoryImpl(private val cartItemLocalDataSource: CartItemLocalDataS
         offset: Int,
         pagingSize: Int,
     ): List<CartItem> {
-        val pagingData = cartItemLocalDataSource.findPagingCarItem(offset, pagingSize)
+        var pagingData = listOf<CartItemEntity>()
+        thread { pagingData = cartItemLocalDataSource.findPagingCarItem(offset, pagingSize) }.join()
         return pagingData.map { it.toCartItem() }
     }
 
