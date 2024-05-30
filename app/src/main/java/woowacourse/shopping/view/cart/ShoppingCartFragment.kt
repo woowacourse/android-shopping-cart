@@ -10,7 +10,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cartItem.CartItemDatabase
 import woowacourse.shopping.data.cartItem.CartItemLocalDataSource
 import woowacourse.shopping.data.cartItem.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
@@ -24,7 +23,6 @@ class ShoppingCartFragment : Fragment() {
     private val shoppingCartViewModel: ShoppingCartViewModel by lazy {
         val viewModelFactory =
             ShoppingCartViewModelFactory(
-                ProductRepositoryImpl(requireContext()),
                 CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
             )
         viewModelFactory.create(ShoppingCartViewModel::class.java)

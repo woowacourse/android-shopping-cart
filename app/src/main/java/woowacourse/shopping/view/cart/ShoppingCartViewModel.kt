@@ -6,14 +6,12 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.Event
 import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.ProductUpdate
 import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
-    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel(), ShoppingCartActionHandler, CountActionHandler {
     private val _cartItems: MutableLiveData<List<CartItem>> = MutableLiveData(listOf())
