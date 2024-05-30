@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.productDetail
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,21 +41,27 @@ class ProductDetailViewModel(
     fun loadAll() {
         thread {
             val currentProduct = shoppingProductsRepository.loadProduct(id = productId)
-            val latestProduct =
-                try {
-                    productHistoryRepository.loadLatestProduct()
-                } catch (e: NoSuchElementException) {
-                    Product.NULL
+
+            productHistoryRepository.loadLatestProductAsync { latestProductId ->
+                val latestProduct = shoppingProductsRepository.loadProduct(latestProductId)
+                uiHandler.post {
+                    _latestProduct.value = latestProduct
                 }
+            }
+
 
             uiHandler.post {
                 _currentProduct.value = currentProduct
                 _productCount.value = 1
-                _latestProduct.value = latestProduct
             }
 
-            productHistoryRepository.saveProductHistory(productId)
+            // TODO: 이거 그냥 callback 의 리턴 값이 없어도 되나?
+            productHistoryRepository.saveProductHistoryAsync(productId) {
+                Log.d(TAG, "loadAll: callback for saveProductHistoryAsync $it")
+            }
         }
+
+
     }
 
     fun addProductToCart() {

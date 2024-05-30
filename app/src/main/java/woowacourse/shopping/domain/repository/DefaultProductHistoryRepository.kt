@@ -40,7 +40,9 @@ class DefaultProductHistoryRepository(
     }
 
     override fun loadLatestProductAsync(callback: (Long) -> Unit) {
-        TODO("Not yet implemented")
+        productHistoryDataSource.loadLatestProductAsync { productId ->
+            callback(productId)
+        }
     }
 
     override fun loadAllProductHistoryAsync(callback: (List<Product>) -> Unit) {

@@ -48,17 +48,22 @@ class ProductListViewModel(
 
     fun loadAll() {
         thread {
+
             val page = currentPage.value ?: currentPageIsNullException()
             val result = (FIRST_PAGE..page).flatMap { productsRepository.loadAllProducts(it) }
             val totalCartCount = productsRepository.shoppingCartProductQuantity()
             val isLastPage = productsRepository.isFinalPage(page)
-            val productHistory = productHistoryRepository.loadAllProductHistory()
 
             uiHandler.post {
                 _loadedProducts.value = result
                 _cartProductTotalCount.value = totalCartCount
                 _isLastPage.value = isLastPage
-                _productsHistory.value = productHistory
+            }
+
+            productHistoryRepository.loadAllProductHistoryAsync { productHistory ->
+                uiHandler.post {
+                    _productsHistory.value = productHistory
+                }
             }
         }
     }

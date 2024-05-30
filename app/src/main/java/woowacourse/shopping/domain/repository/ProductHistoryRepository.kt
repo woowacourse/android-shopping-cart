@@ -13,10 +13,10 @@ interface ProductHistoryRepository {
 
     fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit)
 
-    fun loadLatestProductAsync(callback: (Long) -> Unit)
-
     fun loadAllProductHistoryAsync(callback: (List<Product>) -> Unit)
 
     fun loadProductHistoryAsync(productId: Long, callback: (Product) -> Unit)
+
+    fun loadLatestProductAsync(callback: (Long) -> Unit)
 
 }
