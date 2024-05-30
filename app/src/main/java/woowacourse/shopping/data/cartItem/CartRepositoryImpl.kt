@@ -1,24 +1,18 @@
 package woowacourse.shopping.data.cartItem
 
-import android.content.Context
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.utils.NoSuchDataException
-import kotlin.concurrent.thread
 
-class CartRepositoryImpl(context: Context) : CartRepository {
-    private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
-
+class CartRepositoryImpl(private val cartItemLocalDataSource: CartItemLocalDataSource) : CartRepository {
     private fun addCartItem(
         product: Product,
         quantity: Int,
     ): Long {
-        var addedCartItemId = ERROR_SAVE_DATA_ID
-        thread {
-            addedCartItemId =
-                cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product, quantity))
-        }.join()
+        val entity = CartItemEntity.makeCartItemEntity(product, quantity)
+        val addedCartItemId = cartItemLocalDataSource.saveCartItem(entity) ?: ERROR_SAVE_DATA_ID
+
         if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         return addedCartItemId
     }
@@ -27,40 +21,35 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         offset: Int,
         pagingSize: Int,
     ): List<CartItem> {
-        return cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
+        val pagingData = cartItemLocalDataSource.findPagingCarItem(offset, pagingSize)
+        return pagingData.map { it.toCartItem() }
     }
 
     override fun deleteCartItem(itemId: Long) {
-        thread { cartItemDao.deleteCartItemById(itemId) }.join()
+        cartItemLocalDataSource.deleteCartItemById(itemId)
     }
 
     override fun hasNextCartItemPage(
         currentPage: Int,
         itemsPerPage: Int,
     ): Boolean {
-        var totalItemCount = 0
-        thread { totalItemCount = cartItemDao.getItemCount() }.join()
+        val totalItemCount = cartItemLocalDataSource.getItemCount()
         val totalPageCount = (totalItemCount + itemsPerPage - 1) / itemsPerPage
 
         return currentPage < totalPageCount
     }
 
     override fun loadAllCartItems(): List<CartItem> {
-        var cartItems: List<CartItem> = emptyList()
-        thread { cartItems = cartItemDao.findAll().map { it.toCartItem() } }.join()
-        return cartItems
+        val cartItems = cartItemLocalDataSource.getAllCartItems()
+        return cartItems.map { it.toCartItem() }
     }
 
     override fun getTotalNumberOfCartItems(): Int {
-        var count = 0
-        thread { count = cartItemDao.getTotalQuantity() }.join()
-        return count
+        return cartItemLocalDataSource.getItemTotalQuantity()
     }
 
     private fun findCartItemEntityByProductId(id: Long): CartItemEntity? {
-        var result: CartItemEntity? = null
-        thread { result = cartItemDao.getCartItemByProductId(id) }.join()
-        return result
+        return cartItemLocalDataSource.findCartItemEntityByProductId(id)
     }
 
     override fun updateIncrementQuantity(
@@ -74,7 +63,8 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         } else {
             val updatedQuantity = existingCartItem.quantity + incrementAmount
             val updatedCartItem = existingCartItem.copy(quantity = updatedQuantity)
-            thread { cartItemDao.updateCartItem(updatedCartItem) }.join()
+
+            cartItemLocalDataSource.updateCartItem(updatedCartItem)
             updatedQuantity
         }
     }
@@ -91,7 +81,7 @@ class CartRepositoryImpl(context: Context) : CartRepository {
             deleteCartItem(existingCartItem.id)
         } else if (updatedQuantity > 0) {
             val updatedCartItem = existingCartItem.copy(quantity = updatedQuantity)
-            thread { cartItemDao.updateCartItem(updatedCartItem) }.join()
+            cartItemLocalDataSource.updateCartItem(updatedCartItem)
         }
         return updatedQuantity
     }

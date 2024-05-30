@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import androidx.fragment.app.activityViewModels
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cartItem.CartItemDatabase
+import woowacourse.shopping.data.cartItem.CartItemLocalDataSource
 import woowacourse.shopping.data.cartItem.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentvieweditem.RecentViewedItemRepositoryImpl
@@ -25,7 +27,7 @@ class ProductDetailFragment : Fragment() {
         val viewModelFactory =
             DetailViewModelFactory(
                 ProductRepositoryImpl(requireContext()),
-                CartRepositoryImpl(requireContext()),
+                CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
                 RecentViewedItemRepositoryImpl(requireContext()),
                 receiveProductId(),
                 receiveLastViewedSelected(),
