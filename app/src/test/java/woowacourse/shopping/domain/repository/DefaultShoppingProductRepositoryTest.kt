@@ -2,13 +2,13 @@ package woowacourse.shopping.domain.repository
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
-import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.source.FakeProductDataSource
 import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
+import woowacourse.shopping.testfixture.productDomainTestFixture
+import woowacourse.shopping.testfixture.productDomainsTestFixture
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 
 class DefaultShoppingProductRepositoryTest {
@@ -37,20 +37,14 @@ class DefaultShoppingProductRepositoryTest {
         val loadedProducts = repository.loadAllProducts(page = 1)
 
         // then
-        // TODO: 가독성이 너무 별로인데 개선해야 할듯?
-        val expected =
-            (
-                productsTestFixture(count = 10).map { it.toDomain(2) } +
-                    productsTestFixture(count = 10) {
-                        productTestFixture(
-                            (it + 10).toLong(),
-                        )
-                    }.map {
-                        it.toDomain(
-                            0,
-                        )
-                    }
-            )
+        // expected: id 가 0~9 이면 상품 수량이 2 개, 나머지는 0개
+        val expected = productDomainsTestFixture(dataCount = 20) { id ->
+            when (id) {
+                in 0..9 -> productDomainTestFixture(id.toLong(), quantity = 2)
+                else -> productDomainTestFixture(id.toLong(), quantity = 0)
+            }
+        }
+
         assertThat(loadedProducts).isEqualTo(expected)
     }
 }
