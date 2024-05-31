@@ -31,7 +31,7 @@ class ProductsListFragment : Fragment() {
     private val productListViewModel: ProductListViewModel by lazy {
         val viewModelFactory =
             ProductListViewModelFactory(
-                ProductRepositoryImpl(requireContext()),
+                ProductRepositoryImpl(),
                 CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
                 RecentViewedItemRepositoryImpl(RecentViewedLocalDataSource(RecentViewedItemDatabase.getInstance(requireContext()))),
             )
@@ -57,29 +57,38 @@ class ProductsListFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         setUpDataBinding()
+        setUpProductList()
+        setUPRecentViewedList()
         observeData()
+        observeSharedData()
     }
 
     private fun setUpDataBinding() {
         binding.viewModel = productListViewModel
         binding.productListActionHandler = productListViewModel
+    }
+
+    private fun setUpProductList() {
         productAdapter =
             ProductAdapter(
                 productListActionHandler = productListViewModel,
                 countActionHandler = productListViewModel,
             )
-        binding.rvProducts.itemAnimator?.changeDuration = 0
         binding.rvProducts.adapter = productAdapter
-        val layoutManager = GridLayoutManager(context, 2)
-        layoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    if (productAdapter.getItemViewType(position) == LOAD_MORE_VIEW_TYPE) return 2
-                    return 1
-                }
+        val layoutManager =
+            GridLayoutManager(context, 2).apply {
+                spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            if (productAdapter.getItemViewType(position) == LOAD_MORE_VIEW_TYPE) return 2
+                            return 1
+                        }
+                    }
             }
         binding.rvProducts.layoutManager = layoutManager
+    }
 
+    private fun setUPRecentViewedList() {
         recentProductAdapter =
             RecentProductAdapter(
                 productListActionHandler = productListViewModel,
@@ -111,7 +120,9 @@ class ProductsListFragment : Fragment() {
         productListViewModel.recentViewed.observe(viewLifecycleOwner) {
             recentProductAdapter.updateRecentProducts(it)
         }
+    }
 
+    private fun observeSharedData() {
         sharedViewModel.updateProductEvent.observe(viewLifecycleOwner) { updatedInfo ->
             updatedInfo.getContentIfNotHandled()?.let {
                 productAdapter.updateProductQuantity(it.productId, it.updatedQuantity)

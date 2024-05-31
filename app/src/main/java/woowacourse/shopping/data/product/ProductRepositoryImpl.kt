@@ -1,12 +1,11 @@
 package woowacourse.shopping.data.product
 
-import android.content.Context
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductResponse
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 
-class ProductRepositoryImpl(context: Context) : ProductRepository {
+class ProductRepositoryImpl : ProductRepository {
     private val productDao = ProductDao()
 
     override fun loadPagingProducts(

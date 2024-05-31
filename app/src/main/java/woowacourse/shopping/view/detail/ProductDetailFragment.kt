@@ -28,7 +28,7 @@ class ProductDetailFragment : Fragment() {
     private val productDetailViewModel: ProductDetailViewModel by lazy {
         val viewModelFactory =
             DetailViewModelFactory(
-                ProductRepositoryImpl(requireContext()),
+                ProductRepositoryImpl(),
                 CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
                 RecentViewedItemRepositoryImpl(RecentViewedLocalDataSource(RecentViewedItemDatabase.getInstance(requireContext()))),
                 receiveProductId(),
