@@ -1,7 +1,5 @@
 package woowacourse.shopping.ui.productList
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +15,6 @@ import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
-import kotlin.concurrent.thread
 
 class ProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
@@ -25,8 +22,6 @@ class ProductListViewModel(
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
 ) : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
     val currentPage: LiveData<Int> get() = _currentPage
-
-    private val uiHandler = Handler(Looper.getMainLooper())
 
     private val _loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val loadedProducts: LiveData<List<Product>> get() = _loadedProducts
@@ -95,19 +90,28 @@ class ProductListViewModel(
         productsRepository.increaseShoppingCartProductAsync(productId) {
             productsRepository.shoppingCartProductQuantityAsync { count ->
                 _cartProductTotalCount.postValue(count)
-                increaseProductQuantity(productId, INCREASE_AMOUNT)
+                changeProductQuantity(productId, INCREASE_AMOUNT)
             }
         }
     }
 
-    private fun increaseProductQuantity(
+    override fun onDecrease(productId: Long) {
+        productsRepository.decreaseShoppingCartProductAsync(productId) {
+            productsRepository.shoppingCartProductQuantityAsync { count ->
+                _cartProductTotalCount.postValue(count)
+                changeProductQuantity(productId, DECREASE_AMOUNT)
+            }
+        }
+    }
+
+    private fun changeProductQuantity(
         productId: Long,
-        increaseQuantity: Int,
+        changeAmount: Int,
     ) {
         _loadedProducts.postValue(
             _loadedProducts.value?.map {
                 if (it.id == productId) {
-                    it.copy(quantity = it.quantity + increaseQuantity)
+                    it.copy(quantity = it.quantity + changeAmount)
                 } else {
                     it
                 }
@@ -115,32 +119,12 @@ class ProductListViewModel(
         )
     }
 
-    override fun onDecrease(productId: Long) {
-        thread {
-            productsRepository.decreaseShoppingCartProduct(productId)
-
-            val totalCount = productsRepository.shoppingCartProductQuantity()
-
-            uiHandler.post {
-                _loadedProducts.value =
-                    _loadedProducts.value?.map {
-                        if (it.id == productId) {
-                            it.copy(quantity = it.quantity - 1)
-                        } else {
-                            it
-                        }
-                    }
-                _cartProductTotalCount.value = totalCount
-            }
-            return@thread
-        }
-    }
-
     companion object {
         private const val TAG = "ProductListViewModel"
         private const val FIRST_PAGE = 1
         private const val PAGE_MOVE_COUNT = 1
         private const val INCREASE_AMOUNT = 1
+        private const val DECREASE_AMOUNT = -1
 
         fun factory(
             productRepository: ShoppingProductsRepository =
