@@ -242,7 +242,6 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
-        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         val actual = viewModel.productsHistory.getOrAwaitValue()

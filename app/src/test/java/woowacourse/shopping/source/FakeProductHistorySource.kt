@@ -44,6 +44,9 @@ class FakeProductHistorySource(
         productId: Long,
         callback: (Long) -> Unit,
     ) {
+        thread {
+            callback(loadProductHistory(productId) ?: -1)
+        }
     }
 
     override fun loadLatestProductAsync(callback: (Long) -> Unit) {
