@@ -14,26 +14,30 @@ class DummyShoppingItemsRepository private constructor(database: AppDatabase) : 
         }
     }
 
-    override fun productWithQuantityItem(productId: Long): ProductWithQuantity? {
-        var productItem: ProductWithQuantity? = null
-        threadAction {
-            productItem = productDao.getProductWithQuantityById(productId)
+    override fun productWithQuantityItem(productId: Long): Result<ProductWithQuantity> {
+        return runCatching {
+            var productItem: ProductWithQuantity? = null
+            threadAction {
+                productItem = productDao.getProductWithQuantityById(productId)
+            }
+            productItem ?: throw Exception("Product not found")
         }
-        return productItem
     }
 
     override fun findProductWithQuantityItemsByPage(
         page: Int,
         pageSize: Int,
-    ): List<ProductWithQuantity> {
-        var productWithQuantities = emptyList<ProductWithQuantity>()
-        val offset = page * pageSize
+    ): Result<List<ProductWithQuantity>> {
+        return runCatching {
+            var productWithQuantities = emptyList<ProductWithQuantity>()
+            val offset = page * pageSize
 
-        threadAction {
-            productWithQuantities = productDao.getProductWithQuantityByPage(limit = pageSize, offset = offset)
+            threadAction {
+                productWithQuantities = productDao.getProductWithQuantityByPage(limit = pageSize, offset = offset)
+            }
+
+            productWithQuantities
         }
-
-        return productWithQuantities
     }
 
     private fun threadAction(action: () -> Unit) {

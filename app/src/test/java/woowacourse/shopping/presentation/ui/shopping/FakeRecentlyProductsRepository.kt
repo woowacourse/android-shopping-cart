@@ -8,7 +8,7 @@ class FakeRecentlyProductsRepository : RecentlyViewedProductsRepository {
         return
     }
 
-    override fun getRecentlyViewedProducts(limit: Int): List<RecentlyViewedProduct> {
-        return emptyList()
+    override fun getRecentlyViewedProducts(limit: Int): Result<List<RecentlyViewedProduct>> {
+        return runCatching { emptyList() }
     }
 }

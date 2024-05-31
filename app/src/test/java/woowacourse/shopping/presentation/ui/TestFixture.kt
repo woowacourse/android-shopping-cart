@@ -1,4 +1,5 @@
 import woowacourse.shopping.data.mapper.toProductEntity
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
@@ -76,4 +77,17 @@ val testRecentlyViewedProduct1 =
         price = 1100,
         imageUrl = "https://image1.com",
         viewedAt = 1,
+    )
+
+//  Result<CartItem>
+val testCartItemResult0 =
+    Result.success(
+        CartItem(
+            id = 0,
+            productId = 0,
+            productName = "채채다",
+            price = 1000,
+            imgUrl = "https://image1.com",
+            quantity = 1,
+        ),
     )

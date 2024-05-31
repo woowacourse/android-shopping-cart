@@ -35,8 +35,8 @@ class DetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { productRepository.productWithQuantityItem(dummyProductId) } returns testProductWithQuantity0
-        every { recentlyViewedProductsRepository.getRecentlyViewedProducts(1) } returns listOf()
+        every { productRepository.productWithQuantityItem(dummyProductId) } returns Result.success(testProductWithQuantity0)
+        every { recentlyViewedProductsRepository.getRecentlyViewedProducts(1) } returns Result.success(listOf())
         detailViewModel = DetailViewModel(cartRepository, productRepository, recentlyViewedProductsRepository, dummyProductId)
     }
 

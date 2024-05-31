@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.model.ShoppingCart
 interface CartRepository {
     fun insert(productWithQuantity: ProductWithQuantity)
 
-    fun getQuantityByProductId(productId: Long): Int?
+    fun getQuantityByProductId(productId: Long): Result<Int>
 
     fun plusQuantity(
         productId: Long,
@@ -23,12 +23,12 @@ interface CartRepository {
 
     fun sumQuantity(): Int
 
-    fun findWithProductId(productId: Long): CartItem
+    fun findWithProductId(productId: Long): Result<CartItem>
 
     fun findCartItemsByPage(
         page: Int,
         pageSize: Int,
-    ): ShoppingCart
+    ): Result<ShoppingCart>
 
     fun deleteByProductId(productId: Long)
 }

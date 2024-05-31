@@ -11,23 +11,19 @@ class RemoteShoppingItemsRepository(private val productApiService: ProductApiSer
         // No-op
     }
 
-    override fun productWithQuantityItem(id: Long): ProductWithQuantity? {
-        return try {
-            val product = productApiService.loadById(id)
+    override fun productWithQuantityItem(prductId: Long): Result<ProductWithQuantity> {
+        return runCatching {
+            val product = productApiService.loadById(prductId)
             ProductWithQuantity(product.toProductEntity(), 1)
-        } catch (e: Exception) {
-            throw e
         }
     }
 
     override fun findProductWithQuantityItemsByPage(
         page: Int,
         pageSize: Int,
-    ): List<ProductWithQuantity> {
-        return try {
+    ): Result<List<ProductWithQuantity>> {
+        return runCatching {
             productApiService.load(page, pageSize).map { ProductWithQuantity(it.toProductEntity(), 1) }
-        } catch (e: Exception) {
-            throw e
         }
     }
 }

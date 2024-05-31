@@ -41,16 +41,17 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartA
     val cartItemsState: LiveData<UIState<List<CartItem>>> =
         currentPage.switchMap { page ->
             MutableLiveData<UIState<List<CartItem>>>().apply {
-                value =
-                    try {
-                        val items = repository.findCartItemsByPage(page, pageSize).items
-                        if (items.isEmpty()) {
-                            UIState.Empty
-                        } else {
-                            UIState.Success(items)
-                        }
-                    } catch (e: Exception) {
-                        UIState.Error(e)
+                repository.findCartItemsByPage(page, pageSize)
+                    .onSuccess { items ->
+                        value =
+                            if (items.items.isEmpty()) {
+                                UIState.Empty
+                            } else {
+                                UIState.Success(items.items)
+                            }
+                    }
+                    .onFailure { exception ->
+                        value = UIState.Error(exception)
                     }
             }
         }
@@ -97,13 +98,13 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartA
     }
 
     override fun onPlusButtonClicked(productId: Long) {
-        repository.plusQuantity(productId)
+        repository.plusQuantity(productId, 1)
         modifiedProductIds.add(productId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 
     override fun onMinusButtonClicked(productId: Long) {
-        repository.minusQuantity(productId)
+        repository.minusQuantity(productId, 1)
         modifiedProductIds.add(productId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }

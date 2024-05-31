@@ -22,12 +22,14 @@ class InMemoryRecentlyViewedProductsRepository private constructor(database: App
         }
     }
 
-    override fun getRecentlyViewedProducts(limit: Int): List<RecentlyViewedProduct> {
-        var products = emptyList<RecentlyViewedProductEntity>()
-        threadAction {
-            products = recentlyProductDao.getRecentlyViewedProducts(limit)
+    override fun getRecentlyViewedProducts(limit: Int): Result<List<RecentlyViewedProduct>> {
+        return runCatching {
+            var products = emptyList<RecentlyViewedProductEntity>()
+            threadAction {
+                products = recentlyProductDao.getRecentlyViewedProducts(limit)
+            }
+            products.map { it.toDomainModel() }
         }
-        return products.map { it.toDomainModel() }
     }
 
     private fun threadAction(action: () -> Unit) {

@@ -23,12 +23,14 @@ class InMemoryCartRepository private constructor(database: AppDatabase) : CartRe
         }
     }
 
-    override fun getQuantityByProductId(productId: Long): Int? {
-        var quantity: Int? = null
-        threadAction {
-            quantity = dao.getQuantityByProductId(productId)
+    override fun getQuantityByProductId(productId: Long): Result<Int> {
+        return runCatching {
+            var quantity: Int? = null
+            threadAction {
+                quantity = dao.getQuantityByProductId(productId)
+            }
+            quantity ?: throw Exception(PRODUCT_NOT_FOUND)
         }
-        return quantity
     }
 
     override fun plusQuantity(
@@ -36,7 +38,7 @@ class InMemoryCartRepository private constructor(database: AppDatabase) : CartRe
         quantity: Int,
     ) {
         threadAction {
-            val currentQuantity = findWithProductId(productId).quantity
+            val currentQuantity = dao.findWithProductId(productId).quantity
             dao.updateQuantity(productId, currentQuantity + quantity)
         }
     }
@@ -46,7 +48,7 @@ class InMemoryCartRepository private constructor(database: AppDatabase) : CartRe
         quantity: Int,
     ) {
         threadAction {
-            val currentQuantity = findWithProductId(productId).quantity
+            val currentQuantity = dao.findWithProductId(productId).quantity
             if (currentQuantity - quantity <= 0) {
                 dao.deleteByProductId(productId)
             } else {
@@ -63,12 +65,14 @@ class InMemoryCartRepository private constructor(database: AppDatabase) : CartRe
         return size
     }
 
-    override fun findWithProductId(productId: Long): CartItem {
-        var cartItemEntity: CartItemEntity? = null
-        threadAction {
-            cartItemEntity = dao.findWithProductId(productId)
+    override fun findWithProductId(productId: Long): Result<CartItem> {
+        return runCatching {
+            var cartItemEntity: CartItemEntity? = null
+            threadAction {
+                cartItemEntity = dao.findWithProductId(productId)
+            }
+            cartItemEntity?.toDomainModel() ?: throw Exception(PRODUCT_NOT_FOUND)
         }
-        return cartItemEntity?.toDomainModel() ?: throw Exception(PRODUCT_NOT_FOUND)
     }
 
     override fun sumQuantity(): Int {
@@ -82,14 +86,15 @@ class InMemoryCartRepository private constructor(database: AppDatabase) : CartRe
     override fun findCartItemsByPage(
         page: Int,
         pageSize: Int,
-    ): ShoppingCart {
-        var cartItems: List<CartItem> = emptyList()
-        val offset = page * pageSize
-        threadAction {
-            cartItems =
-                dao.findByPaged(offset = offset, limit = pageSize).map { it.toDomainModel() }
+    ): Result<ShoppingCart> {
+        return runCatching {
+            var cartItems: List<CartItem> = emptyList()
+            val offset = page * pageSize
+            threadAction {
+                cartItems = dao.findByPaged(offset = offset, limit = pageSize).map { it.toDomainModel() }
+            }
+            ShoppingCart(cartItems)
         }
-        return ShoppingCart(cartItems)
     }
 
     override fun deleteByProductId(productId: Long) {

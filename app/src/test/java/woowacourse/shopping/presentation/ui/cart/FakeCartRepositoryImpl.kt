@@ -16,13 +16,15 @@ class FakeCartRepositoryImpl : CartRepository {
                 productName = productWithQuantity.product.name,
                 price = productWithQuantity.product.price,
                 imgUrl = productWithQuantity.product.imageUrl,
-                quantity = productWithQuantity.quantity,
+                quantity = productWithQuantity._quantity,
             ),
         )
     }
 
-    override fun getQuantityByProductId(productId: Long): Int? {
-        return cartItems.find { it.productId == productId }?.quantity
+    override fun getQuantityByProductId(productId: Long): Result<Int> {
+        return runCatching {
+            cartItems.find { it.productId == productId }?.quantity ?: throw Exception("Product not found")
+        }
     }
 
     override fun plusQuantity(
@@ -47,15 +49,17 @@ class FakeCartRepositoryImpl : CartRepository {
         return cartItems.sumOf { it.quantity }
     }
 
-    override fun findWithProductId(productId: Long): CartItem {
-        return cartItems.find { it.productId == productId }!!
+    override fun findWithProductId(productId: Long): Result<CartItem> {
+        return runCatching {
+            cartItems.find { it.productId == productId } ?: throw Exception("Product not found")
+        }
     }
 
     override fun findCartItemsByPage(
         page: Int,
         pageSize: Int,
-    ): ShoppingCart {
-        return ShoppingCart(cartItems)
+    ): Result<ShoppingCart> {
+        return runCatching { ShoppingCart(cartItems) }
     }
 
     override fun deleteByProductId(productId: Long) {

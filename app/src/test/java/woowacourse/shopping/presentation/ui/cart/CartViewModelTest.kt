@@ -10,8 +10,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import testProductWithQuantity0
-import woowacourse.shopping.data.mapper.toCartItem
+import testCartItemResult0
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
@@ -55,14 +54,14 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품을 확인할 수 있다`() {
         // given
-        every { cartRepository.findWithProductId(0L) } returns testProductWithQuantity0.toCartItem()
+        every { cartRepository.findWithProductId(0L) } returns testCartItemResult0
 
         // when
         viewModel.loadPage(0)
 
         // then
         val state = viewModel.cartItemsState.getOrAwaitValue()
-        assertThat(state).isEqualTo(UIState.Success(listOf(testProductWithQuantity0.toCartItem())))
+        assertThat(state).isEqualTo(UIState.Success(listOf(testCartItemResult0)))
     }
 
     @Test
@@ -70,7 +69,7 @@ class CartViewModelTest {
         // given
         every { cartRepository.size() } returns 4
         repeat(4) {
-            every { cartRepository.findWithProductId(it.toLong()) } returns testProductWithQuantity0.toCartItem()
+            every { cartRepository.findWithProductId(it.toLong()) } returns testCartItemResult0
         }
 
         // when
@@ -86,7 +85,7 @@ class CartViewModelTest {
         // given
         every { cartRepository.size() } returns 6
         repeat(6) {
-            every { cartRepository.findWithProductId(it.toLong()) } returns testProductWithQuantity0.toCartItem()
+            every { cartRepository.findWithProductId(it.toLong()) } returns testCartItemResult0
         }
 
         // when
@@ -102,7 +101,7 @@ class CartViewModelTest {
         // given
         every { cartRepository.size() } returns 6
         repeat(6) {
-            every { cartRepository.findWithProductId(it.toLong()) } returns testProductWithQuantity0.toCartItem()
+            every { cartRepository.findWithProductId(it.toLong()) } returns testCartItemResult0
         }
         viewModel.loadPage(0)
 
@@ -119,7 +118,7 @@ class CartViewModelTest {
         // given
         every { cartRepository.size() } returns 6
         repeat(6) {
-            every { cartRepository.findWithProductId(it.toLong()) } returns testProductWithQuantity0.toCartItem()
+            every { cartRepository.findWithProductId(it.toLong()) } returns testCartItemResult0
         }
         viewModel.loadPage(0)
 
@@ -134,7 +133,7 @@ class CartViewModelTest {
     @Test
     fun `아이템을 삭제할 수 있다`() {
         // given
-        every { cartRepository.findWithProductId(0L) } returns testProductWithQuantity0.toCartItem()
+        every { cartRepository.findWithProductId(0L) } returns testCartItemResult0
         every { cartRepository.size() } returns 1
         every { cartRepository.deleteByProductId(0L) } answers {
             every { cartRepository.size() } returns 0

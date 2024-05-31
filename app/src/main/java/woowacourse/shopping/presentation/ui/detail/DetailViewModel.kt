@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,28 +32,36 @@ class DetailViewModel(
     }
 
     private fun loadProductData() {
-        product =
-            shoppingRepository.productWithQuantityItem(productId)?.copy(
-                quantity =
-                    shoppingRepository.productWithQuantityItem(productId)?.quantity?.takeIf { it > 0 }
-                        ?: 1,
-            ) ?: return
-        _productWithQuantity.postValue(product)
-
-        loadRecentlyProduct()
-        setRecentlyProduct()
+        shoppingRepository.productWithQuantityItem(productId)
+            .onSuccess { productWithQuantity ->
+                product =
+                    productWithQuantity.copy(
+                        quantity = productWithQuantity.quantity.takeIf { it > 0 } ?: 1,
+                    )
+                _productWithQuantity.postValue(product)
+                loadRecentlyProduct()
+                setRecentlyProduct()
+            }
+            .onFailure {
+                Log.e("DetailViewModel", "Failed to load product data")
+            }
     }
 
     private fun loadRecentlyProduct() {
-        val recentlyViewedProducts = recentlyViewedProductsRepository.getRecentlyViewedProducts(1)
-        if (recentlyViewedProducts.isNotEmpty()) {
-            val lastViewedProduct = recentlyViewedProducts[0]
-            if (lastViewedProduct.productId != productId) {
-                _recentlyViewedProduct.postValue(lastViewedProduct)
-            } else {
-                _recentlyViewedProduct.postValue(null)
+        recentlyViewedProductsRepository.getRecentlyViewedProducts(1)
+            .onSuccess { recentlyViewedProducts ->
+                if (recentlyViewedProducts.isNotEmpty()) {
+                    val lastViewedProduct = recentlyViewedProducts[0]
+                    if (lastViewedProduct.productId != productId) {
+                        _recentlyViewedProduct.postValue(lastViewedProduct)
+                    } else {
+                        _recentlyViewedProduct.postValue(null)
+                    }
+                }
             }
-        }
+            .onFailure {
+                Log.e("DetailViewModel", "Failed to load recently viewed product")
+            }
     }
 
     private fun setRecentlyProduct() {
@@ -74,23 +83,23 @@ class DetailViewModel(
 
     private fun createShoppingCartItem() {
         productWithQuantity.value?.let {
-            cartRepository.insert(
-                productWithQuantity = it,
-            )
+            cartRepository.insert(productWithQuantity = it)
         }
     }
 
     override fun onPlusButtonClicked(productId: Long) {
         productWithQuantity.value?.let {
-            it.quantity.takeIf { quantity -> quantity < 100 } ?: return
-            _productWithQuantity.postValue(it.copy(quantity = it.quantity + 1))
+            if (it.quantity < 100) {
+                _productWithQuantity.postValue(it.copy(quantity = it.quantity + 1))
+            }
         }
     }
 
     override fun onMinusButtonClicked(productId: Long) {
         productWithQuantity.value?.let {
-            it.quantity.takeIf { quantity -> quantity > 1 } ?: return
-            _productWithQuantity.postValue(it.copy(quantity = it.quantity - 1))
+            if (it.quantity > 1) {
+                _productWithQuantity.postValue(it.copy(quantity = it.quantity - 1))
+            }
         }
     }
 }

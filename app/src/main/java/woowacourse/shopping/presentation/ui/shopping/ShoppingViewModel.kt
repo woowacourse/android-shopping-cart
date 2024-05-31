@@ -43,18 +43,18 @@ class ShoppingViewModel(
     val productItemsState: LiveData<UIState<List<ProductWithQuantity>>> =
         currentPage.switchMap { page ->
             MutableLiveData<UIState<List<ProductWithQuantity>>>().apply {
-                value =
-                    try {
-                        val productList = shoppingRepository.findProductWithQuantityItemsByPage(page, PAGE_SIZE)
+                shoppingRepository.findProductWithQuantityItemsByPage(page, PAGE_SIZE)
+                    .onSuccess { productList ->
                         if (productList.isEmpty()) {
                             _isProductListEmpty.postValue(true)
-                            UIState.Empty
+                            value = UIState.Empty
                         } else {
                             _isProductListEmpty.postValue(false)
-                            UIState.Success(productList)
+                            value = UIState.Success(productList)
                         }
-                    } catch (e: Exception) {
-                        UIState.Error(e)
+                    }
+                    .onFailure { exception ->
+                        value = UIState.Error(exception)
                     }
             }
         }
@@ -70,18 +70,19 @@ class ShoppingViewModel(
     }
 
     fun loadRecentlyViewedProducts() {
-        try {
-            val recentlyViewedProducts = recentlyViewedProductsRepository.getRecentlyViewedProducts(RECENTLY_VIEWED_PRODUCT_SIZE)
-            if (recentlyViewedProducts.isEmpty()) {
-                _isRecentlyViewedEmpty.postValue(true)
-                _recentlyViewedProductsState.postValue(UIState.Empty)
-            } else {
-                _isRecentlyViewedEmpty.postValue(false)
-                _recentlyViewedProductsState.postValue(UIState.Success(recentlyViewedProducts))
+        recentlyViewedProductsRepository.getRecentlyViewedProducts(RECENTLY_VIEWED_PRODUCT_SIZE)
+            .onSuccess { recentlyViewedProducts ->
+                if (recentlyViewedProducts.isEmpty()) {
+                    _isRecentlyViewedEmpty.postValue(true)
+                    _recentlyViewedProductsState.postValue(UIState.Empty)
+                } else {
+                    _isRecentlyViewedEmpty.postValue(false)
+                    _recentlyViewedProductsState.postValue(UIState.Success(recentlyViewedProducts))
+                }
             }
-        } catch (e: Exception) {
-            _recentlyViewedProductsState.postValue(UIState.Error(e))
-        }
+            .onFailure { exception ->
+                _recentlyViewedProductsState.postValue(UIState.Error(exception))
+            }
     }
 
     override fun onProductClick(productId: Long) {
@@ -103,21 +104,26 @@ class ShoppingViewModel(
         productId: Long,
         action: () -> Unit,
     ) {
-        try {
-            action()
-            val productWithQuantityItem = shoppingRepository.productWithQuantityItem(productId) ?: throw Exception(PRODUCT_NOT_FOUND)
-            _updatedProduct.postValue(UIState.Success(productWithQuantityItem))
-            _totalCartItemsCount.postValue(cartRepository.sumQuantity())
-        } catch (e: Exception) {
-            _updatedProduct.postValue(UIState.Error(e))
-        }
+        action()
+        shoppingRepository.productWithQuantityItem(productId)
+            .onSuccess { productWithQuantityItem ->
+                _updatedProduct.postValue(UIState.Success(productWithQuantityItem))
+                _totalCartItemsCount.postValue(cartRepository.sumQuantity())
+            }
+            .onFailure { exception ->
+                _updatedProduct.postValue(UIState.Error(exception))
+            }
     }
 
     override fun onAddToCartButtonClick(productId: Long) {
         updateProductWithAction(productId) {
-            shoppingRepository.productWithQuantityItem(productId)?.let {
-                cartRepository.insert(it)
-            }
+            shoppingRepository.productWithQuantityItem(productId)
+                .onSuccess { product ->
+                    cartRepository.insert(product)
+                }
+                .onFailure {
+                    _updatedProduct.postValue(UIState.Error(Exception(PRODUCT_NOT_FOUND)))
+                }
         }
     }
 

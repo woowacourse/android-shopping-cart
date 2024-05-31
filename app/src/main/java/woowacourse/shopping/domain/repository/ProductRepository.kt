@@ -3,12 +3,12 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.domain.model.ProductWithQuantity
 
-interface ShoppingItemsRepository {
+interface ProductRepository {
     fun insertProducts(products: List<ProductEntity>)
 
-    fun productWithQuantityItem(productId: Long): Result<ProductWithQuantity>
+    fun getProductWithQuantity(productId: Long): Result<ProductWithQuantity>
 
-    fun findProductWithQuantityItemsByPage(
+    fun getProductsByPage(
         page: Int,
         pageSize: Int,
     ): Result<List<ProductWithQuantity>>
