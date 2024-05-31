@@ -3,9 +3,9 @@ package woowacourse.shopping
 import android.app.Application
 import woowacourse.shopping.data.database.AppDatabase
 import woowacourse.shopping.data.datasourceimpl.ProductLocalDataSource
-import woowacourse.shopping.data.repository.InMemoryCartRepository
-import woowacourse.shopping.data.repository.InMemoryRecentlyViewedProductsRepository
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyViewedProductsRepositoryImpl
 
 class ShoppingApplication : Application() {
     val appDatabase: AppDatabase by lazy { AppDatabase.getInstance(this) }
@@ -14,8 +14,8 @@ class ShoppingApplication : Application() {
         val productLocalDataSource = ProductLocalDataSource.getInstance(productDao)
         ProductRepositoryImpl(productLocalDataSource)
     }
-    val cartRepository: InMemoryCartRepository by lazy { InMemoryCartRepository.getInstance(appDatabase) }
-    val recentlyViewedProductsRepository: InMemoryRecentlyViewedProductsRepository by lazy {
-        InMemoryRecentlyViewedProductsRepository.getInstance(appDatabase)
+    val cartRepository: CartRepositoryImpl by lazy { CartRepositoryImpl.getInstance(appDatabase) }
+    val recentlyViewedProductsRepository: RecentlyViewedProductsRepositoryImpl by lazy {
+        RecentlyViewedProductsRepositoryImpl.getInstance(appDatabase)
     }
 }

@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class InMemoryCartRepository private constructor(database: AppDatabase) : CartRepository {
+class CartRepositoryImpl private constructor(database: AppDatabase) : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(productWithQuantity: ProductWithQuantity) {
@@ -113,11 +113,11 @@ class InMemoryCartRepository private constructor(database: AppDatabase) : CartRe
         private const val PRODUCT_NOT_FOUND = "해당 상품이 카트에 존재하지 않습니다."
 
         @Volatile
-        private var instance: InMemoryCartRepository? = null
+        private var instance: CartRepositoryImpl? = null
 
-        fun getInstance(database: AppDatabase): InMemoryCartRepository =
+        fun getInstance(database: AppDatabase): CartRepositoryImpl =
             instance ?: synchronized(this) {
-                instance ?: InMemoryCartRepository(database).also { instance = it }
+                instance ?: CartRepositoryImpl(database).also { instance = it }
             }
     }
 }

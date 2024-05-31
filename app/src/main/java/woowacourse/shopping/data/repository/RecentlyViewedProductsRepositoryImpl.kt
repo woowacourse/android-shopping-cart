@@ -7,7 +7,7 @@ import woowacourse.shopping.data.model.RecentlyViewedProductEntity
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.RecentlyViewedProductsRepository
 
-class InMemoryRecentlyViewedProductsRepository private constructor(database: AppDatabase) : RecentlyViewedProductsRepository {
+class RecentlyViewedProductsRepositoryImpl private constructor(database: AppDatabase) : RecentlyViewedProductsRepository {
     private val recentlyProductDao = database.recentlyProductDao()
 
     override fun insertRecentlyViewedProduct(product: RecentlyViewedProduct) {
@@ -39,11 +39,11 @@ class InMemoryRecentlyViewedProductsRepository private constructor(database: App
     }
 
     companion object {
-        @Volatile private var instance: InMemoryRecentlyViewedProductsRepository? = null
+        @Volatile private var instance: RecentlyViewedProductsRepositoryImpl? = null
 
-        fun getInstance(database: AppDatabase): InMemoryRecentlyViewedProductsRepository =
+        fun getInstance(database: AppDatabase): RecentlyViewedProductsRepositoryImpl =
             instance ?: synchronized(this) {
-                instance ?: InMemoryRecentlyViewedProductsRepository(database).also { instance = it }
+                instance ?: RecentlyViewedProductsRepositoryImpl(database).also { instance = it }
             }
     }
 }
