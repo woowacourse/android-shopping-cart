@@ -54,7 +54,8 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
     private fun updateMultipleProductsQuantities(intent: Intent) {
         val modifiedProductIds = intent.getLongArrayExtra(CartActivity.EXTRA_CHANGED_PRODUCT_IDS)
         val newQuantities = intent.getIntArrayExtra(CartActivity.EXTRA_NEW_PRODUCT_QUANTITIES)
-        modifiedProductIds?.zip(newQuantities?.toList() ?: emptyList())?.forEach { (id, quantity) ->
+        if (modifiedProductIds == null || newQuantities == null) return
+        modifiedProductIds.zip(newQuantities.toList()).forEach { (id, quantity) ->
             viewModel.updateProductQuantity(id, quantity)
         }
     }
