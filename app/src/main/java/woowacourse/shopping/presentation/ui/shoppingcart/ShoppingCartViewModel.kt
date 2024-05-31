@@ -10,7 +10,7 @@ class ShoppingCartViewModel(
     private val orderRepository: OrderRepository,
 ) : BaseViewModel(), ShoppingCartActionHandler {
     private val _uiState: MutableLiveData<ShoppingCartUiState> =
-        MutableLiveData(ShoppingCartUiState())
+        MutableLiveData(ShoppingCartUiState(currentPage = 0))
     val uiState: LiveData<ShoppingCartUiState> get() = _uiState
 
     init {
@@ -18,7 +18,6 @@ class ShoppingCartViewModel(
     }
 
     private fun initPagingOrder() {
-        _uiState.value = _uiState.value?.copy(currentPage = 0)
         getPagingOrder(INIT_ID)
     }
 
@@ -66,11 +65,9 @@ class ShoppingCartViewModel(
     }
 
     private fun refreshPage() {
-        uiState.value?.let { state ->
-            state.pagingOrder?.let { pagingOrder ->
-                val id = pagingOrder.orderList.first().id - 1
-                getPagingOrder(id)
-            }
+        uiState.value?.pagingOrder?.let { pagingOrder ->
+            val id = pagingOrder.orderList.first().id - 1
+            getPagingOrder(id)
         }
     }
 

@@ -37,7 +37,7 @@ class LocalOrderDataSourceTest {
 
     @Test
     fun `Order를_읽고_쓰기`() {
-        val order = Order(0, 3, STUB_PRODUCT_1).toEntity()
+        val order = Order(1, 3, STUB_PRODUCT_1).toEntity()
         dao.putOrder(order)
         val actual = dao.getOrderByProductId(STUB_PRODUCT_1.id)
         val expected = listOf(order)

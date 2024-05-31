@@ -21,7 +21,7 @@ class LocalProductDataSourceTest {
     @BeforeEach
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.databaseBuilder(context, AppDatabase::class.java, "testDb").build()
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
         dao = db.productDao()
     }
 

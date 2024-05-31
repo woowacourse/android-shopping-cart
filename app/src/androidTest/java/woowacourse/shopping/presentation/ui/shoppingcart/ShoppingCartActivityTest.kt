@@ -34,7 +34,6 @@ class ShoppingCartActivityTest {
         (0..3).forEach {
             repository.plusOrder(product = STUB_PRODUCT_LIST[it])
         }
-
         ActivityScenario.launch(ShoppingCartActivity::class.java)
 
         onView(withId(R.id.tv_next_page))
@@ -110,8 +109,6 @@ class ShoppingCartActivityTest {
             .check(matches(isNotEnabled()))
     }
 
-    /*
-    TODO: solve Concurrent Modification error
     @Test
     fun `장바구니에_10개의_상품이_있을_때_다음_페이지로_이동하면_이전_페이지_버튼이_활성화_된다`() {
         (0..9).forEach {
@@ -125,6 +122,4 @@ class ShoppingCartActivityTest {
         onView(withId(R.id.tv_pre_page))
             .check(matches(isEnabled()))
     }
-
-     */
 }

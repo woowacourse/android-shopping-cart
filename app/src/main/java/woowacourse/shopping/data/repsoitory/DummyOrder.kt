@@ -21,6 +21,38 @@ object DummyOrder : OrderRepository {
             order,
             order.copy(id = 2, product = DummyData.STUB_PRODUCT_2),
             order.copy(id = 3, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 4, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 5, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 6, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 7, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 8, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 9, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 10, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 11, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 12, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 13, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 14, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 15, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 16, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 17, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 18, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 19, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 20, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 21, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 22, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 23, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 24, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 25, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 26, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 27, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 28, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 29, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 30, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 31, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 32, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 33, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 34, product = DummyData.STUB_PRODUCT_3),
+            order.copy(id = 35, product = DummyData.STUB_PRODUCT_3),
         )
 
     override fun plusOrder(product: Product) {
@@ -99,7 +131,7 @@ object DummyOrder : OrderRepository {
             val first = fromIndex == 0
             val last = toIndex == orders.size
             PagingOrder(
-                orderList = orders.subList(fromIndex, toIndex),
+                orderList = orders.subList(fromIndex, toIndex).toList(),
                 first = first,
                 last = last,
             )
@@ -110,12 +142,12 @@ object DummyOrder : OrderRepository {
         pageSize: Int,
     ): Result<PagingOrder> =
         runCatching {
-            val fromIndex = lastSeenId
-            val toIndex = max(fromIndex - pageSize, 0)
+            val toIndex = lastSeenId
+            val fromIndex = max(toIndex - pageSize, 0)
             val first = fromIndex == 0
             val last = toIndex == orders.size
             PagingOrder(
-                orderList = orders.subList(fromIndex, toIndex),
+                orderList = orders.subList(fromIndex, toIndex).toList(),
                 first = first,
                 last = last,
             )
