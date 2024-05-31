@@ -3,6 +3,7 @@ package woowacourse.shopping.source
 import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.data.model.ProductData
 import woowacourse.shopping.data.source.ProductDataSource
+import kotlin.concurrent.thread
 
 class FakeProductDataSource(
     private val pagingStrategy: NumberPagingStrategy<ProductData> = NumberPagingStrategy(20),
@@ -19,5 +20,24 @@ class FakeProductDataSource(
     override fun shutDown(): Boolean {
         println("shutDown")
         return true
+    }
+
+    // async function with callback
+    override fun findByPagedAsync(page: Int, callback: (List<ProductData>) -> Unit) {
+        thread {
+            callback(findByPaged(page))
+        }
+    }
+
+    override fun findByIdAsync(id: Long, callback: (ProductData) -> Unit) {
+        thread {
+            callback(findById(id))
+        }
+    }
+
+    override fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+        thread {
+            callback(isFinalPage(page))
+        }
     }
 }

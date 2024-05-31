@@ -2,6 +2,7 @@ package woowacourse.shopping.data.source
 
 import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.local.cart.ShoppingCartDao
+import kotlin.concurrent.thread
 
 class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : ShoppingCartProductIdDataSource {
     override fun findByProductId(productId: Long): ProductIdsCountData? = dao.findById(productId)
@@ -36,6 +37,71 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
 
     override fun clearAll() {
         dao.countAll()
+    }
+
+    // async function with callback
+    override fun findByProductIdAsync(productId: Long, callback: (ProductIdsCountData?) -> Unit) {
+        thread {
+            val product = dao.findById(productId)
+            callback(product)
+        }
+    }
+
+    override fun loadPagedAsync(page: Int, callback: (List<ProductIdsCountData>) -> Unit) {
+        thread {
+            val products = dao.findPaged(page)
+            callback(products)
+        }
+    }
+
+    override fun loadAllAsync(callback: (List<ProductIdsCountData>) -> Unit) {
+        thread {
+            val products = dao.findAll()
+            callback(products)
+        }
+    }
+
+    override fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+        thread {
+            val count = dao.countAll()
+            callback(page * 5 >= count)
+        }
+    }
+
+    override fun addedNewProductsIdAsync(productIdsCountData: ProductIdsCountData, callback: (Long) -> Unit) {
+        thread {
+            val id = dao.insert(productIdsCountData)
+            callback(id)
+        }
+    }
+
+    override fun removedProductsIdAsync(productId: Long, callback: (Long) -> Unit) {
+        thread {
+            val product = dao.findById(productId) ?: throw NoSuchElementException()
+            dao.delete(productId)
+            callback(product.productId)
+        }
+    }
+
+    override fun plusProductsIdCountAsync(productId: Long) {
+        thread {
+            dao.increaseQuantity(productId)
+        }
+    }
+
+    override fun minusProductsIdCountAsync(productId: Long) {
+        thread {
+            val oldProduct = dao.findById(productId) ?: throw NoSuchElementException()
+            val newProduct = oldProduct.copy(quantity = oldProduct.quantity - 1)
+
+            dao.update(newProduct)
+        }
+    }
+
+    override fun clearAllAsync() {
+        thread {
+            dao.countAll()
+        }
     }
 
     companion object {
