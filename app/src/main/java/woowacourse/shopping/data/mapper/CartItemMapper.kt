@@ -42,7 +42,7 @@ fun ProductWithQuantity.toCartItemEntity(): CartItemEntity {
         productName = this.product.name,
         price = this.product.price,
         imgUrl = this.product.imageUrl,
-        quantity = this._quantity,
+        quantity = this.quantity,
     )
 }
 
@@ -53,6 +53,6 @@ fun ProductWithQuantity.toCartItem(): CartItem {
         productName = this.product.name,
         price = this.product.price,
         imgUrl = this.product.imageUrl,
-        quantity = this._quantity,
+        quantity = this.quantity,
     )
 }

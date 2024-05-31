@@ -16,7 +16,7 @@ class FakeCartRepositoryImpl : CartRepository {
                 productName = productWithQuantity.product.name,
                 price = productWithQuantity.product.price,
                 imgUrl = productWithQuantity.product.imageUrl,
-                quantity = productWithQuantity._quantity,
+                quantity = productWithQuantity.quantity,
             ),
         )
     }

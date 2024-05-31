@@ -1,13 +1,11 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.datasourceimpl
 
-import woowacourse.shopping.data.database.AppDatabase
+import woowacourse.shopping.data.dao.ProductDao
+import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.domain.model.ProductWithQuantity
-import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class DummyShoppingItemsRepository private constructor(database: AppDatabase) : ShoppingItemsRepository {
-    private val productDao = database.productDao()
-
+class ProductLocalDataSource(private val productDao: ProductDao) : ProductDataSource {
     override fun insertProducts(products: List<ProductEntity>) {
         threadAction {
             productDao.insertProducts(products)
@@ -20,7 +18,7 @@ class DummyShoppingItemsRepository private constructor(database: AppDatabase) : 
             threadAction {
                 productItem = productDao.getProductWithQuantityById(productId)
             }
-            productItem ?: throw Exception("Product not found")
+            productItem ?: throw Exception(ERROR_MESSAGE)
         }
     }
 
@@ -47,11 +45,15 @@ class DummyShoppingItemsRepository private constructor(database: AppDatabase) : 
     }
 
     companion object {
-        @Volatile private var instance: DummyShoppingItemsRepository? = null
+        private const val ERROR_MESSAGE = "상품을 찾을 수 없습니다."
 
-        fun getInstance(database: AppDatabase): DummyShoppingItemsRepository =
+        @Volatile private var instance: ProductLocalDataSource? = null
+
+        fun getInstance(productDao: ProductDao): ProductLocalDataSource =
             instance ?: synchronized(this) {
-                instance ?: DummyShoppingItemsRepository(database).also { instance = it }
+                instance ?: ProductLocalDataSource(productDao).also {
+                    instance = it
+                }
             }
     }
 }

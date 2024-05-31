@@ -38,6 +38,6 @@ interface CartDao {
     @Query("DELETE FROM cart_items WHERE productId = :productId")
     fun deleteByProductId(productId: Long)
 
-    @Query("SELECT _quantity FROM cart_items WHERE productId = :productId")
+    @Query("SELECT quantity FROM cart_items WHERE productId = :productId")
     fun getQuantityByProductId(productId: Long): Int?
 }

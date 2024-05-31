@@ -1,14 +1,14 @@
-package woowacourse.shopping.domain.repository
+package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.domain.model.ProductWithQuantity
 
-interface ProductRepository {
+interface ProductDataSource {
     fun insertProducts(products: List<ProductEntity>)
 
-    fun getProductWithQuantity(productId: Long): Result<ProductWithQuantity>
+    fun productWithQuantityItem(productId: Long): Result<ProductWithQuantity>
 
-    fun getProductsByPage(
+    fun findProductWithQuantityItemsByPage(
         page: Int,
         pageSize: Int,
     ): Result<List<ProductWithQuantity>>
