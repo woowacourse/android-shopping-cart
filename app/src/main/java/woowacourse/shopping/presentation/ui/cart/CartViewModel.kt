@@ -107,12 +107,12 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         product: Product,
         quantityDelta: Int,
     ) {
-        cartRepository.modifyQuantity(product, quantityDelta).onSuccess {
-            modifyShoppingProductQuantity(product.id, quantityDelta)
+        cartRepository.updateQuantity(product, quantityDelta).onSuccess {
+            updateShoppingProductQuantity(product.id, quantityDelta)
         }
     }
 
-    private fun modifyShoppingProductQuantity(
+    private fun updateShoppingProductQuantity(
         productId: Long,
         quantityDelta: Int,
     ) {

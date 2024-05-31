@@ -128,15 +128,15 @@ class ShoppingViewModel(
         product: Product,
         quantityDelta: Int,
     ) {
-        cartRepository.modifyQuantity(product, quantityDelta).onSuccess {
+        cartRepository.updateQuantity(product, quantityDelta).onSuccess {
             fetchCartData()
-            modifyShoppingProductQuantity(product.id, quantityDelta)
+            updateShoppingProductQuantity(product.id, quantityDelta)
         }.onFailure {
             _error.value = Event(ShoppingError.CartItemsNotModified)
         }
     }
 
-    private fun modifyShoppingProductQuantity(
+    private fun updateShoppingProductQuantity(
         productId: Long,
         quantityDelta: Int,
     ) {

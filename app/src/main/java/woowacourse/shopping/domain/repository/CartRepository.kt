@@ -4,12 +4,12 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 
 interface CartRepository {
-    fun modifyQuantity(
+    fun updateQuantity(
         product: Product,
         quantityDelta: Int,
     ): Result<Long>
 
-    fun updateQuantity(
+    fun setQuantity(
         product: Product,
         newQuantityValue: Int,
     ): Result<Long>

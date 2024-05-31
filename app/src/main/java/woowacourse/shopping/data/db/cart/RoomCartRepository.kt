@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
 
 class RoomCartRepository(private val dao: CartDao) : CartRepository {
-    override fun modifyQuantity(
+    override fun updateQuantity(
         product: Product,
         quantityDelta: Int,
     ): Result<Long> {
@@ -14,11 +14,11 @@ class RoomCartRepository(private val dao: CartDao) : CartRepository {
         thread {
             result =
                 runCatching {
-                    dao.modifyQuantity(product.id, quantityDelta)
+                    dao.updateQuantity(product.id, quantityDelta)
                     dao.find(product.id)?.let {
                         if (it.quantity <= 0) dao.delete(it.product.id)
                     } ?: run {
-                        if (quantityDelta > 0) updateQuantity(product, quantityDelta)
+                        if (quantityDelta > 0) setQuantity(product, quantityDelta)
                     }
                     product.id
                 }
@@ -26,7 +26,7 @@ class RoomCartRepository(private val dao: CartDao) : CartRepository {
         return result ?: throw IllegalArgumentException()
     }
 
-    override fun updateQuantity(
+    override fun setQuantity(
         product: Product,
         newQuantityValue: Int,
     ): Result<Long> {

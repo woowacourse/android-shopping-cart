@@ -20,7 +20,7 @@ interface CartDao {
     fun delete(productId: Long)
 
     @Query("UPDATE cartProducts SET quantity = MAX(0, quantity + :quantityDelta) WHERE product_id = :productId")
-    fun modifyQuantity(
+    fun updateQuantity(
         productId: Long,
         quantityDelta: Int,
     ): Int
