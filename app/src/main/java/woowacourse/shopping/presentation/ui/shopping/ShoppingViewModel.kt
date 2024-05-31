@@ -148,6 +148,12 @@ class ShoppingViewModel(
         _shoppingProducts.value = UiState.Success(shoppingProductItems)
     }
 
+    fun reloadModifiedItems(modifiedProductIds: LongArray, newQuantities: IntArray) {
+        modifiedProductIds.zip(newQuantities.toList()).forEach { (id, quantity) ->
+            updateProductQuantity(id, quantity)
+        }
+    }
+
     fun updateProductQuantity(
         productId: Long,
         newQuantity: Int,

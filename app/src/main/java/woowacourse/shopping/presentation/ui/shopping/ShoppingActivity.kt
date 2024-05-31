@@ -29,21 +29,21 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
         ProductListAdapter(viewModel)
     }
 
-    private val activityResultLauncher =
+    private val productDetailActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             if (activityResult.resultCode == RESULT_OK) {
-                handleActivityResult(activityResult.data)
+                activityResult.data?.let { handleProductDetailActivityResult(it) }
             }
         }
 
-    private fun handleActivityResult(data: Intent?) {
-        data?.let {
-            updateSingleProductQuantity(it)
-            updateMultipleProductsQuantities(it)
+    private val cartActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            if (activityResult.resultCode == RESULT_OK) {
+                activityResult.data?.let { handleCartActivityResult(it) }
+            }
         }
-    }
 
-    private fun updateSingleProductQuantity(intent: Intent) {
+    private fun handleProductDetailActivityResult(intent: Intent) {
         val modifiedProductId = intent.getLongExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, -1L)
         val newQuantity = intent.getIntExtra(ProductDetailActivity.EXTRA_NEW_PRODUCT_QUANTITY, -1)
         if (modifiedProductId != -1L && newQuantity != -1) {
@@ -51,13 +51,11 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
         }
     }
 
-    private fun updateMultipleProductsQuantities(intent: Intent) {
+    private fun handleCartActivityResult(intent: Intent) {
         val modifiedProductIds = intent.getLongArrayExtra(CartActivity.EXTRA_CHANGED_PRODUCT_IDS)
         val newQuantities = intent.getIntArrayExtra(CartActivity.EXTRA_NEW_PRODUCT_QUANTITIES)
         if (modifiedProductIds == null || newQuantities == null) return
-        modifiedProductIds.zip(newQuantities.toList()).forEach { (id, quantity) ->
-            viewModel.updateProductQuantity(id, quantity)
-        }
+        viewModel.reloadModifiedItems(modifiedProductIds, newQuantities)
     }
 
     override fun initStartView(savedInstanceState: Bundle?) {
@@ -132,14 +130,14 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
                     is FromShoppingToScreen.ProductDetail ->
                         ProductDetailActivity.startWithResultLauncher(
                             this,
-                            activityResultLauncher,
+                            productDetailActivityResultLauncher,
                             it.productId,
                         )
 
                     is FromShoppingToScreen.Cart ->
                         CartActivity.startWithResult(
                             this,
-                            activityResultLauncher,
+                            cartActivityResultLauncher,
                         )
                 }
             },
