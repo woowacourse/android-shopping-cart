@@ -49,7 +49,10 @@ interface ShoppingCartProductIdDataSource {
         callback: (Long) -> Unit,
     )
 
-    fun plusProductsIdCountAsync(productId: Long)
+    fun plusProductsIdCountAsync(
+        productId: Long,
+        callback: () -> Unit,
+    )
 
     fun minusProductsIdCountAsync(productId: Long)
 

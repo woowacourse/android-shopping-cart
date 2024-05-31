@@ -139,7 +139,9 @@ class DefaultShoppingProductRepository(
                 return@findByProductIdAsync
             }
 
-            cartSource.plusProductsIdCountAsync(id)
+            cartSource.plusProductsIdCountAsync(id) {
+                callback(true)
+            }
         }
     }
 

@@ -98,9 +98,13 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
         }
     }
 
-    override fun plusProductsIdCountAsync(productId: Long) {
+    override fun plusProductsIdCountAsync(
+        productId: Long,
+        callback: () -> Unit,
+    ) {
         thread {
             dao.increaseQuantity(productId)
+            callback()
         }
     }
 

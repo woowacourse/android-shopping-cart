@@ -104,9 +104,13 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun plusProductsIdCountAsync(productId: Long) {
+    override fun plusProductsIdCountAsync(
+        productId: Long,
+        callback: () -> Unit,
+    ) {
         thread {
             plusProductsIdCount(productId)
+            callback()
         }
     }
 
