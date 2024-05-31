@@ -25,19 +25,28 @@ class RemoteProductDataSource(
         return productApiService.shutDown()
     }
 
-    override fun findByPagedAsync(page: Int, callback: (List<ProductData>) -> Unit) {
+    override fun findByPagedAsync(
+        page: Int,
+        callback: (List<ProductData>) -> Unit,
+    ) {
         thread {
             callback(findByPaged(page))
         }
     }
 
-    override fun findByIdAsync(id: Long, callback: (ProductData) -> Unit) {
+    override fun findByIdAsync(
+        id: Long,
+        callback: (ProductData) -> Unit,
+    ) {
         thread {
             callback(findById(id))
         }
     }
 
-    override fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+    override fun isFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    ) {
         thread {
             callback(isFinalPage(page))
         }

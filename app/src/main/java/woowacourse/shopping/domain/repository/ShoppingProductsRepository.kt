@@ -25,23 +25,50 @@ interface ShoppingProductsRepository {
 
     // async function with callback
 
-    fun loadAllProductsAsync(page: Int, callback: (List<Product>) -> Unit)
+    fun loadAllProductsAsync(
+        page: Int,
+        callback: (List<Product>) -> Unit,
+    )
 
-    fun loadProductsInCartAsync(page: Int, callback: (List<Product>) -> Unit)
+    fun loadProductsInCartAsync(
+        page: Int,
+        callback: (List<Product>) -> Unit,
+    )
 
-    fun loadProductAsync(id: Long, callback: (Product) -> Unit)
+    fun loadProductAsync(
+        id: Long,
+        callback: (Product) -> Unit,
+    )
 
-    fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit)
+    fun isFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    )
 
-    fun isCartFinalPageAsync(page: Int, callback: (Boolean) -> Unit)
+    fun isCartFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    )
 
     fun shoppingCartProductQuantityAsync(callback: (Int) -> Unit)
 
-    fun increaseShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit)
+    fun increaseShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    )
 
-    fun decreaseShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit)
+    fun decreaseShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    )
 
-    fun addShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit)
+    fun addShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    )
 
-    fun removeShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit)
+    fun removeShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    )
 }

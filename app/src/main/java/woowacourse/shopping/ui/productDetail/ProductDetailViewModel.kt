@@ -49,7 +49,6 @@ class ProductDetailViewModel(
                 }
             }
 
-
             uiHandler.post {
                 _currentProduct.value = currentProduct
                 _productCount.value = 1
@@ -60,8 +59,6 @@ class ProductDetailViewModel(
                 Log.d(TAG, "loadAll: callback for saveProductHistoryAsync $it")
             }
         }
-
-
     }
 
     fun addProductToCart() {

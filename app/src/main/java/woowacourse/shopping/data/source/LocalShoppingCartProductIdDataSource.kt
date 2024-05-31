@@ -40,14 +40,20 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
     }
 
     // async function with callback
-    override fun findByProductIdAsync(productId: Long, callback: (ProductIdsCountData?) -> Unit) {
+    override fun findByProductIdAsync(
+        productId: Long,
+        callback: (ProductIdsCountData?) -> Unit,
+    ) {
         thread {
             val product = dao.findById(productId)
             callback(product)
         }
     }
 
-    override fun loadPagedAsync(page: Int, callback: (List<ProductIdsCountData>) -> Unit) {
+    override fun loadPagedAsync(
+        page: Int,
+        callback: (List<ProductIdsCountData>) -> Unit,
+    ) {
         thread {
             val products = dao.findPaged(page)
             callback(products)
@@ -61,21 +67,30 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
         }
     }
 
-    override fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+    override fun isFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    ) {
         thread {
             val count = dao.countAll()
             callback(page * 5 >= count)
         }
     }
 
-    override fun addedNewProductsIdAsync(productIdsCountData: ProductIdsCountData, callback: (Long) -> Unit) {
+    override fun addedNewProductsIdAsync(
+        productIdsCountData: ProductIdsCountData,
+        callback: (Long) -> Unit,
+    ) {
         thread {
             val id = dao.insert(productIdsCountData)
             callback(id)
         }
     }
 
-    override fun removedProductsIdAsync(productId: Long, callback: (Long) -> Unit) {
+    override fun removedProductsIdAsync(
+        productId: Long,
+        callback: (Long) -> Unit,
+    ) {
         thread {
             val product = dao.findById(productId) ?: throw NoSuchElementException()
             dao.delete(productId)

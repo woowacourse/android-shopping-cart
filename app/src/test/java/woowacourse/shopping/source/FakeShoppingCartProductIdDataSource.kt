@@ -53,13 +53,19 @@ class FakeShoppingCartProductIdDataSource(
     }
 
     // fake async function with callback
-    override fun findByProductIdAsync(productId: Long, callback: (ProductIdsCountData?) -> Unit) {
+    override fun findByProductIdAsync(
+        productId: Long,
+        callback: (ProductIdsCountData?) -> Unit,
+    ) {
         thread {
             callback(findByProductId(productId))
         }
     }
 
-    override fun loadPagedAsync(page: Int, callback: (List<ProductIdsCountData>) -> Unit) {
+    override fun loadPagedAsync(
+        page: Int,
+        callback: (List<ProductIdsCountData>) -> Unit,
+    ) {
         thread {
             callback(loadPaged(page))
         }
@@ -71,19 +77,28 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+    override fun isFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    ) {
         thread {
             callback(isFinalPage(page))
         }
     }
 
-    override fun addedNewProductsIdAsync(productIdsCountData: ProductIdsCountData, callback: (Long) -> Unit) {
+    override fun addedNewProductsIdAsync(
+        productIdsCountData: ProductIdsCountData,
+        callback: (Long) -> Unit,
+    ) {
         thread {
             callback(addedNewProductsId(productIdsCountData))
         }
     }
 
-    override fun removedProductsIdAsync(productId: Long, callback: (Long) -> Unit) {
+    override fun removedProductsIdAsync(
+        productId: Long,
+        callback: (Long) -> Unit,
+    ) {
         thread {
             callback(removedProductsId(productId))
         }

@@ -62,7 +62,7 @@ class DefaultProductHistoryRepositoryTest {
 
         // then
         assertThat(product).isEqualTo(
-            productDomainTestFixture(3)
+            productDomainTestFixture(3),
         )
     }
 
@@ -73,11 +73,10 @@ class DefaultProductHistoryRepositoryTest {
         productHistoryRepository.loadLatestProductAsync { product ->
             // then
             assertThat(product).isEqualTo(
-                productDomainTestFixture(3)
+                productDomainTestFixture(3),
             )
         }
     }
-
 
     @Test
     fun `이미 내역에 있는 상품을 저장하려고 하면 저장 안됨`() {
@@ -104,7 +103,6 @@ class DefaultProductHistoryRepositoryTest {
             }
         }
     }
-
 
     @Test
     fun `내역에 없는 상품을 저장`() {

@@ -70,36 +70,53 @@ class DefaultShoppingProductRepository(
     }
 
     // async function with callback
-    override fun loadAllProductsAsync(page: Int, callback: (List<Product>) -> Unit) {
+    override fun loadAllProductsAsync(
+        page: Int,
+        callback: (List<Product>) -> Unit,
+    ) {
         productsSource.findByPagedAsync(page) { productsData ->
-            val products = productsData.map { productData ->
-                productData.toDomain(productQuantity(productData.id))
-            }
+            val products =
+                productsData.map { productData ->
+                    productData.toDomain(productQuantity(productData.id))
+                }
             callback(products)
         }
     }
 
-    override fun loadProductsInCartAsync(page: Int, callback: (List<Product>) -> Unit) {
+    override fun loadProductsInCartAsync(
+        page: Int,
+        callback: (List<Product>) -> Unit,
+    ) {
         cartSource.loadPagedAsync(page = page) {
-            val products = it.map { productIdsCountData ->
-                productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
-            }
+            val products =
+                it.map { productIdsCountData ->
+                    productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+                }
             callback(products)
         }
     }
 
-    override fun loadProductAsync(id: Long, callback: (Product) -> Unit) {
+    override fun loadProductAsync(
+        id: Long,
+        callback: (Product) -> Unit,
+    ) {
         productsSource.findByIdAsync(id) { productData ->
             val product = productData.toDomain(productQuantity(id))
             callback(product)
         }
     }
 
-    override fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+    override fun isFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    ) {
         productsSource.isFinalPageAsync(page, callback)
     }
 
-    override fun isCartFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+    override fun isCartFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    ) {
         cartSource.isFinalPageAsync(page, callback)
     }
 
@@ -110,7 +127,10 @@ class DefaultShoppingProductRepository(
         }
     }
 
-    override fun increaseShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+    override fun increaseShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    ) {
         cartSource.findByProductIdAsync(id) {
             if (it == null) {
                 addShoppingCartProductAsync(id) {
@@ -123,7 +143,10 @@ class DefaultShoppingProductRepository(
         }
     }
 
-    override fun decreaseShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+    override fun decreaseShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    ) {
         cartSource.findByProductIdAsync(id) {
             if (it == null) {
                 callback(false)
@@ -141,13 +164,19 @@ class DefaultShoppingProductRepository(
         }
     }
 
-    override fun addShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+    override fun addShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    ) {
         cartSource.addedNewProductsIdAsync(ProductIdsCountData(id, FIRST_QUANTITY)) {
             callback(true)
         }
     }
 
-    override fun removeShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+    override fun removeShoppingCartProductAsync(
+        id: Long,
+        callback: (Boolean) -> Unit,
+    ) {
         cartSource.removedProductsIdAsync(id) {
             callback(true)
         }

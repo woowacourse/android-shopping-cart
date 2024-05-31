@@ -30,15 +30,20 @@ class FakeProductHistorySource(
         history.clear()
     }
 
-    override fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit) {
+    override fun saveProductHistoryAsync(
+        productId: Long,
+        callback: (Boolean) -> Unit,
+    ) {
         thread {
             saveProductHistory(productId)
             callback(true)
         }
     }
 
-    override fun loadProductHistoryAsync(productId: Long, callback: (Long) -> Unit) {
-
+    override fun loadProductHistoryAsync(
+        productId: Long,
+        callback: (Long) -> Unit,
+    ) {
     }
 
     override fun loadLatestProductAsync(callback: (Long) -> Unit) {

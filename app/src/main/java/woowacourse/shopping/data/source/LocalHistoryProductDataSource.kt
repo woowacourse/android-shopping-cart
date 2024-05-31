@@ -25,7 +25,10 @@ class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : Produc
         dao.deleteAll()
     }
 
-    override fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit) {
+    override fun saveProductHistoryAsync(
+        productId: Long,
+        callback: (Boolean) -> Unit,
+    ) {
         thread {
             val id = dao.findById(productId)
 
@@ -38,7 +41,10 @@ class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : Produc
         }
     }
 
-    override fun loadProductHistoryAsync(productId: Long, callback: (Long) -> Unit) {
+    override fun loadProductHistoryAsync(
+        productId: Long,
+        callback: (Long) -> Unit,
+    ) {
         thread {
             val id = dao.findById(productId)?.id
             callback(id ?: EMPTY)

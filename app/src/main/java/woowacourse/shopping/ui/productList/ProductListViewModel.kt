@@ -48,7 +48,6 @@ class ProductListViewModel(
 
     fun loadAll() {
         thread {
-
             val page = currentPage.value ?: currentPageIsNullException()
             val result = (FIRST_PAGE..page).flatMap { productsRepository.loadAllProducts(it) }
             val totalCartCount = productsRepository.shoppingCartProductQuantity()

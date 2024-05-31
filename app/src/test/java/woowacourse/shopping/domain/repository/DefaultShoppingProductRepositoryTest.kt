@@ -38,12 +38,13 @@ class DefaultShoppingProductRepositoryTest {
 
         // then
         // expected: id 가 0~9 이면 상품 수량이 2 개, 나머지는 0개
-        val expected = productDomainsTestFixture(dataCount = 20) { id ->
-            when (id) {
-                in 0..9 -> productDomainTestFixture(id.toLong(), quantity = 2)
-                else -> productDomainTestFixture(id.toLong(), quantity = 0)
+        val expected =
+            productDomainsTestFixture(dataCount = 20) { id ->
+                when (id) {
+                    in 0..9 -> productDomainTestFixture(id.toLong(), quantity = 2)
+                    else -> productDomainTestFixture(id.toLong(), quantity = 0)
+                }
             }
-        }
 
         assertThat(loadedProducts).isEqualTo(expected)
     }
@@ -112,47 +113,57 @@ class DefaultShoppingProductRepositoryTest {
         val actual = repository.loadProductsInCart(page = 1)
 
         // then
-        assertThat(actual).isEqualTo(productDomainsTestFixture(dataCount = 5) { id ->
-            productDomainTestFixture(id.toLong(), quantity = 2)
-        })
+        assertThat(actual).isEqualTo(
+            productDomainsTestFixture(dataCount = 5) { id ->
+                productDomainTestFixture(id.toLong(), quantity = 2)
+            },
+        )
     }
 
     @Test
     fun `장바구니 1 페이지의 장바구니에 있는 상품을 불러온다 aync`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.loadProductsInCartAsync(page = 1) { actual ->
             // then
-            assertThat(actual).isEqualTo(productDomainsTestFixture(dataCount = 5) { id ->
-                productDomainTestFixture(id.toLong(), quantity = 2)
-            })
+            assertThat(actual).isEqualTo(
+                productDomainsTestFixture(dataCount = 5) { id ->
+                    productDomainTestFixture(id.toLong(), quantity = 2)
+                },
+            )
         }
     }
 
     @Test
     fun `상품 id 로 상품을 찾는다`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         val actual = repository.loadProduct(id = 1)
@@ -161,20 +172,22 @@ class DefaultShoppingProductRepositoryTest {
         assertThat(actual).isEqualTo(productDomainTestFixture(1, quantity = 2))
     }
 
-
     @Test
     fun `상품 id 로 상품을 찾는다 async`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.loadProductAsync(id = 1) { product ->
@@ -186,16 +199,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `상품 목록에서 100 개의 아이템에서 5페이지는 페이지이다`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         val isFinalPage = repository.isFinalPage(page = 5)
@@ -207,16 +223,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `상품 목록에서 100 개의 아이템에서 5페이지는 페이지이다 Async`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.isFinalPageAsync(page = 5) { isFinalPage ->
@@ -225,20 +244,22 @@ class DefaultShoppingProductRepositoryTest {
         }
     }
 
-
     @Test
     fun `장바구니가 마지막 페이지이다`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         val isFinalPage = repository.isCartFinalPage(page = 2)
@@ -250,16 +271,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `장바구니가 마지막 페이지이다 async`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.isCartFinalPageAsync(page = 2) { isFinalPage ->
@@ -271,16 +295,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `장바구니에 10개의 상품이 2개씩 있다면 상품의 개수를 20 개`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         val actual = repository.shoppingCartProductQuantity()
@@ -292,16 +319,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `장바구니에 10개의 상품이 2개씩 있다면 상품의 개수를 20 개 async`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.shoppingCartProductQuantityAsync { actual ->
@@ -313,16 +343,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `장바구니에 상품을 새로 추가한다`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.addShoppingCartProduct(id = 11)
@@ -334,16 +367,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `장바구니에 상품을 새로 추가한다 async`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.addShoppingCartProductAsync(id = 11) {
@@ -352,24 +388,25 @@ class DefaultShoppingProductRepositoryTest {
         }
     }
 
-
     @Test
     fun `장바구니에 상품을 담을 때, 그 상품이 장바구니에 그 상품이 없다면 새로 담는다`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.increaseShoppingCartProduct(id = 11)
-
 
         // then
         assertThat(repository.loadProduct(id = 11).quantity).isEqualTo(1)
@@ -378,16 +415,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `장바구니에 상품을 담을 때, 그 상품이 장바구니에 그 상품이 없다면 새로 담는다 async`() {
         // given
-        val productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        val shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        val repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        val productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        val shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        val repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.increaseShoppingCartProductAsync(id = 11) {
@@ -396,20 +436,22 @@ class DefaultShoppingProductRepositoryTest {
         }
     }
 
-
     @Test
     fun `장바구니에 상품을 담을 때, 그 상품이 장바구니에 이미 있다면 개수를 증가시킨다`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.increaseShoppingCartProduct(id = 1)
@@ -421,16 +463,19 @@ class DefaultShoppingProductRepositoryTest {
     @Test
     fun `장바구니에 상품을 담을 때, 장바구니에 담긴 상품이 이미 있다면 개수를 증가시킨다 async`() {
         // given
-        productDataSource = FakeProductDataSource(
-            allProducts = productsTestFixture(count = 100).toMutableList(),
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
-        )
-        repository = DefaultShoppingProductRepository(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource,
-        )
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(dataCount = 10, 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepository(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         // when
         repository.increaseShoppingCartProductAsync(id = 1) {

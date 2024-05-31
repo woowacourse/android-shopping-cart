@@ -11,9 +11,18 @@ interface ProductDataSource {
 
     fun shutDown(): Boolean
 
-    fun findByPagedAsync(page: Int, callback: (List<ProductData>) -> Unit)
+    fun findByPagedAsync(
+        page: Int,
+        callback: (List<ProductData>) -> Unit,
+    )
 
-    fun findByIdAsync(id: Long, callback: (ProductData) -> Unit)
+    fun findByIdAsync(
+        id: Long,
+        callback: (ProductData) -> Unit,
+    )
 
-    fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit)
+    fun isFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    )
 }

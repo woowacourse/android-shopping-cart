@@ -41,14 +41,15 @@ fun productDomainTestFixture(
     name: String = "$id name",
     imageUrl: String = "1",
     price: Int = 1,
-    quantity: Int = 0
-): Product = Product(
-    id = id,
-    name = name,
-    imgUrl = imageUrl,
-    price = price,
-    quantity = quantity
-)
+    quantity: Int = 0,
+): Product =
+    Product(
+        id = id,
+        name = name,
+        imgUrl = imageUrl,
+        price = price,
+        quantity = quantity,
+    )
 
 /**
  * @param dataCount 생성할 Product 의 데이터 개수
@@ -58,6 +59,7 @@ fun productDomainTestFixture(
 fun productDomainsTestFixture(
     dataCount: Int,
     productDomainTestFixture: (Int) -> Product = { productDomainTestFixture(it.toLong()) },
-): List<Product> = List(dataCount) {
-    productDomainTestFixture(it)
-}
+): List<Product> =
+    List(dataCount) {
+        productDomainTestFixture(it)
+    }

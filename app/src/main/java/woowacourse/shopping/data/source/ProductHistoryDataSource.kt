@@ -11,12 +11,17 @@ interface ProductHistoryDataSource {
 
     fun deleteAllProductHistory()
 
-    fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit)
+    fun saveProductHistoryAsync(
+        productId: Long,
+        callback: (Boolean) -> Unit,
+    )
 
-    fun loadProductHistoryAsync(productId: Long, callback: (Long) -> Unit)
+    fun loadProductHistoryAsync(
+        productId: Long,
+        callback: (Long) -> Unit,
+    )
 
     fun loadLatestProductAsync(callback: (Long) -> Unit)
 
     fun loadAllProductHistoryAsync(callback: (List<Long>) -> Unit)
-
 }

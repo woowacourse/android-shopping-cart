@@ -22,22 +22,36 @@ interface ShoppingCartProductIdDataSource {
     fun clearAll()
 
     // async function with callback
-    fun findByProductIdAsync(productId: Long, callback: (ProductIdsCountData?) -> Unit)
+    fun findByProductIdAsync(
+        productId: Long,
+        callback: (ProductIdsCountData?) -> Unit,
+    )
 
-    fun loadPagedAsync(page: Int, callback: (List<ProductIdsCountData>) -> Unit)
+    fun loadPagedAsync(
+        page: Int,
+        callback: (List<ProductIdsCountData>) -> Unit,
+    )
 
     fun loadAllAsync(callback: (List<ProductIdsCountData>) -> Unit)
 
-    fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit)
+    fun isFinalPageAsync(
+        page: Int,
+        callback: (Boolean) -> Unit,
+    )
 
-    fun addedNewProductsIdAsync(productIdsCountData: ProductIdsCountData, callback: (Long) -> Unit)
+    fun addedNewProductsIdAsync(
+        productIdsCountData: ProductIdsCountData,
+        callback: (Long) -> Unit,
+    )
 
-    fun removedProductsIdAsync(productId: Long, callback: (Long) -> Unit)
+    fun removedProductsIdAsync(
+        productId: Long,
+        callback: (Long) -> Unit,
+    )
 
     fun plusProductsIdCountAsync(productId: Long)
 
     fun minusProductsIdCountAsync(productId: Long)
 
     fun clearAllAsync()
-
 }
