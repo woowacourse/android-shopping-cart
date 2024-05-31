@@ -47,23 +47,21 @@ class ProductListViewModel(
     val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
 
     fun loadAll() {
-        thread {
-            val page = currentPage.value ?: currentPageIsNullException()
-            val result = (FIRST_PAGE..page).flatMap { productsRepository.loadAllProducts(it) }
-            val totalCartCount = productsRepository.shoppingCartProductQuantity()
-            val isLastPage = productsRepository.isFinalPage(page)
+        val page = currentPage.value ?: currentPageIsNullException()
+        productsRepository.loadAllProductsAsync(page) { products ->
+            _loadedProducts.postValue(products)
+        }
 
-            uiHandler.post {
-                _loadedProducts.value = result
-                _cartProductTotalCount.value = totalCartCount
-                _isLastPage.value = isLastPage
-            }
+        productsRepository.isFinalPageAsync(page) {
+            _isLastPage.postValue(it)
+        }
 
-            productHistoryRepository.loadAllProductHistoryAsync { productHistory ->
-                uiHandler.post {
-                    _productsHistory.value = productHistory
-                }
-            }
+        productsRepository.shoppingCartProductQuantityAsync { count ->
+            _cartProductTotalCount.postValue(count)
+        }
+
+        productHistoryRepository.loadAllProductHistoryAsync { productHistory ->
+            _productsHistory.postValue(productHistory)
         }
     }
 
