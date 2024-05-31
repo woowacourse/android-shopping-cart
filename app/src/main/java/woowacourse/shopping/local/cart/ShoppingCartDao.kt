@@ -14,8 +14,8 @@ interface ShoppingCartDao {
     @Query("SELECT * from shopping_cart_products WHERE productId = :productId")
     fun findById(productId: Long): ProductIdsCountData?
 
-    @Query("SELECT * from shopping_cart_products LIMIT 5 OFFSET :page-1")
-    fun findPaged(page: Int): List<ProductIdsCountData>
+    @Query("SELECT * from shopping_cart_products LIMIT 5 OFFSET :offset")
+    fun findPaged(offset: Int): List<ProductIdsCountData>
 
     @Query("SELECT * from shopping_cart_products")
     fun findAll(): List<ProductIdsCountData>
