@@ -66,20 +66,20 @@ class ProductListViewModel(
     }
 
     fun loadNextPageProducts() {
-        thread {
-            if (isLastPage.value == true) return@thread
+        if (isLastPage.value == true) return
 
-            val nextPage = _currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
-            val isLastPage = productsRepository.isFinalPage(nextPage)
-            val result = productsRepository.loadAllProducts(nextPage)
-            val totalCount = productsRepository.shoppingCartProductQuantity()
+        val nextPage = _currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
+        _currentPage.postValue(nextPage)
 
-            uiHandler.post {
-                _currentPage.value = nextPage
-                _isLastPage.value = isLastPage
-                _loadedProducts.value = _loadedProducts.value?.toMutableList()?.apply { addAll(result) }
-                _cartProductTotalCount.value = totalCount
-            }
+        productsRepository.isFinalPageAsync(nextPage) {
+            _isLastPage.postValue(it)
+        }
+        productsRepository.loadAllProductsAsync(nextPage) { products ->
+            _loadedProducts.postValue(_loadedProducts.value?.toMutableList()?.apply { addAll(products) })
+        }
+
+        productsRepository.shoppingCartProductQuantityAsync { count ->
+            _cartProductTotalCount.postValue(count)
         }
     }
 
