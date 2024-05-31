@@ -92,28 +92,27 @@ class ProductListViewModel(
     }
 
     override fun onIncrease(productId: Long) {
-        thread {
-            try {
-                productsRepository.increaseShoppingCartProduct(productId)
-            } catch (e: NoSuchElementException) {
-                productsRepository.addShoppingCartProduct(productId)
-            } catch (_: Exception) {
-            } finally {
-                val totalCount = productsRepository.shoppingCartProductQuantity()
-
-                uiHandler.post {
-                    _loadedProducts.value =
-                        _loadedProducts.value?.map {
-                            if (it.id == productId) {
-                                it.copy(quantity = it.quantity + 1)
-                            } else {
-                                it
-                            }
-                        }
-                    _cartProductTotalCount.value = totalCount
-                }
+        productsRepository.increaseShoppingCartProductAsync(productId) {
+            productsRepository.shoppingCartProductQuantityAsync { count ->
+                _cartProductTotalCount.postValue(count)
+                increaseProductQuantity(productId, INCREASE_AMOUNT)
             }
         }
+    }
+
+    private fun increaseProductQuantity(
+        productId: Long,
+        increaseQuantity: Int,
+    ) {
+        _loadedProducts.postValue(
+            _loadedProducts.value?.map {
+                if (it.id == productId) {
+                    it.copy(quantity = it.quantity + increaseQuantity)
+                } else {
+                    it
+                }
+            },
+        )
     }
 
     override fun onDecrease(productId: Long) {
@@ -141,6 +140,7 @@ class ProductListViewModel(
         private const val TAG = "ProductListViewModel"
         private const val FIRST_PAGE = 1
         private const val PAGE_MOVE_COUNT = 1
+        private const val INCREASE_AMOUNT = 1
 
         fun factory(
             productRepository: ShoppingProductsRepository =

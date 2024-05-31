@@ -81,7 +81,6 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
-        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         val loadedProducts = viewModel.loadedProducts.getOrAwaitValue()
@@ -97,10 +96,8 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
-        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         viewModel.loadNextPageProducts()
-        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         val loadedProducts = viewModel.loadedProducts
