@@ -1,8 +1,5 @@
 package woowacourse.shopping.ui.productDetail
 
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,19 +14,16 @@ import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
-import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val productId: Long,
     private val shoppingProductsRepository: ShoppingProductsRepository,
     private val productHistoryRepository: ProductHistoryRepository,
 ) : ViewModel(), OnItemQuantityChangeListener, OnProductItemClickListener {
-    private val uiHandler = Handler(Looper.getMainLooper())
-
     private val _currentProduct: MutableLiveData<Product> = MutableLiveData()
     val currentProduct: LiveData<Product> get() = _currentProduct
 
-    private val _productCount: MutableLiveData<Int> = MutableLiveData(1)
+    private val _productCount: MutableLiveData<Int> = MutableLiveData(FIRST_QUANTITY)
     val productCount: LiveData<Int> get() = _productCount
 
     private val _latestProduct: MutableLiveData<Product> = MutableLiveData()
@@ -39,48 +33,39 @@ class ProductDetailViewModel(
     val detailProductDestinationId: SingleLiveData<Long> get() = _detailProductDestinationId
 
     fun loadAll() {
-        thread {
-            val currentProduct = shoppingProductsRepository.loadProduct(id = productId)
-
-            productHistoryRepository.loadLatestProductAsync { latestProductId ->
-                val latestProduct = shoppingProductsRepository.loadProduct(latestProductId)
-                uiHandler.post {
-                    _latestProduct.value = latestProduct
-                }
+        shoppingProductsRepository.loadProductAsync(productId) { product ->
+            _currentProduct.postValue(product)
+            _productCount.postValue(1)
+        }
+        productHistoryRepository.loadLatestProductAsync { latestProductId ->
+            shoppingProductsRepository.loadProductAsync(latestProductId) { latestProduct ->
+                _latestProduct.postValue(latestProduct)
             }
+        }
 
-            uiHandler.post {
-                _currentProduct.value = currentProduct
-                _productCount.value = 1
-            }
-
-            // TODO: 이거 그냥 callback 의 리턴 값이 없어도 되나?
-            productHistoryRepository.saveProductHistoryAsync(productId) {
-                Log.d(TAG, "loadAll: callback for saveProductHistoryAsync $it")
-            }
+        productHistoryRepository.saveProductHistoryAsync(productId) {
+            // TODO: 담겼다는 메시지
         }
     }
 
     fun addProductToCart() {
-        thread {
-            repeat(productCount.value!!) {
-                // TODO: 상품을 증가시킬 때 특정 수량만큼 추가할 수 있도록 변경해야 함
-                shoppingProductsRepository.increaseShoppingCartProduct(productId)
-                // TODO: "장바구니에 담겼습니다" 토스트 메시지 띄우기
+        repeat(productCount.value ?: 0) {
+            shoppingProductsRepository.increaseShoppingCartProductAsync(productId) {
+                // TODO: 여기서 담겼다는 메시지? 한 번에 여러개 넣으면 터짐..
             }
         }
     }
 
     override fun onIncrease(productId: Long) {
-        _productCount.value = _productCount.value?.plus(1)
+        _productCount.value = _productCount.value?.plus(SINGLE_CHANGE_AMOUNT)
     }
 
     override fun onDecrease(productId: Long) {
         val currentProductCount = _productCount.value
-        if (currentProductCount == 1) {
+        if (currentProductCount == FIRST_QUANTITY) {
             return
         }
-        _productCount.value = _productCount.value?.minus(1)
+        _productCount.value = _productCount.value?.minus(SINGLE_CHANGE_AMOUNT)
     }
 
     override fun onClick(productId: Long) {
@@ -89,6 +74,8 @@ class ProductDetailViewModel(
 
     companion object {
         private const val TAG = "ProductDetailViewModel"
+        private const val FIRST_QUANTITY = 1
+        private const val SINGLE_CHANGE_AMOUNT = 1
 
         fun factory(
             productId: Long,

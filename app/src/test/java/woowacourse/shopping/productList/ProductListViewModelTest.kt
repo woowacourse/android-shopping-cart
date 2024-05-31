@@ -139,7 +139,6 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
-        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         val isLastPage = viewModel.isLastPage.value
@@ -179,9 +178,7 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
-        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
         viewModel.loadNextPageProducts()
-        Thread.sleep(1000) // todo: thread sleep 을 쓰지 않고 테스트 해야 함
 
         // then
         assertThat(viewModel.isLastPage.getOrAwaitValue()).isTrue
