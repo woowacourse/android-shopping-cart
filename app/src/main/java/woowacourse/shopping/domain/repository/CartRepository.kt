@@ -9,7 +9,7 @@ interface CartRepository {
         quantityDelta: Int,
     ): Result<Long>
 
-    fun setQuantity(
+    fun updateQuantity(
         product: Product,
         newQuantityValue: Int,
     ): Result<Long>

@@ -61,7 +61,7 @@ class ProductDetailViewModelTest {
         every { productRepository.loadById(any()) } returns Result.success(dummyProduct)
         every { cartRepository.find(any()) } returns Result.success(cart)
         every {
-            cartRepository.setQuantity(shoppingProduct.toProduct(), shoppingProduct.quantity)
+            cartRepository.updateQuantity(shoppingProduct.toProduct(), shoppingProduct.quantity)
         } returns Result.success(shoppingProduct.id)
 
         // when

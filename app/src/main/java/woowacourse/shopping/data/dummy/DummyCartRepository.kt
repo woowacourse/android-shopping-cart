@@ -13,20 +13,33 @@ object DummyCartRepository : CartRepository {
         quantityDelta: Int,
     ): Result<Long> =
         runCatching {
-            cartMap[product] = ((cartMap[product] ?: 0) + quantityDelta).coerceAtLeast(0)
-            if (cartMap[product] == 0) cartMap.remove(product)
+            cartMap[product]?.let { originQuantity ->
+                val newQuantity = originQuantity + quantityDelta
+                updateQuantity(product, newQuantity)
+            } ?: addCart(product, 0 + quantityDelta)
             product.id
         }
 
-    override fun setQuantity(
+    override fun updateQuantity(
         product: Product,
-        newQuantityValue: Int,
+        newQuantity: Int,
     ): Result<Long> =
         runCatching {
-            cartMap[product] = newQuantityValue.coerceAtLeast(0)
-            if (cartMap[product] == 0) cartMap.remove(product)
+            when {
+                (newQuantity == 0) -> deleteProduct(product)
+                (0 < newQuantity) -> cartMap[product] = newQuantity
+                else -> throw IllegalArgumentException()
+            }
             product.id
         }
+
+    private fun addCart(
+        product: Product,
+        newQuantity: Int,
+    ) {
+        if (newQuantity <= 0) throw IllegalArgumentException("장바구니 상품의 수량은 0보다 커야합니다.")
+        cartMap.plus(Pair(product, newQuantity))
+    }
 
     override fun deleteProduct(product: Product): Result<Long> =
         runCatching {
@@ -62,6 +75,7 @@ object DummyCartRepository : CartRepository {
 
     override fun getMaxPage(pageSize: Int): Result<Int> =
         runCatching {
-            ((cartMap.size + (pageSize - 1)) / pageSize - 1).coerceAtLeast(0)
+            if (pageSize < 1) throw IllegalArgumentException("pageSize는 1 이상이어야 합니다.")
+            ((cartMap.size + (pageSize - 1)) / pageSize - 1)
         }
 }

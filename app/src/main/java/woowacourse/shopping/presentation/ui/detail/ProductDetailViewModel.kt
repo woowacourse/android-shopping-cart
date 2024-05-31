@@ -90,7 +90,7 @@ class ProductDetailViewModel(
     }
 
     override fun onAddCartClick() {
-        cartRepository.setQuantity(shoppingProductItem.toProduct(), shoppingProductItem.quantity)
+        cartRepository.updateQuantity(shoppingProductItem.toProduct(), shoppingProductItem.quantity)
             .onSuccess { saveCartItem() }
             .onFailure { _error.postValue(Event(DetailError.CartItemNotFound)) }
     }

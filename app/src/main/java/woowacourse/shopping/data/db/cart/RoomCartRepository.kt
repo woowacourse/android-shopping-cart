@@ -18,7 +18,7 @@ class RoomCartRepository(private val dao: CartDao) : CartRepository {
                     dao.find(product.id)?.let {
                         if (it.quantity <= 0) dao.delete(it.product.id)
                     } ?: run {
-                        if (quantityDelta > 0) setQuantity(product, quantityDelta)
+                        if (quantityDelta > 0) updateQuantity(product, quantityDelta)
                     }
                     product.id
                 }
@@ -26,7 +26,7 @@ class RoomCartRepository(private val dao: CartDao) : CartRepository {
         return result ?: throw IllegalArgumentException()
     }
 
-    override fun setQuantity(
+    override fun updateQuantity(
         product: Product,
         newQuantityValue: Int,
     ): Result<Long> {
@@ -100,8 +100,10 @@ class RoomCartRepository(private val dao: CartDao) : CartRepository {
         thread {
             result =
                 runCatching {
+                    if (pageSize < 0) throw IllegalArgumentException("pageSize는 0보다 커야 합니다.")
                     val itemCount = dao.countItems()
-                    ((itemCount - 1) / pageSize).coerceAtLeast(0)
+                    if (itemCount == 0) 0
+                    else ((itemCount - 1) / pageSize)
                 }
         }.join()
         return result ?: throw IllegalArgumentException()
