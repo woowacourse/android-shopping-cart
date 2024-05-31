@@ -4,4 +4,6 @@ interface ShoppingActionHandler {
     fun onProductClick(productId: Long)
 
     fun onLoadMoreButtonClick()
+
+    fun onAddToCartButtonClick(productId: Long)
 }

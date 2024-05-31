@@ -7,4 +7,8 @@ data class CartItem(
     val price: Long,
     val imgUrl: String,
     val quantity: Int,
-)
+) {
+    fun totalPrice(): Long {
+        return price * quantity
+    }
+}

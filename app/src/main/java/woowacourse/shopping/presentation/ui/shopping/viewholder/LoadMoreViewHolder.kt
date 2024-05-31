@@ -1,7 +1,8 @@
-package woowacourse.shopping.presentation.ui.shopping
+package woowacourse.shopping.presentation.ui.shopping.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 
 class LoadMoreViewHolder(
     binding: ItemLoadMoreBinding,

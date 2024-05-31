@@ -1,25 +1,34 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.view.Menu
-import android.view.View.GONE
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductWithQuantity
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
+import woowacourse.shopping.presentation.ui.cart.CartActivity.Companion.EXTRA_KEY_MODIFIED_PRODUCT_IDS
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
+import woowacourse.shopping.presentation.ui.shopping.adapter.RecentlyProductAdapter
+import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 
 class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity_shopping) {
     private val viewModel: ShoppingViewModel by viewModels {
-        ShoppingViewModelFactory(ShoppingItemsRepositoryImpl((application as ShoppingApplication).shoppingDataSource))
+        ShoppingViewModelFactory(
+            (application as ShoppingApplication).shoppingItemsRepository,
+            (application as ShoppingApplication).cartRepository,
+            (application as ShoppingApplication).recentlyViewedProductsRepository,
+        )
     }
-    private lateinit var adapter: ShoppingAdapter
+
+    private lateinit var shoppingAdapter: ShoppingAdapter
+    private lateinit var recentlyProductAdapter: RecentlyProductAdapter
 
     override fun onCreateSetup() {
         initializeViews()
@@ -28,28 +37,27 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
 
     private fun initializeViews() {
         setUpToolbar()
-        setUpRecyclerView()
+        setUpShoppingProductRecyclerView()
+        setUpRecentlyViewedProductRecyclerView()
         binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarMain
-        setSupportActionBar(toolbar)
-        toolbar.setOnMenuItemClickListener {
+        binding.ivCart.setOnClickListener {
             navigateToShoppingCart()
-            true
         }
     }
 
-    private fun setUpRecyclerView() {
-        adapter = ShoppingAdapter(viewModel)
-        binding.rvProductList.adapter = adapter
+    private fun setUpShoppingProductRecyclerView() {
+        shoppingAdapter = ShoppingAdapter(viewModel = viewModel)
+        binding.rvProductList.adapter = shoppingAdapter
 
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return when (adapter.getItemViewType(position)) {
+                    return when (shoppingAdapter.getItemViewType(position)) {
                         ShoppingAdapter.VIEW_TYPE_PRODUCT -> 1
                         ShoppingAdapter.VIEW_TYPE_LOAD_MORE -> 2
                         else -> 1
@@ -59,46 +67,87 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity
         binding.rvProductList.layoutManager = layoutManager
     }
 
+    private fun setUpRecentlyViewedProductRecyclerView() {
+        recentlyProductAdapter = RecentlyProductAdapter(actionHandler = viewModel)
+        binding.rvRecentlyViewed.adapter = recentlyProductAdapter
+    }
+
     private fun observeViewModel() {
+        observeShoppingProductItems()
+        observeRecentlyViewedProductItems()
+        observeProductUpdate()
+        observeProductClick()
+    }
+
+    private fun observeShoppingProductItems() {
         viewModel.productItemsState.observe(this) { state ->
             when (state) {
-                is UIState.Success -> showData(state.data)
-                is UIState.Empty -> showEmptyView()
+                is UIState.Success -> showShoppingProductData(state.data)
+                is UIState.Empty -> showMessage(getString(R.string.empty_product_list))
                 is UIState.Error ->
-                    showError(
+                    showMessage(state.exception.message ?: getString(R.string.unknown_error))
+            }
+        }
+    }
+
+    private fun observeProductUpdate() {
+        viewModel.updatedProduct.observe(this) { state ->
+            when (state) {
+                is UIState.Success -> shoppingAdapter.updateItem(state.data)
+                is UIState.Empty -> return@observe
+                is UIState.Error ->
+                    showMessage(
                         state.exception.message ?: getString(R.string.unknown_error),
                     )
             }
         }
+    }
 
-        viewModel.navigateToProductDetail.observe(this) { productId ->
-            onProductClick(productId)
+    private fun observeRecentlyViewedProductItems() {
+        viewModel.recentlyViewedProductsState.observe(this) { state ->
+            when (state) {
+                is UIState.Success -> showRecentlyViewedProductData(state.data)
+                is UIState.Empty -> return@observe
+                is UIState.Error ->
+                    showMessage(state.exception.message ?: getString(R.string.unknown_error))
+            }
         }
     }
 
-    private fun showData(data: List<Product>) {
-        adapter.submitList(data)
+    private fun observeProductClick() {
+        viewModel.navigateToProductDetail.observe(this) { productId ->
+            navigateToDetail(productId)
+        }
     }
 
-    private fun showEmptyView() {
-        binding.rvProductList.visibility = GONE
-        showErrorMessage(getString(R.string.empty_product_list))
+    private fun showShoppingProductData(data: List<ProductWithQuantity>) {
+        shoppingAdapter.submitList(data)
     }
 
-    private fun showError(errorMessage: String) {
-        showErrorMessage(errorMessage)
+    private fun showRecentlyViewedProductData(data: List<RecentlyViewedProduct>) {
+        recentlyProductAdapter.submitList(data)
     }
 
     private fun navigateToShoppingCart() {
-        startActivity(CartActivity.createIntent(context = this))
+        val intent = CartActivity.createIntent(this)
+        activityResultLauncher.launch(intent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+    private val activityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            viewModel.loadRecentlyViewedProducts()
+            if (result.resultCode == RESULT_OK) {
+                val modifiedProductIds =
+                    result.data?.getLongArrayExtra(EXTRA_KEY_MODIFIED_PRODUCT_IDS)?.toList()
+                        ?: emptyList()
+                if (modifiedProductIds.isNotEmpty()) {
+                    viewModel.updateModifiedProducts(modifiedProductIds)
+                }
+            }
+        }
 
-    private fun onProductClick(productId: Long) {
-        startActivity(DetailActivity.createIntent(this, productId))
+    private fun navigateToDetail(productId: Long) {
+        val intent = DetailActivity.createIntent(this, productId)
+        activityResultLauncher.launch(intent)
     }
 }

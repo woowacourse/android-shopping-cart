@@ -4,11 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.Menu
 import androidx.activity.viewModels
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.ui.cart.CartActivity
@@ -17,8 +14,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
-            cartRepository = CartRepositoryImpl((application as ShoppingApplication).cartDatabase),
-            shoppingRepository = ShoppingItemsRepositoryImpl((application as ShoppingApplication).shoppingDataSource),
+            (application as ShoppingApplication).shoppingItemsRepository,
+            (application as ShoppingApplication).cartRepository,
+            (application as ShoppingApplication).recentlyViewedProductsRepository,
             productId = productId,
         )
     }
@@ -30,16 +28,15 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     }
 
     private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarDetail
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationOnClickListener {
+        binding.ivBack.setOnClickListener {
             finish()
         }
     }
 
     private fun observeViewModel() {
-        viewModel.navigateToShoppingCart.observe(this) {
-            navigateToCart()
+        viewModel.addToCart.observe(this) {
+            showMessage(getString(R.string.add_to_cart))
+            navigateToBack()
         }
     }
 
@@ -48,10 +45,17 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun navigateToCart() {
-        startActivity(
-            CartActivity.createIntent(context = this),
-        )
+    private fun navigateToBack() {
+        val modifiedProductIds = setOf(productId)
+        val resultIntent =
+            Intent().apply {
+                putExtra(
+                    CartActivity.EXTRA_KEY_MODIFIED_PRODUCT_IDS,
+                    modifiedProductIds.toLongArray(),
+                )
+            }
+        setResult(RESULT_OK, resultIntent)
+        finish()
     }
 
     companion object {

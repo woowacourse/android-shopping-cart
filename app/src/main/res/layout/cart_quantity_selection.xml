@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
+
+        <variable
+            name="actionHandler"
+            type="woowacourse.shopping.presentation.ui.cart.CartActionHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="126dp"
+        android:layout_height="42dp">
+
+        <TextView
+            android:id="@+id/btn_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/round_button_left"
+            android:gravity="center"
+            android:onClick="@{() -> actionHandler.onMinusButtonClicked(cartItem.productId)}"
+            android:text="−"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@{String.valueOf(cartItem.quantity)}"
+            android:textSize="21dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_minus"
+            app:layout_constraintStart_toEndOf="@id/btn_minus"
+            app:layout_constraintTop_toTopOf="@id/btn_minus"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/btn_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/round_button_right"
+            android:gravity="center"
+            android:onClick="@{() -> actionHandler.onPlusButtonClicked(cartItem.productId)}"
+            android:text="+"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_quantity"
+            app:layout_constraintStart_toEndOf="@+id/tv_quantity"
+            app:layout_constraintTop_toTopOf="@+id/tv_quantity" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -16,20 +16,43 @@
         android:id="@+id/activity_cart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".domain.presentation.main.MainActivity">
+        tools:context=".presentation.ui.cart.CartActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar_cart"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/gray_500"
-            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_back_vector"
-            app:title="Cart"
-            app:titleTextColor="@color/white" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="@string/cart"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_back"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.517" />
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:padding="11dp"
+                android:onClick="@{() -> viewModel.navigateToShopping()}"
+                android:src="@drawable/ic_back_vector"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_empty_cart"
