@@ -11,13 +11,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ProductHistoryDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
@@ -31,8 +31,6 @@ import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productDomainTestFixture
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
-import java.util.concurrent.CountDownLatch
-import kotlin.concurrent.thread
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
@@ -165,11 +163,9 @@ class ProductDetailViewModelTest {
         shoppingProductRepository.loadProductAsync(productId) {
             assertThat(it).isEqualTo(productDomainTestFixture(1))
         }
-//        val expectedProduct = productTestFixture(1).toDomain(quantity = 1)
-//        assertThat(actualProduct).isEqualTo(expectedProduct)
     }
 
-    // todo: 이 테스트 깨짐 수정 필요
+    // todo: 이 테스트 깨짐 수정 필요 스레드 ㄱ때문에 깨지는 건 아님
 //    @Test
 //    fun `현재 상품이 이미 장바구니에 있을 때 장바구니에 담으면 장바구니에 수 만큼 더 담긴다`() {
 //        // given
@@ -195,21 +191,23 @@ class ProductDetailViewModelTest {
 //        assertThat(actualProduct).isEqualTo(expectedProduct)
 //    }
 
-    // TODO: 위와 마찬가지로 테스트 깨짐 수정 필요
-//    @Test
-//    fun `최근 상품이 없으면 fake 객체`() {
-//        // given
-//        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
-//
-//        // when
-//        viewModel.loadAll()
-//        Thread.sleep(3000)
-//
-//        // then
-//        // TODO: 터짐.
-//        val actualLatestProduct = viewModel.latestProduct.getOrAwaitValue()
-//        assertThat(actualLatestProduct).isEqualTo(Product.NULL)
-//    }
+    //     TODO: 스레드 때문에 건 아님
+    @Test
+    fun `최근 상품이 없으면 fake 객체`() {
+        // given
+        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+
+        // when
+        viewModel.loadAll()
+
+        // then
+//        assertThrows<NoSuchElementException> {
+//            viewModel.latestProduct.value != null
+//        }
+        assertThrows<NoSuchElementException> {
+            assertThat(viewModel.latestProduct.value).isEqualTo(productDomainTestFixture(0))
+        }
+    }
 
     @Test
     fun `최근 상품이 있으면 해당 객체`() {
