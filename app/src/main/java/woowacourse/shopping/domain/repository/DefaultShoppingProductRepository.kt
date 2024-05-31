@@ -88,11 +88,9 @@ class DefaultShoppingProductRepository(
         callback: (List<Product>) -> Unit,
     ) {
         cartSource.loadPagedAsync(page = page) {
-            val products =
-                it.map { productIdsCountData ->
-                    productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
-                }
-            callback(products)
+            it.map { productIdsCountData ->
+                productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+            }.let(callback)
         }
     }
 
