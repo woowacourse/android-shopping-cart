@@ -69,6 +69,90 @@ class DefaultShoppingProductRepository(
         cartSource.removedProductsId(id)
     }
 
+    // async function with callback
+    override fun loadAllProductsAsync(page: Int, callback: (List<Product>) -> Unit) {
+        productsSource.findByPagedAsync(page) { productsData ->
+            val products = productsData.map { productData ->
+                productData.toDomain(productQuantity(productData.id))
+            }
+            callback(products)
+        }
+    }
+
+    override fun loadProductsInCartAsync(page: Int, callback: (List<Product>) -> Unit) {
+        cartSource.loadPagedAsync(page = page) {
+            val products = it.map { productIdsCountData ->
+                productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+            }
+            callback(products)
+        }
+    }
+
+    override fun loadProductAsync(id: Long, callback: (Product) -> Unit) {
+        productsSource.findByIdAsync(id) { productData ->
+            val product = productData.toDomain(productQuantity(id))
+            callback(product)
+        }
+    }
+
+    override fun isFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+        productsSource.isFinalPageAsync(page, callback)
+    }
+
+    override fun isCartFinalPageAsync(page: Int, callback: (Boolean) -> Unit) {
+        cartSource.isFinalPageAsync(page, callback)
+    }
+
+    override fun shoppingCartProductQuantityAsync(callback: (Int) -> Unit) {
+        cartSource.loadAllAsync { productIdsCountData ->
+            val quantity = productIdsCountData.sumOf { it.quantity }
+            callback(quantity)
+        }
+    }
+
+    override fun increaseShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+        cartSource.findByProductIdAsync(id) {
+            if (it == null) {
+                addShoppingCartProductAsync(id) {
+                    callback(true)
+                }
+                return@findByProductIdAsync
+            }
+
+            cartSource.plusProductsIdCountAsync(id)
+        }
+    }
+
+    override fun decreaseShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+        cartSource.findByProductIdAsync(id) {
+            if (it == null) {
+                callback(false)
+                return@findByProductIdAsync
+            }
+
+            if (it.quantity == 1) {
+                removeShoppingCartProductAsync(id) {
+                    callback(true)
+                }
+                return@findByProductIdAsync
+            }
+
+            cartSource.minusProductsIdCountAsync(id)
+        }
+    }
+
+    override fun addShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+        cartSource.addedNewProductsIdAsync(ProductIdsCountData(id, FIRST_QUANTITY)) {
+            callback(true)
+        }
+    }
+
+    override fun removeShoppingCartProductAsync(id: Long, callback: (Boolean) -> Unit) {
+        cartSource.removedProductsIdAsync(id) {
+            callback(true)
+        }
+    }
+
     companion object {
         private const val FIRST_QUANTITY = 1
         private const val TAG = "DefaultShoppingProductR"

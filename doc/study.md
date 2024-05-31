@@ -31,11 +31,8 @@
 이런 형태로 사용할 수 있을 것 같다.  
 ```kotlin
 class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : ProductHistoryDataSource {
-
-    private val executor = Executors.newFixedThreadPool(4)
-
     override fun saveProductHistory(productId: Long, callback: (Boolean) -> Unit) {
-        executor.execute {
+        thread {
             val id = dao.findById(productId)
 
             if (id != null) {
@@ -46,10 +43,58 @@ class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : Produc
             callback(true)
         }
     }
-
-// ...
+    // ...
 }
 ```
 
 이렇게 해보자.
+
+# 이거 된다!!!!!!!!!!!!!!1
+이제 이거로 모두 바꾸면서 테스트도 리팩토링 해보자!  
+만약 위처럼 한다면 어떻게 테스트를 작성해야 하는가
+
+데이터 소스, 레포지토리가 따로 있다고 하면
+``` kotlin
+class DefaultProductHistoryRepository(
+    private val productHistoryDataSource: ProductHistoryDataSource,
+    private val productDataSource: ProductDataSource,
+) : ProductHistoryRepository {
+    override fun saveProductHistoryAsync(productId: Long, callback: (Boolean) -> Unit) {
+        productHistoryDataSource.saveProductHistoryAsync(productId, callback)
+    }
+    // ..
+}
+```
+   
+테스트에서는
+``` kotlin
+
+@Test
+fun `내역에 없는 상품을 저장 async`() {
+    // given setup
+    val product = productTestFixture(5)
+
+    // when
+    productHistoryRepository.saveProductHistoryAsync(product.id) {
+        // then
+        productHistoryRepository.loadAllProductHistoryAsync { products ->
+            assertThat(products).hasSize(4)
+        }
+    }
+}
+
+@Test
+fun `이미 내역에 있는 상품을 저장하려고 하면 저장 안됨 aync`() {
+    // given setup
+    val product = productTestFixture(3)
+
+    // when
+    productHistoryRepository.saveProductHistoryAsync(product.id) {
+        // then
+        productHistoryRepository.loadAllProductHistoryAsync { products ->
+            assertThat(products).hasSize(3)
+        }
+    }
+}
+```
 
