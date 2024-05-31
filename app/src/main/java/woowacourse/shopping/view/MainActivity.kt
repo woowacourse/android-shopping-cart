@@ -14,6 +14,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setFragment()
+    }
+
+    private fun setFragment() {
         supportFragmentManager.beginTransaction().replace(
             R.id.fragment_container,
             ProductsListFragment(),

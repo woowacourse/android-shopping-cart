@@ -63,7 +63,7 @@ class ShoppingCartFragment : Fragment() {
 
     private fun observeData() {
         shoppingCartViewModel.pagedData.observe(viewLifecycleOwner) {
-            adapter.updateCartItems(it)
+            adapter.submitList(it.toList())
         }
 
         shoppingCartViewModel.navigateToBack.observe(viewLifecycleOwner) {
@@ -75,7 +75,6 @@ class ShoppingCartFragment : Fragment() {
         }
 
         shoppingCartViewModel.updatedCountInfo.observe(viewLifecycleOwner) {
-            adapter.updateCartItem(it.productId, it.updatedQuantity)
             sharedViewModel.setUpdateProductEvent(it.productId, it.updatedQuantity)
         }
     }

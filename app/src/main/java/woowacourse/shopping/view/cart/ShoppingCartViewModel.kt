@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -79,10 +80,12 @@ class ShoppingCartViewModel(
         val pageNumber = currentPage.value ?: 1
         val startIndex = (pageNumber - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
         if (shouldLoadCartItems(pageNumber)) {
+            Log.d("yenni", "load")
             loadCartItems()
         }
         val endIndex = minOf(pageNumber * CART_ITEM_PAGE_SIZE, cartItems.size)
         val newData = cartItems.subList(startIndex, endIndex)
+
         _pagedData.value = newData
 
         updateButtonState()
@@ -101,12 +104,44 @@ class ShoppingCartViewModel(
     override fun onIncreaseQuantityButtonClicked(product: Product) {
         val updatedQuantity = cartRepository.updateIncrementQuantity(product, INCREMENT_VALUE)
         _updatedCountInfo.value = ProductUpdate(product.id, updatedQuantity)
+        updateCartItemsQuantity(product.id, updatedQuantity)
+        updatePagedDataQuantity(product.id, updatedQuantity)
     }
 
     override fun onDecreaseQuantityButtonClicked(product: Product) {
         val updatedQuantity = cartRepository.updateDecrementQuantity(product, DECREMENT_VALUE, false)
-        if (updatedQuantity > 1) {
+        if (updatedQuantity > 0) {
             _updatedCountInfo.value = ProductUpdate(product.id, updatedQuantity)
+            updateCartItemsQuantity(product.id, updatedQuantity)
+            updatePagedDataQuantity(product.id, updatedQuantity)
+        }
+    }
+
+    private fun updateCartItemsQuantity(
+        productId: Long,
+        updatedQuantity: Int,
+    ) {
+        val index = cartItems.indexOfFirst { it.product.id == productId }
+        if (index != -1) {
+            val updatedCartItem = cartItems[index].copy(quantity = updatedQuantity)
+            cartItems[index] = updatedCartItem
+        }
+    }
+
+    private fun updatePagedDataQuantity(
+        productId: Long,
+        updatedQuantity: Int,
+    ) {
+        val currentList = pagedData.value ?: return
+        val index = currentList.indexOfFirst { it.product.id == productId }
+
+        if (index != -1) {
+            val updatedCartItem = currentList[index].copy(quantity = updatedQuantity)
+            val updatedList =
+                currentList.toMutableList().apply {
+                    this[index] = updatedCartItem
+                }
+            _pagedData.value = updatedList
         }
     }
 
