@@ -108,12 +108,15 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
         }
     }
 
-    override fun minusProductsIdCountAsync(productId: Long) {
+    override fun minusProductsIdCountAsync(
+        productId: Long,
+        callback: () -> Unit,
+    ) {
         thread {
             val oldProduct = dao.findById(productId) ?: throw NoSuchElementException()
             val newProduct = oldProduct.copy(quantity = oldProduct.quantity - 1)
-
             dao.update(newProduct)
+            callback()
         }
     }
 

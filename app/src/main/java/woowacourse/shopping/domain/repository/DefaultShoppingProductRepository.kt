@@ -162,7 +162,7 @@ class DefaultShoppingProductRepository(
                 return@findByProductIdAsync
             }
 
-            cartSource.minusProductsIdCountAsync(id)
+            cartSource.minusProductsIdCountAsync(id) { callback(true) }
         }
     }
 

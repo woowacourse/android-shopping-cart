@@ -54,7 +54,10 @@ interface ShoppingCartProductIdDataSource {
         callback: () -> Unit,
     )
 
-    fun minusProductsIdCountAsync(productId: Long)
+    fun minusProductsIdCountAsync(
+        productId: Long,
+        callback: () -> Unit,
+    )
 
     fun clearAllAsync()
 }
