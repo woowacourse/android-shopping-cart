@@ -27,13 +27,13 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
-    private val _productBrowsingHistory: MutableLiveData<ProductBrowsingHistory> = MutableLiveData()
-    val productBrowsingHistory: LiveData<ProductBrowsingHistory> get() = _productBrowsingHistory
+    private val _mostRecentHistory: MutableLiveData<ProductBrowsingHistory> = MutableLiveData()
+    val mostRecentHistory: LiveData<ProductBrowsingHistory> get() = _mostRecentHistory
 
     init {
         savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let(::findByProductId)
-        getPrice()
-        getHistory()
+        updatePrice()
+        getMostRecentHistory()
     }
 
     private fun findByProductId(id: Int) {
@@ -58,23 +58,23 @@ class ProductDetailViewModel(
 
     override fun onClickPlusOrderButton() {
         _quantity.value = _quantity.value?.plus(1)
-        getPrice()
+        updatePrice()
     }
 
     override fun onClickMinusOrderButton() {
         quantity.value?.let { value ->
             if (value > 1) _quantity.value = value - 1
         }
-        getPrice()
+        updatePrice()
     }
 
     override fun onClickRecentHistory() {
-        _product.value = productBrowsingHistory.value?.product
+        _product.value = mostRecentHistory.value?.product
         _quantity.value = 1
-        getPrice()
+        updatePrice()
     }
 
-    private fun getPrice() {
+    private fun updatePrice() {
         product.value?.price?.let {
             _price.value = quantity.value?.times(it)
         }
@@ -84,8 +84,8 @@ class ProductDetailViewModel(
         product.value?.let { historyRepository.putProductOnHistory(it) }
     }
 
-    private fun getHistory() {
+    private fun getMostRecentHistory() {
         val history = historyRepository.getHistories(1).firstOrNull()
-        _productBrowsingHistory.value = history
+        _mostRecentHistory.value = history
     }
 }
