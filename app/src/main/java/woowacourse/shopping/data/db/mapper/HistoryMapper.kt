@@ -1,18 +1,19 @@
 package woowacourse.shopping.data.db.mapper
 
-import woowacourse.shopping.data.db.model.HistoryEntity
-import woowacourse.shopping.domain.model.History
+import woowacourse.shopping.data.db.model.ProductBrowsingHistoryEntity
+import woowacourse.shopping.domain.model.ProductBrowsingHistory
 
-fun HistoryEntity.toHistory(): History = History(product.toProduct(), timestamp)
+fun ProductBrowsingHistoryEntity.toHistory(): ProductBrowsingHistory = ProductBrowsingHistory(product.toProduct(), timestamp)
 
-fun History.toEntity(): HistoryEntity = HistoryEntity(product = product.toEntity(), timestamp = timestamp)
+fun ProductBrowsingHistory.toEntity(): ProductBrowsingHistoryEntity =
+    ProductBrowsingHistoryEntity(product = product.toEntity(), timestamp = timestamp)
 
-fun List<HistoryEntity>.toHistory(): List<History> =
+fun List<ProductBrowsingHistoryEntity>.toHistory(): List<ProductBrowsingHistory> =
     this.map {
         it.toHistory()
     }
 
-fun List<History>.toEntity(): List<HistoryEntity> =
+fun List<ProductBrowsingHistory>.toEntity(): List<ProductBrowsingHistoryEntity> =
     this.map {
         it.toEntity()
     }

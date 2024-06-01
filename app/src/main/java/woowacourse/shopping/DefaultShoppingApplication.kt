@@ -1,11 +1,11 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.datasource.history.LocalHistoryDataSource
 import woowacourse.shopping.data.datasource.order.LocalOrderDataSource
+import woowacourse.shopping.data.datasource.productbrowsinghistory.LocalProductBrowsingHistory
 import woowacourse.shopping.data.db.AppDatabase
-import woowacourse.shopping.data.repsoitory.DefaultHistoryRepository
 import woowacourse.shopping.data.repsoitory.DefaultOrderRepository
+import woowacourse.shopping.data.repsoitory.DefaultProductBrowsingHistoryRepository
 import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailViewModelFactory
 import woowacourse.shopping.presentation.ui.productlist.ProductListViewModelFactory
@@ -13,20 +13,20 @@ import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartViewModelFa
 
 class DefaultShoppingApplication : Application(), ShoppingApplication {
     private val db by lazy { AppDatabase.getDatabase(this) }
-    private val localHistoryDataSource by lazy { LocalHistoryDataSource(db.historyDao()) }
+    private val localProductBrowsingHistory by lazy { LocalProductBrowsingHistory(db.historyDao()) }
     private val localOrderDataSource by lazy { LocalOrderDataSource(db.orderDao()) }
 
     private val productListViewModelFactory by lazy {
-        val localHistoryDataSource = localHistoryDataSource
+        val localHistoryDataSource = localProductBrowsingHistory
         val localOrderDataSource = localOrderDataSource
         ProductListViewModelFactory(
             DummyProductList,
             DefaultOrderRepository(localOrderDataSource),
-            DefaultHistoryRepository(localHistoryDataSource),
+            DefaultProductBrowsingHistoryRepository(localHistoryDataSource),
         )
     }
     private val productDetailViewModelFactory by lazy {
-        val historyRepository = DefaultHistoryRepository(localHistoryDataSource)
+        val historyRepository = DefaultProductBrowsingHistoryRepository(localProductBrowsingHistory)
         val orderRepository = DefaultOrderRepository(localOrderDataSource)
         ProductDetailViewModelFactory(
             DummyProductList,

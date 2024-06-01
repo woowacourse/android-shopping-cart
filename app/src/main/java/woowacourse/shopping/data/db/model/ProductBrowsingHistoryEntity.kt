@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["productId"], unique = true)])
-data class HistoryEntity(
+data class ProductBrowsingHistoryEntity(
     @PrimaryKey(autoGenerate = true) val historyId: Int = 0,
     @Embedded
     val product: ProductEntity,

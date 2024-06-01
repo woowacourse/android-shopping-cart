@@ -1,18 +1,18 @@
 package woowacourse.shopping.data.repsoitory
 
-import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.HistoryRepository
+import woowacourse.shopping.domain.model.ProductBrowsingHistory
+import woowacourse.shopping.domain.repository.ProductBrowsingHistoryRepository
 
-object DummyHistory : HistoryRepository {
-    private val histories: MutableList<History> = mutableListOf()
+object DummyHistory : ProductBrowsingHistoryRepository {
+    private val histories: MutableList<ProductBrowsingHistory> = mutableListOf()
 
     override fun putProductOnHistory(product: Product) {
-        val history = History(product, System.currentTimeMillis())
-        histories.add(history)
+        val productBrowsingHistory = ProductBrowsingHistory(product, System.currentTimeMillis())
+        histories.add(productBrowsingHistory)
     }
 
-    override fun getHistories(size: Int): List<History> {
+    override fun getHistories(size: Int): List<ProductBrowsingHistory> {
         val from = 0
         val to = if (size > histories.size) histories.size else size
         return histories.subList(from, to)

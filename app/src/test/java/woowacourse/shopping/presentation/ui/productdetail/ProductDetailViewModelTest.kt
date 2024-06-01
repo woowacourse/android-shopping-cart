@@ -12,12 +12,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.DummyData.STUB_HISTORY_A
-import woowacourse.shopping.data.DummyData.STUB_HISTORY_B
 import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
+import woowacourse.shopping.data.DummyData.STUB_ProductBrowsing_HISTORY_A
+import woowacourse.shopping.data.DummyData.STUB_ProductBrowsing_HISTORY_B
 import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.OrderRepository
+import woowacourse.shopping.domain.repository.ProductBrowsingHistoryRepository
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -30,7 +30,7 @@ class ProductDetailViewModelTest {
     private lateinit var orderRepository: OrderRepository
 
     @MockK
-    private lateinit var historyRepository: HistoryRepository
+    private lateinit var historyRepository: ProductBrowsingHistoryRepository
 
     @BeforeEach
     fun setUp() {
@@ -38,8 +38,8 @@ class ProductDetailViewModelTest {
         savedStateHandle = SavedStateHandle(initialState)
         every { historyRepository.getHistories(any()) } returns
             listOf(
-                STUB_HISTORY_A,
-                STUB_HISTORY_B,
+                STUB_ProductBrowsing_HISTORY_A,
+                STUB_ProductBrowsing_HISTORY_B,
             )
         viewModel =
             ProductDetailViewModel(

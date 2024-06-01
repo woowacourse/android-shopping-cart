@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.model
 
-data class History(
+data class ProductBrowsingHistory(
     val product: Product,
     val timestamp: Long,
 )

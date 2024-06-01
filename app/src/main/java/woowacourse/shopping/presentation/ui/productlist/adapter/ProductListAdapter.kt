@@ -21,7 +21,7 @@ class ProductListAdapter(
             emptyList(),
             true,
         ),
-    private val historyListAdapter: HistoryListAdapter,
+    private val historyListAdapter: ProductBrowsingHistoryListAdapter,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -127,7 +127,7 @@ class ProductListAdapter(
         class HistoryViewHolder(
             private val binding: HolderHistoryListBinding,
         ) : ProductListViewHolder(binding.root) {
-            fun bind(historyListAdapter: HistoryListAdapter) {
+            fun bind(historyListAdapter: ProductBrowsingHistoryListAdapter) {
                 binding.rvHistoryList.adapter = historyListAdapter
             }
         }

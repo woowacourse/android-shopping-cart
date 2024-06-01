@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.OrderRepository
+import woowacourse.shopping.domain.repository.ProductBrowsingHistoryRepository
 import woowacourse.shopping.domain.repository.ProductListRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.Event
@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
 class ProductListViewModel(
     private val productListRepository: ProductListRepository,
     private val orderRepository: OrderRepository,
-    private val historyRepository: HistoryRepository,
+    private val historyRepository: ProductBrowsingHistoryRepository,
 ) : BaseViewModel(), ProductListActionHandler {
     private val _uiState: MutableLiveData<ProductListUiState> =
         MutableLiveData(ProductListUiState())

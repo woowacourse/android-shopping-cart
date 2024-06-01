@@ -9,7 +9,7 @@ import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.presentation.ui.productlist.adapter.HistoryListAdapter
+import woowacourse.shopping.presentation.ui.productlist.adapter.ProductBrowsingHistoryListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapterManager
@@ -22,7 +22,11 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         shoppingApplication.productListViewModelFactory()
     }
 
-    private val historyListAdapter: HistoryListAdapter by lazy { HistoryListAdapter(actionHandler = viewModel) }
+    private val historyListAdapter: ProductBrowsingHistoryListAdapter by lazy {
+        ProductBrowsingHistoryListAdapter(
+            actionHandler = viewModel,
+        )
+    }
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(
             historyListAdapter = historyListAdapter,

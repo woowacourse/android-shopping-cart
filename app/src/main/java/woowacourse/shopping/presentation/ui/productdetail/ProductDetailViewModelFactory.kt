@@ -4,14 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.OrderRepository
+import woowacourse.shopping.domain.repository.ProductBrowsingHistoryRepository
 import woowacourse.shopping.domain.repository.ProductListRepository
 
 class ProductDetailViewModelFactory(
     private val productListRepository: ProductListRepository,
     private val orderRepository: OrderRepository,
-    private val historyRepository: HistoryRepository,
+    private val historyRepository: ProductBrowsingHistoryRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(
         modelClass: Class<T>,

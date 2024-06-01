@@ -1,9 +1,9 @@
 package woowacourse.shopping.domain.datasource
 
-import woowacourse.shopping.domain.model.History
+import woowacourse.shopping.domain.model.ProductBrowsingHistory
 
 interface HistoryDataSource {
-    fun putHistory(history: History)
+    fun putHistory(productBrowsingHistory: ProductBrowsingHistory)
 
-    fun getHistories(size: Int): List<History>
+    fun getHistories(size: Int): List<ProductBrowsingHistory>
 }

@@ -8,7 +8,7 @@
 
         <variable
             name="history"
-            type="woowacourse.shopping.domain.model.History" />
+            type="woowacourse.shopping.domain.model.ProductBrowsingHistory" />
 
         <variable
             name="actionHandler"

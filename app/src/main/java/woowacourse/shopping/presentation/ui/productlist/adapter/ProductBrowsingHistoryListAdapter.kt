@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderHistoryBinding
-import woowacourse.shopping.domain.model.History
+import woowacourse.shopping.domain.model.ProductBrowsingHistory
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 
-class HistoryListAdapter(
+class ProductBrowsingHistoryListAdapter(
     private val actionHandler: ProductListActionHandler,
-) : ListAdapter<History, HistoryListAdapter.HistoryViewHolder>(DIFF_CALLBACK) {
+) : ListAdapter<ProductBrowsingHistory, ProductBrowsingHistoryListAdapter.HistoryViewHolder>(DIFF_CALLBACK) {
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recyclerView.itemAnimator = null
@@ -39,25 +39,25 @@ class HistoryListAdapter(
         val binding: HolderHistoryBinding,
         val actionHandler: ProductListActionHandler,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(history: History) {
-            binding.history = history
+        fun bind(productBrowsingHistory: ProductBrowsingHistory) {
+            binding.history = productBrowsingHistory
             binding.actionHandler = actionHandler
         }
     }
 
     companion object {
         val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<History>() {
+            object : DiffUtil.ItemCallback<ProductBrowsingHistory>() {
                 override fun areItemsTheSame(
-                    old: History,
-                    new: History,
+                    old: ProductBrowsingHistory,
+                    new: ProductBrowsingHistory,
                 ): Boolean {
                     return old == new
                 }
 
                 override fun areContentsTheSame(
-                    old: History,
-                    new: History,
+                    old: ProductBrowsingHistory,
+                    new: ProductBrowsingHistory,
                 ): Boolean {
                     return old == new
                 }

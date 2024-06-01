@@ -13,11 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.DummyData
 import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.domain.model.PagingProduct
-import woowacourse.shopping.domain.repository.HistoryRepository
+import woowacourse.shopping.domain.model.ProductBrowsingHistory
 import woowacourse.shopping.domain.repository.OrderRepository
+import woowacourse.shopping.domain.repository.ProductBrowsingHistoryRepository
 import woowacourse.shopping.domain.repository.ProductListRepository
 import woowacourse.shopping.getOrAwaitValue
 
@@ -31,7 +31,7 @@ class ProductListViewModelTest {
     private lateinit var orderRepository: OrderRepository
 
     @MockK
-    private lateinit var historyRepository: HistoryRepository
+    private lateinit var historyRepository: ProductBrowsingHistoryRepository
 
     @InjectMockKs
     private lateinit var productListViewModel: ProductListViewModel
@@ -46,7 +46,7 @@ class ProductListViewModelTest {
                 20,
             )
         } returns DummyProductList.getPagingProduct(0, 20)
-        every { historyRepository.getHistories(any()) } returns List(10) { History(DummyData.STUB_PRODUCT_1, 1L) }
+        every { historyRepository.getHistories(any()) } returns List(10) { ProductBrowsingHistory(DummyData.STUB_PRODUCT_1, 1L) }
 
         // when
         productListViewModel.initPage()
@@ -61,7 +61,7 @@ class ProductListViewModelTest {
     fun `더보기 버튼을 눌렀을 때 상품을 더 불러온다`() {
         // given
         every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_1))
-        every { historyRepository.getHistories(any()) } returns List(10) { History(DummyData.STUB_PRODUCT_1, 1L) }
+        every { historyRepository.getHistories(any()) } returns List(10) { ProductBrowsingHistory(DummyData.STUB_PRODUCT_1, 1L) }
         val dummyPagingProduct = DummyProductList.getPagingProduct(0, 20).getOrThrow()
         val nextDummyPagingProduct = DummyProductList.getPagingProduct(1, 20).getOrThrow()
 
@@ -117,7 +117,7 @@ class ProductListViewModelTest {
         every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_1)
         every { orderRepository.getOrders() } returns listOf(Order(1, 2, DummyData.STUB_PRODUCT_1))
         every { orderRepository.plusOrder(DummyData.STUB_PRODUCT_1) } just runs
-        every { historyRepository.getHistories(any()) } returns List(10) { History(DummyData.STUB_PRODUCT_1, 1L) }
+        every { historyRepository.getHistories(any()) } returns List(10) { ProductBrowsingHistory(DummyData.STUB_PRODUCT_1, 1L) }
         productListViewModel.initPage()
 
         // when
@@ -143,7 +143,7 @@ class ProductListViewModelTest {
         every { productListRepository.findProductById(1) } returns Result.success(DummyData.STUB_PRODUCT_1)
         every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_1))
         every { orderRepository.minusOrder(DummyData.STUB_PRODUCT_1) } just runs
-        every { historyRepository.getHistories(any()) } returns List(10) { History(DummyData.STUB_PRODUCT_1, 1L) }
+        every { historyRepository.getHistories(any()) } returns List(10) { ProductBrowsingHistory(DummyData.STUB_PRODUCT_1, 1L) }
         productListViewModel.initPage()
 
         // when

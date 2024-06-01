@@ -11,5 +11,5 @@ class ProductAndHistoryEntity(
         parentColumn = "id",
         entityColumn = "productId",
     )
-    val history: HistoryEntity,
+    val history: ProductBrowsingHistoryEntity,
 )
