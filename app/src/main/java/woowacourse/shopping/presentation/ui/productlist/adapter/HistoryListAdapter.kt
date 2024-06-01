@@ -2,15 +2,16 @@ package woowacourse.shopping.presentation.ui.productlist.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderHistoryBinding
 import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 
 class HistoryListAdapter(
-    private var histories: List<History>? = null,
     private val actionHandler: ProductListActionHandler,
-) : RecyclerView.Adapter<HistoryListAdapter.HistoryViewHolder>() {
+) : ListAdapter<History, HistoryListAdapter.HistoryViewHolder>(DIFF_CALLBACK) {
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recyclerView.itemAnimator = null
@@ -27,20 +28,11 @@ class HistoryListAdapter(
         )
     }
 
-    override fun getItemCount(): Int = histories?.size ?: 0
-
     override fun onBindViewHolder(
         viewHolder: HistoryViewHolder,
         position: Int,
     ) {
-        histories?.get(position)?.let {
-            viewHolder.bind(it)
-        }
-    }
-
-    fun updateHistoryList(newHistories: List<History>) {
-        histories = newHistories
-        notifyDataSetChanged()
+        viewHolder.bind(getItem(position))
     }
 
     class HistoryViewHolder(
@@ -51,5 +43,24 @@ class HistoryListAdapter(
             binding.history = history
             binding.actionHandler = actionHandler
         }
+    }
+
+    companion object {
+        val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<History>() {
+                override fun areItemsTheSame(
+                    old: History,
+                    new: History,
+                ): Boolean {
+                    return old == new
+                }
+
+                override fun areContentsTheSame(
+                    old: History,
+                    new: History,
+                ): Boolean {
+                    return old == new
+                }
+            }
     }
 }
