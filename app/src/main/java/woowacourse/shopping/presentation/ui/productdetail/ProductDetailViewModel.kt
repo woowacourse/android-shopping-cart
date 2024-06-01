@@ -87,7 +87,5 @@ class ProductDetailViewModel(
     private fun getHistory() {
         val history = historyRepository.getHistories(1).firstOrNull()
         _productBrowsingHistory.value = history
-        println(history)
-        println(product.value)
     }
 }
