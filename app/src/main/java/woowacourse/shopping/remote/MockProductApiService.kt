@@ -11,6 +11,7 @@ import woowacourse.shopping.remote.ProductMockWebServer.Companion.BASE_PORT
 import woowacourse.shopping.remote.ProductMockWebServer.Companion.GET_PAGING_PRODUCTS
 import woowacourse.shopping.remote.ProductMockWebServer.Companion.GET_PRODUCT
 import woowacourse.shopping.remote.ProductMockWebServer.Companion.GET_TOTAL_COUNT
+import woowacourse.shopping.remote.logging.LoggingInterceptor
 import kotlin.concurrent.thread
 
 class MockProductApiService : ProductApiService {
@@ -22,42 +23,34 @@ class MockProductApiService : ProductApiService {
             }
         }
 
-    private val client: OkHttpClient = OkHttpClient.Builder().build()
+    private val loggingInterceptor = LoggingInterceptor()
+
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
+
     private val gson = Gson()
 
     override fun loadById(id: Long): ProductData {
         val request = Request.Builder().url(GET_PRODUCT.format(id)).build()
-        println("request: $request")
-
         val response: Response = client.newCall(request).execute()
-        println("response: $response")
         val responseBody = response.body?.string() ?: throw NoSuchElementException()
-        println("responseBody: $responseBody")
+
         return gson.fromJson(responseBody, object : TypeToken<ProductData>() {}.type)
     }
 
     override fun loadPaged(page: Int): List<ProductData> {
         val request = Request.Builder().url(GET_PAGING_PRODUCTS.format(page)).build()
-        println("request: $request")
-
         val response: Response = client.newCall(request).execute()
-        println("response: $response")
-
         val responseBody = response.body?.string() ?: return emptyList()
-        println("responseBody: $responseBody")
 
         return gson.fromJson(responseBody, object : TypeToken<List<ProductData>>() {}.type)
     }
 
     override fun count(): Int {
         val request = Request.Builder().url(GET_TOTAL_COUNT).build()
-        println("request: $request")
-
         val response: Response = client.newCall(request).execute()
-        println("response: $response")
-
         val responseBody = response.body?.string() ?: return 0
-        println("responseBody: $responseBody")
 
         return gson.fromJson(responseBody, Int::class.java)
     }
