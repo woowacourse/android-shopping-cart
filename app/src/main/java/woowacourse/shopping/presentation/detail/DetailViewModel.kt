@@ -59,7 +59,7 @@ class DetailViewModel(
         cartRepository.patchQuantity(
             targetProduct.product.id,
             productInformation.value?.quantity ?: return,
-            productInformation.value?.cartItem ?: return
+            productInformation.value?.cartItem
         )
         _message.value = Event(StringResource(R.string.message_add_to_cart_complete))
 
@@ -80,7 +80,11 @@ class DetailViewModel(
         if (quantity < 0) return
         _productInformation.value =
             productInformation.value?.copy(
-                cartItem = CartItem(productId = productId, quantity = quantity),
+                cartItem = CartItem(
+                    id = productInformation.value?.cartItem?.id,
+                    productId = productId,
+                    quantity = quantity
+                ),
             )
     }
 
