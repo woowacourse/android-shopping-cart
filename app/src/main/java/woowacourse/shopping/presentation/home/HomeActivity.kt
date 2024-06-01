@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.DefaultShoppingApplication
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.databinding.LayoutCartCountBinding
@@ -28,10 +29,7 @@ class HomeActivity : AppCompatActivity() {
     }
     private val viewModel: HomeViewModel by viewModels {
         val application = application as ShoppingApplication
-        HomeViewModelFactory(
-            application.productRepository,
-            application.cartRepository,
-        )
+        application.homeViewModelFactory
     }
     private val productAdapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }
     private val historyAdapter: HistoryAdapter by lazy { HistoryAdapter(viewModel) }

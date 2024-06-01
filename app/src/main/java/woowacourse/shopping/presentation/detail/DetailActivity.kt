@@ -14,6 +14,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.card.MaterialCardView
 import woowacourse.shopping.R
+import woowacourse.shopping.DefaultShoppingApplication
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.model.history.RecentProduct
 import woowacourse.shopping.databinding.ActivityDetailBinding

@@ -15,6 +15,11 @@ class CartAdapter(
     private val cartItemEventListener: CartItemEventListener,
     private val quantityListener: QuantityListener,
 ) : ListAdapter<CartedProduct, CartAdapter.CartViewHolder>(CartDiffUtil) {
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recyclerView.itemAnimator = null
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

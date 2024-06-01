@@ -51,4 +51,10 @@ class CartRepositoryImpl(
             }
         }.join()
     }
+
+    override fun addCartItem(cartItem: CartItem) {
+        thread {
+            cartDataSource.addCartItem(cartItem)
+        }.join()
+    }
 }
