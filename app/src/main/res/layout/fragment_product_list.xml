@@ -22,6 +22,13 @@
         android:layout_height="match_parent"
         android:clickable="true">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
         <View
             android:id="@+id/vw_product_list_top_bar"
             android:layout_width="match_parent"
@@ -42,25 +49,100 @@
             app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
 
         <ImageButton
+            android:id="@+id/btn_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/top_bar_margin_end"
+            android:layout_marginEnd="4dp"
             android:background="@android:color/transparent"
             android:onClick="@{()->productListActionHandler.onShoppingCartButtonClicked()}"
             android:src="@drawable/ic_cart"
             app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
-            app:layout_constraintEnd_toEndOf="@id/vw_product_list_top_bar"
+            app:layout_constraintEnd_toStartOf="@id/tv_total_count"
             app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_products"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_total_count"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/shape_circle"
+            android:gravity="center"
+            android:text="@{String.valueOf(viewModel.totalCount)}"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btn_cart"
+            app:layout_constraintEnd_toEndOf="@id/gl_end"
+            app:layout_constraintTop_toTopOf="@id/btn_cart"
+            app:visibility="@{viewModel.totalCount}"
+            tools:text="2" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="14dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vw_product_list_top_bar"
-            app:spanCount="2"
-            tools:listitem="@layout/item_product" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vw_product_list_top_bar">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:paddingHorizontal="14dp"
+                    android:text="@string/product_list_page_recent_title"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recent_products"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="14dp"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vw_product_list_top_bar"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_recent_product" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="7dp"
+                    android:background="#EBEBEB"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_products"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vw_product_list_top_bar"
+                    app:spanCount="2"
+                    tools:listitem="@layout/item_product" />
+
+            </LinearLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

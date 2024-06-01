@@ -5,21 +5,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.cartItem.CartItemDatabase
+import woowacourse.shopping.data.cartItem.CartItemLocalDataSource
+import woowacourse.shopping.data.cartItem.CartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
+import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
 class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
-    private lateinit var adapter: ShoppingCartAdapter
 
+    private val sharedViewModel: MainViewModel by activityViewModels()
     private val shoppingCartViewModel: ShoppingCartViewModel by lazy {
-        val viewModelFactory = ShoppingCartViewModelFactory(ProductRepositoryImpl(context = requireContext()))
+        val viewModelFactory =
+            ShoppingCartViewModelFactory(
+                CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
+            )
         viewModelFactory.create(ShoppingCartViewModel::class.java)
     }
+
+    private lateinit var adapter: ShoppingCartAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,13 +55,15 @@ class ShoppingCartFragment : Fragment() {
         adapter =
             ShoppingCartAdapter(
                 shoppingCartActionHandler = shoppingCartViewModel,
+                countActionHandler = shoppingCartViewModel,
             )
         binding.rvShoppingCart.adapter = adapter
+        binding.rvShoppingCart.itemAnimator?.changeDuration = 0
     }
 
     private fun observeData() {
         shoppingCartViewModel.pagedData.observe(viewLifecycleOwner) {
-            adapter.updateCartItems(it)
+            adapter.submitList(it.toList())
         }
 
         shoppingCartViewModel.navigateToBack.observe(viewLifecycleOwner) {
@@ -61,6 +72,10 @@ class ShoppingCartFragment : Fragment() {
 
         shoppingCartViewModel.navigateToDetail.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { navigateToDetail(it) }
+        }
+
+        shoppingCartViewModel.updatedCountInfo.observe(viewLifecycleOwner) {
+            sharedViewModel.setUpdateProductEvent(it.productId, it.updatedQuantity)
         }
     }
 
@@ -78,9 +93,5 @@ class ShoppingCartFragment : Fragment() {
             .add(R.id.fragment_container, nextFragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    companion object {
-        const val DEFAULT_ITEM_SIZE = 0
     }
 }

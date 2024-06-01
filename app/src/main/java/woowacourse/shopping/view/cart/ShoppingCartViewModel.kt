@@ -1,17 +1,20 @@
 package woowacourse.shopping.view.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.view.Event
-import kotlin.concurrent.thread
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.utils.Event
+import woowacourse.shopping.view.CountActionHandler
+import woowacourse.shopping.view.ProductUpdate
 
 class ShoppingCartViewModel(
-    private val repository: ProductRepository,
-) : ViewModel(), ShoppingCartActionHandler {
-    private var shoppingCart = ShoppingCart()
+    private val cartRepository: CartRepository,
+) : ViewModel(), ShoppingCartActionHandler, CountActionHandler {
+    private val cartItems: MutableList<CartItem> = mutableListOf()
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
@@ -31,27 +34,27 @@ class ShoppingCartViewModel(
     private val _navigateToDetail = MutableLiveData<Event<Long>>()
     val navigateToDetail: LiveData<Event<Long>> get() = _navigateToDetail
 
+    private val _updatedCountInfo: MutableLiveData<ProductUpdate> = MutableLiveData()
+    val updatedCountInfo: LiveData<ProductUpdate> get() = _updatedCountInfo
+
     init {
         loadCartItems()
         updatePagedData()
     }
 
     private fun loadCartItems() {
-        var pagingData = emptyList<CartItem>()
-        thread {
-            val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
-            pagingData = repository.loadPagingCartItems(itemSize, CART_ITEM_LOAD_PAGING_SIZE)
-        }.join()
+        val pagingData = cartRepository.loadPagingCartItems(cartItems.size, CART_ITEM_LOAD_PAGING_SIZE)
 
         if (pagingData.isNotEmpty()) {
-            shoppingCart.addProducts(pagingData)
+            cartItems.addAll(pagingData)
             updateButtonState()
         }
     }
 
-    override fun onRemoveCartItemButtonClicked(cartItemId: Long) {
-        thread { repository.deleteCartItem(cartItemId) }.join()
-        shoppingCart.deleteProduct(cartItemId)
+    override fun onRemoveCartItemButtonClicked(cartItem: CartItem) {
+        cartRepository.deleteCartItem(cartItem.id)
+        cartItems.removeIf { it.id == cartItem.id }
+        _updatedCountInfo.value = ProductUpdate(cartItem.product.id, REMOVED_VALUE)
         updatePagedData()
     }
 
@@ -77,29 +80,77 @@ class ShoppingCartViewModel(
         val pageNumber = currentPage.value ?: 1
         val startIndex = (pageNumber - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
         if (shouldLoadCartItems(pageNumber)) {
+            Log.d("yenni", "load")
             loadCartItems()
         }
-        val endIndex = minOf(pageNumber * CART_ITEM_PAGE_SIZE, shoppingCart.getItemCount())
-        val newData = shoppingCart.cartItems.value?.subList(startIndex, endIndex) ?: emptyList()
+        val endIndex = minOf(pageNumber * CART_ITEM_PAGE_SIZE, cartItems.size)
+        val newData = cartItems.subList(startIndex, endIndex)
+
         _pagedData.value = newData
 
         updateButtonState()
     }
 
     private fun shouldLoadCartItems(pageNumber: Int): Boolean {
-        return pageNumber * CART_ITEM_PAGE_SIZE > shoppingCart.getItemCount()
+        return pageNumber * CART_ITEM_PAGE_SIZE > cartItems.size
     }
 
     private fun updateButtonState() {
         val pageNumber = currentPage.value ?: 1
         _isPrevButtonActivated.value = pageNumber > MIN_PAGE_COUNT
-        _isNextButtonActivated.value = repository.hasNextCartItemPage(pageNumber, CART_ITEM_PAGE_SIZE)
+        _isNextButtonActivated.value = cartRepository.hasNextCartItemPage(pageNumber, CART_ITEM_PAGE_SIZE)
+    }
+
+    override fun onIncreaseQuantityButtonClicked(product: Product) {
+        val updatedQuantity = cartRepository.updateIncrementQuantity(product, INCREMENT_VALUE)
+        _updatedCountInfo.value = ProductUpdate(product.id, updatedQuantity)
+        updateCartItemsQuantity(product.id, updatedQuantity)
+        updatePagedDataQuantity(product.id, updatedQuantity)
+    }
+
+    override fun onDecreaseQuantityButtonClicked(product: Product) {
+        val updatedQuantity = cartRepository.updateDecrementQuantity(product, DECREMENT_VALUE, false)
+        if (updatedQuantity > 0) {
+            _updatedCountInfo.value = ProductUpdate(product.id, updatedQuantity)
+            updateCartItemsQuantity(product.id, updatedQuantity)
+            updatePagedDataQuantity(product.id, updatedQuantity)
+        }
+    }
+
+    private fun updateCartItemsQuantity(
+        productId: Long,
+        updatedQuantity: Int,
+    ) {
+        val index = cartItems.indexOfFirst { it.product.id == productId }
+        if (index != -1) {
+            val updatedCartItem = cartItems[index].copy(quantity = updatedQuantity)
+            cartItems[index] = updatedCartItem
+        }
+    }
+
+    private fun updatePagedDataQuantity(
+        productId: Long,
+        updatedQuantity: Int,
+    ) {
+        val currentList = pagedData.value ?: return
+        val index = currentList.indexOfFirst { it.product.id == productId }
+
+        if (index != -1) {
+            val updatedCartItem = currentList[index].copy(quantity = updatedQuantity)
+            val updatedList =
+                currentList.toMutableList().apply {
+                    this[index] = updatedCartItem
+                }
+            _pagedData.value = updatedList
+        }
     }
 
     companion object {
-        private const val DEFAULT_ITEM_SIZE = 0
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3
         private const val MIN_PAGE_COUNT = 1
+        const val INCREMENT_VALUE = 1
+        const val DECREMENT_VALUE = 1
+        const val REMOVED_VALUE = 0
     }
 }

@@ -2,12 +2,14 @@ package woowacourse.shopping.view.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.CartRepository
 
-class ShoppingCartViewModelFactory(private val repository: ProductRepository) : ViewModelProvider.Factory {
+class ShoppingCartViewModelFactory(
+    private val cartRepository: CartRepository,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(ShoppingCartViewModel::class.java)) {
-            ShoppingCartViewModel(repository) as T
+            ShoppingCartViewModel(cartRepository) as T
         } else {
             throw IllegalArgumentException(UNKNOWN_VIEWMODEL)
         }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="productListActionHandler"
+            type="woowacourse.shopping.view.products.ProductListActionHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:onClick="@{() -> productListActionHandler.onProductItemClicked(product)}">
+
+        <ImageView
+            android:id="@+id/iv_recent_product_image"
+            imageUrl="@{product.imageUrl}"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:layout_marginBottom="4dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/tv_recent_product_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher_background" />
+
+
+        <TextView
+            android:id="@+id/tv_recent_product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="9dp"
+            android:layout_marginBottom="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_recent_product_image"
+            app:layout_constraintStart_toStartOf="@id/iv_recent_product_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_recent_product_image"
+            tools:text="상품 이름" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

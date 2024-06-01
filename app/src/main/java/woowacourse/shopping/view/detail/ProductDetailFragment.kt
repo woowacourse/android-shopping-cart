@@ -6,17 +6,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
+import androidx.fragment.app.activityViewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.cartItem.CartItemDatabase
+import woowacourse.shopping.data.cartItem.CartItemLocalDataSource
+import woowacourse.shopping.data.cartItem.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemDatabase
+import woowacourse.shopping.data.recentvieweditem.RecentViewedItemRepositoryImpl
+import woowacourse.shopping.data.recentvieweditem.RecentViewedLocalDataSource
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.view.MainViewModel
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
 
+    private val sharedViewModel: MainViewModel by activityViewModels()
     private val productDetailViewModel: ProductDetailViewModel by lazy {
-        val viewModelFactory = DetailViewModelFactory(ProductRepositoryImpl(context = requireContext()), receiveProductId())
+        val viewModelFactory =
+            DetailViewModelFactory(
+                ProductRepositoryImpl(),
+                CartRepositoryImpl(CartItemLocalDataSource(CartItemDatabase.getInstance(requireContext()))),
+                RecentViewedItemRepositoryImpl(RecentViewedLocalDataSource(RecentViewedItemDatabase.getInstance(requireContext()))),
+                receiveProductId(),
+                receiveLastViewedSelected(),
+            )
         viewModelFactory.create(ProductDetailViewModel::class.java)
     }
 
@@ -36,28 +53,56 @@ class ProductDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupDataBinding()
         observeData()
+        updateRecentViewedProduct()
     }
 
     private fun setupDataBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = productDetailViewModel
         binding.detailActionHandler = productDetailViewModel
+        binding.countActionHandler = productDetailViewModel
     }
 
     private fun observeData() {
         productDetailViewModel.cartItemSavedState.observe(viewLifecycleOwner) {
             when (it) {
-                is ProductDetailState.Success -> showAddCartSuccessMessage()
+                is ProductDetailState.Success -> {
+                    showAddCartSuccessMessage()
+                    sharedViewModel.setUpdateProductEvent(it.updatedProductId, it.updatedValue)
+                }
                 is ProductDetailState.Fail -> showAddCartErrorMessage()
             }
         }
 
         productDetailViewModel.navigateToBack.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { parentFragmentManager.popBackStack() }
+            it.getContentIfNotHandled()?.let {
+                if (receiveLastViewedSelected()) {
+                    parentFragmentManager.popBackStack("detailFragment", POP_BACK_STACK_INCLUSIVE)
+                } else {
+                    parentFragmentManager.popBackStack()
+                }
+            }
+        }
+
+        productDetailViewModel.navigateToLastViewedItem.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
+            }
+        }
+    }
+
+    private fun updateRecentViewedProduct() {
+        productDetailViewModel.saveRecentViewedProduct { viewedProduct ->
+            sharedViewModel.setUpdatedRecentViewedProduct(viewedProduct)
         }
     }
 
     private fun receiveProductId(): Long {
         return arguments?.getLong(PRODUCT_ID) ?: throw NoSuchDataException()
+    }
+
+    private fun receiveLastViewedSelected(): Boolean {
+        return arguments?.getBoolean(LAST_VIEWED_SELECTED) ?: throw NoSuchDataException()
     }
 
     override fun onDestroyView() {
@@ -71,11 +116,34 @@ class ProductDetailFragment : Fragment() {
 
     private fun showToastMessage(message: Int) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
+    private fun navigateToDetail(productId: Long) {
+        val productFragment =
+            ProductDetailFragment().apply {
+                arguments = createBundle(productId, true)
+            }
+        changeFragment(productFragment)
+    }
+
+    private fun changeFragment(nextFragment: Fragment) {
+        parentFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment_container, nextFragment)
+            .addToBackStack("detailFragment2")
+            .commit()
+    }
+
     companion object {
-        fun createBundle(id: Long): Bundle {
-            return Bundle().apply { putLong(PRODUCT_ID, id) }
+        fun createBundle(
+            productId: Long,
+            lastViewedProductSelected: Boolean = false,
+        ): Bundle {
+            return Bundle().apply {
+                putLong(PRODUCT_ID, productId)
+                putBoolean(LAST_VIEWED_SELECTED, lastViewedProductSelected)
+            }
         }
 
         private const val PRODUCT_ID = "productId"
+        private const val LAST_VIEWED_SELECTED = "lastViewedProductSelected"
     }
 }

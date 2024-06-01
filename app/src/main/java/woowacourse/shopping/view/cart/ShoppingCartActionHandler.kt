@@ -1,7 +1,9 @@
 package woowacourse.shopping.view.cart
 
+import woowacourse.shopping.domain.model.CartItem
+
 interface ShoppingCartActionHandler {
-    fun onRemoveCartItemButtonClicked(cartItemId: Long)
+    fun onRemoveCartItemButtonClicked(cartItem: CartItem)
 
     fun onPreviousPageButtonClicked()
 
