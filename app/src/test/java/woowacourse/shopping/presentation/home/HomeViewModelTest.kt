@@ -33,14 +33,14 @@ class HomeViewModelTest {
 
     @Test
     fun `첫 페이지의 상품 데이터를 제공한다`() {
-        val actualResult = homeViewModel.products.getOrAwaitValue()
+        val actualResult = homeViewModel.uiState.getOrAwaitValue().products
         assertThat(actualResult).isEqualTo(getFixtureCartableProducts(20))
     }
 
     @Test
     fun `지정한 개수만큼 최근 본 상품들을 불러올 수 있다`() {
         thread {
-            val productHistory = homeViewModel.productHistory.getOrAwaitValue()
+            val productHistory = homeViewModel.uiState.getOrAwaitValue().productHistory
             assertThat(productHistory).isEqualTo(
                 listOf(
                     RecentProduct(ProductHistory(100, 100), Product(100, "사과100", "image100", 100000)),
@@ -61,7 +61,7 @@ class HomeViewModelTest {
     @Test
     fun `장바구니에 담긴 상품의 총 개수를 불러올 수 있다`() {
         thread {
-            val totalQuantity = homeViewModel.totalQuantity.getOrAwaitValue()
+            val totalQuantity = homeViewModel.uiState.getOrAwaitValue().totalQuantity
             assertThat(totalQuantity).isEqualTo(100)
         }.join()
     }
@@ -70,7 +70,7 @@ class HomeViewModelTest {
     fun `다음 페이지의 상품 데이터를 불러올 수 있다`() {
         thread {
             homeViewModel.loadNextPage()
-            val actualResult = homeViewModel.products.getOrAwaitValue()
+            val actualResult = homeViewModel.uiState.getOrAwaitValue().products
             assertThat(actualResult).isEqualTo(getFixtureCartableProducts(40))
         }.join()
     }

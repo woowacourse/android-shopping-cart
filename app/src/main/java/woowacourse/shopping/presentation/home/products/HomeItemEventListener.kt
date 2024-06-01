@@ -5,5 +5,5 @@ interface HomeItemEventListener {
 
     fun loadNextPage()
 
-    fun onNavigatedBack(changedIds: LongArray?)
+    fun onNavigatedBack(changedIds: LongArray)
 }

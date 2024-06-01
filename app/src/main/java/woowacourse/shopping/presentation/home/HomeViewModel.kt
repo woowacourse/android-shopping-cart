@@ -19,77 +19,55 @@ class HomeViewModel(
     private var page: Int = 0
     private var nextPageProducts: List<CartableProduct> = emptyList()
 
-    private val _products: MutableLiveData<List<CartableProduct>> =
-        MutableLiveData<List<CartableProduct>>(emptyList())
-    val products: LiveData<List<CartableProduct>>
-        get() = _products
+    private val _uiState: MutableLiveData<HomeUiState> = MutableLiveData(HomeUiState())
+    val uiState: LiveData<HomeUiState>
+        get() = _uiState
 
-    private val _loadStatus: MutableLiveData<LoadStatus> = MutableLiveData(LoadStatus())
-    val loadStatus: LiveData<LoadStatus>
-        get() = _loadStatus
-
-    private val _navigateToDetailEvent: MutableLiveData<Event<DetailNavigationData>> =
-        MutableLiveData()
-    val navigateToDetailEvent: LiveData<Event<DetailNavigationData>>
-        get() = _navigateToDetailEvent
-
-    private val _navigateToCartEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val navigateToCartEvent: LiveData<Event<Unit>>
-        get() = _navigateToCartEvent
-
-    private val _totalQuantity: MutableLiveData<Int> = MutableLiveData(0)
-    val totalQuantity: LiveData<Int>
-        get() = _totalQuantity
-
-    private val _productHistory: MutableLiveData<List<RecentProduct>> =
-        MutableLiveData(emptyList())
-    val productHistory: LiveData<List<RecentProduct>>
-        get() = _productHistory
+    private val _uiEvent: MutableLiveData<Event<HomeUiEvent>> = MutableLiveData()
+    val uiEvent: LiveData<Event<HomeUiEvent>>
+        get() = _uiEvent
 
     init {
         loadProducts()
         loadHistory()
     }
 
+    fun navigateToCart() {
+        _uiEvent.value = Event(HomeUiEvent.NavigateToCart)
+    }
+
     private fun loadProducts() {
-        _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
         val currentPageData =
             nextPageProducts.ifEmpty {
                 productRepository.fetchSinglePage(page)
             }
         nextPageProducts = productRepository.fetchSinglePage(++page)
-        _products.value = products.value?.plus(currentPageData)
         val isLoadingAvailable = nextPageProducts.isNotEmpty()
-
-        _loadStatus.value =
-            loadStatus.value?.copy(loadingAvailable = isLoadingAvailable, isLoadingPage = false)
+        _uiState.value = uiState.value?.copy(
+            loadStatus = LoadStatus(loadingAvailable = isLoadingAvailable, isLoadingPage = false),
+            products = uiState.value?.products?.plus(currentPageData) ?: return
+        )
         updateTotalCount()
-    }
-
-    fun loadHistory() {
-        _productHistory.value = productRepository.fetchProductHistory(10)
-    }
-
-    fun navigateToCart() {
-        _navigateToCartEvent.value = Event(Unit)
     }
 
     override fun navigateToProductDetail(id: Long) {
         val lastlyViewedId = productRepository.fetchLatestHistory()?.product?.id
         loadHistory()
-        _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
+        _uiEvent.value = Event(HomeUiEvent.NavigateToDetail(id, lastlyViewedId))
     }
 
     override fun loadNextPage() {
         loadProducts()
     }
 
-    override fun onNavigatedBack(changedIds: LongArray?) {
-        if (changedIds == null) return
+    override fun onNavigatedBack(changedIds: LongArray) {
+        if (changedIds.isEmpty()) return
         changedIds.forEach { id ->
             val updatedProduct = productRepository.fetchProduct(id)
             val target = getUpdatedProducts(id, updatedProduct.cartItem)
-            _products.value = target
+            _uiState.value = uiState.value?.copy(
+                products = target ?: return@forEach
+            )
         }
         loadHistory()
         updateTotalCount()
@@ -107,7 +85,9 @@ class HomeViewModel(
         } else {
             getUpdatedProducts(productId, productRepository.fetchProduct(productId).cartItem)
         }
-        _products.value = target
+        _uiState.value = uiState.value?.copy(
+            products = target ?: return
+        )
         updateTotalCount()
     }
 
@@ -115,7 +95,7 @@ class HomeViewModel(
         targetProductId: Long,
         cartItemToUpdate: CartItem?
     ): List<CartableProduct>? {
-        return products.value?.map {
+        return uiState.value?.products?.map {
             if (it.product.id == targetProductId) {
                 it.copy(cartItem = cartItemToUpdate)
             } else {
@@ -124,7 +104,15 @@ class HomeViewModel(
         }
     }
 
+    private fun loadHistory() {
+        _uiState.value = uiState.value?.copy(
+            productHistory = productRepository.fetchProductHistory(10)
+        )
+    }
+
     private fun updateTotalCount() {
-        _totalQuantity.value = cartRepository.fetchTotalCount()
+        _uiState.value = uiState.value?.copy(
+            totalQuantity = cartRepository.fetchTotalCount()
+        )
     }
 }

@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.home
 
-import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -39,16 +39,8 @@ class HomeActivity : AppCompatActivity() {
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val changedIds =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
-                    } else {
-                        result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
-                    }
-                viewModel.onNavigatedBack(changedIds = changedIds)
-            }
-            viewModel.loadHistory()
+            val changedIds = getChangedIdsFromActivityResult(result)
+            viewModel.onNavigatedBack(changedIds = changedIds)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +48,7 @@ class HomeActivity : AppCompatActivity() {
         initializeProductListLayout()
         initializeBindingVariables()
         initializeToolbar()
-        observeEvents()
+        observeLiveData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,8 +57,8 @@ class HomeActivity : AppCompatActivity() {
         layoutCartCountBinding.viewModel = viewModel
         val menuItem = menu?.findItem(R.id.menu_shopping_cart)
         menuItem?.setActionView(layoutCartCountBinding.root)
-        viewModel.totalQuantity.observe(this) {
-            layoutCartCountBinding.tvBadgeQuantity.text = it.toString()
+        viewModel.uiState.observe(this) {
+            layoutCartCountBinding.tvBadgeQuantity.text = it.totalQuantity.toString()
         }
         super.onCreateOptionsMenu(menu)
         return true
@@ -90,25 +82,36 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    private fun observeEvents() {
-        viewModel.navigateToDetailEvent.observe(this) { event ->
-            val data = event.getContentIfNotHandled()
-            activityResultLauncher.launch(
-                DetailActivity.newIntent(
-                    this,
-                    data?.productId ?: return@observe,
-                    data.lastlyViewedProductId,
-                ),
-            )
+    private fun observeLiveData() {
+        viewModel.uiEvent.observe(this) { event ->
+            val uiEvent = event.getContentIfNotHandled() ?: return@observe
+            when (uiEvent) {
+                is HomeUiEvent.NavigateToDetail -> {
+                    activityResultLauncher.launch(
+                        DetailActivity.newIntent(this, uiEvent.productId, uiEvent.lastlyViewedId),
+                    )
+                }
+
+                is HomeUiEvent.NavigateToCart -> {
+                    activityResultLauncher.launch(CartActivity.newIntent(this))
+                }
+            }
         }
-        viewModel.navigateToCartEvent.observe(this) { event ->
-            event.getContentIfNotHandled()
-            activityResultLauncher.launch(CartActivity.newIntent(this))
-        }
-        viewModel.products.observe(this) {
-            productAdapter.submitList(it)
+        viewModel.uiState.observe(this) {
+            productAdapter.submitList(it.products)
         }
     }
+
+    private fun getChangedIdsFromActivityResult(result: ActivityResult): LongArray =
+        if (result.resultCode == RESULT_OK) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
+            } else {
+                result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
+            }
+        } else {
+            longArrayOf()
+        } ?: longArrayOf()
 
     companion object {
         private const val EXTRA_CHANGED_IDS = "changed_ids"

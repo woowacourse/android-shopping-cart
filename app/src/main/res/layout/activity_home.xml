@@ -65,7 +65,7 @@
                     layout="@layout/item_product_history_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    shopping:recentProducts="@{viewModel.productHistory}"
+                    shopping:recentProducts="@{viewModel.uiState.productHistory}"
                     shopping:adapter="@{historyAdapter}"/>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -77,8 +77,8 @@
                     android:padding="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_history"
-                    shopping:data="@{viewModel.products}"
-                    shopping:loadStatus="@{viewModel.loadStatus}"
+                    shopping:data="@{viewModel.uiState.products}"
+                    shopping:loadStatus="@{viewModel.uiState.loadStatus}"
                     tools:listitem="@layout/item_product" />
 
             </LinearLayout>

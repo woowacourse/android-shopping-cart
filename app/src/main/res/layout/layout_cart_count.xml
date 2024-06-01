@@ -30,7 +30,7 @@
             android:background="@drawable/badge_count"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@{String.valueOf(viewModel.totalQuantity)}"
+            android:text="@{String.valueOf(viewModel.uiState.totalQuantity)}"
             android:maxLength="2"
             android:textColor="@color/white"
             android:textSize="12sp"
