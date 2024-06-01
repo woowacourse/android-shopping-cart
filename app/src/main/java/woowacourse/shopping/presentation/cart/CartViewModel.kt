@@ -53,11 +53,11 @@ class CartViewModel(
             cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return)
                 .isNotEmpty()
         setPageInformation()
-        _cartableProducts.postValue(cartItems)
+        _cartableProducts.value = cartItems
     }
 
     override fun onCartItemDelete(cartedProduct: CartedProduct) {
-        cartRepository.removeCartItem(cartedProduct.cartItem)
+        cartRepository.patchQuantity(cartedProduct.product.id, 0, cartedProduct.cartItem)
         alteredCartItems += cartedProduct.product.id
         if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
             _currentPage.value = currentPage.value?.minus(1)
@@ -72,11 +72,7 @@ class CartViewModel(
         if (quantity < 0) return
         val targetItem = productRepository.fetchProduct(productId)
         if (targetItem.cartItem != null) {
-            if (quantity == 0) {
-                cartRepository.removeCartItem(targetItem.cartItem)
-            } else {
-                cartRepository.updateQuantity(targetItem.cartItem.id ?: return, quantity)
-            }
+            cartRepository.patchQuantity(productId, quantity, targetItem.cartItem)
             if (productId !in alteredCartItems) {
                 alteredCartItems += productId
             }

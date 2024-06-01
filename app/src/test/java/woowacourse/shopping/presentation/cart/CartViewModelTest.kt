@@ -102,16 +102,12 @@ class CartViewModelTest {
                 product = Product(id = 1, name = "사과1", imageSource = "image1", price = 1000),
             ),
         )
-        verify { cartRepository.removeCartItem(capture(deletedItem)) }
+        verify { cartRepository.patchQuantity(1, 0, capture(deletedItem)) }
         assertThat(deletedItem.captured).isEqualTo(
             CartItem(id = 1, productId = 1, quantity = 1),
         )
         verify { cartRepository.fetchCartItems(0) }
-        assertThat(viewmodel.alteredCartItems).isEqualTo(
-            arrayListOf(
-                ProductQuantity(1, 0),
-            ),
-        )
+        assertThat(viewmodel.alteredCartItems).contains(1L)
     }
 
     @Test
@@ -120,7 +116,7 @@ class CartViewModelTest {
 
         thread {
             cartViewModel.onQuantityChange(1L, 100)
-            verify { cartRepository.updateQuantity(1, 100) }
+            verify { cartRepository.patchQuantity(1, 100, any()) }
             verify { cartRepository.fetchCartItems(0) }
         }.join()
 
@@ -148,7 +144,7 @@ class CartViewModelTest {
 
         thread {
             cartViewModel.onQuantityChange(1L, 0)
-            verify { cartRepository.removeCartItem(CartItem(1, 1, 1)) }
+            verify { cartRepository.patchQuantity(1, 1, CartItem(1, 1, 1)) }
             verify { cartRepository.fetchCartItems(0) }
         }.join()
     }

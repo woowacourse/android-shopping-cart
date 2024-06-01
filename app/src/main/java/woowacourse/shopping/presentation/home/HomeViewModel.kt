@@ -11,7 +11,6 @@ import woowacourse.shopping.domain.repository.product.ProductRepository
 import woowacourse.shopping.presentation.home.products.HomeItemEventListener
 import woowacourse.shopping.presentation.home.products.QuantityListener
 import woowacourse.shopping.presentation.util.Event
-import kotlin.concurrent.thread
 
 class HomeViewModel(
     private val productRepository: ProductRepository,
@@ -53,11 +52,7 @@ class HomeViewModel(
     }
 
     private fun loadProducts() {
-        _loadStatus.value =
-            loadStatus.value?.copy(
-                isLoadingPage = true,
-                loadingAvailable = false,
-            )
+        _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
         val currentPageData =
             nextPageProducts.ifEmpty {
                 productRepository.fetchSinglePage(page)
@@ -65,11 +60,9 @@ class HomeViewModel(
         nextPageProducts = productRepository.fetchSinglePage(++page)
         _products.value = products.value?.plus(currentPageData)
         val isLoadingAvailable = nextPageProducts.isNotEmpty()
+
         _loadStatus.value =
-            loadStatus.value?.copy(
-                loadingAvailable = isLoadingAvailable,
-                isLoadingPage = false,
-            )
+            loadStatus.value?.copy(loadingAvailable = isLoadingAvailable, isLoadingPage = false)
         updateTotalCount()
     }
 
@@ -85,7 +78,6 @@ class HomeViewModel(
         val lastlyViewedId = productRepository.fetchLatestHistory()?.product?.id
         loadHistory()
         _navigateToDetailEvent.postValue(Event(DetailNavigationData(id, lastlyViewedId)))
-
     }
 
     override fun loadNextPage() {
@@ -93,22 +85,10 @@ class HomeViewModel(
     }
 
     override fun onNavigatedBack(changedIds: LongArray?) {
-        println("changedId : ${changedIds?.forEach { print("$it ") }}")
         if (changedIds == null) return
         changedIds.forEach { id ->
             val updatedProduct = productRepository.fetchProduct(id)
-            println(updatedProduct)
-            val target =
-                products.value?.map { cartedProduct ->
-                    if (cartedProduct.product.id == id) {
-                        val item =
-                            cartedProduct.copy(cartItem = updatedProduct.cartItem)
-                        println("changed : $item")
-                        item
-                    } else {
-                        cartedProduct
-                    }
-                }
+            val target = getUpdatedProducts(id, updatedProduct.cartItem)
             _products.value = target
         }
         loadHistory()
@@ -121,38 +101,27 @@ class HomeViewModel(
     ) {
         if (quantity < 0) return
         val targetProduct = productRepository.fetchProduct(productId)
-        if (quantity == 0) {
-            if (targetProduct.cartItem != null) {
-                cartRepository.removeCartItem(targetProduct.cartItem)
-            }
-            val target =
-                products.value?.map {
-                    if (it.product.id == targetProduct.product.id) {
-                        val item = it.copy(cartItem = null)
-                        item
-                    } else {
-                        it
-                    }
-                }
-            _products.value = target
+        cartRepository.patchQuantity(productId, quantity, targetProduct.cartItem)
+        val target = if (quantity == 0) {
+            getUpdatedProducts(targetProduct.product.id, null)
         } else {
-            if (targetProduct.cartItem?.id != null) {
-                cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
-                targetProduct.cartItem.id
-            } else {
-                cartRepository.addCartItem(CartItem(productId = productId, quantity = quantity))
-            }
-            val target =
-                products.value?.map {
-                    if (it.product.id == productId) {
-                        it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
-                    } else {
-                        it
-                    }
-                }
-            _products.value = target
+            getUpdatedProducts(productId, productRepository.fetchProduct(productId).cartItem)
         }
+        _products.value = target
         updateTotalCount()
+    }
+
+    private fun getUpdatedProducts(
+        targetProductId: Long,
+        cartItemToUpdate: CartItem?
+    ): List<CartableProduct>? {
+        return products.value?.map {
+            if (it.product.id == targetProductId) {
+                it.copy(cartItem = cartItemToUpdate)
+            } else {
+                it
+            }
+        }
     }
 
     private fun updateTotalCount() {

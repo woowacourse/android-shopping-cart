@@ -6,6 +6,7 @@ import woowacourse.shopping.data.model.product.Product
 import woowacourse.shopping.domain.repository.cart.CartRepository
 import woowacourse.shopping.fixture.getFixtureCartItems
 import woowacourse.shopping.fixture.getFixtureCartedProducts
+import kotlin.concurrent.thread
 import kotlin.math.min
 
 class FakeCartRepository : CartRepository {
@@ -22,7 +23,7 @@ class FakeCartRepository : CartRepository {
         return cartedItems.subList(fromIndex, toIndex)
     }
 
-    override fun addCartItem(cartItem: CartItem) {
+    private fun addCartItem(cartItem: CartItem) {
         cartedItems.add(
             CartedProduct(
                 cartItem.copy(id = id++),
@@ -40,7 +41,7 @@ class FakeCartRepository : CartRepository {
         return cartItems.sumOf { it.quantity }
     }
 
-    override fun updateQuantity(
+    private fun updateQuantity(
         cartItemId: Long,
         quantity: Int,
     ) {
@@ -54,11 +55,25 @@ class FakeCartRepository : CartRepository {
         cartedItems.removeAt(index)
     }
 
-    override fun removeCartItem(cartItem: CartItem) {
+    private fun removeCartItem(cartItem: CartItem) {
         cartedItems.removeIf { it.cartItem.productId == cartItem.productId }
     }
 
     override fun removeAll() {
         cartedItems.clear()
+    }
+
+    override fun patchQuantity(productId: Long, quantity: Int, cartItem: CartItem?) {
+        if (quantity == 0) {
+            if (cartItem != null) {
+                removeCartItem(cartItem)
+            }
+        } else {
+            if (cartItem?.id != null) {
+                updateQuantity(cartItem.id!!, quantity)
+            } else {
+                addCartItem(CartItem(productId = productId, quantity = quantity))
+            }
+        }
     }
 }

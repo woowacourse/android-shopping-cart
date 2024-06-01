@@ -84,7 +84,7 @@ class HomeViewModelTest {
                 cartRepository,
             )
         viewModel.onQuantityChange(12, 11)
-        verify { cartRepository.addCartItem(CartItem(null, 12, 11)) }
+        verify { cartRepository.patchQuantity(12, 11, null) }
     }
 
     @Test
@@ -97,6 +97,7 @@ class HomeViewModelTest {
             )
         viewModel.onQuantityChange(12, 1)
         viewModel.onQuantityChange(12, 11)
-        verify { cartRepository.addCartItem(CartItem(null, 12, 11)) }
+        verify { cartRepository.patchQuantity(12, 1, any()) }
+        verify { cartRepository.patchQuantity(12, 11, any()) }
     }
 }

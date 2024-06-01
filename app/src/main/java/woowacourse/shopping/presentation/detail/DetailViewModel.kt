@@ -56,24 +56,11 @@ class DetailViewModel(
 
     fun updateCartStatus(productId: Long) {
         val targetProduct = productRepository.fetchProduct(productId)
-        if (productInformation.value?.quantity == 0 && targetProduct.cartItem?.id != null) {
-            cartRepository.removeCartItem(targetProduct.cartItem)
-        } else {
-            println(targetProduct.cartItem)
-            if (targetProduct.cartItem?.id != null) {
-                cartRepository.updateQuantity(
-                    targetProduct.cartItem.id,
-                    productInformation.value?.quantity ?: return
-                )
-            } else {
-                cartRepository.addCartItem(
-                    CartItem(
-                        productId = productId,
-                        quantity = productInformation.value?.quantity ?: return
-                    )
-                )
-            }
-        }
+        cartRepository.patchQuantity(
+            targetProduct.product.id,
+            productInformation.value?.quantity ?: return,
+            productInformation.value?.cartItem ?: return
+        )
         _message.value = Event(StringResource(R.string.message_add_to_cart_complete))
 
     }
