@@ -33,8 +33,8 @@ class ProductListViewModel(
 
     fun initPage() {
         initPagingProduct()
-        getOrders()
-        getHistories()
+        updateOrders()
+        updateHistories()
         makePagingProductUiModels()
     }
 
@@ -52,22 +52,23 @@ class ProductListViewModel(
                 getPagingProduct(pagingProduct.currentPage + 1)
             }
         }
-        getOrders()
+        updateOrders()
         makePagingProductUiModels()
     }
 
     private fun initPagingProduct(pageSize: Int = PAGING_SIZE) {
-        productListRepository.getPagingProduct(INIT_PAGE_NUM, pageSize).onSuccess { item ->
-            val pagingProduct =
-                PagingProduct(
-                    currentPage = item.currentPage,
-                    productList =
-                        _uiState.value?.pagingProduct?.productList ?: item.productList,
-                    isLastPage = item.isLastPage,
-                )
-            _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
-        }.onFailure { _ ->
-            showMessage(MessageProvider.DefaultErrorMessage)
+        if (_uiState.value?.pagingProduct == null) {
+            productListRepository.getPagingProduct(INIT_PAGE_NUM, pageSize).onSuccess { item ->
+                val pagingProduct =
+                    PagingProduct(
+                        currentPage = item.currentPage,
+                        productList = item.productList,
+                        isLastPage = item.isLastPage,
+                    )
+                _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
+            }.onFailure { _ ->
+                showMessage(MessageProvider.DefaultErrorMessage)
+            }
         }
     }
 
@@ -101,7 +102,7 @@ class ProductListViewModel(
 
     private fun plusOrder(product: Product) {
         orderRepository.plusOrder(product)
-        getOrders()
+        updateOrders()
     }
 
     override fun onClickMinusOrderButton(productId: Int) {
@@ -115,16 +116,16 @@ class ProductListViewModel(
 
     private fun minusOrder(product: Product) {
         orderRepository.minusOrder(product)
-        getOrders()
+        updateOrders()
     }
 
-    private fun getOrders() {
+    private fun updateOrders() {
         val orders = orderRepository.getOrders()
         val orderSum = orders.sumOf { it.quantity }
         _uiState.value = _uiState.value?.copy(orders = orders, orderSum = orderSum)
     }
 
-    private fun getHistories() {
+    private fun updateHistories() {
         val histories = historyRepository.getHistories(HISTORY_SIZE)
         _uiState.postValue(_uiState.value?.copy(histories = histories))
     }

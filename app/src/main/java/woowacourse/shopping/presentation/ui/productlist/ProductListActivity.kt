@@ -36,7 +36,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
     override fun onResume() {
         super.onResume()
-        initPage()
+        initViewModel()
     }
 
     override fun initStartView() {
@@ -45,7 +45,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         initObserve()
     }
 
-    private fun initPage() {
+    private fun initViewModel() {
         viewModel.initPage()
     }
 
