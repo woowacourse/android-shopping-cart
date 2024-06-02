@@ -38,8 +38,6 @@ class ShoppingViewModel(
 
     val shoppingProducts: LiveData<UiState<List<ProductListItem.ShoppingProductItem>>> get() = _shoppingProducts
 
-    private val shoppingProductItems = mutableListOf<ProductListItem.ShoppingProductItem>()
-
     private val _error = MutableLiveData<Event<ShoppingError>>()
 
     val error: LiveData<Event<ShoppingError>> get() = _error
@@ -120,8 +118,11 @@ class ShoppingViewModel(
         carts: List<Cart>,
     ) {
         val newShoppingProducts = fromProductsAndCarts(products, carts)
-        shoppingProductItems.addAll(newShoppingProducts)
-        _shoppingProducts.value = UiState.Success(shoppingProductItems)
+        val originShoppingProducts = when (val currentState = _shoppingProducts.value) {
+            is UiState.Success -> currentState.data
+            else -> emptyList()
+        }
+        _shoppingProducts.value = UiState.Success(originShoppingProducts + newShoppingProducts)
     }
 
     private fun updateCartItemQuantity(
@@ -140,12 +141,15 @@ class ShoppingViewModel(
         productId: Long,
         quantityDelta: Int,
     ) {
-        val productIndex = shoppingProductItems.indexOfFirst { it.id == productId }
-        val originalQuantity = shoppingProductItems[productIndex].quantity
-        val updatedProduct =
-            shoppingProductItems[productIndex].copy(quantity = originalQuantity + quantityDelta)
-        shoppingProductItems[productIndex] = updatedProduct
-        _shoppingProducts.value = UiState.Success(shoppingProductItems)
+        val originShoppingProducts =
+            (_shoppingProducts.value as UiState.Success).data
+        val targetIndex = originShoppingProducts.indexOfFirst { it.id == productId }
+        val originQuantity = originShoppingProducts[targetIndex].quantity
+        val newProduct =
+            originShoppingProducts[targetIndex].copy(quantity = originQuantity + quantityDelta)
+        val newShoppingProducts = originShoppingProducts.toMutableList()
+        newShoppingProducts[targetIndex] = newProduct
+        _shoppingProducts.value = UiState.Success(newShoppingProducts)
     }
 
     fun reloadModifiedItems(modifiedProductIds: LongArray, newQuantities: IntArray) {
@@ -158,12 +162,15 @@ class ShoppingViewModel(
         productId: Long,
         newQuantity: Int,
     ) {
-        val productIndex = shoppingProductItems.indexOfFirst { it.id == productId }
-        if (productIndex != -1) {
-            val updatedProduct =
-                shoppingProductItems[productIndex].copy(quantity = newQuantity)
-            shoppingProductItems[productIndex] = updatedProduct
-            _shoppingProducts.value = UiState.Success(shoppingProductItems)
+        val originShoppingProducts =
+            (_shoppingProducts.value as UiState.Success).data
+        val targetIndex = originShoppingProducts.indexOfFirst { it.id == productId }
+        if (targetIndex != -1) {
+            val newProduct =
+                originShoppingProducts[targetIndex].copy(quantity = newQuantity)
+            val newShoppingProducts = originShoppingProducts.toMutableList()
+            newShoppingProducts[targetIndex] = newProduct
+            _shoppingProducts.value = UiState.Success(newShoppingProducts)
         }
     }
 
