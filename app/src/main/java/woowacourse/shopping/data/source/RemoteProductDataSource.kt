@@ -51,4 +51,46 @@ class RemoteProductDataSource(
             callback(isFinalPage(page))
         }
     }
+
+    override fun findByPagedResult(page: Int): Result<List<ProductData>> {
+        return runCatching {
+            productApiService.loadPaged(page)
+        }
+    }
+
+    override fun findByIdResult(id: Long): Result<ProductData> {
+        return runCatching {
+            productApiService.loadById(id)
+        }
+    }
+
+    override fun isFinalPageResult(page: Int): Result<Boolean> {
+        return runCatching {
+            val count = productApiService.count()
+            page * 20 >= count
+        }
+    }
+
+    override fun findByPagedAsyncResult(page: Int, callback: (Result<List<ProductData>>) -> Unit) {
+        thread {
+            callback(runCatching {
+                productApiService.loadPaged(page)
+            })
+        }
+    }
+
+    override fun findByIdAsyncResult(id: Long, callback: (Result<ProductData>) -> Unit) {
+        thread {
+            callback(runCatching {
+                productApiService.loadById(id)
+            })
+        }
+    }
+
+    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+        callback(runCatching {
+            val count = productApiService.count()
+            page * 20 >= count
+        })
+    }
 }

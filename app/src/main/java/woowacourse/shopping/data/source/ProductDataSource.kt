@@ -25,4 +25,30 @@ interface ProductDataSource {
         page: Int,
         callback: (Boolean) -> Unit,
     )
+
+    // return Result
+
+    fun findByPagedResult(page: Int): Result<List<ProductData>>
+
+    fun findByIdResult(id: Long): Result<ProductData>
+
+    fun isFinalPageResult(page: Int): Result<Boolean>
+
+    // callback wrapped in Result
+
+    fun findByPagedAsyncResult(
+        page: Int,
+        callback: (Result<List<ProductData>>) -> Unit
+    )
+
+    fun findByIdAsyncResult(
+        id: Long,
+        callback: (Result<ProductData>) -> Unit
+    )
+
+    fun isFinalPageAsyncResult(
+        page: Int,
+        callback: (Result<Boolean>) -> Unit
+    )
+
 }
