@@ -12,6 +12,7 @@ import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapt
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.ProductViewHolder
 import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUiModel
 import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
+import woowacourse.shopping.presentation.ui.productlist.uistates.ProductBrowsingHistoryUiState
 
 class ProductListAdapter(
     private val actionHandler: ProductListActionHandler,
@@ -21,6 +22,7 @@ class ProductListAdapter(
             emptyList(),
             true,
         ),
+    private var historyUiState: ProductBrowsingHistoryUiState = ProductBrowsingHistoryUiState.Loading,
     private val historyListAdapter: ProductBrowsingHistoryListAdapter,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -30,9 +32,9 @@ class ProductListAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when {
-            (position == 0) -> HISTORY_VIEW_TYPE
-            (position == itemCount - 1) -> LOAD_VIEW_TYPE
-            else -> PRODUCT_VIEW_TYPE
+            (position == 0) -> ProductListViewType.ProductBrowsingHistory.ordinal
+            (position == itemCount - 1) -> ProductListViewType.LoadMore.ordinal
+            else -> ProductListViewType.Product.ordinal
         }
     }
 
@@ -43,6 +45,13 @@ class ProductListAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (ProductListViewType.entries[viewType]) {
+            ProductListViewType.ProductBrowsingHistory -> {
+                ProductListViewHolder.HistoryViewHolder(
+                    HolderHistoryListBinding.inflate(inflater, parent, false),
+                    historyUiState,
+                )
+            }
+
             ProductListViewType.Product -> {
                 ProductViewHolder(
                     HolderProductBinding.inflate(inflater, parent, false),
@@ -54,12 +63,6 @@ class ProductListAdapter(
                 LoadMoreViewHolder(
                     HolderLoadMoreBinding.inflate(inflater, parent, false),
                     actionHandler,
-                )
-            }
-
-            ProductListViewType.ProductBrowsingHistory -> {
-                ProductListViewHolder.HistoryViewHolder(
-                    HolderHistoryListBinding.inflate(inflater, parent, false),
                 )
             }
         }
@@ -103,6 +106,14 @@ class ProductListAdapter(
         }
     }
 
+    fun updateHistoryListState(newHistoryUiState: ProductBrowsingHistoryUiState) {
+        historyUiState = newHistoryUiState
+        if (newHistoryUiState is ProductBrowsingHistoryUiState.Success) {
+            historyListAdapter.submitList(newHistoryUiState.histories)
+        }
+        notifyItemChanged(0)
+    }
+
     sealed class ProductListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         class ProductViewHolder(
             private val binding: HolderProductBinding,
@@ -126,16 +137,12 @@ class ProductListAdapter(
 
         class HistoryViewHolder(
             private val binding: HolderHistoryListBinding,
+            private val productBrowsingHistoryUiState: ProductBrowsingHistoryUiState,
         ) : ProductListViewHolder(binding.root) {
             fun bind(historyListAdapter: ProductBrowsingHistoryListAdapter) {
                 binding.rvHistoryList.adapter = historyListAdapter
+                binding.state = productBrowsingHistoryUiState
             }
         }
-    }
-
-    companion object {
-        const val PRODUCT_VIEW_TYPE = 0
-        const val LOAD_VIEW_TYPE = 1
-        const val HISTORY_VIEW_TYPE = 2
     }
 }

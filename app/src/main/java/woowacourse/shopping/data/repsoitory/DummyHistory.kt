@@ -12,9 +12,9 @@ object DummyHistory : ProductBrowsingHistoryRepository {
         histories.add(productBrowsingHistory)
     }
 
-    override fun getHistories(size: Int): List<ProductBrowsingHistory> {
+    override fun getHistories(size: Int): Result<List<ProductBrowsingHistory>> {
         val from = 0
         val to = if (size > histories.size) histories.size else size
-        return histories.subList(from, to)
+        return runCatching { histories.subList(from, to).toList() }
     }
 }

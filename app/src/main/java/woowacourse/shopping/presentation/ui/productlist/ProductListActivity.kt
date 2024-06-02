@@ -11,8 +11,8 @@ import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductBrowsingHistoryListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
-import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapterManager
+import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListViewType
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
 
 class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
@@ -59,7 +59,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     private fun initAdapter() {
         binding.rvProductList.adapter = productListAdapter
         binding.rvProductList.layoutManager =
-            ProductListAdapterManager(this, productListAdapter, 2, PRODUCT_VIEW_TYPE)
+            ProductListAdapterManager(this, productListAdapter, 2, ProductListViewType.Product.ordinal)
     }
 
     private fun initObserve() {
@@ -76,10 +76,8 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
             }
         }
 
-        viewModel.uiState.observe(this) { state ->
-            state.histories?.let { histories ->
-                historyListAdapter.submitList(histories)
-            }
+        viewModel.historyUiState.observe(this) { state ->
+            productListAdapter.updateHistoryListState(state)
         }
         viewModel.pagingProductUiModel.observe(this) { state ->
             state?.let { pagingProductUiModel ->

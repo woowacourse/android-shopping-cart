@@ -15,8 +15,10 @@ class DefaultProductBrowsingHistoryRepository(
             localProductBrowsingHistory.putHistory(productBrowsingHistory)
         }
 
-    override fun getHistories(size: Int): List<ProductBrowsingHistory> =
-        runOnOtherThreadAndReturn {
-            localProductBrowsingHistory.getHistories(size)
+    override fun getHistories(size: Int): Result<List<ProductBrowsingHistory>> =
+        runCatching {
+            runOnOtherThreadAndReturn {
+                localProductBrowsingHistory.getHistories(size)
+            }
         }
 }

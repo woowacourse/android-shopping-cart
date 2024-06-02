@@ -85,7 +85,8 @@ class ProductDetailViewModel(
     }
 
     private fun getMostRecentHistory() {
-        val history = historyRepository.getHistories(1).firstOrNull()
-        _mostRecentHistory.value = history
+        historyRepository.getHistories(1).onSuccess {
+            _mostRecentHistory.value = it.firstOrNull()
+        }
     }
 }

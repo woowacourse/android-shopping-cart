@@ -13,6 +13,8 @@ import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUiModel
 import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
+import woowacourse.shopping.presentation.ui.productlist.uistates.ProductBrowsingHistoryUiState
+import woowacourse.shopping.presentation.ui.productlist.uistates.ProductListUiState
 
 class ProductListViewModel(
     private val productListRepository: ProductListRepository,
@@ -22,6 +24,10 @@ class ProductListViewModel(
     private val _uiState: MutableLiveData<ProductListUiState> =
         MutableLiveData(ProductListUiState())
     val uiState: LiveData<ProductListUiState> get() = _uiState
+
+    private val _historyUiState: MutableLiveData<ProductBrowsingHistoryUiState> =
+        MutableLiveData(ProductBrowsingHistoryUiState.Loading)
+    val historyUiState: LiveData<ProductBrowsingHistoryUiState> get() = _historyUiState
 
     private val _pagingProductUiModel: MutableLiveData<PagingProductUiModel> =
         MutableLiveData()
@@ -126,8 +132,12 @@ class ProductListViewModel(
     }
 
     private fun updateHistories() {
-        val histories = historyRepository.getHistories(HISTORY_SIZE)
-        _uiState.postValue(_uiState.value?.copy(histories = histories))
+        _historyUiState.value = ProductBrowsingHistoryUiState.Loading
+        historyRepository.getHistories(HISTORY_SIZE).onSuccess { histories ->
+            _historyUiState.postValue(ProductBrowsingHistoryUiState.Success(histories))
+        }.onFailure {
+            _historyUiState.postValue(ProductBrowsingHistoryUiState.Failure)
+        }
     }
 
     private fun makePagingProductUiModels() {

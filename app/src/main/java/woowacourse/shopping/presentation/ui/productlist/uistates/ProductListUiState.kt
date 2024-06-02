@@ -1,12 +1,10 @@
-package woowacourse.shopping.presentation.ui.productlist
+package woowacourse.shopping.presentation.ui.productlist.uistates
 
 import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.domain.model.PagingProduct
-import woowacourse.shopping.domain.model.ProductBrowsingHistory
 
 data class ProductListUiState(
     val pagingProduct: PagingProduct? = null,
     val orders: List<Order>? = null,
     val orderSum: Int? = null,
-    val histories: List<ProductBrowsingHistory>? = null,
 )
