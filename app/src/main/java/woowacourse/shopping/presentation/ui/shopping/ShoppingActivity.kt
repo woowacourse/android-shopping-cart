@@ -19,6 +19,7 @@ import woowacourse.shopping.presentation.ui.shopping.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewType
 import woowacourse.shopping.presentation.util.EventObserver
 
+
 class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_shopping
@@ -32,14 +33,20 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
     private val productDetailActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             if (activityResult.resultCode == RESULT_OK) {
-                activityResult.data?.let { handleProductDetailActivityResult(it) }
+                activityResult.data?.let {
+                    viewModel.fetchCartProducts()
+                    handleProductDetailActivityResult(it)
+                }
             }
         }
 
     private val cartActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             if (activityResult.resultCode == RESULT_OK) {
-                activityResult.data?.let { handleCartActivityResult(it) }
+                activityResult.data?.let {
+                    viewModel.fetchCartProducts()
+                    handleCartActivityResult(it)
+                }
             }
         }
 
@@ -144,12 +151,6 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
         )
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.fetchInitialRecentProducts()
-        viewModel.fetchCartProducts()
-    }
-
     companion object {
         const val GRIDLAYOUT_COL = 2
         private const val EXTRA_PRODUCT_ID = "productId"
@@ -162,11 +163,13 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>() {
         ) {
             if (context is Activity) {
                 Intent(context, ShoppingActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                    addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                     putExtra(EXTRA_PRODUCT_ID, productId)
                     putExtra(EXTRA_NEW_PRODUCT_QUANTITY, quantity)
                     context.setResult(Activity.RESULT_OK, this)
-                    context.startActivity(this)
+//                    context.startActivity(this)
                 }
             } else {
                 throw IllegalAccessError("해당 메서드는 액티비티에서 호출해야 합니다")

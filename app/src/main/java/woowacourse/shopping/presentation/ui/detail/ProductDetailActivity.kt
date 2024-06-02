@@ -2,7 +2,9 @@ package woowacourse.shopping.presentation.ui.detail
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import woowacourse.shopping.R
@@ -32,7 +34,9 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
 
     private fun checkIsLastViewedProduct() {
         val isLastViewedProduct = intent.getBooleanExtra(EXTRA_IS_LAST_VIEWED_PRODUCT, false)
-        if (!isLastViewedProduct) viewModel.loadLastProduct()
+        if (!isLastViewedProduct) {
+            viewModel.loadLastProduct()
+        }
     }
 
     private fun initActionBarTitle() {
@@ -88,7 +92,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             productId: Long,
         ) {
             Intent(context, ProductDetailActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                flags = FLAG_ACTIVITY_CLEAR_TOP
                 putExtra(EXTRA_PRODUCT_ID, productId)
                 putExtra(EXTRA_IS_LAST_VIEWED_PRODUCT, true)
                 context.startActivity(this)
