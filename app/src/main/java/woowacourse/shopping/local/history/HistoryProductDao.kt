@@ -11,6 +11,10 @@ interface HistoryProductDao {
     @Insert
     fun insert(historyProduct: HistoryProduct): Long
 
+    // TODO: 하나만 써야지
+    @Insert
+    fun insert2(historyProduct: HistoryProduct)
+
     @Query("SELECT * from history_products WHERE id = :id")
     fun findById(id: Long): HistoryProduct?
 

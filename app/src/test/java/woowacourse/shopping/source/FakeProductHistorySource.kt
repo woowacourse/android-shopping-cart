@@ -51,13 +51,69 @@ class FakeProductHistorySource(
 
     override fun loadLatestProductAsync(callback: (Long) -> Unit) {
         thread {
-            callback(loadLatestProduct())
+            callback(history.last())
         }
     }
 
     override fun loadAllProductHistoryAsync(callback: (List<Long>) -> Unit) {
         thread {
-            callback(loadAllProductHistory())
+            callback(history)
+        }
+    }
+
+    override fun saveProductHistoryResult(productId: Long): Result<Unit> {
+        return runCatching {
+            saveProductHistory(productId)
+        }
+    }
+
+    override fun loadProductHistoryResult(productId: Long): Result<Long> {
+        return runCatching {
+            history.find { it == productId } ?: throw NoSuchElementException()
+        }
+    }
+
+    override fun loadLatestProductResult(): Result<Long> {
+        return runCatching {
+            history.last()
+        }
+    }
+
+    override fun loadAllProductHistoryResult(): Result<List<Long>> {
+        return runCatching {
+            history
+        }
+    }
+
+    override fun saveProductHistoryAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+        thread {
+            callback(runCatching {
+                saveProductHistory(productId)
+            })
+        }
+    }
+
+    override fun loadProductHistoryAsyncResult(productId: Long, callback: (Result<Long>) -> Unit) {
+        thread {
+            callback(runCatching {
+                history.find { it == productId } ?: throw NoSuchElementException()
+            })
+        }
+    }
+
+    override fun loadLatestProductAsyncResult(callback: (Result<Long>) -> Unit) {
+        thread {
+            callback(runCatching {
+                history.last()
+            })
+        }
+    }
+
+    override fun loadAllProductHistoryAsyncResult(callback: (Result<List<Long>>) -> Unit) {
+        thread {
+            callback(runCatching {
+                history
+            })
         }
     }
 

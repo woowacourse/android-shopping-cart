@@ -65,6 +65,74 @@ class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : Produc
         }
     }
 
+    override fun saveProductHistoryResult(productId: Long): Result<Unit> {
+        return runCatching {
+            val id = dao.findById(productId)
+
+            if (id != null) {
+                dao.delete(id)
+            }
+
+            dao.insert(HistoryProduct(productId))
+        }
+    }
+
+    override fun loadProductHistoryResult(productId: Long): Result<Long> {
+        return runCatching {
+            dao.findById(productId)?.id ?: throw NoSuchElementException()
+        }
+    }
+
+    override fun loadLatestProductResult(): Result<Long> {
+        return runCatching {
+            dao.findLatest()?.id ?: throw NoSuchElementException()
+        }
+    }
+
+    override fun loadAllProductHistoryResult(): Result<List<Long>> {
+        return runCatching {
+            dao.findAll().map { it.id }
+        }
+    }
+
+    override fun saveProductHistoryAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+        thread {
+            callback(runCatching {
+                val id = dao.findById(productId)
+
+                if (id != null) {
+                    dao.delete(id)
+                }
+
+                dao.insert2(HistoryProduct(productId))
+            })
+        }
+    }
+
+    override fun loadProductHistoryAsyncResult(productId: Long, callback: (Result<Long>) -> Unit) {
+        thread {
+            callback(runCatching {
+                dao.findById(productId)?.id ?: throw NoSuchElementException()
+            })
+        }
+    }
+
+    override fun loadLatestProductAsyncResult(callback: (Result<Long>) -> Unit) {
+        thread {
+            callback(runCatching {
+                dao.findLatest()?.id ?: throw NoSuchElementException()
+            })
+        }
+    }
+
+    override fun loadAllProductHistoryAsyncResult(callback: (Result<List<Long>>) -> Unit) {
+        thread {
+            callback(runCatching {
+                dao.findAll().map { it.id }
+            })
+        }
+    }
+
     companion object {
         private const val EMPTY = -1L
     }
