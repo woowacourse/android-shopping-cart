@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.productlist.ProductListActivity
-import woowacourse.shopping.shoppingcart.uimodel.LoadCartItemState
+import woowacourse.shopping.shoppingcart.uimodel.CartItemState
+import woowacourse.shopping.shoppingcart.uimodel.CountChangeEvent
+import woowacourse.shopping.shoppingcart.uimodel.CountChangeFailEvent
 import woowacourse.shopping.shoppingcart.uimodel.ShoppingCartClickAction
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.showToastMessage
@@ -48,17 +50,30 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         viewModel.updatePageCount()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
+
+        viewModel.cartItemState.observe(this) { state ->
+            when (state) {
+                is CartItemState.Init -> adapter.replaceItems(state.currentCartItems)
+                is CartItemState.Loading -> showToastMessage(R.string.loading_message)
+                is CartItemState.Error -> showToastMessage(R.string.network_error)
+                is CartItemState.Change -> {}
+            }
+        }
     }
 
     private fun updateView() {
-        viewModel.loadState.observe(this) { state ->
-            when (state) {
-                is LoadCartItemState.AddNextPageOfItem -> adapter.addItem(state.result)
-                is LoadCartItemState.InitView -> adapter.replaceItems(state.currentCartItems)
-                is LoadCartItemState.DeleteCartItem -> adapter.deleteItemByProductId(state.result)
-                is LoadCartItemState.ChangeItemCount -> adapter.changeProductInfo(state.result)
-                is LoadCartItemState.MinusFail -> showToastMessage(R.string.min_cart_item_message)
-                is LoadCartItemState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
+        viewModel.cartItemChange.observe(this) { event ->
+            when (event) {
+                is CountChangeEvent.AddNextPageOfItem -> adapter.addItem(event.result)
+                is CountChangeEvent.ChangeItemCount -> adapter.changeProductInfo(event.result)
+                is CountChangeEvent.DeleteCartItem -> adapter.deleteItemByProductId(event.result)
+            }
+        }
+
+        viewModel.cartItemChangeFail.observe(this) { event ->
+            when (event) {
+                CountChangeFailEvent.MinusChangeFail -> showToastMessage(R.string.min_cart_item_message)
+                CountChangeFailEvent.PlusChangeFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
     }

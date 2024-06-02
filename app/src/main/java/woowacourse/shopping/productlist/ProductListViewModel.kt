@@ -55,7 +55,7 @@ class ProductListViewModel(
         runCatching {
             val products =
                 productRepository.products(
-                    currentProducts().size,
+                    NO_PRODUCT_OF_CART_ITEM,
                     PRODUCTS_OFFSET_SIZE,
                 )
             val cartItems = shoppingRepository.shoppingCart().items

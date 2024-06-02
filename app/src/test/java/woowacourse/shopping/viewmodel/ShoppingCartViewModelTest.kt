@@ -10,7 +10,6 @@ import woowacourse.shopping.repository.DummyProductRepository
 import woowacourse.shopping.repository.DummyShoppingRepository
 import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
 import woowacourse.shopping.shoppingcart.toShoppingCartUiModel
-import woowacourse.shopping.shoppingcart.uimodel.LoadCartItemState
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
 import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
 
@@ -44,7 +43,7 @@ class ShoppingCartViewModelTest {
         viewModel.loadCartItems()
 
         // given
-        val actual = viewModel.loadState.getOrAwaitValue() as LoadCartItemState.InitView
+        val actual = viewModel.cartItemState.getOrAwaitValue() as LoadCartItemState.InitView
 
         // then
         assertThat(actual.currentCartItems.items).containsExactly(
@@ -58,7 +57,7 @@ class ShoppingCartViewModelTest {
     fun `데이터를 삭제하면, 카트 아이템의 개수가 1개 줄어든다`() {
         // when
         viewModel.loadCartItems()
-        val previous = viewModel.loadState.getOrAwaitValue() as LoadCartItemState.InitView
+        val previous = viewModel.cartItemState.getOrAwaitValue() as LoadCartItemState.InitView
         assertThat(previous.currentCartItems.items.size).isEqualTo(1)
 
         // given
@@ -66,7 +65,7 @@ class ShoppingCartViewModelTest {
 
         // then
         viewModel.loadCartItems()
-        val actual = viewModel.loadState.getOrAwaitValue() as LoadCartItemState.InitView
+        val actual = viewModel.cartItemState.getOrAwaitValue() as LoadCartItemState.InitView
         assertThat(actual.currentCartItems.items).hasSize(0)
     }
 
