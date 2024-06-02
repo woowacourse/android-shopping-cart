@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.productdetail.uimodel.CountState
+import woowacourse.shopping.productdetail.uimodel.CountEvent
 import woowacourse.shopping.productdetail.uimodel.ProductDetailClickAction
 import woowacourse.shopping.productdetail.uimodel.RecentProductState
 import woowacourse.shopping.productlist.ProductListActivity
@@ -72,16 +72,19 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
     }
 
     private fun showProductDetail() {
-        viewModel.loadProductDetail(productId)
+        viewModel.initProductDetail(productId)
         viewModel.product.observe(this) {
             showProductDetailView(it)
         }
-        viewModel.countState.observe(this) { countState ->
-            when (countState) {
-                is CountState.ChangeItemCount -> binding.countResult = countState.countResult
-                is CountState.MinusFail -> showToastMessage(R.string.min_cart_item_message)
-                is CountState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
-                is CountState.ShowCount -> binding.countResult = countState.countResult
+
+        viewModel.count.observe(this) {
+            binding.countResult = it
+        }
+
+        viewModel.countEvent.observe(this) { event ->
+            when (event) {
+                CountEvent.MinusFail -> showToastMessage(R.string.min_cart_item_message)
+                CountEvent.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
     }

@@ -1,19 +1,12 @@
 package woowacourse.shopping.productdetail.uimodel
 
-import woowacourse.shopping.util.UiState
-
-sealed interface RecentProductState : UiState {
+sealed interface RecentProductState {
     data class Show(
         val name: String,
         val id: Long,
-    ) : RecentProductState,
-        UiState.Complete
+    ) : RecentProductState
 
-    data object Same :
-        RecentProductState,
-        UiState.Complete
+    data object Same : RecentProductState
 
-    data object NoRecentProduct :
-        RecentProductState,
-        UiState.Complete
+    data object NoRecentProduct : RecentProductState
 }

@@ -9,8 +9,8 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.productdetail.uimodel.CountEvent
 import woowacourse.shopping.productdetail.uimodel.CountResultUiModel
-import woowacourse.shopping.productdetail.uimodel.CountState
 import woowacourse.shopping.productdetail.uimodel.RecentProductState
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingRepository
@@ -22,8 +22,11 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val _countState: MutableLiveData<CountState> = MutableLiveData()
-    val countState: LiveData<CountState> get() = _countState
+    private val _countEvent: MutableSingleLiveData<CountEvent> = MutableSingleLiveData()
+    val countEvent: SingleLiveData<CountEvent> get() = _countEvent
+
+    private val _count: MutableLiveData<CountResultUiModel> = MutableLiveData()
+    val count: LiveData<CountResultUiModel> get() = _count
 
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
@@ -34,23 +37,18 @@ class ProductDetailViewModel(
     private val _recentProductState: MutableLiveData<RecentProductState> = MutableLiveData()
     val recentProductState: LiveData<RecentProductState> get() = _recentProductState
 
-    private fun currentCountResult(): CountResultUiModel = _countState.value?.countResult ?: error("초기화 이후에 메서드를 실행해주세요")
+    private fun currentCountResult(): CountResultUiModel = _count.value ?: error("초기화 이후에 메서드를 실행해주세요")
 
     private fun currentProduct(): Product = _product.value ?: error("초기화 이후에 메서드를 실행해주세요")
 
-    fun loadProductDetail(productId: Long) {
-        runCatching {
+    fun initProductDetail(productId: Long) {
+        _count.value ?: runCatching {
             productRepository.productById(productId)
         }.onSuccess {
             _product.value = it
-            val count = _countState.value?.countResult?.count ?: MINIMUM_COUNT
-            val price = _countState.value?.countResult?.price ?: it.price
-            _countState.value =
-                CountState.ShowCount(
-                    CountResultUiModel(
-                        count, price,
-                    ),
-                )
+            val count = MINIMUM_COUNT
+            val price = it.price
+            _count.value = CountResultUiModel(count, price)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -60,15 +58,9 @@ class ProductDetailViewModel(
         val shoppingCartItem = ShoppingCartItem(currentProduct(), currentCountResult().count)
         when (val result = shoppingCartItem.decreaseQuantity()) {
             is QuantityUpdate.Success -> {
-                _countState.value =
-                    CountState.ShowCount(
-                        result.value.toCountResult(),
-                    )
+                _count.value = result.value.toCountResult()
             }
-
-            QuantityUpdate.Failure ->
-                _countState.value =
-                    CountState.MinusFail(currentCountResult())
+            QuantityUpdate.Failure -> _countEvent.setValue(CountEvent.MinusFail)
         }
     }
 
@@ -76,12 +68,9 @@ class ProductDetailViewModel(
         val shoppingCartItem = ShoppingCartItem(currentProduct(), currentCountResult().count)
         when (val result = shoppingCartItem.increaseQuantity()) {
             is QuantityUpdate.Success -> {
-                _countState.value = CountState.ChangeItemCount(result.value.toCountResult())
+                _count.value = result.value.toCountResult()
             }
-
-            QuantityUpdate.Failure ->
-                _countState.value =
-                    CountState.PlusFail(currentCountResult())
+            QuantityUpdate.Failure -> _countEvent.setValue(CountEvent.PlusFail)
         }
     }
 

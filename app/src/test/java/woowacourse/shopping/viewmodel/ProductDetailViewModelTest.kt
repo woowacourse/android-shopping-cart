@@ -21,7 +21,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `장바구니 담기에 성공하면, isAddSuccess에 true가 반환된다`() {
         // when
-        viewModel.loadProductDetail(0)
+        viewModel.initProductDetail(0)
         viewModel.addProductToCart()
 
         // given
