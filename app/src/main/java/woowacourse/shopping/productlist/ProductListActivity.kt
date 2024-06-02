@@ -87,7 +87,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     }
 
     override fun onProductClicked(id: Long) {
-        activityResultLauncher.launch(ProductDetailActivity.newInstance(this, id))
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, id))
     }
 
     override fun onIntoCartClicked(id: Long) {

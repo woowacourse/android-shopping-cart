@@ -118,7 +118,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
     override fun onLastProductClicked() {
         val state = viewModel.recentProductState.value
         if (state is RecentProductState.Show) {
-            startActivity(newInstance(this, state.id))
+            startActivity(newIntent(this, state.id))
             finish()
         }
     }
@@ -152,7 +152,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
         private const val EXTRA_PRODUCT_ID = "productId"
         private const val INVALID_PRODUCT_ID = -1L
 
-        fun newInstance(
+        fun newIntent(
             context: Context,
             productId: Long,
         ) = Intent(context, ProductDetailActivity::class.java).apply {
