@@ -39,7 +39,7 @@
             android:text="@{vm.product.name}"
             app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
             tools:text="동원 스위트 콘"
-            tools:layout_editor_absoluteX="16dp" />
+            />
 
         <View
             android:id="@+id/product_detail_divide_line"
@@ -48,7 +48,7 @@
             android:layout_marginTop="8dp"
             android:background="@color/gray6"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
-            tools:layout_editor_absoluteX="-196dp" />
+            />
 
         <TextView
             android:id="@+id/tv_product_price"
