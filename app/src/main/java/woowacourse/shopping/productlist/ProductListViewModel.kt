@@ -9,7 +9,6 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.productlist.uimodel.ProductChangeEvent
-import woowacourse.shopping.productlist.uimodel.ProductChangeFailEvent
 import woowacourse.shopping.productlist.uimodel.ProductUiModel
 import woowacourse.shopping.productlist.uimodel.ProductUiState
 import woowacourse.shopping.productlist.uimodel.RecentProductUiModel
@@ -25,10 +24,6 @@ class ProductListViewModel(
     private val _productChangeEvent: MutableSingleLiveData<ProductChangeEvent> =
         MutableSingleLiveData()
     val productChangeEvent: SingleLiveData<ProductChangeEvent> get() = _productChangeEvent
-
-    private val _productChangeFailEvent: MutableSingleLiveData<ProductChangeFailEvent> =
-        MutableSingleLiveData()
-    val productChangeFailEvent: SingleLiveData<ProductChangeFailEvent> get() = _productChangeFailEvent
 
     private val _productUiState: MutableLiveData<ProductUiState> = MutableLiveData()
     val productUiState: LiveData<ProductUiState> get() = _productUiState
@@ -140,7 +135,7 @@ class ProductListViewModel(
             when (result) {
                 is QuantityUpdate.Success -> changeItemCount(result.value.toProductUiModel())
                 QuantityUpdate.Failure ->
-                    _productChangeFailEvent.setValue(ProductChangeFailEvent.PlusFail)
+                    _productChangeEvent.setValue(ProductChangeEvent.PlusFail)
             }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")

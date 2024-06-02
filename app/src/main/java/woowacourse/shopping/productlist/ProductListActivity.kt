@@ -10,7 +10,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.productlist.uimodel.ProductChangeEvent
-import woowacourse.shopping.productlist.uimodel.ProductChangeFailEvent
 import woowacourse.shopping.productlist.uimodel.ProductListClickAction
 import woowacourse.shopping.productlist.uimodel.ProductUiState
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
@@ -82,11 +81,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
             when (event) {
                 is ProductChangeEvent.AddProducts -> productAdapter.addItems(event.result)
                 is ProductChangeEvent.ChangeItemCount -> productAdapter.changeProductsInfo(event.result)
-            }
-        }
-        viewModel.productChangeFailEvent.observe(this) { state ->
-            when (state) {
-                ProductChangeFailEvent.PlusFail -> showToastMessage(R.string.max_cart_item_message)
+                ProductChangeEvent.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
     }

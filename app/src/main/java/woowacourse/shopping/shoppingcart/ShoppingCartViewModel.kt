@@ -10,7 +10,6 @@ import woowacourse.shopping.repository.ShoppingRepository
 import woowacourse.shopping.shoppingcart.uimodel.CartItemState
 import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel
 import woowacourse.shopping.shoppingcart.uimodel.CountChangeEvent
-import woowacourse.shopping.shoppingcart.uimodel.CountChangeFailEvent
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import kotlin.math.ceil
@@ -25,9 +24,6 @@ class ShoppingCartViewModel(
 
     private val _cartItemChange: MutableSingleLiveData<CountChangeEvent> = MutableSingleLiveData()
     val cartItemChange: SingleLiveData<CountChangeEvent> get() = _cartItemChange
-
-    private val _cartItemChangeFail: MutableSingleLiveData<CountChangeFailEvent> = MutableSingleLiveData()
-    val cartItemChangeFail: SingleLiveData<CountChangeFailEvent> get() = _cartItemChangeFail
 
     private val _cartItemState: MutableLiveData<CartItemState> =
         MutableLiveData()
@@ -121,7 +117,7 @@ class ShoppingCartViewModel(
                     _changedProductIds.add(productId)
                 }
 
-                QuantityUpdate.Failure -> _cartItemChangeFail.setValue(CountChangeFailEvent.PlusChangeFail)
+                QuantityUpdate.Failure -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
             }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -140,7 +136,7 @@ class ShoppingCartViewModel(
                     _changedProductIds.add(productId)
                 }
 
-                QuantityUpdate.Failure -> _cartItemChangeFail.setValue(CountChangeFailEvent.PlusChangeFail)
+                QuantityUpdate.Failure -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
             }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")

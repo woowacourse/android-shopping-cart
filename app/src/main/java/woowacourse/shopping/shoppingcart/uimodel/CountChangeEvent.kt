@@ -12,4 +12,8 @@ sealed interface CountChangeEvent {
     data class ChangeItemCount(
         val result: CartItemUiModel,
     ) : CountChangeEvent
+
+    data object MinusChangeFail : CountChangeEvent
+
+    data object PlusChangeFail : CountChangeEvent
 }

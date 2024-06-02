@@ -12,7 +12,6 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.productlist.ProductListActivity
 import woowacourse.shopping.shoppingcart.uimodel.CartItemState
 import woowacourse.shopping.shoppingcart.uimodel.CountChangeEvent
-import woowacourse.shopping.shoppingcart.uimodel.CountChangeFailEvent
 import woowacourse.shopping.shoppingcart.uimodel.ShoppingCartClickAction
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.showToastMessage
@@ -67,13 +66,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
                 is CountChangeEvent.AddNextPageOfItem -> adapter.addItem(event.result)
                 is CountChangeEvent.ChangeItemCount -> adapter.changeProductInfo(event.result)
                 is CountChangeEvent.DeleteCartItem -> adapter.deleteItemByProductId(event.result)
-            }
-        }
-
-        viewModel.cartItemChangeFail.observe(this) { event ->
-            when (event) {
-                CountChangeFailEvent.MinusChangeFail -> showToastMessage(R.string.min_cart_item_message)
-                CountChangeFailEvent.PlusChangeFail -> showToastMessage(R.string.max_cart_item_message)
+                is CountChangeEvent.MinusChangeFail -> showToastMessage(R.string.min_cart_item_message)
+                is CountChangeEvent.PlusChangeFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
     }
