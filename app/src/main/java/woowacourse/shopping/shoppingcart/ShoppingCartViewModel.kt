@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.repository.ShoppingRepository
-import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModels
+import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel
 import woowacourse.shopping.shoppingcart.uimodel.LoadCartItemState
 import kotlin.math.ceil
 
@@ -38,7 +38,7 @@ class ShoppingCartViewModel(
     val changedProductIds: Set<Long>
         get() = _changedProductIds.toSet()
 
-    private fun currentCartItems(): CartItemUiModels = _loadState?.value?.currentCartItems ?: error("초기화 이후에 메서드를 실행해주세요")
+    private fun currentCartItems(): List<CartItemUiModel> = _loadState?.value?.currentCartItems ?: error("초기화 이후에 메서드를 실행해주세요")
 
     private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(DEFAULT_CURRENT_PAGE)?.not() ?: false
 
@@ -61,8 +61,7 @@ class ShoppingCartViewModel(
         }.onSuccess { shoppingCartItems ->
             _loadState.value =
                 LoadCartItemState.InitView(
-                    shoppingCartItems.map { it.toShoppingCartUiModel() }
-                        .let(::CartItemUiModels),
+                    shoppingCartItems.map { it.toShoppingCartUiModel() },
                 )
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -157,6 +156,12 @@ class ShoppingCartViewModel(
         _currentPage.value = _currentPage.value?.dec()
         loadCartItems()
     }
+
+    private fun List<CartItemUiModel>.updateCartItem(cartItemUiModel: CartItemUiModel): List<CartItemUiModel> =
+        currentCartItems().map { if (it.id == cartItemUiModel.id) cartItemUiModel else it }
+
+    private fun List<CartItemUiModel>.deleteCartItem(productId: Long): List<CartItemUiModel> =
+        currentCartItems().filterNot { it.id == productId }
 
     companion object {
         private const val PAGE_SIZE = 5
