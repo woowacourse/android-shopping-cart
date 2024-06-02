@@ -16,6 +16,7 @@ import woowacourse.shopping.productdetail.uimodel.CountEvent
 import woowacourse.shopping.productdetail.uimodel.ProductDetailClickAction
 import woowacourse.shopping.productdetail.uimodel.RecentProductState
 import woowacourse.shopping.productlist.ProductListActivity
+import woowacourse.shopping.productlist.ProductListActivity.ResultActivity.Companion.ACTIVITY_TYPE
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.imageUrlToSrc
 import woowacourse.shopping.util.showToastMessage
@@ -60,11 +61,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
             if (isSuccess) {
                 viewModel.updateRecentProduct(productId)
                 val intent =
-                    ProductListActivity.recentAndChangeProductIntent(
-                        this@ProductDetailActivity,
-                        longArrayOf(productId),
-                        true,
-                    )
+                    Intent(this, ProductListActivity::class.java).apply {
+                        putExtra(CHANGED_PRODUCT_ID, longArrayOf(productId))
+                        putExtra(IS_RECENT_CHANGED, true)
+                        putExtra(ACTIVITY_TYPE, ProductListActivity.ResultActivity.DETAIL.ordinal)
+                    }
+
                 setResult(RESULT_OK, intent)
                 finish()
             }
@@ -143,12 +145,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
 
     private fun updateRecentInfoChangeAndFinish() {
         viewModel.updateRecentProduct(productId)
-        val intent = ProductListActivity.recentInstance(this@ProductDetailActivity, true)
+        val intent =
+            Intent(this, ProductListActivity::class.java).apply {
+                putExtra(IS_RECENT_CHANGED, true)
+                putExtra(ACTIVITY_TYPE, ProductListActivity.ResultActivity.DETAIL.ordinal)
+            }
+
         setResult(RESULT_OK, intent)
         finish()
     }
 
     companion object {
+        const val IS_RECENT_CHANGED = "isRecentChange"
+        const val CHANGED_PRODUCT_ID = "productId"
+
         private const val EXTRA_PRODUCT_ID = "productId"
         private const val INVALID_PRODUCT_ID = -1L
 

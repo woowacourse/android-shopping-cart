@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.productlist.ProductListActivity
+import woowacourse.shopping.productlist.ProductListActivity.ResultActivity.Companion.ACTIVITY_TYPE
 import woowacourse.shopping.shoppingcart.uimodel.CartItemState
 import woowacourse.shopping.shoppingcart.uimodel.CountChangeEvent
 import woowacourse.shopping.shoppingcart.uimodel.ShoppingCartClickAction
@@ -103,10 +104,11 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
     private fun setResultAndFinish() {
         val intent =
-            ProductListActivity.changedProductIntent(
-                this@ShoppingCartActivity,
-                viewModel.changedProductIds.toLongArray(),
-            )
+            Intent(this, ProductListActivity::class.java).apply {
+                putExtra(CHANGED_PRODUCT_ID, viewModel.changedProductIds.toLongArray())
+                putExtra(ACTIVITY_TYPE, ProductListActivity.ResultActivity.CART.ordinal)
+            }
+
         if (viewModel.changedProductIds.isEmpty()) {
             setResult(RESULT_CANCELED, intent)
             finish()
@@ -117,6 +119,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     }
 
     companion object {
+        const val CHANGED_PRODUCT_ID = "productId"
+
         fun newInstance(context: Context) = Intent(context, ShoppingCartActivity::class.java)
     }
 }

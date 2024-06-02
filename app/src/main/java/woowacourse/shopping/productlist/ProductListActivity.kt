@@ -1,6 +1,5 @@
 package woowacourse.shopping.productlist
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.productlist.ProductListActivity.ResultActivity.Companion.ACTIVITY_TYPE
+import woowacourse.shopping.productlist.ProductListActivity.ResultActivity.Companion.INVALID_ACTIVITY_ID
 import woowacourse.shopping.productlist.uimodel.ProductChangeEvent
 import woowacourse.shopping.productlist.uimodel.ProductListClickAction
 import woowacourse.shopping.productlist.uimodel.ProductUiState
@@ -46,15 +47,31 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private fun activityResultLauncher() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                val changedProductId: LongArray =
-                    result.data?.getLongArrayExtra(CHANGED_PRODUCT_ID) ?: longArrayOf()
-                viewModel.reloadProductOfInfo(changedProductId.toList())
-
-                val isRecentChanged =
-                    result.data?.getBooleanExtra(IS_RECENT_CHANGED, false) ?: false
-                if (isRecentChanged) viewModel.loadRecentProduct()
+                result.data?.let {
+                    val activityType =
+                        ResultActivity.values()[it.getIntExtra(ACTIVITY_TYPE, INVALID_ACTIVITY_ID)]
+                    when (activityType) {
+                        ResultActivity.DETAIL -> handleDetailActivityResult(it)
+                        ResultActivity.CART -> handleShoppingCartResult(it)
+                    }
+                }
             }
         }
+
+    private fun handleDetailActivityResult(intent: Intent) {
+        val changedProductId: LongArray =
+            intent.getLongArrayExtra(ProductDetailActivity.CHANGED_PRODUCT_ID) ?: longArrayOf()
+        viewModel.reloadProductOfInfo(changedProductId.toList())
+
+        val isRecentChanged = intent.getBooleanExtra(ProductDetailActivity.IS_RECENT_CHANGED, false)
+        if (isRecentChanged) viewModel.loadRecentProduct()
+    }
+
+    private fun handleShoppingCartResult(intent: Intent) {
+        val changedProductId: LongArray =
+            intent.getLongArrayExtra(ShoppingCartActivity.CHANGED_PRODUCT_ID) ?: longArrayOf()
+        viewModel.reloadProductOfInfo(changedProductId.toList())
+    }
 
     private fun attachAdapter() {
         productAdapter = ProductListAdapter(this)
@@ -115,31 +132,13 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         }
     }
 
-    companion object {
-        private const val CHANGED_PRODUCT_ID = "productId"
-        private const val IS_RECENT_CHANGED = "isRecentChange"
+    enum class ResultActivity {
+        DETAIL,
+        CART, ;
 
-        fun changedProductIntent(
-            context: Context,
-            changedProductIds: LongArray,
-        ) = Intent(context, ProductListActivity::class.java).apply {
-            putExtra(CHANGED_PRODUCT_ID, changedProductIds)
-        }
-
-        fun recentInstance(
-            context: Context,
-            isRecentChanged: Boolean,
-        ) = Intent(context, ProductListActivity::class.java).apply {
-            putExtra(IS_RECENT_CHANGED, isRecentChanged)
-        }
-
-        fun recentAndChangeProductIntent(
-            context: Context,
-            changedProductIds: LongArray,
-            isRecentChanged: Boolean,
-        ) = Intent(context, ProductListActivity::class.java).apply {
-            putExtra(CHANGED_PRODUCT_ID, changedProductIds)
-            putExtra(IS_RECENT_CHANGED, isRecentChanged)
+        companion object {
+            const val ACTIVITY_TYPE = "activityType"
+            const val INVALID_ACTIVITY_ID = -1
         }
     }
 }
