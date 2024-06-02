@@ -42,22 +42,22 @@ class ProductListAdapter(
     ): ProductListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
-        return when (viewType) {
-            PRODUCT_VIEW_TYPE -> {
+        return when (ProductListViewType.entries[viewType]) {
+            ProductListViewType.Product -> {
                 ProductViewHolder(
                     HolderProductBinding.inflate(inflater, parent, false),
                     actionHandler,
                 )
             }
 
-            LOAD_VIEW_TYPE -> {
+            ProductListViewType.LoadMore -> {
                 LoadMoreViewHolder(
                     HolderLoadMoreBinding.inflate(inflater, parent, false),
                     actionHandler,
                 )
             }
 
-            else -> {
+            ProductListViewType.ProductBrowsingHistory -> {
                 ProductListViewHolder.HistoryViewHolder(
                     HolderHistoryListBinding.inflate(inflater, parent, false),
                 )
@@ -65,7 +65,7 @@ class ProductListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = pagingProductUiModel.productUiModels.size + 2
+    override fun getItemCount(): Int = pagingProductUiModel.productUiModels.size + ProductListViewType.entries.size - 1
 
     override fun onBindViewHolder(
         holder: ProductListViewHolder,
