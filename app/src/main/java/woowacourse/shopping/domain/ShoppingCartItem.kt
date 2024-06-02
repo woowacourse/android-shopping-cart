@@ -10,7 +10,7 @@ data class ShoppingCartItem(
 
     fun decreaseQuantity(): QuantityUpdate {
         if (totalQuantity <= MIN_QUANTITY) {
-            return QuantityUpdate.Failure
+            return QuantityUpdate.CantChange
         }
         return QuantityUpdate.Success(value = copy(totalQuantity = totalQuantity - COUNT_INTERVAL))
     }

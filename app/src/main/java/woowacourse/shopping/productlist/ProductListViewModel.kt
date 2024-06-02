@@ -120,7 +120,7 @@ class ProductListViewModel(
         }.onSuccess { result ->
             when (result) {
                 is QuantityUpdate.Success -> changeItemCount(result.value.toProductUiModel())
-                QuantityUpdate.Failure ->
+                QuantityUpdate.CantChange ->
                     deleteShoppingCart(productId)
             }
         }.onFailure {
@@ -134,7 +134,7 @@ class ProductListViewModel(
         }.onSuccess { result ->
             when (result) {
                 is QuantityUpdate.Success -> changeItemCount(result.value.toProductUiModel())
-                QuantityUpdate.Failure ->
+                QuantityUpdate.CantChange ->
                     _productChangeEvent.setValue(ProductChangeEvent.PlusFail)
             }
         }.onFailure {

@@ -60,7 +60,7 @@ class ProductDetailViewModel(
             is QuantityUpdate.Success -> {
                 _count.value = result.value.toCountResult()
             }
-            QuantityUpdate.Failure -> _countEvent.setValue(CountEvent.MinusFail)
+            QuantityUpdate.CantChange -> _countEvent.setValue(CountEvent.MinusFail)
         }
     }
 
@@ -70,7 +70,7 @@ class ProductDetailViewModel(
             is QuantityUpdate.Success -> {
                 _count.value = result.value.toCountResult()
             }
-            QuantityUpdate.Failure -> _countEvent.setValue(CountEvent.PlusFail)
+            QuantityUpdate.CantChange -> _countEvent.setValue(CountEvent.PlusFail)
         }
     }
 

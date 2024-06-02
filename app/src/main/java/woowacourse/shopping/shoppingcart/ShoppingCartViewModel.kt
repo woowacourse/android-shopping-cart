@@ -117,7 +117,7 @@ class ShoppingCartViewModel(
                     _changedProductIds.add(productId)
                 }
 
-                QuantityUpdate.Failure -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
+                QuantityUpdate.CantChange -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
             }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -136,7 +136,7 @@ class ShoppingCartViewModel(
                     _changedProductIds.add(productId)
                 }
 
-                QuantityUpdate.Failure -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
+                QuantityUpdate.CantChange -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
             }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
