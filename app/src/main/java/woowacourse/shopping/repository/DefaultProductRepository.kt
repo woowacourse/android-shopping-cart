@@ -40,7 +40,7 @@ class DefaultProductRepository(
     }
 
     override fun lastRecentProduct(): GetLastProduct {
-        val recent = recentProductDataSource.lastRecentProduct() ?: return GetLastProduct.Fail
+        val recent = recentProductDataSource.lastRecentProduct() ?: return GetLastProduct.NoRecentProduct
         return GetLastProduct.Success(
             recent.toRecentProduct(
                 productDataSource.productById(recent.productId).toProduct(),

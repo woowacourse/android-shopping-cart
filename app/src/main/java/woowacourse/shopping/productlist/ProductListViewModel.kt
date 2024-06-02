@@ -160,9 +160,7 @@ class ProductListViewModel(
                     cartItems.map { it.product.id }.contains(productId)
                 }.map { productRepository.productById(it) }
 
-            products.map { product ->
-                product.toProductUiModel(productOfCartQuantity(cartItems, product))
-            }
+            cartItems.map { it.toProductUiModel() } + products.map { it.toProductUiModel(0) }
         }.onSuccess { updatedProducts ->
             _productChangeEvent.setValue(
                 ProductChangeEvent.ChangeItemCount(

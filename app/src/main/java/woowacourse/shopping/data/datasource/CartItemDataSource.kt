@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.data.datasource.impl.CartItem
 import woowacourse.shopping.data.entity.ShoppingCartItemEntity
 
 interface CartItemDataSource {
@@ -29,7 +28,7 @@ interface CartItemDataSource {
 
     fun itemCount(): Int
 
-    fun cartItemById(productId: Long): CartItem
+    fun cartItemById(productId: Long): ShoppingCartItemEntity?
 
     fun updateTotalQuantity(
         productId: Long,

@@ -21,7 +21,7 @@ class RecentProducts(items: Collection<RecentProduct>) {
         if (_items.isNotEmpty()) {
             GetLastProduct.Success(_items.last())
         } else {
-            GetLastProduct.Fail
+            GetLastProduct.NoRecentProduct
         }
 
     companion object {
@@ -32,5 +32,5 @@ class RecentProducts(items: Collection<RecentProduct>) {
 sealed interface GetLastProduct {
     data class Success(val value: RecentProduct) : GetLastProduct
 
-    data object Fail : GetLastProduct
+    data object NoRecentProduct : GetLastProduct
 }

@@ -69,13 +69,10 @@ class RoomCartItemDataSource(private val cartItemDao: ShoppingCartItemDao) : Car
         return count
     }
 
-    override fun cartItemById(productId: Long): CartItem {
-        var result: CartItem = CartItem.Fail
+    override fun cartItemById(productId: Long): ShoppingCartItemEntity? {
+        var result: ShoppingCartItemEntity? = null
         thread {
-            val cartItem = cartItemDao.cartItemById(productId)
-            if (cartItem != null) {
-                result = CartItem.Success(cartItem)
-            }
+            result = cartItemDao.cartItemById(productId)
         }.join()
         return result
     }
@@ -88,10 +85,4 @@ class RoomCartItemDataSource(private val cartItemDao: ShoppingCartItemDao) : Car
             cartItemDao.updateTotalQuantity(productId, newQuantity)
         }.join()
     }
-}
-
-sealed interface CartItem {
-    data class Success(val value: ShoppingCartItemEntity) : CartItem
-
-    data object Fail : CartItem
 }

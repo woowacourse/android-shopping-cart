@@ -2,7 +2,6 @@ package woowacourse.shopping.repository
 
 import woowacourse.shopping.data.datasource.CartItemDataSource
 import woowacourse.shopping.data.datasource.ProductDataSource
-import woowacourse.shopping.data.datasource.impl.CartItem
 import woowacourse.shopping.data.entity.ShoppingCartItemEntity
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCart
@@ -37,26 +36,21 @@ class DefaultShoppingRepository(
 
     override fun cartItemByProductId(productId: Long): ShoppingCartItem {
         val product = productDataSource.productById(productId).toProduct()
-        val itemState = cartItemDataSource.cartItemById(productId)
-        return if (itemState is CartItem.Success) {
-            itemState.value.toShoppingCartItem(product)
-        } else {
-            error("$productId 에 해당하는 장바구니 아이템이 없습니다.")
-        }
+        val cartItem = cartItemDataSource.cartItemById(productId)
+
+        return cartItem?.toShoppingCartItem(product) ?: error("$productId 에 해당하는 장바구니 아이템이 없습니다.")
     }
 
     override fun cartItemsByProductIds(productIds: List<Long>): List<ShoppingCartItem> {
         val cartItems = mutableListOf<ShoppingCartItem>()
 
         productIds.forEach { productId ->
-            val state = cartItemDataSource.cartItemById(productId)
-            if (state is CartItem.Success) {
-                cartItems.add(
-                    state.value.toShoppingCartItem(
-                        productDataSource.productById(productId).toProduct(),
-                    ),
-                )
-            }
+            val cartItem = cartItemDataSource.cartItemById(productId) ?: error("$productId 에 해당하는 장바구니 아이템이 없습니다.")
+            cartItems.add(
+                cartItem.toShoppingCartItem(
+                    productDataSource.productById(productId).toProduct(),
+                ),
+            )
         }
         return cartItems
     }
@@ -100,18 +94,18 @@ class DefaultShoppingRepository(
     }
 
     override fun addCartItem(shoppingCartItem: ShoppingCartItem) {
-        val itemState = cartItemDataSource.cartItemById(shoppingCartItem.product.id)
-        if (itemState is CartItem.Success) {
-            cartItemDataSource.increaseCount(
-                shoppingCartItem.product.id,
-                shoppingCartItem.totalQuantity,
-            )
-        } else {
+        val cartItem = cartItemDataSource.cartItemById(shoppingCartItem.product.id)
+        if (cartItem == null) {
             cartItemDataSource.insert(
                 ShoppingCartItemEntity(
                     shoppingCartItem.product.id,
                     shoppingCartItem.totalQuantity,
                 ),
+            )
+        } else {
+            cartItemDataSource.increaseCount(
+                shoppingCartItem.product.id,
+                shoppingCartItem.totalQuantity,
             )
         }
     }
