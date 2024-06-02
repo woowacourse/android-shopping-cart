@@ -182,6 +182,105 @@ class DefaultShoppingProductRepository(
         }
     }
 
+    override fun loadAllProductsAsyncResult(page: Int, callback: (Result<List<Product>>) -> Unit) {
+        productsSource.findByPagedAsyncResult(page) { result ->
+            val products = result.map { productsData ->
+                productsData.map { productData ->
+                    productData.toDomain(productQuantity(productData.id))
+                }
+            }
+
+            callback(products)
+        }
+    }
+
+    override fun loadProductsInCartAsyncResult(page: Int, callback: (Result<List<Product>>) -> Unit) {
+        cartSource.loadPagedAsync(page = page) {
+            it.map { productIdsCountData ->
+                productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+            }
+        }.let { callback }
+    }
+
+    override fun loadProductAsyncResult(id: Long, callback: (Result<Product>) -> Unit) {
+        productsSource.findByIdAsyncResult(id) { result ->
+            val product = result.map { productData ->
+                productData.toDomain(productQuantity(id))
+            }
+
+            callback(product)
+        }
+    }
+
+    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+        productsSource.isFinalPageAsyncResult(page, callback)
+    }
+
+    override fun isCartFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+        cartSource.isFinalPageAsyncResult(page, callback)
+    }
+
+    override fun shoppingCartProductQuantityAsyncResult(callback: (Result<Int>) -> Unit) {
+        cartSource.loadAllAsyncResult { result ->
+            val quantity = result.map { productIdsCountData ->
+                productIdsCountData.sumOf { it.quantity }
+            }
+
+            callback(quantity)
+        }
+    }
+
+    override fun increaseShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
+        cartSource.plusProductsIdCountAsyncResult(id) { result ->
+            callback(result)
+        }
+//        cartSource.plusProductsIdCountAsyncResult(id) { result ->
+//            callback(result)
+//
+//        }
+//
+//        cartSource.findByProductIdAsyncResult(id) {result ->
+//            if (result.isFailure) {
+//                addShoppingCartProductAsyncResult(id) { result ->
+//                    callback(result)
+//                }
+//                return@findByProductIdAsyncResult
+//            }
+//
+//            cartSource.plusProductsIdCountAsyncResult(id) { result ->
+//                callback(result)
+//            }
+//        }
+    }
+
+    override fun decreaseShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
+        cartSource.findByProductIdAsyncResult(id) { result ->
+            result
+                .onFailure {
+                    runCatching { callback(Result.failure(it)) }
+                }
+                .onSuccess {
+                    if (it!!.quantity == 1) {
+                        removeShoppingCartProductAsyncResult(id) { result ->
+                            callback(result)
+                        }
+                        return@onSuccess
+                    }
+                    cartSource.minusProductsIdCountAsyncResult(id) { result -> callback(result) }
+                }
+        }
+    }
+
+    override fun addShoppingCartProductAsyncResult(id: Long, callback: (Result<Long>) -> Unit) {
+        cartSource.addedNewProductsIdAsyncResult(ProductIdsCountData(id, FIRST_QUANTITY)) {
+            callback(it)
+        }
+    }
+
+    override fun removeShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
     companion object {
         private const val FIRST_QUANTITY = 1
         private const val TAG = "DefaultShoppingProductR"

@@ -4,12 +4,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.source.FakeProductDataSource
 import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productDomainTestFixture
 import woowacourse.shopping.testfixture.productDomainsTestFixture
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
+import java.util.concurrent.CountDownLatch
 
 class DefaultShoppingProductRepositoryTest {
     private lateinit var productDataSource: ProductDataSource
@@ -85,11 +87,17 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        var actualLoadedProducts: List<Product> = emptyList()
+        val latch = CountDownLatch(1)
+
         // when
         repository.loadAllProductsAsync(page = 1) { loadedProducts ->
-            // then
-            assertThat(loadedProducts).isEqualTo(productDomainsTestFixture(dataCount = 20))
+            actualLoadedProducts = loadedProducts
+            latch.countDown()
         }
+
+        latch.await()
+        assertThat(actualLoadedProducts).isEqualTo(productDomainsTestFixture(dataCount = 20))
     }
 
     @Test
@@ -137,15 +145,21 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        val latch = CountDownLatch(1)
+        var actual: List<Product> = emptyList()
+
         // when
-        repository.loadProductsInCartAsync(page = 1) { actual ->
+        repository.loadProductsInCartAsync(page = 1) { products ->
             // then
-            assertThat(actual).isEqualTo(
-                productDomainsTestFixture(dataCount = 5) { id ->
-                    productDomainTestFixture(id.toLong(), quantity = 2)
-                },
-            )
+            actual = products
+            latch.countDown()
         }
+        latch.await()
+        assertThat(actual).isEqualTo(
+            productDomainsTestFixture(dataCount = 5) { id ->
+                productDomainTestFixture(id.toLong(), quantity = 2)
+            },
+        )
     }
 
     @Test
@@ -188,16 +202,21 @@ class DefaultShoppingProductRepositoryTest {
                 productsSource = productDataSource,
                 cartSource = shoppingCartProductIdDataSource,
             )
+        val latch = CountDownLatch(1)
+        var actual: Product = Product.NULL
 
         // when
         repository.loadProductAsync(id = 1) { product ->
+            actual = product
+            latch.countDown()
             // then
-            assertThat(product).isEqualTo(productDomainTestFixture(1, quantity = 2))
         }
+        latch.await()
+        assertThat(actual).isEqualTo(productDomainTestFixture(1, quantity = 2))
     }
 
     @Test
-    fun `상품 목록에서 100 개의 아이템에서 5페이지는 페이지이다`() {
+    fun `상품 목록에서 100 개의 아이템에서 5페이지는 마지막 페이지이다`() {
         // given
         productDataSource =
             FakeProductDataSource(
@@ -221,7 +240,7 @@ class DefaultShoppingProductRepositoryTest {
     }
 
     @Test
-    fun `상품 목록에서 100 개의 아이템에서 5페이지는 페이지이다 Async`() {
+    fun `상품 목록에서 100 개의 아이템에서 5페이지는 마지막 페이지이다 Async`() {
         // given
         productDataSource =
             FakeProductDataSource(
@@ -237,11 +256,17 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        val latch = CountDownLatch(1)
+        var actual = false
+
         // when
         repository.isFinalPageAsync(page = 5) { isFinalPage ->
             // then
-            assertThat(isFinalPage).isTrue
+            actual = isFinalPage
+            latch.countDown()
         }
+        latch.await()
+        assertThat(actual).isTrue
     }
 
     @Test
@@ -285,11 +310,17 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        val latch = CountDownLatch(1)
+        var actual = false
+
         // when
         repository.isCartFinalPageAsync(page = 2) { isFinalPage ->
+            actual = isFinalPage
             // then
-            assertThat(isFinalPage).isTrue
+            latch.countDown()
         }
+        latch.await()
+        assertThat(actual).isTrue
     }
 
     @Test
@@ -333,11 +364,16 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        val latch = CountDownLatch(1)
+        var actual: Int = -1
+
         // when
-        repository.shoppingCartProductQuantityAsync { actual ->
-            // then
-            assertThat(actual).isEqualTo(20)
+        repository.shoppingCartProductQuantityAsync { quantity ->
+            actual = quantity
+            latch.countDown()
         }
+        latch.await()
+        assertThat(actual).isEqualTo(20)
     }
 
     @Test
@@ -381,11 +417,16 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        val latch = CountDownLatch(1)
+        var totalQuantity: Int = -1
+
         // when
         repository.addShoppingCartProductAsync(id = 11) {
-            // then
-            assertThat(repository.loadProduct(id = 11).quantity).isEqualTo(1)
+            totalQuantity = repository.loadProduct(id = 11).quantity
+            latch.countDown()
         }
+        latch.await()
+        assertThat(totalQuantity).isEqualTo(1)
     }
 
     @Test
@@ -429,11 +470,17 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        val latch = CountDownLatch(1)
+        var totalQuantity: Int = -1
+
         // when
         repository.increaseShoppingCartProductAsync(id = 11) {
             // then
-            assertThat(repository.loadProduct(id = 11).quantity).isEqualTo(1)
+            totalQuantity = repository.loadProduct(id = 11).quantity
+            latch.countDown()
         }
+        latch.await()
+        assertThat(totalQuantity).isEqualTo(1)
     }
 
     @Test
@@ -477,10 +524,159 @@ class DefaultShoppingProductRepositoryTest {
                 cartSource = shoppingCartProductIdDataSource,
             )
 
+        val latch = CountDownLatch(1)
+        var totalQuantity: Int = -1
+
         // when
         repository.increaseShoppingCartProductAsync(id = 1) {
+            totalQuantity = repository.loadProduct(id = 1).quantity
+            latch.countDown()
             // then
-            assertThat(repository.loadProduct(id = 1).quantity).isEqualTo(3)
         }
+        latch.await()
+        assertThat(totalQuantity).isEqualTo(3)
     }
+
+    @Test
+    fun `첫번째 페이지에 있는 상품을 모두 불러온다 async result `() {
+        // given
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource()
+        repository = DefaultShoppingProductRepository(productDataSource, shoppingCartProductIdDataSource)
+
+        val latch = CountDownLatch(1)
+        var actual: List<Product> = emptyList()
+
+        // when
+        repository.loadAllProductsAsyncResult(page = 1) { result ->
+            actual = result.getOrThrow()
+            latch.countDown()
+        }
+        latch.await()
+        assertThat(actual).isEqualTo(productDomainsTestFixture(dataCount = 20))
+    }
+
+    @Test
+    fun `상품 id 로 상품을 찾는다 async result`() {
+        // given
+        productDataSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource()
+        repository = DefaultShoppingProductRepository(productDataSource, shoppingCartProductIdDataSource)
+
+        val latch = CountDownLatch(1)
+        var actual: Product = Product.NULL
+
+        // when
+        repository.loadProductAsyncResult(id = 1) { result ->
+            actual = result.getOrThrow()
+            latch.countDown()
+        }
+        latch.await()
+        assertThat(actual).isEqualTo(productDomainTestFixture(1, quantity = 0))
+    }
+
+    @Test
+    fun `상품 목록에서 100 개의 아이템에서 5 페이지는 마지막 페이지이다 async result`() {
+        // given
+        productDataSource = FakeProductDataSource(
+            allProducts = productsTestFixture(count = 100).toMutableList()
+        )
+        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource()
+        repository = DefaultShoppingProductRepository(productDataSource, shoppingCartProductIdDataSource)
+
+        // when
+        val latch = CountDownLatch(1)
+        var actual = false
+
+        repository.isFinalPageAsyncResult(page = 5) { result ->
+            actual = result.getOrThrow()
+            latch.countDown()
+        }
+        latch.await()
+        assertThat(actual).isTrue
+    }
+
+    @Test
+    fun `장바구니가 마지막 페이지이다 async result`() {
+        // given
+        productDataSource = FakeProductDataSource(
+            allProducts = productsTestFixture(count = 100).toMutableList()
+        )
+        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
+            data = productsIdCountDataTestFixture(dataCount = 10, quantity = 2).toMutableList()
+        )
+        repository = DefaultShoppingProductRepository(productDataSource, shoppingCartProductIdDataSource)
+
+        val latch = CountDownLatch(1)
+        var actual = false
+
+        // when
+        repository.isCartFinalPageAsyncResult(page = 2) { result ->
+            actual = result.getOrThrow()
+            latch.countDown()
+        }
+
+        latch.await()
+        assertThat(actual).isTrue
+    }
+
+    @Test
+    fun `장바구니에 10개의 상품이 2개씩 있다면 상품의 개수는 20 개이다 async result`() {
+        // given
+        productDataSource = FakeProductDataSource(
+            allProducts = productsTestFixture(count = 100).toMutableList()
+        )
+        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource(
+            data = productsIdCountDataTestFixture(dataCount = 10, quantity = 2).toMutableList()
+        )
+        repository = DefaultShoppingProductRepository(
+            productsSource = productDataSource,
+            cartSource = shoppingCartProductIdDataSource
+        )
+
+        val latch = CountDownLatch(1)
+        var actual: Int = -1
+
+        // when
+        repository.shoppingCartProductQuantityAsyncResult { result ->
+            actual = result.getOrThrow()
+            latch.countDown()
+        }
+        latch.await()
+        assertThat(actual).isEqualTo(20)
+    }
+
+    @Test
+    fun `장바구니에 상품을 새로 추가한다 async result`() {
+        // given
+        productDataSource = FakeProductDataSource(
+            allProducts = productsTestFixture(count = 100).toMutableList()
+        )
+        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSource()
+        repository = DefaultShoppingProductRepository(
+            productsSource = productDataSource,
+            cartSource = shoppingCartProductIdDataSource
+        )
+
+        var addedProductId: Long = -1
+        val latch = CountDownLatch(1)
+
+        // when
+        repository.addShoppingCartProductAsyncResult(id = 11) { result ->
+            // then
+            addedProductId = result.getOrThrow()
+            latch.countDown()
+        }
+
+        latch.await()
+        assertThat(addedProductId).isEqualTo(11)
+    }
+
+
 }
