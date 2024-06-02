@@ -129,6 +129,81 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
         }
     }
 
+    override fun findByProductIdAsyncResult(productId: Long, callback: (Result<ProductIdsCountData?>) -> Unit) {
+        thread {
+            runCatching {
+                dao.findById(productId)
+                callback
+            }
+        }
+    }
+
+    override fun loadPagedAsyncResult(page: Int, callback: (Result<List<ProductIdsCountData>>) -> Unit) {
+        thread {
+            runCatching {
+                val offset = (page - 1) * 5
+                dao.findPaged(offset)
+            }.let(callback)
+        }
+    }
+
+    override fun loadAllAsyncResult(callback: (Result<List<ProductIdsCountData>>) -> Unit) {
+        thread {
+            callback(runCatching { dao.findAll() })
+        }
+    }
+
+    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+        thread {
+            callback(runCatching { page * 5 >= dao.countAll() })
+        }
+    }
+
+    override fun addedNewProductsIdAsyncResult(
+        productIdsCountData: ProductIdsCountData,
+        callback: (Result<Long>) -> Unit
+    ) {
+        thread {
+            runCatching {
+                dao.insert(productIdsCountData)
+            }.let(callback)
+        }
+    }
+
+    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Long>) -> Unit) {
+        thread {
+            callback(runCatching {
+                val product = dao.findById(productId) ?: throw NoSuchElementException()
+                dao.delete(productId)
+                product.productId
+            })
+        }
+    }
+
+    override fun plusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+        thread {
+            callback(runCatching {
+                dao.increaseQuantity(productId)
+            })
+        }
+    }
+
+    override fun minusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+        thread {
+            callback(runCatching {
+                val oldProduct = dao.findById(productId) ?: throw NoSuchElementException()
+                val newProduct = oldProduct.copy(quantity = oldProduct.quantity - 1)
+                dao.update(newProduct)
+            })
+        }
+    }
+
+    override fun clearAllAsyncResult(callback: (Result<Unit>) -> Unit) {
+        thread {
+            callback(runCatching { dao.clearAll() })
+        }
+    }
+
     companion object {
         private const val TAG = "LocalShoppingCartProductIdDataSource"
     }

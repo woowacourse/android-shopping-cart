@@ -35,10 +35,8 @@ class FakeShoppingCartProductIdDataSource(
 
     override fun plusProductsIdCount(productId: Long) {
         val oldItem = data.find { it.productId == productId } ?: throw NoSuchElementException()
-        println("oldItem: $oldItem")
         data.remove(oldItem)
         val newItem = oldItem.copy(quantity = oldItem.quantity + 1)
-        println("newItem: $newItem")
         data.add(newItem)
     }
 
@@ -127,6 +125,82 @@ class FakeShoppingCartProductIdDataSource(
     override fun clearAllAsync() {
         thread {
             clearAll()
+        }
+    }
+
+    override fun findByProductIdAsyncResult(productId: Long, callback: (Result<ProductIdsCountData?>) -> Unit) {
+        thread {
+            runCatching {
+                findByProductId(productId)
+            }.let(callback)
+        }
+    }
+
+    override fun loadPagedAsyncResult(page: Int, callback: (Result<List<ProductIdsCountData>>) -> Unit) {
+        thread {
+            runCatching {
+                loadPaged(page)
+            }.let(callback)
+        }
+    }
+
+    override fun loadAllAsyncResult(callback: (Result<List<ProductIdsCountData>>) -> Unit) {
+        thread {
+            runCatching {
+                loadAll()
+            }.let(callback)
+        }
+    }
+
+    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+        thread {
+            runCatching {
+                isFinalPage(page)
+            }.let(callback)
+        }
+    }
+
+    override fun addedNewProductsIdAsyncResult(
+        productIdsCountData: ProductIdsCountData,
+        callback: (Result<Long>) -> Unit
+    ) {
+        thread {
+            runCatching {
+                data.add(productIdsCountData)
+                productIdsCountData.productId
+            }.let(callback)
+        }
+    }
+
+    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Long>) -> Unit) {
+        thread {
+            runCatching {
+                removedProductsId(productId)
+            }.let(callback)
+        }
+    }
+
+    override fun plusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+        thread {
+            runCatching {
+                plusProductsIdCount(productId)
+            }.let(callback)
+        }
+    }
+
+    override fun minusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+        thread {
+            runCatching {
+                minusProductsIdCount(productId)
+            }.let(callback)
+        }
+    }
+
+    override fun clearAllAsyncResult(callback: (Result<Unit>) -> Unit) {
+        thread {
+            runCatching {
+                clearAll()
+            }.let(callback)
         }
     }
 
