@@ -8,24 +8,35 @@ import androidx.lifecycle.map
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.productlist.uimodel.LoadProductState
-import woowacourse.shopping.productlist.uimodel.LoadProductState.ShowProducts
+import woowacourse.shopping.productlist.uimodel.ProductChangeEvent
+import woowacourse.shopping.productlist.uimodel.ProductChangeFailEvent
 import woowacourse.shopping.productlist.uimodel.ProductUiModel
+import woowacourse.shopping.productlist.uimodel.ProductUiState
 import woowacourse.shopping.productlist.uimodel.RecentProductUiModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingRepository
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val _loadState: MutableLiveData<LoadProductState> = MutableLiveData()
-    val loadState: LiveData<LoadProductState> get() = _loadState
+    private val _productChangeEvent: MutableSingleLiveData<ProductChangeEvent> =
+        MutableSingleLiveData()
+    val productChangeEvent: SingleLiveData<ProductChangeEvent> get() = _productChangeEvent
+
+    private val _productChangeFailEvent: MutableSingleLiveData<ProductChangeFailEvent> =
+        MutableSingleLiveData()
+    val productChangeFailEvent: SingleLiveData<ProductChangeFailEvent> get() = _productChangeFailEvent
+
+    private val _productUiState: MutableLiveData<ProductUiState> = MutableLiveData()
+    val productUiState: LiveData<ProductUiState> get() = _productUiState
 
     val totalSize: Int = productRepository.productsTotalSize()
 
     val totalCartItemCount =
-        _loadState.map {
+        _productUiState.map {
             it.currentProducts.filterNot { product -> product.cartItemCount == 0 }
                 .sumOf { product -> product.cartItemCount }
         }
@@ -33,21 +44,18 @@ class ProductListViewModel(
     private val _recentProducts: MutableLiveData<List<RecentProductUiModel>> = MutableLiveData()
     val recentProducts: LiveData<List<RecentProductUiModel>> get() = _recentProducts
 
-    private fun currentLoadState(): List<ProductUiModel> = _loadState.value?.currentProducts ?: emptyList()
+    private fun currentProducts(): List<ProductUiModel> = _productUiState?.value?.currentProducts ?: emptyList()
 
     fun initProducts() {
-        _loadState.value ?: loadProducts()
-    }
+        _productUiState.value?.let {
+            _productUiState.value = ProductUiState.Init(currentProducts())
+            return
+        }
 
-    fun loadMoreProducts() {
-        loadProducts()
-    }
-
-    private fun loadProducts() {
         runCatching {
             val products =
                 productRepository.products(
-                    currentLoadState().size,
+                    currentProducts().size,
                     PRODUCTS_OFFSET_SIZE,
                 )
             val cartItems = shoppingRepository.shoppingCart().items
@@ -55,11 +63,26 @@ class ProductListViewModel(
                 product.toProductUiModel(productOfCartQuantity(cartItems, product))
             }
         }.onSuccess { newProducts ->
-            _loadState.value =
-                ShowProducts(
-                    newProducts,
-                    currentLoadState().addProduct(newProducts),
+            _productUiState.value = ProductUiState.Init(newProducts)
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    fun loadMoreProducts() {
+        runCatching {
+            val products =
+                productRepository.products(
+                    currentProducts().size,
+                    PRODUCTS_OFFSET_SIZE,
                 )
+            val cartItems = shoppingRepository.shoppingCart().items
+            products.map { product ->
+                product.toProductUiModel(productOfCartQuantity(cartItems, product))
+            }
+        }.onSuccess { newProducts ->
+            _productUiState.value = ProductUiState.Change(currentProducts() + newProducts)
+            _productChangeEvent.setValue(ProductChangeEvent.AddProducts(newProducts))
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -117,8 +140,7 @@ class ProductListViewModel(
             when (result) {
                 is QuantityUpdate.Success -> changeItemCount(result.value.toProductUiModel())
                 QuantityUpdate.Failure ->
-                    _loadState.value =
-                        LoadProductState.PlusFail(currentLoadState())
+                    _productChangeFailEvent.setValue(ProductChangeFailEvent.PlusFail)
             }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -126,11 +148,12 @@ class ProductListViewModel(
     }
 
     private fun changeItemCount(updatedProduct: ProductUiModel) {
-        _loadState.value =
-            LoadProductState.ChangeItemCount(
+        _productChangeEvent.setValue(
+            ProductChangeEvent.ChangeItemCount(
                 updatedProduct.let(::listOf),
-                currentLoadState().updateProduct(updatedProduct),
-            )
+            ),
+        )
+        _productUiState.value = ProductUiState.Change(currentProducts().updateProduct(updatedProduct))
     }
 
     fun reloadProductOfInfo(productIds: List<Long>) {
@@ -142,11 +165,12 @@ class ProductListViewModel(
                 product.toProductUiModel(productOfCartQuantity(cartItems, product))
             }
         }.onSuccess { updatedProducts ->
-            _loadState.value =
-                LoadProductState.ChangeItemCount(
+            _productChangeEvent.setValue(
+                ProductChangeEvent.ChangeItemCount(
                     updatedProducts,
-                    currentLoadState().updateProducts(updatedProducts),
-                )
+                ),
+            )
+            _productUiState.value = ProductUiState.Change(currentProducts().updateProducts(updatedProducts))
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -163,7 +187,7 @@ class ProductListViewModel(
     }
 
     private fun List<ProductUiModel>.updateProducts(updatedProducts: List<ProductUiModel>): List<ProductUiModel> =
-        currentLoadState().map { product ->
+        currentProducts().map { product ->
             if (updatedProducts.map { it.id }.contains(product.id)) {
                 updatedProducts.first { product.id == it.id }
             } else {
@@ -172,9 +196,7 @@ class ProductListViewModel(
         }
 
     private fun List<ProductUiModel>.updateProduct(product: ProductUiModel): List<ProductUiModel> =
-        currentLoadState().map { if (it.id == product.id) product else it }
-
-    private fun List<ProductUiModel>.addProduct(product: List<ProductUiModel>): List<ProductUiModel> = currentLoadState() + product
+        currentProducts().map { if (it.id == product.id) product else it }
 
     companion object {
         private const val PRODUCTS_OFFSET_SIZE = 20

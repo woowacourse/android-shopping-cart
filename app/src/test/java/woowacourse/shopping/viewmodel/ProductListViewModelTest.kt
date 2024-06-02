@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.productlist.ProductListViewModel
 import woowacourse.shopping.productlist.toProductUiModel
-import woowacourse.shopping.productlist.uimodel.LoadProductState
+import woowacourse.shopping.productlist.uimodel.ProductChangeEvent
 import woowacourse.shopping.repository.DummyProductRepository
 import woowacourse.shopping.repository.DummyShoppingRepository
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
@@ -28,7 +28,7 @@ class ProductListViewModelTest {
         viewModel.initProducts()
 
         // given
-        val actual = viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts
+        val actual = viewModel.productChangeEvent.getOrAwaitValue() as ProductChangeEvent.ShowProducts
 
         // then
         assertThat(actual.result.products).containsAll(
@@ -44,11 +44,11 @@ class ProductListViewModelTest {
         // given
         viewModel.initProducts()
         val firstActual =
-            (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
+            (viewModel.productChangeEvent.getOrAwaitValue() as ProductChangeEvent.ShowProducts).result.products
 
         viewModel.loadMoreProducts()
         val secondActual =
-            (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
+            (viewModel.productChangeEvent.getOrAwaitValue() as ProductChangeEvent.ShowProducts).result.products
 
         // then
         assertThat(firstActual).hasSize(20)
@@ -62,7 +62,7 @@ class ProductListViewModelTest {
         viewModel.initProducts()
 
         // given
-        val firstActual = viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts
+        val firstActual = viewModel.productChangeEvent.getOrAwaitValue() as ProductChangeEvent.ShowProducts
 
         // then
         assertThat(firstActual.result.products).hasSize(20)
@@ -71,7 +71,7 @@ class ProductListViewModelTest {
         viewModel.loadMoreProducts()
 
         // given
-        val secondActual = viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts
+        val secondActual = viewModel.productChangeEvent.getOrAwaitValue() as ProductChangeEvent.ShowProducts
 
         // then
         assertThat(secondActual.result.products).hasSize(20)

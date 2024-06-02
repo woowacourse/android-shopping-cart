@@ -8,6 +8,7 @@ import woowacourse.shopping.databinding.ItemProductListBinding
 import woowacourse.shopping.productlist.uimodel.ProductListClickAction
 import woowacourse.shopping.productlist.uimodel.ProductUiModel
 import woowacourse.shopping.util.imageUrlToSrc
+import kotlin.math.max
 
 class ProductListAdapter(
     private val onClick: ProductListClickAction,
@@ -48,11 +49,17 @@ class ProductListAdapter(
         return holder.onBind(items[position])
     }
 
-    fun submitItems(products: List<ProductUiModel>) {
+    fun addItems(products: List<ProductUiModel>) {
+        val previous = items
+        items.addAll(products)
+        notifyItemRangeInserted(previous.size, products.size)
+    }
+
+    fun replaceItems(products: List<ProductUiModel>) {
         val previous = items
         items.clear()
         items.addAll(products)
-        notifyItemRangeInserted(previous.size, products.size)
+        notifyItemRangeChanged(0, max(products.size, previous.size))
     }
 
     fun changeProductsInfo(products: List<ProductUiModel>) {

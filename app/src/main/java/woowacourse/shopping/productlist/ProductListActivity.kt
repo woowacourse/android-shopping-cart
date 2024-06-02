@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
-import woowacourse.shopping.productlist.uimodel.LoadProductState
+import woowacourse.shopping.productlist.uimodel.ProductChangeEvent
+import woowacourse.shopping.productlist.uimodel.ProductChangeFailEvent
 import woowacourse.shopping.productlist.uimodel.ProductListClickAction
+import woowacourse.shopping.productlist.uimodel.ProductUiState
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.showToastMessage
@@ -31,8 +33,11 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         binding.lifecycleOwner = this
         binding.vm = viewModel
 
+        viewModel.initProducts()
+
         attachAdapter()
-        showProducts()
+        observeProductsState()
+        observeProductEvent()
         supportActionBar?.hide()
         loadRecentProduct()
 
@@ -61,13 +66,27 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         binding.rcvProductListRecent.adapter = recentAdapter
     }
 
-    private fun showProducts() {
-        viewModel.initProducts()
-        viewModel.loadState.observe(this) { loadState ->
-            when (loadState) {
-                is LoadProductState.ChangeItemCount -> productAdapter.changeProductsInfo(loadState.result)
-                is LoadProductState.ShowProducts -> productAdapter.submitItems(loadState.currentProducts)
-                is LoadProductState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
+    private fun observeProductsState() {
+        viewModel.productUiState.observe(this) { state ->
+            when (state) {
+                is ProductUiState.Init -> productAdapter.replaceItems(state.currentProducts)
+                is ProductUiState.Change -> {}
+                is ProductUiState.Error -> showToastMessage(R.string.network_error)
+                is ProductUiState.Loading -> showToastMessage(R.string.loading_message)
+            }
+        }
+    }
+
+    private fun observeProductEvent() {
+        viewModel.productChangeEvent.observe(this) { event ->
+            when (event) {
+                is ProductChangeEvent.AddProducts -> productAdapter.addItems(event.result)
+                is ProductChangeEvent.ChangeItemCount -> productAdapter.changeProductsInfo(event.result)
+            }
+        }
+        viewModel.productChangeFailEvent.observe(this) { state ->
+            when (state) {
+                ProductChangeFailEvent.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }
     }
