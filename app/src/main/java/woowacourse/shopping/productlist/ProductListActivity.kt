@@ -66,7 +66,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         viewModel.loadState.observe(this) { loadState ->
             when (loadState) {
                 is LoadProductState.ChangeItemCount -> productAdapter.changeProductsInfo(loadState.result)
-                is LoadProductState.ShowProducts -> productAdapter.submitItems(loadState.currentProducts.products)
+                is LoadProductState.ShowProducts -> productAdapter.submitItems(loadState.currentProducts)
                 is LoadProductState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
             }
         }

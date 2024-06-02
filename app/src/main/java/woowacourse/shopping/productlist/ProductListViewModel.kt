@@ -11,7 +11,6 @@ import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.productlist.uimodel.LoadProductState
 import woowacourse.shopping.productlist.uimodel.LoadProductState.ShowProducts
 import woowacourse.shopping.productlist.uimodel.ProductUiModel
-import woowacourse.shopping.productlist.uimodel.ProductUiModels
 import woowacourse.shopping.productlist.uimodel.RecentProductUiModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.ShoppingRepository
@@ -25,12 +24,16 @@ class ProductListViewModel(
 
     val totalSize: Int = productRepository.productsTotalSize()
 
-    val totalCartItemCount = _loadState.map { it.currentProducts.totalCartItemCount() }
+    val totalCartItemCount =
+        _loadState.map {
+            it.currentProducts.filterNot { product -> product.cartItemCount == 0 }
+                .sumOf { product -> product.cartItemCount }
+        }
 
     private val _recentProducts: MutableLiveData<List<RecentProductUiModel>> = MutableLiveData()
     val recentProducts: LiveData<List<RecentProductUiModel>> get() = _recentProducts
 
-    private fun currentLoadState(): ProductUiModels = _loadState.value?.currentProducts ?: ProductUiModels.default()
+    private fun currentLoadState(): List<ProductUiModel> = _loadState.value?.currentProducts ?: emptyList()
 
     fun initProducts() {
         _loadState.value ?: loadProducts()
@@ -44,7 +47,7 @@ class ProductListViewModel(
         runCatching {
             val products =
                 productRepository.products(
-                    currentLoadState().totalProductCount(),
+                    currentLoadState().size,
                     PRODUCTS_OFFSET_SIZE,
                 )
             val cartItems = shoppingRepository.shoppingCart().items
@@ -54,7 +57,7 @@ class ProductListViewModel(
         }.onSuccess { newProducts ->
             _loadState.value =
                 ShowProducts(
-                    newProducts.let(::ProductUiModels),
+                    newProducts,
                     currentLoadState().addProduct(newProducts),
                 )
         }.onFailure {
@@ -158,6 +161,20 @@ class ProductListViewModel(
             Log.d(this::class.java.simpleName, "$it")
         }
     }
+
+    private fun List<ProductUiModel>.updateProducts(updatedProducts: List<ProductUiModel>): List<ProductUiModel> =
+        currentLoadState().map { product ->
+            if (updatedProducts.map { it.id }.contains(product.id)) {
+                updatedProducts.first { product.id == it.id }
+            } else {
+                product
+            }
+        }
+
+    private fun List<ProductUiModel>.updateProduct(product: ProductUiModel): List<ProductUiModel> =
+        currentLoadState().map { if (it.id == product.id) product else it }
+
+    private fun List<ProductUiModel>.addProduct(product: List<ProductUiModel>): List<ProductUiModel> = currentLoadState() + product
 
     companion object {
         private const val PRODUCTS_OFFSET_SIZE = 20
