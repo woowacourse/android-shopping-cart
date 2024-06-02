@@ -101,7 +101,7 @@ class ProductDetailViewModel(
                 is GetLastProduct.Success,
                 -> _recentProductState.value = isSameProduct(state.value)
 
-                GetLastProduct.Fail,
+                GetLastProduct.NoRecentProduct,
                 -> _recentProductState.value = RecentProductState.NoRecentProduct
             }
         }.onFailure {

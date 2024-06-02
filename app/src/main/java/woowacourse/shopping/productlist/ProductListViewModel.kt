@@ -148,13 +148,17 @@ class ProductListViewModel(
                 updatedProduct.let(::listOf),
             ),
         )
-        _productUiState.value = ProductUiState.Change(currentProducts().updateProduct(updatedProduct))
+        _productUiState.value =
+            ProductUiState.Change(currentProducts().updateProduct(updatedProduct))
     }
 
     fun reloadProductOfInfo(productIds: List<Long>) {
         runCatching {
             val cartItems = shoppingRepository.cartItemsByProductIds(productIds.toList())
-            val products = productIds.map { productRepository.productById(it) }
+            val products =
+                productIds.filterNot { productId ->
+                    cartItems.map { it.product.id }.contains(productId)
+                }.map { productRepository.productById(it) }
 
             products.map { product ->
                 product.toProductUiModel(productOfCartQuantity(cartItems, product))
@@ -165,7 +169,8 @@ class ProductListViewModel(
                     updatedProducts,
                 ),
             )
-            _productUiState.value = ProductUiState.Change(currentProducts().updateProducts(updatedProducts))
+            _productUiState.value =
+                ProductUiState.Change(currentProducts().updateProducts(updatedProducts))
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
