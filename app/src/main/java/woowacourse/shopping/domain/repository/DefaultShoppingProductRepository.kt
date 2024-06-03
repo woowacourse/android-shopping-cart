@@ -241,6 +241,22 @@ class DefaultShoppingProductRepository(
         }
     }
 
+    override fun putItemInCartAsyncResult(id: Long, quantity: Int, callback: (Result<Unit>) -> Unit) {
+        cartSource.findByProductIdAsyncResultNonNull(id) { result ->
+            result.onSuccess {
+                cartSource.plusProductIdCountAsyncResult(id, quantity) {
+                    callback(it)
+                }
+            }
+            result.onFailure {
+                cartSource.addedNewProductsIdAsyncResult(ProductIdsCountData(id, quantity)) {
+                    callback(Result.success(Unit))
+                }
+            }
+
+        }
+    }
+
     override fun decreaseShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
         cartSource.findByProductIdAsyncResult(id) {
             it.onSuccess { data ->

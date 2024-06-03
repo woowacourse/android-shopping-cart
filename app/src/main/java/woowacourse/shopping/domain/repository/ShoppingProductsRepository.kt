@@ -106,6 +106,12 @@ interface ShoppingProductsRepository {
         callback: (Result<Unit>) -> Unit,
     )
 
+    fun putItemInCartAsyncResult(
+        id: Long,
+        quantity: Int,
+        callback: (Result<Unit>) -> Unit,
+    )
+
     fun decreaseShoppingCartProductAsyncResult(
         id: Long,
         callback: (Result<Unit>) -> Unit,
@@ -120,5 +126,4 @@ interface ShoppingProductsRepository {
         id: Long,
         callback: (Result<Unit>) -> Unit,
     )
-
 }
