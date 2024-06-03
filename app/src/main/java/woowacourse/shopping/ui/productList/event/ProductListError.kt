@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productList
+package woowacourse.shopping.ui.productList.event
 
 sealed class ProductListError {
     data object LoadProducts : ProductListError()

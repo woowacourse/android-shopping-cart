@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productList
+package woowacourse.shopping.ui.productList.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderProductHistoryBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.productList.viewholder.ProductHistoryItemViewHolder
 
 class ProductHistoryAdapter(
     private val onProductItemClickListener: OnProductItemClickListener,

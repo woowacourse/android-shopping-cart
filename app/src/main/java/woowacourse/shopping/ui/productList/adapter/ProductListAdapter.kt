@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productList
+package woowacourse.shopping.ui.productList.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,8 +8,9 @@ import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.productList.viewholder.ProductsItemViewHolder
 
-class ProductRecyclerViewAdapter(
+class ProductListAdapter(
     private val onProductItemClickListener: OnProductItemClickListener,
     private val onItemQuantityChangeListener: OnItemQuantityChangeListener,
 ) : RecyclerView.Adapter<ProductsItemViewHolder>() {

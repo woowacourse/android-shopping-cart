@@ -15,6 +15,10 @@ import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
+import woowacourse.shopping.ui.productList.adapter.ProductHistoryAdapter
+import woowacourse.shopping.ui.productList.adapter.ProductListAdapter
+import woowacourse.shopping.ui.productList.event.ProductListError
+import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
 
 class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
@@ -26,7 +30,7 @@ class ProductListFragment : Fragment() {
         ViewModelProvider(this, factory)[ProductListViewModel::class.java]
     }
 
-    private val productsAdapter: ProductRecyclerViewAdapter by lazy { ProductRecyclerViewAdapter(viewModel, viewModel) }
+    private val productsAdapter: ProductListAdapter by lazy { ProductListAdapter(viewModel, viewModel) }
     private val historyAdapter: ProductHistoryAdapter by lazy { ProductHistoryAdapter(viewModel) }
 
     override fun onCreateView(

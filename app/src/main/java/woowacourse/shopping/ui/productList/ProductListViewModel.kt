@@ -14,6 +14,8 @@ import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.productList.event.ProductListError
+import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
 
 class ProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
