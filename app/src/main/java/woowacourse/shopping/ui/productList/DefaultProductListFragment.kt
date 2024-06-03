@@ -17,7 +17,7 @@ import woowacourse.shopping.ui.productDetail.ProductDetailFragment
 import woowacourse.shopping.ui.productList.adapter.ProductHistoryAdapter
 import woowacourse.shopping.ui.productList.adapter.ProductListAdapter
 import woowacourse.shopping.ui.productList.event.ProductListError
-import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
+import woowacourse.shopping.ui.productList.event.ProductListEvent
 
 class DefaultProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
@@ -89,8 +89,8 @@ class DefaultProductListFragment : Fragment() {
     private fun observeNavigationEvent() {
         viewModel.navigationEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is ProductListNavigationEvent.ProductDetail -> navigateToProductDetail(event.productId)
-                ProductListNavigationEvent.ShoppingCart -> navigateToShoppingCart()
+                is ProductListEvent.NavigateToProductDetail -> navigateToProductDetail(event.productId)
+                ProductListEvent.NavigateToShoppingCart -> navigateToShoppingCart()
             }
         }
     }

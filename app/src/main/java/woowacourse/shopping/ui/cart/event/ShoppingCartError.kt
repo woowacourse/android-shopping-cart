@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.cart
+package woowacourse.shopping.ui.cart.event
 
 sealed class ShoppingCartError {
     data object LoadCart : ShoppingCartError()

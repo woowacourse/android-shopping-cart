@@ -30,7 +30,7 @@ import woowacourse.shopping.testfixture.productDomainsTestFixture
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productList.DefaultProductListViewModel
 import woowacourse.shopping.ui.productList.ProductListViewModel
-import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
+import woowacourse.shopping.ui.productList.event.ProductListEvent
 import java.util.concurrent.CountDownLatch
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -229,7 +229,7 @@ class ProductListViewModelTest {
 
         // then
         val navigation = viewModel.navigationEvent.getValue()
-        assertThat(navigation).isEqualTo(ProductListNavigationEvent.ProductDetail(3))
+        assertThat(navigation).isEqualTo(ProductListEvent.NavigateToProductDetail(3))
     }
 
     @Test

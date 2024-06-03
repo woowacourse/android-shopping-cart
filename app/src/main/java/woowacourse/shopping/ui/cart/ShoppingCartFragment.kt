@@ -11,6 +11,9 @@ import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartListBinding
 import woowacourse.shopping.ui.FragmentNavigator
+import woowacourse.shopping.ui.cart.adapter.CartItemRecyclerViewAdapter
+import woowacourse.shopping.ui.cart.event.ShoppingCartError
+import woowacourse.shopping.ui.cart.event.ShoppingCartEvent
 
 class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null

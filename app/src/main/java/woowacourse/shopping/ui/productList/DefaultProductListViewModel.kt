@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.productList.event.ProductListError
-import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
+import woowacourse.shopping.ui.productList.event.ProductListEvent
 
 class DefaultProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
@@ -16,7 +16,7 @@ class DefaultProductListViewModel(
 ) : ProductListViewModel() {
     override val uiState: ProductListUiState = DefaultProductListUiState()
     override val errorEvent: MutableSingleLiveData<ProductListError> = MutableSingleLiveData()
-    override val navigationEvent: MutableSingleLiveData<ProductListNavigationEvent> = MutableSingleLiveData()
+    override val navigationEvent: MutableSingleLiveData<ProductListEvent> = MutableSingleLiveData()
 
     override fun loadAll() {
         val page = uiState.currentPage()
@@ -85,11 +85,11 @@ class DefaultProductListViewModel(
     }
 
     override fun navigateToShoppingCart() {
-        navigationEvent.setValue(ProductListNavigationEvent.ShoppingCart)
+        navigationEvent.setValue(ProductListEvent.NavigateToShoppingCart)
     }
 
     override fun onClick(productId: Long) {
-        navigationEvent.setValue(ProductListNavigationEvent.ProductDetail(productId))
+        navigationEvent.setValue(ProductListEvent.NavigateToProductDetail(productId))
     }
 
     override fun onAdd(productId: Long) {

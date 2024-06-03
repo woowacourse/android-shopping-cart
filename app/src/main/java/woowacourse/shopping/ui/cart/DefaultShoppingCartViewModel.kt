@@ -5,6 +5,8 @@ import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.ui.cart.event.ShoppingCartError
+import woowacourse.shopping.ui.cart.event.ShoppingCartEvent
 
 class DefaultShoppingCartViewModel(
     private val shoppingProductsRepository: ShoppingProductsRepository,
