@@ -5,8 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingRepository
-import woowacourse.shopping.productlist.toProductUiModel
+import woowacourse.shopping.domain.QuantityUpdate
+import woowacourse.shopping.repository.ShoppingRepository
+import woowacourse.shopping.shoppingcart.uimodel.CartItemState
+import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel
+import woowacourse.shopping.shoppingcart.uimodel.CountChangeEvent
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(
@@ -17,9 +22,12 @@ class ShoppingCartViewModel(
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private val _loadState: MutableLiveData<LoadCartItemState> =
-        MutableLiveData<LoadCartItemState>()
-    val loadState: LiveData<LoadCartItemState> get() = _loadState
+    private val _cartItemChange: MutableSingleLiveData<CountChangeEvent> = MutableSingleLiveData()
+    val cartItemChange: SingleLiveData<CountChangeEvent> get() = _cartItemChange
+
+    private val _cartItemState: MutableLiveData<CartItemState> =
+        MutableLiveData()
+    val cartItemState: LiveData<CartItemState> get() = _cartItemState
 
     val isLeftBtnEnable =
         MediatorLiveData(false).apply {
@@ -31,6 +39,12 @@ class ShoppingCartViewModel(
             addSource(_currentPage) { value = checkIsRightBtnEnable() }
             addSource(totalPage) { value = checkIsRightBtnEnable() }
         }
+
+    private val _changedProductIds: MutableSet<Long> = mutableSetOf()
+    val changedProductIds: Set<Long>
+        get() = _changedProductIds.toSet()
+
+    private fun currentCartItems(): List<CartItemUiModel> = _cartItemState?.value?.currentCartItems ?: error("초기화 이후에 메서드를 실행해주세요")
 
     private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(DEFAULT_CURRENT_PAGE)?.not() ?: false
 
@@ -51,7 +65,7 @@ class ShoppingCartViewModel(
             val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
             repository.shoppingCartItems(currentPage - DEFAULT_CURRENT_PAGE, PAGE_SIZE)
         }.onSuccess { shoppingCartItems ->
-            _loadState.value = LoadCartItemState.InitView(shoppingCartItems.map { it.product.toProductUiModel() })
+            _cartItemState.value = CartItemState.Init(shoppingCartItems.map { it.toShoppingCartUiModel() })
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -61,10 +75,13 @@ class ShoppingCartViewModel(
         runCatching {
             repository.deleteShoppingCartItem(productId)
         }.onSuccess {
-            if (_currentPage.value != totalPage.value && totalPage.value != 0) {
+            if (checkIsRightBtnEnable()) {
                 loadCartItemOfNextPage()
             }
+            _cartItemState.value = CartItemState.Change(currentCartItems().deleteCartItem(productId))
+            _cartItemChange.setValue(CountChangeEvent.DeleteCartItem(productId))
             updatePageCount()
+            _changedProductIds.add(productId)
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -75,7 +92,9 @@ class ShoppingCartViewModel(
             val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
             repository.shoppingCartItemByPosition(currentPage - 1, PAGE_SIZE, MAX_POSITION_OF_ITEM)
         }.onSuccess { shoppingCartItem ->
-            _loadState.value = LoadCartItemState.AddNextPageOfItem(shoppingCartItem.product.toProductUiModel())
+            val cartItem = shoppingCartItem.toShoppingCartUiModel()
+            _cartItemState.value = CartItemState.Change(currentCartItems() + shoppingCartItem.toShoppingCartUiModel())
+            _cartItemChange.setValue(CountChangeEvent.AddNextPageOfItem(cartItem))
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -86,10 +105,54 @@ class ShoppingCartViewModel(
         loadCartItems()
     }
 
+    fun plusCartItemCount(productId: Long) {
+        runCatching {
+            repository.increasedCartItem(productId)
+        }.onSuccess { result ->
+            when (result) {
+                is QuantityUpdate.Success -> {
+                    val updatedUiModel = result.value.toShoppingCartUiModel()
+                    _cartItemState.value = CartItemState.Change(currentCartItems().updateCartItem(updatedUiModel))
+                    _cartItemChange.setValue(CountChangeEvent.ChangeItemCount(updatedUiModel))
+                    _changedProductIds.add(productId)
+                }
+
+                QuantityUpdate.CantChange -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
+            }
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    fun minusCartItemCount(productId: Long) {
+        runCatching {
+            repository.decreasedCartItem(productId)
+        }.onSuccess { result ->
+            when (result) {
+                is QuantityUpdate.Success -> {
+                    val updatedUiModel = result.value.toShoppingCartUiModel()
+                    _cartItemState.value = CartItemState.Change(currentCartItems().updateCartItem(updatedUiModel))
+                    _cartItemChange.setValue(CountChangeEvent.ChangeItemCount(updatedUiModel))
+                    _changedProductIds.add(productId)
+                }
+
+                QuantityUpdate.CantChange -> _cartItemChange.setValue(CountChangeEvent.PlusChangeFail)
+            }
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
     fun previousPage() {
         _currentPage.value = _currentPage.value?.dec()
         loadCartItems()
     }
+
+    private fun List<CartItemUiModel>.updateCartItem(cartItemUiModel: CartItemUiModel): List<CartItemUiModel> =
+        currentCartItems().map { if (it.id == cartItemUiModel.id) cartItemUiModel else it }
+
+    private fun List<CartItemUiModel>.deleteCartItem(productId: Long): List<CartItemUiModel> =
+        currentCartItems().filterNot { it.id == productId }
 
     companion object {
         private const val PAGE_SIZE = 5

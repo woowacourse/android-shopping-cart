@@ -9,9 +9,9 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.shoppingcart.ShoppingCartAdapter
+import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel
 
 class ShoppingCartActivityTest {
     @get:Rule
@@ -24,7 +24,7 @@ class ShoppingCartActivityTest {
         activityRule.scenario.onActivity { activity ->
             val items =
                 listOf(
-                    ProductUiModel(
+                    CartItemUiModel(
                         0,
                         "[든든] 동원 스위트콘",
                         99800,
@@ -45,9 +45,5 @@ class ShoppingCartActivityTest {
     fun `장바구니의_아이템_개수가_5개_이하라면_버튼들이_비활성화된다`() {
         onView(withId(R.id.btn_shopping_cart_left)).check(matches(isClickable()))
         onView(withId(R.id.btn_shopping_cart_right)).check(matches(isClickable()))
-    }
-
-    @Test
-    fun `장바구니_아이템의_개수가_1개일때_아이템을_삭제하면_recyclerview에는_아이템이_없다`() {
     }
 }

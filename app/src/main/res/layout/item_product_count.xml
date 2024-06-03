@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="inflatedVisibility"
+            type="Boolean" />
+
+        <variable
+            name="productId"
+            type="Long" />
+
+        <variable
+            name="isLeftBtnNotEnable"
+            type="Boolean" />
+
+        <variable
+            name="cartItemCount"
+            type="Integer" />
+
+        <variable
+            name="onClick"
+            type="woowacourse.shopping.util.CartItemCountClickAction" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rect_white_fill_4"
+        android:visibility="@{inflatedVisibility ? View.VISIBLE : View.GONE }">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:enabled="@{isLeftBtnNotEnable ? false : true}"
+            android:fontFamily="@font/roboto_bold"
+            android:onClick="@{() -> onClick.onMinusCountClicked(productId)}"
+            android:text="-"
+            android:textColor="@drawable/sel_cart_item_left_btn"
+            android:textSize="22sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center"
+            android:text="@{Integer.toString(cartItemCount)}"
+            android:textColor="@color/gray_700"
+            android:textSize="22dp"
+            tools:text="2" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/roboto_bold"
+            android:onClick="@{() -> onClick.onPlusCountClicked(productId)}"
+            android:text="+"
+            android:textColor="@color/gray_700"
+            android:textSize="22dp" />
+
+    </LinearLayout>
+</layout>

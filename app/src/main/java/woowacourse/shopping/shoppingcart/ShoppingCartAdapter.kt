@@ -3,29 +3,26 @@ package woowacourse.shopping.shoppingcart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel
+import woowacourse.shopping.shoppingcart.uimodel.ShoppingCartClickAction
 import woowacourse.shopping.util.imageUrlToSrc
 
 class ShoppingCartAdapter(
     private val onClicked: ShoppingCartClickAction,
 ) : RecyclerView.Adapter<ShoppingCartAdapter.ShoppingCartViewHolder>() {
-    private val items = mutableListOf<ProductUiModel>()
+    private val items = mutableListOf<CartItemUiModel>()
 
     class ShoppingCartViewHolder(
         private val binding: ItemCartBinding,
         private val onClicked: ShoppingCartClickAction,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(item: ProductUiModel) {
+        fun onBind(item: CartItemUiModel) {
             with(binding) {
                 tvItemCartName.text = item.name
                 itemView.context.imageUrlToSrc(item.imageUrl, ivCartProduct)
-                tvCartPrice.text =
-                    itemView.context.getString(R.string.product_price_format, item.price)
-                ibCartClose.setOnClickListener {
-                    onClicked.onItemRemoveBtnClicked(item.id)
-                }
+                binding.cartItem = item
+                binding.onClick = onClicked
             }
         }
     }
@@ -47,7 +44,7 @@ class ShoppingCartAdapter(
         holder.onBind(items[position])
     }
 
-    fun replaceItems(newItems: List<ProductUiModel>) {
+    fun replaceItems(newItems: List<CartItemUiModel>) {
         items.clear()
         items.addAll(newItems.toList())
         notifyDataSetChanged()
@@ -59,8 +56,14 @@ class ShoppingCartAdapter(
         notifyItemRemoved(deleteIndex)
     }
 
-    fun addItem(item: ProductUiModel) {
+    fun addItem(item: CartItemUiModel) {
         items.add(item.copy())
         notifyItemInserted(items.lastIndex)
+    }
+
+    fun changeProductInfo(updatedCartItem: CartItemUiModel) {
+        val changeIndex = items.indexOfFirst { it.id == updatedCartItem.id }
+        items[changeIndex] = updatedCartItem
+        notifyItemChanged(changeIndex)
     }
 }

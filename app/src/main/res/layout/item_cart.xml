@@ -5,12 +5,21 @@
 
     <data>
 
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.shoppingcart.uimodel.CartItemUiModel" />
+
+        <variable
+            name="onClick"
+            type="woowacourse.shopping.shoppingcart.uimodel.ShoppingCartClickAction" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
+        android:animateLayoutChanges="true"
         android:background="@drawable/rect_gray500_line_1">
 
         <TextView
@@ -44,11 +53,27 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@android:color/transparent"
+            android:onClick="@{() -> onClick.onItemRemoveBtnClicked(cartItem.id)}"
             android:padding="12dp"
             android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray_300" />
+
+        <include
+            android:id="@+id/include_cart_count"
+            layout="@layout/item_product_count"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            app:cartItemCount="@{cartItem.cartItemCount}"
+            app:inflatedVisibility="@{true}"
+            app:isLeftBtnNotEnable="@{cartItem.isMinCount()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ib_cart_close"
+            app:onClick="@{onClick}"
+            app:productId="@{cartItem.id}" />
 
         <TextView
             android:id="@+id/tv_cart_price"
@@ -57,6 +82,7 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="17dp"
             android:fontFamily="@font/roboto"
+            android:text="@{@string/product_price_format(cartItem.totalPrice)}"
             android:textColor="@color/gray_500"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

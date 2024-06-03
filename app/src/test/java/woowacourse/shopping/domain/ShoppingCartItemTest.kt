@@ -52,7 +52,7 @@ class ShoppingCartItemTest {
         val result = shoppingCartItem.decreaseQuantity()
 
         // then
-        assertThat(result).isInstanceOf(QuantityUpdate.Failure::class.java)
+        assertThat(result).isInstanceOf(QuantityUpdate.CantChange::class.java)
     }
 
     @Test

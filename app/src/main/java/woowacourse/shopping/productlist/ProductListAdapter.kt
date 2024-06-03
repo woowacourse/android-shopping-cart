@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListBinding
+import woowacourse.shopping.productlist.uimodel.ProductListClickAction
+import woowacourse.shopping.productlist.uimodel.ProductUiModel
 import woowacourse.shopping.util.imageUrlToSrc
+import kotlin.math.max
 
 class ProductListAdapter(
     private val onClick: ProductListClickAction,
@@ -14,7 +17,7 @@ class ProductListAdapter(
 
     class ProductListViewHolder(
         private val binding: ItemProductListBinding,
-        private val onClick: ProductListClickAction,
+        private val onClickHandler: ProductListClickAction,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(item: ProductUiModel) {
             with(binding) {
@@ -22,9 +25,8 @@ class ProductListAdapter(
                 tvProductListPrice.text =
                     itemView.context.getString(R.string.product_price_format, item.price)
                 itemView.context.imageUrlToSrc(item.imageUrl, ivProductItem)
-                root.setOnClickListener {
-                    onClick.onProductClicked(item.id)
-                }
+                binding.product = item
+                binding.onClick = onClickHandler
             }
         }
     }
@@ -47,9 +49,26 @@ class ProductListAdapter(
         return holder.onBind(items[position])
     }
 
-    fun submitList(products: List<ProductUiModel>) {
-        val previousCount = itemCount
+    fun addItems(products: List<ProductUiModel>) {
+        val previous = items
         items.addAll(products)
-        notifyItemRangeInserted(previousCount, products.size)
+        notifyItemRangeInserted(previous.size, products.size)
+    }
+
+    fun replaceItems(products: List<ProductUiModel>) {
+        val previous = items
+        items.clear()
+        items.addAll(products)
+        notifyItemRangeChanged(0, max(products.size, previous.size))
+    }
+
+    fun changeProductsInfo(products: List<ProductUiModel>) {
+        products.forEach { changeProductsInfo(it) }
+    }
+
+    private fun changeProductsInfo(product: ProductUiModel) {
+        val changeIndex = items.indexOfFirst { it.id == product.id }
+        items[changeIndex] = product
+        notifyItemChanged(changeIndex)
     }
 }
