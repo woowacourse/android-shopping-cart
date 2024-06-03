@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.ui.cart.DefaultShoppingCartViewModel" />
+            type="woowacourse.shopping.ui.cart.ShoppingCartViewModel" />
     </data>
 
 

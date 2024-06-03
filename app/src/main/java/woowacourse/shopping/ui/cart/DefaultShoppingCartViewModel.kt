@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.cart
 
 import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
-import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
@@ -13,10 +12,9 @@ class DefaultShoppingCartViewModel(
 ) : ShoppingCartViewModel() {
     override val uiState: DefaultShoppingCartUiState = DefaultShoppingCartUiState()
 
-    private var _deletedItemId: MutableSingleLiveData<Long> = MutableSingleLiveData()
-    val deletedItemId: SingleLiveData<Long> get() = _deletedItemId
+    override val event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
 
-    fun loadAll() {
+    override fun loadAll() {
         val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
         shoppingProductsRepository.loadProductsInCartAsync(page = nowPage) { products ->
@@ -27,7 +25,7 @@ class DefaultShoppingCartViewModel(
         }
     }
 
-    fun nextPage() {
+    override fun nextPage() {
         if (uiState.isLastPage.value == true) return
 
         uiState.currentPage.value = uiState.currentPage.value?.plus(PAGE_MOVE_COUNT)
@@ -41,7 +39,7 @@ class DefaultShoppingCartViewModel(
         }
     }
 
-    fun previousPage() {
+    override fun previousPage() {
         if (uiState.currentPage.value == FIRST_PAGE) return
 
         uiState.currentPage.value = uiState.currentPage.value?.minus(PAGE_MOVE_COUNT)
@@ -55,7 +53,7 @@ class DefaultShoppingCartViewModel(
         }
     }
 
-    fun deleteItem(cartItemId: Long) {
+    override fun deleteItem(cartItemId: Long) {
         val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
         shoppingProductsRepository.removeShoppingCartProductAsync(cartItemId) {
@@ -70,7 +68,7 @@ class DefaultShoppingCartViewModel(
     }
 
     override fun onClick(productId: Long) {
-        _deletedItemId.setValue(productId)
+        event.setValue(ShoppingCartEvent.DeleteItem(productId))
     }
 
     override fun onIncrease(productId: Long) {

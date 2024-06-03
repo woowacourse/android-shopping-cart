@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentCartListBinding
@@ -13,10 +14,8 @@ class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
-    private val factory: UniversalViewModelFactory = DefaultShoppingCartViewModel.factory()
-
-    private val viewModel: DefaultShoppingCartViewModel by lazy {
-        ViewModelProvider(this, factory)[DefaultShoppingCartViewModel::class.java]
+    private val viewModel: ShoppingCartViewModel by viewModels {
+        DefaultShoppingCartViewModel.factory()
     }
 
     private val adapter: CartItemRecyclerViewAdapter by lazy {
@@ -60,15 +59,18 @@ class ShoppingCartFragment : Fragment() {
     }
 
     private fun observeDeletedItem() {
-        viewModel.deletedItemId.observe(viewLifecycleOwner) { productId ->
-            viewModel.deleteItem(productId)
+        viewModel.event.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is ShoppingCartEvent.DeleteItem -> viewModel.deleteItem(event.cartItemId)
+            }
         }
+
+//        viewModel.deletedItemId.observe(viewLifecycleOwner) { productId ->
+//            viewModel.deleteItem(productId)
+//        }
     }
 
     private fun observeItemsInCurrentPage() {
-//        viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) { products ->
-//            adapter.updateData(products)
-//        }
         viewModel.uiState.itemsInCurrentPage.observe(viewLifecycleOwner){
             adapter.updateData(it)
         }
