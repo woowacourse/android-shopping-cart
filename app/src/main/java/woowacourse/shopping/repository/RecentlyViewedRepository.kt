@@ -24,10 +24,14 @@ class RecentlyViewedRepository(context: Context) {
     suspend fun addProduct(productId: Int) {
         withContext(Dispatchers.IO) {
             val currentTime = System.currentTimeMillis()
-            recentlyViewedProductDao.deleteProductByProductId(productId)
-            val product = RecentlyViewedProductEntity(productId = productId, viewedAt = currentTime)
-            recentlyViewedProductDao.insertProduct(product)
-            recentlyViewedProductDao.deleteOldestProducts()
+            val existingProduct = recentlyViewedProductDao.getProductById(productId)
+            if (existingProduct != null) {
+                recentlyViewedProductDao.updateViewedAt(productId, currentTime)
+            } else {
+                val product = RecentlyViewedProductEntity(productId = productId, viewedAt = currentTime)
+                recentlyViewedProductDao.insertProduct(product)
+                recentlyViewedProductDao.deleteOldestProducts()
+            }
         }
     }
 }

@@ -19,4 +19,10 @@ interface RecentlyViewedProductDao {
 
     @Query("DELETE FROM recently_viewed_products WHERE id NOT IN (SELECT id FROM recently_viewed_products ORDER BY viewedAt DESC LIMIT 10)")
     suspend fun deleteOldestProducts()
+
+    @Query("UPDATE recently_viewed_products SET viewedAt = :viewedAt WHERE productId = :productId")
+    fun updateViewedAt(productId: Int, viewedAt: Long)
+
+    @Query("SELECT * FROM recently_viewed_products WHERE productId = :productId LIMIT 1")
+    fun getProductById(productId: Int): RecentlyViewedProductEntity?
 }
