@@ -11,16 +11,15 @@ class CartViewHolder(private val binding: ItemCartBinding) : ViewHolder(binding.
         productUiModel: ProductUiModel,
         cartListener: CartListener,
     ) {
-        binding.productUiModel = productUiModel
-        binding.ivCartExit.setOnClickListener {
-            cartListener.deleteCartItem(productUiModel.productId)
-        }
+        binding.product = productUiModel
+        binding.listener = cartListener
+
         binding.addCartQuantityBundle =
             AddCartQuantityBundle(
                 productUiModel.productId,
                 productUiModel.quantity,
-                cartListener::increaseQuantity,
-                cartListener::decreaseQuantity,
+                cartListener::onClickIncreaseQuantity,
+                cartListener::onClickDecreaseQuantity,
             )
     }
 }

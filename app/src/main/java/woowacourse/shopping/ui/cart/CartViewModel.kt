@@ -14,7 +14,7 @@ import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 class CartViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-) : ViewModel(), CartListener {
+) : ViewModel() {
     private val _productUiModels = MutableLiveData<List<ProductUiModel>>(emptyList())
     val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels
 
@@ -63,7 +63,7 @@ class CartViewModel(
         totalCartCount.value = cartRepository.totalCartItemCount()
     }
 
-    override fun deleteCartItem(productId: Long) {
+    fun deleteCartItem(productId: Long) {
         _changedCartEvent.value = Event(Unit)
         cartRepository.deleteCartItem(productId)
         updateDeletedCart(productId)
@@ -96,7 +96,7 @@ class CartViewModel(
         loadCartPage(page - 1)
     }
 
-    override fun increaseQuantity(productId: Long) {
+    fun increaseQuantity(productId: Long) {
         _changedCartEvent.value = Event(Unit)
         cartRepository.increaseQuantity(productId)
 
@@ -104,7 +104,7 @@ class CartViewModel(
         updateChangedCartQuantity(productId, cartItem.quantity)
     }
 
-    override fun decreaseQuantity(productId: Long) {
+    fun decreaseQuantity(productId: Long) {
         _changedCartEvent.value = Event(Unit)
         cartRepository.decreaseQuantity(productId)
 
@@ -117,7 +117,10 @@ class CartViewModel(
         updateChangedCartQuantity(productId, --cartItem.quantity)
     }
 
-    private fun updateChangedCartQuantity(productId: Long, quantity: Quantity) {
+    private fun updateChangedCartQuantity(
+        productId: Long,
+        quantity: Quantity,
+    ) {
         val position = findProductUiModelsPosition(productId) ?: return
         val productUiModels = _productUiModels.value?.toMutableList() ?: return
         productUiModels[position] = productUiModels[position].copy(quantity = quantity)

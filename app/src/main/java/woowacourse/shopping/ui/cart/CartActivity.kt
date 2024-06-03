@@ -11,7 +11,7 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartAdapter
 
-class CartActivity : AppCompatActivity() {
+class CartActivity : AppCompatActivity(), CartListener {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<CartViewModel> {
         CartViewModelFactory(
@@ -42,7 +42,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeCartAdapter() {
-        val cartAdapter = CartAdapter(viewModel)
+        val cartAdapter = CartAdapter(this)
         binding.rvCart.itemAnimator = null
         binding.rvCart.adapter = cartAdapter
 
@@ -62,4 +62,10 @@ class CartActivity : AppCompatActivity() {
             Toast.makeText(this, R.string.load_page_error, Toast.LENGTH_SHORT).show()
         }
     }
+
+    override fun onClickExitCartItem(productId: Long) = viewModel.deleteCartItem(productId)
+
+    override fun onClickIncreaseQuantity(productId: Long) = viewModel.increaseQuantity(productId)
+
+    override fun onClickDecreaseQuantity(productId: Long) = viewModel.decreaseQuantity(productId)
 }

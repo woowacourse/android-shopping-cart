@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="productUiModel"
+            name="product"
             type="woowacourse.shopping.ui.products.adapter.type.ProductUiModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.cart.CartListener" />
 
         <variable
             name="addCartQuantityBundle"
@@ -28,7 +32,7 @@
             android:layout_marginTop="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{productUiModel.title}"
+            android:text="@{product.title}"
             android:textColor="@color/gray_500"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -44,6 +48,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:padding="20dp"
+            android:onClick="@{() -> listener.onClickExitCartItem(product.productId)}"
             android:src="@drawable/ic_exit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -67,7 +72,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="18dp"
-            app:imageUrl="@{productUiModel.imageUrl}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintStart_toStartOf="@id/tv_cart_product_title"
@@ -78,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="17dp"
-            android:text="@{@string/product_price(productUiModel.totalPrice())}"
+            android:text="@{@string/product_price(product.totalPrice())}"
             android:textColor="@color/gray_500"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

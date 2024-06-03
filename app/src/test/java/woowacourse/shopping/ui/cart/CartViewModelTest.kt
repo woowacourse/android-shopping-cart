@@ -43,7 +43,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(productRepository, cartRepository)
 
         // when
-        viewModel.deleteCartItem(cartItems.first().productId)
+        viewModel.onClickExitCartItem(cartItems.first().productId)
 
         // then
         assertThat(viewModel.productUiModels.getOrAwaitValue()).hasSize(0)
@@ -225,7 +225,7 @@ class CartViewModelTest {
 
         // when
         val lastOneCartItem = viewModel.productUiModels.getOrAwaitValue().first()
-        viewModel.deleteCartItem(lastOneCartItem.productId)
+        viewModel.onClickExitCartItem(lastOneCartItem.productId)
 
         // then
         val actual = viewModel.page.getOrAwaitValue()
@@ -242,7 +242,7 @@ class CartViewModelTest {
 
         // when
         val cartItem = viewModel.productUiModels.getOrAwaitValue().first()
-        viewModel.deleteCartItem(cartItem.productId)
+        viewModel.onClickExitCartItem(cartItem.productId)
 
         // then
         val actual = viewModel.isEmptyCart.getOrAwaitValue()
@@ -259,7 +259,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(productRepository, cartRepository)
 
         // when
-        viewModel.increaseQuantity(0L)
+        viewModel.onClickIncreaseQuantity(0L)
 
         // then
         val actual = viewModel.productUiModels.getOrAwaitValue().first()
@@ -276,7 +276,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(productRepository, cartRepository)
 
         // when
-        viewModel.decreaseQuantity(0L)
+        viewModel.onClickDecreaseQuantity(0L)
 
         // then
         val actual = viewModel.productUiModels.getOrAwaitValue().first()
@@ -293,7 +293,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(productRepository, cartRepository)
 
         // when
-        viewModel.decreaseQuantity(0L)
+        viewModel.onClickDecreaseQuantity(0L)
 
         // then
         val actual = viewModel.isEmptyCart.getOrAwaitValue()
