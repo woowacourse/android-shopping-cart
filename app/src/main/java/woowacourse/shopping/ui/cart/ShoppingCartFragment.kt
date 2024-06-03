@@ -13,10 +13,10 @@ class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
-    private val factory: UniversalViewModelFactory = ShoppingCartViewModel.factory()
+    private val factory: UniversalViewModelFactory = DefaultShoppingCartViewModel.factory()
 
-    private val viewModel: ShoppingCartViewModel by lazy {
-        ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
+    private val viewModel: DefaultShoppingCartViewModel by lazy {
+        ViewModelProvider(this, factory)[DefaultShoppingCartViewModel::class.java]
     }
 
     private val adapter: CartItemRecyclerViewAdapter by lazy {
@@ -66,8 +66,11 @@ class ShoppingCartFragment : Fragment() {
     }
 
     private fun observeItemsInCurrentPage() {
-        viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) { products ->
-            adapter.updateData(products)
+//        viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) { products ->
+//            adapter.updateData(products)
+//        }
+        viewModel.uiState.itemsInCurrentPage.observe(viewLifecycleOwner){
+            adapter.updateData(it)
         }
     }
 
