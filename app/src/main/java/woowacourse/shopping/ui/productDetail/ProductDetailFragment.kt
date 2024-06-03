@@ -38,9 +38,9 @@ class ProductDetailFragment : Fragment() {
 
     private fun initViewModel() {
         arguments?.let {
-            factory = ProductDetailViewModel.factory(productId = it.getLong(PRODUCT_ID))
+            factory = DefaultProductDetailViewModel.factory(productId = it.getLong(PRODUCT_ID))
         }
-        viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[DefaultProductDetailViewModel::class.java]
         viewModel.loadAll()
     }
 
@@ -49,9 +49,9 @@ class ProductDetailFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.detailProductDestinationId.observe(viewLifecycleOwner) {
-            navigateToProductDetail(it)
-        }
+//        viewModel.detailProductDestinationId.observe(viewLifecycleOwner) {
+//            navigateToProductDetail(it)
+//        }
 
         binding.productDetailToolbar.setOnMenuItemClickListener {
             navigateToMenuItem(it)

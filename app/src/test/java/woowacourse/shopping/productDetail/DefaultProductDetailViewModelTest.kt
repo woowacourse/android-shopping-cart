@@ -30,10 +30,10 @@ import woowacourse.shopping.source.FakeProductHistorySource
 import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productDomainTestFixture
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
-import woowacourse.shopping.ui.productDetail.ProductDetailViewModel
+import woowacourse.shopping.ui.productDetail.DefaultProductDetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
-class ProductDetailViewModelTest {
+class DefaultProductDetailViewModelTest {
     private var productId: Long = -1
     private lateinit var productsSource: ProductDataSource
     private lateinit var cartSource: ShoppingCartProductIdDataSource
@@ -41,7 +41,7 @@ class ProductDetailViewModelTest {
 
     private lateinit var historyDataSource: ProductHistoryDataSource
     private lateinit var historyRepository: ProductHistoryRepository
-    private lateinit var viewModel: ProductDetailViewModel
+    private lateinit var viewModel: DefaultProductDetailViewModel
 
     /**
      * setup 에서 장바구니에는 아무런 데이터도 없도록 만든다
@@ -85,7 +85,7 @@ class ProductDetailViewModelTest {
                 data = productsIdCountDataTestFixture(3, 2).toMutableList(),
             )
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
@@ -101,7 +101,7 @@ class ProductDetailViewModelTest {
         // given
         cartSource = FakeShoppingCartProductIdDataSource(data = mutableListOf())
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -116,7 +116,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `현재 상품의 개수를 1 에서 더 줄여도 줄어들지 않는다 `() {
         // given
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -136,7 +136,7 @@ class ProductDetailViewModelTest {
                 data = productsIdCountDataTestFixture(3, 2).toMutableList(),
             )
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -153,7 +153,7 @@ class ProductDetailViewModelTest {
     fun `현재 상품을 장바구니에 담는다`() {
         // given
         productId = 1
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
         viewModel.loadAll()
 
         // when
@@ -195,7 +195,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `최근 상품이 없으면 fake 객체`() {
         // given
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
@@ -217,7 +217,7 @@ class ProductDetailViewModelTest {
                 history = ArrayDeque<Long>(listOf(1, 2, 3)),
             )
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productsSource)
-        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()

@@ -46,7 +46,7 @@
 
         <ImageView
             android:id="@+id/product_detail_product_image"
-            imageUrl="@{vm.currentProduct.imgUrl}"
+            imageUrl="@{vm.uiState.product.imgUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:importantForAccessibility="no"
@@ -60,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@{vm.currentProduct.name}"
+            android:text="@{vm.uiState.product.name}"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/product_detail_price_style"
@@ -90,16 +90,16 @@
             android:layout_marginBottom="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/product_detail_price_style"
-            bind:itemId="@{vm.currentProduct.id}"
+            bind:itemId="@{vm.uiState.product.id}"
             bind:onItemChargeListener="@{onItemChargeListener}"
-            bind:quantity="@{vm.productCount}" />
+            bind:quantity="@{vm.uiState.productCount}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/product_detail_latest_product_container"
-            currentProductId="@{vm.currentProduct.id}"
-            latestProductId="@{vm.latestProduct.id}"
+            currentProductId="@{vm.uiState.product.id}"
+            latestProductId="@{vm.uiState.latestProduct.id}"
             android:layout_width="0dp"
-            android:onClick="@{() -> onProductClickListener.onClick(vm.latestProduct.id)}"
+            android:onClick="@{() -> onProductClickListener.onClick(vm.uiState.latestProduct.id)}"
             android:layout_height="80dp"
             android:layout_marginHorizontal="30dp"
             android:background="@drawable/grey_border"
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@{vm.latestProduct.name}"
+                android:text="@{vm.uiState.latestProduct.name}"
                 android:textSize="16dp"
                 app:layout_constraintStart_toStartOf="@id/product_detail_product_description"
                 app:layout_constraintTop_toBottomOf="@id/product_detail_product_description"
