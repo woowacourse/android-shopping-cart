@@ -45,10 +45,10 @@
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/circle_background"
                 android:gravity="center"
-                android:text="@{String.valueOf(vm.cartProductTotalCount > 99 ?  @string/greater_than_99: vm.cartProductTotalCount)}"
+                android:text="@{String.valueOf(vm.uiState.cartProductTotalCount > 99 ?  @string/greater_than_99: vm.uiState.cartProductTotalCount)}"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                android:visibility="@{vm.cartProductTotalCount > 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{vm.uiState.cartProductTotalCount > 0 ? View.VISIBLE : View.GONE}"
                 tools:ignore="SpUsage"
                 tools:text="99" />
 
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="20dp"
-                    android:text="@{vm.productsHistory.empty ? @string/product_history_empty : @string/products_history}"
+                    android:text="@{vm.uiState.productsHistory.empty ? @string/product_history_empty : @string/products_history}"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/product_latest_list"
@@ -105,7 +105,7 @@
 
                     android:orientation="horizontal"
                     android:overScrollMode="never"
-                    android:visibility="@{vm.productsHistory.empty ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{vm.uiState.productsHistory.empty ? View.GONE : View.VISIBLE}"
 
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toTopOf="@id/product_detail_list"

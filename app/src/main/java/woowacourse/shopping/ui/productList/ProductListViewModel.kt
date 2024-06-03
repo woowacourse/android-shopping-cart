@@ -8,7 +8,6 @@ import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.currentPageIsNullException
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
@@ -23,17 +22,7 @@ class ProductListViewModel(
 ) : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private val _loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
-    val loadedProducts: LiveData<List<Product>> get() = _loadedProducts
-
-    private val _productsHistory: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
-    val productsHistory: LiveData<List<Product>> get() = _productsHistory
-
-    private val _cartProductTotalCount: MutableLiveData<Int> = MutableLiveData()
-    val cartProductTotalCount: LiveData<Int> get() = _cartProductTotalCount
-
-    private var _isLastPage: MutableLiveData<Boolean> = MutableLiveData()
-    val isLastPage: LiveData<Boolean> get() = _isLastPage
+    val uiState: DefaultUiState = DefaultUiState()
 
     private var _errorEvent = MutableSingleLiveData<ProductListError>()
     val errorEvent: SingleLiveData<ProductListError> get() = _errorEvent
@@ -53,7 +42,7 @@ class ProductListViewModel(
     private fun loadAllProducts(page: Int) {
         productsRepository.loadAllProductsAsyncResult(page) { result ->
             result.onSuccess {
-                _loadedProducts.postValue(it)
+                uiState.loadedProducts.postValue(it)
             }.onFailure {
                 _errorEvent.postValue(ProductListError.LoadProducts)
             }
@@ -63,7 +52,7 @@ class ProductListViewModel(
     private fun loadFinalPage(page: Int) {
         productsRepository.isFinalPageAsyncResult(page) { result ->
             result.onSuccess {
-                _isLastPage.postValue(it)
+                uiState.isLastPage.postValue(it)
             }.onFailure {
                 _errorEvent.postValue(ProductListError.FinalPage)
             }
@@ -73,7 +62,7 @@ class ProductListViewModel(
     private fun calculateProductsQuantityInCart() {
         productsRepository.shoppingCartProductQuantityAsyncResult { result ->
             result.onSuccess {
-                _cartProductTotalCount.postValue(it)
+                uiState.cartProductTotalCount.postValue(it)
             }.onFailure {
                 _errorEvent.postValue(ProductListError.CartProductQuantity)
             }
@@ -83,7 +72,7 @@ class ProductListViewModel(
     private fun loadProductsHistory() {
         productHistoryRepository.loadAllProductHistoryAsyncResult { result ->
             result.onSuccess {
-                _productsHistory.postValue(it)
+                uiState.productsHistory.postValue(it)
             }.onFailure {
                 _errorEvent.postValue(ProductListError.LoadProductHistory)
             }
@@ -91,7 +80,7 @@ class ProductListViewModel(
     }
 
     fun loadNextPageProducts() {
-        if (isLastPage.value == true) return
+        if (uiState.isLastPage.value == true) return
 
         val nextPage = _currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
         _currentPage.postValue(nextPage)
@@ -104,7 +93,7 @@ class ProductListViewModel(
     private fun addNextPageProducts(page: Int) {
         productsRepository.loadAllProductsAsyncResult(page) { result ->
             result.onSuccess {
-                _loadedProducts.postValue(_loadedProducts.value?.toMutableList()?.apply { addAll(it) })
+                uiState.loadedProducts.postValue(uiState.loadedProducts.value?.toMutableList()?.apply { addAll(it) })
             }.onFailure {
                 _errorEvent.postValue(ProductListError.LoadProducts)
             }
@@ -156,8 +145,8 @@ class ProductListViewModel(
         productId: Long,
         changeAmount: Int,
     ) {
-        _loadedProducts.postValue(
-            _loadedProducts.value?.map {
+        uiState.loadedProducts.postValue(
+            uiState.loadedProducts.value?.map {
                 if (it.id == productId) {
                     it.copy(quantity = it.quantity + changeAmount)
                 } else {

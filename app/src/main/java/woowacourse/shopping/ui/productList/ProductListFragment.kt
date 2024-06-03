@@ -58,45 +58,30 @@ class ProductListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        registerLoadMoreButtonListener()
         initObserve()
-    }
-
-    private fun registerLoadMoreButtonListener() {
-        binding.productDetailList.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    super.onScrolled(recyclerView, dx, dy)
-
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val totalItemCount = layoutManager.itemCount
-                    val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-
-                    if (viewModel.isLastPage.value == false && hasMoreItems(totalItemCount, lastVisibleItem)) {
-                        binding.loadMoreButton.visibility = View.VISIBLE
-                        return
-                    }
-
-                    binding.loadMoreButton.visibility = View.GONE
-                }
-            },
-        )
+        registerLoadMoreButtonListener()
     }
 
     private fun initObserve() {
+        observeUiState()
         observeNavigationEvent()
-        observeLoadedProducts()
-        observeProductHistory()
         observeErrorEvent()
     }
 
+    private fun observeUiState() {
+        observeLoadedProducts()
+        observeProductHistory()
+    }
+
     private fun observeLoadedProducts() {
-        viewModel.loadedProducts.observe(viewLifecycleOwner) { products ->
+        viewModel.uiState.loadedProducts.observe(viewLifecycleOwner) { products ->
             productsAdapter.updateAllLoadedProducts(products)
+        }
+    }
+
+    private fun observeProductHistory() {
+        viewModel.uiState.productsHistory.observe(viewLifecycleOwner) {
+            historyAdapter.update(it)
         }
     }
 
@@ -106,12 +91,6 @@ class ProductListFragment : Fragment() {
                 is ProductListNavigationEvent.ProductDetail -> navigateToProductDetail(event.productId)
                 ProductListNavigationEvent.ShoppingCart -> navigateToShoppingCart()
             }
-        }
-    }
-
-    private fun observeProductHistory() {
-        viewModel.productsHistory.observe(viewLifecycleOwner) {
-            historyAdapter.update(it)
         }
     }
 
@@ -131,6 +110,31 @@ class ProductListFragment : Fragment() {
                 ProductListError.UpdateProductQuantity -> showToast(R.string.error_message_update_products_quantity_in_cart)
             }
         }
+    }
+
+    private fun registerLoadMoreButtonListener() {
+        binding.productDetailList.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int,
+                ) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                    if (viewModel.uiState.isLastPage.value == false && hasMoreItems(totalItemCount, lastVisibleItem)) {
+                        binding.loadMoreButton.visibility = View.VISIBLE
+                        return
+                    }
+
+                    binding.loadMoreButton.visibility = View.GONE
+                }
+            },
+        )
     }
 
     private fun showToast(@StringRes stringId: Int) {
