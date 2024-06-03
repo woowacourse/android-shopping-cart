@@ -28,6 +28,9 @@
     <string name="error_message_add_product_in_cart">상품을 장바구니에 추가하는데 실패했습니다.</string>
     <string name="error_message_update_products_quantity_in_cart">장바구니 상품 개수를 업데이트하는데 실패했습니다.</string>
 
+    <string name="error_message_shopping_cart_products">장바구니 상품을 불러오는데 실패했습니다.</string>
+    <string name="error_message_shopping_cart_final_page">장바구니 상품의 페이지를 계산하는데 실패했습니다.</string>
+    <string name="error_message_shopping_cart_delete_item">장바구니 상품의 페이지를 계산하는데 실패했습니다.</string>
 
 
 </resources>

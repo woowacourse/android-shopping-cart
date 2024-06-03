@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.UniversalViewModelFactory
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartListBinding
+import woowacourse.shopping.ui.FragmentNavigator
 
 class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null
@@ -42,9 +44,10 @@ class ShoppingCartFragment : Fragment() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
+        observeUiState()
+        observeEvent()
+        observeError()
         initNavigation()
-        observeDeletedItem()
-        observeItemsInCurrentPage()
     }
 
     override fun onResume() {
@@ -58,20 +61,40 @@ class ShoppingCartFragment : Fragment() {
         }
     }
 
-    private fun observeDeletedItem() {
+    private fun observeUiState() {
+        observeItemsInCurrentPage()
+    }
+
+    private fun observeEvent() {
         viewModel.event.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is ShoppingCartEvent.DeleteItem -> viewModel.deleteItem(event.cartItemId)
+                is ShoppingCartEvent.NavigateToProductList -> (requireActivity() as? FragmentNavigator)?.navigateToProductList()
             }
         }
+    }
 
-//        viewModel.deletedItemId.observe(viewLifecycleOwner) { productId ->
-//            viewModel.deleteItem(productId)
-//        }
+    private fun observeError() {
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            when (error) {
+                ShoppingCartError.LoadCart -> showToast(R.string.error_message_shopping_cart_products)
+                ShoppingCartError.FinalPage -> showToast(R.string.error_message_shopping_cart_final_page)
+                ShoppingCartError.DeleteItem -> showToast(R.string.error_message_shopping_cart_delete_item)
+                ShoppingCartError.UpdateItemQuantity -> showToast(R.string.error_message_update_products_quantity_in_cart)
+            }
+        }
+    }
+
+    private fun showToast(@StringRes stringId: Int) {
+        Toast.makeText(
+            requireContext(),
+            stringId,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun observeItemsInCurrentPage() {
-        viewModel.uiState.itemsInCurrentPage.observe(viewLifecycleOwner){
+        viewModel.uiState.itemsInCurrentPage.observe(viewLifecycleOwner) {
             adapter.updateData(it)
         }
     }
