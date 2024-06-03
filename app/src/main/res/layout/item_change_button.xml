@@ -78,7 +78,7 @@
             android:layout_height="48dp"
             android:background="@android:color/transparent"
             android:importantForAccessibility="no"
-            android:onClick="@{() -> onItemChargeListener.onIncrease(itemId)}"
+            android:onClick="@{() -> onItemChargeListener.onAdd(itemId)}"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_plus"
             android:visibility="@{quantity == 0 ? View.VISIBLE : View.GONE}"
