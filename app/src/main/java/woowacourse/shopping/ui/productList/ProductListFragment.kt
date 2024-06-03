@@ -24,7 +24,7 @@ class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
-    private val factory: UniversalViewModelFactory = ProductListViewModel.factory()
+    private val factory: UniversalViewModelFactory = DefaultProductListViewModel.factory()
 
     private val viewModel: ProductListViewModel by lazy {
         ViewModelProvider(this, factory)[ProductListViewModel::class.java]

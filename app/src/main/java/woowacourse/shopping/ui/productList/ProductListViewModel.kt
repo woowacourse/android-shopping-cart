@@ -1,7 +1,5 @@
 package woowacourse.shopping.ui.productList
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
@@ -17,24 +15,35 @@ import woowacourse.shopping.ui.OnProductItemClickListener
 import woowacourse.shopping.ui.productList.event.ProductListError
 import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
 
-class ProductListViewModel(
+
+abstract class ProductListViewModel(
+) : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
+    abstract val uiState: UiState
+
+    abstract val errorEvent: SingleLiveData<ProductListError>
+
+    abstract val navigationEvent: SingleLiveData<ProductListNavigationEvent>
+
+    abstract fun loadAll()
+
+    abstract fun loadNextPageProducts()
+
+    abstract fun navigateToShoppingCart()
+
+}
+
+class DefaultProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
     private val productHistoryRepository: ProductHistoryRepository,
-    private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
-) : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
-    val currentPage: LiveData<Int> get() = _currentPage
+) : ProductListViewModel() {
+    override val uiState: DefaultUiState = DefaultUiState()
 
-    val uiState: DefaultUiState = DefaultUiState()
+    override val errorEvent: MutableSingleLiveData<ProductListError> = MutableSingleLiveData()
 
-    private var _errorEvent = MutableSingleLiveData<ProductListError>()
-    val errorEvent: SingleLiveData<ProductListError> get() = _errorEvent
+    override val navigationEvent: MutableSingleLiveData<ProductListNavigationEvent> = MutableSingleLiveData()
 
-    private var _navigationEvent = MutableSingleLiveData<ProductListNavigationEvent>()
-    val navigationEvent: SingleLiveData<ProductListNavigationEvent> get() = _navigationEvent
-
-
-    fun loadAll() {
-        val page = currentPage.value ?: currentPageIsNullException()
+    override fun loadAll() {
+        val page = uiState.currentPage.value ?: currentPageIsNullException()
         loadAllProducts(page)
         loadFinalPage(page)
         calculateProductsQuantityInCart()
@@ -46,7 +55,7 @@ class ProductListViewModel(
             result.onSuccess {
                 uiState.loadedProducts.postValue(it)
             }.onFailure {
-                _errorEvent.postValue(ProductListError.LoadProducts)
+                errorEvent.postValue(ProductListError.LoadProducts)
             }
         }
     }
@@ -56,7 +65,7 @@ class ProductListViewModel(
             result.onSuccess {
                 uiState.isLastPage.postValue(it)
             }.onFailure {
-                _errorEvent.postValue(ProductListError.FinalPage)
+                errorEvent.postValue(ProductListError.FinalPage)
             }
         }
     }
@@ -66,7 +75,7 @@ class ProductListViewModel(
             result.onSuccess {
                 uiState.cartProductTotalCount.postValue(it)
             }.onFailure {
-                _errorEvent.postValue(ProductListError.CartProductQuantity)
+                errorEvent.postValue(ProductListError.CartProductQuantity)
             }
         }
     }
@@ -76,16 +85,16 @@ class ProductListViewModel(
             result.onSuccess {
                 uiState.productsHistory.postValue(it)
             }.onFailure {
-                _errorEvent.postValue(ProductListError.LoadProductHistory)
+                errorEvent.postValue(ProductListError.LoadProductHistory)
             }
         }
     }
 
-    fun loadNextPageProducts() {
+    override fun loadNextPageProducts() {
         if (uiState.isLastPage.value == true) return
 
-        val nextPage = _currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
-        _currentPage.postValue(nextPage)
+        val nextPage = uiState.currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
+        uiState.currentPage.postValue(nextPage)
 
         loadFinalPage(nextPage)
         addNextPageProducts(nextPage)
@@ -97,17 +106,17 @@ class ProductListViewModel(
             result.onSuccess {
                 uiState.loadedProducts.postValue(uiState.loadedProducts.value?.toMutableList()?.apply { addAll(it) })
             }.onFailure {
-                _errorEvent.postValue(ProductListError.LoadProducts)
+                errorEvent.postValue(ProductListError.LoadProducts)
             }
         }
     }
 
-    fun navigateToShoppingCart() {
-        _navigationEvent.setValue(ProductListNavigationEvent.ShoppingCart)
+    override fun navigateToShoppingCart() {
+        navigationEvent.setValue(ProductListNavigationEvent.ShoppingCart)
     }
 
     override fun onClick(productId: Long) {
-        _navigationEvent.setValue(ProductListNavigationEvent.ProductDetail(productId))
+        navigationEvent.setValue(ProductListNavigationEvent.ProductDetail(productId))
     }
 
     override fun onAdd(productId: Long) {
@@ -116,7 +125,8 @@ class ProductListViewModel(
                 changeProductQuantity(productId, INCREASE_AMOUNT)
                 calculateProductsQuantityInCart()
             }.onFailure {
-                _errorEvent.postValue(ProductListError.AddProductInCart)
+                errorEvent.postValue(ProductListError.AddProductInCart)
+
             }
         }
     }
@@ -127,7 +137,8 @@ class ProductListViewModel(
                 changeProductQuantity(productId, INCREASE_AMOUNT)
                 calculateProductsQuantityInCart()
             }.onFailure {
-                _errorEvent.postValue(ProductListError.UpdateProductQuantity)
+                errorEvent.postValue(ProductListError.UpdateProductQuantity)
+
             }
         }
     }
@@ -138,7 +149,7 @@ class ProductListViewModel(
                 changeProductQuantity(productId, DECREASE_AMOUNT)
                 calculateProductsQuantityInCart()
             }.onFailure {
-                _errorEvent.postValue(ProductListError.UpdateProductQuantity)
+                errorEvent.postValue(ProductListError.UpdateProductQuantity)
             }
         }
     }
@@ -160,7 +171,6 @@ class ProductListViewModel(
 
     companion object {
         private const val TAG = "ProductListViewModel"
-        private const val FIRST_PAGE = 1
         private const val PAGE_MOVE_COUNT = 1
         private const val INCREASE_AMOUNT = 1
         private const val DECREASE_AMOUNT = -1
@@ -178,7 +188,7 @@ class ProductListViewModel(
                 ),
         ): UniversalViewModelFactory =
             UniversalViewModelFactory {
-                ProductListViewModel(productRepository, historyRepository)
+                DefaultProductListViewModel(productRepository, historyRepository)
             }
     }
 }
