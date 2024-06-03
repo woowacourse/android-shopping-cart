@@ -2,9 +2,10 @@ package woowacourse.shopping.ui.productDetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
@@ -51,7 +52,7 @@ class ProductDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         observeEvent()
-
+        observeError()
     }
 
     private fun observeEvent() {
@@ -59,11 +60,28 @@ class ProductDetailFragment : Fragment() {
             when (event) {
                 is ProductDetailEvent.NavigateToProductDetail -> navigateToProductDetail(event.productId)
                 is ProductDetailEvent.NavigateToProductList -> navigateToProductList()
+                is ProductDetailEvent.AddProductToCart -> showToast(R.string.message_save_product_in_cart)
             }
         }
     }
 
-    private fun navigateToProductDetail(id: Long) = (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
+    private fun observeError() {
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            when (error) {
+                is ProductDetailError.LoadProduct -> showToast(R.string.error_message_load_product)
+                is ProductDetailError.LoadLatestProduct -> showToast(R.string.error_message_load_product)
+                is ProductDetailError.SaveProductInHistory -> showToast(R.string.error_message_save_product_in_history)
+                is ProductDetailError.AddProductToCart -> showToast(R.string.error_message_add_product_in_cart)
+            }
+        }
+    }
+
+    private fun showToast(@StringRes stringId: Int) {
+        Toast.makeText(requireContext(), stringId, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToProductDetail(id: Long) =
+        (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
 
     private fun navigateToProductList() = (requireActivity() as? FragmentNavigator)?.navigateToProductList()
 

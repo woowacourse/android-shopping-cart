@@ -32,5 +32,9 @@
     <string name="error_message_shopping_cart_final_page">장바구니 상품의 페이지를 계산하는데 실패했습니다.</string>
     <string name="error_message_shopping_cart_delete_item">장바구니 상품의 페이지를 계산하는데 실패했습니다.</string>
 
+    <string name="error_message_save_product_in_history">현재 상품을 최근 본 내역에 추가하는데 실패했습니다.</string>
+    <string name="error_message_load_product">상품을 불러오는데 실패했습니다.</string>
+
+    <string name="message_save_product_in_cart">장바구니에 담았습니다.</string>
 
 </resources>

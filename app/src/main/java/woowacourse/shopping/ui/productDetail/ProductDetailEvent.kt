@@ -5,4 +5,5 @@ sealed class ProductDetailEvent {
 
     data object NavigateToProductList : ProductDetailEvent()
 
+    data object AddProductToCart : ProductDetailEvent()
 }

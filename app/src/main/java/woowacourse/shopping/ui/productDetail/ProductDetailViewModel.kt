@@ -10,6 +10,8 @@ abstract class ProductDetailViewModel: ViewModel(), OnItemQuantityChangeListener
 
     abstract val event: SingleLiveData<ProductDetailEvent>
 
+    abstract val error: SingleLiveData<ProductDetailError>
+
     abstract fun loadAll()
 
     abstract fun addProductToCart()

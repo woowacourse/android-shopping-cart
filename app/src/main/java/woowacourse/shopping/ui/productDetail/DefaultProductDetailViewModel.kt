@@ -17,13 +17,15 @@ class DefaultProductDetailViewModel(
 
     override val event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
 
+    override val error: MutableSingleLiveData<ProductDetailError> = MutableSingleLiveData()
+
     override fun loadAll() {
         shoppingProductsRepository.loadProductAsyncResult(productId) { result ->
             result.onSuccess { product ->
                 uiState.postCurrentProduct(product)
             }
             result.onFailure {
-                // TODO: error
+                error.postValue(ProductDetailError.LoadProduct)
             }
         }
 
@@ -34,21 +36,18 @@ class DefaultProductDetailViewModel(
                         uiState.postLatestProduct(it)
                     }
                     latestProduct.onFailure {
-                        // TODO: error
+                        error.postValue(ProductDetailError.LoadProduct)
                     }
-
                 }
             }
             result.onFailure {
+                error.postValue(ProductDetailError.LoadLatestProduct)
             }
         }
 
         productHistoryRepository.saveProductHistoryAsyncResult(productId) { result ->
-            result.onSuccess {
-                // TODO: 내역에 저장됨
-            }
             result.onFailure {
-                // TODO: error
+                error.postValue(ProductDetailError.SaveProductInHistory)
             }
         }
     }
@@ -56,10 +55,10 @@ class DefaultProductDetailViewModel(
     override fun addProductToCart() {
         shoppingProductsRepository.putItemInCartAsyncResult(productId, uiState.currentQuantity()) { result ->
             result.onSuccess {
-                // TODO: 담겼다는 메시지
+                event.postValue(ProductDetailEvent.AddProductToCart)
             }
             result.onFailure {
-                // TODO: error
+                error.postValue(ProductDetailError.AddProductToCart)
             }
         }
     }
