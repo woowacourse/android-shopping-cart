@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.db.ShoppingCartDatabase
+import woowacourse.shopping.db.recenteProduct.RecentlyViewedProductEntity
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.RecentlyViewedRepository
@@ -36,13 +37,30 @@ class ProductListViewModel(application: Application) : AndroidViewModel(applicat
         ShoppingCartDatabase.initialize(application)
         loadCartItems()
 
-        _recentlyViewedProducts.addSource(_cartItems) { updateRecentlyViewedProducts() }
-        _recentlyViewedProducts.addSource(_recentlyViewedEntities) { updateRecentlyViewedProducts() }
+        _recentlyViewedProducts.addSource(_cartItems) {
+            _cartItems.value?.map { it.productId }?.let { it1 ->
+                _recentlyViewedEntities.value?.let { it2 ->
+                    updateRecentlyViewedProducts(
+                        it1,
+                        it2
+                    )
+                }
+            }
+        }
+        _recentlyViewedProducts.addSource(_recentlyViewedEntities) {
+            _cartItems.value?.map { it.productId }?.let { it1 ->
+                updateRecentlyViewedProducts(
+                    it1,
+                    _recentlyViewedEntities.value.orEmpty()
+                )
+            }
+        }
     }
 
-    private fun updateRecentlyViewedProducts() {
-        val cartItemIds = _cartItems.value?.map { it.productId } ?: emptyList()
-        val recentlyViewedEntities = _recentlyViewedEntities.value ?: emptyList()
+    private fun updateRecentlyViewedProducts(
+        cartItemIds: List<Int>,
+        recentlyViewedEntities: List<RecentlyViewedProductEntity>
+    ) {
         var recentlyViewedProducts: List<Product> = emptyList()
         thread {
             recentlyViewedProducts =
