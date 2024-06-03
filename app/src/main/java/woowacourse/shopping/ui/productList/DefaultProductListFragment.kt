@@ -28,6 +28,7 @@ class DefaultProductListFragment : Fragment() {
     }
 
     private val productsAdapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
+
     private val historyAdapter: ProductHistoryAdapter by lazy { ProductHistoryAdapter(viewModel) }
 
     override fun onCreateView(
@@ -76,13 +77,13 @@ class DefaultProductListFragment : Fragment() {
 
     private fun observeLoadedProducts() {
         viewModel.uiState.loadedProducts.observe(viewLifecycleOwner) { products ->
-            productsAdapter.updateAllLoadedProducts(products)
+            productsAdapter.submitList(products)
         }
     }
 
     private fun observeProductHistory() {
         viewModel.uiState.productsHistory.observe(viewLifecycleOwner) {
-            historyAdapter.update(it)
+            historyAdapter.submitList(it.reversed())
         }
     }
 
