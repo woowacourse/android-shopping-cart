@@ -3,21 +3,20 @@ package woowacourse.shopping.ui.cart
 import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 
 class DefaultShoppingCartViewModel(
     private val shoppingProductsRepository: ShoppingProductsRepository,
 ) : ShoppingCartViewModel() {
-    override val uiState: DefaultShoppingCartUiState = DefaultShoppingCartUiState()
+    override val uiState: ShoppingCartUiState = DefaultShoppingCartUiState()
 
     override val event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
 
     override val error: MutableSingleLiveData<ShoppingCartError> = MutableSingleLiveData()
 
     override fun loadAll() {
-        val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
+        val nowPage = uiState.currentPage()
 
         loadProductsInCart(nowPage)
         calculateFinalPage(nowPage)
@@ -26,7 +25,7 @@ class DefaultShoppingCartViewModel(
     private fun loadProductsInCart(nowPage: Int) {
         shoppingProductsRepository.loadProductsInCartAsyncResult(page = nowPage) { result ->
             result.onSuccess { products ->
-                uiState.itemsInCurrentPage.postValue(products)
+                uiState.postItemsInCurrentPage(products)
             }
             result.onFailure {
                 error.setValue(ShoppingCartError.LoadCart)
@@ -37,7 +36,7 @@ class DefaultShoppingCartViewModel(
     private fun calculateFinalPage(nowPage: Int) {
         shoppingProductsRepository.isCartFinalPageAsyncResult(nowPage) { result ->
             result.onSuccess {
-                uiState.isLastPage.postValue(it)
+                uiState.postIsLastPage(it)
             }
             result.onFailure {
                 error.setValue(ShoppingCartError.FinalPage)
@@ -46,27 +45,21 @@ class DefaultShoppingCartViewModel(
     }
 
     override fun nextPage() {
-        if (uiState.isLastPage.value == true) return
-
-        uiState.currentPage.value = uiState.currentPage.value?.plus(PAGE_MOVE_COUNT)
-        val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
+        val nowPage = uiState.nextPage()
 
         loadProductsInCart(nowPage)
         calculateFinalPage(nowPage)
     }
 
     override fun previousPage() {
-        if (uiState.currentPage.value == FIRST_PAGE) return
-
-        uiState.currentPage.value = uiState.currentPage.value?.minus(PAGE_MOVE_COUNT)
-        val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
+        val nowPage = uiState.previousPage()
 
         loadProductsInCart(nowPage)
         calculateFinalPage(nowPage)
     }
 
     override fun deleteItem(cartItemId: Long) {
-        val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
+        val nowPage = uiState.currentPage()
 
         shoppingProductsRepository.removeShoppingCartProductAsyncResult(cartItemId) { result ->
             result.onSuccess {
@@ -88,7 +81,7 @@ class DefaultShoppingCartViewModel(
     }
 
     override fun onIncrease(productId: Long) {
-        val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
+        val nowPage = uiState.currentPage()
 
         shoppingProductsRepository.increaseShoppingCartProductAsyncResult(productId) { result ->
             result.onSuccess {
@@ -103,7 +96,7 @@ class DefaultShoppingCartViewModel(
     override fun onDecrease(productId: Long) {
         shoppingProductsRepository.decreaseShoppingCartProductAsyncResult(productId) { result ->
             result.onSuccess {
-                val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
+                val nowPage = uiState.currentPage()
 
                 loadProductsInCart(nowPage)
                 calculateFinalPage(nowPage)
@@ -115,8 +108,6 @@ class DefaultShoppingCartViewModel(
     }
 
     companion object {
-        private const val FIRST_PAGE = 1
-        private const val PAGE_MOVE_COUNT = 1
         private const val TAG = "ShoppingCartViewModel"
 
         fun factory(
