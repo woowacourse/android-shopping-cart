@@ -43,7 +43,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/ic_product_list_cart"
             app:layout_constraintTop_toTopOf="parent"
-            app:showOrderQuantity = "@{vm.uiState.orderSum}"
+            app:showOrderQuantity = "@{vm.orderUiState}"
             tools:text="1" />
 
         <Space

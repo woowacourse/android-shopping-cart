@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.ui.productlist
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
@@ -11,37 +12,77 @@ import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
-import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUiModel
+import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductListUiModel
 import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
+import woowacourse.shopping.presentation.ui.productlist.uistates.OrderUiState
+import woowacourse.shopping.presentation.ui.productlist.uistates.PagingProductUiState
 import woowacourse.shopping.presentation.ui.productlist.uistates.ProductBrowsingHistoryUiState
-import woowacourse.shopping.presentation.ui.productlist.uistates.ProductListUiState
 
 class ProductListViewModel(
     private val productListRepository: ProductListRepository,
     private val orderRepository: OrderRepository,
     private val historyRepository: ProductBrowsingHistoryRepository,
 ) : BaseViewModel(), ProductListActionHandler {
-    private val _uiState: MutableLiveData<ProductListUiState> =
-        MutableLiveData(ProductListUiState())
-    val uiState: LiveData<ProductListUiState> get() = _uiState
-
     private val _historyUiState: MutableLiveData<ProductBrowsingHistoryUiState> =
         MutableLiveData(ProductBrowsingHistoryUiState.Loading)
     val historyUiState: LiveData<ProductBrowsingHistoryUiState> get() = _historyUiState
 
-    private val _pagingProductUiModel: MutableLiveData<PagingProductUiModel> =
+    private val _pagingProductUiState: MutableLiveData<PagingProductUiState> =
         MutableLiveData()
-    val pagingProductUiModel: LiveData<PagingProductUiModel> get() = _pagingProductUiModel
+    val pagingProductUiState: LiveData<PagingProductUiState> get() = _pagingProductUiState
+
+    private val _orderUiState: MutableLiveData<OrderUiState> =
+        MutableLiveData(OrderUiState.Loading)
+    val orderUiState: LiveData<OrderUiState> get() = _orderUiState
 
     private val _navigateAction: MutableLiveData<Event<ProductListNavigateAction>> =
         MutableLiveData(null)
     val navigateAction: LiveData<Event<ProductListNavigateAction>> get() = _navigateAction
 
+    val productListUiModel: MediatorLiveData<ProductListUiModel> = MediatorLiveData()
+
+    init {
+        productListUiModel.addSource(pagingProductUiState) {
+            val uiModels =
+                it.pagingProduct?.productList?.map { product -> ProductUiModel(product, 0) }
+                    ?: listOf()
+            val oldPagingProductUiModel = productListUiModel.value
+            val newProductListUiModel =
+                oldPagingProductUiModel?.copy(
+                    productUiModels = uiModels,
+                    isLastPage = it.pagingProduct?.isLastPage ?: true,
+                ) ?: ProductListUiModel(
+                    uiModels,
+                    it.pagingProduct?.isLastPage ?: true,
+                )
+            productListUiModel.value = newProductListUiModel
+        }
+
+        productListUiModel.addSource(orderUiState) {
+            val productList = productListUiModel.value?.productUiModels
+            val orders =
+                if (it is OrderUiState.Success) it.orders else listOf()
+            val productUiModels =
+                productList?.map { productUiModel ->
+                    val quantity =
+                        orders.firstOrNull { order ->
+                            productUiModel.product.id == order.product.id
+                        }?.quantity ?: 0
+                    ProductUiModel(productUiModel.product, quantity)
+                } ?: listOf()
+            val oldPagingProductUiModel = productListUiModel.value
+            val newPagingProductUiModel =
+                oldPagingProductUiModel?.copy(
+                    productUiModels = productUiModels,
+                )
+            productListUiModel.value = newPagingProductUiModel
+        }
+    }
+
     fun initPage() {
         initPagingProduct()
         updateOrders()
         updateHistories()
-        makePagingProductUiModels()
     }
 
     override fun onClickProduct(productId: Int) {
@@ -53,28 +94,27 @@ class ProductListViewModel(
     }
 
     override fun onClickLoadMoreButton() {
-        _uiState.value?.let { state ->
+        _pagingProductUiState.value?.let { state ->
             state.pagingProduct?.let { pagingProduct ->
                 getPagingProduct(pagingProduct.currentPage + 1)
             }
         }
         updateOrders()
-        makePagingProductUiModels()
     }
 
     private fun initPagingProduct(pageSize: Int = PAGING_SIZE) {
-        if (_uiState.value?.pagingProduct == null) {
-            productListRepository.getPagingProduct(INIT_PAGE_NUM, pageSize).onSuccess { item ->
-                val pagingProduct =
-                    PagingProduct(
-                        currentPage = item.currentPage,
-                        productList = item.productList,
-                        isLastPage = item.isLastPage,
-                    )
-                _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
-            }.onFailure { _ ->
-                showMessage(MessageProvider.DefaultErrorMessage)
-            }
+        productListRepository.getPagingProduct(INIT_PAGE_NUM, pageSize).onSuccess { item ->
+            val pagingProduct =
+                PagingProduct(
+                    currentPage = item.currentPage,
+                    productList = item.productList,
+                    isLastPage = item.isLastPage,
+                )
+
+            _pagingProductUiState.value = PagingProductUiState(pagingProduct, loading = false)
+        }.onFailure { _ ->
+            _pagingProductUiState.value = PagingProductUiState(failure = true, loading = false)
+            showMessage(MessageProvider.DefaultErrorMessage)
         }
     }
 
@@ -82,17 +122,20 @@ class ProductListViewModel(
         page: Int,
         pageSize: Int = PAGING_SIZE,
     ) {
+        _pagingProductUiState.value = pagingProductUiState.value?.copy(loading = true)
         productListRepository.getPagingProduct(page, pageSize).onSuccess { item ->
-            val pagingProduct =
+            val oldPagingProduct = pagingProductUiState.value?.pagingProduct
+            val newPagingProduct =
                 PagingProduct(
                     currentPage = item.currentPage,
                     productList =
-                        _uiState.value?.pagingProduct?.productList?.plus(item.productList)
-                            ?: item.productList,
+                        oldPagingProduct?.productList?.plus(item.productList) ?: item.productList,
                     isLastPage = item.isLastPage,
                 )
-            _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
+            _pagingProductUiState.value =
+                _pagingProductUiState.value?.copy(pagingProduct = newPagingProduct, loading = false)
         }.onFailure { _ ->
+            _pagingProductUiState.value = PagingProductUiState(failure = true, loading = false)
             showMessage(MessageProvider.DefaultErrorMessage)
         }
     }
@@ -100,7 +143,6 @@ class ProductListViewModel(
     override fun onClickPlusOrderButton(productId: Int) {
         productListRepository.findProductById(productId).onSuccess { product ->
             plusOrder(product)
-            makePagingProductUiModels()
         }.onFailure {
             throw NoSuchElementException()
         }
@@ -114,7 +156,6 @@ class ProductListViewModel(
     override fun onClickMinusOrderButton(productId: Int) {
         productListRepository.findProductById(productId).onSuccess { product ->
             minusOrder(product)
-            makePagingProductUiModels()
         }.onFailure {
             throw NoSuchElementException()
         }
@@ -128,7 +169,7 @@ class ProductListViewModel(
     private fun updateOrders() {
         val orders = orderRepository.getOrders()
         val orderSum = orders.sumOf { it.quantity }
-        _uiState.value = _uiState.value?.copy(orders = orders, orderSum = orderSum)
+        _orderUiState.value = OrderUiState.Success(orders = orders, orderSum = orderSum)
     }
 
     private fun updateHistories() {
@@ -138,19 +179,6 @@ class ProductListViewModel(
         }.onFailure {
             _historyUiState.postValue(ProductBrowsingHistoryUiState.Failure)
         }
-    }
-
-    private fun makePagingProductUiModels() {
-        val pagingProduct = _uiState.value?.pagingProduct ?: return
-        val orders = _uiState.value?.orders ?: listOf()
-        val uiModels =
-            pagingProduct.productList.map { product ->
-                val quantity = orders.firstOrNull { product.id == it.product.id }?.quantity ?: 0
-                ProductUiModel(product, quantity)
-            }
-        val pagingProductUiModel =
-            PagingProductUiModel(pagingProduct.currentPage, uiModels, pagingProduct.isLastPage)
-        _pagingProductUiModel.value = pagingProductUiModel
     }
 
     companion object {

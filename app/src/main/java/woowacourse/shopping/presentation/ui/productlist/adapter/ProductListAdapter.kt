@@ -10,15 +10,14 @@ import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.LoadMoreViewHolder
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.ProductViewHolder
-import woowacourse.shopping.presentation.ui.productlist.uimodels.PagingProductUiModel
+import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductListUiModel
 import woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel
 import woowacourse.shopping.presentation.ui.productlist.uistates.ProductBrowsingHistoryUiState
 
 class ProductListAdapter(
     private val actionHandler: ProductListActionHandler,
-    private var pagingProductUiModel: PagingProductUiModel =
-        PagingProductUiModel(
-            0,
+    private var productListUiModel: ProductListUiModel =
+        ProductListUiModel(
             emptyList(),
             true,
         ),
@@ -68,7 +67,7 @@ class ProductListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = pagingProductUiModel.productUiModels.size + ProductListViewType.entries.size - 1
+    override fun getItemCount(): Int = productListUiModel.productUiModels.size + ProductListViewType.entries.size - 1
 
     override fun onBindViewHolder(
         holder: ProductListViewHolder,
@@ -76,11 +75,11 @@ class ProductListAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> {
-                holder.bind(pagingProductUiModel.productUiModels[position - 1])
+                holder.bind(productListUiModel.productUiModels[position - 1])
             }
 
             is LoadMoreViewHolder -> {
-                holder.bind(pagingProductUiModel.isLastPage)
+                holder.bind(productListUiModel.isLastPage)
             }
 
             is ProductListViewHolder.HistoryViewHolder -> {
@@ -89,17 +88,17 @@ class ProductListAdapter(
         }
     }
 
-    fun updateProductList(newPagingProductUiModel: PagingProductUiModel) {
-        val positionStart = pagingProductUiModel.productUiModels.size
-        val positionEnd = newPagingProductUiModel.productUiModels.size
+    fun updateProductList(newProductListUiModel: ProductListUiModel) {
+        val positionStart = productListUiModel.productUiModels.size
+        val positionEnd = newProductListUiModel.productUiModels.size
         val itemCount = positionEnd - positionStart
 
         val diff =
-            newPagingProductUiModel.productUiModels - pagingProductUiModel.productUiModels.toSet()
-        pagingProductUiModel = newPagingProductUiModel
+            newProductListUiModel.productUiModels - productListUiModel.productUiModels.toSet()
+        productListUiModel = newProductListUiModel
         notifyItemRangeInserted(positionStart, itemCount + 1)
 
-        newPagingProductUiModel.productUiModels.forEachIndexed { index, productUiModel ->
+        newProductListUiModel.productUiModels.forEachIndexed { index, productUiModel ->
             if (diff.map { it.product.id }.contains(productUiModel.product.id)) {
                 notifyItemChanged(index + 1)
             }
