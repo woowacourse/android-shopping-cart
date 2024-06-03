@@ -7,7 +7,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ui.cart.ShoppingCartFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment
 import woowacourse.shopping.ui.productDetail.ProductDetailFragment.Companion.PRODUCT_ID
-import woowacourse.shopping.ui.productList.ProductListFragment
+import woowacourse.shopping.ui.productList.DefaultProductListFragment
 
 class MainActivity : AppCompatActivity(), FragmentNavigator {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity(), FragmentNavigator {
 
     private fun initFragment() {
         supportFragmentManager.commit {
-            replace(R.id.container, ProductListFragment::class.java, null, ProductListFragment.TAG)
-            addToBackStack(ProductListFragment.TAG)
+            replace(R.id.container, DefaultProductListFragment::class.java, null, DefaultProductListFragment.TAG)
+            addToBackStack(DefaultProductListFragment.TAG)
         }
     }
 
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), FragmentNavigator {
         removeBackStack()
 
         supportFragmentManager.commit {
-            replace(R.id.container, ProductListFragment::class.java, null, ProductListFragment.TAG)
+            replace(R.id.container, DefaultProductListFragment::class.java, null, DefaultProductListFragment.TAG)
         }
     }
 
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), FragmentNavigator {
                 },
                 ProductDetailFragment.TAG,
             )
-            addToBackStack(ProductListFragment.TAG)
+            addToBackStack(DefaultProductListFragment.TAG)
         }
     }
 

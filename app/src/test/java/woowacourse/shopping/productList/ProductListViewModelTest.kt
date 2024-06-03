@@ -22,13 +22,16 @@ import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.source.FakeProductDataSource
 import woowacourse.shopping.source.FakeProductHistorySource
 import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
+import woowacourse.shopping.testfixture.productDomainsTestFixture
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
+import woowacourse.shopping.ui.productList.DefaultProductListViewModel
 import woowacourse.shopping.ui.productList.ProductListViewModel
+import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
+import java.util.concurrent.CountDownLatch
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
@@ -77,32 +80,32 @@ class ProductListViewModelTest {
     @Test
     fun `장바구니에 아무것도 들어가 있지 않을 때 상품 20개 로드`() {
         // given setup
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
 
         // then
-        val loadedProducts = viewModel.loadedProducts.getOrAwaitValue()
+        val loadedProducts = viewModel.uiState.loadedProducts.getOrAwaitValue()
         assertThat(loadedProducts).isEqualTo(
             productsTestFixture(20).map { it.toDomain(0) },
         )
     }
 
     @Test
-    fun `장바구니에 아무것도 들어가 있지 않을 때 상품 40개 로드`() {
+    fun `장바구니에 아무것도 들어가 있지 않을 때 첫 페이지에서 다음 페이지 더보기를 누르면 상품 40개 로드`() {
         // given setup
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
 
         viewModel.loadNextPageProducts()
 
-        // then
-        val loadedProducts = viewModel.loadedProducts
-        assertThat(loadedProducts.getOrAwaitValue()).isEqualTo(
-            productsTestFixture(40).map { it.toDomain(0) },
+
+        val loadedProducts = viewModel.uiState.loadedProducts.getOrAwaitValue()
+        assertThat(loadedProducts).isEqualTo(
+            productDomainsTestFixture(40)
         )
     }
 
@@ -115,13 +118,13 @@ class ProductListViewModelTest {
             )
         shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
 
         // then
-        val currentPage = viewModel.currentPage
+        val currentPage = viewModel.uiState.currentPage
         assertThat(currentPage.getOrAwaitValue()).isEqualTo(1)
     }
 
@@ -135,13 +138,13 @@ class ProductListViewModelTest {
         shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
 
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
 
         // then
-        val isLastPage = viewModel.isLastPage.value
+        val isLastPage = viewModel.uiState.isLastPage.value
         assertThat(isLastPage).isTrue
     }
 
@@ -155,13 +158,13 @@ class ProductListViewModelTest {
         shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
 
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
 
         // then
-        val isLastPage = viewModel.isLastPage.getOrAwaitValue()
+        val isLastPage = viewModel.uiState.isLastPage.getOrAwaitValue()
         assertThat(isLastPage).isFalse
     }
 
@@ -174,14 +177,14 @@ class ProductListViewModelTest {
             )
         shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
         viewModel.loadNextPageProducts()
 
         // then
-        assertThat(viewModel.isLastPage.getOrAwaitValue()).isTrue
+        assertThat(viewModel.uiState.isLastPage.getOrAwaitValue()).isTrue
     }
 
     @Test
@@ -192,13 +195,13 @@ class ProductListViewModelTest {
         shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
 
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
 
         // then
-        assertThat(viewModel.cartProductTotalCount.getOrAwaitValue()).isEqualTo(10)
+        assertThat(viewModel.uiState.cartProductTotalCount.getOrAwaitValue()).isEqualTo(10)
     }
 
     @Test
@@ -218,16 +221,15 @@ class ProductListViewModelTest {
                 cartSource,
             )
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
 
         // when
         viewModel.loadAll()
         viewModel.onClick(productId = 3)
 
         // then
-        val productDetailId = viewModel.detailProductDestinationId.getValue()
-        val expected: Long = 3
-        assertThat(productDetailId).isEqualTo(expected)
+        val navigation = viewModel.navigationEvent.getValue()
+        assertThat(navigation).isEqualTo(ProductListNavigationEvent.ProductDetail(3))
     }
 
     @Test
@@ -235,20 +237,22 @@ class ProductListViewModelTest {
         // given
         historyDataSource =
             FakeProductHistorySource(
-                history = ArrayDeque<Long>(listOf(1, 2, 3, 4, 5)),
+                history = ArrayDeque<Long>(listOf(0, 1, 2, 3, 4)),
             )
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
-        viewModel = ProductListViewModel(shoppingProductRepository, historyRepository)
+        viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
+        val latch = CountDownLatch(1)
 
         // when
         viewModel.loadAll()
+        latch.countDown()
 
         // then
-        val actual = viewModel.productsHistory.getOrAwaitValue()
+//        val actual = viewModel.productsHistory.getOrAwaitValue()
+        latch.await()
+        val actual = viewModel.uiState.productsHistory.value
         assertThat(actual).isEqualTo(
-            productsTestFixture(5) {
-                productTestFixture(id = it.toLong() + 1)
-            }.map { it.toDomain(0) },
+            productDomainsTestFixture(5)
         )
     }
 }
