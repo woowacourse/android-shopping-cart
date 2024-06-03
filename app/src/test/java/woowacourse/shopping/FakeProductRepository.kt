@@ -7,7 +7,7 @@ import kotlin.math.min
 class FakeProductRepository(savedProducts: List<Product> = emptyList()) : ProductRepository {
     private val products: MutableMap<Long, Product> = savedProducts.associateBy { it.id }.toMutableMap()
 
-    override fun find(id: Long): Product {
+    override fun findOrNull(id: Long): Product {
         return products[id] ?: throw IllegalArgumentException()
     }
 

@@ -44,7 +44,7 @@ class CartViewModel(
         runCatching {
             cartRepository.findRange(page, PAGE_SIZE)
         }.onSuccess {
-            _productUiModels.value = it.toProductUiModels()
+            _productUiModels.value = it.toProductUiModels() ?: return
             loadTotalCartCount()
             _page.value = page
         }.onFailure {
@@ -52,9 +52,9 @@ class CartViewModel(
         }
     }
 
-    private fun List<CartItem>.toProductUiModels(): List<ProductUiModel> {
+    private fun List<CartItem>.toProductUiModels(): List<ProductUiModel>? {
         return map {
-            val product = productRepository.find(it.productId)
+            val product = productRepository.findOrNull(it.productId) ?: return null
             ProductUiModel.from(product, it.quantity)
         }
     }

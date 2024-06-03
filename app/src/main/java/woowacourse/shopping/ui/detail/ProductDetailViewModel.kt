@@ -38,8 +38,6 @@ class ProductDetailViewModel(
             )
         }
 
-    private lateinit var product: Product
-
     private val _lastRecentProduct = MutableLiveData<LastRecentProductUiModel>()
     val lastRecentProduct: LiveData<LastRecentProductUiModel> get() = _lastRecentProduct
 
@@ -53,13 +51,11 @@ class ProductDetailViewModel(
     }
 
     private fun loadProduct() {
-        product =
-            runCatching {
-                productRepository.find(productId)
-            }.onFailure {
-                _productLoadError.value = Event(Unit)
-            }.getOrNull() ?: return
-
+        val product = productRepository.findOrNull(productId)
+        if (product == null) {
+            _productLoadError.value = Event(Unit)
+            return
+        }
         _productUiModel.value = product.toProductUiModel()
     }
 
@@ -70,7 +66,7 @@ class ProductDetailViewModel(
 
     private fun loadLastRecentProduct() {
         val lastRecentProduct = recentProductRepository.findLastOrNull() ?: return
-        val product = productRepository.find(lastRecentProduct.productId)
+        val product = productRepository.findOrNull(lastRecentProduct.productId) ?: return
         _lastRecentProduct.value = LastRecentProductUiModel(product.id, product.title)
     }
 

@@ -57,12 +57,16 @@ class ProductsViewModel(
     }
 
     fun loadProducts() {
-        val products = _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
+        val productUiModels = _productUiModels.value ?: return
+        val products =
+            productUiModels.map {
+                productRepository.findOrNull(it.productId) ?: return
+            }
         _productUiModels.value = products.toProductUiModels()
     }
 
     fun loadProduct(productId: Long) {
-        val product = productRepository.find(productId)
+        val product = productRepository.findOrNull(productId) ?: return
         val productUiModel = product.toProductUiModel()
         updateProductUiModels(productId, productUiModel)
     }
@@ -89,7 +93,7 @@ class ProductsViewModel(
     private fun List<RecentProduct>.toRecentProductUiModels(): List<RecentProductUiModel>? {
         val recentProductsUiModels =
             map {
-                val product = productRepository.find(it.productId)
+                val product = productRepository.findOrNull(it.productId) ?: return null
                 RecentProductUiModel(product.id, product.imageUrl, product.title)
             }
         return recentProductsUiModels.ifEmpty { null }

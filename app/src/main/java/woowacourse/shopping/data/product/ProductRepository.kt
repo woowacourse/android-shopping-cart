@@ -4,7 +4,7 @@ import woowacourse.shopping.data.product.entity.Product
 import java.lang.IllegalArgumentException
 
 interface ProductRepository {
-    fun find(id: Long): Product
+    fun findOrNull(id: Long): Product?
 
     fun findRange(
         page: Int,

@@ -11,7 +11,7 @@ class RoomProductRepository(private val productDao: ProductDao) : ProductReposit
         }
     }
 
-    override fun find(id: Long): Product {
+    override fun findOrNull(id: Long): Product {
         var product: Product? = null
         thread {
             product = productDao.findOrNull(id)
