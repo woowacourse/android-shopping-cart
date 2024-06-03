@@ -3,7 +3,7 @@ package woowacourse.shopping.presentation.ui.productlist.uistates
 import woowacourse.shopping.domain.model.Order
 
 sealed class OrderUiState {
-    class Success(
+    data class Success(
         val orders: List<Order>,
         val orderSum: Int,
     ) : OrderUiState()

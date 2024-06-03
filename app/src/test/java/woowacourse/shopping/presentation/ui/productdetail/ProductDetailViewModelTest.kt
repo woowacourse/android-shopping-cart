@@ -37,9 +37,11 @@ class ProductDetailViewModelTest {
         val initialState = mutableMapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to 1)
         savedStateHandle = SavedStateHandle(initialState)
         every { historyRepository.getHistories(any()) } returns
-            listOf(
-                STUB_ProductBrowsing_HISTORY_A,
-                STUB_ProductBrowsing_HISTORY_B,
+            Result.success(
+                listOf(
+                    STUB_ProductBrowsing_HISTORY_A,
+                    STUB_ProductBrowsing_HISTORY_B,
+                ),
             )
         viewModel =
             ProductDetailViewModel(
