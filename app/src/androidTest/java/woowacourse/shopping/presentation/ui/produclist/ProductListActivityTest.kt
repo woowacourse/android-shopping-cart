@@ -37,7 +37,7 @@ class ProductListActivityTest {
         val recyclerView = onView(withId(R.id.rv_product_list))
 
         // When
-        recyclerView.perform(scrollToPosition<ProductListAdapter.ProductListViewHolder>(20))
+        recyclerView.perform(scrollToPosition<ProductListAdapter.ProductListViewHolder>(21))
 
         // then
         onView(withId(R.id.tv_show_more_products)).check(
@@ -63,12 +63,15 @@ class ProductListActivityTest {
     fun `20개의_상품_목록이_있을_때_더보기_버튼을_누르면_상품이_20개_추가되어_보여진다`() {
         // Given
         val recyclerView = onView(withId(R.id.rv_product_list))
-        recyclerView.perform(scrollToPosition<ProductListAdapter.ProductListViewHolder>(20))
+        recyclerView.perform(scrollToPosition<ProductListAdapter.ProductListViewHolder>(21))
+        onView(withId(R.id.tv_show_more_products)).check(
+            matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)),
+        )
 
         // When
         onView(withId(R.id.tv_show_more_products)).perform(click())
 
         // then
-        recyclerView.check(RecyclerViewItemCountAssertion(41))
+        recyclerView.check(RecyclerViewItemCountAssertion(42))
     }
 }

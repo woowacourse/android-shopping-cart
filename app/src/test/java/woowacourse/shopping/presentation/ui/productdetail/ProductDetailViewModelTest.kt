@@ -12,8 +12,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_1
+import woowacourse.shopping.data.DummyData.STUB_ProductBrowsing_HISTORY_A
+import woowacourse.shopping.data.DummyData.STUB_ProductBrowsing_HISTORY_B
 import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.OrderRepository
+import woowacourse.shopping.domain.repository.ProductBrowsingHistoryRepository
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -23,19 +27,34 @@ class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
 
     @MockK
-    private lateinit var shoppingCartRepository: ShoppingCartRepository
+    private lateinit var orderRepository: OrderRepository
+
+    @MockK
+    private lateinit var historyRepository: ProductBrowsingHistoryRepository
 
     @BeforeEach
     fun setUp() {
         val initialState = mutableMapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to 1)
         savedStateHandle = SavedStateHandle(initialState)
+        every { historyRepository.getHistories(any()) } returns
+            Result.success(
+                listOf(
+                    STUB_ProductBrowsing_HISTORY_A,
+                    STUB_ProductBrowsing_HISTORY_B,
+                ),
+            )
         viewModel =
-            ProductDetailViewModel(savedStateHandle, DummyProductList, shoppingCartRepository)
+            ProductDetailViewModel(
+                savedStateHandle,
+                DummyProductList,
+                orderRepository,
+                historyRepository,
+            )
     }
 
     @Test
     fun `선택한 상품의 상세 정보를 불러온다`() {
-        // given & when
+        // when
         val actual = viewModel.product.getOrAwaitValue()
 
         // then
@@ -46,13 +65,13 @@ class ProductDetailViewModelTest {
     @Test
     fun `선택한 상품을 장바구니에 추가한다`() {
         // given
-        every { shoppingCartRepository.addOrder(any()) } just runs
+        every { orderRepository.plusOrder(STUB_PRODUCT_1, 1) } just runs
 
         // when
         viewModel.onAddToCartButtonClick()
 
         // then
         val product = DummyProductList.findProductById(1).getOrThrow()
-        verify { shoppingCartRepository.addOrder(product) }
+        verify { orderRepository.plusOrder(product, 1) }
     }
 }

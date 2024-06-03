@@ -6,17 +6,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.snackbar.Snackbar
+import woowacourse.shopping.ShoppingApplication
 
 abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
     abstract val layoutResourceId: Int
     private var _binding: T? = null
     val binding get() = requireNotNull(_binding)
-
     private var toast: Toast? = null
     private var snackbar: Snackbar? = null
+    lateinit var shoppingApplication: ShoppingApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        shoppingApplication = application as ShoppingApplication
         _binding = DataBindingUtil.setContentView(this, layoutResourceId)
         initStartView()
     }

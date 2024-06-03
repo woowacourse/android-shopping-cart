@@ -6,8 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -15,10 +13,12 @@ import woowacourse.shopping.presentation.base.observeEvent
 
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels {
-        ProductDetailViewModelFactory(
-            DummyProductList,
-            DummyShoppingCart,
-        )
+        shoppingApplication.productDetailViewModelFactory()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.putHistory()
     }
 
     override val layoutResourceId: Int
@@ -37,6 +37,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private fun initDataBinding() {
         binding.apply {
             vm = viewModel
+            actionHandler = viewModel
             lifecycleOwner = this@ProductDetailActivity
         }
     }

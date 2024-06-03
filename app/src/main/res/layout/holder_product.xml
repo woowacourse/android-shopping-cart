@@ -7,8 +7,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            name="productUiModel"
+            type="woowacourse.shopping.presentation.ui.productlist.uimodels.ProductUiModel" />
 
         <variable
             name="actionHandler"
@@ -21,17 +21,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{() -> actionHandler.onClickProduct(product.id)}">
+        android:onClick="@{() -> actionHandler.onClickProduct(productUiModel.product.id)}">
 
         <ImageView
             android:id="@+id/iv_product_thumbnail"
-            urlToImage="@{product.imageUrl}"
+            urlToImage="@{productUiModel.product.imageUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/img_dummy_product_thumbnail" />
+
+        <TextView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_white_radius_16"
+            android:text="+"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:onClick="@{() -> actionHandler.onClickPlusOrderButton(productUiModel.product.id)}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_thumbnail"
+            app:showIfCountLessThanZero="@{productUiModel.quantity}"
+            tools:visibility="visible" />
+
+
+        <include
+            layout="@layout/holder_counter"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:countNum="@{productUiModel.quantity}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_thumbnail"
+            app:onMinusClickListener="@{() -> actionHandler.onClickMinusOrderButton(productUiModel.product.id)}"
+            app:onPlusClickListener="@{() -> actionHandler.onClickPlusOrderButton(productUiModel.product.id)}"
+            app:hideIfCountLessThanZero="@{productUiModel.quantity}"
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_product_name"
@@ -42,7 +72,7 @@
             android:layout_marginEnd="9dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{productUiModel.product.name}"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -54,7 +84,7 @@
 
         <TextView
             android:id="@+id/tv_product_price"
-            priceToCurrency="@{product.price}"
+            priceToCurrency="@{productUiModel.product.price}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"

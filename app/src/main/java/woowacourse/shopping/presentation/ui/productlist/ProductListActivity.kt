@@ -1,35 +1,52 @@
 package woowacourse.shopping.presentation.ui.productlist
 
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.databinding.ProductListMenuLayoutBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.ui.productlist.adapter.ProductBrowsingHistoryListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
-import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapterManager
+import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListViewType
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
 
 class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
 
     private val viewModel: ProductListViewModel by viewModels {
-        ProductListViewModelFactory(
-            DummyProductList,
+        shoppingApplication.productListViewModelFactory()
+    }
+
+    private val historyListAdapter: ProductBrowsingHistoryListAdapter by lazy {
+        ProductBrowsingHistoryListAdapter(
+            actionHandler = viewModel,
+        )
+    }
+    private val productListAdapter: ProductListAdapter by lazy {
+        ProductListAdapter(
+            historyListAdapter = historyListAdapter,
+            actionHandler = viewModel,
         )
     }
 
-    private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
+    override fun onResume() {
+        super.onResume()
+        initViewModel()
+    }
 
     override fun initStartView() {
         initDataBinding()
         initAdapter()
         initObserve()
+    }
+
+    private fun initViewModel() {
+        viewModel.initProductList()
     }
 
     private fun initDataBinding() {
@@ -40,9 +57,9 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     }
 
     private fun initAdapter() {
-        binding.rvProductList.adapter = adapter
+        binding.rvProductList.adapter = productListAdapter
         binding.rvProductList.layoutManager =
-            ProductListAdapterManager(this, adapter, 2, PRODUCT_VIEW_TYPE)
+            ProductListAdapterManager(this, productListAdapter, 2, ProductListViewType.Product.ordinal)
     }
 
     private fun initObserve() {
@@ -53,12 +70,19 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
                         this,
                         navigateAction.productId,
                     )
+
+                is ProductListNavigateAction.NavigateToShoppingCart ->
+                    ShoppingCartActivity.startActivity(this)
             }
         }
 
-        viewModel.uiState.observe(this) { state ->
-            state.pagingProduct?.let { pagingProduct ->
-                adapter.updateProductList(pagingProduct)
+        viewModel.historyUiState.observe(this) { state ->
+            productListAdapter.updateHistoryListState(state)
+        }
+
+        viewModel.productListUiModel.observe(this) { state ->
+            state?.let { pagingProductUiModel ->
+                productListAdapter.updateProductList(pagingProductUiModel)
             }
         }
 
@@ -69,15 +93,14 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.product_list_menu_items, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_shopping_card -> ShoppingCartActivity.startActivity(this)
-        }
+        val menuItem = menu.findItem(R.id.menu_shopping_cart)
+        val menuBinding = ProductListMenuLayoutBinding.inflate(layoutInflater)
+        menuBinding.handler = viewModel
+        menuBinding.vm = viewModel
+        menuBinding.lifecycleOwner = this
+        menuItem.setActionView(menuBinding.root)
         return true
     }
 }

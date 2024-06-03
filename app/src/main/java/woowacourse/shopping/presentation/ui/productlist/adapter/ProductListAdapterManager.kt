@@ -14,10 +14,10 @@ class ProductListAdapterManager(
         spanSizeLookup =
             object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return if (adapter.getItemViewType(position) == productViewType) {
-                        1
-                    } else {
+                    return if (adapter.getItemViewType(position) != productViewType) {
                         spanCount
+                    } else {
+                        1
                     }
                 }
             }

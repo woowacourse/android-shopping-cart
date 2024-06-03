@@ -12,4 +12,8 @@ sealed interface ProductDetailMessage : MessageProvider {
     data object AddToCartSuccessMessage : ProductDetailMessage {
         fun getMessage(context: Context): String = context.getString(R.string.add_to_cart_success_message)
     }
+
+    data object RemoveToCartSuccessMessage : ProductDetailMessage {
+        fun getMessage(context: Context): String = context.getString(R.string.add_to_cart_success_message)
+    }
 }
