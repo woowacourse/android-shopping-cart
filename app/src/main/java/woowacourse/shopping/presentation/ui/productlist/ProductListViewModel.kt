@@ -79,7 +79,7 @@ class ProductListViewModel(
         }
     }
 
-    fun initPage() {
+    fun initProductList() {
         initPagingProduct()
         updateOrders()
         updateHistories()

@@ -46,7 +46,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     }
 
     private fun initViewModel() {
-        viewModel.initPage()
+        viewModel.initProductList()
     }
 
     private fun initDataBinding() {

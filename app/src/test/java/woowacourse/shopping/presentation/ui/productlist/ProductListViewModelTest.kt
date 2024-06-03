@@ -49,7 +49,7 @@ class ProductListViewModelTest {
         every { historyRepository.getHistories(any()) } returns List(10) { ProductBrowsingHistory(DummyData.STUB_PRODUCT_1, 1L) }
 
         // when
-        productListViewModel.initPage()
+        productListViewModel.initProductList()
 
         // then
         val actual = productListViewModel.uiState.getOrAwaitValue()
@@ -78,7 +78,7 @@ class ProductListViewModelTest {
                 20,
             ).getOrThrow()
         } returns nextDummyPagingProduct
-        productListViewModel.initPage()
+        productListViewModel.initProductList()
 
         // when
         productListViewModel.onClickLoadMoreButton()
@@ -118,7 +118,7 @@ class ProductListViewModelTest {
         every { orderRepository.getOrders() } returns listOf(Order(1, 2, DummyData.STUB_PRODUCT_1))
         every { orderRepository.plusOrder(DummyData.STUB_PRODUCT_1) } just runs
         every { historyRepository.getHistories(any()) } returns List(10) { ProductBrowsingHistory(DummyData.STUB_PRODUCT_1, 1L) }
-        productListViewModel.initPage()
+        productListViewModel.initProductList()
 
         // when
         productListViewModel.onClickPlusOrderButton(1)
@@ -144,7 +144,7 @@ class ProductListViewModelTest {
         every { orderRepository.getOrders() } returns listOf(Order(1, 1, DummyData.STUB_PRODUCT_1))
         every { orderRepository.minusOrder(DummyData.STUB_PRODUCT_1) } just runs
         every { historyRepository.getHistories(any()) } returns List(10) { ProductBrowsingHistory(DummyData.STUB_PRODUCT_1, 1L) }
-        productListViewModel.initPage()
+        productListViewModel.initProductList()
 
         // when
         productListViewModel.onClickMinusOrderButton(1)
