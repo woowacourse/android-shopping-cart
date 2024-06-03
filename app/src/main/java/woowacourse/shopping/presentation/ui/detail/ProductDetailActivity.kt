@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import woowacourse.shopping.R
@@ -45,7 +44,10 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
 
     private fun fetchInitialData() {
         id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
-        if (id == -1L) finish()
+        if (id == -1L) {
+            finish()
+            return
+        }
         viewModel.fetchInitialData(id)
     }
 
@@ -66,7 +68,11 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             this,
             EventObserver {
                 when (it) {
-                    is FromDetailToScreen.ProductDetail -> startLastViewedActivity(this, it.productId)
+                    is FromDetailToScreen.ProductDetail -> startLastViewedActivity(
+                        this,
+                        it.productId
+                    )
+
                     is FromDetailToScreen.Shopping -> moveToShoppingActivity(it)
                 }
             },
@@ -80,6 +86,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             it.quantity,
         )
         finish()
+        return
     }
 
     companion object {
