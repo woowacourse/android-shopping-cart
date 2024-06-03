@@ -124,7 +124,7 @@ class ProductListViewModelTest {
         viewModel.loadAll()
 
         // then
-        val currentPage = viewModel.uiState.currentPage
+        val currentPage = viewModel.uiState.page
         assertThat(currentPage.getOrAwaitValue()).isEqualTo(1)
     }
 

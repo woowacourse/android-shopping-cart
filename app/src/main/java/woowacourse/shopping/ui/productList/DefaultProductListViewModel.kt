@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.productList
 import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.UniversalViewModelFactory
-import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
@@ -15,14 +14,12 @@ class DefaultProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
     private val productHistoryRepository: ProductHistoryRepository,
 ) : ProductListViewModel() {
-    override val uiState: DefaultProductListUiState = DefaultProductListUiState()
-
+    override val uiState: ProductListUiState = DefaultProductListUiState()
     override val errorEvent: MutableSingleLiveData<ProductListError> = MutableSingleLiveData()
-
     override val navigationEvent: MutableSingleLiveData<ProductListNavigationEvent> = MutableSingleLiveData()
 
     override fun loadAll() {
-        val page = uiState.currentPage.value ?: currentPageIsNullException()
+        val page = uiState.currentPage()
         loadAllProducts(page)
         loadFinalPage(page)
         calculateProductsQuantityInCart()
@@ -32,7 +29,7 @@ class DefaultProductListViewModel(
     private fun loadAllProducts(page: Int) {
         productsRepository.loadAllProductsAsyncResult(page) { result ->
             result.onSuccess {
-                uiState.loadedProducts.postValue(it)
+                uiState.postLoadedProducts(it)
             }.onFailure {
                 errorEvent.postValue(ProductListError.LoadProducts)
             }
@@ -42,7 +39,7 @@ class DefaultProductListViewModel(
     private fun loadFinalPage(page: Int) {
         productsRepository.isFinalPageAsyncResult(page) { result ->
             result.onSuccess {
-                uiState.isLastPage.postValue(it)
+                uiState.postLastPage(it)
             }.onFailure {
                 errorEvent.postValue(ProductListError.FinalPage)
             }
@@ -52,7 +49,7 @@ class DefaultProductListViewModel(
     private fun calculateProductsQuantityInCart() {
         productsRepository.shoppingCartProductQuantityAsyncResult { result ->
             result.onSuccess {
-                uiState.cartProductTotalCount.postValue(it)
+                uiState.postCartProductTotalCount(it)
             }.onFailure {
                 errorEvent.postValue(ProductListError.CartProductQuantity)
             }
@@ -62,7 +59,7 @@ class DefaultProductListViewModel(
     private fun loadProductsHistory() {
         productHistoryRepository.loadAllProductHistoryAsyncResult { result ->
             result.onSuccess {
-                uiState.productsHistory.postValue(it)
+                uiState.postProductsHistory(it)
             }.onFailure {
                 errorEvent.postValue(ProductListError.LoadProductHistory)
             }
@@ -70,10 +67,7 @@ class DefaultProductListViewModel(
     }
 
     override fun loadNextPageProducts() {
-        if (uiState.isLastPage.value == true) return
-
-        val nextPage = uiState.currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
-        uiState.currentPage.postValue(nextPage)
+        val nextPage = uiState.nextPage()
 
         loadFinalPage(nextPage)
         addNextPageProducts(nextPage)
@@ -82,8 +76,8 @@ class DefaultProductListViewModel(
 
     private fun addNextPageProducts(page: Int) {
         productsRepository.loadAllProductsAsyncResult(page) { result ->
-            result.onSuccess {
-                uiState.loadedProducts.postValue(uiState.loadedProducts.value?.toMutableList()?.apply { addAll(it) })
+            result.onSuccess { products ->
+                uiState.addLoadedProducts(products)
             }.onFailure {
                 errorEvent.postValue(ProductListError.LoadProducts)
             }
@@ -101,7 +95,7 @@ class DefaultProductListViewModel(
     override fun onAdd(productId: Long) {
         productsRepository.addShoppingCartProductAsyncResult(productId) { result ->
             result.onSuccess {
-                changeProductQuantity(productId, INCREASE_AMOUNT)
+                uiState.increaseProductQuantity(productId)
                 calculateProductsQuantityInCart()
             }.onFailure {
                 errorEvent.postValue(ProductListError.AddProductInCart)
@@ -113,7 +107,7 @@ class DefaultProductListViewModel(
     override fun onIncrease(productId: Long) {
         productsRepository.increaseShoppingCartProductAsyncResult(productId) { result ->
             result.onSuccess {
-                changeProductQuantity(productId, INCREASE_AMOUNT)
+                uiState.increaseProductQuantity(productId)
                 calculateProductsQuantityInCart()
             }.onFailure {
                 errorEvent.postValue(ProductListError.UpdateProductQuantity)
@@ -125,7 +119,7 @@ class DefaultProductListViewModel(
     override fun onDecrease(productId: Long) {
         productsRepository.decreaseShoppingCartProductAsyncResult(productId) { result ->
             result.onSuccess {
-                changeProductQuantity(productId, DECREASE_AMOUNT)
+                uiState.decreaseProductQuantity(productId)
                 calculateProductsQuantityInCart()
             }.onFailure {
                 errorEvent.postValue(ProductListError.UpdateProductQuantity)
@@ -133,26 +127,9 @@ class DefaultProductListViewModel(
         }
     }
 
-    private fun changeProductQuantity(
-        productId: Long,
-        changeAmount: Int,
-    ) {
-        uiState.loadedProducts.postValue(
-            uiState.loadedProducts.value?.map {
-                if (it.id == productId) {
-                    it.copy(quantity = it.quantity + changeAmount)
-                } else {
-                    it
-                }
-            },
-        )
-    }
-
     companion object {
         private const val TAG = "ProductListViewModel"
         private const val PAGE_MOVE_COUNT = 1
-        private const val INCREASE_AMOUNT = 1
-        private const val DECREASE_AMOUNT = -1
 
         fun factory(
             productRepository: ShoppingProductsRepository =
