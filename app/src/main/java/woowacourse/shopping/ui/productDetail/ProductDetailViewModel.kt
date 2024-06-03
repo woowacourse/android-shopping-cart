@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productDetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,25 +34,48 @@ class ProductDetailViewModel(
     val detailProductDestinationId: SingleLiveData<Long> get() = _detailProductDestinationId
 
     fun loadAll() {
-        shoppingProductsRepository.loadProductAsync(productId) { product ->
-            _currentProduct.postValue(product)
-            _productCount.postValue(1)
+        shoppingProductsRepository.loadProductAsyncResult(productId) { result ->
+            result.onSuccess { product ->
+                _currentProduct.postValue(product)
+                _productCount.postValue(1)
+            }
+            result.onFailure {
+                // TODO: error
+            }
+
         }
-        productHistoryRepository.loadLatestProductAsync { latestProductId ->
-            shoppingProductsRepository.loadProductAsync(latestProductId) { latestProduct ->
-                _latestProduct.postValue(latestProduct)
+
+        productHistoryRepository.loadLatestProductIdAsyncResult { result ->
+            result.onSuccess { latestProductId ->
+                shoppingProductsRepository.loadProductAsyncResult(latestProductId) { latestProduct ->
+                    latestProduct.onSuccess {
+                        _latestProduct.postValue(it)
+                    }
+                    latestProduct.onFailure {
+                        // TODO: error
+                    }
+
+                }
             }
         }
 
-        productHistoryRepository.saveProductHistoryAsync(productId) {
-            // TODO: 담겼다는 메시지
+        productHistoryRepository.saveProductHistoryAsyncResult(productId) { result ->
+            result.onSuccess {
+                // TODO: 내역에 저장됨
+            }
+            result.onFailure {
+                // TODO: error
+            }
         }
     }
 
     fun addProductToCart() {
-        repeat(productCount.value ?: 0) {
-            shoppingProductsRepository.increaseShoppingCartProductAsync(productId) {
-                // TODO: 여기서 담겼다는 메시지? 한 번에 여러개 넣으면 터짐..
+        shoppingProductsRepository.putItemInCartAsyncResult(productId, productCount.value ?: 1) {result ->
+            result.onSuccess {
+                // TODO: 담겼다는 메시지
+            }
+            result.onFailure {
+                // TODO: error
             }
         }
     }
