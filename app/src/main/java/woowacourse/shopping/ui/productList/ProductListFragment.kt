@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,7 +40,6 @@ class ProductListFragment : Fragment() {
         binding.productDetailList.adapter = productsAdapter
         binding.productLatestList.adapter = historyAdapter
 
-        showLoadMoreButton()
         return binding.root
     }
 
@@ -47,7 +48,21 @@ class ProductListFragment : Fragment() {
         viewModel.loadAll()
     }
 
-    private fun showLoadMoreButton() {
+    private fun hasMoreItems(
+        totalItemCount: Int,
+        lastVisibleItem: Int,
+    ) = totalItemCount == lastVisibleItem + 1
+
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        registerLoadMoreButtonListener()
+        initObserve()
+    }
+
+    private fun registerLoadMoreButtonListener() {
         binding.productDetailList.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(
@@ -72,23 +87,12 @@ class ProductListFragment : Fragment() {
         )
     }
 
-    private fun hasMoreItems(
-        totalItemCount: Int,
-        lastVisibleItem: Int,
-    ) = totalItemCount == lastVisibleItem + 1
-
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
-        super.onViewCreated(view, savedInstanceState)
-
+    private fun initObserve() {
         observeNavigationShoppingCart()
         observeLoadedProducts()
         observeDetailProductDestination()
-        viewModel.productsHistory.observe(viewLifecycleOwner) {
-            historyAdapter.update(it)
-        }
+        observeProductHistory()
+        observeErrorEvent()
     }
 
     private fun observeNavigationShoppingCart() {
@@ -107,6 +111,38 @@ class ProductListFragment : Fragment() {
         viewModel.detailProductDestinationId.observe(viewLifecycleOwner) { productId ->
             navigateToProductDetail(productId)
         }
+    }
+
+    private fun observeProductHistory() {
+        viewModel.productsHistory.observe(viewLifecycleOwner) {
+            historyAdapter.update(it)
+        }
+    }
+
+    private fun observeErrorEvent() {
+        viewModel.errorEvent.observe(viewLifecycleOwner) {
+            when (it) {
+                ProductListError.FinalPage -> showToast(R.string.error_message_final_page)
+
+                ProductListError.CartProductQuantity -> showToast(R.string.error_message_cart_product_quantity)
+
+                ProductListError.LoadProductHistory -> showToast(R.string.error_message_product_history)
+
+                ProductListError.LoadProducts -> showToast(R.string.error_message_load_products)
+
+                ProductListError.AddProductInCart -> showToast(R.string.error_message_add_product_in_cart)
+
+                ProductListError.UpdateProductQuantity -> showToast(R.string.error_message_update_products_quantity_in_cart)
+            }
+        }
+    }
+
+    private fun showToast(@StringRes stringId: Int) {
+        Toast.makeText(
+            requireContext(),
+            stringId,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun navigateToShoppingCart() {

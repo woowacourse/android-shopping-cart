@@ -63,3 +63,19 @@ Fragment
 * 로컬 데이터 유지를 위해 Room을 사용한다. 
 * 상품 목록의 HTTP Client를 구현한다. 
 * MockWebServer를 사용하여 테스트 환경을 만든다.
+
+### 리뷰 반영
+- [x] Thread 를 ViewModel 에서 사용할 필요가 있을까? DataSOurce 로 이동시켜보기
+- [x] Thread { ... }.join 을  
+- [ ] Result 값을 리턴값으로 활용한다면, 에러가 발생했을 때 단순앱을 죽이는 것이 아니라 사용자에게 에러를 알리고 앱을 유지시킬 수 있겠다는 생각이 듭니다!
+  - [x] ProductListFragment 에 적용
+- [ ] 리사이클러뷰를 리스트 어댑터와 diffutil 로 바꾸기. 차이점 알아보기
+- [ ] Repository, DataSource 에서 Result 객체로 결과를 받는다면, 현재와 같은 구현들이 수정이 될 수 있겠다는 생각이 듭니다~💪
+- [ ] 화면이 깜빡이는 이유가 여기에 있었네요😅
+  아이템을 카트에 넣거나, 빼거나, 리스트에 변경이 생길 경우 notifyDataSetChanged()으로 모든 아이템들을 갱샌해주고 있군요!
+  notifyXXX 에는 여러가지 함수들이 존재를 하는데, 각각의 함수별로 차이점을 살펴보시면 좋을 것 같습니다!💪
+- [ ] 테스트 코드의 경우 어떤 테스트인지 확실하게 알 수 있게 행위 -> 결과 형식으로 네이밍을 정해보는 것도 좋을 것 같다
+- [ ] 데이터 베이스 테스트 test fixture
+- [ ] 로그용 Log.d, println 지우기
+- [ ] dao, api service, datasource, repository 각각 어떠한 로직이 들어가야 하나?
+- [ ] replace()와 add(), addToBackStack()의 동작과 차이점. 해당 이슈 관련 오류
