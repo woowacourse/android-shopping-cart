@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartListBinding
 import woowacourse.shopping.ui.FragmentNavigator
-import woowacourse.shopping.ui.cart.adapter.CartItemRecyclerViewAdapter
+import woowacourse.shopping.ui.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.ui.cart.event.ShoppingCartError
 import woowacourse.shopping.ui.cart.event.ShoppingCartEvent
 
@@ -23,8 +23,8 @@ class ShoppingCartFragment : Fragment() {
         DefaultShoppingCartViewModel.factory()
     }
 
-    private val adapter: CartItemRecyclerViewAdapter by lazy {
-        CartItemRecyclerViewAdapter(onCartProductListener = viewModel)
+    private val adapter: ShoppingCartAdapter by lazy {
+        ShoppingCartAdapter(onCartProductListener = viewModel)
     }
 
     override fun onCreateView(
@@ -91,7 +91,7 @@ class ShoppingCartFragment : Fragment() {
 
     private fun observeItemsInCurrentPage() {
         viewModel.uiState.itemsInCurrentPage.observe(viewLifecycleOwner) {
-            adapter.updateData(it)
+            adapter.submitList(it)
         }
     }
 

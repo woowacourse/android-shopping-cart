@@ -2,25 +2,16 @@ package woowacourse.shopping.ui.cart.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.HolderCartBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.ui.cart.CartProductListener
 import woowacourse.shopping.ui.cart.viewholder.ShoppingCartItemViewHolder
 
-class CartItemRecyclerViewAdapter(
+class ShoppingCartAdapter(
     private val onCartProductListener: CartProductListener,
-) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
-    private var products: List<Product> = emptyList()
-
-    private lateinit var recyclerView: RecyclerView
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        this.recyclerView = recyclerView
-        recyclerView.itemAnimator = null
-    }
-
+) : ListAdapter<Product, ShoppingCartItemViewHolder>(productDiffCallback) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -33,18 +24,17 @@ class CartItemRecyclerViewAdapter(
     override fun onBindViewHolder(
         holder: ShoppingCartItemViewHolder,
         position: Int,
-    ) = holder.bind(products[position])
+    ) = holder.bind(getItem(position))
 
-    override fun getItemCount(): Int = products.size
+    companion object {
+        private val productDiffCallback = object : DiffUtil.ItemCallback<Product>() {
+            override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-    fun updateData(newData: List<Product>) {
-        val oldSize = products.size
-        this.products = newData.toList()
-        if (newData.isEmpty()) {
-            notifyItemRangeRemoved(0, oldSize)
-            return
+            override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+                return oldItem == newItem
+            }
         }
-
-        notifyItemRangeChanged(0, itemCount)
     }
 }
