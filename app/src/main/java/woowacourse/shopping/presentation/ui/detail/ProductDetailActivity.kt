@@ -10,7 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.ViewModelFactory
-import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity.Companion.launchWithProductDetails
 import woowacourse.shopping.presentation.util.EventObserver
 import kotlin.properties.Delegates
 
@@ -68,25 +68,27 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             this,
             EventObserver {
                 when (it) {
-                    is FromDetailToScreen.ProductDetail -> startLastViewedActivity(
-                        this,
-                        it.productId
-                    )
+                    is FromDetailToScreen.ProductDetail -> {
+                        startLastViewedActivity(this, it.productId)
+                        finish()
+                    }
 
-                    is FromDetailToScreen.Shopping -> moveToShoppingActivity(it)
+                    is FromDetailToScreen.Shopping -> moveToShoppingActivity2(it)
                 }
             },
         )
     }
 
-    private fun moveToShoppingActivity(it: FromDetailToScreen.Shopping) {
-        ShoppingActivity.startWithNewProductQuantity(
-            this,
-            it.productId,
-            it.quantity,
-        )
+    private fun moveToShoppingActivity1(it: FromDetailToScreen.Shopping) {
+        val intent = launchWithProductDetails(this, it.productId, it.quantity)
+        setResult(RESULT_OK, intent)
         finish()
-        return
+    }
+
+    private fun moveToShoppingActivity2(it: FromDetailToScreen.Shopping) {
+        val intent = launchWithProductDetails(this, it.productId, it.quantity)
+        startActivity(intent)
+        finish()
     }
 
     companion object {
@@ -99,7 +101,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             productId: Long,
         ) {
             Intent(context, ProductDetailActivity::class.java).apply {
-                flags = FLAG_ACTIVITY_CLEAR_TOP
+                addFlags(FLAG_ACTIVITY_CLEAR_TOP)
                 putExtra(EXTRA_PRODUCT_ID, productId)
                 putExtra(EXTRA_IS_LAST_VIEWED_PRODUCT, true)
                 context.startActivity(this)
