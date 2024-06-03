@@ -195,11 +195,16 @@ class DefaultShoppingProductRepository(
     }
 
     override fun loadProductsInCartAsyncResult(page: Int, callback: (Result<List<Product>>) -> Unit) {
-        cartSource.loadPagedAsync(page = page) {
-            it.map { productIdsCountData ->
-                productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+        cartSource.loadPagedAsyncResult(page = page) { result ->
+            val products = result.map { productIdsCountDatas ->
+                productIdsCountDatas.map { productIdsCountData ->
+                    productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+                }
             }
-        }.let { callback }
+
+            callback(products)
+        }
+
     }
 
     override fun loadProductAsyncResult(id: Long, callback: (Result<Product>) -> Unit) {
