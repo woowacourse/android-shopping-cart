@@ -8,6 +8,7 @@ import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.entity.CartItem
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 
 class CartViewModel(
@@ -22,7 +23,7 @@ class CartViewModel(
     private val _page = MutableLiveData<Int>(INITIALIZE_PAGE)
     val page: LiveData<Int> get() = _page
 
-    private val maxPage = MutableLiveData<Int>(INITIALIZE_PAGE)
+    private val maxPage: LiveData<Int> = totalCartCount.map { (it - 1) / PAGE_SIZE }
 
     val hasPage: LiveData<Boolean> = totalCartCount.map { it > PAGE_SIZE }
     val hasPreviousPage: LiveData<Boolean> = _page.map { it > INITIALIZE_PAGE }
@@ -36,10 +37,10 @@ class CartViewModel(
     val pageLoadError: LiveData<Event<Unit>> get() = _pageLoadError
 
     init {
-        loadCart(_page.value ?: INITIALIZE_PAGE)
+        loadCart()
     }
 
-    private fun loadCart(page: Int) {
+    private fun loadCart(page: Int = _page.value ?: INITIALIZE_PAGE) {
         val cart = cartRepository.findRange(page, PAGE_SIZE)
         _productUiModels.value = cart.toProductUiModels()
         loadTotalCartCount()
@@ -53,9 +54,7 @@ class CartViewModel(
     }
 
     private fun loadTotalCartCount() {
-        val totalCartCount = cartRepository.totalCartItemCount()
-        this.totalCartCount.value = totalCartCount
-        maxPage.value = (totalCartCount - 1) / PAGE_SIZE
+        totalCartCount.value = cartRepository.totalCartItemCount()
     }
 
     override fun deleteCartItem(productId: Long) {
@@ -107,12 +106,8 @@ class CartViewModel(
         _changedCartEvent.value = Event(Unit)
         cartRepository.increaseQuantity(productId)
 
-        val position = findProductUiModelsPosition(productId) ?: return
-        val productUiModels = _productUiModels.value?.toMutableList() ?: return
-        var changedQuantity = productUiModels[position].quantity
-        productUiModels[position] = productUiModels[position].copy(quantity = ++changedQuantity)
-        _productUiModels.value = productUiModels
-        loadTotalCartCount()
+        val cartItem = cartRepository.findOrNull(productId) ?: return
+        updateChangedCartQuantity(productId, cartItem.quantity)
     }
 
     override fun decreaseQuantity(productId: Long) {
@@ -125,11 +120,15 @@ class CartViewModel(
             return
         }
 
+        updateChangedCartQuantity(productId, --cartItem.quantity)
+    }
+
+    private fun updateChangedCartQuantity(productId: Long, quantity: Quantity) {
         val position = findProductUiModelsPosition(productId) ?: return
         val productUiModels = _productUiModels.value?.toMutableList() ?: return
-        var changedQuantity = productUiModels[position].quantity
-        productUiModels[position] = productUiModels[position].copy(quantity = --changedQuantity)
+        productUiModels[position] = productUiModels[position].copy(quantity = quantity)
         _productUiModels.value = productUiModels
+        loadTotalCartCount()
     }
 
     private fun findProductUiModelsPosition(productId: Long): Int? {
