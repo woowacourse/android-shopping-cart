@@ -20,6 +20,12 @@ class DefaultProductDetailViewModel(
     override val error: MutableSingleLiveData<ProductDetailError> = MutableSingleLiveData()
 
     override fun loadAll() {
+        loadCurrentProduct()
+        loadLatestProduct()
+        saveCurrentProductInHistory()
+    }
+
+    private fun loadCurrentProduct() {
         shoppingProductsRepository.loadProductAsyncResult(productId) { result ->
             result.onSuccess { product ->
                 uiState.postCurrentProduct(product)
@@ -28,23 +34,31 @@ class DefaultProductDetailViewModel(
                 error.postValue(ProductDetailError.LoadProduct)
             }
         }
+    }
 
+    private fun loadLatestProduct() {
         productHistoryRepository.loadLatestProductIdAsyncResult { result ->
             result.onSuccess { latestProductId ->
-                shoppingProductsRepository.loadProductAsyncResult(latestProductId) { latestProduct ->
-                    latestProduct.onSuccess {
-                        uiState.postLatestProduct(it)
-                    }
-                    latestProduct.onFailure {
-                        error.postValue(ProductDetailError.LoadProduct)
-                    }
-                }
+                loadLatestProductWithId(latestProductId)
             }
             result.onFailure {
                 error.postValue(ProductDetailError.LoadLatestProduct)
             }
         }
+    }
 
+    private fun loadLatestProductWithId(latestProductId: Long) {
+        shoppingProductsRepository.loadProductAsyncResult(latestProductId) { latestProduct ->
+            latestProduct.onSuccess {
+                uiState.postLatestProduct(it)
+            }
+            latestProduct.onFailure {
+                error.postValue(ProductDetailError.LoadProduct)
+            }
+        }
+    }
+
+    private fun saveCurrentProductInHistory() {
         productHistoryRepository.saveProductHistoryAsyncResult(productId) { result ->
             result.onFailure {
                 error.postValue(ProductDetailError.SaveProductInHistory)
