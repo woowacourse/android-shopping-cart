@@ -71,11 +71,11 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="8dp"
-            app:count="@{vm.quantity}"
+            app:countNum="@{vm.quantity}"
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line"
             app:layout_constraintEnd_toEndOf="parent"
-            app:minusCount="@{() -> actionHandler.onClickMinusOrderButton()}"
-            app:plusCount="@{() -> actionHandler.onClickPlusOrderButton()}"
+            app:onMinusClickListener="@{() -> actionHandler.onClickMinusOrderButton()}"
+            app:onPlusClickListener="@{() -> actionHandler.onClickPlusOrderButton()}"
             />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

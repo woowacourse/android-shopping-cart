@@ -55,11 +55,11 @@
             android:layout_height="42dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            app:count="@{productUiModel.quantity}"
+            app:countNum="@{productUiModel.quantity}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_thumbnail"
             app:layout_constraintEnd_toEndOf="@id/iv_product_thumbnail"
-            app:minusCount="@{() -> actionHandler.onClickMinusOrderButton(productUiModel.product.id)}"
-            app:plusCount="@{() -> actionHandler.onClickPlusOrderButton(productUiModel.product.id)}"
+            app:onMinusClickListener="@{() -> actionHandler.onClickMinusOrderButton(productUiModel.product.id)}"
+            app:onPlusClickListener="@{() -> actionHandler.onClickPlusOrderButton(productUiModel.product.id)}"
             app:hideIfCountLessThanZero="@{productUiModel.quantity}"
             tools:visibility="gone" />
 
