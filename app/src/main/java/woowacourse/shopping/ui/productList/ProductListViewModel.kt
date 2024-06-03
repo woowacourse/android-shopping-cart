@@ -41,22 +41,55 @@ class ProductListViewModel(
     private var _shoppingCartDestination: MutableSingleLiveData<Boolean> = MutableSingleLiveData()
     val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
 
+    private var _errorEvent = MutableSingleLiveData<ProductListError>()
+    val errorEvent: SingleLiveData<ProductListError> get() = _errorEvent
+
+
     fun loadAll() {
         val page = currentPage.value ?: currentPageIsNullException()
-        productsRepository.loadAllProductsAsync(page) { products ->
-            _loadedProducts.postValue(products)
-        }
+        loadAllProducts(page)
+        loadFinalPage(page)
+        calculateProductsQuantityInCart()
+        loadProductsHistory()
+    }
 
-        productsRepository.isFinalPageAsync(page) {
-            _isLastPage.postValue(it)
+    private fun loadAllProducts(page: Int) {
+        productsRepository.loadAllProductsAsyncResult(page) { result ->
+            result.onSuccess {
+                _loadedProducts.postValue(it)
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.LoadProducts)
+            }
         }
+    }
 
-        productsRepository.shoppingCartProductQuantityAsync { count ->
-            _cartProductTotalCount.postValue(count)
+    private fun loadFinalPage(page: Int) {
+        productsRepository.isFinalPageAsyncResult(page) { result ->
+            result.onSuccess {
+                _isLastPage.postValue(it)
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.FinalPage)
+            }
         }
+    }
 
-        productHistoryRepository.loadAllProductHistoryAsync { productHistory ->
-            _productsHistory.postValue(productHistory)
+    private fun calculateProductsQuantityInCart() {
+        productsRepository.shoppingCartProductQuantityAsyncResult { result ->
+            result.onSuccess {
+                _cartProductTotalCount.postValue(it)
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.CartProductQuantity)
+            }
+        }
+    }
+
+    private fun loadProductsHistory() {
+        productHistoryRepository.loadAllProductHistoryAsyncResult { result ->
+            result.onSuccess {
+                _productsHistory.postValue(it)
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.LoadProductHistory)
+            }
         }
     }
 
@@ -66,15 +99,18 @@ class ProductListViewModel(
         val nextPage = _currentPage.value?.plus(PAGE_MOVE_COUNT) ?: currentPageIsNullException()
         _currentPage.postValue(nextPage)
 
-        productsRepository.isFinalPageAsync(nextPage) {
-            _isLastPage.postValue(it)
-        }
-        productsRepository.loadAllProductsAsync(nextPage) { products ->
-            _loadedProducts.postValue(_loadedProducts.value?.toMutableList()?.apply { addAll(products) })
-        }
+        loadFinalPage(nextPage)
+        addNextPageProducts(nextPage)
+        calculateProductsQuantityInCart()
+    }
 
-        productsRepository.shoppingCartProductQuantityAsync { count ->
-            _cartProductTotalCount.postValue(count)
+    private fun addNextPageProducts(page: Int) {
+        productsRepository.loadAllProductsAsyncResult(page) { result ->
+            result.onSuccess {
+                _loadedProducts.postValue(_loadedProducts.value?.toMutableList()?.apply { addAll(it) })
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.LoadProducts)
+            }
         }
     }
 
@@ -86,20 +122,35 @@ class ProductListViewModel(
         _detailProductDestinationId.setValue(productId)
     }
 
-    override fun onIncrease(productId: Long) {
-        productsRepository.increaseShoppingCartProductAsync(productId) {
-            productsRepository.shoppingCartProductQuantityAsync { count ->
-                _cartProductTotalCount.postValue(count)
+    override fun onAdd(productId: Long) {
+        productsRepository.addShoppingCartProductAsyncResult(productId) { result ->
+            result.onSuccess {
                 changeProductQuantity(productId, INCREASE_AMOUNT)
+                calculateProductsQuantityInCart()
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.AddProductInCart)
+            }
+        }
+    }
+
+    override fun onIncrease(productId: Long) {
+        productsRepository.increaseShoppingCartProductAsyncResult(productId) { result ->
+            result.onSuccess {
+                changeProductQuantity(productId, INCREASE_AMOUNT)
+                calculateProductsQuantityInCart()
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.UpdateProductQuantity)
             }
         }
     }
 
     override fun onDecrease(productId: Long) {
-        productsRepository.decreaseShoppingCartProductAsync(productId) {
-            productsRepository.shoppingCartProductQuantityAsync { count ->
-                _cartProductTotalCount.postValue(count)
+        productsRepository.decreaseShoppingCartProductAsyncResult(productId) { result ->
+            result.onSuccess {
                 changeProductQuantity(productId, DECREASE_AMOUNT)
+                calculateProductsQuantityInCart()
+            }.onFailure {
+                _errorEvent.postValue(ProductListError.UpdateProductQuantity)
             }
         }
     }
