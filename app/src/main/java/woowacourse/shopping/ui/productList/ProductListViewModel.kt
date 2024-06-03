@@ -35,14 +35,11 @@ class ProductListViewModel(
     private var _isLastPage: MutableLiveData<Boolean> = MutableLiveData()
     val isLastPage: LiveData<Boolean> get() = _isLastPage
 
-    private var _detailProductDestinationId: MutableSingleLiveData<Long> = MutableSingleLiveData()
-    val detailProductDestinationId: SingleLiveData<Long> get() = _detailProductDestinationId
-
-    private var _shoppingCartDestination: MutableSingleLiveData<Boolean> = MutableSingleLiveData()
-    val shoppingCartDestination: SingleLiveData<Boolean> get() = _shoppingCartDestination
-
     private var _errorEvent = MutableSingleLiveData<ProductListError>()
     val errorEvent: SingleLiveData<ProductListError> get() = _errorEvent
+
+    private var _navigationEvent = MutableSingleLiveData<ProductListNavigationEvent>()
+    val navigationEvent: SingleLiveData<ProductListNavigationEvent> get() = _navigationEvent
 
 
     fun loadAll() {
@@ -115,11 +112,11 @@ class ProductListViewModel(
     }
 
     fun navigateToShoppingCart() {
-        _shoppingCartDestination.setValue(true)
+        _navigationEvent.setValue(ProductListNavigationEvent.ShoppingCart)
     }
 
     override fun onClick(productId: Long) {
-        _detailProductDestinationId.setValue(productId)
+        _navigationEvent.setValue(ProductListNavigationEvent.ProductDetail(productId))
     }
 
     override fun onAdd(productId: Long) {

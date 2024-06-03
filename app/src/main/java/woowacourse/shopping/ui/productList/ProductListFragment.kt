@@ -88,17 +88,10 @@ class ProductListFragment : Fragment() {
     }
 
     private fun initObserve() {
-        observeNavigationShoppingCart()
+        observeNavigationEvent()
         observeLoadedProducts()
-        observeDetailProductDestination()
         observeProductHistory()
         observeErrorEvent()
-    }
-
-    private fun observeNavigationShoppingCart() {
-        viewModel.shoppingCartDestination.observe(viewLifecycleOwner) {
-            navigateToShoppingCart()
-        }
     }
 
     private fun observeLoadedProducts() {
@@ -107,9 +100,12 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    private fun observeDetailProductDestination() {
-        viewModel.detailProductDestinationId.observe(viewLifecycleOwner) { productId ->
-            navigateToProductDetail(productId)
+    private fun observeNavigationEvent() {
+        viewModel.navigationEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is ProductListNavigationEvent.ProductDetail -> navigateToProductDetail(event.productId)
+                ProductListNavigationEvent.ShoppingCart -> navigateToShoppingCart()
+            }
         }
     }
 
