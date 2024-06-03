@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
+            name="listener"
+            type="woowacourse.shopping.listener.OnClickCartItemCounter" />
+
+        <variable
             name="product"
-            type="woowacourse.shopping.db.Product" />
+            type="woowacourse.shopping.model.Product" />
+
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.model.CartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,6 +63,16 @@
             app:layout_constraintTop_toBottomOf="@id/cart_product_name"
             tools:src="@drawable/ic_launcher_background" />
 
+        <include
+            android:id="@+id/cart_quantity_button"
+            layout="@layout/quantity_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/cart_product_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            bind:cartItem="@{cartItem}"
+            bind:listener="@{listener}"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/cart_product_price"

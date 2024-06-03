@@ -4,32 +4,38 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderProductBinding
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.listener.OnClickCartItemCounter
+import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 
 class ProductRecyclerViewAdapter(
-    private var values: List<Product>,
+    private var values: List<Product> = emptyList(),
+    private var cartItems: List<CartItem> = emptyList(),
+    private val onClickCartItemCounter: OnClickCartItemCounter,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        return ViewHolder(
+        val binding =
             HolderProductBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
-            ),
-            onClick = { id -> onClick(id) },
-        )
+            )
+        return ViewHolder(binding) { id -> onClick(id) }
     }
 
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int,
     ) {
-        val item = values[position]
-        holder.bind(item)
+        val product = values[position]
+        val cartItems =
+            cartItems.find { it.productId == product.id } ?: CartItem(product.id, 0)
+        holder.bind(product, cartItems)
+        holder.binding.listener = onClickCartItemCounter
     }
 
     override fun getItemCount(): Int = values.size
@@ -40,13 +46,21 @@ class ProductRecyclerViewAdapter(
         notifyItemRangeInserted(start, newData.size - start)
     }
 
+    fun updateCartItems(newData: List<CartItem>) {
+        this.cartItems = newData
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(
-        private val binding: HolderProductBinding,
+        val binding: HolderProductBinding,
         private val onClick: (id: Int) -> Unit,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(
+            product: Product,
+            cartItem: CartItem,
+        ) {
             binding.product = product
+            binding.cartItem = cartItem
             binding.root.setOnClickListener { onClick(product.id) }
         }
     }

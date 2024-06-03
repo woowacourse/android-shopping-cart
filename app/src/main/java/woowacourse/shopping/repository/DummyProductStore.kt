@@ -1,6 +1,6 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.model.Product
 
 class DummyProductStore : ProductStore {
     private val products =

@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="listener"
-            type="woowacourse.shopping.listener.OnClickCartItemCounter" />
-
-        <variable
-            name="cartItem"
-            type="woowacourse.shopping.model.CartItem" />
-
         <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
@@ -65,28 +55,6 @@
             app:layout_constraintStart_toStartOf="@id/main_product_list_product_name"
             app:layout_constraintTop_toBottomOf="@id/main_product_list_product_name"
             tools:text="100000" />
-
-        <include
-            android:id="@+id/main_product_list_quantity_button"
-            layout="@layout/quantity_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/main_product_list_item_img"
-            app:layout_constraintEnd_toEndOf="@id/main_product_list_item_img"
-            bind:cartItem="@{cartItem}"
-            bind:listener="@{listener}" />
-
-        <ImageButton
-            android:id="@+id/main_product_list_add_cart_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:importantForAccessibility="no"
-            android:onClick="@{() -> listener.increaseQuantity(cartItem)}"
-            android:src="@drawable/plus"
-            app:layout_constraintBottom_toBottomOf="@id/main_product_list_item_img"
-            app:layout_constraintEnd_toEndOf="@id/main_product_list_item_img"
-            app:visibilityByPlusButton="@{cartItem.quantity}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,35 +1,47 @@
 package woowacourse.shopping.cart
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import woowacourse.shopping.db.Product
-import woowacourse.shopping.db.ShoppingCart
-import woowacourse.shopping.repository.DummyProductStore
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import woowacourse.shopping.db.ShoppingCartDatabase
+import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.service.MockWebService
+import kotlin.concurrent.thread
 import kotlin.math.min
 
-class CartViewModel : ViewModel() {
-    private val productStore = DummyProductStore()
+class CartViewModel(application: Application) : AndroidViewModel(application) {
+    private val productStore = MockWebService()
 
-    private var _productIds: List<Int> = ShoppingCart.productIds
-    private val productIds: List<Int>
-        get() = _productIds
+    private var _productIds: List<Int> = listOf()
+    private val productIds: List<Int> get() = _productIds
 
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
+
     private var _itemsInShoppingCartPage: MutableLiveData<MutableList<Product>> = MutableLiveData()
+    val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
+
+    private val _cartItems = MutableLiveData<List<CartItem>>()
+    val cartItems: LiveData<List<CartItem>> get() = _cartItems
 
     init {
+        ShoppingCartDatabase.initialize(application)
+        loadCartItems()
         updateItemsInShoppingCart()
     }
 
-    val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
-
     fun deleteItem(productId: Int) {
-        ShoppingCart.delete(productId)
-        _itemsInShoppingCartPage.value =
-            _itemsInShoppingCartPage.value?.filter { it.id != productId }?.toMutableList()
-        _productIds = ShoppingCart.productIds
+        viewModelScope.launch {
+            ShoppingCartDatabase.deleteProduct(productId)
+            _itemsInShoppingCartPage.value =
+                _itemsInShoppingCartPage.value?.filter { it.id != productId }?.toMutableList()
+            _productIds = _productIds.filter { it != productId }
+            loadCartItems()
+        }
     }
 
     fun nextPage() {
@@ -44,13 +56,39 @@ class CartViewModel : ViewModel() {
         updateItemsInShoppingCart()
     }
 
+    fun increaseQuantity(productId: Int) {
+        viewModelScope.launch {
+            ShoppingCartDatabase.addProductCount(productId)
+            loadCartItems()
+        }
+    }
+
+    fun decreaseQuantity(productId: Int) {
+        viewModelScope.launch {
+            ShoppingCartDatabase.subtractProductCount(productId)
+            loadCartItems()
+        }
+    }
+
     private fun updateItemsInShoppingCart() {
-        currentPage.value?.let { page ->
-            val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
-            val newItems =
-                productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
-                    .map { productId -> productStore.findById(productId) }
-            _itemsInShoppingCartPage.value = newItems.toMutableList()
+        var newItems: List<Product> = emptyList()
+        thread {
+            currentPage.value?.let { page ->
+                val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
+                newItems =
+                    productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
+                        .map { productId -> productStore.findProductById(productId) }
+            }
+        }.join()
+        _itemsInShoppingCartPage.value = newItems.toMutableList()
+    }
+
+    private fun loadCartItems() {
+        viewModelScope.launch {
+            val cartItemsFromDb = ShoppingCartDatabase.getCartItems()
+            _cartItems.value = cartItemsFromDb
+            _productIds = cartItemsFromDb.map { it.productId }
+            updateItemsInShoppingCart()
         }
     }
 

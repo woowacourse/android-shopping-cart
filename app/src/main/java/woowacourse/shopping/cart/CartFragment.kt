@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.databinding.FragmentCartListBinding
+import woowacourse.shopping.listener.OnClickCartItemCounter
+import woowacourse.shopping.model.CartItem
 
-class CartFragment : Fragment() {
+class CartFragment : Fragment(), OnClickCartItemCounter {
     private val viewModel: CartViewModel by viewModels()
     private val adapter: CartItemRecyclerViewAdapter by lazy {
         CartItemRecyclerViewAdapter(
-            viewModel.itemsInShoppingCartPage.value ?: emptyList(),
-            onClick = { deleteItemId ->
-                viewModel.deleteItem(deleteItemId)
-            },
+            onClickCartItemCounter = this,
+            onClick = { deleteItemId -> viewModel.deleteItem(deleteItemId) },
         )
     }
     private var _binding: FragmentCartListBinding? = null
@@ -28,7 +28,6 @@ class CartFragment : Fragment() {
     ): View {
         _binding = FragmentCartListBinding.inflate(inflater)
         binding.cartList.adapter = adapter
-
         return binding.root
     }
 
@@ -45,8 +44,27 @@ class CartFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) {
-            adapter.updateData(it)
+        viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) { products ->
+            val cartItems = viewModel.cartItems.value ?: emptyList()
+            adapter.updateData(products, cartItems)
         }
+
+        viewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            val products = viewModel.itemsInShoppingCartPage.value ?: emptyList()
+            adapter.updateData(products, cartItems)
+        }
+    }
+
+    override fun increaseQuantity(cartItem: CartItem) {
+        viewModel.increaseQuantity(cartItem.productId)
+    }
+
+    override fun decreaseQuantity(cartItem: CartItem) {
+        viewModel.decreaseQuantity(cartItem.productId)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

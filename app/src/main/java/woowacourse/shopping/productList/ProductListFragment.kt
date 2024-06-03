@@ -6,20 +6,34 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.base.FragmentReplacer.replaceFragment
 import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.factory.BaseViewModelFactory
+import woowacourse.shopping.listener.OnClickCartItemCounter
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.productDetail.ProductDetailFragment
 
-class ProductListFragment : Fragment() {
-    private val viewModel: ProductListViewModel by lazy { ProductListViewModel() }
+class ProductListFragment : Fragment(), OnClickCartItemCounter {
+    private val viewModel: ProductListViewModel by viewModels {
+        BaseViewModelFactory { ProductListViewModel(requireActivity().application) }
+    }
 
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
             viewModel.loadedProducts.value ?: emptyList(),
+            onClickCartItemCounter = this,
+            onClick = { id -> navigateToProductDetail(id) },
+        )
+    }
+
+    private val recentlyViewedAdapter: RecentlyViewedAdapter by lazy {
+        RecentlyViewedAdapter(
+            viewModel.recentlyViewedProducts.value ?: emptyList(),
             onClick = { id -> navigateToProductDetail(id) },
         )
     }
@@ -34,7 +48,11 @@ class ProductListFragment : Fragment() {
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.productDetailList.adapter = adapter
+        binding.recentlyViewedList.adapter = recentlyViewedAdapter
+        binding.recentlyViewedList.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         showLoadMoreButton()
         return binding.root
     }
@@ -48,7 +66,6 @@ class ProductListFragment : Fragment() {
                     dy: Int,
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
-
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val totalItemCount = layoutManager.itemCount
                     val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
@@ -72,12 +89,24 @@ class ProductListFragment : Fragment() {
         binding.productListToolbar.setNavigationOnClickListener {
             navigateToCart()
         }
-
         binding.productListToolbar.setOnMenuItemClickListener {
             clickCartButton(it)
         }
+
         viewModel.loadedProducts.observe(viewLifecycleOwner) {
             adapter.updateData(it)
+        }
+
+        viewModel.cartItems.observe(viewLifecycleOwner) {
+            adapter.updateCartItems(it)
+        }
+
+        viewModel.recentlyViewedProducts.observe(viewLifecycleOwner) {
+            recentlyViewedAdapter.updateData(it)
+        }
+
+        binding.loadMoreButton.setOnClickListener {
+            viewModel.loadMoreProducts()
         }
     }
 
@@ -87,6 +116,7 @@ class ProductListFragment : Fragment() {
                 navigateToCart()
                 true
             }
+
             else -> false
         }
 
@@ -101,5 +131,18 @@ class ProductListFragment : Fragment() {
             }
 
         replaceFragment(R.id.container, productDetailFragment, parentFragmentManager)
+    }
+
+    override fun increaseQuantity(cartItem: CartItem) {
+        viewModel.increaseQuantity(cartItem.productId)
+    }
+
+    override fun decreaseQuantity(cartItem: CartItem) {
+        viewModel.decreaseQuantity(cartItem.productId)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

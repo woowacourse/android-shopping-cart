@@ -5,10 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderCartBinding
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.listener.OnClickCartItemCounter
+import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 
 class CartItemRecyclerViewAdapter(
-    private var values: List<Product>,
+    private var products: List<Product> = emptyList(),
+    private var cartItems: List<CartItem> = emptyList(),
+    private val onClickCartItemCounter: OnClickCartItemCounter,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemRecyclerViewAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
@@ -29,25 +33,34 @@ class CartItemRecyclerViewAdapter(
         holder: ViewHolder,
         position: Int,
     ) {
-        val item = values[position]
-        holder.bind(item)
+        val product = products[position]
+        val item = cartItems.find { it.productId == product.id } ?: CartItem(product.id, 0)
+        holder.bind(product, cartItem = item)
+        holder.binding.listener = onClickCartItemCounter
     }
 
-    override fun getItemCount(): Int = values.size.coerceAtMost(5)
+    override fun getItemCount(): Int = products.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newData: List<Product>) {
-        this.values = newData
+    fun updateData(
+        newProducts: List<Product>,
+        newCartItems: List<CartItem>,
+    ) {
+        this.products = newProducts
+        this.cartItems = newCartItems
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(
-        private val binding: HolderCartBinding,
+        val binding: HolderCartBinding,
         private val onClick: (id: Int) -> Unit,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(
+            product: Product,
+            cartItem: CartItem,
+        ) {
             binding.product = product
+            binding.cartItem = cartItem
             binding.cartProductDelete.setOnClickListener { onClick(product.id) }
         }
     }

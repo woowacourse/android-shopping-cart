@@ -1,6 +1,6 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.model.Product
 
 interface ProductStore {
     fun loadDataAsNeeded(currentIndex: Int): List<Product>
