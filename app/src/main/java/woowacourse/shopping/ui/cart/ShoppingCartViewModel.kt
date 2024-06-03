@@ -22,4 +22,8 @@ abstract class ShoppingCartViewModel : ViewModel(), CartProductListener {
     abstract fun deleteItem(cartItemId: Long)
 
     abstract fun onBackClick()
+
+    override fun onAdd(productId: Long) {
+
+    }
 }

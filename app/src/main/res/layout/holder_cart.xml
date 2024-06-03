@@ -25,16 +25,17 @@
 
         <TextView
             android:id="@+id/cart_product_name"
-            android:layout_width="363dp"
-            android:layout_height="19dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:layout_marginStart="30dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cart_product_delete"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="상품 이름" />

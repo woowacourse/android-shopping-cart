@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@string/product_price_description"
+            android:text="@{@string/price_format(vm.uiState.product.price)}"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/product_detail_latest_product_container"
             app:layout_constraintStart_toStartOf="parent"

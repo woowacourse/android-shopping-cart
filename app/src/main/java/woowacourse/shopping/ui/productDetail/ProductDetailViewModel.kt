@@ -17,4 +17,8 @@ abstract class ProductDetailViewModel : ViewModel(), ProductDetailListener {
     abstract fun addProductToCart()
 
     abstract fun onFinishClick()
+
+    override fun onAdd(productId: Long) {
+
+    }
 }
