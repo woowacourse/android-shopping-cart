@@ -37,13 +37,19 @@ class CartViewModel(
     val pageLoadError: LiveData<Event<Unit>> get() = _pageLoadError
 
     init {
-        loadCart()
+        loadCartPage(_page.value ?: INITIALIZE_PAGE)
     }
 
-    private fun loadCart(page: Int = _page.value ?: INITIALIZE_PAGE) {
-        val cart = cartRepository.findRange(page, PAGE_SIZE)
-        _productUiModels.value = cart.toProductUiModels()
-        loadTotalCartCount()
+    private fun loadCartPage(page: Int) {
+        runCatching {
+            cartRepository.findRange(page, PAGE_SIZE)
+        }.onSuccess {
+            _productUiModels.value = it.toProductUiModels()
+            loadTotalCartCount()
+            _page.value = page
+        }.onFailure {
+            _pageLoadError.value = Event(Unit)
+        }
     }
 
     private fun List<CartItem>.toProductUiModels(): List<ProductUiModel> {
@@ -81,25 +87,13 @@ class CartViewModel(
     }
 
     fun moveNextPage() {
-        _page.value = nextPage(_page.value ?: INITIALIZE_PAGE)
-    }
-
-    private fun nextPage(page: Int): Int {
-        runCatching { loadCart(page + 1) }
-            .onSuccess { return page + 1 }
-            .onFailure { _pageLoadError.value = Event(Unit) }
-        return page
+        val page = _page.value ?: return
+        loadCartPage(page + 1)
     }
 
     fun movePreviousPage() {
-        _page.value = previousPage(_page.value ?: INITIALIZE_PAGE)
-    }
-
-    private fun previousPage(page: Int): Int {
-        runCatching { loadCart(page - 1) }
-            .onSuccess { return page - 1 }
-            .onFailure { _pageLoadError.value = Event(Unit) }
-        return page
+        val page = _page.value ?: return
+        loadCartPage(page - 1)
     }
 
     override fun increaseQuantity(productId: Long) {

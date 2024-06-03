@@ -44,26 +44,20 @@ class ProductsViewModel(
     }
 
     fun loadPage() {
-        page = nextPage(page)
-    }
-
-    private fun nextPage(page: Int): Int {
         val productUiModels = _productUiModels.value ?: emptyList()
         runCatching {
             productRepository.findRange(page, PAGE_SIZE)
         }.onSuccess { products ->
             _productUiModels.value = (productUiModels + products.toProductUiModels())
             _showLoadMore.value = false
-            return page + 1
+            page++
         }.onFailure {
             _pageLoadError.value = Event(Unit)
         }
-        return page
     }
 
     fun loadProducts() {
-        val products =
-            _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
+        val products = _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
         _productUiModels.value = products.toProductUiModels()
     }
 
