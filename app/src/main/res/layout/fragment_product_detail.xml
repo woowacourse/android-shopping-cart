@@ -18,12 +18,9 @@
             type="int" />
 
         <variable
-            name="onItemChargeListener"
-            type="woowacourse.shopping.ui.OnItemQuantityChangeListener" />
+            name="productDetailListener"
+            type="woowacourse.shopping.ui.productDetail.ProductDetailListener" />
 
-        <variable
-            name="onProductClickListener"
-            type="woowacourse.shopping.ui.OnProductItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -101,7 +98,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/product_detail_price_style"
             bind:itemId="@{vm.uiState.product.id}"
-            bind:onItemChargeListener="@{onItemChargeListener}"
+            bind:onItemChargeListener="@{productDetailListener}"
             bind:quantity="@{vm.uiState.productCount}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -112,7 +109,7 @@
             android:layout_height="80dp"
             android:layout_marginHorizontal="30dp"
             android:background="@drawable/grey_border"
-            android:onClick="@{() -> onProductClickListener.onClick(vm.uiState.latestProduct.id)}"
+            android:onClick="@{() -> productDetailListener.navigateToDetail(vm.uiState.latestProduct.id)}"
             android:padding="10dp"
             app:layout_constraintBottom_toTopOf="@id/btn_add_to_cart"
             app:layout_constraintEnd_toEndOf="parent"

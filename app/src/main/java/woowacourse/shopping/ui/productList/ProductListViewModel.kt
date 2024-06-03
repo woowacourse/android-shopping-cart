@@ -2,12 +2,10 @@ package woowacourse.shopping.ui.productList
 
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ui.util.SingleLiveData
-import woowacourse.shopping.ui.OnItemQuantityChangeListener
-import woowacourse.shopping.ui.OnProductItemClickListener
 import woowacourse.shopping.ui.productList.event.ProductListError
 import woowacourse.shopping.ui.productList.event.ProductListEvent
 
-abstract class ProductListViewModel : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
+abstract class ProductListViewModel : ViewModel(), ProductListListener{
     abstract val uiState: ProductListUiState
 
     abstract val errorEvent: SingleLiveData<ProductListError>

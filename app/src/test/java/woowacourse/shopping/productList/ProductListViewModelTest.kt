@@ -225,7 +225,7 @@ class ProductListViewModelTest {
 
         // when
         viewModel.loadAll()
-        viewModel.onClick(productId = 3)
+        viewModel.navigateToDetail(productId = 3)
 
         // then
         val navigation = viewModel.navigationEvent.getValue()

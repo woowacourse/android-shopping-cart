@@ -10,15 +10,15 @@
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
-            name="onProductItemClickListener"
-            type="woowacourse.shopping.ui.OnProductItemClickListener" />
+            name="productNavigator"
+            type="woowacourse.shopping.ui.OnProductNavigator" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
+        android:onClick="@{() -> productNavigator.navigateToDetail(product.id)}"
         android:padding="10dp">
 
         <ImageView

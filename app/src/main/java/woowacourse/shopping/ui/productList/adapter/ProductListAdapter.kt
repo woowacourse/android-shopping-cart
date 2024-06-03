@@ -6,13 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.ui.OnItemQuantityChangeListener
-import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.productList.ProductListListener
 import woowacourse.shopping.ui.productList.viewholder.ProductsItemViewHolder
 
 class ProductListAdapter(
-    private val onProductItemClickListener: OnProductItemClickListener,
-    private val onItemQuantityChangeListener: OnItemQuantityChangeListener,
+    private val productListListener: ProductListListener
 ) : RecyclerView.Adapter<ProductsItemViewHolder>() {
     private var products: List<Product> = emptyList()
 
@@ -22,8 +20,7 @@ class ProductListAdapter(
     ): ProductsItemViewHolder =
         ProductsItemViewHolder(
             HolderProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onProductItemClickListener,
-            onItemQuantityChangeListener,
+            productListListener
         )
 
     override fun onBindViewHolder(

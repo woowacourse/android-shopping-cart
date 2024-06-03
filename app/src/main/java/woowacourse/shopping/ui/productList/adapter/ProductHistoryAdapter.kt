@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderProductHistoryBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.OnProductNavigator
 import woowacourse.shopping.ui.productList.viewholder.ProductHistoryItemViewHolder
 
 class ProductHistoryAdapter(
-    private val onProductItemClickListener: OnProductItemClickListener,
+    private val navigator: OnProductNavigator
 ) : RecyclerView.Adapter<ProductHistoryItemViewHolder>() {
     private var products: List<Product> = emptyList()
 
@@ -20,7 +20,7 @@ class ProductHistoryAdapter(
     ): ProductHistoryItemViewHolder =
         ProductHistoryItemViewHolder(
             HolderProductHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onProductItemClickListener,
+            navigator
         )
 
     override fun onBindViewHolder(

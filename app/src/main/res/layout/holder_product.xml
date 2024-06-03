@@ -11,19 +11,15 @@
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
-            name="onProductItemClickListener"
-            type="woowacourse.shopping.ui.OnProductItemClickListener" />
-
-        <variable
-            name="onItemChargeListener"
-            type="woowacourse.shopping.ui.OnItemQuantityChangeListener" />
+            name="productListListener"
+            type="woowacourse.shopping.ui.productList.ProductListListener" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
+        android:onClick="@{() -> productListListener.navigateToDetail(product.id)}"
         android:padding="10dp">
 
         <ImageView
@@ -48,7 +44,7 @@
             app:layout_constraintEnd_toEndOf="@id/main_product_list_item_img"
             app:layout_constraintStart_toStartOf="@id/main_product_list_item_img"
             bind:itemId="@{product.id}"
-            bind:onItemChargeListener="@{onItemChargeListener}"
+            bind:onItemChargeListener="@{productListListener}"
             bind:quantity="@{product.quantity}" />
 
         <TextView

@@ -27,7 +27,7 @@ class DefaultProductListFragment : Fragment() {
         DefaultProductListViewModel.factory()
     }
 
-    private val productsAdapter: ProductListAdapter by lazy { ProductListAdapter(viewModel, viewModel) }
+    private val productsAdapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
     private val historyAdapter: ProductHistoryAdapter by lazy { ProductHistoryAdapter(viewModel) }
 
     override fun onCreateView(

@@ -1,14 +1,14 @@
 package woowacourse.shopping.ui.productList
 
-import woowacourse.shopping.ui.util.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
-import woowacourse.shopping.ui.UniversalViewModelFactory
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.ui.UniversalViewModelFactory
 import woowacourse.shopping.ui.productList.event.ProductListError
 import woowacourse.shopping.ui.productList.event.ProductListEvent
+import woowacourse.shopping.ui.util.MutableSingleLiveData
 
 class DefaultProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
@@ -88,8 +88,8 @@ class DefaultProductListViewModel(
         navigationEvent.setValue(ProductListEvent.NavigateToShoppingCart)
     }
 
-    override fun onClick(productId: Long) {
-        navigationEvent.setValue(ProductListEvent.NavigateToProductDetail(productId))
+    override fun navigateToDetail(id: Long) {
+        navigationEvent.setValue(ProductListEvent.NavigateToProductDetail(id))
     }
 
     override fun onAdd(productId: Long) {
@@ -129,7 +129,6 @@ class DefaultProductListViewModel(
 
     companion object {
         private const val TAG = "ProductListViewModel"
-        private const val PAGE_MOVE_COUNT = 1
 
         fun factory(
             productRepository: ShoppingProductsRepository =

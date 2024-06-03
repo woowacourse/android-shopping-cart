@@ -9,9 +9,9 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.ui.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.ui.FragmentNavigator
+import woowacourse.shopping.ui.UniversalViewModelFactory
 import woowacourse.shopping.ui.productDetail.event.ProductDetailError
 import woowacourse.shopping.ui.productDetail.event.ProductDetailEvent
 
@@ -33,8 +33,7 @@ class ProductDetailFragment : Fragment() {
 
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.onItemChargeListener = viewModel
-        binding.onProductClickListener = viewModel
+        binding.productDetailListener = viewModel
 
         return binding.root
     }
