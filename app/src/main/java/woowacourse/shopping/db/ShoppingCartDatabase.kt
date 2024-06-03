@@ -13,6 +13,10 @@ object ShoppingCartDatabase {
         database = CartDatabase.getDatabase(context)
     }
 
+    fun getDatabase(): CartDatabase {
+        return database
+    }
+
     suspend fun getCartItems(): List<CartItem> =
         withContext(Dispatchers.IO) {
             database.cartItemDao().getAllCartItems().map { it.toCartItem() }
@@ -56,4 +60,11 @@ object ShoppingCartDatabase {
                 database.cartItemDao().delete(cartItem)
             }
         }
+
+    suspend fun getCartItemById(productId: Int): CartItem {
+        return database.cartItemDao().getCartItemByProductId(productId)?.toCartItem() ?: CartItem(
+            productId,
+            0
+        )
+    }
 }

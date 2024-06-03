@@ -8,30 +8,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.db.ShoppingCartDatabase
 import woowacourse.shopping.db.recenteProduct.RecentlyViewedProductEntity
 import woowacourse.shopping.factory.BaseViewModelFactory
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedRepository
-import woowacourse.shopping.service.MockWebService
-import kotlin.concurrent.thread
 
 class ProductDetailViewModel(application: Application, val productId: Int) :
     AndroidViewModel(application) {
-    private val productStore = MockWebService()
+    private val productRepository = ProductRepository(application)
     private val recentlyViewedRepository = RecentlyViewedRepository(application)
 
-    val product: Product
-        get() = getProduct()
-
-    private fun getProduct(): Product {
-        var product = Product(0, "", "", 0)
-        thread {
-            product = productStore.findProductById(productId)
-        }.join()
-        return product
-    }
+    private val _product = MutableLiveData<Product>()
+    val product: LiveData<Product> get() = _product
 
     private val _cartItem = MutableLiveData<CartItem>()
     val cartItem: LiveData<CartItem> get() = _cartItem
@@ -46,21 +36,27 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
         recentlyViewedRepository.getRecentProducts(productId)
 
     init {
+        loadProduct()
         loadCartItem()
         addProductToRecentlyViewed()
         observeLastViewedProduct()
     }
 
+    private fun loadProduct() {
+        viewModelScope.launch {
+            _product.value = productRepository.getProductById(productId)
+        }
+    }
+
     private fun loadCartItem() {
         viewModelScope.launch {
-            val cartItems = ShoppingCartDatabase.getCartItems()
-            _cartItem.value = cartItems.find { it.productId == productId } ?: CartItem(productId, 0)
+            _cartItem.value = productRepository.getCartItemById(productId)
         }
     }
 
     private fun addProductToRecentlyViewed() {
         viewModelScope.launch {
-            recentlyViewedRepository.addProduct(productId)
+            productRepository.addProductToRecentlyViewed(productId)
         }
     }
 
@@ -69,12 +65,12 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
             val lastViewedEntity = lastViewedEntities.firstOrNull()
             var lastViewedProduct = Product(0, "", "", 0)
             if (lastViewedEntity != null) {
-                thread {
-                    lastViewedProduct = productStore.findProductById(lastViewedEntity.productId)
-                }.join()
-                _lastViewedProduct.value = lastViewedProduct
-                val shouldShow = lastViewedProduct.id != productId
-                _shouldShowLastViewedProduct.value = shouldShow
+                viewModelScope.launch {
+                    lastViewedProduct = productRepository.getProductById(lastViewedEntity.productId)
+                    _lastViewedProduct.value = lastViewedProduct
+                    val shouldShow = lastViewedProduct.id != productId
+                    _shouldShowLastViewedProduct.value = shouldShow
+                }
             } else {
                 _shouldShowLastViewedProduct.value = false
             }
@@ -86,7 +82,7 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
             if ((_cartItem.value?.quantity ?: 0) > 0) {
                 addProductCount()
             } else {
-                ShoppingCartDatabase.addProductToCart(productId)
+                productRepository.addProductToCart(productId)
                 loadCartItem()
             }
         }
@@ -94,14 +90,14 @@ class ProductDetailViewModel(application: Application, val productId: Int) :
 
     private fun addProductCount() {
         viewModelScope.launch {
-            ShoppingCartDatabase.addProductCount(productId)
+            productRepository.addProductCount(productId)
             loadCartItem()
         }
     }
 
     fun subtractProductCount() {
         viewModelScope.launch {
-            ShoppingCartDatabase.subtractProductCount(productId)
+            productRepository.subtractProductCount(productId)
             loadCartItem()
         }
     }
