@@ -80,7 +80,7 @@ class DefaultProductDetailViewModel(
     }
 
     override fun onFinishClick() {
-        event.setValue(ProductDetailEvent.NavigateToProductList)
+        event.setValue(ProductDetailEvent.PopBackStack)
     }
 
     override fun onIncrease(productId: Long) {

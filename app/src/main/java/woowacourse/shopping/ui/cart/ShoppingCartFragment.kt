@@ -65,7 +65,7 @@ class ShoppingCartFragment : Fragment() {
         viewModel.event.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is ShoppingCartEvent.DeleteItem -> viewModel.deleteItem(event.cartItemId)
-                is ShoppingCartEvent.NavigateToProductList -> (requireActivity() as? FragmentNavigator)?.navigateToProductList()
+                is ShoppingCartEvent.PopBackStack -> (requireActivity() as FragmentNavigator).popBackStack()
             }
         }
     }

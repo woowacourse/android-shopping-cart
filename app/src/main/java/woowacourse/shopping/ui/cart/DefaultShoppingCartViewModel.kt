@@ -75,7 +75,7 @@ class DefaultShoppingCartViewModel(
     }
 
     override fun onBackClick() {
-        event.setValue(ShoppingCartEvent.NavigateToProductList)
+        event.setValue(ShoppingCartEvent.PopBackStack)
     }
 
     override fun deleteProduct(productId: Long) {

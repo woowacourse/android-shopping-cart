@@ -20,25 +20,19 @@ class MainActivity : AppCompatActivity(), FragmentNavigator {
     }
 
     private fun initFragment() {
-        supportFragmentManager.commit {
-            replace(R.id.container, DefaultProductListFragment::class.java, null, DefaultProductListFragment.TAG)
-            addToBackStack(DefaultProductListFragment.TAG)
-        }
+        navigateToProductList()
     }
 
     override fun navigateToProductList() {
-        removeBackStack()
-
         supportFragmentManager.commit {
             replace(R.id.container, DefaultProductListFragment::class.java, null, DefaultProductListFragment.TAG)
         }
     }
 
     override fun navigateToShoppingCart() {
-        removeBackStack()
-
         supportFragmentManager.commit {
             replace(R.id.container, ShoppingCartFragment::class.java, null, ShoppingCartFragment.TAG)
+            addToBackStack(DefaultProductListFragment.TAG)
         }
     }
 
@@ -58,6 +52,10 @@ class MainActivity : AppCompatActivity(), FragmentNavigator {
         }
     }
 
+    override fun popBackStack() {
+        supportFragmentManager.popBackStack()
+    }
+
     private fun removeBackStack() {
         val isFirstFragment = supportFragmentManager.backStackEntryCount == 0
         if (!isFirstFragment) {
@@ -72,4 +70,6 @@ interface FragmentNavigator {
     fun navigateToShoppingCart()
 
     fun navigateToProductDetail(productId: Long)
+
+    fun popBackStack()
 }

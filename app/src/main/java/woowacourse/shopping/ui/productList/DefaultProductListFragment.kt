@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductListBinding
-import woowacourse.shopping.ui.cart.ShoppingCartFragment
-import woowacourse.shopping.ui.productDetail.ProductDetailFragment
+import woowacourse.shopping.ui.FragmentNavigator
 import woowacourse.shopping.ui.productList.adapter.ProductHistoryAdapter
 import woowacourse.shopping.ui.productList.adapter.ProductListAdapter
 import woowacourse.shopping.ui.productList.event.ProductListError
@@ -90,8 +89,11 @@ class DefaultProductListFragment : Fragment() {
     private fun observeNavigationEvent() {
         viewModel.navigationEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is ProductListEvent.NavigateToProductDetail -> navigateToProductDetail(event.productId)
-                ProductListEvent.NavigateToShoppingCart -> navigateToShoppingCart()
+                is ProductListEvent.NavigateToProductDetail ->
+                    (requireActivity() as FragmentNavigator).navigateToProductDetail(event.productId)
+
+                is ProductListEvent.NavigateToShoppingCart ->
+                    (requireActivity() as FragmentNavigator).navigateToShoppingCart()
             }
         }
     }
@@ -145,20 +147,6 @@ class DefaultProductListFragment : Fragment() {
             stringId,
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    private fun navigateToShoppingCart() {
-        navigateToFragment(ShoppingCartFragment())
-    }
-
-    private fun navigateToProductDetail(id: Long) = navigateToFragment(ProductDetailFragment.newInstance(id))
-
-    private fun navigateToFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container, fragment)
-            addToBackStack(null)
-            commit()
-        }
     }
 
     companion object {

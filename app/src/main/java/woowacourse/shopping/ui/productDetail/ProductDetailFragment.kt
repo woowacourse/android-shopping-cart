@@ -60,7 +60,7 @@ class ProductDetailFragment : Fragment() {
         viewModel.event.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is ProductDetailEvent.NavigateToProductDetail -> navigateToProductDetail(event.productId)
-                is ProductDetailEvent.NavigateToProductList -> navigateToProductList()
+                is ProductDetailEvent.PopBackStack -> (requireActivity() as FragmentNavigator).popBackStack()
                 is ProductDetailEvent.AddProductToCart -> showToast(R.string.message_save_product_in_cart)
             }
         }
@@ -77,14 +77,11 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-    private fun showToast(@StringRes stringId: Int) {
+    private fun showToast(@StringRes stringId: Int) =
         Toast.makeText(requireContext(), stringId, Toast.LENGTH_SHORT).show()
-    }
 
-    private fun navigateToProductDetail(id: Long) =
-        (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
+    private fun navigateToProductDetail(id: Long) = (requireActivity() as FragmentNavigator).navigateToProductDetail(id)
 
-    private fun navigateToProductList() = (requireActivity() as? FragmentNavigator)?.navigateToProductList()
 
     override fun onDestroyView() {
         super.onDestroyView()
