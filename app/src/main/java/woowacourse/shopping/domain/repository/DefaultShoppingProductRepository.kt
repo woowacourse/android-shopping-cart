@@ -267,7 +267,9 @@ class DefaultShoppingProductRepository(
     }
 
     override fun removeShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
-        TODO("Not yet implemented")
+        cartSource.removedProductsIdAsyncResult(id) {
+            callback(it)
+        }
     }
 
     companion object {

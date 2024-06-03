@@ -14,14 +14,34 @@ class DefaultShoppingCartViewModel(
 
     override val event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
 
+    override val error: MutableSingleLiveData<ShoppingCartError> = MutableSingleLiveData()
+
     override fun loadAll() {
         val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
-        shoppingProductsRepository.loadProductsInCartAsync(page = nowPage) { products ->
-            uiState.itemsInCurrentPage.postValue(products)
+        loadProductsInCart(nowPage)
+        calculateFinalPage(nowPage)
+    }
+
+    private fun loadProductsInCart(nowPage: Int) {
+        shoppingProductsRepository.loadProductsInCartAsyncResult(page = nowPage) { result ->
+            result.onSuccess { products ->
+                uiState.itemsInCurrentPage.postValue(products)
+            }
+            result.onFailure {
+                error.setValue(ShoppingCartError.LoadCart)
+            }
         }
-        shoppingProductsRepository.isCartFinalPageAsync(nowPage) {
-            uiState.isLastPage.postValue(it)
+    }
+
+    private fun calculateFinalPage(nowPage: Int) {
+        shoppingProductsRepository.isCartFinalPageAsyncResult(nowPage) { result ->
+            result.onSuccess {
+                uiState.isLastPage.postValue(it)
+            }
+            result.onFailure {
+                error.setValue(ShoppingCartError.FinalPage)
+            }
         }
     }
 
@@ -31,12 +51,8 @@ class DefaultShoppingCartViewModel(
         uiState.currentPage.value = uiState.currentPage.value?.plus(PAGE_MOVE_COUNT)
         val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
-        shoppingProductsRepository.isCartFinalPageAsync(page = nowPage) {
-            uiState.isLastPage.postValue(it)
-        }
-        shoppingProductsRepository.loadProductsInCartAsync(page = nowPage) { products ->
-            uiState.itemsInCurrentPage.postValue(products)
-        }
+        loadProductsInCart(nowPage)
+        calculateFinalPage(nowPage)
     }
 
     override fun previousPage() {
@@ -45,24 +61,20 @@ class DefaultShoppingCartViewModel(
         uiState.currentPage.value = uiState.currentPage.value?.minus(PAGE_MOVE_COUNT)
         val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
-        shoppingProductsRepository.isCartFinalPageAsync(nowPage) {
-            uiState.isLastPage.postValue(it)
-        }
-        shoppingProductsRepository.loadProductsInCartAsync(nowPage) { products ->
-            uiState.itemsInCurrentPage.postValue(products)
-        }
+        loadProductsInCart(nowPage)
+        calculateFinalPage(nowPage)
     }
 
     override fun deleteItem(cartItemId: Long) {
         val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
-        shoppingProductsRepository.removeShoppingCartProductAsync(cartItemId) {
-            shoppingProductsRepository.loadProductsInCartAsync(page = nowPage) { products ->
-                uiState.itemsInCurrentPage.postValue(products)
+        shoppingProductsRepository.removeShoppingCartProductAsyncResult(cartItemId) { result ->
+            result.onSuccess {
+                loadProductsInCart(nowPage)
+                calculateFinalPage(nowPage)
             }
-            shoppingProductsRepository.isCartFinalPageAsync(nowPage) {
-                uiState.isLastPage.postValue(it)
-
+            result.onFailure {
+                error.setValue(ShoppingCartError.DeleteItem)
             }
         }
     }
@@ -74,24 +86,26 @@ class DefaultShoppingCartViewModel(
     override fun onIncrease(productId: Long) {
         val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
-        shoppingProductsRepository.increaseShoppingCartProductAsync(productId) {
-            shoppingProductsRepository.loadProductsInCartAsync(page = nowPage) { products ->
-                uiState.itemsInCurrentPage.postValue(products)
-
+        shoppingProductsRepository.increaseShoppingCartProductAsyncResult(productId) { result ->
+            result.onSuccess {
+                loadProductsInCart(nowPage)
+            }
+            result.onFailure {
+                error.setValue(ShoppingCartError.UpdateItemQuantity)
             }
         }
     }
 
     override fun onDecrease(productId: Long) {
-        shoppingProductsRepository.loadProductAsync(productId) { product ->
-            if (product.quantity == 1) return@loadProductAsync
-
-            shoppingProductsRepository.decreaseShoppingCartProductAsync(productId) {
+        shoppingProductsRepository.decreaseShoppingCartProductAsyncResult(productId) { result ->
+            result.onSuccess {
                 val nowPage = uiState.currentPage.value ?: currentPageIsNullException()
 
-                shoppingProductsRepository.loadProductsInCartAsync(page = nowPage) { products ->
-                    uiState.itemsInCurrentPage.postValue(products)
-                }
+                loadProductsInCart(nowPage)
+                calculateFinalPage(nowPage)
+            }
+            result.onFailure {
+                error.setValue(ShoppingCartError.UpdateItemQuantity)
             }
         }
     }

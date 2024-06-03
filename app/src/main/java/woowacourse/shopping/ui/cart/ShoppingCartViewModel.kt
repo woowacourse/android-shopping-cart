@@ -10,6 +10,8 @@ abstract class ShoppingCartViewModel : ViewModel(), OnProductItemClickListener, 
 
     abstract val event: SingleLiveData<ShoppingCartEvent>
 
+    abstract val error: SingleLiveData<ShoppingCartError>
+
     abstract fun loadAll()
 
     abstract fun nextPage()
