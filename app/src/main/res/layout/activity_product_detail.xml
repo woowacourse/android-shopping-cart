@@ -7,9 +7,6 @@
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.ui.productdetail.ProductDetailViewModel" />
-        <variable
-            name="actionHandler"
-            type="woowacourse.shopping.presentation.ui.productdetail.ProductDetailActionHandler"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,8 +71,8 @@
             app:countNum="@{vm.quantity}"
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line"
             app:layout_constraintEnd_toEndOf="parent"
-            app:onMinusClickListener="@{() -> actionHandler.onClickMinusOrderButton()}"
-            app:onPlusClickListener="@{() -> actionHandler.onClickPlusOrderButton()}"
+            app:onMinusClickListener="@{() -> vm.onClickMinusOrderButton()}"
+            app:onPlusClickListener="@{() -> vm.onClickPlusOrderButton()}"
             />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -86,7 +83,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_price"
             hideIfRecentHistory="@{vm.mostRecentHistory}"
             hideIfRecentProduct="@{vm.product}"
-            android:onClick="@{() -> actionHandler.onClickRecentHistory()}"
+            android:onClick="@{() -> vm.onClickRecentHistory()}"
             android:background="@drawable/bg_white_outline_radius_4"
             >
             <TextView
