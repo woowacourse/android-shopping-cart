@@ -131,10 +131,11 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
 
     override fun findByProductIdAsyncResult(productId: Long, callback: (Result<ProductIdsCountData?>) -> Unit) {
         thread {
-            runCatching {
-                dao.findById(productId)
-                callback
-            }
+            callback(
+                runCatching {
+                    dao.findById(productId)
+                }
+            )
         }
     }
 
@@ -163,20 +164,26 @@ class LocalShoppingCartProductIdDataSource(private val dao: ShoppingCartDao) : S
         productIdsCountData: ProductIdsCountData,
         callback: (Result<Long>) -> Unit
     ) {
+//        thread {
+//            runCatching {
+//                dao.insert(productIdsCountData)
+//            }.let(callback)
+//        }
         thread {
-            runCatching {
-                dao.insert(productIdsCountData)
-            }.let(callback)
+             callback(
+                runCatching {
+                    dao.insert(productIdsCountData)
+                }
+             )
         }
+
     }
 
-    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Long>) -> Unit) {
+    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
         thread {
-            callback(runCatching {
-                val product = dao.findById(productId) ?: throw NoSuchElementException()
+            runCatching {
                 dao.delete(productId)
-                product.productId
-            })
+            }.let(callback)
         }
     }
 

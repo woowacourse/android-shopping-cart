@@ -88,7 +88,7 @@ interface ShoppingCartProductIdDataSource {
 
     fun removedProductsIdAsyncResult(
         productId: Long,
-        callback: (Result<Long>) -> Unit,
+        callback: (Result<Unit>) -> Unit,
     )
 
     fun plusProductsIdCountAsyncResult(

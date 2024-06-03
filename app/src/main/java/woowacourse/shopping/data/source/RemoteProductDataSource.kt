@@ -88,9 +88,11 @@ class RemoteProductDataSource(
     }
 
     override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
-        callback(runCatching {
-            val count = productApiService.count()
-            page * 20 >= count
-        })
+        thread {
+            callback(runCatching {
+                val count = productApiService.count()
+                page * 20 >= count
+            })
+        }
     }
 }

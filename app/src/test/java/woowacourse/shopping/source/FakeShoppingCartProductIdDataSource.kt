@@ -172,10 +172,11 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Long>) -> Unit) {
+    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
         thread {
             runCatching {
                 removedProductsId(productId)
+                Unit // TODO: 임시로 해둠
             }.let(callback)
         }
     }

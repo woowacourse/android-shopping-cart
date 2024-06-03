@@ -234,39 +234,23 @@ class DefaultShoppingProductRepository(
         cartSource.plusProductsIdCountAsyncResult(id) { result ->
             callback(result)
         }
-//        cartSource.plusProductsIdCountAsyncResult(id) { result ->
-//            callback(result)
-//
-//        }
-//
-//        cartSource.findByProductIdAsyncResult(id) {result ->
-//            if (result.isFailure) {
-//                addShoppingCartProductAsyncResult(id) { result ->
-//                    callback(result)
-//                }
-//                return@findByProductIdAsyncResult
-//            }
-//
-//            cartSource.plusProductsIdCountAsyncResult(id) { result ->
-//                callback(result)
-//            }
-//        }
     }
 
     override fun decreaseShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
-        cartSource.findByProductIdAsyncResult(id) { result ->
-            result
-                .onFailure {
-                    runCatching { callback(Result.failure(it)) }
-                }
-                .onSuccess {
-                    if (it!!.quantity == 1) {
-                        removeShoppingCartProductAsyncResult(id) { result ->
-                            callback(result)
-                        }
-                        return@onSuccess
+        cartSource.findByProductIdAsyncResult(id) {
+            it.onSuccess { data ->
+                if (data!!.quantity == 1) {
+                    cartSource.removedProductsIdAsyncResult(id) {
+                        callback(it)
                     }
-                    cartSource.minusProductsIdCountAsyncResult(id) { result -> callback(result) }
+                } else {
+                    cartSource.minusProductsIdCountAsyncResult(id) {
+                        callback(it)
+                    }
+                }
+            }
+                .onFailure {
+                    callback(Result.failure(it))
                 }
         }
     }
