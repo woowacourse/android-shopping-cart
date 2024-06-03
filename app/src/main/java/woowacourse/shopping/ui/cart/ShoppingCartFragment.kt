@@ -47,18 +47,11 @@ class ShoppingCartFragment : Fragment() {
         observeUiState()
         observeEvent()
         observeError()
-        initNavigation()
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.loadAll()
-    }
-
-    private fun initNavigation() {
-        binding.productDetailToolbar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
     }
 
     private fun observeUiState() {

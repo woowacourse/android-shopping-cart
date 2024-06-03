@@ -79,6 +79,10 @@ class DefaultShoppingCartViewModel(
         }
     }
 
+    override fun onBackClick() {
+        event.setValue(ShoppingCartEvent.NavigateToProductList)
+    }
+
     override fun onClick(productId: Long) {
         event.setValue(ShoppingCartEvent.DeleteItem(productId))
     }

@@ -19,4 +19,6 @@ abstract class ShoppingCartViewModel : ViewModel(), OnProductItemClickListener, 
     abstract fun previousPage()
 
     abstract fun deleteItem(cartItemId: Long)
+
+    abstract fun onBackClick()
 }
