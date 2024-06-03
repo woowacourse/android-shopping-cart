@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.productDetail
 
 import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
-import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
@@ -16,8 +15,7 @@ class DefaultProductDetailViewModel(
 ) : ProductDetailViewModel() {
     override val uiState: ProductDetailUiState = DefaultProductDetailUiState()
 
-    private var _detailProductDestinationId: MutableSingleLiveData<Long> = MutableSingleLiveData()
-    val detailProductDestinationId: SingleLiveData<Long> get() = _detailProductDestinationId
+    override val event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
 
     override fun loadAll() {
         shoppingProductsRepository.loadProductAsyncResult(productId) { result ->
@@ -66,6 +64,10 @@ class DefaultProductDetailViewModel(
         }
     }
 
+    override fun onFinishClick() {
+        event.setValue(ProductDetailEvent.NavigateToProductList)
+    }
+
     override fun onIncrease(productId: Long) {
         uiState.increaseProductCount()
     }
@@ -75,7 +77,7 @@ class DefaultProductDetailViewModel(
     }
 
     override fun onClick(productId: Long) {
-        _detailProductDestinationId.setValue(productId)
+        event.setValue(ProductDetailEvent.NavigateToProductDetail(productId))
     }
 
     companion object {

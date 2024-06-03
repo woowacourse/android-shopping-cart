@@ -49,26 +49,23 @@ class ProductDetailFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-//        viewModel.detailProductDestinationId.observe(viewLifecycleOwner) {
-//            navigateToProductDetail(it)
-//        }
 
-        binding.productDetailToolbar.setOnMenuItemClickListener {
-            navigateToMenuItem(it)
+        observeEvent()
+
+    }
+
+    private fun observeEvent() {
+        viewModel.event.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is ProductDetailEvent.NavigateToProductDetail -> navigateToProductDetail(event.productId)
+                is ProductDetailEvent.NavigateToProductList -> navigateToProductList()
+            }
         }
     }
 
     private fun navigateToProductDetail(id: Long) = (requireActivity() as? FragmentNavigator)?.navigateToProductDetail(id)
 
-    private fun navigateToMenuItem(it: MenuItem) =
-        when (it.itemId) {
-            R.id.action_x -> {
-                (requireActivity() as? FragmentNavigator)?.navigateToProductList()
-                true
-            }
-
-            else -> false
-        }
+    private fun navigateToProductList() = (requireActivity() as? FragmentNavigator)?.navigateToProductList()
 
     override fun onDestroyView() {
         super.onDestroyView()
