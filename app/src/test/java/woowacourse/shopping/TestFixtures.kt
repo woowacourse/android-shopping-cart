@@ -46,8 +46,11 @@ fun convertProductUiModel(
     cartRepository: CartRepository,
 ): List<ProductUiModel> {
     return products.map { product ->
-        runCatching { cartRepository.find(product.id) }
-            .map { ProductUiModel.from(product, it.quantity) }
-            .getOrElse { ProductUiModel.from(product) }
+        val cartItem = cartRepository.findOrNull(product.id)
+        if (cartItem == null) {
+            ProductUiModel.from(product)
+        } else {
+            ProductUiModel.from(product, cartItem.quantity)
+        }
     }
 }

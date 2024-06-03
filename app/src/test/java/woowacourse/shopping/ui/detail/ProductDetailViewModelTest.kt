@@ -86,8 +86,8 @@ class ProductDetailViewModelTest {
         viewModel.addCartProduct()
 
         // then
-        val actual = cartRepository.find(0L)
-        assertThat(actual.productId).isEqualTo(0L)
+        val actual = cartRepository.findOrNull(0L)
+        assertThat(actual?.productId).isEqualTo(0L)
         assertThat(viewModel.isSuccessAddCart.getOrAwaitValue().peekContent()).isTrue
     }
 

@@ -9,32 +9,27 @@ import kotlin.concurrent.thread
 class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
     override fun increaseQuantity(productId: Long) {
         thread {
-            runCatching {
-                cartDao.find(productId)
-            }.onSuccess {
-                var oldQuantity = it.quantity
-                cartDao.changeQuantity(productId, ++oldQuantity)
-            }.onFailure {
-                val cartItem = CartItem(productId = productId, quantity = Quantity(1))
-                cartDao.insert(cartItem)
+            val cartItem = cartDao.findOrNull(productId)
+            if (cartItem == null) {
+                cartDao.insert(CartItem(productId = productId, quantity = Quantity(1)))
+                return@thread
             }
+            var oldQuantity = cartItem.quantity
+            cartDao.changeQuantity(productId, ++oldQuantity)
         }.join()
     }
 
     override fun decreaseQuantity(productId: Long) {
         thread {
-            runCatching {
-                cartDao.find(productId)
-            }.onSuccess {
-                var oldQuantity = it.quantity
-                if (oldQuantity.count == 1) {
-                    cartDao.delete(productId)
-                    return@thread
-                }
-                cartDao.changeQuantity(productId, --oldQuantity)
-            }.onFailure {
-                throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+            val cartItem = cartDao.findOrNull(productId)
+            cartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+
+            var oldQuantity = cartItem.quantity
+            if (oldQuantity.count == 1) {
+                cartDao.delete(productId)
+                return@thread
             }
+            cartDao.changeQuantity(productId, --oldQuantity)
         }.join()
     }
 
@@ -43,35 +38,28 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
         quantity: Quantity,
     ) {
         thread {
-            runCatching {
-                cartDao.find(productId)
-            }.onSuccess {
-                cartDao.changeQuantity(productId, quantity)
-            }.onFailure {
-                val cartItem = CartItem(productId = productId, quantity = quantity)
-                cartDao.insert(cartItem)
+            val cartItem = cartDao.findOrNull(productId)
+            if (cartItem == null) {
+                cartDao.insert(CartItem(productId = productId, quantity = quantity))
+                return@thread
             }
+            cartDao.changeQuantity(productId, quantity)
         }.join()
     }
 
     override fun deleteCartItem(productId: Long) {
         thread {
-            runCatching {
-                cartDao.delete(productId)
-            }.onFailure {
-                throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
-            }
+            cartDao.findOrNull(productId) ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+            cartDao.delete(productId)
         }.join()
     }
 
-    override fun find(productId: Long): CartItem {
+    override fun findOrNull(productId: Long): CartItem? {
         var cartItem: CartItem? = null
         thread {
-            cartItem =
-                runCatching { cartDao.find(productId) }
-                    .getOrNull()
+            cartItem = cartDao.findOrNull(productId)
         }.join()
-        return cartItem ?: throw IllegalArgumentException(CANNOT_FIND_MESSAGE)
+        return cartItem
     }
 
     override fun findRange(
@@ -95,6 +83,5 @@ class RoomCartRepository(private val cartDao: CartDao) : CartRepository {
 
     companion object {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
-        private const val CANNOT_FIND_MESSAGE = "해당하는 장바구니 상품이 존재하지 않습니다."
     }
 }

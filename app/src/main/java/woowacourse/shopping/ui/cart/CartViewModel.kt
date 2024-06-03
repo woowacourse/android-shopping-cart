@@ -106,6 +106,7 @@ class CartViewModel(
     override fun increaseQuantity(productId: Long) {
         _changedCartEvent.value = Event(Unit)
         cartRepository.increaseQuantity(productId)
+
         val position = findProductUiModelsPosition(productId) ?: return
         val productUiModels = _productUiModels.value?.toMutableList() ?: return
         var changedQuantity = productUiModels[position].quantity
@@ -117,17 +118,18 @@ class CartViewModel(
     override fun decreaseQuantity(productId: Long) {
         _changedCartEvent.value = Event(Unit)
         cartRepository.decreaseQuantity(productId)
-        runCatching {
-            cartRepository.find(productId)
-        }.onSuccess {
-            val position = findProductUiModelsPosition(productId) ?: return
-            val productUiModels = _productUiModels.value?.toMutableList() ?: return
-            var changedQuantity = productUiModels[position].quantity
-            productUiModels[position] = productUiModels[position].copy(quantity = --changedQuantity)
-            _productUiModels.value = productUiModels
-        }.onFailure {
+
+        val cartItem = cartRepository.findOrNull(productId)
+        if (cartItem == null) {
             updateDeletedCart(productId)
+            return
         }
+
+        val position = findProductUiModelsPosition(productId) ?: return
+        val productUiModels = _productUiModels.value?.toMutableList() ?: return
+        var changedQuantity = productUiModels[position].quantity
+        productUiModels[position] = productUiModels[position].copy(quantity = --changedQuantity)
+        _productUiModels.value = productUiModels
     }
 
     private fun findProductUiModelsPosition(productId: Long): Int? {

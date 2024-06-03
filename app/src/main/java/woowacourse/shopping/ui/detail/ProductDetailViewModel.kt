@@ -64,9 +64,8 @@ class ProductDetailViewModel(
     }
 
     private fun Product.toProductUiModel(): ProductUiModel {
-        return runCatching { cartRepository.find(id) }
-            .map { ProductUiModel.from(this, it.quantity) }
-            .getOrElse { ProductUiModel.from(this) }
+        val cartItem = cartRepository.findOrNull(id) ?: return ProductUiModel.from(this)
+        return ProductUiModel.from(this, cartItem.quantity)
     }
 
     private fun loadLastRecentProduct() {

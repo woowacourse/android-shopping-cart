@@ -21,10 +21,6 @@ interface CartDao {
     @Query("DELETE FROM cart WHERE product_id = :productId")
     fun delete(productId: Long)
 
-    fun find(productId: Long): CartItem {
-        return findOrNull(productId) ?: throw IllegalArgumentException()
-    }
-
     @Query("SELECT * FROM cart WHERE product_id = :productId")
     fun findOrNull(productId: Long): CartItem?
 

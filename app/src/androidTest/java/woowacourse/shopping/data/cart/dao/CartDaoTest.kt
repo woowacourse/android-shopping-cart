@@ -46,9 +46,9 @@ class CartDaoTest {
         cartDao.insert(cartItem)
 
         // then
-        val actual = cartDao.find(productId = 0L)
-        assertThat(actual.productId).isEqualTo(0L)
-        assertThat(actual.quantity).isEqualTo(Quantity(10))
+        val actual = cartDao.findOrNull(productId = 0L)
+        assertThat(actual?.productId).isEqualTo(0L)
+        assertThat(actual?.quantity).isEqualTo(Quantity(10))
     }
 
     @Test
@@ -61,8 +61,8 @@ class CartDaoTest {
         cartDao.changeQuantity(productId = 0L, quantity = Quantity(1))
 
         // then
-        val actual = cartDao.find(productId = 0L)
-        assertThat(actual.quantity).isEqualTo(Quantity(1))
+        val actual = cartDao.findOrNull(productId = 0L)
+        assertThat(actual?.quantity).isEqualTo(Quantity(1))
     }
 
     @Test
@@ -76,7 +76,7 @@ class CartDaoTest {
 
         // then
         assertThrows(IllegalArgumentException::class.java) {
-            assertThat(cartDao.find(productId = 0L)).isNull()
+            assertThat(cartDao.findOrNull(productId = 0L)).isNull()
         }
     }
 
@@ -87,12 +87,12 @@ class CartDaoTest {
         val cartItemId = cartDao.insert(cartItem)
 
         // when
-        val actual = cartDao.find(productId = 0L)
+        val actual = cartDao.findOrNull(productId = 0L)
 
         // then
-        assertThat(actual.id).isEqualTo(cartItemId)
-        assertThat(actual.productId).isEqualTo(0L)
-        assertThat(actual.quantity).isEqualTo(Quantity(10))
+        assertThat(actual?.id).isEqualTo(cartItemId)
+        assertThat(actual?.productId).isEqualTo(0L)
+        assertThat(actual?.quantity).isEqualTo(Quantity(10))
     }
 
     @Test

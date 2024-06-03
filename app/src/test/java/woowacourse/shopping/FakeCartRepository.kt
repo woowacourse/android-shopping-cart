@@ -52,8 +52,8 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
         cart.remove(deleteCartItem)
     }
 
-    override fun find(productId: Long): CartItem {
-        return cart.find { it.productId == productId } ?: throw IllegalArgumentException()
+    override fun findOrNull(productId: Long): CartItem? {
+        return cart.find { it.productId == productId }
     }
 
     override fun findRange(

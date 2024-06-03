@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.FakeCartRepository
 import woowacourse.shopping.FakeRecentProductRepository
@@ -21,7 +20,6 @@ import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.products
-import java.lang.IllegalArgumentException
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductsViewModelTest {
@@ -150,8 +148,8 @@ class ProductsViewModelTest {
         viewModel.increaseQuantity(0L)
 
         // then
-        val actual = cartRepository.find(0L)
-        assertThat(actual.quantity).isEqualTo(Quantity(1))
+        val actual = cartRepository.findOrNull(0L)
+        assertThat(actual?.quantity).isEqualTo(Quantity(1))
         assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(1)
     }
 
@@ -167,8 +165,8 @@ class ProductsViewModelTest {
         viewModel.increaseQuantity(0L)
 
         // then
-        val actual = cartRepository.find(0L)
-        assertThat(actual.quantity).isEqualTo(Quantity(4))
+        val actual = cartRepository.findOrNull(0L)
+        assertThat(actual?.quantity).isEqualTo(Quantity(4))
         assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(4)
     }
 
@@ -184,7 +182,7 @@ class ProductsViewModelTest {
         viewModel.decreaseQuantity(0L)
 
         // then
-        assertThrows<IllegalArgumentException> { cartRepository.find(0L) }
+        assertThat(cartRepository.findOrNull(0L)).isNull()
         assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(0)
     }
 
@@ -200,8 +198,8 @@ class ProductsViewModelTest {
         viewModel.decreaseQuantity(0L)
 
         // then
-        val actual = cartRepository.find(0L)
-        assertThat(actual.quantity).isEqualTo(Quantity(5))
+        val actual = cartRepository.findOrNull(0L)
+        assertThat(actual?.quantity).isEqualTo(Quantity(5))
         assertThat(viewModel.cartTotalCount.getOrAwaitValue()).isEqualTo(5)
     }
 

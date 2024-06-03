@@ -17,7 +17,7 @@ interface CartRepository {
 
     fun deleteCartItem(productId: Long)
 
-    fun find(productId: Long): CartItem
+    fun findOrNull(productId: Long): CartItem?
 
     fun findRange(
         page: Int,
