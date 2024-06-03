@@ -7,6 +7,8 @@ import woowacourse.shopping.domain.repository.DefaultProductHistoryRepository
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
+import woowacourse.shopping.ui.productDetail.event.ProductDetailError
+import woowacourse.shopping.ui.productDetail.event.ProductDetailEvent
 
 class DefaultProductDetailViewModel(
     private val productId: Long,

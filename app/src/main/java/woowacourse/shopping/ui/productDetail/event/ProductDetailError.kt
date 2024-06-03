@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productDetail
+package woowacourse.shopping.ui.productDetail.event
 
 sealed class ProductDetailError {
 

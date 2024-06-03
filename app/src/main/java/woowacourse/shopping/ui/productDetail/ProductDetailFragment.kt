@@ -12,6 +12,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.ui.FragmentNavigator
+import woowacourse.shopping.ui.productDetail.event.ProductDetailError
+import woowacourse.shopping.ui.productDetail.event.ProductDetailEvent
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null

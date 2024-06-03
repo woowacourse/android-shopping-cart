@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.productDetail.event.ProductDetailError
+import woowacourse.shopping.ui.productDetail.event.ProductDetailEvent
 
 abstract class ProductDetailViewModel: ViewModel(), OnItemQuantityChangeListener, OnProductItemClickListener {
     abstract val uiState: ProductDetailUiState
