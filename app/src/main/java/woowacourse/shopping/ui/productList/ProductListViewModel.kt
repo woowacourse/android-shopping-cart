@@ -8,7 +8,7 @@ import woowacourse.shopping.ui.productList.event.ProductListError
 import woowacourse.shopping.ui.productList.event.ProductListNavigationEvent
 
 abstract class ProductListViewModel : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
-    abstract val uiState: UiState
+    abstract val uiState: ProductListUiState
 
     abstract val errorEvent: SingleLiveData<ProductListError>
 

@@ -15,7 +15,7 @@ class DefaultProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
     private val productHistoryRepository: ProductHistoryRepository,
 ) : ProductListViewModel() {
-    override val uiState: DefaultUiState = DefaultUiState()
+    override val uiState: DefaultProductListUiState = DefaultProductListUiState()
 
     override val errorEvent: MutableSingleLiveData<ProductListError> = MutableSingleLiveData()
 
