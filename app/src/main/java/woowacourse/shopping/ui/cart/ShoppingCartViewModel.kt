@@ -1,13 +1,12 @@
 package woowacourse.shopping.ui.cart
 
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ui.util.SingleLiveData
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
-import woowacourse.shopping.ui.OnProductItemClickListener
 import woowacourse.shopping.ui.cart.event.ShoppingCartError
 import woowacourse.shopping.ui.cart.event.ShoppingCartEvent
+import woowacourse.shopping.ui.util.SingleLiveData
 
-abstract class ShoppingCartViewModel : ViewModel(), OnProductItemClickListener, OnItemQuantityChangeListener {
+abstract class ShoppingCartViewModel : ViewModel(), CartProductListener {
     abstract val uiState: ShoppingCartUiState
 
     abstract val event: SingleLiveData<ShoppingCartEvent>

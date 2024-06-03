@@ -78,7 +78,7 @@ class DefaultShoppingCartViewModel(
         event.setValue(ShoppingCartEvent.NavigateToProductList)
     }
 
-    override fun onClick(productId: Long) {
+    override fun deleteProduct(productId: Long) {
         event.setValue(ShoppingCartEvent.DeleteItem(productId))
     }
 

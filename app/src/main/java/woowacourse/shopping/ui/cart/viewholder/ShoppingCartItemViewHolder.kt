@@ -3,17 +3,14 @@ package woowacourse.shopping.ui.cart.viewholder
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderCartBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.ui.OnItemQuantityChangeListener
-import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.cart.CartProductListener
 
 class ShoppingCartItemViewHolder(
     private val binding: HolderCartBinding,
-    private val onProductItemClickListener: OnProductItemClickListener,
-    private val onItemChargeListener: OnItemQuantityChangeListener,
+    private val onCartProductListener: CartProductListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(product: Product) {
         binding.product = product
-        binding.onProductItemClickListener = onProductItemClickListener
-        binding.onItemChargeListener = onItemChargeListener
+        binding.cartProductListener = onCartProductListener
     }
 }

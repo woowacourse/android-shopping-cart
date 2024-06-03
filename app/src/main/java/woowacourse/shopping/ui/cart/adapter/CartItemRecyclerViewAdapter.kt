@@ -5,13 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderCartBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.ui.OnItemQuantityChangeListener
-import woowacourse.shopping.ui.OnProductItemClickListener
+import woowacourse.shopping.ui.cart.CartProductListener
 import woowacourse.shopping.ui.cart.viewholder.ShoppingCartItemViewHolder
 
 class CartItemRecyclerViewAdapter(
-    private val onProductItemClickListener: OnProductItemClickListener,
-    private val onItemQuantityChangeListener: OnItemQuantityChangeListener,
+    private val onCartProductListener: CartProductListener,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
     private var products: List<Product> = emptyList()
 
@@ -29,8 +27,7 @@ class CartItemRecyclerViewAdapter(
     ): ShoppingCartItemViewHolder =
         ShoppingCartItemViewHolder(
             HolderCartBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onProductItemClickListener,
-            onItemQuantityChangeListener,
+            onCartProductListener,
         )
 
     override fun onBindViewHolder(

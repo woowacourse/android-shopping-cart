@@ -11,12 +11,9 @@
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
-            name="onProductItemClickListener"
-            type="woowacourse.shopping.ui.OnProductItemClickListener" />
+            name="cartProductListener"
+            type="woowacourse.shopping.ui.cart.CartProductListener" />
 
-        <variable
-            name="onItemChargeListener"
-            type="woowacourse.shopping.ui.OnItemQuantityChangeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,8 +25,8 @@
 
         <TextView
             android:id="@+id/cart_product_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="363dp"
+            android:layout_height="19dp"
             android:layout_margin="10dp"
             android:ellipsize="end"
             android:maxLines="1"
@@ -48,7 +45,7 @@
             android:layout_height="16dp"
             android:layout_margin="10dp"
             android:importantForAccessibility="no"
-            android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
+            android:onClick="@{() -> cartProductListener.deleteProduct(product.id)}"
             android:src="@drawable/ic_x"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="@id/cart_product_delete"
             app:layout_constraintTop_toTopOf="@id/cart_product_image"
             bind:itemId="@{product.id}"
-            bind:onItemChargeListener="@{onItemChargeListener}"
+            bind:onItemChargeListener="@{cartProductListener}"
             bind:quantity="@{product.quantity}" />
 
 
