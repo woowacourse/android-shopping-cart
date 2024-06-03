@@ -5,21 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
-import woowacourse.shopping.ui.products.adapter.recent.OnClickRecentProductItem
+import woowacourse.shopping.ui.products.ProductsListener
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.products.adapter.type.ProductsView
 import woowacourse.shopping.ui.products.adapter.type.ProductsViewType
 import woowacourse.shopping.ui.products.adapter.type.RecentProductsUiModel
-import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
-import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
-class ProductsAdapter(
-    private val onClickProductItem: OnClickProductItem,
-    private val onClickRecentProductItem: OnClickRecentProductItem,
-    private val onIncreaseProductQuantity: OnIncreaseProductQuantity,
-    private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
-) :
+class ProductsAdapter(private val productsListener: ProductsListener) :
     RecyclerView.Adapter<ProductsViewHolder>() {
     private val productsViews: MutableList<ProductsView> = mutableListOf()
 
@@ -32,7 +25,7 @@ class ProductsAdapter(
         return when (productsViewType) {
             ProductsViewType.RECENT_PRODUCTS -> {
                 val binding = ItemRecentProductsBinding.inflate(inflater, parent, false)
-                ProductsViewHolder.RecentProductsViewHolder(binding, onClickRecentProductItem)
+                ProductsViewHolder.RecentProductsViewHolder(binding, productsListener::onClickRecentProductItem)
             }
 
             ProductsViewType.PRODUCTS_UI_MODEL -> {
@@ -54,9 +47,7 @@ class ProductsAdapter(
             is ProductsViewHolder.ProductViewHolder -> {
                 holder.bind(
                     productsViews[position] as ProductUiModel,
-                    onClickProductItem,
-                    onIncreaseProductQuantity,
-                    onDecreaseProductQuantity,
+                    productsListener,
                 )
             }
         }

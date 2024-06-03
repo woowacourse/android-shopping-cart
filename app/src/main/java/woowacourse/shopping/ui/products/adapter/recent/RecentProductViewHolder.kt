@@ -7,7 +7,7 @@ class RecentProductViewHolder(private val binding: ItemRecentProductBinding) :
     ViewHolder(binding.root) {
     fun bind(
         recentProductUiModel: RecentProductUiModel,
-        onClickRecentProductItem: OnClickRecentProductItem,
+        onClickRecentProductItem: (productId: Long) -> Unit,
     ) {
         binding.root.setOnClickListener { onClickRecentProductItem(recentProductUiModel.productId) }
         binding.recentProduct = recentProductUiModel

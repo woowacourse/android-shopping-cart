@@ -8,7 +8,3 @@ class AddCartQuantityBundle(
     val onIncreaseProductQuantity: (productId: Long) -> Unit,
     val onDecreaseProductQuantity: (productId: Long) -> Unit,
 )
-
-typealias OnIncreaseProductQuantity = (productId: Long) -> Unit
-
-typealias OnDecreaseProductQuantity = (productId: Long) -> Unit

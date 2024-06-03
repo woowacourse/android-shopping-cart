@@ -19,7 +19,7 @@ import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductsAdapter
 import woowacourse.shopping.ui.products.adapter.ProductsSpanSizeLookUp
 
-class ProductsActivity : AppCompatActivity() {
+class ProductsActivity : AppCompatActivity(), ProductsListener {
     private val binding: ActivityProductsBinding by lazy {
         ActivityProductsBinding.inflate(layoutInflater)
     }
@@ -30,14 +30,7 @@ class ProductsActivity : AppCompatActivity() {
             CartRepository.getInstance(),
         )
     }
-    private val adapter by lazy {
-        ProductsAdapter(
-            onClickProductItem = { navigateToProductDetailView(it) },
-            onClickRecentProductItem = { navigateToProductDetailView(it) },
-            onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
-            onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
-        )
-    }
+    private val adapter by lazy { ProductsAdapter(this) }
 
     private val productDetailActivityResultLauncher =
         registerForActivityResult(
@@ -134,4 +127,12 @@ class ProductsActivity : AppCompatActivity() {
         const val PRODUCT_ID_KEY = "changed_product_id_key"
         private const val PRODUCT_ID_DEFAULT_VALUE = -1L
     }
+
+    override fun onClickProductItem(productId: Long) = navigateToProductDetailView(productId)
+
+    override fun onClickRecentProductItem(productId: Long) = navigateToProductDetailView(productId)
+
+    override fun onClickIncreaseQuantity(productId: Long) = viewModel.increaseQuantity(productId)
+
+    override fun onClickDecreaseQuantity(productId: Long) = viewModel.decreaseQuantity(productId)
 }

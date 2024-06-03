@@ -4,34 +4,29 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
+import woowacourse.shopping.ui.products.ProductsListener
 import woowacourse.shopping.ui.products.adapter.recent.OnClickRecentProductItem
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductsAdapter
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
 import woowacourse.shopping.ui.utils.AddCartQuantityBundle
-import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
-import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
 sealed class ProductsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class ProductViewHolder(private val binding: ItemProductBinding) :
         ProductsViewHolder(binding.root) {
         fun bind(
             productUiModel: ProductUiModel,
-            onClickProductItem: OnClickProductItem,
-            onIncreaseProductQuantity: OnIncreaseProductQuantity,
-            onDecreaseProductQuantity: OnDecreaseProductQuantity,
+            productsListener: ProductsListener,
         ) {
-            binding.productUiModel = productUiModel
+            binding.product = productUiModel
+            binding.listener = productsListener
             binding.addCartQuantityBundle =
                 AddCartQuantityBundle(
                     productUiModel.productId,
                     productUiModel.quantity,
-                    onIncreaseProductQuantity,
-                    onDecreaseProductQuantity,
+                    productsListener::onClickIncreaseQuantity,
+                    productsListener::onClickDecreaseQuantity,
                 )
-            binding.ivProduct.setOnClickListener {
-                onClickProductItem(productUiModel.productId)
-            }
         }
     }
 
@@ -53,5 +48,3 @@ sealed class ProductsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 }
-
-typealias OnClickProductItem = (productId: Long) -> Unit

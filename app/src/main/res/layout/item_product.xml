@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="productUiModel"
+            name="product"
             type="woowacourse.shopping.ui.products.adapter.type.ProductUiModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.products.ProductsListener" />
 
         <variable
             name="addCartQuantityBundle"
@@ -25,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
-            app:imageUrl="@{productUiModel.imageUrl}"
+            android:onClick="@{() -> listener.onClickProductItem(product.productId)}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintBottom_toTopOf="@+id/tv_product_title"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +45,7 @@
             android:layout_marginHorizontal="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{productUiModel.title}"
+            android:text="@{product.title}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -55,7 +60,7 @@
             android:layout_marginHorizontal="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/product_price(productUiModel.price)}"
+            android:text="@{@string/product_price(product.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,13 +76,13 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/shape_product_add_cart_button"
             android:gravity="center"
-            android:onClick="@{() -> addCartQuantityBundle.onIncreaseProductQuantity.invoke(productUiModel.productId)}"
+            android:onClick="@{() -> addCartQuantityBundle.onIncreaseProductQuantity.invoke(product.productId)}"
             android:text="@string/plus"
             android:textColor="@color/gray_500"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="parent"
-            app:visibility="@{productUiModel.quantity.min}" />
+            app:visibility="@{product.quantity.min}" />
 
         <include
             android:id="@+id/btn_add_cart_quantity"
@@ -89,7 +94,7 @@
             app:bundle="@{addCartQuantityBundle}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="parent"
-            app:visibility="@{productUiModel.quantity.greaterThanMin}"
+            app:visibility="@{product.quantity.greaterThanMin}"
             tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
