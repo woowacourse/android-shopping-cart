@@ -2,8 +2,6 @@ package woowacourse.shopping.ui.productDetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.MutableSingleLiveData
-import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.domain.model.Product
 
 abstract class ProductDetailUiState {

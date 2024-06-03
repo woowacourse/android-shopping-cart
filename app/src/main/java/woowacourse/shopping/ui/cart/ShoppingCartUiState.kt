@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.cart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.model.Product
 
 abstract class ShoppingCartUiState {
@@ -34,14 +33,14 @@ data class DefaultShoppingCartUiState(
         if (isLastPage.value == true) throw IllegalStateException("마지막 페이지입니다.")
 
         page.value = page.value?.plus(PAGE_MOVE_COUNT)
-        return page.value ?: currentPageIsNullException()
+        return page.value ?: throw IllegalStateException("currentPage is null")
     }
 
     override fun previousPage(): Int {
         if (page.value == FIRST_PAGE) throw IllegalStateException("첫 페이지입니다.")
 
         page.value = page.value?.minus(PAGE_MOVE_COUNT)
-        return page.value ?: currentPageIsNullException()
+        return page.value ?: throw IllegalStateException("currentPage is null")
     }
 
     override fun postPage(page: Int) {

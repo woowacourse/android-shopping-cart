@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.productList
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.domain.model.Product
 
 abstract class ProductListUiState {
@@ -52,7 +51,7 @@ data class DefaultProductListUiState(
         if (isLastPage.value == true) throw IllegalStateException("마지막 페이지입니다.")
 
         page.value = page.value?.plus(PAGE_MOVE_COUNT)
-        return page.value ?: currentPageIsNullException()
+        return page.value ?: throw IllegalStateException("currentPage is null")
     }
 
     override fun increaseProductQuantity(productId: Long) {

@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.productList
 
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.SingleLiveData
+import woowacourse.shopping.ui.util.SingleLiveData
 import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.OnProductItemClickListener
 import woowacourse.shopping.ui.productList.event.ProductListError

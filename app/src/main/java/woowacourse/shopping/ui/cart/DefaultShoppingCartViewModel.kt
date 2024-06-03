@@ -1,8 +1,8 @@
 package woowacourse.shopping.ui.cart
 
-import woowacourse.shopping.MutableSingleLiveData
+import woowacourse.shopping.ui.util.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
-import woowacourse.shopping.UniversalViewModelFactory
+import woowacourse.shopping.ui.UniversalViewModelFactory
 import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.ui.cart.event.ShoppingCartError
