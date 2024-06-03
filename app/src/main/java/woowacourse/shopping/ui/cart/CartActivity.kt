@@ -19,9 +19,6 @@ class CartActivity : AppCompatActivity() {
             CartRepository.getInstance(),
         )
     }
-    private val adapter by lazy {
-        CartAdapter(viewModel)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +42,12 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeCartAdapter() {
+        val cartAdapter = CartAdapter(viewModel)
         binding.rvCart.itemAnimator = null
-        binding.rvCart.adapter = adapter
+        binding.rvCart.adapter = cartAdapter
 
         viewModel.productUiModels.observe(this) {
-            adapter.submitList(it)
+            cartAdapter.submitList(it)
         }
     }
 
