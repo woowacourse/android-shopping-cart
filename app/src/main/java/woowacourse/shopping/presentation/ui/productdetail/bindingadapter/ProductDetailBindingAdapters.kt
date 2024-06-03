@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductBrowsingHistory
 
 @BindingAdapter(value = ["hideIfRecentHistory", "hideIfRecentProduct"], requireAll = true)
-fun View.hideIfCountLessThanZero(
+fun View.hideIfRecent(
     hideIfRecentProductBrowsingHistory: ProductBrowsingHistory?,
     hideIfRecentProduct: Product,
 ) {
