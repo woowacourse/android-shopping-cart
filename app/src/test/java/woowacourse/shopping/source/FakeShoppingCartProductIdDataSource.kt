@@ -136,6 +136,14 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
+    override fun findByProductIdAsyncResultNonNull(productId: Long, callback: (Result<ProductIdsCountData>) -> Unit) {
+        thread {
+            runCatching {
+                findByProductId(productId) ?: throw NoSuchElementException()
+            }.let(callback)
+        }
+    }
+
     override fun loadPagedAsyncResult(page: Int, callback: (Result<List<ProductIdsCountData>>) -> Unit) {
         thread {
             runCatching {
@@ -186,6 +194,17 @@ class FakeShoppingCartProductIdDataSource(
             runCatching {
                 plusProductsIdCount(productId)
             }.let(callback)
+        }
+    }
+
+    override fun plusProductIdCountAsyncResult(productId: Long, quantity: Int, callback: (Result<Unit>) -> Unit) {
+        thread{
+            runCatching {
+                val oldItem = data.find { it.productId == productId } ?: throw NoSuchElementException()
+                data.remove(oldItem)
+                val newItem = oldItem.copy(quantity = oldItem.quantity + quantity)
+                data.add(newItem)
+            }
         }
     }
 

@@ -67,6 +67,11 @@ interface ShoppingCartProductIdDataSource {
         callback: (Result<ProductIdsCountData?>) -> Unit,
     )
 
+    fun findByProductIdAsyncResultNonNull(
+        productId: Long,
+        callback: (Result<ProductIdsCountData>) -> Unit
+    )
+
     fun loadPagedAsyncResult(
         page: Int,
         callback: (Result<List<ProductIdsCountData>>) -> Unit,
@@ -93,6 +98,12 @@ interface ShoppingCartProductIdDataSource {
 
     fun plusProductsIdCountAsyncResult(
         productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    )
+
+    fun plusProductIdCountAsyncResult(
+        productId: Long,
+        quantity: Int,
         callback: (Result<Unit>) -> Unit,
     )
 
