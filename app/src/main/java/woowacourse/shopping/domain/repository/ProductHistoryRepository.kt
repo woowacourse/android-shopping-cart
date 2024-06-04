@@ -5,16 +5,10 @@ import woowacourse.shopping.domain.model.Product
 interface ProductHistoryRepository {
     fun saveProductHistoryAsyncResult(
         productId: Long,
-        callback: (Result<Unit>) -> Unit
+        callback: (Result<Unit>) -> Unit,
     )
 
     fun loadAllProductHistoryAsyncResult(callback: (Result<List<Product>>) -> Unit)
 
-    fun loadProductHistoryAsyncResult(
-        productId: Long,
-        callback: (Result<Product>) -> Unit
-    )
-
     fun loadLatestProductIdAsyncResult(callback: (Result<Long>) -> Unit)
-
 }

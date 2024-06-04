@@ -28,7 +28,7 @@ class LocalShoppingCartProductIdDataSourceStudy(private val dao: ShoppingCartDao
     }
 
     override fun plusProductsIdCount(productId: Long) {
-        dao.increaseQuantity(productId)
+        dao.increaseQuantity(productId, 1)
     }
 
     override fun minusProductsIdCount(productId: Long) {
@@ -106,7 +106,7 @@ class LocalShoppingCartProductIdDataSourceStudy(private val dao: ShoppingCartDao
         callback: () -> Unit,
     ) {
         thread {
-            dao.increaseQuantity(productId)
+            dao.increaseQuantity(productId, 1)
             callback()
         }
     }
@@ -129,27 +129,36 @@ class LocalShoppingCartProductIdDataSourceStudy(private val dao: ShoppingCartDao
         }
     }
 
-    override fun findByProductIdAsyncResult(productId: Long, callback: (Result<ProductIdsCountData?>) -> Unit) {
+    override fun findByProductIdAsyncResult(
+        productId: Long,
+        callback: (Result<ProductIdsCountData?>) -> Unit,
+    ) {
         thread {
             callback(
                 runCatching {
                     dao.findById(productId)
-                }
+                },
             )
         }
     }
 
-    override fun findByProductIdAsyncResultNonNull(productId: Long, callback: (Result<ProductIdsCountData>) -> Unit) {
+    override fun findByProductIdAsyncResultNonNull(
+        productId: Long,
+        callback: (Result<ProductIdsCountData>) -> Unit,
+    ) {
         thread {
             callback(
                 runCatching {
                     dao.findById(productId) ?: throw NoSuchElementException()
-                }
+                },
             )
         }
     }
 
-    override fun loadPagedAsyncResult(page: Int, callback: (Result<List<ProductIdsCountData>>) -> Unit) {
+    override fun loadPagedAsyncResult(
+        page: Int,
+        callback: (Result<List<ProductIdsCountData>>) -> Unit,
+    ) {
         thread {
             runCatching {
                 val offset = (page - 1) * 5
@@ -164,7 +173,10 @@ class LocalShoppingCartProductIdDataSourceStudy(private val dao: ShoppingCartDao
         }
     }
 
-    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+    override fun isFinalPageAsyncResult(
+        page: Int,
+        callback: (Result<Boolean>) -> Unit,
+    ) {
         thread {
             callback(runCatching { page * 5 >= dao.countAll() })
         }
@@ -172,7 +184,7 @@ class LocalShoppingCartProductIdDataSourceStudy(private val dao: ShoppingCartDao
 
     override fun addedNewProductsIdAsyncResult(
         productIdsCountData: ProductIdsCountData,
-        callback: (Result<Long>) -> Unit
+        callback: (Result<Long>) -> Unit,
     ) {
 //        thread {
 //            runCatching {
@@ -180,16 +192,18 @@ class LocalShoppingCartProductIdDataSourceStudy(private val dao: ShoppingCartDao
 //            }.let(callback)
 //        }
         thread {
-             callback(
+            callback(
                 runCatching {
                     dao.insert(productIdsCountData)
-                }
-             )
+                },
+            )
         }
-
     }
 
-    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun removedProductsIdAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
             runCatching {
                 dao.delete(productId)
@@ -197,29 +211,45 @@ class LocalShoppingCartProductIdDataSourceStudy(private val dao: ShoppingCartDao
         }
     }
 
-    override fun plusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun plusProductsIdCountAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
-            callback(runCatching {
-                dao.increaseQuantity(productId)
-            })
+            callback(
+                runCatching {
+                    dao.increaseQuantity(productId, 1)
+                },
+            )
         }
     }
 
-    override fun plusProductIdCountAsyncResult(productId: Long, quantity: Int, callback: (Result<Unit>) -> Unit) {
+    override fun plusProductIdCountAsyncResult(
+        productId: Long,
+        quantity: Int,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
-            callback(runCatching {
-                dao.increaseQuantity(productId, quantity)
-            })
+            callback(
+                runCatching {
+                    dao.increaseQuantity(productId, quantity)
+                },
+            )
         }
     }
 
-    override fun minusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun minusProductsIdCountAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
-            callback(runCatching {
-                val oldProduct = dao.findById(productId) ?: throw NoSuchElementException()
-                val newProduct = oldProduct.copy(quantity = oldProduct.quantity - 1)
-                dao.update(newProduct)
-            })
+            callback(
+                runCatching {
+                    val oldProduct = dao.findById(productId) ?: throw NoSuchElementException()
+                    val newProduct = oldProduct.copy(quantity = oldProduct.quantity - 1)
+                    dao.update(newProduct)
+                },
+            )
         }
     }
 

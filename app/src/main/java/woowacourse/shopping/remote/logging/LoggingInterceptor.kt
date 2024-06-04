@@ -17,24 +17,29 @@ class LoggingInterceptor : Interceptor {
         return response
     }
 
-    private fun logRequest(request: Request, chain: Interceptor.Chain) {
+    private fun logRequest(
+        request: Request,
+        chain: Interceptor.Chain,
+    ) {
         println(
-            """REQUEST
-    request: $request
-    url: ${request.url}
-    chain, headers:  ${chain.connection()}${request.headers}
-            """.trimIndent()
+            """
+            REQUEST
+            request: $request
+            url: ${request.url}
+            chain, headers:  ${chain.connection()}${request.headers}
+            """.trimIndent(),
         )
     }
 
     private fun logResponse(response: Response) {
         println(
-            """RESPONSE
-    response: $response
-    url: ${response.request.url}
-    code: ${response.code}
-    header: ${response.headers}
-                """.trimIndent()
+            """
+            RESPONSE
+            response: $response
+            url: ${response.request.url}
+            code: ${response.code}
+            header: ${response.headers}
+            """.trimIndent(),
         )
     }
 }

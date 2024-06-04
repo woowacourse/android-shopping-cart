@@ -11,7 +11,10 @@ class DefaultProductHistoryRepository(
     private val productHistoryDataSource: ProductHistoryDataSource,
     private val productDataSource: ProductDataSource,
 ) : ProductHistoryRepository {
-    override fun saveProductHistoryAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun saveProductHistoryAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         productHistoryDataSource.saveProductHistoryAsyncResult(productId, callback)
     }
 
@@ -39,10 +42,6 @@ class DefaultProductHistoryRepository(
                     callback(Result.failure(it))
                 }
         }
-    }
-
-    override fun loadProductHistoryAsyncResult(productId: Long, callback: (Result<Product>) -> Unit) {
-        TODO("Not yet implemented")
     }
 
     override fun loadLatestProductIdAsyncResult(callback: (Result<Long>) -> Unit) {

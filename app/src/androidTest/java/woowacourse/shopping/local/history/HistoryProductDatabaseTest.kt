@@ -36,7 +36,7 @@ class HistoryProductDatabaseTest {
     @DisplayName("새로운 HistoryProduct를 추가하면 id를 반환한다.")
     fun testInsert1() {
         // when
-        val insertedId = dao.insert(HistoryProduct(1))
+        val insertedId = dao.insertedId(HistoryProduct(1))
 
         // then
         assertEquals(1, insertedId)
@@ -49,7 +49,7 @@ class HistoryProductDatabaseTest {
         insertHistories(1, 2)
 
         // when & then
-        assertThrows<SQLiteConstraintException> { dao.insert(HistoryProduct(1)) }
+        assertThrows<SQLiteConstraintException> { dao.insertedId(HistoryProduct(1)) }
     }
 
     @Test
@@ -69,8 +69,8 @@ class HistoryProductDatabaseTest {
     @DisplayName("상품 내역에 존재하는 상품 id 를 찾는다")
     fun testFindById() {
         // given
-        dao.insert(HistoryProduct(1L))
-        dao.insert(HistoryProduct(2L))
+        dao.insertedId(HistoryProduct(1L))
+        dao.insertedId(HistoryProduct(2L))
 
         // when
         val found = dao.findById(2L)
@@ -119,7 +119,7 @@ class HistoryProductDatabaseTest {
      */
     private fun insertHistories(vararg ids: Long) {
         ids.forEach { id ->
-            dao.insert(HistoryProduct(id = id))
+            dao.insertedId(HistoryProduct(id = id))
         }
     }
 }

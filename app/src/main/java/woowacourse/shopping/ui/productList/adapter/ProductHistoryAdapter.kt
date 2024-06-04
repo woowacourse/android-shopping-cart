@@ -10,7 +10,7 @@ import woowacourse.shopping.ui.OnProductNavigator
 import woowacourse.shopping.ui.productList.viewholder.ProductHistoryItemViewHolder
 
 class ProductHistoryAdapter(
-    private val navigator: OnProductNavigator
+    private val navigator: OnProductNavigator,
 ) : ListAdapter<Product, ProductHistoryItemViewHolder>(productComparator) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -18,7 +18,7 @@ class ProductHistoryAdapter(
     ): ProductHistoryItemViewHolder =
         ProductHistoryItemViewHolder(
             HolderProductHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            navigator
+            navigator,
         )
 
     override fun onBindViewHolder(
@@ -31,11 +31,17 @@ class ProductHistoryAdapter(
     companion object {
         private val productComparator =
             object : DiffUtil.ItemCallback<Product>() {
-                override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+                override fun areItemsTheSame(
+                    oldItem: Product,
+                    newItem: Product,
+                ): Boolean {
                     return oldItem.id == newItem.id
                 }
 
-                override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+                override fun areContentsTheSame(
+                    oldItem: Product,
+                    newItem: Product,
+                ): Boolean {
                     return oldItem == newItem
                 }
             }

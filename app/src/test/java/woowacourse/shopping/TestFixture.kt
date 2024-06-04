@@ -70,15 +70,16 @@ fun <T> SingleLiveData<T>.getOrAwaitValue(
 ): T {
     var data: T? = null
     val latch = CountDownLatch(1)
-    val observer = object : Observer<Event<T>> {
-        override fun onChanged(value: Event<T>) {
-            if (value != null) {
-                data = value.getContentIfNotHandled()
-                latch.countDown()
-                this@getOrAwaitValue.liveData.removeObserver(this)
+    val observer =
+        object : Observer<Event<T>> {
+            override fun onChanged(value: Event<T>) {
+                if (value != null) {
+                    data = value.getContentIfNotHandled()
+                    latch.countDown()
+                    this@getOrAwaitValue.liveData.removeObserver(this)
+                }
             }
         }
-    }
 
     this.liveData.observeForever(observer)
 
@@ -94,9 +95,10 @@ fun <T> SingleLiveData<T>.getOrAwaitValue(
 
 // ObserveForever function for SingleLiveData
 fun <T> SingleLiveData<T>.observeForever(observer: (T) -> Unit) {
-    val liveDataObserver = Observer<Event<T>> { event ->
-        event.getContentIfNotHandled()?.let(observer)
-    }
+    val liveDataObserver =
+        Observer<Event<T>> { event ->
+            event.getContentIfNotHandled()?.let(observer)
+        }
     this.liveData.observeForever(liveDataObserver)
 }
 

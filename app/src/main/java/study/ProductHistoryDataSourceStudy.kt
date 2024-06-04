@@ -37,7 +37,6 @@ interface ProductHistoryDataSourceStudy {
 
     fun loadAllProductHistoryResult(): Result<List<Long>>
 
-
     // using callback with Result
 
     fun saveProductHistoryAsyncResult(
@@ -53,5 +52,4 @@ interface ProductHistoryDataSourceStudy {
     fun loadLatestProductAsyncResult(callback: (Result<Long>) -> Unit)
 
     fun loadAllProductHistoryAsyncResult(callback: (Result<List<Long>>) -> Unit)
-
 }

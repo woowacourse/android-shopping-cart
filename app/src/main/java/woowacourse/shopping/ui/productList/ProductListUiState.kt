@@ -28,20 +28,18 @@ abstract class ProductListUiState {
     abstract fun postCartProductTotalCount(count: Int)
 
     abstract fun postProductsHistory(history: List<Product>)
-
 }
 
 data class DefaultProductListUiState(
     override val page: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
     override val loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(),
     override val productsHistory: MutableLiveData<List<Product>> = MutableLiveData(),
-    override val cartProductTotalCount: MutableLiveData<Int> = MutableLiveData(0),
-    override val isLastPage: MutableLiveData<Boolean> = MutableLiveData(false),
+    override val cartProductTotalCount: MutableLiveData<Int> = MutableLiveData(),
+    override val isLastPage: MutableLiveData<Boolean> = MutableLiveData(),
 ) : ProductListUiState() {
-
     override fun addLoadedProducts(products: List<Product>) {
         loadedProducts.postValue(
-            loadedProducts.value?.toMutableList()?.apply { addAll(products) } ?: products
+            loadedProducts.value?.toMutableList()?.apply { addAll(products) } ?: products,
         )
     }
 
@@ -62,7 +60,10 @@ data class DefaultProductListUiState(
         changeProductQuantity(productId, DECREASE_AMOUNT)
     }
 
-    private fun changeProductQuantity(productId: Long, changeAmount: Int) {
+    private fun changeProductQuantity(
+        productId: Long,
+        changeAmount: Int,
+    ) {
         loadedProducts.postValue(
             loadedProducts.value?.map { product ->
                 if (product.id == productId) {

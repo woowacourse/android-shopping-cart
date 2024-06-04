@@ -41,7 +41,7 @@ class DefaultProductHistoryRepositoryTestStudy {
 
         // then
         assertThat(product).isEqualTo(
-            productDomainTestFixture(1)
+            productDomainTestFixture(1),
         )
     }
 
@@ -153,7 +153,6 @@ class DefaultProductHistoryRepositoryTestStudy {
         assertThat(actualLatestId).isEqualTo(product.id)
     }
 
-
     @Test
     fun `내역에 없는 상품을 저장`() {
         // given setup
@@ -186,7 +185,7 @@ class DefaultProductHistoryRepositoryTestStudy {
         latch.await()
 
         assertThat(resultProducts).isEqualTo(
-            productDomainsTestFixture(4)
+            productDomainsTestFixture(4),
         )
     }
 
@@ -212,10 +211,9 @@ class DefaultProductHistoryRepositoryTestStudy {
         latch.await()
 
         assertThat(resultProducts).isEqualTo(
-            productDomainsTestFixture(4)
+            productDomainsTestFixture(4),
         )
     }
-
 
     @Test
     fun `상품 모두 로드`() {
@@ -226,7 +224,7 @@ class DefaultProductHistoryRepositoryTestStudy {
 
         // then
         assertThat(products).isEqualTo(
-            productDomainsTestFixture(3)
+            productDomainsTestFixture(3),
         )
     }
 
@@ -244,9 +242,8 @@ class DefaultProductHistoryRepositoryTestStudy {
         latch.await()
 
         assertThat(resultProducts).isEqualTo(
-            productDomainsTestFixture(3)
+            productDomainsTestFixture(3),
         )
-
     }
 
     // 이거는 실행안 되도록 애노테이션 아래 붙여줘
@@ -262,7 +259,6 @@ class DefaultProductHistoryRepositoryTestStudy {
                 resultProducts = it
                 latch.countDown()
             }
-
         }
         latch.await()
         assertThat(resultProducts).isEqualTo(productDomainsTestFixture(3))

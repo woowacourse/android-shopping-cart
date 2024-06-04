@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.cart
 
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ui.OnItemQuantityChangeListener
 import woowacourse.shopping.ui.cart.event.ShoppingCartError
 import woowacourse.shopping.ui.cart.event.ShoppingCartEvent
 import woowacourse.shopping.ui.util.SingleLiveData
@@ -24,6 +23,5 @@ abstract class ShoppingCartViewModel : ViewModel(), CartProductListener {
     abstract fun onBackClick()
 
     override fun onAdd(productId: Long) {
-
     }
 }

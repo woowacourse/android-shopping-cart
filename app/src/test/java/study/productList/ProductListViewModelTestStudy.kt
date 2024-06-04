@@ -56,7 +56,6 @@ class ProductListViewModelTestStudy {
         historyRepository = DefaultProductHistoryRepositoryStudy(historyDataSource, productSource)
     }
 
-
     @Test
     fun `장바구니에 아무것도 들어가 있지 않을 때 상품 20개 로드`() {
         // given setup
@@ -71,7 +70,6 @@ class ProductListViewModelTestStudy {
             productsTestFixture(20).map { it.toDomain(0) },
         )
     }
-
 
     // TODO: 테스트 터짐. 이런 시나리오를 테스트 하려면?
     @Disabled
@@ -91,7 +89,7 @@ class ProductListViewModelTestStudy {
         latch.await()
         val loadedProducts = viewModel.uiState.loadedProducts.getOrAwaitValue()
         assertThat(loadedProducts).isEqualTo(
-            productDomainsTestFixture(40)
+            productDomainsTestFixture(40),
         )
     }
 
@@ -224,7 +222,7 @@ class ProductListViewModelTestStudy {
         shoppingProductRepository = DefaultShoppingProductRepositoryStudy(productSource, cartSource)
         historyDataSource =
             FakeProductHistorySourceStudy(
-                history = mutableListOf(0, 1, 2, 3, 4)
+                history = mutableListOf(0, 1, 2, 3, 4),
             )
         historyRepository = DefaultProductHistoryRepositoryStudy(historyDataSource, productSource)
         viewModel = DefaultProductListViewModelStudy(shoppingProductRepository, historyRepository)
@@ -235,11 +233,10 @@ class ProductListViewModelTestStudy {
         // then
         val actual = viewModel.uiState.productsHistory.getOrAwaitValue()
         assertThat(actual).isEqualTo(
-            productDomainsTestFixture(5)
+            productDomainsTestFixture(5),
         )
     }
 }
-
 
 class DefaultProductListViewModelStudy(
     private val productsRepository: ShoppingProductsRepositoryStudy,
@@ -331,7 +328,6 @@ class DefaultProductListViewModelStudy(
                 calculateProductsQuantityInCart()
             }.onFailure {
                 errorEvent.postValue(ProductListError.AddProductInCart)
-
             }
         }
     }
@@ -343,7 +339,6 @@ class DefaultProductListViewModelStudy(
                 calculateProductsQuantityInCart()
             }.onFailure {
                 errorEvent.postValue(ProductListError.UpdateProductQuantity)
-
             }
         }
     }

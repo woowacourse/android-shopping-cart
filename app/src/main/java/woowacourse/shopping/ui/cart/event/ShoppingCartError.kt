@@ -8,5 +8,4 @@ sealed class ShoppingCartError {
     data object DeleteItem : ShoppingCartError()
 
     data object UpdateItemQuantity : ShoppingCartError()
-
 }

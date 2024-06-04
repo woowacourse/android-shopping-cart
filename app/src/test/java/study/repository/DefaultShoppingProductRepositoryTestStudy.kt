@@ -584,9 +584,10 @@ class DefaultShoppingProductRepositoryTestStudy {
     @Test
     fun `상품 목록에서 100 개의 아이템에서 5 페이지는 마지막 페이지이다 async result`() {
         // given
-        productDataSource = FakeProductDataSourceStudy(
-            allProducts = productsTestFixture(count = 100).toMutableList()
-        )
+        productDataSource =
+            FakeProductDataSourceStudy(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
         shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSourceStudy()
         repository = DefaultShoppingProductRepositoryStudy(productDataSource, shoppingCartProductIdDataSource)
 
@@ -605,12 +606,14 @@ class DefaultShoppingProductRepositoryTestStudy {
     @Test
     fun `장바구니가 마지막 페이지이다 async result`() {
         // given
-        productDataSource = FakeProductDataSourceStudy(
-            allProducts = productsTestFixture(count = 100).toMutableList()
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSourceStudy(
-            data = productsIdCountDataTestFixture(dataCount = 10, quantity = 2).toMutableList()
-        )
+        productDataSource =
+            FakeProductDataSourceStudy(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSourceStudy(
+                data = productsIdCountDataTestFixture(dataCount = 10, quantity = 2).toMutableList(),
+            )
         repository = DefaultShoppingProductRepositoryStudy(productDataSource, shoppingCartProductIdDataSource)
 
         val latch = CountDownLatch(1)
@@ -629,16 +632,19 @@ class DefaultShoppingProductRepositoryTestStudy {
     @Test
     fun `장바구니에 10개의 상품이 2개씩 있다면 상품의 개수는 20 개이다 async result`() {
         // given
-        productDataSource = FakeProductDataSourceStudy(
-            allProducts = productsTestFixture(count = 100).toMutableList()
-        )
-        shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSourceStudy(
-            data = productsIdCountDataTestFixture(dataCount = 10, quantity = 2).toMutableList()
-        )
-        repository = DefaultShoppingProductRepositoryStudy(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource
-        )
+        productDataSource =
+            FakeProductDataSourceStudy(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
+        shoppingCartProductIdDataSource =
+            FakeShoppingCartProductIdDataSourceStudy(
+                data = productsIdCountDataTestFixture(dataCount = 10, quantity = 2).toMutableList(),
+            )
+        repository =
+            DefaultShoppingProductRepositoryStudy(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         val latch = CountDownLatch(1)
         var actual: Int = -1
@@ -655,14 +661,16 @@ class DefaultShoppingProductRepositoryTestStudy {
     @Test
     fun `장바구니에 상품을 새로 추가한다 async result`() {
         // given
-        productDataSource = FakeProductDataSourceStudy(
-            allProducts = productsTestFixture(count = 100).toMutableList()
-        )
+        productDataSource =
+            FakeProductDataSourceStudy(
+                allProducts = productsTestFixture(count = 100).toMutableList(),
+            )
         shoppingCartProductIdDataSource = FakeShoppingCartProductIdDataSourceStudy()
-        repository = DefaultShoppingProductRepositoryStudy(
-            productsSource = productDataSource,
-            cartSource = shoppingCartProductIdDataSource
-        )
+        repository =
+            DefaultShoppingProductRepositoryStudy(
+                productsSource = productDataSource,
+                cartSource = shoppingCartProductIdDataSource,
+            )
 
         var addedProductId: Long = -1
         val latch = CountDownLatch(1)
@@ -677,6 +685,4 @@ class DefaultShoppingProductRepositoryTestStudy {
         latch.await()
         assertThat(addedProductId).isEqualTo(11)
     }
-
-
 }

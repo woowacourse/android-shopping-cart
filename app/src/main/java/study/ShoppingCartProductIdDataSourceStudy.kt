@@ -69,7 +69,7 @@ interface ShoppingCartProductIdDataSourceStudy {
 
     fun findByProductIdAsyncResultNonNull(
         productId: Long,
-        callback: (Result<ProductIdsCountData>) -> Unit
+        callback: (Result<ProductIdsCountData>) -> Unit,
     )
 
     fun loadPagedAsyncResult(
@@ -77,9 +77,7 @@ interface ShoppingCartProductIdDataSourceStudy {
         callback: (Result<List<ProductIdsCountData>>) -> Unit,
     )
 
-    fun loadAllAsyncResult(
-        callback: (Result<List<ProductIdsCountData>>) -> Unit,
-    )
+    fun loadAllAsyncResult(callback: (Result<List<ProductIdsCountData>>) -> Unit)
 
     fun isFinalPageAsyncResult(
         page: Int,
@@ -112,8 +110,5 @@ interface ShoppingCartProductIdDataSourceStudy {
         callback: (Result<Unit>) -> Unit,
     )
 
-    fun clearAllAsyncResult(
-        callback: (Result<Unit>) -> Unit,
-    )
-
+    fun clearAllAsyncResult(callback: (Result<Unit>) -> Unit)
 }

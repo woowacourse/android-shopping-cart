@@ -59,7 +59,6 @@ class DefaultProductListFragment : Fragment() {
                 false -> binding.loadMoreButton.visibility = View.VISIBLE
             }
         }
-
     }
 
     private fun initObserve() {
@@ -115,11 +114,13 @@ class DefaultProductListFragment : Fragment() {
         }
     }
 
-    private fun showToast(@StringRes stringId: Int) {
+    private fun showToast(
+        @StringRes stringId: Int,
+    ) {
         Toast.makeText(
             requireContext(),
             stringId,
-            Toast.LENGTH_SHORT
+            Toast.LENGTH_SHORT,
         ).show()
     }
 

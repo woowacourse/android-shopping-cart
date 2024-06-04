@@ -20,7 +20,6 @@ abstract class ProductDetailUiState {
     abstract fun increaseProductCount()
 
     abstract fun decreaseProductCount()
-
 }
 
 class DefaultProductDetailUiState : ProductDetailUiState() {

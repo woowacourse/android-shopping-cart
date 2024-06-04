@@ -3,8 +3,6 @@ package study.repository
 import study.ProductDataSourceStudy
 import study.ProductHistoryDataSourceStudy
 import woowacourse.shopping.data.model.toDomain
-import woowacourse.shopping.data.source.ProductDataSource
-import woowacourse.shopping.data.source.ProductHistoryDataSource
 import woowacourse.shopping.domain.model.Product
 import java.util.Collections.synchronizedList
 import java.util.concurrent.atomic.AtomicInteger
@@ -77,7 +75,10 @@ class DefaultProductHistoryRepositoryStudy(
         }
     }
 
-    override fun saveProductHistoryAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun saveProductHistoryAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         productHistoryDataSource.saveProductHistoryAsyncResult(productId, callback)
     }
 
@@ -107,7 +108,10 @@ class DefaultProductHistoryRepositoryStudy(
         }
     }
 
-    override fun loadProductHistoryAsyncResult(productId: Long, callback: (Result<Product>) -> Unit) {
+    override fun loadProductHistoryAsyncResult(
+        productId: Long,
+        callback: (Result<Product>) -> Unit,
+    ) {
         TODO("Not yet implemented")
     }
 

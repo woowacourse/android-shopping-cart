@@ -144,13 +144,15 @@ class DefaultProductDetailViewModelTestStudy {
     @Test
     fun `현재 상품이 이미 장바구니에 있을 때 장바구니에 담으면 장바구니에 수 만큼 더 담긴다`() {
         // given
-        productsSource = FakeProductDataSourceStudy(
-            allProducts = productsTestFixture(40).toMutableList(),
-        )
+        productsSource =
+            FakeProductDataSourceStudy(
+                allProducts = productsTestFixture(40).toMutableList(),
+            )
 
-        cartSource = FakeShoppingCartProductIdDataSourceStudy(
-            data = productsIdCountDataTestFixture(3, 2).toMutableList(),
-        )
+        cartSource =
+            FakeShoppingCartProductIdDataSourceStudy(
+                data = productsIdCountDataTestFixture(3, 2).toMutableList(),
+            )
         shoppingProductRepository = DefaultShoppingProductRepositoryStudy(productsSource, cartSource)
         viewModel = DefaultProductDetailViewModelStudy(productId, shoppingProductRepository, historyRepository)
 
@@ -192,11 +194,10 @@ class DefaultProductDetailViewModelTestStudy {
         // then
         val actualLatestProduct = viewModel.uiState.latestProduct.getOrAwaitValue()
         assertThat(actualLatestProduct).isEqualTo(
-            productDomainTestFixture(3)
+            productDomainTestFixture(3),
         )
     }
 }
-
 
 class DefaultProductDetailViewModelStudy(
     private val productId: Long,

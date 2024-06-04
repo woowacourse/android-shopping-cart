@@ -53,7 +53,6 @@ class ProductListViewModelTest {
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
     }
 
-
     @Test
     fun `장바구니에 아무것도 들어가 있지 않을 때 상품 20개 로드`() {
         // given setup
@@ -68,7 +67,6 @@ class ProductListViewModelTest {
             productsTestFixture(20).map { it.toDomain(0) },
         )
     }
-
 
     // TODO: 테스트 터짐. 이런 시나리오를 테스트 하려면?
     @Disabled
@@ -88,7 +86,7 @@ class ProductListViewModelTest {
         latch.await()
         val loadedProducts = viewModel.uiState.loadedProducts.getOrAwaitValue()
         assertThat(loadedProducts).isEqualTo(
-            productDomainsTestFixture(40)
+            productDomainsTestFixture(40),
         )
     }
 
@@ -221,7 +219,7 @@ class ProductListViewModelTest {
         shoppingProductRepository = DefaultShoppingProductRepository(productSource, cartSource)
         historyDataSource =
             FakeProductHistorySource(
-                history = mutableListOf(0, 1, 2, 3, 4)
+                history = mutableListOf(0, 1, 2, 3, 4),
             )
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productSource)
         viewModel = DefaultProductListViewModel(shoppingProductRepository, historyRepository)
@@ -232,7 +230,7 @@ class ProductListViewModelTest {
         // then
         val actual = viewModel.uiState.productsHistory.getOrAwaitValue()
         assertThat(actual).isEqualTo(
-            productDomainsTestFixture(5)
+            productDomainsTestFixture(5),
         )
     }
 }

@@ -25,9 +25,10 @@ class MockProductApiService : ProductApiService {
 
     private val loggingInterceptor = LoggingInterceptor()
 
-    private val client: OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .build()
+    private val client: OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
 
     private val gson = Gson()
 

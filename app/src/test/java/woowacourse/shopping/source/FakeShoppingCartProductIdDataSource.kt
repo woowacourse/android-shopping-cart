@@ -7,15 +7,10 @@ import kotlin.concurrent.thread
 class FakeShoppingCartProductIdDataSource(
     private val data: MutableList<ProductIdsCountData> = mutableListOf(),
 ) : ShoppingCartProductIdDataSource {
-    override fun findByProductIdAsyncResult(productId: Long, callback: (Result<ProductIdsCountData?>) -> Unit) {
-        thread {
-            runCatching {
-                data.find { it.productId == productId }
-            }.let(callback)
-        }
-    }
-
-    override fun findByProductIdAsyncResultNonNull(productId: Long, callback: (Result<ProductIdsCountData>) -> Unit) {
+    override fun findByProductIdAsyncResultNonNull(
+        productId: Long,
+        callback: (Result<ProductIdsCountData>) -> Unit,
+    ) {
         thread {
             runCatching {
                 data.find { it.productId == productId } ?: throw NoSuchElementException()
@@ -23,7 +18,10 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun loadPagedAsyncResult(page: Int, callback: (Result<List<ProductIdsCountData>>) -> Unit) {
+    override fun loadPagedAsyncResult(
+        page: Int,
+        callback: (Result<List<ProductIdsCountData>>) -> Unit,
+    ) {
         thread {
             runCatching {
                 val start = (page - 1) * PAGE_SIZE
@@ -41,7 +39,10 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+    override fun isFinalPageAsyncResult(
+        page: Int,
+        callback: (Result<Boolean>) -> Unit,
+    ) {
         thread {
             runCatching {
                 val count = data.size
@@ -52,7 +53,7 @@ class FakeShoppingCartProductIdDataSource(
 
     override fun addedNewProductsIdAsyncResult(
         productIdsCountData: ProductIdsCountData,
-        callback: (Result<Long>) -> Unit
+        callback: (Result<Long>) -> Unit,
     ) {
         thread {
             runCatching {
@@ -62,7 +63,10 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun removedProductsIdAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun removedProductsIdAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
             runCatching {
                 val foundItem = data.find { it.productId == productId } ?: throw NoSuchElementException()
@@ -72,7 +76,10 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun plusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun plusProductsIdCountAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
             runCatching {
                 val oldItem = data.find { it.productId == productId } ?: throw NoSuchElementException()
@@ -84,7 +91,11 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun plusProductIdCountAsyncResult(productId: Long, quantity: Int, callback: (Result<Unit>) -> Unit) {
+    override fun plusProductIdCountAsyncResult(
+        productId: Long,
+        quantity: Int,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
             runCatching {
                 val oldItem = data.find { it.productId == productId } ?: throw NoSuchElementException()
@@ -96,21 +107,16 @@ class FakeShoppingCartProductIdDataSource(
         }
     }
 
-    override fun minusProductsIdCountAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun minusProductsIdCountAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
             runCatching {
                 val oldItem = data.find { it.productId == productId } ?: throw NoSuchElementException()
                 data.remove(oldItem)
                 data.add(oldItem.copy(quantity = oldItem.quantity - 1))
                 Unit
-            }.let(callback)
-        }
-    }
-
-    override fun clearAllAsyncResult(callback: (Result<Unit>) -> Unit) {
-        thread {
-            runCatching {
-                data.clear()
             }.let(callback)
         }
     }

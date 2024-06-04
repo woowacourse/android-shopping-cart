@@ -61,19 +61,28 @@ class FakeProductDataSourceStudy(
         return runCatching { isFinalPage(page) }
     }
 
-    override fun findByPagedAsyncResult(page: Int, callback: (Result<List<ProductData>>) -> Unit) {
+    override fun findByPagedAsyncResult(
+        page: Int,
+        callback: (Result<List<ProductData>>) -> Unit,
+    ) {
         thread {
             callback(runCatching { findByPaged(page) })
         }
     }
 
-    override fun findByIdAsyncResult(id: Long, callback: (Result<ProductData>) -> Unit) {
+    override fun findByIdAsyncResult(
+        id: Long,
+        callback: (Result<ProductData>) -> Unit,
+    ) {
         thread {
             callback(runCatching { findById(id) })
         }
     }
 
-    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+    override fun isFinalPageAsyncResult(
+        page: Int,
+        callback: (Result<Boolean>) -> Unit,
+    ) {
         thread {
             callback(runCatching { isFinalPage(page) })
         }

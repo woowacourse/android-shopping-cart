@@ -1,13 +1,13 @@
-package woowacourse.shopping.source
+package woowacourse.shopping.remote.source
 
-import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.data.model.ProductData
 import woowacourse.shopping.data.source.ProductDataSource
+import woowacourse.shopping.remote.MockProductApiService
+import woowacourse.shopping.remote.ProductApiService
 import kotlin.concurrent.thread
 
-class FakeProductDataSource(
-    private val pagingStrategy: NumberPagingStrategy<ProductData> = NumberPagingStrategy(20),
-    private val allProducts: MutableList<ProductData>,
+class RemoteProductDataSource(
+    private val productApiService: ProductApiService = MockProductApiService(),
 ) : ProductDataSource {
     override fun findByPagedAsyncResult(
         page: Int,
@@ -16,7 +16,7 @@ class FakeProductDataSource(
         thread {
             callback(
                 runCatching {
-                    pagingStrategy.loadPagedData(page, allProducts)
+                    productApiService.loadPaged(page)
                 },
             )
         }
@@ -31,7 +31,7 @@ class FakeProductDataSource(
                 runCatching {
                     val productsData = mutableListOf<ProductData>()
                     for (i in 1..page) {
-                        productsData.addAll(pagingStrategy.loadPagedData(i, allProducts))
+                        productsData.addAll(productApiService.loadPaged(i))
                     }
                     productsData.toList()
                 },
@@ -46,8 +46,7 @@ class FakeProductDataSource(
         thread {
             callback(
                 runCatching {
-                    allProducts.find { it.id == id }
-                        ?: throw NoSuchElementException("there is no product with id: $id")
+                    productApiService.loadById(id)
                 },
             )
         }
@@ -60,7 +59,8 @@ class FakeProductDataSource(
         thread {
             callback(
                 runCatching {
-                    pagingStrategy.isFinalPage(page, allProducts)
+                    val count = productApiService.count()
+                    page * 20 >= count
                 },
             )
         }

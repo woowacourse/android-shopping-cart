@@ -4,8 +4,6 @@ import study.ProductDataSourceStudy
 import study.ShoppingCartProductIdDataSourceStudy
 import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.data.model.toDomain
-import woowacourse.shopping.data.source.ProductDataSource
-import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 import woowacourse.shopping.domain.model.Product
 
 class DefaultShoppingProductRepositoryStudy(
@@ -184,65 +182,90 @@ class DefaultShoppingProductRepositoryStudy(
         }
     }
 
-    override fun loadAllProductsAsyncResult(page: Int, callback: (Result<List<Product>>) -> Unit) {
+    override fun loadAllProductsAsyncResult(
+        page: Int,
+        callback: (Result<List<Product>>) -> Unit,
+    ) {
         productsSource.findByPagedAsyncResult(page) { result ->
-            val products = result.map { productsData ->
-                productsData.map { productData ->
-                    productData.toDomain(productQuantity(productData.id))
+            val products =
+                result.map { productsData ->
+                    productsData.map { productData ->
+                        productData.toDomain(productQuantity(productData.id))
+                    }
                 }
-            }
             callback(products)
         }
     }
 
-    override fun loadProductsInCartAsyncResult(page: Int, callback: (Result<List<Product>>) -> Unit) {
+    override fun loadProductsInCartAsyncResult(
+        page: Int,
+        callback: (Result<List<Product>>) -> Unit,
+    ) {
         cartSource.loadPagedAsyncResult(page = page) { result ->
-            val products = result.map { productIdsCountDatas ->
-                productIdsCountDatas.map { productIdsCountData ->
-                    productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+            val products =
+                result.map { productIdsCountDatas ->
+                    productIdsCountDatas.map { productIdsCountData ->
+                        productsSource.findById(productIdsCountData.productId).toDomain(productIdsCountData.quantity)
+                    }
                 }
-            }
 
             callback(products)
         }
-
     }
 
-    override fun loadProductAsyncResult(id: Long, callback: (Result<Product>) -> Unit) {
+    override fun loadProductAsyncResult(
+        id: Long,
+        callback: (Result<Product>) -> Unit,
+    ) {
         productsSource.findByIdAsyncResult(id) { result ->
-            val product = result.map { productData ->
-                productData.toDomain(productQuantity(id))
-            }
+            val product =
+                result.map { productData ->
+                    productData.toDomain(productQuantity(id))
+                }
 
             callback(product)
         }
     }
 
-    override fun isFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+    override fun isFinalPageAsyncResult(
+        page: Int,
+        callback: (Result<Boolean>) -> Unit,
+    ) {
         productsSource.isFinalPageAsyncResult(page, callback)
     }
 
-    override fun isCartFinalPageAsyncResult(page: Int, callback: (Result<Boolean>) -> Unit) {
+    override fun isCartFinalPageAsyncResult(
+        page: Int,
+        callback: (Result<Boolean>) -> Unit,
+    ) {
         cartSource.isFinalPageAsyncResult(page, callback)
     }
 
     override fun shoppingCartProductQuantityAsyncResult(callback: (Result<Int>) -> Unit) {
         cartSource.loadAllAsyncResult { result ->
-            val quantity = result.map { productIdsCountData ->
-                productIdsCountData.sumOf { it.quantity }
-            }
+            val quantity =
+                result.map { productIdsCountData ->
+                    productIdsCountData.sumOf { it.quantity }
+                }
 
             callback(quantity)
         }
     }
 
-    override fun increaseShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
+    override fun increaseShoppingCartProductAsyncResult(
+        id: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         cartSource.plusProductsIdCountAsyncResult(id) { result ->
             callback(result)
         }
     }
 
-    override fun putItemInCartAsyncResult(id: Long, quantity: Int, callback: (Result<Unit>) -> Unit) {
+    override fun putItemInCartAsyncResult(
+        id: Long,
+        quantity: Int,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         cartSource.findByProductIdAsyncResultNonNull(id) { result ->
             result.onSuccess {
                 cartSource.plusProductIdCountAsyncResult(id, quantity) {
@@ -254,11 +277,13 @@ class DefaultShoppingProductRepositoryStudy(
                     callback(Result.success(Unit))
                 }
             }
-
         }
     }
 
-    override fun decreaseShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
+    override fun decreaseShoppingCartProductAsyncResult(
+        id: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         cartSource.findByProductIdAsyncResult(id) {
             it.onSuccess { data ->
                 if (data!!.quantity == 1) {
@@ -277,13 +302,19 @@ class DefaultShoppingProductRepositoryStudy(
         }
     }
 
-    override fun addShoppingCartProductAsyncResult(id: Long, callback: (Result<Long>) -> Unit) {
+    override fun addShoppingCartProductAsyncResult(
+        id: Long,
+        callback: (Result<Long>) -> Unit,
+    ) {
         cartSource.addedNewProductsIdAsyncResult(ProductIdsCountData(id, FIRST_QUANTITY)) {
             callback(it)
         }
     }
 
-    override fun removeShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
+    override fun removeShoppingCartProductAsyncResult(
+        id: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         cartSource.removedProductsIdAsyncResult(id) {
             callback(it)
         }

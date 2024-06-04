@@ -19,6 +19,5 @@ abstract class ProductDetailViewModel : ViewModel(), ProductDetailListener {
     abstract fun onFinishClick()
 
     override fun onAdd(productId: Long) {
-
     }
 }

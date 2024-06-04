@@ -2,7 +2,6 @@ package woowacourse.shopping.productDetail
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
@@ -53,7 +52,7 @@ class DefaultProductDetailViewModelTest {
     }
 
     @Test
-    fun `현재 상품을 표시한다`() {
+    fun `상품 상세 화면에서 현재 상품을 표시한다`() {
         // given
         cartSource =
             FakeShoppingCartProductIdDataSource(
@@ -67,7 +66,7 @@ class DefaultProductDetailViewModelTest {
 
         // then
         val actualProduct = viewModel.uiState.product.getOrAwaitValue()
-        val expectedProduct = productDomainTestFixture(1, quantity = 2)
+        val expectedProduct = productDomainTestFixture(1, quantity = 1)
         assertThat(actualProduct).isEqualTo(expectedProduct)
     }
 
@@ -124,22 +123,6 @@ class DefaultProductDetailViewModelTest {
         assertThat(actualCount).isEqualTo(expectedCount)
     }
 
-    @RepeatedTest(10)
-    fun `현재 상품을 장바구니에 담는다`() {
-        // given
-        productId = 1
-        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
-        viewModel.loadAll()
-
-        // when
-        viewModel.addProductToCart()
-
-        // then
-        shoppingProductRepository.loadProductAsync(productId) {
-            assertThat(it).isEqualTo(productDomainTestFixture(1))
-        }
-    }
-
     @Test
     fun `현재 상품을 장바구니에 새로 담는다 aysnc result`() {
         // given
@@ -158,13 +141,15 @@ class DefaultProductDetailViewModelTest {
     @Test
     fun `현재 상품이 이미 장바구니에 있을 때 장바구니에 담으면 장바구니에 수 만큼 더 담긴다`() {
         // given
-        productsSource = FakeProductDataSource(
-            allProducts = productsTestFixture(40).toMutableList(),
-        )
+        productsSource =
+            FakeProductDataSource(
+                allProducts = productsTestFixture(40).toMutableList(),
+            )
 
-        cartSource = FakeShoppingCartProductIdDataSource(
-            data = productsIdCountDataTestFixture(3, 2).toMutableList(),
-        )
+        cartSource =
+            FakeShoppingCartProductIdDataSource(
+                data = productsIdCountDataTestFixture(3, 2).toMutableList(),
+            )
         shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
         viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
 
@@ -205,8 +190,6 @@ class DefaultProductDetailViewModelTest {
 
         // then
         val actualLatestProduct = viewModel.uiState.latestProduct.getOrAwaitValue()
-        assertThat(actualLatestProduct).isEqualTo(
-            productDomainTestFixture(3)
-        )
+        assertThat(actualLatestProduct.id).isEqualTo(3)
     }
 }

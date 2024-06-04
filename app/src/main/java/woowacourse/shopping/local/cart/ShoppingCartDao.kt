@@ -29,11 +29,11 @@ interface ShoppingCartDao {
     @Update
     fun update(productIdsCountData: ProductIdsCountData)
 
-    @Query("UPDATE shopping_cart_products SET quantity = quantity + 1 WHERE productId = :productId")
-    fun increaseQuantity(productId: Long)
-
     @Query("UPDATE shopping_cart_products SET quantity = quantity + :addedQuantity WHERE productId = :productId")
-    fun increaseQuantity(productId: Long, addedQuantity: Int)
+    fun increaseQuantity(
+        productId: Long,
+        addedQuantity: Int,
+    )
 
     @Query("DELETE FROM shopping_cart_products")
     fun clearAll()

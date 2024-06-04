@@ -77,11 +77,11 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-    private fun showToast(@StringRes stringId: Int) =
-        Toast.makeText(requireContext(), stringId, Toast.LENGTH_SHORT).show()
+    private fun showToast(
+        @StringRes stringId: Int,
+    ) = Toast.makeText(requireContext(), stringId, Toast.LENGTH_SHORT).show()
 
     private fun navigateToProductDetail(id: Long) = (requireActivity() as FragmentNavigator).navigateToProductDetail(id)
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -1,7 +1,6 @@
 package woowacourse.shopping.source
 
 import study.ProductHistoryDataSourceStudy
-import woowacourse.shopping.data.source.ProductHistoryDataSource
 import kotlin.concurrent.thread
 
 class FakeProductHistorySourceStudy(
@@ -86,35 +85,49 @@ class FakeProductHistorySourceStudy(
         }
     }
 
-    override fun saveProductHistoryAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun saveProductHistoryAsyncResult(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         thread {
-            callback(runCatching {
-                saveProductHistory(productId)
-            })
+            callback(
+                runCatching {
+                    saveProductHistory(productId)
+                },
+            )
         }
     }
 
-    override fun loadProductHistoryAsyncResult(productId: Long, callback: (Result<Long>) -> Unit) {
+    override fun loadProductHistoryAsyncResult(
+        productId: Long,
+        callback: (Result<Long>) -> Unit,
+    ) {
         thread {
-            callback(runCatching {
-                history.find { it == productId } ?: throw NoSuchElementException()
-            })
+            callback(
+                runCatching {
+                    history.find { it == productId } ?: throw NoSuchElementException()
+                },
+            )
         }
     }
 
     override fun loadLatestProductAsyncResult(callback: (Result<Long>) -> Unit) {
         thread {
-            callback(runCatching {
-                history.last()
-            })
+            callback(
+                runCatching {
+                    history.last()
+                },
+            )
         }
     }
 
     override fun loadAllProductHistoryAsyncResult(callback: (Result<List<Long>>) -> Unit) {
         thread {
-            callback(runCatching {
-                history
-            })
+            callback(
+                runCatching {
+                    history
+                },
+            )
         }
     }
 

@@ -38,17 +38,16 @@ interface ProductDataSourceStudy {
 
     fun findByPagedAsyncResult(
         page: Int,
-        callback: (Result<List<ProductData>>) -> Unit
+        callback: (Result<List<ProductData>>) -> Unit,
     )
 
     fun findByIdAsyncResult(
         id: Long,
-        callback: (Result<ProductData>) -> Unit
+        callback: (Result<ProductData>) -> Unit,
     )
 
     fun isFinalPageAsyncResult(
         page: Int,
-        callback: (Result<Boolean>) -> Unit
+        callback: (Result<Boolean>) -> Unit,
     )
-
 }

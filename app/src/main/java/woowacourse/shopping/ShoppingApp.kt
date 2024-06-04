@@ -1,18 +1,18 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.source.LocalHistoryProductDataSource
-import woowacourse.shopping.data.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ProductHistoryDataSource
-import woowacourse.shopping.data.source.RemoteProductDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
 import woowacourse.shopping.local.cart.ShoppingCartDao
 import woowacourse.shopping.local.cart.ShoppingCartDatabase
 import woowacourse.shopping.local.history.HistoryProductDao
 import woowacourse.shopping.local.history.HistoryProductDatabase
+import woowacourse.shopping.local.source.LocalHistoryProductDataSource
+import woowacourse.shopping.local.source.LocalShoppingCartProductIdDataSource
 import woowacourse.shopping.remote.MockProductApiService
 import woowacourse.shopping.remote.ProductApiService
+import woowacourse.shopping.remote.source.RemoteProductDataSource
 
 class ShoppingApp : Application() {
     private val productsApi: ProductApiService by lazy { MockProductApiService() }

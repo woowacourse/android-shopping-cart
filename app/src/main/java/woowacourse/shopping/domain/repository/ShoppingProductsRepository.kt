@@ -13,7 +13,6 @@ interface ShoppingProductsRepository {
         callback: (Result<List<Product>>) -> Unit,
     )
 
-
     fun loadProductsInCartAsyncResult(
         page: Int,
         callback: (Result<List<Product>>) -> Unit,

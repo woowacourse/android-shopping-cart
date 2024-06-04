@@ -1,11 +1,11 @@
-package woowacourse.shopping.source
+package woowacourse.shopping.local.source
 
+import woowacourse.shopping.data.model.HistoryProduct
 import woowacourse.shopping.data.source.ProductHistoryDataSource
+import woowacourse.shopping.local.history.HistoryProductDao
 import kotlin.concurrent.thread
 
-class FakeProductHistorySource(
-    private val history: MutableList<Long> = ArrayDeque(MAX_SIZE),
-) : ProductHistoryDataSource {
+class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : ProductHistoryDataSource {
     override fun saveProductHistoryAsyncResult(
         productId: Long,
         callback: (Result<Unit>) -> Unit,
@@ -13,16 +13,13 @@ class FakeProductHistorySource(
         thread {
             callback(
                 runCatching {
-                    if (history.contains(productId)) {
-                        history.remove(productId)
+                    val id = dao.findById(productId)
+
+                    if (id != null) {
+                        dao.delete(id)
                     }
 
-                    if (history.size == MAX_SIZE) {
-                        history.removeFirst()
-                    }
-
-                    history.add(productId)
-                    Unit
+                    dao.insert(HistoryProduct(productId))
                 },
             )
         }
@@ -32,7 +29,7 @@ class FakeProductHistorySource(
         thread {
             callback(
                 runCatching {
-                    history.last()
+                    dao.findLatest()?.id ?: throw NoSuchElementException()
                 },
             )
         }
@@ -42,13 +39,9 @@ class FakeProductHistorySource(
         thread {
             callback(
                 runCatching {
-                    history
+                    dao.findAll().map { it.id }
                 },
             )
         }
-    }
-
-    companion object {
-        private const val MAX_SIZE = 10
     }
 }

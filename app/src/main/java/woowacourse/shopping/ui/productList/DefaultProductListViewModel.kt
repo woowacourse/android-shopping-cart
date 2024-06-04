@@ -99,7 +99,6 @@ class DefaultProductListViewModel(
                 calculateProductsQuantityInCart()
             }.onFailure {
                 errorEvent.postValue(ProductListError.AddProductInCart)
-
             }
         }
     }
@@ -111,7 +110,6 @@ class DefaultProductListViewModel(
                 calculateProductsQuantityInCart()
             }.onFailure {
                 errorEvent.postValue(ProductListError.UpdateProductQuantity)
-
             }
         }
     }

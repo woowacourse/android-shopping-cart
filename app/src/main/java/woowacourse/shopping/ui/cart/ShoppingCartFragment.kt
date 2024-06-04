@@ -83,11 +83,13 @@ class ShoppingCartFragment : Fragment() {
         }
     }
 
-    private fun showToast(@StringRes stringId: Int) {
+    private fun showToast(
+        @StringRes stringId: Int,
+    ) {
         Toast.makeText(
             requireContext(),
             stringId,
-            Toast.LENGTH_SHORT
+            Toast.LENGTH_SHORT,
         ).show()
     }
 
