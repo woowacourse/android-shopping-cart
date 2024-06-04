@@ -189,7 +189,6 @@ class DefaultShoppingProductRepository(
                     productData.toDomain(productQuantity(productData.id))
                 }
             }
-
             callback(products)
         }
     }
