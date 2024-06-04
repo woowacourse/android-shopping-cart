@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.cart
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +64,7 @@ class ShoppingCartFragment : Fragment() {
 
     private fun observeEvent() {
         viewModel.event.observe(viewLifecycleOwner) { event ->
+            Log.d(TAG, "observeEvent: event; $event")
             when (event) {
                 is ShoppingCartEvent.DeleteItem -> viewModel.deleteItem(event.cartItemId)
                 is ShoppingCartEvent.PopBackStack -> (requireActivity() as FragmentNavigator).popBackStack()

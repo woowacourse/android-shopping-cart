@@ -1,5 +1,6 @@
 package woowacourse.shopping.domain.repository
 
+import android.util.Log
 import woowacourse.shopping.data.model.ProductIdsCountData
 import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
@@ -53,20 +54,28 @@ class DefaultShoppingProductRepository(
     override fun loadProductsInCartAsyncResult(page: Int, callback: (Result<List<Product>>) -> Unit) {
         cartSource.loadPagedAsyncResult(page) { cartsResult ->
             cartsResult.onSuccess { cartsData ->
-                val products = synchronizedList(List(cartsData.size) { Product.NULL })
-                val remaining = AtomicInteger(cartsData.size)
+                val productsKindCount = cartsData.size
+                if (productsKindCount == 0) {
+                    callback(Result.success(emptyList()))
+                    return@onSuccess
+                }
+
+                val products = synchronizedList(List(productsKindCount) { Product.NULL })
+                val remaining = AtomicInteger(productsKindCount)
 
                 cartsData.forEachIndexed { index, cartData ->
                     productsSource.findByIdAsyncResult(cartData.productId) { productResult ->
-                        productResult.onFailure {
-                            callback(Result.failure(it))
-                        }
+                        productResult
                             .onSuccess { productData ->
                                 products[index] = productData.toDomain(cartData.quantity)
                                 if (remaining.decrementAndGet() == 0) {
                                     callback(Result.success(products))
                                 }
                             }
+                            .onFailure {
+                                callback(Result.failure(it))
+                            }
+
                     }
                 }
             }.onFailure {
@@ -124,9 +133,9 @@ class DefaultShoppingProductRepository(
     }
 
     override fun decreaseShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
-        cartSource.findByProductIdAsyncResult(id) {
-            it.onSuccess { data ->
-                if (data!!.quantity == 1) {
+        cartSource.findByProductIdAsyncResultNonNull(id) { cartResult ->
+            cartResult.onSuccess { cartData ->
+                if (cartData.quantity == 1) {
                     cartSource.removedProductsIdAsyncResult(id) {
                         callback(it)
                     }
@@ -150,6 +159,7 @@ class DefaultShoppingProductRepository(
 
     override fun removeShoppingCartProductAsyncResult(id: Long, callback: (Result<Unit>) -> Unit) {
         cartSource.removedProductsIdAsyncResult(id) {
+            Log.d(TAG, "removeShoppingCartProductAsyncResult: $it")
             callback(it)
         }
     }

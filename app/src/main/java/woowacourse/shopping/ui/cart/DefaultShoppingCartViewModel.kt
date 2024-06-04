@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart
 
+import android.util.Log
 import woowacourse.shopping.ui.util.MutableSingleLiveData
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.ui.UniversalViewModelFactory
@@ -27,9 +28,11 @@ class DefaultShoppingCartViewModel(
     private fun loadProductsInCart(nowPage: Int) {
         shoppingProductsRepository.loadProductsInCartAsyncResult(page = nowPage) { result ->
             result.onSuccess { products ->
+                Log.d(TAG, "loadProductsInCart: success product in carts: $products")
                 uiState.postItemsInCurrentPage(products)
             }
             result.onFailure {
+                Log.d(TAG, "loadProductsInCart: failure: $it")
                 error.setValue(ShoppingCartError.LoadCart)
             }
         }
@@ -79,6 +82,7 @@ class DefaultShoppingCartViewModel(
     }
 
     override fun deleteProduct(productId: Long) {
+        Log.d(TAG, "deleteProduct: $productId")
         event.setValue(ShoppingCartEvent.DeleteItem(productId))
     }
 
