@@ -24,9 +24,9 @@ abstract class ProductDetailUiState {
 }
 
 class DefaultProductDetailUiState : ProductDetailUiState() {
-    override val product: MutableLiveData<Product> = MutableLiveData(Product.NULL)
+    override val product: MutableLiveData<Product> = MutableLiveData()
     override val productCount: MutableLiveData<Int> = MutableLiveData(FIRST_QUANTITY)
-    override val latestProduct: MutableLiveData<Product> = MutableLiveData(Product.NULL)
+    override val latestProduct: MutableLiveData<Product> = MutableLiveData()
 
     override fun currentProduct(): Product = product.value ?: throw IllegalStateException("Product is null")
 
@@ -41,13 +41,13 @@ class DefaultProductDetailUiState : ProductDetailUiState() {
     }
 
     override fun increaseProductCount() {
-        productCount.postValue(productCount.value?.plus(CHANGE_AMOUNT))
+        productCount.value = productCount.value?.plus(CHANGE_AMOUNT)
     }
 
     override fun decreaseProductCount() {
-        val currentCount = productCount.value ?: throw IllegalStateException("Product count is null")
+        val currentCount = currentQuantity()
         if (currentCount > MINIMUM_QUANTITY) {
-            productCount.postValue(currentCount - CHANGE_AMOUNT)
+            productCount.value = currentCount - CHANGE_AMOUNT
         }
     }
 

@@ -24,7 +24,6 @@ class DefaultProductDetailViewModel(
     override fun loadAll() {
         loadCurrentProduct()
         loadLatestProduct()
-        saveCurrentProductInHistory()
     }
 
     private fun loadCurrentProduct() {
@@ -53,6 +52,7 @@ class DefaultProductDetailViewModel(
         shoppingProductsRepository.loadProductAsyncResult(latestProductId) { latestProduct ->
             latestProduct.onSuccess {
                 uiState.postLatestProduct(it)
+                saveCurrentProductInHistory()
             }
             latestProduct.onFailure {
                 error.postValue(ProductDetailError.LoadProduct)

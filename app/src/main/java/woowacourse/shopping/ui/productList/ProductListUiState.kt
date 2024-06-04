@@ -33,8 +33,8 @@ abstract class ProductListUiState {
 
 data class DefaultProductListUiState(
     override val page: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
-    override val loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(emptyList()),
-    override val productsHistory: MutableLiveData<List<Product>> = MutableLiveData(emptyList()),
+    override val loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(),
+    override val productsHistory: MutableLiveData<List<Product>> = MutableLiveData(),
     override val cartProductTotalCount: MutableLiveData<Int> = MutableLiveData(0),
     override val isLastPage: MutableLiveData<Boolean> = MutableLiveData(false),
 ) : ProductListUiState() {

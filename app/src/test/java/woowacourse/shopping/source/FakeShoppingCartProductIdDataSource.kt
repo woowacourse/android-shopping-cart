@@ -198,13 +198,14 @@ class FakeShoppingCartProductIdDataSource(
     }
 
     override fun plusProductIdCountAsyncResult(productId: Long, quantity: Int, callback: (Result<Unit>) -> Unit) {
-        thread{
+        thread {
             runCatching {
                 val oldItem = data.find { it.productId == productId } ?: throw NoSuchElementException()
                 data.remove(oldItem)
                 val newItem = oldItem.copy(quantity = oldItem.quantity + quantity)
                 data.add(newItem)
-            }
+                Unit
+            }.let(callback)
         }
     }
 

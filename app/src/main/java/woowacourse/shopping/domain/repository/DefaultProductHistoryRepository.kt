@@ -11,7 +11,6 @@ class DefaultProductHistoryRepository(
     private val productHistoryDataSource: ProductHistoryDataSource,
     private val productDataSource: ProductDataSource,
 ) : ProductHistoryRepository {
-    // ---
     override fun saveProductHistory(productId: Long) {
         productHistoryDataSource.saveProductHistory(productId)
     }
@@ -88,8 +87,8 @@ class DefaultProductHistoryRepository(
 
                 ids.forEachIndexed { index, id ->
                     productDataSource.findByIdAsyncResult(id) { resultIdProduct ->
-                        resultIdProduct.onSuccess { productdata ->
-                            products[index] = productdata.toDomain(quantity = 0)
+                        resultIdProduct.onSuccess { productData ->
+                            products[index] = productData.toDomain(quantity = 0)
                             if (remaining.decrementAndGet() == 0) {
                                 callback(Result.success(products.toList()))
                             }

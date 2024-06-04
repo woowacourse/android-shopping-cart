@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 
 abstract class SingleLiveData<T> {
-    private val liveData = MutableLiveData<Event<T>>()
+    val liveData = MutableLiveData<Event<T>>()
 
     protected constructor()
 

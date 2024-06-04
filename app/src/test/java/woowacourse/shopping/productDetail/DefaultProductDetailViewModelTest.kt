@@ -1,20 +1,11 @@
 package woowacourse.shopping.productDetail
 
-import android.os.Handler
-import android.os.Looper
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkConstructor
-import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.model.toDomain
 import woowacourse.shopping.data.source.ProductDataSource
 import woowacourse.shopping.data.source.ProductHistoryDataSource
 import woowacourse.shopping.data.source.ShoppingCartProductIdDataSource
@@ -23,7 +14,6 @@ import woowacourse.shopping.domain.repository.DefaultShoppingProductRepository
 import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ShoppingProductsRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
 import woowacourse.shopping.source.FakeProductDataSource
 import woowacourse.shopping.source.FakeProductHistorySource
@@ -31,6 +21,8 @@ import woowacourse.shopping.source.FakeShoppingCartProductIdDataSource
 import woowacourse.shopping.testfixture.productDomainTestFixture
 import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
 import woowacourse.shopping.ui.productDetail.DefaultProductDetailViewModel
+import woowacourse.shopping.ui.productDetail.event.ProductDetailError
+import woowacourse.shopping.ui.productDetail.event.ProductDetailEvent
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class DefaultProductDetailViewModelTest {
@@ -48,18 +40,6 @@ class DefaultProductDetailViewModelTest {
      */
     @BeforeEach
     fun setUp() {
-        mockkStatic(Looper::class)
-        mockkConstructor(Handler::class)
-        val mockMainLooper =
-            mockk<Looper> {
-                every { thread } returns Thread.currentThread()
-            }
-        every { Looper.getMainLooper() } returns mockMainLooper
-        every { anyConstructed<Handler>().post(any()) } answers {
-            firstArg<Runnable>().run()
-            true
-        }
-
         productId = 1
         productsSource =
             FakeProductDataSource(
@@ -70,11 +50,6 @@ class DefaultProductDetailViewModelTest {
 
         historyDataSource = FakeProductHistorySource()
         historyRepository = DefaultProductHistoryRepository(historyDataSource, productsSource)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -91,8 +66,8 @@ class DefaultProductDetailViewModelTest {
         viewModel.loadAll()
 
         // then
-        val actualProduct = viewModel.currentProduct.getOrAwaitValue()
-        val expectedProduct = productTestFixture(1).toDomain(quantity = 2)
+        val actualProduct = viewModel.uiState.product.getOrAwaitValue()
+        val expectedProduct = productDomainTestFixture(1, quantity = 2)
         assertThat(actualProduct).isEqualTo(expectedProduct)
     }
 
@@ -108,7 +83,7 @@ class DefaultProductDetailViewModelTest {
         viewModel.onIncrease(productId)
 
         // then
-        val actualCount = viewModel.productCount.getOrAwaitValue()
+        val actualCount = viewModel.uiState.productCount.getOrAwaitValue()
         val expectedCount = 2
         assertThat(actualCount).isEqualTo(expectedCount)
     }
@@ -123,7 +98,7 @@ class DefaultProductDetailViewModelTest {
         viewModel.onDecrease(productId)
 
         // then
-        val actualCount = viewModel.productCount.getOrAwaitValue()
+        val actualCount = viewModel.uiState.productCount.getOrAwaitValue()
         val expectedCount = 1
         assertThat(actualCount).isEqualTo(expectedCount)
     }
@@ -143,13 +118,13 @@ class DefaultProductDetailViewModelTest {
         viewModel.onDecrease(productId)
 
         // then
-        val actualCount = viewModel.productCount.getOrAwaitValue()
+        val actualCount = viewModel.uiState.productCount.getOrAwaitValue()
         val expectedCount = 1
 
         assertThat(actualCount).isEqualTo(expectedCount)
     }
 
-    @Test
+    @RepeatedTest(10)
     fun `현재 상품을 장바구니에 담는다`() {
         // given
         productId = 1
@@ -165,35 +140,46 @@ class DefaultProductDetailViewModelTest {
         }
     }
 
-    // todo: 이 테스트 깨짐 수정 필요 스레드 ㄱ때문에 깨지는 건 아님
-//    @Test
-//    fun `현재 상품이 이미 장바구니에 있을 때 장바구니에 담으면 장바구니에 수 만큼 더 담긴다`() {
-//        // given
-//        cartSource =
-//            FakeShoppingCartProductIdDataSource(
-//                data = productsIdCountDataTestFixture(3, 2).toMutableList(),
-//            )
-//        shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
-//        viewModel = ProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
-//        viewModel.loadAll()
-//
-//        // when
-//        viewModel.onIncrease(productId)
-//        val actualCount = viewModel.productCount.getOrAwaitValue()
-//        assertThat(actualCount).isEqualTo(2)
-//
-//        viewModel.addProductToCart()
-//        Thread.sleep(5000) // todo: thread 를 사용하면서 생기는 문제를 해결해야 함. 이렇게 sleep 을 걸지 않아도 되도록 수정해야 함
-//
-//        // then
-//        val actualProduct = shoppingProductRepository.loadProduct(productId)
-//        val expectedProduct = productTestFixture(1).toDomain(quantity = 4)
-//        assertThat(actualProduct).isEqualTo(expectedProduct)
-//    }
-
-    //     TODO: 스레드 때문에 건 아님
     @Test
-    fun `최근 상품이 없으면 fake 객체`() {
+    fun `현재 상품을 장바구니에 새로 담는다 aysnc result`() {
+        // given
+        productId = 1
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+        viewModel.loadAll()
+
+        // when
+        viewModel.addProductToCart()
+
+        // then
+        val actual = viewModel.event.getOrAwaitValue()
+        assertThat(actual).isEqualTo(ProductDetailEvent.AddProductToCart)
+    }
+
+    @Test
+    fun `현재 상품이 이미 장바구니에 있을 때 장바구니에 담으면 장바구니에 수 만큼 더 담긴다`() {
+        // given
+        productsSource = FakeProductDataSource(
+            allProducts = productsTestFixture(40).toMutableList(),
+        )
+
+        cartSource = FakeShoppingCartProductIdDataSource(
+            data = productsIdCountDataTestFixture(3, 2).toMutableList(),
+        )
+        shoppingProductRepository = DefaultShoppingProductRepository(productsSource, cartSource)
+        viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
+
+        viewModel.loadAll()
+
+        // when
+        viewModel.onIncrease(productId)
+        viewModel.addProductToCart()
+
+        val actualEvent = viewModel.event.getOrAwaitValue()
+        assertThat(actualEvent).isEqualTo(ProductDetailEvent.AddProductToCart)
+    }
+
+    @Test
+    fun `최근 상품이 없으면 LoadedLatestProduct 에러가 된다`() {
         // given
         viewModel = DefaultProductDetailViewModel(productId, shoppingProductRepository, historyRepository)
 
@@ -201,12 +187,7 @@ class DefaultProductDetailViewModelTest {
         viewModel.loadAll()
 
         // then
-//        assertThrows<NoSuchElementException> {
-//            viewModel.latestProduct.value != null
-//        }
-        assertThrows<NoSuchElementException> {
-            assertThat(viewModel.latestProduct.value).isEqualTo(productDomainTestFixture(0))
-        }
+        assertThat(viewModel.error.getOrAwaitValue()).isEqualTo(ProductDetailError.LoadLatestProduct)
     }
 
     @Test
@@ -223,7 +204,9 @@ class DefaultProductDetailViewModelTest {
         viewModel.loadAll()
 
         // then
-        val actualLatestProduct = viewModel.latestProduct.getOrAwaitValue()
-        assertThat(actualLatestProduct).isEqualTo(productTestFixture(3).toDomain(0))
+        val actualLatestProduct = viewModel.uiState.latestProduct.getOrAwaitValue()
+        assertThat(actualLatestProduct).isEqualTo(
+            productDomainTestFixture(3)
+        )
     }
 }
