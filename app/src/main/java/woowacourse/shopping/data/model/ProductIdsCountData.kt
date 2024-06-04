@@ -8,4 +8,8 @@ data class ProductIdsCountData(
     @PrimaryKey(autoGenerate = false)
     val productId: Long = -1,
     val quantity: Int,
-)
+){
+    companion object {
+        val NULL = ProductIdsCountData(-1, 0)
+    }
+}

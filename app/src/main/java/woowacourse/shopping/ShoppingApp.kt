@@ -32,7 +32,6 @@ class ShoppingApp : Application() {
 
     override fun onTerminate() {
         super.onTerminate()
-        productSource.shutDown()
         shoppingCartDb.close()
         historyProductDb.close()
     }

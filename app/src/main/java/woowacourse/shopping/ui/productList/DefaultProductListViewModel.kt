@@ -27,10 +27,9 @@ class DefaultProductListViewModel(
     }
 
     private fun loadAllProducts(page: Int) {
-        productsRepository.loadAllProductsAsyncResult(page) { result ->
+        productsRepository.loadAllProductsAsyncResult2(page) { result ->
             result.onSuccess { products ->
-                val currentProducts = uiState.loadedProducts.value ?: emptyList()
-                uiState.postLoadedProducts(currentProducts.union(products).toList())
+                uiState.postLoadedProducts(products)
             }.onFailure {
                 errorEvent.postValue(ProductListError.LoadProducts)
             }

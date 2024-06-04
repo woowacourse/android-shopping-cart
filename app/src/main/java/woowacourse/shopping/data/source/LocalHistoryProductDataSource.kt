@@ -5,96 +5,6 @@ import woowacourse.shopping.local.history.HistoryProductDao
 import kotlin.concurrent.thread
 
 class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : ProductHistoryDataSource {
-    override fun saveProductHistory(productId: Long) {
-        val id = dao.findById(productId)
-
-        if (id != null) {
-            dao.delete(id)
-        }
-
-        dao.insert(HistoryProduct(productId))
-    }
-
-    override fun loadProductHistory(productId: Long): Long? = dao.findById(productId)?.id
-
-    override fun loadLatestProduct(): Long = dao.findLatest()?.id ?: EMPTY
-
-    override fun loadAllProductHistory(): List<Long> = dao.findAll().map { it.id }
-
-    override fun deleteAllProductHistory() {
-        dao.deleteAll()
-    }
-
-    override fun saveProductHistoryAsync(
-        productId: Long,
-        callback: (Boolean) -> Unit,
-    ) {
-        thread {
-            val id = dao.findById(productId)
-
-            if (id != null) {
-                dao.delete(id)
-            }
-
-            dao.insert(HistoryProduct(productId))
-            callback(true)
-        }
-    }
-
-    override fun loadProductHistoryAsync(
-        productId: Long,
-        callback: (Long) -> Unit,
-    ) {
-        thread {
-            val id = dao.findById(productId)?.id
-            callback(id ?: EMPTY)
-        }
-    }
-
-    override fun loadLatestProductAsync(callback: (Long) -> Unit) {
-        thread {
-            val id = dao.findLatest()?.id ?: EMPTY
-            callback(id)
-        }
-    }
-
-    override fun loadAllProductHistoryAsync(callback: (List<Long>) -> Unit) {
-        thread {
-            val ids = dao.findAll().map { it.id }
-            callback(ids)
-        }
-    }
-
-    override fun saveProductHistoryResult(productId: Long): Result<Unit> {
-        return runCatching {
-            val id = dao.findById(productId)
-
-            if (id != null) {
-                dao.delete(id)
-            }
-
-            dao.insert(HistoryProduct(productId))
-        }
-    }
-
-    override fun loadProductHistoryResult(productId: Long): Result<Long> {
-        return runCatching {
-            dao.findById(productId)?.id ?: throw NoSuchElementException()
-        }
-    }
-
-    override fun loadLatestProductResult(): Result<Long> {
-        return runCatching {
-            dao.findLatest()?.id ?: throw NoSuchElementException()
-        }
-    }
-
-    override fun loadAllProductHistoryResult(): Result<List<Long>> {
-        return runCatching {
-            dao.findAll().map { it.id }
-        }
-    }
-
     override fun saveProductHistoryAsyncResult(productId: Long, callback: (Result<Unit>) -> Unit) {
         thread {
             callback(runCatching {
@@ -131,9 +41,5 @@ class LocalHistoryProductDataSource(private val dao: HistoryProductDao) : Produc
                 dao.findAll().map { it.id }
             })
         }
-    }
-
-    companion object {
-        private const val EMPTY = -1L
     }
 }
