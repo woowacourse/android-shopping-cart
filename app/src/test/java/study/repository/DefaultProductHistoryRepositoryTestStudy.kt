@@ -1,36 +1,36 @@
-package woowacourse.shopping.domain.repository
+package study.repository
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import study.ProductDataSourceStudy
+import study.ProductHistoryDataSourceStudy
+import study.source.FakeProductDataSourceStudy
 import woowacourse.shopping.data.model.toDomain
-import woowacourse.shopping.data.source.ProductDataSource
-import woowacourse.shopping.data.source.ProductHistoryDataSource
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.productTestFixture
 import woowacourse.shopping.productsTestFixture
-import woowacourse.shopping.source.FakeProductDataSource
-import woowacourse.shopping.source.FakeProductHistorySource
+import woowacourse.shopping.source.FakeProductHistorySourceStudy
 import woowacourse.shopping.testfixture.productDomainTestFixture
 import woowacourse.shopping.testfixture.productDomainsTestFixture
 import java.util.concurrent.CountDownLatch
 
-class DefaultProductHistoryRepositoryTest {
-    private lateinit var historySource: ProductHistoryDataSource
-    private lateinit var productSource: ProductDataSource
-    private lateinit var productHistoryRepository: ProductHistoryRepository
+class DefaultProductHistoryRepositoryTestStudy {
+    private lateinit var historySource: ProductHistoryDataSourceStudy
+    private lateinit var productSource: ProductDataSourceStudy
+    private lateinit var productHistoryRepository: ProductHistoryRepositoryStudy
 
     @BeforeEach
     fun setUp() {
         historySource =
-            FakeProductHistorySource(
+            FakeProductHistorySourceStudy(
                 history = mutableListOf(0, 1, 2),
             )
         productSource =
-            FakeProductDataSource(
+            FakeProductDataSourceStudy(
                 allProducts = productsTestFixture(60).toMutableList(),
             )
-        productHistoryRepository = DefaultProductHistoryRepository(historySource, productSource)
+        productHistoryRepository = DefaultProductHistoryRepositoryStudy(historySource, productSource)
     }
 
     @Test
