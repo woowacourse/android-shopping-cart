@@ -1,13 +1,22 @@
 package woowacourse.shopping.presentation.home
 
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.history.ProductHistory
+import woowacourse.shopping.data.model.history.RecentProduct
+import woowacourse.shopping.data.model.product.Product
+import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
+import woowacourse.shopping.domain.repository.cart.CartRepository
+import woowacourse.shopping.fixture.getFixtureCartableProducts
 import woowacourse.shopping.getOrAwaitValue
+import kotlin.concurrent.thread
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class HomeViewModelTest {
@@ -15,86 +24,80 @@ class HomeViewModelTest {
 
     @BeforeEach
     fun setup() {
-        homeViewModel = HomeViewModel(FakeProductRepository())
+        homeViewModel =
+            HomeViewModel(
+                FakeProductRepository(),
+                FakeCartRepository(),
+            )
     }
 
     @Test
     fun `첫 페이지의 상품 데이터를 제공한다`() {
-        val actualResult = homeViewModel.products.getOrAwaitValue()
-
-        assertThat(actualResult).isEqualTo(
-            listOf(
-                Product(1, "Product 1", "", 1000),
-                Product(2, "Product 2", "", 2000),
-                Product(3, "Product 3", "", 3000),
-                Product(4, "Product 4", "", 4000),
-                Product(5, "Product 5", "", 5000),
-                Product(6, "Product 6", "", 6000),
-                Product(7, "Product 7", "", 7000),
-                Product(8, "Product 8", "", 8000),
-                Product(9, "Product 9", "", 9000),
-                Product(10, "Product 10", "", 10000),
-                Product(11, "Product 11", "", 11000),
-                Product(12, "Product 12", "", 12000),
-                Product(13, "Product 13", "", 13000),
-                Product(14, "Product 14", "", 14000),
-                Product(15, "Product 15", "", 15000),
-                Product(16, "Product 16", "", 16000),
-                Product(17, "Product 17", "", 17000),
-                Product(18, "Product 18", "", 18000),
-                Product(19, "Product 19", "", 19000),
-                Product(20, "Product 20", "", 20000),
-            ),
-        )
+        val actualResult = homeViewModel.uiState.getOrAwaitValue().products
+        assertThat(actualResult).isEqualTo(getFixtureCartableProducts(20))
     }
 
     @Test
-    fun `더보기 작업을 수행하면 다음 페이지를 불러온다`() {
-        homeViewModel.onLoadClick()
-        val actualResult = homeViewModel.products.getOrAwaitValue()
-        assertThat(actualResult).isEqualTo(
-            listOf(
-                Product(1, "Product 1", "", 1000),
-                Product(2, "Product 2", "", 2000),
-                Product(3, "Product 3", "", 3000),
-                Product(4, "Product 4", "", 4000),
-                Product(5, "Product 5", "", 5000),
-                Product(6, "Product 6", "", 6000),
-                Product(7, "Product 7", "", 7000),
-                Product(8, "Product 8", "", 8000),
-                Product(9, "Product 9", "", 9000),
-                Product(10, "Product 10", "", 10000),
-                Product(11, "Product 11", "", 11000),
-                Product(12, "Product 12", "", 12000),
-                Product(13, "Product 13", "", 13000),
-                Product(14, "Product 14", "", 14000),
-                Product(15, "Product 15", "", 15000),
-                Product(16, "Product 16", "", 16000),
-                Product(17, "Product 17", "", 17000),
-                Product(18, "Product 18", "", 18000),
-                Product(19, "Product 19", "", 19000),
-                Product(20, "Product 20", "", 20000),
-                Product(21, "Product 21", "", 21000),
-                Product(22, "Product 22", "", 22000),
-                Product(23, "Product 23", "", 23000),
-                Product(24, "Product 24", "", 24000),
-                Product(25, "Product 25", "", 25000),
-                Product(26, "Product 26", "", 26000),
-                Product(27, "Product 27", "", 27000),
-                Product(28, "Product 28", "", 28000),
-                Product(29, "Product 29", "", 29000),
-                Product(30, "Product 30", "", 30000),
-                Product(31, "Product 31", "", 31000),
-                Product(32, "Product 32", "", 32000),
-                Product(33, "Product 33", "", 33000),
-                Product(34, "Product 34", "", 34000),
-                Product(35, "Product 35", "", 35000),
-                Product(36, "Product 36", "", 36000),
-                Product(37, "Product 37", "", 37000),
-                Product(38, "Product 38", "", 38000),
-                Product(39, "Product 39", "", 39000),
-                Product(40, "Product 40", "", 40000),
-            ),
-        )
+    fun `지정한 개수만큼 최근 본 상품들을 불러올 수 있다`() {
+        thread {
+            val productHistory = homeViewModel.uiState.getOrAwaitValue().productHistory
+            assertThat(productHistory).isEqualTo(
+                listOf(
+                    RecentProduct(ProductHistory(100, 100), Product(100, "사과100", "image100", 100000)),
+                    RecentProduct(ProductHistory(99, 99), Product(99, "사과99", "image99", 99000)),
+                    RecentProduct(ProductHistory(98, 98), Product(98, "사과98", "image98", 98000)),
+                    RecentProduct(ProductHistory(97, 97), Product(97, "사과97", "image97", 97000)),
+                    RecentProduct(ProductHistory(96, 96), Product(96, "사과96", "image96", 96000)),
+                    RecentProduct(ProductHistory(95, 95), Product(95, "사과95", "image95", 95000)),
+                    RecentProduct(ProductHistory(94, 94), Product(94, "사과94", "image94", 94000)),
+                    RecentProduct(ProductHistory(93, 93), Product(93, "사과93", "image93", 93000)),
+                    RecentProduct(ProductHistory(92, 92), Product(92, "사과92", "image92", 92000)),
+                    RecentProduct(ProductHistory(91, 91), Product(91, "사과91", "image91", 91000)),
+                ),
+            )
+        }.join()
+    }
+
+    @Test
+    fun `장바구니에 담긴 상품의 총 개수를 불러올 수 있다`() {
+        thread {
+            val totalQuantity = homeViewModel.uiState.getOrAwaitValue().totalQuantity
+            assertThat(totalQuantity).isEqualTo(100)
+        }.join()
+    }
+
+    @Test
+    fun `다음 페이지의 상품 데이터를 불러올 수 있다`() {
+        thread {
+            homeViewModel.loadNextPage()
+            val actualResult = homeViewModel.uiState.getOrAwaitValue().products
+            assertThat(actualResult).isEqualTo(getFixtureCartableProducts(40))
+        }.join()
+    }
+
+    @Test
+    fun `장바구니에 상품을 추가하지 않은 상태에서 수량을 변경시키면 상품을 장바구니에 추가한다`() {
+        val cartRepository = mockk<CartRepository>(relaxed = true)
+        val viewModel =
+            HomeViewModel(
+                FakeProductRepository(),
+                cartRepository,
+            )
+        viewModel.onQuantityChange(12, 11)
+        verify { cartRepository.patchQuantity(12, 11, null) }
+    }
+
+    @Test
+    fun `장바구니에 상품을 추가한 상태에서 수량을 변경시키면 상품의 수량이 변경된다`() {
+        val cartRepository = mockk<CartRepository>(relaxed = true)
+        val viewModel =
+            HomeViewModel(
+                FakeProductRepository(),
+                cartRepository,
+            )
+        viewModel.onQuantityChange(12, 1)
+        viewModel.onQuantityChange(12, 11)
+        verify { cartRepository.patchQuantity(12, 1, any()) }
+        verify { cartRepository.patchQuantity(12, 11, any()) }
     }
 }

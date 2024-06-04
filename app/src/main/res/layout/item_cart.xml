@@ -8,11 +8,15 @@
 
         <variable
             name="cartItemDeleteClickListener"
-            type="woowacourse.shopping.presentation.cart.CartItemDeleteClickListener" />
+            type="woowacourse.shopping.presentation.cart.CartItemEventListener" />
 
         <variable
-            name="order"
-            type="woowacourse.shopping.presentation.cart.Order" />
+            name="quantityListener"
+            type="woowacourse.shopping.presentation.home.products.QuantityListener" />
+
+        <variable
+            name="cartedProduct"
+            type="woowacourse.shopping.data.model.cart.CartedProduct" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -30,7 +34,7 @@
             android:paddingVertical="20dp">
 
             <TextView
-                android:id="@+id/tv_product_title_detail"
+                android:id="@+id/tv_product_title_cart"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_500"
@@ -43,7 +47,7 @@
                 android:ellipsize="end"
                 android:layout_marginEnd="12dp"
                 tools:text="오이"
-                android:text="@{order.productName}"/>
+                android:text="@{cartedProduct.product.name}"/>
 
             <ImageButton
                 android:id="@+id/btn_delete"
@@ -51,15 +55,15 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_exit"
-                app:layout_constraintTop_toTopOf="@id/tv_product_title_detail"
+                app:layout_constraintTop_toTopOf="@id/tv_product_title_cart"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:padding="6dp"
                 app:tint="@color/gray_500"
-                android:onClick="@{() -> cartItemDeleteClickListener.onCartItemDelete(order.cartItemId)}"
+                android:onClick="@{() -> cartItemDeleteClickListener.onCartItemDelete(cartedProduct)}"
                 android:contentDescription="@string/description_delete_cart_item" />
 
             <ImageView
-                android:id="@+id/iv_product_detail"
+                android:id="@+id/iv_product_cart"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:contentDescription="@string/description_thumbnail"
@@ -67,11 +71,22 @@
                 app:layout_constraintDimensionRatio="H,2:1"
                 app:layout_constraintEnd_toStartOf="@id/tv_price"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_product_title_detail"
+                app:layout_constraintTop_toBottomOf="@id/tv_product_title_cart"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginTop="26dp"
-                shopping:productThumbnail="@{order.image}"
+                shopping:productThumbnail="@{cartedProduct.product.imageSource}"
                 tools:src="@drawable/ic_launcher_background" />
+
+            <include
+                layout="@layout/layout_quantity_manipulation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_price"
+                shopping:productId="@{cartedProduct.product.id}"
+                shopping:quantity="@{cartedProduct.cartItem.quantity}"
+                shopping:quantityListener="@{quantityListener}" />
 
             <TextView
                 android:id="@+id/tv_price"
@@ -79,11 +94,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/gray_500"
-                app:layout_constraintStart_toEndOf="@id/iv_product_detail"
+                app:layout_constraintStart_toEndOf="@id/iv_product_cart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="10,000원"
-                android:text="@{@string/format_price(order.price)}"
+                android:text="@{@string/format_price(cartedProduct.product.price * cartedProduct.cartItem.quantity)}"
                 android:gravity="end"
                 android:maxLines="1"
                 android:ellipsize="end"

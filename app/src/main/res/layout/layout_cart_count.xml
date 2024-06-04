@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.presentation.home.HomeViewModel" />
+    </data>
+
+    <LinearLayout
+        style="?attr/actionButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:onClick="@{() -> viewModel.navigateToCart()}">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_shopping_cart" />
+
+        <TextView
+            android:id="@+id/tv_badge_quantity"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/badge_count"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@{String.valueOf(viewModel.uiState.totalQuantity)}"
+            android:maxLength="2"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            tools:text="0" />
+
+    </LinearLayout>
+</layout>

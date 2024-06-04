@@ -1,12 +1,9 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.data.model.product.CartableProduct
 
 interface ProductDataSource {
-    fun getProducts(
-        page: Int,
-        pageSize: Int,
-    ): List<Product>
+    fun fetchProduct(id: Long): CartableProduct
 
-    fun getProductById(id: Long): Product
+    fun fetchSinglePage(page: Int): List<CartableProduct>
 }

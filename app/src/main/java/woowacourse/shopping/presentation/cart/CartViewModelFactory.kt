@@ -2,8 +2,8 @@ package woowacourse.shopping.presentation.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.cart.CartRepository
+import woowacourse.shopping.domain.repository.product.ProductRepository
 
 class CartViewModelFactory(
     private val cartRepository: CartRepository,

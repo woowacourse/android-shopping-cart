@@ -4,7 +4,8 @@
 
     <item
         android:id="@+id/menu_shopping_cart"
-        android:icon="@drawable/ic_shopping_cart"
+        app:actionLayout="@layout/layout_cart_count"
         android:title="@string/menu_shopping_cart"
+        android:icon="@drawable/badge_count"
         app:showAsAction="always" />
 </menu>

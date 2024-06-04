@@ -1,18 +1,13 @@
 package woowacourse.shopping
 
-import android.app.Application
-import woowacourse.shopping.data.datasource.DefaultCart
-import woowacourse.shopping.data.datasource.DefaultProducts
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.cart.CartRepository
+import woowacourse.shopping.domain.repository.product.ProductRepository
+import woowacourse.shopping.presentation.cart.CartViewModelFactory
+import woowacourse.shopping.presentation.home.HomeViewModelFactory
 
-class ShoppingApplication : Application() {
-    val productRepository: ProductRepository by lazy {
-        ProductRepositoryImpl(DefaultProducts)
-    }
-    val cartRepository: CartRepository by lazy {
-        CartRepositoryImpl(DefaultCart)
-    }
+interface ShoppingApplication {
+    val productRepository: ProductRepository
+    val cartRepository: CartRepository
+    val cartViewModelFactory: CartViewModelFactory
+    val homeViewModelFactory: HomeViewModelFactory
 }

@@ -3,25 +3,33 @@ package woowacourse.shopping.presentation.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.data.model.cart.CartedProduct
+import woowacourse.shopping.domain.repository.cart.CartRepository
+import woowacourse.shopping.domain.repository.product.ProductRepository
+import woowacourse.shopping.presentation.home.products.ProductQuantity
+import woowacourse.shopping.presentation.home.products.QuantityListener
+import java.util.Collections.replaceAll
 
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-) : ViewModel(), CartItemDeleteClickListener {
+) : ViewModel(), CartItemEventListener, QuantityListener {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int>
         get() = _currentPage
 
-    private val _orders: MutableLiveData<List<Order>> = MutableLiveData(emptyList())
-    val orders: LiveData<List<Order>>
-        get() = _orders
+    private val _cartableProducts: MutableLiveData<List<CartedProduct>> =
+        MutableLiveData(emptyList())
+    val cartableProducts: LiveData<List<CartedProduct>>
+        get() = _cartableProducts
 
     private val _pageInformation: MutableLiveData<PageInformation> =
         MutableLiveData(PageInformation())
     val pageInformation: LiveData<PageInformation>
         get() = _pageInformation
+
+    var alteredCartItems: Array<Long> = arrayOf()
+        private set
 
     private var hasNext: Boolean = true
 
@@ -39,34 +47,37 @@ class CartViewModel(
         loadCurrentPageCartItems()
     }
 
-    fun removeCartItem(cartItemId: Long) {
-        cartRepository.removeCartItem(cartItemId = cartItemId)
+    fun loadCurrentPageCartItems() {
+        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
+        hasNext =
+            cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return)
+                .isNotEmpty()
+        setPageInformation()
+        _cartableProducts.value = cartItems
+    }
 
-        if (orders.value?.size == 1 && currentPage.value != 0) {
+    override fun onCartItemDelete(cartedProduct: CartedProduct) {
+        cartRepository.patchQuantity(cartedProduct.product.id, 0, cartedProduct.cartItem)
+        alteredCartItems += cartedProduct.product.id
+        if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
             _currentPage.value = currentPage.value?.minus(1)
         }
-
         loadCurrentPageCartItems()
     }
 
-    fun loadCurrentPageCartItems() {
-        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
-        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
-
-        val orders =
-            cartItems.map {
-                val productInformation = productRepository.fetchProduct(it.productId)
-                Order(
-                    cartItemId = it.id,
-                    image = productInformation.imageSource,
-                    productName = productInformation.name,
-                    quantity = it.quantity,
-                    price = it.quantity * productInformation.price,
-                )
+    override fun onQuantityChange(
+        productId: Long,
+        quantity: Int,
+    ) {
+        if (quantity < 0) return
+        val targetItem = productRepository.fetchProduct(productId)
+        if (targetItem.cartItem != null) {
+            cartRepository.patchQuantity(productId, quantity, targetItem.cartItem)
+            if (productId !in alteredCartItems) {
+                alteredCartItems += productId
             }
-
-        setPageInformation()
-        _orders.value = orders
+        }
+        loadCurrentPageCartItems()
     }
 
     private fun setPageInformation() {
@@ -84,13 +95,4 @@ class CartViewModel(
                 )
         }
     }
-
-    override fun onCartItemDelete(cartItemId: Long) {
-        removeCartItem(cartItemId)
-    }
 }
-
-data class PageInformation(
-    val previousPageEnabled: Boolean = false,
-    val nextPageEnabled: Boolean = false,
-)

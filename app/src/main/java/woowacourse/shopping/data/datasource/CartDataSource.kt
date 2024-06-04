@@ -1,19 +1,21 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.cart.CartItem
+import woowacourse.shopping.data.model.cart.CartedProduct
 
 interface CartDataSource {
-    fun getCartItems(
-        page: Int,
-        pageSize: Int,
-    ): List<CartItem>
+    fun fetchCartItems(page: Int): List<CartedProduct>
 
-    fun addCartItem(
-        productId: Long,
+    fun addCartItem(cartItem: CartItem)
+
+    fun fetchTotalCount(): Int
+
+    fun updateQuantity(
+        cartItemId: Long,
         quantity: Int,
-    ): Long
+    )
 
-    fun deleteCartItem(cartItemId: Long): Long
+    fun removeCartItem(cartItem: CartItem)
 
-    fun deleteAll()
+    fun removeAll()
 }

@@ -1,24 +1,27 @@
 package woowacourse.shopping.presentation.home
 
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.DefaultShoppingApplication
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.datasource.DefaultProducts
-import woowacourse.shopping.data.model.Product
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
-import woowacourse.shopping.presentation.BindableAdapter
+import woowacourse.shopping.databinding.LayoutCartCountBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.home.history.HistoryAdapter
+import woowacourse.shopping.presentation.home.products.ProductAdapter
+import woowacourse.shopping.presentation.home.products.ProductItemSpanSizeLookup
 
 class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding by lazy {
@@ -26,44 +29,48 @@ class HomeActivity : AppCompatActivity() {
     }
     private val viewModel: HomeViewModel by viewModels {
         val application = application as ShoppingApplication
-        HomeViewModelFactory(
-            application.productRepository
-        )
+        application.homeViewModelFactory
     }
-    private val adapter: ProductAdapter by lazy {
-        ProductAdapter(viewModel)
-    }
+    private val productAdapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }
+    private val historyAdapter: HistoryAdapter by lazy { HistoryAdapter(viewModel) }
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            val changedIds = getChangedIdsFromActivityResult(result)
+            viewModel.onNavigatedBack(changedIds = changedIds)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeProductListLayout()
         initializeBindingVariables()
         initializeToolbar()
-        observeEvents()
+        observeLiveData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_shopping_cart -> {
-                startActivity(CartActivity.newIntent(this))
-            }
+        val layoutCartCountBinding = LayoutCartCountBinding.inflate(layoutInflater)
+        layoutCartCountBinding.viewModel = viewModel
+        val menuItem = menu?.findItem(R.id.menu_shopping_cart)
+        menuItem?.setActionView(layoutCartCountBinding.root)
+        viewModel.uiState.observe(this) {
+            layoutCartCountBinding.tvBadgeQuantity.text = it.totalQuantity.toString()
         }
-        return super.onOptionsItemSelected(item)
+        super.onCreateOptionsMenu(menu)
+        return true
     }
 
     private fun initializeProductListLayout() {
         val layoutManager = GridLayoutManager(this, 2)
-        layoutManager.spanSizeLookup = ProductItemSpanSizeLookup(adapter)
+        layoutManager.spanSizeLookup = ProductItemSpanSizeLookup(productAdapter)
         binding.rvHome.layoutManager = layoutManager
     }
 
     private fun initializeBindingVariables() {
-        binding.productAdapter = adapter
+        binding.productAdapter = productAdapter
+        binding.historyAdapter = historyAdapter
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
     }
@@ -73,32 +80,52 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    private fun observeEvents() {
-        viewModel.navigateToDetailEvent.observe(this) { event ->
-            startActivity(
-                DetailActivity.newIntent(
-                    this,
-                    event.getContentIfNotHandled() ?: return@observe
-                )
-            )
+    private fun observeLiveData() {
+        viewModel.uiEvent.observe(this) { event ->
+            val uiEvent = event.getContentIfNotHandled() ?: return@observe
+            when (uiEvent) {
+                is HomeUiEvent.NavigateToDetail -> {
+                    activityResultLauncher.launch(
+                        DetailActivity.newIntent(this, uiEvent.productId, uiEvent.lastlyViewedId),
+                    )
+                }
+
+                is HomeUiEvent.NavigateToCart -> {
+                    activityResultLauncher.launch(CartActivity.newIntent(this))
+                }
+            }
         }
+        viewModel.uiState.observe(this) {
+            productAdapter.submitList(it.products)
+        }
+    }
+
+    private fun getChangedIdsFromActivityResult(result: ActivityResult): LongArray =
+        if (result.resultCode == RESULT_OK) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
+            } else {
+                result.data?.getLongArrayExtra(EXTRA_CHANGED_IDS)
+            }
+        } else {
+            longArrayOf()
+        } ?: longArrayOf()
+
+    companion object {
+        private const val EXTRA_CHANGED_IDS = "changed_ids"
     }
 }
 
 @BindingAdapter("shopping:data")
-fun <T> RecyclerView.setData(
-    data: List<T>?,
-) {
+fun <T> RecyclerView.setData(data: List<T>?) {
     if (data == null) return
-    if (adapter is BindableAdapter<*>) {
-        (adapter as BindableAdapter<T>).setData(data)
+    if (adapter is ListAdapter<*, *>) {
+        (adapter as ListAdapter<T, RecyclerView.ViewHolder>).submitList(data)
     }
 }
 
 @BindingAdapter("shopping:loadStatus")
-fun RecyclerView.setLoadStatus(
-    loadStatus: LoadStatus?,
-) {
+fun RecyclerView.setLoadStatus(loadStatus: LoadStatus?) {
     if (loadStatus == null) return
     if (adapter is ProductAdapter) {
         (adapter as ProductAdapter).updateLoadStatus(loadStatus)
