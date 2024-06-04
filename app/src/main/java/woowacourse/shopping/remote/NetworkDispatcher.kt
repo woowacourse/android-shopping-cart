@@ -14,14 +14,11 @@ class NetworkDispatcher : Dispatcher() {
     private val gson = Gson()
 
     override fun dispatch(request: RecordedRequest): MockResponse {
-        println("request: $request")
         val path = request.path ?: return MockResponse().setResponseCode(404)
-        println("path: $path")
 
         return when {
             path.startsWith(GET_PAGING_PRODUCTS_PATH) -> {
                 val segments = path.removePrefix(GET_PAGING_PRODUCTS_PATH).toInt()
-                println("segment: $segments")
 
                 val fromIndex = (segments - 1) * ProductMockWebServer.PAGE_SIZE + 1
                 val toIndex =
@@ -40,7 +37,6 @@ class NetworkDispatcher : Dispatcher() {
 
             path.startsWith(GET_PRODUCT_PATH) -> {
                 val productId = path.removePrefix(GET_PRODUCT_PATH).toLong()
-                println(" now productId: $productId")
 
                 val body =
                     ProductMockWebServer.allProducts.find {
@@ -63,7 +59,6 @@ class NetworkDispatcher : Dispatcher() {
             }
 
             else -> {
-                println("not found")
                 MockResponse().setResponseCode(404)
             }
         }

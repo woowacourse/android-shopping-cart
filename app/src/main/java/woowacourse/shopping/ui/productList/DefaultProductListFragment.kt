@@ -8,8 +8,6 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.ui.FragmentNavigator
@@ -49,18 +47,19 @@ class DefaultProductListFragment : Fragment() {
         viewModel.loadAll()
     }
 
-    private fun hasMoreItems(
-        totalItemCount: Int,
-        lastVisibleItem: Int,
-    ) = totalItemCount == lastVisibleItem + 1
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
         initObserve()
-        registerLoadMoreButtonListener()
+        viewModel.uiState.isLastPage.observe(viewLifecycleOwner) { isLast ->
+            when (isLast) {
+                true -> binding.loadMoreButton.visibility = View.GONE
+                false -> binding.loadMoreButton.visibility = View.VISIBLE
+            }
+        }
+
     }
 
     private fun initObserve() {
@@ -114,31 +113,6 @@ class DefaultProductListFragment : Fragment() {
                 ProductListError.UpdateProductQuantity -> showToast(R.string.error_message_update_products_quantity_in_cart)
             }
         }
-    }
-
-    private fun registerLoadMoreButtonListener() {
-        binding.productDetailList.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    super.onScrolled(recyclerView, dx, dy)
-
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val totalItemCount = layoutManager.itemCount
-                    val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-
-                    if (viewModel.uiState.isLastPage.value == false && hasMoreItems(totalItemCount, lastVisibleItem)) {
-                        binding.loadMoreButton.visibility = View.VISIBLE
-                        return
-                    }
-
-                    binding.loadMoreButton.visibility = View.GONE
-                }
-            },
-        )
     }
 
     private fun showToast(@StringRes stringId: Int) {

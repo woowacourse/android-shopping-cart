@@ -21,7 +21,7 @@ class DefaultProductListViewModel(
     override fun loadAll() {
         val page = uiState.currentPage()
         loadAllProducts(page)
-        loadFinalPage(page)
+        calculateFinalPage(page)
         calculateProductsQuantityInCart()
         loadProductsHistory()
     }
@@ -37,10 +37,10 @@ class DefaultProductListViewModel(
         }
     }
 
-    private fun loadFinalPage(page: Int) {
+    private fun calculateFinalPage(page: Int) {
         productsRepository.isFinalPageAsyncResult(page) { result ->
-            result.onSuccess {
-                uiState.postLastPage(it)
+            result.onSuccess { isLastPage ->
+                uiState.postLastPage(isLastPage)
             }.onFailure {
                 errorEvent.postValue(ProductListError.FinalPage)
             }
@@ -70,7 +70,7 @@ class DefaultProductListViewModel(
     override fun loadNextPageProducts() {
         val nextPage = uiState.nextPage()
 
-        loadFinalPage(nextPage)
+        calculateFinalPage(nextPage)
         addNextPageProducts(nextPage)
         calculateProductsQuantityInCart()
     }

@@ -14,7 +14,7 @@ class ProductMockWebServer {
                     "$i 번째 상품 이름",
                     i * 100,
                 )
-            } + ProductData.NULL
+            }
 
         const val BASE_PORT = 12345
         const val BASE_URL = "http://localhost:$BASE_PORT"
