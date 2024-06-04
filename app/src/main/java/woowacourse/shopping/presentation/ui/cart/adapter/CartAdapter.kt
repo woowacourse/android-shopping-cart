@@ -1,16 +1,16 @@
-package woowacourse.shopping.presentation.ui.cart
+package woowacourse.shopping.presentation.ui.cart.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductListItem
+import woowacourse.shopping.presentation.ui.cart.CartHandler
 
 class CartAdapter(
     private val cartHandler: CartHandler,
-    private var carts: List<Cart> = emptyList(),
+    private var carts: List<ProductListItem.ShoppingProductItem> = emptyList(),
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,28 +29,12 @@ class CartAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newItems: List<Cart>) {
+    fun updateList(newItems: List<ProductListItem.ShoppingProductItem>) {
         carts = newItems
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
         return carts.size
-    }
-}
-
-class CartViewHolder(private val binding: ItemCartBinding, val cartHandler: CartHandler) :
-    RecyclerView.ViewHolder(binding.root) {
-    lateinit var product: Product
-
-    init {
-        binding.ivClose.setOnClickListener {
-            cartHandler.onDeleteClick(product)
-        }
-    }
-
-    fun bind(item: Cart) {
-        product = item.product
-        binding.cart = item
     }
 }

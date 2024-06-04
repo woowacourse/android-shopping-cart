@@ -16,7 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewHolder
+import woowacourse.shopping.presentation.ui.shopping.adapter.ProductViewHolder
 
 @RunWith(AndroidJUnit4::class)
 class ShoppingActivityTest {
@@ -30,26 +30,29 @@ class ShoppingActivityTest {
     }
 
     @Test
-    fun `상품_목록의_맨_아래_20번째는_더보기_뷰홀더가_등장한다`() {
+    fun `상품_목록_첫_번째는_상품이_보인다`() {
+        onView(withId(R.id.rv_shopping)).check(
+            matches(
+                matchViewHolderAtPosition(
+                    0,
+                    ProductViewHolder.RecentlyViewedProductViewHolder::class.java,
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun `상품_목록의_맨_아래_21번째는_더보기_뷰홀더가_등장한다`() {
         onView(withId(R.id.rv_shopping)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
-                20,
+                21,
             ),
         )
             .check(
                 matches(
-                    matchViewHolderAtPosition(20, ShoppingViewHolder.LoadViewHolder::class.java),
+                    matchViewHolderAtPosition(21, ProductViewHolder.LoadViewHolder::class.java),
                 ),
             )
-    }
-
-    @Test
-    fun `상품_목록_첫_번째는_상품이_보인다`() {
-        onView(withId(R.id.rv_shopping)).check(
-            matches(
-                matchViewHolderAtPosition(0, ShoppingViewHolder.ProductViewHolder::class.java),
-            ),
-        )
     }
 
     private fun matchViewHolderAtPosition(

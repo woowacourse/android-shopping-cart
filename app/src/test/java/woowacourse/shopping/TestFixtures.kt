@@ -2,23 +2,49 @@ package woowacourse.shopping
 
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductListItem
+import woowacourse.shopping.domain.ProductListItem.ShoppingProductItem.Companion.joinProductAndCart
+import woowacourse.shopping.domain.RecentProductItem
+import java.time.LocalDateTime
 
-val products =
-    List(51) { id ->
+val dummyProducts =
+    List(3) { id ->
         Product(
             id = id.toLong(),
-            imgUrl = "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
+            imgUrl = "",
             name = "$id",
             price = 10000,
         )
     }
 
-val product: Product = products.first()
+val dummyProduct: Product = dummyProducts.first()
 
-val dummyCarts: List<Cart> =
+val dummyRecentProducts =
+    listOf(
+        RecentProductItem(
+            productId = 0,
+            name = "0",
+            imgUrl = "",
+            dateTime = LocalDateTime.of(2023, 5, 23, 11, 42),
+        ),
+    )
+
+val dummyRecentProduct = dummyRecentProducts[0]
+
+val dummyCartProducts: List<Cart> =
     List(3) {
         Cart(
-            product = product,
-            count = 1,
+            product = dummyProducts[it],
+            quantity = 1,
         )
     }
+
+val cart: Cart = dummyCartProducts.first()
+
+val dummyShoppingProducts =
+    ProductListItem.ShoppingProductItem.fromProductsAndCarts(
+        dummyProducts,
+        dummyCartProducts,
+    )
+
+val shoppingProduct: ProductListItem.ShoppingProductItem = joinProductAndCart(dummyProduct, cart)

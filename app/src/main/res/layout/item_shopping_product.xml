@@ -7,20 +7,25 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.domain.ProductListItem.ShoppingProductItem" />
+
+        <variable
+            name="shoppingHandler"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_margin="6dp"
+        android:onClick="@{()->shoppingHandler.onProductItemClick(product.id)}">
 
         <ImageView
             android:id="@+id/img_item"
+            bindLoadImage="@{product.imgUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
             android:scaleType="centerCrop"
-            bindLoadImage="@{product.imgUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,16 +50,38 @@
 
         <TextView
             android:id="@+id/tv_price"
+            bindTextFormattedCurrency="@{product.price}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="6dp"
             android:textSize="16sp"
-            bindTextFormattedCurrency="@{product.price}"
             app:layout_constraintEnd_toEndOf="@id/img_item"
             app:layout_constraintStart_toStartOf="@id/img_item"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             tools:text="상품 가격" />
 
+        <include
+            android:id="@+id/layout_shopping_quantity_control"
+            bindSetVisibility="@{product.quantity>0}"
+            layout="@layout/include_quantity_control"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/img_item"
+            app:layout_constraintEnd_toEndOf="@id/img_item"
+            app:layout_constraintStart_toStartOf="@id/img_item"
+            app:product="@{product}"
+            app:quantityHandler="@{shoppingHandler}" />
 
+        <ImageView
+            android:id="@+id/btn_plus"
+            bindSetVisibility="@{0==product.quantity}"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:onClick="@{()->shoppingHandler.onIncreaseQuantity(product)}"
+            android:src="@drawable/ic_white_plus"
+            app:layout_constraintBottom_toBottomOf="@id/img_item"
+            app:layout_constraintEnd_toEndOf="@id/img_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

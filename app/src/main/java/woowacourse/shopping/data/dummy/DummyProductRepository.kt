@@ -1,11 +1,11 @@
-package woowacourse.shopping.data.remote
+package woowacourse.shopping.data.dummy
 
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
 
 class DummyProductRepository : ProductRepository {
-    private val products =
+    val products =
         listOf(
             Product(
                 id = 0L,

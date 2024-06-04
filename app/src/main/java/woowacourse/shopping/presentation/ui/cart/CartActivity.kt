@@ -4,15 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
+import woowacourse.shopping.presentation.ui.cart.adapter.CartAdapter
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
 import woowacourse.shopping.presentation.util.EventObserver
 
 class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
@@ -24,26 +25,22 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            viewModel.loadProductByPage(0)
+        }
+        binding.cartHandler = this
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
         initActionBarTitle()
-        initButtonClickListener()
         initCartAdapter()
-        viewModel.loadProductByPage()
         observeErrorEventUpdates()
         observeCartUpdates()
+        observeChangedCartProducts()
     }
 
     private fun initActionBarTitle() {
         title = getString(R.string.cart_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun initButtonClickListener() {
-        binding.btnLeft.setOnClickListener {
-            viewModel.minus()
-        }
-        binding.btnRight.setOnClickListener {
-            viewModel.plus()
-        }
     }
 
     private fun initCartAdapter() {
@@ -60,26 +57,59 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     }
 
     private fun observeCartUpdates() {
-        viewModel.carts.observe(this) {
+        viewModel.shoppingProducts.observe(this) {
             when (it) {
                 is UiState.None -> {}
-                is UiState.Success -> handleSuccessState(it)
+                is UiState.Success -> handleSuccessState(it.data)
             }
         }
     }
 
-    private fun handleSuccessState(it: UiState.Success<List<Cart>>) {
-        cartAdapter.updateList(it.data)
-        with(binding) {
-            layoutPage.isVisible = viewModel.maxPage > 0
-            btnRight.isEnabled = viewModel.currentPage < viewModel.maxPage
-            btnLeft.isEnabled = viewModel.currentPage > 0
-            tvPageCount.text = (viewModel.currentPage + PAGE_OFFSET).toString()
+    private fun handleSuccessState(products: List<ProductListItem.ShoppingProductItem>) {
+        cartAdapter.updateList(products)
+        viewModel.updatePageController()
+    }
+
+    private fun observeChangedCartProducts() {
+        viewModel.changedCartProducts.observe(this) { carts ->
+            carts?.let {
+                Intent(applicationContext, ShoppingActivity::class.java).apply {
+                    putExtra(EXTRA_CHANGED_PRODUCT_IDS, it.map { it.product.id }.toLongArray())
+                    putExtra(EXTRA_NEW_PRODUCT_QUANTITIES, it.map { it.quantity }.toIntArray())
+                    setResult(RESULT_OK, this)
+                }
+            }
         }
     }
 
-    override fun onDeleteClick(product: Product) {
-        viewModel.deleteProduct(product)
+    override fun onDeleteClick(product: ProductListItem.ShoppingProductItem) {
+        viewModel.deleteProduct(product.toProduct())
+    }
+
+    override fun onNextPageClick() {
+        viewModel.turnNextPage()
+    }
+
+    override fun onBeforePageClick() {
+        viewModel.turnPreviousPage()
+    }
+
+    override fun onDecreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let {
+            viewModel.updateCartItemQuantity(
+                item.toProduct(),
+                -1,
+            )
+        }
+    }
+
+    override fun onIncreaseQuantity(item: ProductListItem.ShoppingProductItem?) {
+        item?.let {
+            viewModel.updateCartItemQuantity(
+                item.toProduct(),
+                1,
+            )
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -88,11 +118,15 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     }
 
     companion object {
-        const val PAGE_OFFSET = 1
+        const val EXTRA_CHANGED_PRODUCT_IDS = "changedProductIds"
+        const val EXTRA_NEW_PRODUCT_QUANTITIES = "newProductQuantities"
 
-        fun start(context: Context) {
+        fun startWithResult(
+            context: Context,
+            activityLauncher: ActivityResultLauncher<Intent>,
+        ) {
             Intent(context, CartActivity::class.java).apply {
-                context.startActivity(this)
+                activityLauncher.launch(this)
             }
         }
     }

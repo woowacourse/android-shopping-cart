@@ -4,6 +4,9 @@
 
     <data>
 
+        <variable
+            name="handler"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +18,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:text="상품 더보기"
+            android:onClick="@{()->handler.onLoadMoreClick()}"
+            android:text="@string/load_more_products"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -10,4 +10,7 @@
     <string name="all_product_loaded">아이템을 모두 불러왔습니다</string>
     <string name="cart_title">Cart</string>
     <string name="error_load_cart">카트 불러오기에 실패했습니다</string>
+    <string name="recently_viewed_product">최근 본 상품</string>
+    <string name="load_more_products">상품 더보기</string>
+    <string name="last_viewed_product">마지막으로 본 상품</string>
 </resources>
