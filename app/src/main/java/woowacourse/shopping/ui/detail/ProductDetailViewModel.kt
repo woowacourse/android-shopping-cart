@@ -10,7 +10,6 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.entity.Product
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
-import woowacourse.shopping.ui.utils.AddCartQuantityBundle
 
 class ProductDetailViewModel(
     private val productId: Long,
@@ -27,16 +26,6 @@ class ProductDetailViewModel(
 
     private val _isSuccessAddCart = MutableLiveData<Event<Boolean>>()
     val isSuccessAddCart: LiveData<Event<Boolean>> get() = _isSuccessAddCart
-
-    val addCartQuantityBundle: LiveData<AddCartQuantityBundle> =
-        _productUiModel.map {
-            AddCartQuantityBundle(
-                productId = it.productId,
-                quantity = it.quantity,
-                onIncreaseProductQuantity = { increaseQuantity() },
-                onDecreaseProductQuantity = { decreaseQuantity() },
-            )
-        }
 
     private val _lastRecentProduct = MutableLiveData<LastRecentProductUiModel>()
     val lastRecentProduct: LiveData<LastRecentProductUiModel> get() = _lastRecentProduct
@@ -85,12 +74,12 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun increaseQuantity() {
+    fun increaseQuantity() {
         var quantity = _productUiModel.value?.quantity ?: return
         _productUiModel.value = _productUiModel.value?.copy(quantity = ++quantity)
     }
 
-    private fun decreaseQuantity() {
+    fun decreaseQuantity() {
         var quantity = _productUiModel.value?.quantity ?: return
         _productUiModel.value = _productUiModel.value?.copy(quantity = --quantity)
     }

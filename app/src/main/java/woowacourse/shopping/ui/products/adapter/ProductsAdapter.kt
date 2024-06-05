@@ -34,7 +34,7 @@ class ProductsAdapter(private val productsListener: ProductsListener) :
 
             ProductsViewType.PRODUCTS_UI_MODEL -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ProductsViewHolder.ProductViewHolder(binding)
+                ProductsViewHolder.ProductViewHolder(binding, productsListener)
             }
         }
     }
@@ -49,10 +49,7 @@ class ProductsAdapter(private val productsListener: ProductsListener) :
             }
 
             is ProductsViewHolder.ProductViewHolder -> {
-                holder.bind(
-                    productsViews[position] as ProductUiModel,
-                    productsListener,
-                )
+                holder.bind(productsViews[position] as ProductUiModel)
             }
         }
     }

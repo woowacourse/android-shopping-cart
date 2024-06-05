@@ -14,8 +14,8 @@
             type="woowacourse.shopping.ui.products.ProductsListener" />
 
         <variable
-            name="addCartQuantityBundle"
-            type="woowacourse.shopping.ui.utils.AddCartQuantityBundle" />
+            name="quantityListener"
+            type="woowacourse.shopping.ui.utils.AddQuantityListener" />
 
     </data>
 
@@ -76,7 +76,7 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/shape_product_add_cart_button"
             android:gravity="center"
-            android:onClick="@{() -> addCartQuantityBundle.onIncreaseProductQuantity.invoke(product.productId)}"
+            android:onClick="@{() -> quantityListener.onIncreaseProductQuantity()}"
             android:text="@string/plus"
             android:textColor="@color/gray_500"
             android:textSize="30sp"
@@ -91,7 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            app:bundle="@{addCartQuantityBundle}"
+            app:listener="@{quantityListener}"
+            app:quantity="@{product.quantity}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="parent"
             app:visibility="@{product.quantity.greaterThanMin}"

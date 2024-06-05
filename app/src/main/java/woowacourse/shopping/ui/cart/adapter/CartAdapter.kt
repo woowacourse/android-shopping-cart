@@ -15,17 +15,14 @@ class CartAdapter(private val cartListener: CartListener) : ListAdapter<ProductU
     ): CartViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartBinding.inflate(inflater, parent, false)
-        return CartViewHolder(binding)
+        return CartViewHolder(binding, cartListener)
     }
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(
-            getItem(position),
-            cartListener,
-        )
+        holder.bind(getItem(position))
     }
 
     companion object {

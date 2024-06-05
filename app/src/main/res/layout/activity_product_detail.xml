@@ -10,6 +10,10 @@
             type="woowacourse.shopping.ui.detail.ProductDetailViewModel" />
 
         <variable
+            name="quantityListener"
+            type="woowacourse.shopping.ui.utils.AddQuantityListener" />
+
+        <variable
             name="onClickLastRecentProductListener"
             type="woowacourse.shopping.ui.detail.OnClickLastRecentProductListener" />
     </data>
@@ -84,7 +88,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="14dp"
-            app:bundle="@{viewModel.addCartQuantityBundle}"
+            app:listener="@{quantityListener}"
+            app:quantity="@{viewModel.productUiModel.quantity}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/divider_product_detail" />
 

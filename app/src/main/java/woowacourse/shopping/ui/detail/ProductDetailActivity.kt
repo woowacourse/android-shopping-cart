@@ -16,8 +16,9 @@ import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.products.ProductsActivity
+import woowacourse.shopping.ui.utils.AddQuantityListener
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), AddQuantityListener {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModelFactory(
@@ -35,6 +36,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.quantityListener = this
         binding.onClickLastRecentProductListener =
             OnClickLastRecentProductListener { productId ->
                 val intent = newIntent(this@ProductDetailActivity, productId, lastSeenProductVisible = true)
@@ -125,6 +127,10 @@ class ProductDetailActivity : AppCompatActivity() {
         val resultIntent = Intent().putExtra(ProductsActivity.PRODUCT_ID_KEY, productId())
         setResult(Activity.RESULT_OK, resultIntent)
     }
+
+    override fun onIncreaseProductQuantity() = viewModel.increaseQuantity()
+
+    override fun onDecreaseProductQuantity() = viewModel.decreaseQuantity()
 
     companion object {
         private const val PRODUCT_ID_KEY = "product_id_key"

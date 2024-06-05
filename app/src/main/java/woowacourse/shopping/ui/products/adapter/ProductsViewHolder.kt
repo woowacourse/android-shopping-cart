@@ -9,24 +9,27 @@ import woowacourse.shopping.ui.products.adapter.recent.OnClickRecentProductItem
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.adapter.recent.RecentProductsAdapter
 import woowacourse.shopping.ui.products.adapter.type.ProductUiModel
-import woowacourse.shopping.ui.utils.AddCartQuantityBundle
+import woowacourse.shopping.ui.utils.AddQuantityListener
 
 sealed class ProductsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    class ProductViewHolder(private val binding: ItemProductBinding) :
+    class ProductViewHolder(
+        private val binding: ItemProductBinding,
+        private val productsListener: ProductsListener,
+    ) :
         ProductsViewHolder(binding.root) {
-        fun bind(
-            productUiModel: ProductUiModel,
-            productsListener: ProductsListener,
-        ) {
+        fun bind(productUiModel: ProductUiModel) {
             binding.product = productUiModel
             binding.listener = productsListener
-            binding.addCartQuantityBundle =
-                AddCartQuantityBundle(
-                    productUiModel.productId,
-                    productUiModel.quantity,
-                    productsListener::onClickIncreaseQuantity,
-                    productsListener::onClickDecreaseQuantity,
-                )
+            binding.quantityListener = object : AddQuantityListener {
+                override fun onIncreaseProductQuantity() {
+                    productsListener.onClickIncreaseQuantity(productUiModel.productId)
+                }
+
+                override fun onDecreaseProductQuantity() {
+                    productsListener.onClickDecreaseQuantity(productUiModel.productId)
+                }
+
+            }
         }
     }
 
