@@ -1,20 +1,26 @@
 package woowacourse.shopping.presentation.ui.shopping.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 
 class ShoppingAdapter(
-    private val shoppingHandler: ShoppingHandler,
-    private var items: List<Product> = emptyList(),
-) : RecyclerView.Adapter<ShoppingViewHolder>() {
+    private val shoppingActionHandler: ShoppingActionHandler,
+) : ListAdapter<CartProduct, ShoppingViewHolder>(DIFF_CALLBACK) {
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - LOADING_OFFSET) ShoppingViewType.LoadMore.value else ShoppingViewType.Product.value
+        return when (position) {
+            itemCount - LOADING_OFFSET -> {
+                ShoppingViewType.LoadMore.value
+            }
+            else -> {
+                ShoppingViewType.Product.value
+            }
+        }
     }
 
     override fun onCreateViewHolder(
@@ -25,12 +31,12 @@ class ShoppingAdapter(
         return when (ShoppingViewType.of(viewType)) {
             ShoppingViewType.Product -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ShoppingViewHolder.ProductViewHolder(binding, shoppingHandler)
+                ShoppingViewHolder.ProductViewHolder(binding, shoppingActionHandler)
             }
 
             ShoppingViewType.LoadMore -> {
                 val binding = ItemLoadBinding.inflate(inflater, parent, false)
-                ShoppingViewHolder.LoadViewHolder(binding, shoppingHandler)
+                ShoppingViewHolder.LoadViewHolder(binding, shoppingActionHandler)
             }
         }
     }
@@ -41,26 +47,35 @@ class ShoppingAdapter(
     ) {
         when (holder) {
             is ShoppingViewHolder.ProductViewHolder -> {
-                holder.bind(items[position])
+                holder.bind(getItem(position))
             }
-
             is ShoppingViewHolder.LoadViewHolder -> {
                 holder.bind()
             }
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newItems: List<Product>) {
-        items = newItems
-        notifyDataSetChanged()
-    }
-
     override fun getItemCount(): Int {
-        return items.size + LOADING_OFFSET
+        return if (currentList.isEmpty()) 0 else currentList.size + LOADING_OFFSET
     }
 
     companion object {
         private const val LOADING_OFFSET = 1
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<CartProduct>() {
+                override fun areItemsTheSame(
+                    oldItem: CartProduct,
+                    newItem: CartProduct,
+                ): Boolean {
+                    return oldItem.productId == newItem.productId
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: CartProduct,
+                    newItem: CartProduct,
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }

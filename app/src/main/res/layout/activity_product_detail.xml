@@ -5,8 +5,16 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel" />
+            name="cartProduct"
+            type="woowacourse.shopping.domain.CartProduct" />
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.domain.RecentProduct" />
+
+        <variable
+            name="detailActionHandler"
+            type="woowacourse.shopping.presentation.ui.detail.DetailActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +34,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            productSrc="@{viewModel}"/>
+            productUrl="@{cartProduct.imgUrl}" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -36,33 +44,50 @@
             android:layout_marginTop="17dp"
             android:textSize="24sp"
             android:textStyle="bold"
+            tools:text="상품명"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_product"
             app:layout_goneMarginStart="18dp"
-            tools:text="상품 이름"
-            productName="@{viewModel}"/>
-
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="17dp"
-            android:text="@string/price_format"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line" />
+            android:text="@{cartProduct.name}"/>
 
         <TextView
             android:id="@+id/tv_price_value"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="17dp"
+            tools:text="20,000원"
+            productPrice="@{cartProduct}"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            app:layout_constraintEnd_toStartOf="@id/space_mid" />
+
+        <Space
+            android:id="@+id/space_mid"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/tv_price_value"
+            app:layout_constraintEnd_toStartOf="@id/layout_counter"
+            app:layout_constraintTop_toBottomOf="@id/line"/>
+
+
+        <include
+            android:id="@+id/layout_counter"
+            layout="@layout/selector_quantity"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_price"
-            tools:text="10000원"
-            productPrice="@{viewModel}"/>
+            app:layout_constraintTop_toTopOf="@id/tv_price_value"
+            app:layout_constraintStart_toEndOf="@id/space_mid"
+            app:cartProduct="@{cartProduct}"
+            app:shoppingActionHandler="@{detailActionHandler}"
+            />
 
         <TextView
             android:id="@+id/tv_add_cart"
@@ -76,7 +101,8 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="@{() -> detailActionHandler.onAddToCart(cartProduct)}"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/line"
@@ -86,5 +112,44 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_name"
             app:layout_constraintTop_toBottomOf="@id/tv_name" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_recent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_price_value"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
+            android:padding="15dp"
+            android:background="@drawable/background_cart"
+            android:onClick="@{() -> detailActionHandler.onNavigateToDetail(recentProduct.productId)}">
+
+            <TextView
+                android:id="@+id/tv_recent_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="#04C09E"
+                android:textStyle="bold"
+                android:text="마지막으로 본 상품"/>
+            <TextView
+                android:id="@+id/tv_recent_product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_recent_title"
+                android:layout_marginTop="5dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="17sp"
+                android:text="@{recentProduct.name}"
+                tools:text="동원참치"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

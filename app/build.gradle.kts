@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("de.mannodermaus.android-junit5") version "1.10.0.0"
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -69,4 +70,12 @@ dependencies {
     androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.3.0")
     androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.3.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // room
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    implementation("com.google.code.gson:gson:2.9.0")
 }

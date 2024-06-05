@@ -6,11 +6,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.ui.EventObserver
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActionActivity.Companion.EXTRA_UPDATED_PRODUCT
 
 class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
@@ -19,31 +22,75 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+        initTitle()
 
-        title = getString(R.string.detail_title)
+        binding.detailActionHandler = viewModel
+        binding.lifecycleOwner = this
 
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
+        initData(id)
+        initObserver()
+    }
 
-        viewModel.loadById(id)
-        viewModel.products.observe(this) { state ->
+    private fun initTitle() {
+        title = getString(R.string.detail_title)
+    }
+
+    private fun initObserver() {
+        viewModel.product.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
                 is UiState.Success -> {
-                    binding.tvAddCart.setOnClickListener {
-                        finish()
-                        viewModel.saveCartItem(state.data)
-                    }
+                    binding.cartProduct = state.data
                 }
             }
         }
-        viewModel.errorHandler.observe(this) { event ->
-            event.getContentIfNotHandled()?.let { message ->
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        viewModel.recentProduct.observe(this) { state ->
+            when (state) {
+                is UiState.None -> {
+                    binding.layoutRecent.isVisible = false
+                }
+
+                is UiState.Success -> {
+                    binding.recentProduct = state.data
+                    binding.layoutRecent.isVisible = !(intent.getBooleanExtra(EXTRA_OVERLAY, false))
+                }
             }
         }
+        viewModel.errorHandler.observe(
+            this,
+            EventObserver {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            },
+        )
+        viewModel.cartHandler.observe(
+            this,
+            EventObserver {
+                intent.apply {
+                    putExtra(
+                        EXTRA_UPDATED_PRODUCT,
+                        it,
+                    )
+                }.run {
+                    setResult(RESULT_OK, this)
+                    this@ProductDetailActivity.finish()
+                }
+            },
+        )
+        viewModel.navigateHandler.observe(
+            this,
+            EventObserver {
+                createIntent(this, it).apply {
+                    startActivity(this)
+                }
+            },
+        )
+    }
+
+    private fun initData(id: Long) {
+        viewModel.findCartProductById(id)
+        viewModel.findOneRecentProduct()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,14 +105,16 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
 
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
+        const val EXTRA_OVERLAY = "overlay"
 
-        fun start(
+        fun createIntent(
             context: Context,
             productId: Long,
-        ) {
-            Intent(context, ProductDetailActivity::class.java).apply {
+        ): Intent {
+            return Intent(context, ProductDetailActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra(EXTRA_PRODUCT_ID, productId)
-                context.startActivity(this)
+                if (context is ProductDetailActivity) putExtra(EXTRA_OVERLAY, true)
             }
         }
     }

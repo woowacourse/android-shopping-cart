@@ -1,16 +1,16 @@
 package woowacourse.shopping.presentation.ui.cart
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProduct
 
 class CartAdapter(
     private val cartActionHandler: CartActionHandler,
-    private var carts: List<Cart> = emptyList(),
-) : RecyclerView.Adapter<CartViewHolder>() {
+) : ListAdapter<CartProduct, CartViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -24,24 +24,33 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(carts[position])
+        holder.bind(getItem(position))
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newItems: List<Cart>) {
-        carts = newItems
-        notifyDataSetChanged()
-    }
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<CartProduct>() {
+                override fun areItemsTheSame(
+                    oldItem: CartProduct,
+                    newItem: CartProduct,
+                ): Boolean {
+                    return oldItem.productId == newItem.productId
+                }
 
-    override fun getItemCount(): Int {
-        return carts.size
+                override fun areContentsTheSame(
+                    oldItem: CartProduct,
+                    newItem: CartProduct,
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }
 
 class CartViewHolder(private val binding: ItemCartBinding, val cartActionHandler: CartActionHandler) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: Cart) {
-        binding.cart = item
+    fun bind(item: CartProduct) {
+        binding.cartProduct = item
         binding.cartActionHandler = cartActionHandler
     }
 }

@@ -1,9 +1,10 @@
 package woowacourse.shopping.presentation.ui.cart
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.presentation.base.CartCountHandler
 
-interface CartActionHandler {
-    fun onDelete(product: Product)
+interface CartActionHandler : CartCountHandler {
+    fun onDelete(cartProduct: CartProduct)
 
     fun onNext()
 

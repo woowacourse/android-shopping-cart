@@ -10,4 +10,3 @@ fun ImageView.setCartImgUrl(url: String) {
         .load(url)
         .into(this)
 }
-
