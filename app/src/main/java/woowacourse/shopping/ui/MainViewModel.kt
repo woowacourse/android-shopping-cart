@@ -3,11 +3,13 @@ package woowacourse.shopping.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.livedata.Event
-import kotlin.concurrent.thread
 
 class MainViewModel(
     private val productRepository: ProductRepository = ProductRepository(),
@@ -32,9 +34,9 @@ class MainViewModel(
     }
 
     fun addCartProduct(product: Product) {
-        thread {
+        viewModelScope.launch {
             cartRepository.addCartProduct(product)
+            _onProductAdded.value = Event(Unit)
         }
-        _onProductAdded.value = Event(Unit)
     }
 }

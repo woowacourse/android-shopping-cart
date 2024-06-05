@@ -3,12 +3,13 @@ package woowacourse.shopping.ui.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.data.mapper.toModel
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.livedata.MutableSingleLiveData
 import woowacourse.shopping.ui.livedata.SingleLiveData
-import kotlin.concurrent.thread
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -22,18 +23,18 @@ class CartViewModel(
     val onCartProductDeleted: SingleLiveData<Unit> get() = _onCartProductDeleted
 
     fun getAllCartProducts() {
-        thread {
+        viewModelScope.launch {
             val cartProducts = cartRepository
                 .getAllCartProducts()
                 .map { it.toModel() }
-            _cartProducts.postValue(cartProducts)
+            _cartProducts.value = cartProducts
         }
     }
 
     fun deleteCartProduct(id: Int) {
-        thread {
+        viewModelScope.launch {
             cartRepository.deleteCartProduct(id.toLong())
-        }.join()
-        _onCartProductDeleted.setValue(Unit)
+            _onCartProductDeleted.setValue(Unit)
+        }
     }
 }

@@ -8,11 +8,11 @@ import androidx.room.Query
 interface CartProductDao {
 
     @Query("SELECT * FROM cart_products")
-    fun getAll(): List<CartProductEntity>
+    suspend fun getAll(): List<CartProductEntity>
 
     @Insert
-    fun insert(cartProduct: CartProductEntity)
+    suspend fun insert(cartProduct: CartProductEntity)
 
     @Query("DELETE FROM cart_products WHERE id = :id")
-    fun delete(id: Long)
+    suspend fun delete(id: Long)
 }
