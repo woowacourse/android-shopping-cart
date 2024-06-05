@@ -1,0 +1,6 @@
+package woowacourse.shopping.ui.productDetail
+
+import woowacourse.shopping.ui.OnItemQuantityChangeListener
+import woowacourse.shopping.ui.OnProductNavigator
+
+interface ProductDetailListener : OnItemQuantityChangeListener, OnProductNavigator

@@ -1,37 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="product"
-            type="woowacourse.shopping.data.Product" />
+            type="woowacourse.shopping.domain.model.Product" />
 
         <variable
-            name="onProductItemClickListener"
-            type="woowacourse.shopping.productList.ProductRecyclerViewAdapter.OnProductItemClickListener" />
+            name="productListListener"
+            type="woowacourse.shopping.ui.productList.ProductListListener" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
-        >
+        android:onClick="@{() -> productListListener.navigateToDetail(product.id)}"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/main_product_list_item_img"
+            imageUrl="@{product.imgUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
-            android:layout_margin="@dimen/text_margin"
             android:importantForAccessibility="no"
-            imageUrl="@{product.imgUrl}"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars" />
+
+        <include
+            android:id="@+id/main_product_list_change_button"
+            layout="@layout/item_change_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/main_product_list_item_img"
+            app:layout_constraintEnd_toEndOf="@id/main_product_list_item_img"
+            app:layout_constraintStart_toStartOf="@id/main_product_list_item_img"
+            bind:itemId="@{product.id}"
+            bind:onItemChargeListener="@{productListListener}"
+            bind:quantity="@{product.quantity}" />
 
         <TextView
             android:id="@+id/main_product_list_product_name"

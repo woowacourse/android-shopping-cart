@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="itemId"
+            type="long"/>
+
+        <variable
+            name="quantity"
+            type="int" />
+
+        <variable
+            name="onItemChargeListener"
+            type="woowacourse.shopping.ui.OnItemQuantityChangeListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@{quantity > 0 ? @color/white : @android:color/transparent}"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_decrease"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:onClick="@{() -> onItemChargeListener.onDecrease(itemId)}"
+            android:text="@string/minus"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            android:visibility="@{quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/tv_quantity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:gravity="center"
+            android:text="@{String.valueOf(quantity)}"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            android:visibility="@{quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/btn_decrease"
+            app:layout_constraintEnd_toStartOf="@id/btn_increase"
+            app:layout_constraintStart_toEndOf="@id/btn_decrease"
+            app:layout_constraintTop_toTopOf="@id/btn_decrease"
+            tools:ignore="SpUsage"
+            tools:text="1" />
+
+        <Button
+            android:id="@+id/btn_increase"
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:onClick="@{() -> onItemChargeListener.onIncrease(itemId)}"
+            android:text="@string/plus"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            android:visibility="@{quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_quantity"
+            app:layout_constraintTop_toTopOf="@id/btn_decrease"
+            tools:ignore="SpUsage" />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:importantForAccessibility="no"
+            android:onClick="@{() -> onItemChargeListener.onAdd(itemId)}"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_plus"
+            android:visibility="@{quantity == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

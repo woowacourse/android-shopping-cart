@@ -11,4 +11,30 @@
     <string name="shopping_description">Shopping</string>
     <string name="exit">X</string>
     <string name="shopping_cart">shopping cart</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+
+    <string name="greater_than_99"><![CDATA[99+]]> </string>
+    <string name="latest_product_guide">마지막으로 본 상품</string>
+
+    <string name="product_history_empty">최근 본 상품이 없어요!</string>
+    <string name="products_history">최근 본 상품</string>
+
+    <!--    message-->
+    <string name="error_message_final_page">페이지를 불러오는데 실패했습니다</string>
+    <string name="error_message_cart_product_quantity">페이지를 불러오는데 실패했습니다.</string>
+    <string name="error_message_product_history">최근 본 상품을 불러오는데 실패했습니다.</string>
+    <string name="error_message_load_products">상품 목록을 불러오는데 실패했습니다.</string>
+    <string name="error_message_add_product_in_cart">상품을 장바구니에 추가하는데 실패했습니다.</string>
+    <string name="error_message_update_products_quantity_in_cart">장바구니 상품 개수를 업데이트하는데 실패했습니다.</string>
+
+    <string name="error_message_shopping_cart_products">장바구니 상품을 불러오는데 실패했습니다.</string>
+    <string name="error_message_shopping_cart_final_page">장바구니 상품의 페이지를 계산하는데 실패했습니다.</string>
+    <string name="error_message_shopping_cart_delete_item">장바구니 상품의 페이지를 계산하는데 실패했습니다.</string>
+
+    <string name="error_message_save_product_in_history">현재 상품을 최근 본 내역에 추가하는데 실패했습니다.</string>
+    <string name="error_message_load_product">상품을 불러오는데 실패했습니다.</string>
+
+    <string name="message_save_product_in_cart">장바구니에 담았습니다.</string>
+
 </resources>

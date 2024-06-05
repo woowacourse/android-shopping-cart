@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.cart.ShoppingCartViewModel" />
+            type="woowacourse.shopping.ui.cart.ShoppingCartViewModel" />
     </data>
 
 
@@ -17,6 +17,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/product_detail_toolbar"
+            onNavigationBackClick="@{() -> vm.onBackClick()}"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -48,7 +49,7 @@
             app:layout_constraintBottom_toTopOf="@id/cart_list_page_number"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintTop_toBottomOf="@id/product_detail_toolbar"
-            tools:context=".cart.ShoppingCartFragment"
+            tools:context=".ui.cart.ShoppingCartFragment"
             tools:itemCount="3"
             tools:listitem="@layout/holder_cart" />
 
@@ -56,15 +57,18 @@
             android:id="@+id/cart_list_left_page_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:enabled="@{vm.currentPage > 1}"
+            android:backgroundTint="@{vm.uiState.page == 1 ? @color/gray : @color/black}"
+            android:enabled="@{vm.uiState.page > 1}"
             android:onClick="@{() -> vm.previousPage()}"
             android:text="@string/previous_arrow"
+            android:textColor="@{vm.uiState.page == 1 ? @color/gray : @color/white}"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/cart_list_page_number"
             app:layout_constraintEnd_toStartOf="@id/cart_list_page_number"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cart_list_page_number" />
+            app:layout_constraintTop_toTopOf="@+id/cart_list_page_number"
+            tools:backgroundTint="@color/black"
+            tools:textColor="@color/white" />
 
         <TextView
             android:id="@+id/cart_list_page_number"
@@ -72,26 +76,30 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="50dp"
-            android:text="@{String.valueOf(vm.currentPage)}"
+            android:text="@{String.valueOf(vm.uiState.page)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cart_list_right_page_button"
             app:layout_constraintStart_toEndOf="@id/cart_list_left_page_button"
-            app:layout_constraintTop_toBottomOf="@id/cart_list" />
+            app:layout_constraintTop_toBottomOf="@id/cart_list"
+            tools:text="1" />
 
 
         <Button
             android:id="@+id/cart_list_right_page_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:enabled="@{!vm.isLastPage()}"
+            android:backgroundTint="@{vm.uiState.isLastPage() ? @color/gray : @color/black}"
+            android:enabled="@{!vm.uiState.isLastPage()}"
             android:onClick="@{() -> vm.nextPage()}"
             android:text="@string/next_arrow"
+            android:textColor="@{vm.uiState.isLastPage() ? @color/gray : @color/white}"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/cart_list_page_number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cart_list_page_number"
-            app:layout_constraintTop_toTopOf="@+id/cart_list_page_number" />
+            app:layout_constraintTop_toTopOf="@+id/cart_list_page_number"
+            tools:backgroundTint="@color/black"
+            tools:textColor="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
-            type="woowacourse.shopping.productDetail.ProductDetailViewModel" />
+            type="woowacourse.shopping.ui.productDetail.ProductDetailViewModel" />
+
+        <variable
+            name="productCount"
+            type="int" />
+
+        <variable
+            name="productDetailListener"
+            type="woowacourse.shopping.ui.productDetail.ProductDetailListener" />
+
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,19 +33,31 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:backgroundTint="@color/gray"
+            app:layout_constraintBottom_toTopOf="@id/product_detail_product_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/product_detail_toolbar_menu"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <ImageView
+                android:id="@+id/product_detail_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:importantForAccessibility="no"
+                android:onClick="@{() -> vm.onFinishClick()}"
+                android:src="@drawable/ic_x" />
+
+        </androidx.appcompat.widget.Toolbar>
 
         <ImageView
             android:id="@+id/product_detail_product_image"
-            imageUrl="@{vm.product.imgUrl}"
+            imageUrl="@{vm.uiState.product.imgUrl}"
             android:layout_width="match_parent"
-            android:layout_height="360dp"
+            android:layout_height="0dp"
             android:importantForAccessibility="no"
+            app:layout_constraintBottom_toTopOf="@id/product_detail_product_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_toolbar"
             tools:src="@tools:sample/backgrounds/scenic" />
@@ -43,9 +67,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@{vm.product.name}"
+            android:text="@{vm.uiState.product.name}"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/product_detail_price_style"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_product_image"
@@ -56,32 +81,77 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@string/product_price_description"
+            android:text="@{@string/price_format(vm.uiState.product.price)}"
             android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/product_detail_latest_product_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
             tools:text="가격" />
 
-        <TextView
-            android:id="@+id/product_detail_product_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="18dp"
-            android:text="@{String.valueOf(vm.product.price)}"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
-            tools:text="Product Price" />
-
-        <Button
+        <include
+            android:id="@+id/product_detail_product_quantity_change"
+            layout="@layout/item_change_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/product_detail_price_style"
+            bind:itemId="@{vm.uiState.product.id}"
+            bind:onItemChargeListener="@{productDetailListener}"
+            bind:quantity="@{vm.uiState.productCount}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/product_detail_latest_product_container"
+            currentProductId="@{vm.uiState.product.id}"
+            latestProductId="@{vm.uiState.latestProduct.id}"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="30dp"
+            android:background="@drawable/grey_border"
+            android:onClick="@{() -> productDetailListener.navigateToDetail(vm.uiState.latestProduct.id)}"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_to_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_detail_price_style">
+
+            <TextView
+                android:id="@+id/product_detail_product_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/latest_product_guide"
+                android:textColor="@color/teal_700"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_latest_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{vm.uiState.latestProduct.name}"
+                android:textSize="16dp"
+                app:layout_constraintStart_toStartOf="@id/product_detail_product_description"
+                app:layout_constraintTop_toBottomOf="@id/product_detail_product_description"
+                tools:ignore="SpUsage"
+                tools:text="PET보틀-정사각형(500ml)" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_add_to_cart"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
             android:backgroundTint="@color/black"
             android:onClick="@{() -> vm.addProductToCart()}"
             android:text="@string/add_to_cart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_detail_latest_product_container" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

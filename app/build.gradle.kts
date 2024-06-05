@@ -76,4 +76,13 @@ dependencies {
     androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.3.0")
     androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.3.0")
     testImplementation("io.mockk:mockk:1.13.8")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    implementation("com.google.code.gson:gson:2.8.7")
+
+    // mockwebserver testimplementation
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 }
