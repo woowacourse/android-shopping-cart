@@ -23,7 +23,7 @@ class CartViewModel(
     private val _page = MutableLiveData<Int>(INITIALIZE_PAGE)
     val page: LiveData<Int> get() = _page
 
-    private val maxPage: LiveData<Int> = totalCartCount.map { (it - 1) / PAGE_SIZE }
+    private val maxPage = MutableLiveData<Int>(INITIALIZE_PAGE)
 
     val hasPage: LiveData<Boolean> = totalCartCount.map { it > PAGE_SIZE }
     val hasPreviousPage: LiveData<Boolean> = _page.map { it > INITIALIZE_PAGE }
@@ -60,7 +60,9 @@ class CartViewModel(
     }
 
     private fun loadTotalCartCount() {
-        totalCartCount.value = cartRepository.totalCartItemCount()
+        val totalCartCount = cartRepository.totalCartItemCount()
+        this.totalCartCount.value = totalCartCount
+        maxPage.value = (totalCartCount - 1) / PAGE_SIZE
     }
 
     fun deleteCartItem(productId: Long) {
