@@ -2,7 +2,8 @@ package woowacourse.shopping.ui.products.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
 import woowacourse.shopping.ui.products.ProductsListener
@@ -13,8 +14,8 @@ import woowacourse.shopping.ui.products.adapter.type.ProductsViewType
 import woowacourse.shopping.ui.products.adapter.type.RecentProductsUiModel
 
 class ProductsAdapter(private val productsListener: ProductsListener) :
-    RecyclerView.Adapter<ProductsViewHolder>() {
-    private val productsViews: MutableList<ProductsView> = mutableListOf()
+    ListAdapter<ProductsView, ProductsViewHolder>(diffCallback) {
+    private var productsViews: List<ProductsView> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +26,10 @@ class ProductsAdapter(private val productsListener: ProductsListener) :
         return when (productsViewType) {
             ProductsViewType.RECENT_PRODUCTS -> {
                 val binding = ItemRecentProductsBinding.inflate(inflater, parent, false)
-                ProductsViewHolder.RecentProductsViewHolder(binding, productsListener::onClickRecentProductItem)
+                ProductsViewHolder.RecentProductsViewHolder(
+                    binding,
+                    productsListener::onClickRecentProductItem,
+                )
             }
 
             ProductsViewType.PRODUCTS_UI_MODEL -> {
@@ -58,42 +62,32 @@ class ProductsAdapter(private val productsListener: ProductsListener) :
     override fun getItemViewType(position: Int): Int = productsViews[position].viewType.type
 
     fun updateProducts(updatedProducts: List<ProductUiModel>) {
-        val products = productsViews.filterIsInstance<ProductUiModel>()
-        val newProducts = updatedProducts.subtract(products.toSet())
+        val newProductsView: MutableList<ProductsView> = updatedProducts.toMutableList()
 
-        if (products.size < updatedProducts.size) {
-            insertRangeProducts(newProducts)
-            return
+        if (isExistedRecentProducts()) {
+            newProductsView.add(RECENT_PRODUCTS_INDEX, productsViews[RECENT_PRODUCTS_INDEX])
         }
 
-        if (products.size == updatedProducts.size) {
-            newProducts.forEach { changeProduct(it) }
-        }
-    }
-
-    private fun insertRangeProducts(newProducts: Set<ProductUiModel>) {
-        productsViews.addAll(newProducts)
-        notifyItemRangeInserted(productsViews.size, newProducts.size)
-    }
-
-    private fun changeProduct(newProduct: ProductUiModel) {
-        val position =
-            productsViews.indexOfFirst { it is ProductUiModel && it.productId == newProduct.productId }
-        productsViews[position] = newProduct
-        notifyItemChanged(position)
+        productsViews = newProductsView
+        submitList(productsViews)
     }
 
     fun updateRecentProducts(recentProducts: List<RecentProductUiModel>) {
+        val newRecentProducts = RecentProductsUiModel(recentProducts)
+        val newProductsView = productsViews.toMutableList()
+
         if (isExistedRecentProducts()) {
-            productsViews[RECENT_PRODUCTS_INDEX] = RecentProductsUiModel(recentProducts)
-            notifyItemChanged(RECENT_PRODUCTS_INDEX)
-            return
+            newProductsView[RECENT_PRODUCTS_INDEX] = newRecentProducts
+        } else {
+            newProductsView.add(RECENT_PRODUCTS_INDEX, newRecentProducts)
         }
-        productsViews.add(RECENT_PRODUCTS_INDEX, RecentProductsUiModel(recentProducts))
-        notifyItemInserted(RECENT_PRODUCTS_INDEX)
+
+        productsViews = newProductsView
+        submitList(productsViews)
     }
 
     private fun isExistedRecentProducts(): Boolean {
+        if (productsViews.isEmpty()) return false
         return ProductsViewType.from(getItemViewType(RECENT_PRODUCTS_INDEX)) == ProductsViewType.RECENT_PRODUCTS
     }
 
@@ -104,5 +98,26 @@ class ProductsAdapter(private val productsListener: ProductsListener) :
 
     companion object {
         private const val RECENT_PRODUCTS_INDEX = 0
+
+        private val diffCallback =
+            object : DiffUtil.ItemCallback<ProductsView>() {
+                override fun areItemsTheSame(
+                    oldItem: ProductsView,
+                    newItem: ProductsView,
+                ): Boolean {
+                    if (oldItem.viewType != newItem.viewType) return false
+                    if (oldItem is RecentProductsUiModel && newItem is RecentProductsUiModel) {
+                        return oldItem.recentProductUiModels == newItem.recentProductUiModels
+                    }
+                    return (oldItem as ProductUiModel).productId == (newItem as ProductUiModel).productId
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: ProductsView,
+                    newItem: ProductsView,
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }
