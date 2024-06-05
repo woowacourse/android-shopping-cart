@@ -114,7 +114,7 @@ class CartViewModel(
             return
         }
 
-        updateChangedCartQuantity(productId, --cartItem.quantity)
+        updateChangedCartQuantity(productId, cartItem.quantity)
     }
 
     private fun updateChangedCartQuantity(
