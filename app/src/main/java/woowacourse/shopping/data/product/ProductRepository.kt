@@ -1,17 +1,17 @@
 package woowacourse.shopping.data.product
 
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.data.product.entity.Product
 import java.lang.IllegalArgumentException
 
 interface ProductRepository {
-    fun find(id: Long): Product
+    fun findOrNull(id: Long): Product?
 
     fun findRange(
         page: Int,
         pageSize: Int,
     ): List<Product>
 
-    fun totalCount(): Int
+    fun totalProductCount(): Int
 
     companion object {
         private const val NOT_INITIALIZE_INSTANCE_MESSAGE = "초기화된 인스턴스가 없습니다."

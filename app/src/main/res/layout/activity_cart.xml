@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.feature.cart.CartViewModel" />
+            type="woowacourse.shopping.ui.cart.CartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.cart.CartActivity">
+        tools:context=".ui.cart.CartActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_cart"

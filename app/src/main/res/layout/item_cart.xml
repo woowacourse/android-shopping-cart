@@ -6,15 +6,23 @@
     <data>
 
         <variable
-            name="cartItem"
-            type="woowacourse.shopping.model.CartItem" />
+            name="product"
+            type="woowacourse.shopping.ui.products.adapter.type.ProductUiModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.cart.CartListener" />
+
+        <variable
+            name="quantityListener"
+            type="woowacourse.shopping.ui.utils.AddQuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:background="@drawable/shape_cart_item">
+        android:background="@drawable/shape_border_4">
 
         <TextView
             android:id="@+id/tv_cart_product_title"
@@ -24,7 +32,7 @@
             android:layout_marginTop="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{cartItem.product.title}"
+            android:text="@{product.title}"
             android:textColor="@color/gray_500"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -39,11 +47,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:onClick="@{() -> listener.onClickExitCartItem(product.productId)}"
             android:padding="20dp"
             android:src="@drawable/ic_exit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray_200" />
+
+        <include
+            android:id="@+id/btn_add_cart_quantity"
+            layout="@layout/button_add_cart_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_cart_product_price"
+            app:layout_constraintEnd_toEndOf="@id/iv_cart_exit"
+            app:layout_constraintTop_toBottomOf="@id/iv_cart_exit"
+            app:listener="@{quantityListener}"
+            app:quantity="@{product.quantity}" />
 
         <ImageView
             android:id="@+id/iv_cart_product"
@@ -51,7 +73,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="18dp"
-            app:imageUrl="@{cartItem.product.imageUrl}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintStart_toStartOf="@id/tv_cart_product_title"
@@ -61,12 +83,12 @@
             android:id="@+id/tv_cart_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:text="@{@string/product_price(cartItem.product.price)}"
+            android:layout_marginBottom="17dp"
+            android:text="@{@string/product_price(product.totalPrice())}"
             android:textColor="@color/gray_500"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_cart_exit"
             tools:text="99,800원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

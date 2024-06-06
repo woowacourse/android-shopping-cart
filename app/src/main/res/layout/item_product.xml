@@ -7,7 +7,16 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.model.Product" />
+            type="woowacourse.shopping.ui.products.adapter.type.ProductUiModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.products.ProductsListener" />
+
+        <variable
+            name="quantityListener"
+            type="woowacourse.shopping.ui.utils.AddQuantityListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,12 +29,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
+            android:onClick="@{() -> listener.onClickProductItem(product.productId)}"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintBottom_toTopOf="@+id/tv_product_title"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/img_default_product" />
 
         <TextView
             android:id="@+id/tv_product_title"
@@ -55,6 +66,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_product_title"
             tools:text="10,000원" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_products_add_cart"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/shape_product_add_cart_button"
+            android:gravity="center"
+            android:onClick="@{() -> quantityListener.onIncreaseProductQuantity()}"
+            android:text="@string/plus"
+            android:textColor="@color/gray_500"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:visibility="@{product.quantity.min}" />
+
+        <include
+            android:id="@+id/btn_add_cart_quantity"
+            layout="@layout/button_add_cart_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:listener="@{quantityListener}"
+            app:quantity="@{product.quantity}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:visibility="@{product.quantity.greaterThanMin}"
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
