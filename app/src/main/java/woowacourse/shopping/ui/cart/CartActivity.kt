@@ -2,10 +2,10 @@ package woowacourse.shopping.ui.cart
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.Product
 
 
 class CartActivity : AppCompatActivity() {
@@ -57,16 +57,30 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setupCartProductList() {
-        viewModel.cartProducts.observe(this) {
-            val adapter = CartProductAdapter(
-                items = it,
-                dateFormatter = dateFormatter,
-                onClickDelete = viewModel::deleteCartProduct
-            )
-            binding.rvCartProducts.adapter = adapter
+        setupAdapter()
+        viewModel.uiState.observe(this) {
+            if (it is CartUiState.Success) {
+                addCartProducts(it.cartProducts)
+            } else if (it is CartUiState.Error) {
+                Toast.makeText(this, "에러 발생했어요~", Toast.LENGTH_SHORT).show()
+            }
         }
         viewModel.onCartProductDeleted.observe(this) {
             Toast.makeText(this, getString(R.string.cart_deleted), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setupAdapter() {
+        val adapter = CartProductAdapter(
+            onClickDelete = viewModel::deleteCartProduct,
+            dateFormatter = dateFormatter
+        )
+        binding.rvCartProducts.setHasFixedSize(true)
+        binding.rvCartProducts.adapter = adapter
+    }
+
+    private fun addCartProducts(products: List<Product>) {
+        val adapter = binding.rvCartProducts.adapter as? CartProductAdapter
+        adapter?.submitList(products)
     }
 }

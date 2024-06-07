@@ -1,19 +1,11 @@
 package woowacourse.shopping.ui.cart
 
-import androidx.lifecycle.ViewModel
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -49,7 +41,7 @@ class CartViewModelTest {
         delay(3000)
 
         // then
-        val actual = vm.cartProducts.value
+        val actual = vm.uiState.value
         assertThat(actual).hasSize(2)
     }
 

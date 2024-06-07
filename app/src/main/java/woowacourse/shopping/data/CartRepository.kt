@@ -1,8 +1,8 @@
 package woowacourse.shopping.data
 
+import kotlinx.coroutines.delay
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.model.Product
-import kotlin.random.Random
 
 class CartRepository(
     private val dao: CartProductDao,
@@ -12,6 +12,7 @@ class CartRepository(
     }
 
     suspend fun getAllCartProducts(): List<CartProductEntity> {
+        delay(3_000)
         return dao.getAll()
     }
 
