@@ -13,7 +13,7 @@ class DefaultShoppingRepository(
         return shoppingDataSource.products(currentPage, pageSize)
     }
 
-    override fun productById(id: Long): Product? {
+    override fun productById(id: Long): Product {
         return shoppingDataSource.productById(id)
     }
 

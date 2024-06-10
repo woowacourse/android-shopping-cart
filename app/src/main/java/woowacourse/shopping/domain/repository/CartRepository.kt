@@ -10,9 +10,9 @@ interface CartRepository {
     fun addCartProduct(
         productId: Long,
         count: Int,
-    ): Long?
+    )
 
-    fun deleteCartProduct(productId: Long): Long?
+    fun deleteCartProduct(productId: Long)
 
     fun canLoadMoreCartProducts(currentPage: Int): Boolean
 }

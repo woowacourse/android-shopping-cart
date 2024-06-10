@@ -29,7 +29,7 @@ object DummyShoppingDataSource : ShoppingDataSource {
                     1000,
                     "꼬상",
                     "https://w7.pngwing.com/pngs/921/264/" +
-                        "png-transparent-chipmunk-chip-n-dale-sticker-the-walt-disney-company-goofy-others.png",
+                            "png-transparent-chipmunk-chip-n-dale-sticker-the-walt-disney-company-goofy-others.png",
                 ),
                 Product(
                     5,
@@ -55,8 +55,8 @@ object DummyShoppingDataSource : ShoppingDataSource {
         return products.subList(fromIndex, toIndex)
     }
 
-    override fun productById(id: Long): Product? {
-        return products.find { it.id == id }
+    override fun productById(id: Long): Product {
+        return products.find { it.id == id } ?: Product(0, 0, "", "")
     }
 
     override fun canLoadMoreProducts(

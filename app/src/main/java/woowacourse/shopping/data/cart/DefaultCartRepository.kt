@@ -22,15 +22,15 @@ class DefaultCartRepository(
     override fun addCartProduct(
         productId: Long,
         count: Int,
-    ): Long? {
+    ) {
         shoppingDataSource.updateProductCount(productId, count)
-        val product = shoppingDataSource.productById(productId) ?: return null
-        return cartDataSource.addCartProduct(product, count)
+        val product = shoppingDataSource.productById(productId)
+        cartDataSource.addCartProduct(product, count)
     }
 
-    override fun deleteCartProduct(productId: Long): Long? {
-        val product = shoppingDataSource.productById(productId) ?: return null
-        return cartDataSource.deleteCartProduct(product)
+    override fun deleteCartProduct(productId: Long) {
+        val product = shoppingDataSource.productById(productId)
+        cartDataSource.deleteCartProduct(product)
     }
 
     override fun canLoadMoreCartProducts(currentPage: Int): Boolean {
