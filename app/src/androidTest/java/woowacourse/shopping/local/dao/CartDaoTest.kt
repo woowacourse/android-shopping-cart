@@ -9,23 +9,23 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.local.CartDatabase
+import woowacourse.shopping.local.AppDatabase
 import woowacourse.shopping.local.entity.CartEntity
 import kotlin.concurrent.thread
 
 @RunWith(AndroidJUnit4::class)
-class CarDaoTest {
-    private lateinit var carDao: CarDao
-    private lateinit var db: CartDatabase
+class CartDaoTest {
+    private lateinit var cartDao: CartDao
+    private lateinit var db: AppDatabase
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, CartDatabase::class.java).build()
-        carDao = db.dao()
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        cartDao = db.cartDao()
 
         thread {
-            carDao.clearAllCartItems()
+            cartDao.clearAllCartItems()
         }.join()
     }
 
@@ -35,10 +35,10 @@ class CarDaoTest {
         val item = CartEntity(0, Product(0, 1000, "상품", ""))
         val expected = item.product
         thread {
-            carDao.saveItemCart(item)
+            cartDao.saveItemCart(item)
         }.join()
         // when
-        val actual = carDao.findAllCartItem().firstOrNull()?.product
+        val actual = cartDao.findAllCartItem().firstOrNull()?.product
         // then
         assertThat(actual).isNotNull()
         assertThat(actual?.id).isEqualTo(expected.id)
@@ -49,10 +49,10 @@ class CarDaoTest {
         // given
         val item = CartEntity(0, Product(5, 1000, "상품", ""))
         thread {
-            carDao.saveItemCart(item)
+            cartDao.saveItemCart(item)
         }.join()
         // when
-        val actual = carDao.findCartItemById(item.productId)?.product
+        val actual = cartDao.findCartItemById(item.productId)?.product
         // then
         assertThat(actual).isEqualTo(item.product)
     }
@@ -62,13 +62,13 @@ class CarDaoTest {
         // given
         val item = CartEntity(0, Product(5, 1000, "상품", ""))
         thread {
-            carDao.saveItemCart(item)
+            cartDao.saveItemCart(item)
         }.join()
         // when
         thread {
-            carDao.clearCartItemById(item.productId)
+            cartDao.clearCartItemById(item.productId)
         }.join()
         // then
-        assertThat(carDao.findAllCartItem().contains(item)).isEqualTo(false)
+        assertThat(cartDao.findAllCartItem().contains(item)).isEqualTo(false)
     }
 }

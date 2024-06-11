@@ -9,20 +9,20 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.local.RecentProductDatabase
+import woowacourse.shopping.local.AppDatabase
 import woowacourse.shopping.local.entity.RecentProductEntity
 import kotlin.concurrent.thread
 
 @RunWith(AndroidJUnit4::class)
 class RecentProductDaoTest {
     private lateinit var recentProductDao: RecentProductDao
-    private lateinit var db: RecentProductDatabase
+    private lateinit var db: AppDatabase
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, RecentProductDatabase::class.java).build()
-        recentProductDao = db.dao()
+        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        recentProductDao = db.recentProductDao()
     }
 
     @Test

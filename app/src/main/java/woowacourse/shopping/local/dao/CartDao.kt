@@ -7,7 +7,7 @@ import androidx.room.Update
 import woowacourse.shopping.local.entity.CartEntity
 
 @Dao
-interface CarDao {
+interface CartDao {
     @Insert
     fun saveItemCart(product: CartEntity): Long
 

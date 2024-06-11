@@ -3,11 +3,11 @@ package woowacourse.shopping.data.recent
 import android.content.Context
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.local.RecentProductDatabase
+import woowacourse.shopping.local.AppDatabase
 import woowacourse.shopping.local.entity.RecentProductEntity
 
 class DefaultRecentProductDataSource(context: Context) : RecentProductDataSource {
-    private val recentProductDao = RecentProductDatabase.getInstance(context).dao()
+    private val recentProductDao = AppDatabase.getInstance(context).recentProductDao()
     private lateinit var recent: List<RecentProductEntity>
     private val products: List<RecentProduct> get() = recent.map { it.toDomainModel() }
 
