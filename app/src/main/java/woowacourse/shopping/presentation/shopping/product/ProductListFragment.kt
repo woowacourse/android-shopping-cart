@@ -82,15 +82,7 @@ class ProductListFragment :
     private fun initViews() {
         binding?.apply {
             productAdapter =
-                ProductAdapter(
-                    onClickItem = {
-                        navigateToDetailView(it)
-                        recentViewModel.addRecentProduct(it)
-                    },
-                    onPlusItem = { viewModel.loadProducts() },
-                    onClickAddBtn = { viewModel.increaseCount(it) },
-                    onClickMinusBtn = { viewModel.decreaseCount(it) },
-                )
+                ProductAdapter(viewModel)
             rvProductList.adapter = productAdapter
             rvProductList.layoutManager =
                 GridLayoutManager(requireContext(), SPAN_COUNT).apply {
@@ -105,6 +97,11 @@ class ProductListFragment :
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
             productAdapter.updateProducts(it)
+        }
+
+        viewModel.clickedItemId.observe(viewLifecycleOwner) {
+            recentViewModel.addRecentProduct(it)
+            navigateToDetailView(it)
         }
 
         recentViewModel.recentProducts.observe(viewLifecycleOwner) {

@@ -9,13 +9,18 @@ import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.cart.toUiModel
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
+import woowacourse.shopping.presentation.util.SingleLiveEvent
 
 class ProductListViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(), ProductAction {
     private val _products = MutableLiveData<List<ShoppingUiModel>>(emptyList())
     val products: LiveData<List<ShoppingUiModel>> = _products
+
+    private val _clickedItemId = SingleLiveEvent<Long>()
+    val clickedItemId: LiveData<Long> = _clickedItemId
+
     private var currentPage = 0
 
     fun loadProducts() {
@@ -47,11 +52,19 @@ class ProductListViewModel(
         }
     }
 
-    fun increaseCount(id: Long) {
+    override fun onClickItem(id: Long) {
+        _clickedItemId.value = id
+    }
+
+    override fun moreItems() {
+        loadProducts()
+    }
+
+    override fun increaseCount(id: Long) {
         updateProducts(id, +1)
     }
 
-    fun decreaseCount(id: Long) {
+    override fun decreaseCount(id: Long) {
         updateProducts(id, -1)
     }
 
@@ -68,7 +81,7 @@ class ProductListViewModel(
                     if (newCount == 0) {
                         cartRepository.deleteCartProduct(id)
                     } else {
-                        addCartProduct(id, newCount)
+                        cartRepository.addCartProduct(id, newCount)
                     }
                     it.copy(count = newCount, isVisible = visible)
                 } else {
@@ -80,13 +93,6 @@ class ProductListViewModel(
         } else {
             _products.value = newProducts
         }
-    }
-
-    private fun addCartProduct(
-        id: Long,
-        count: Int,
-    ) {
-        cartRepository.addCartProduct(id, count)
     }
 
     companion object {
