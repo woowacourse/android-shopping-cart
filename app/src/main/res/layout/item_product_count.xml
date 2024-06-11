@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:count="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -22,10 +22,10 @@
             android:layout_height="48dp"
             android:background="@drawable/shape_oval"
             android:src="@drawable/ic_add_24"
-            isVisible="@{!product.visible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_count"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            count:isVisible="@{!product.visible}" />
 
         <ImageButton
             android:id="@+id/btn_minus"
@@ -34,10 +34,10 @@
             android:background="@color/white"
             android:padding="11dp"
             android:src="@drawable/ic_minus_24"
-            isVisible="@{product.visible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            count:isVisible="@{product.visible}" />
 
         <TextView
             android:id="@+id/tv_count"
@@ -49,10 +49,10 @@
             android:text="@{String.valueOf(product.count)}"
             android:textAppearance="@style/B1"
             android:textColor="@color/black"
-            isVisible="@{product.visible}"
             app:layout_constraintEnd_toStartOf="@id/btn_plus"
             app:layout_constraintStart_toEndOf="@id/btn_minus"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            count:isVisible="@{product.visible}" />
 
         <ImageButton
             android:id="@+id/btn_plus"
@@ -61,10 +61,10 @@
             android:background="@color/white"
             android:padding="11dp"
             android:src="@drawable/ic_add_24"
-            isVisible="@{product.visible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_count"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            count:isVisible="@{product.visible}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

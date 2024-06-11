@@ -12,6 +12,8 @@ sealed class ShoppingUiModel(val viewType: Int) {
         init {
             isVisible = count > 0 || isVisible
         }
+
+        fun totalPrice(): Int = price * count
     }
 
     data object LoadMore : ShoppingUiModel(ITEM_VIEW_TYPE_PLUS)

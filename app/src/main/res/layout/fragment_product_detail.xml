@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:recentProduct="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -70,7 +71,6 @@
             bind:product="@{vm.product}" />
 
         <LinearLayout
-            isVisible="@{vm.isRecentProductVisible}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
@@ -82,7 +82,8 @@
             app:layout_constraintBottom_toTopOf="@+id/btn_product_cart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_price_title">
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_price_title"
+            recentProduct:isVisible="@{vm.isRecentProductVisible}">
 
             <TextView
                 android:layout_width="wrap_content"

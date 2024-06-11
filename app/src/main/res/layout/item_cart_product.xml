@@ -61,7 +61,7 @@
                 android:id="@+id/tv_cart_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/price_format(cartProduct.product.price * cartProduct.product.count)}"
+                android:text="@{@string/price_format(cartProduct.product.totalPrice())}"
                 android:textAppearance="@style/B2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
