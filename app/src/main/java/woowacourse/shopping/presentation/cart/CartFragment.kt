@@ -59,12 +59,7 @@ class CartFragment :
     }
 
     private fun initViews() {
-        adapter =
-            CartAdapter(
-                onClickDeleteBtn = { viewModel.deleteProduct(it) },
-                onClickPlusBtn = { viewModel.increaseCount(it) },
-                onClickMinusBtn = { viewModel.decreaseCount(it) },
-            )
+        adapter = CartAdapter(viewModel)
         binding?.apply {
             rvShoppingCart.adapter = adapter
         }

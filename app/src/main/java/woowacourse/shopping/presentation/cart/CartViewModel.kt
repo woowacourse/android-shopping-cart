@@ -10,7 +10,7 @@ import woowacourse.shopping.presentation.base.BaseViewModelFactory
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(), CartAction{
     private val _currentPage = MutableLiveData(START_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
     val products: LiveData<List<CartProductUi>> =
@@ -25,26 +25,6 @@ class CartViewModel(
         }
     val canLoadNextPage: LiveData<Boolean> =
         _currentPage.map { page -> cartRepository.canLoadMoreCartProducts(page) }
-
-    fun deleteProduct(item: CartProductUi) {
-        val currentProducts = products.value ?: return
-        if (currentProducts.contains(item)) {
-            cartRepository.deleteCartProduct(item.product.id)
-            refreshCurrentPage()
-        }
-    }
-
-    fun increaseCount(item: CartProductUi) {
-        val updateItem = item.increaseCount()
-        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
-        refreshCurrentPage()
-    }
-
-    fun decreaseCount(item: CartProductUi) {
-        val updateItem = item.decreaseCount()
-        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
-        refreshCurrentPage()
-    }
 
     fun moveToNextPage() {
         val currentPage = _currentPage.value ?: return
@@ -63,6 +43,26 @@ class CartViewModel(
     private fun refreshCurrentPage(increment: Int = 0) {
         val currentPage = _currentPage.value ?: return
         _currentPage.value = currentPage + increment
+    }
+
+    override fun deleteProduct(product: CartProductUi) {
+        val currentProducts = products.value ?: return
+        if (currentProducts.contains(product)) {
+            cartRepository.deleteCartProduct(product.product.id)
+            refreshCurrentPage()
+        }
+    }
+
+    override fun increaseCount(product: CartProductUi) {
+        val updateItem = product.increaseCount()
+        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
+        refreshCurrentPage()
+    }
+
+    override fun decreaseCount(product: CartProductUi) {
+        val updateItem = product.decreaseCount()
+        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
+        refreshCurrentPage()
     }
 
     companion object {
