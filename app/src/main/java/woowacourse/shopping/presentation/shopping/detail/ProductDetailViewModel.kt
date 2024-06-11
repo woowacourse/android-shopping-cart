@@ -40,10 +40,11 @@ class ProductDetailViewModel(
             }
 
     init {
+        loadProduct()
         loadLastViewedProduct()
     }
 
-    fun loadProduct() {
+    private fun loadProduct() {
         val product =
             shoppingRepository.productById(productId)?.toShoppingUiModel(true) ?: return
         _product.value = product
