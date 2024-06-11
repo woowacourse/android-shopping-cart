@@ -25,15 +25,18 @@ class ProductDetailViewModel(
 
     private val _isAddedCart = SingleLiveEvent<Boolean>()
     val isAddedCart: LiveData<Boolean> get() = _isAddedCart
+
     private val _lastViewedProduct = MutableLiveData<RecentProduct?>()
     val lastViewedProduct: LiveData<RecentProduct?> get() = _lastViewedProduct
+
     private val _onClickedLastViewedProduct = SingleLiveEvent<Long>()
     val onClickedLastViewedProduct: LiveData<Long> get() = _onClickedLastViewedProduct
+
     val isRecentProductVisible: LiveData<Boolean>
         get() =
             _product.map {
                 lastViewedProduct.value != null &&
-                    it.id != lastViewedProduct.value?.product?.id
+                        it.id != lastViewedProduct.value?.product?.id
             }
 
     init {

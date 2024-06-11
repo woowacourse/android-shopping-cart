@@ -10,19 +10,22 @@ import woowacourse.shopping.presentation.base.BaseViewModelFactory
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-) : ViewModel(), CartAction{
+) : ViewModel(), CartAction {
     private val _currentPage = MutableLiveData(START_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
+
     val products: LiveData<List<CartProductUi>> =
         _currentPage.map { page ->
             cartRepository.cartProducts(page).map {
                 it.toUiModel(true)
             }
         }
+
     val canLoadPrevPage: LiveData<Boolean> =
         _currentPage.map { page ->
             page > 1
         }
+
     val canLoadNextPage: LiveData<Boolean> =
         _currentPage.map { page -> cartRepository.canLoadMoreCartProducts(page) }
 
