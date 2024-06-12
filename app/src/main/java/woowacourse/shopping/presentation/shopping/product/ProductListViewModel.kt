@@ -29,8 +29,8 @@ class ProductListViewModel(
 
         var loadProducts: List<ShoppingUiModel.Product> =
             currentProducts +
-                    shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
-                        .map { it.toShoppingUiModel(false) }
+                shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
+                    .map { it.toShoppingUiModel(false) }
 
         val carProducts: List<ShoppingUiModel.Product> =
             cartRepository.totalCartProducts().map { it.toUiModel(false).product }

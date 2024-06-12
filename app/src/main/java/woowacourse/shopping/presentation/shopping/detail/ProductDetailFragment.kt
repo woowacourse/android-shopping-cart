@@ -58,7 +58,7 @@ class ProductDetailFragment :
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
                         (requireActivity() as? ShoppingNavigator)?.navigateToProductList(
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE,
                         )
                     }
                     return false

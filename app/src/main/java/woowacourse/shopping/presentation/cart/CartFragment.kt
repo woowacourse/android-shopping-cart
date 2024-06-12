@@ -52,7 +52,7 @@ class CartFragment :
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == android.R.id.home) {
                         (requireActivity() as? ShoppingNavigator)?.navigateToProductList(
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE,
                         )
                         return true
                     }

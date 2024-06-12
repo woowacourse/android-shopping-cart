@@ -30,7 +30,7 @@ class CartViewModel(
         loadProducts()
     }
 
-     fun loadProducts(page : Int = START_PAGE) {
+    fun loadProducts(page: Int = START_PAGE) {
         _products.value = cartRepository.cartProducts(page).map { it.toUiModel(true) }
     }
 
@@ -60,32 +60,35 @@ class CartViewModel(
             refreshCurrentPage()
         }
     }
+
     override fun onPlus(cartProduct: ShoppingUiModel.Product) {
         val currentProducts = products.value ?: return
-        val updatedProducts = currentProducts.map {
-            if (it.product.id == cartProduct.id) {
-                val updatedProduct = it.copy(product = it.product.copy(count = it.product.count + 1))
-                cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
-                updatedProduct
-            } else {
-                it
+        val updatedProducts =
+            currentProducts.map {
+                if (it.product.id == cartProduct.id) {
+                    val updatedProduct = it.copy(product = it.product.copy(count = it.product.count + 1))
+                    cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
+                    updatedProduct
+                } else {
+                    it
+                }
             }
-        }
         _products.value = updatedProducts
     }
 
     override fun onMinus(cartProduct: ShoppingUiModel.Product) {
         if (cartProduct.count == 1) return
         val currentProducts = products.value ?: return
-        val updatedProducts = currentProducts.map {
-            if (it.product.id == cartProduct.id) {
-                val updatedProduct = it.copy(product = it.product.copy(count = it.product.count - 1))
-                cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
-                updatedProduct
-            } else {
-                it
+        val updatedProducts =
+            currentProducts.map {
+                if (it.product.id == cartProduct.id) {
+                    val updatedProduct = it.copy(product = it.product.copy(count = it.product.count - 1))
+                    cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
+                    updatedProduct
+                } else {
+                    it
+                }
             }
-        }
         _products.value = updatedProducts
     }
 

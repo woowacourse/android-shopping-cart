@@ -10,7 +10,6 @@ import woowacourse.shopping.databinding.ItemCartProductBinding
 class CartAdapter(
     private val cartAction: CartAction,
 ) : ListAdapter<CartProductUi, CartAdapter.CartViewHolder>(DIFF_CALLBACK) {
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -49,14 +48,14 @@ class CartAdapter(
             object : DiffUtil.ItemCallback<CartProductUi>() {
                 override fun areItemsTheSame(
                     oldItem: CartProductUi,
-                    newItem: CartProductUi
+                    newItem: CartProductUi,
                 ): Boolean {
                     return oldItem.product.id == newItem.product.id
                 }
 
                 override fun areContentsTheSame(
                     oldItem: CartProductUi,
-                    newItem: CartProductUi
+                    newItem: CartProductUi,
                 ): Boolean {
                     return oldItem == newItem
                 }

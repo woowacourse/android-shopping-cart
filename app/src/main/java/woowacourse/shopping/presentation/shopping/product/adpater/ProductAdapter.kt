@@ -10,7 +10,7 @@ import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class ProductAdapter(
-    private val productAction: ProductAction
+    private val productAction: ProductAction,
 ) :
     RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<ShoppingUiModel> = emptyList()

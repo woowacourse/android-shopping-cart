@@ -12,8 +12,8 @@ import woowacourse.shopping.local.entity.RecentProductEntity
 @Database(entities = [CartEntity::class, RecentProductEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
-    abstract fun recentProductDao(): RecentProductDao
 
+    abstract fun recentProductDao(): RecentProductDao
 
     companion object {
         private var instance: AppDatabase? = null

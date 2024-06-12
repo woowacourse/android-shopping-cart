@@ -50,7 +50,7 @@ class ShoppingActivity :
     override fun navigateToProductList(flag: Int) {
         supportFragmentManager.popBackStack(
             ProductListFragment.TAG,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
+            FragmentManager.POP_BACK_STACK_INCLUSIVE,
         )
     }
 
