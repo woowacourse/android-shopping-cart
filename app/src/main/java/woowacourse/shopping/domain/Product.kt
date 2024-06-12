@@ -6,6 +6,4 @@ data class Product(
     val name: String,
     val imageUrl: String,
     val count: Int = 0,
-) {
-    val isVisible get() = count > 0
-}
+)

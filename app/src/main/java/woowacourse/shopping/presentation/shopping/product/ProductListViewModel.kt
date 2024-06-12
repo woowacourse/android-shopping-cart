@@ -29,8 +29,8 @@ class ProductListViewModel(
 
         var loadProducts: List<ShoppingUiModel.Product> =
             currentProducts +
-                shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
-                    .map { it.toShoppingUiModel(false) }
+                    shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
+                        .map { it.toShoppingUiModel(false) }
 
         val carProducts: List<ShoppingUiModel.Product> =
             cartRepository.totalCartProducts().map { it.toUiModel(false).product }
@@ -61,22 +61,31 @@ class ProductListViewModel(
     }
 
     override fun increaseCount(id: Long) {
-        updateProducts(id, +1)
-    }
-
-    override fun decreaseCount(id: Long) {
-        updateProducts(id, -1)
-    }
-
-    private fun updateProducts(
-        id: Long,
-        change: Int,
-    ) {
         val currentProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>() ?: return
         val newProducts =
             currentProducts.map {
                 if (it.id == id) {
-                    val newCount = it.count + change
+                    val newCount = it.count + 1
+                    val visible = newCount > 0
+                    cartRepository.addCartProduct(id, newCount)
+                    it.copy(count = newCount, isVisible = visible)
+                } else {
+                    it
+                }
+            }
+        if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
+            _products.value = newProducts + ShoppingUiModel.LoadMore
+        } else {
+            _products.value = newProducts
+        }
+    }
+
+    override fun decreaseCount(id: Long) {
+        val currentProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>() ?: return
+        val newProducts =
+            currentProducts.map {
+                if (it.id == id) {
+                    val newCount = it.count - 1
                     val visible = newCount > 0
                     if (newCount == 0) {
                         cartRepository.deleteCartProduct(id)
