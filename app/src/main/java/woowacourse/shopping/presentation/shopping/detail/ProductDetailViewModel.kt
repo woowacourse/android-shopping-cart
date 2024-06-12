@@ -32,12 +32,11 @@ class ProductDetailViewModel(
     private val _onClickedLastViewedProduct = SingleLiveEvent<Long>()
     val onClickedLastViewedProduct: LiveData<Long> get() = _onClickedLastViewedProduct
 
-    val isRecentProductVisible: LiveData<Boolean>
-        get() =
-            _product.map {
-                lastViewedProduct.value != null &&
-                        it.id != lastViewedProduct.value?.product?.id
-            }
+    val isRecentProductVisible: LiveData<Boolean> =
+        _product.map {
+            lastViewedProduct.value != null &&
+                    it.id != lastViewedProduct.value?.product?.id
+        }
 
     init {
         loadProduct()

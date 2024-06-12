@@ -8,11 +8,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
+import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 
 class CartFragment :
     BindingFragment<FragmentShoppingCartBinding>(R.layout.fragment_shopping_cart) {
@@ -48,7 +50,9 @@ class CartFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == android.R.id.home) {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        (requireActivity() as? ShoppingNavigator)?.navigateToProductList(
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        )
                         return true
                     }
                     return false

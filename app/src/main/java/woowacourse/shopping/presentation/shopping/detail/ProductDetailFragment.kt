@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
@@ -56,11 +57,9 @@ class ProductDetailFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
-                        if (viewModel.isRecentProductVisible.value == false) {
-                            (requireActivity() as? ShoppingNavigator)?.navigateToProductList(1)
-                        } else {
-                            (requireActivity() as ShoppingNavigator).popBackStack()
-                        }
+                        (requireActivity() as? ShoppingNavigator)?.navigateToProductList(
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        )
                     }
                     return false
                 }
