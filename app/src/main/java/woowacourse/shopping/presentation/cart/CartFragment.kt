@@ -71,7 +71,7 @@ class CartFragment :
 
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
-            adapter.updateProduct(it)
+            adapter.submitList(it)
         }
     }
 
