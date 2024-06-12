@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
+import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -59,11 +60,10 @@ class CartViewModel(
             refreshCurrentPage()
         }
     }
-
-    override fun increaseCount(cart: CartProductUi) {
+    override fun onPlus(cartProduct: ShoppingUiModel.Product) {
         val currentProducts = products.value ?: return
         val updatedProducts = currentProducts.map {
-            if (it.product.id == cart.product.id) {
+            if (it.product.id == cartProduct.id) {
                 val updatedProduct = it.copy(product = it.product.copy(count = it.product.count + 1))
                 cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
                 updatedProduct
@@ -74,11 +74,11 @@ class CartViewModel(
         _products.value = updatedProducts
     }
 
-    override fun decreaseCount(cart: CartProductUi) {
-        if (cart.product.count == 1) return
+    override fun onMinus(cartProduct: ShoppingUiModel.Product) {
+        if (cartProduct.count == 1) return
         val currentProducts = products.value ?: return
         val updatedProducts = currentProducts.map {
-            if (it.product.id == cart.product.id) {
+            if (it.product.id == cartProduct.id) {
                 val updatedProduct = it.copy(product = it.product.copy(count = it.product.count - 1))
                 cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
                 updatedProduct

@@ -37,14 +37,9 @@ class CartAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
+            binding.cartAction = cartAction
             binding.ivCartItemDelete.setOnClickListener {
                 cartAction.deleteProduct(product)
-            }
-            binding.itemProductCount.btnPlus.setOnClickListener {
-                cartAction.increaseCount(product)
-            }
-            binding.itemProductCount.btnMinus.setOnClickListener {
-                cartAction.decreaseCount(product)
             }
         }
     }

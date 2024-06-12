@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="detailAction"
+            type="woowacourse.shopping.presentation.shopping.detail.DetailAction" />
+
+        <variable
             name="vm"
             type="woowacourse.shopping.presentation.shopping.detail.ProductDetailViewModel" />
     </data>
@@ -68,6 +72,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/tv_product_price_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_price_title"
+            bind:countHandler="@{detailAction}"
             bind:product="@{vm.product}" />
 
         <LinearLayout

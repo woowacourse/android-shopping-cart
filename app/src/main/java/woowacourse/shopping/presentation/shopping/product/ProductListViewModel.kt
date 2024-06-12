@@ -60,14 +60,14 @@ class ProductListViewModel(
         loadProducts()
     }
 
-    override fun increaseCount(id: Long) {
+    override fun onPlus(cartProduct: ShoppingUiModel.Product) {
         val currentProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>() ?: return
         val newProducts =
             currentProducts.map {
-                if (it.id == id) {
+                if (it.id == cartProduct.id) {
                     val newCount = it.count + 1
                     val visible = newCount > 0
-                    cartRepository.addCartProduct(id, newCount)
+                    cartRepository.addCartProduct(it.id, newCount)
                     it.copy(count = newCount, isVisible = visible)
                 } else {
                     it
@@ -80,17 +80,17 @@ class ProductListViewModel(
         }
     }
 
-    override fun decreaseCount(id: Long) {
+    override fun onMinus(cartProduct: ShoppingUiModel.Product) {
         val currentProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>() ?: return
         val newProducts =
             currentProducts.map {
-                if (it.id == id) {
+                if (it.id == cartProduct.id) {
                     val newCount = it.count - 1
                     val visible = newCount > 0
                     if (newCount == 0) {
-                        cartRepository.deleteCartProduct(id)
+                        cartRepository.deleteCartProduct(it.id)
                     } else {
-                        cartRepository.addCartProduct(id, newCount)
+                        cartRepository.addCartProduct(it.id, newCount)
                     }
                     it.copy(count = newCount, isVisible = visible)
                 } else {

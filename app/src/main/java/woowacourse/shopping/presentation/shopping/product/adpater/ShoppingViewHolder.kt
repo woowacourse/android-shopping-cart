@@ -17,15 +17,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.root.setOnClickListener {
                 productAction.onClickItem(product.id)
             }
-            binding.itemProductCount.btnProductAdd.setOnClickListener {
-                productAction.increaseCount(product.id)
-            }
-            binding.itemProductCount.btnPlus.setOnClickListener {
-                productAction.increaseCount(product.id)
-            }
-            binding.itemProductCount.btnMinus.setOnClickListener {
-                productAction.decreaseCount(product.id)
-            }
+            binding.shoppingAction = productAction
         }
     }
 

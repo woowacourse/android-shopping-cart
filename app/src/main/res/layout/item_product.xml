@@ -8,6 +8,10 @@
     <data>
 
         <variable
+            name="shoppingAction"
+            type="woowacourse.shopping.presentation.shopping.product.ProductAction" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.presentation.shopping.product.ShoppingUiModel.Product" />
     </data>
@@ -54,6 +58,7 @@
             tools:text="오둥 가격" />
 
         <include
+            bind:countHandler="@{shoppingAction}"
             android:id="@+id/item_product_count"
             layout="@layout/item_product_count"
             android:layout_width="wrap_content"

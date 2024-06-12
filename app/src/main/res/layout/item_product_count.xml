@@ -8,6 +8,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="countHandler"
+            type="woowacourse.shopping.presentation.base.CountHandler" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.presentation.shopping.product.ShoppingUiModel.Product" />
     </data>
@@ -17,6 +21,7 @@
         android:layout_height="wrap_content">
 
         <ImageButton
+            android:onClick="@{() -> countHandler.onPlus(product)}"
             android:id="@+id/btn_product_add"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -32,6 +37,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@color/white"
+            android:onClick="@{() -> countHandler.onMinus(product)}"
             android:padding="11dp"
             android:src="@drawable/ic_minus_24"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -59,6 +65,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@color/white"
+            android:onClick="@{() -> countHandler.onPlus(product)}"
             android:padding="11dp"
             android:src="@drawable/ic_add_24"
             app:layout_constraintBottom_toBottomOf="parent"

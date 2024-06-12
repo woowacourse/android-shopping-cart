@@ -19,7 +19,7 @@ class ProductDetailViewModel(
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
     private val productId: Long,
-) : ViewModel() {
+) : ViewModel(), DetailAction {
     private val _product = MutableLiveData<ShoppingUiModel.Product>()
     val product: LiveData<ShoppingUiModel.Product> get() = _product
 
@@ -65,16 +65,20 @@ class ProductDetailViewModel(
         _isAddedCart.value = true
     }
 
-    fun increaseCount() {
+    override fun onPlus(cartProduct: ShoppingUiModel.Product) {
         val product = _product.value ?: return
-        val newCount = product.count + 1
-        _product.value = product.copy(count = newCount)
+        if (product.id == cartProduct.id) {
+            val newCount = product.count + 1
+            _product.value = product.copy(count = newCount)
+        }
     }
 
-    fun decreaseCount() {
+    override fun onMinus(cartProduct: ShoppingUiModel.Product) {
         val product = _product.value ?: return
-        val newCount = (product.count - 1).coerceAtLeast(1)
-        _product.value = product.copy(count = newCount)
+        if (product.id == cartProduct.id) {
+            val newCount = (product.count - 1).coerceAtLeast(1)
+            _product.value = product.copy(count = newCount)
+        }
     }
 
     companion object {

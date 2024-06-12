@@ -1,8 +1,8 @@
 package woowacourse.shopping.presentation.shopping.product
 
-interface ProductAction {
+import woowacourse.shopping.presentation.base.CountHandler
+
+interface ProductAction : CountHandler {
     fun onClickItem(id: Long)
     fun moreItems()
-    fun increaseCount(id: Long)
-    fun decreaseCount(id: Long)
 }

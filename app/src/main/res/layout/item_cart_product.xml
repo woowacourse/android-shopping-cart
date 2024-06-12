@@ -5,6 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="cartAction"
+            type="woowacourse.shopping.presentation.cart.CartAction" />
 
         <variable
             name="cartProduct"
@@ -68,6 +71,7 @@
                 tools:text="30_000원" />
 
             <include
+                bind:countHandler="@{cartAction}"
                 android:id="@+id/item_product_count"
                 layout="@layout/item_product_count"
                 android:layout_width="wrap_content"

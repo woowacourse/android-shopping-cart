@@ -72,12 +72,7 @@ class ProductDetailFragment :
         binding?.btnProductCart?.setOnClickListener {
             viewModel.addCartProduct()
         }
-        binding?.itemProductCount?.btnPlus?.setOnClickListener {
-            viewModel.increaseCount()
-        }
-        binding?.itemProductCount?.btnMinus?.setOnClickListener {
-            viewModel.decreaseCount()
-        }
+        binding?.detailAction = viewModel
     }
 
     private fun initObservers() {
