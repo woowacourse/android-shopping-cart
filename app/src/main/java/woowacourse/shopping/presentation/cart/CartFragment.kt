@@ -46,7 +46,8 @@ class CartFragment :
                 override fun onCreateMenu(
                     menu: Menu,
                     menuInflater: MenuInflater,
-                ) {}
+                ) {
+                }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == android.R.id.home) {
@@ -72,6 +73,10 @@ class CartFragment :
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+
+        viewModel.currentPage.observe(viewLifecycleOwner) { page ->
+            viewModel.loadProducts(page)
         }
     }
 

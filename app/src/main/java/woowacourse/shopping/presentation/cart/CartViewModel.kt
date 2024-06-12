@@ -14,12 +14,8 @@ class CartViewModel(
     private val _currentPage = MutableLiveData(START_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
 
-    val products: LiveData<List<CartProductUi>> =
-        _currentPage.map { page ->
-            cartRepository.cartProducts(page).map {
-                it.toUiModel(true)
-            }
-        }
+    private val _products = MutableLiveData<List<CartProductUi>>()
+    val products: LiveData<List<CartProductUi>> get() = _products
 
     val canLoadPrevPage: LiveData<Boolean> =
         _currentPage.map { page ->
@@ -28,6 +24,14 @@ class CartViewModel(
 
     val canLoadNextPage: LiveData<Boolean> =
         _currentPage.map { page -> cartRepository.canLoadMoreCartProducts(page) }
+
+    init {
+        loadProducts()
+    }
+
+     fun loadProducts(page : Int = START_PAGE) {
+        _products.value = cartRepository.cartProducts(page).map { it.toUiModel(true) }
+    }
 
     fun moveToNextPage() {
         val currentPage = _currentPage.value ?: return
@@ -48,24 +52,41 @@ class CartViewModel(
         _currentPage.value = currentPage + increment
     }
 
-    override fun deleteProduct(product: CartProductUi) {
+    override fun deleteProduct(cart: CartProductUi) {
         val currentProducts = products.value ?: return
-        if (currentProducts.contains(product)) {
-            cartRepository.deleteCartProduct(product.product.id)
+        if (currentProducts.contains(cart)) {
+            cartRepository.deleteCartProduct(cart.product.id)
             refreshCurrentPage()
         }
     }
 
-    override fun increaseCount(product: CartProductUi) {
-        val updateItem = product.increaseCount()
-        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
-        refreshCurrentPage()
+    override fun increaseCount(cart: CartProductUi) {
+        val currentProducts = products.value ?: return
+        val updatedProducts = currentProducts.map {
+            if (it.product.id == cart.product.id) {
+                val updatedProduct = it.copy(product = it.product.copy(count = it.product.count + 1))
+                cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
+                updatedProduct
+            } else {
+                it
+            }
+        }
+        _products.value = updatedProducts
     }
 
-    override fun decreaseCount(product: CartProductUi) {
-        val updateItem = product.decreaseCount()
-        cartRepository.addCartProduct(updateItem.product.id, updateItem.count)
-        refreshCurrentPage()
+    override fun decreaseCount(cart: CartProductUi) {
+        if (cart.product.count == 1) return
+        val currentProducts = products.value ?: return
+        val updatedProducts = currentProducts.map {
+            if (it.product.id == cart.product.id) {
+                val updatedProduct = it.copy(product = it.product.copy(count = it.product.count - 1))
+                cartRepository.addCartProduct(updatedProduct.product.id, updatedProduct.product.count)
+                updatedProduct
+            } else {
+                it
+            }
+        }
+        _products.value = updatedProducts
     }
 
     companion object {

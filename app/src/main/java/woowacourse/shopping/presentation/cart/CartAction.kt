@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.cart
 
 interface CartAction {
-    fun deleteProduct(product: CartProductUi)
-    fun increaseCount(product: CartProductUi)
-    fun decreaseCount(product: CartProductUi)
+    fun deleteProduct(cart: CartProductUi)
+    fun increaseCount(cart: CartProductUi)
+    fun decreaseCount(cart: CartProductUi)
 }
