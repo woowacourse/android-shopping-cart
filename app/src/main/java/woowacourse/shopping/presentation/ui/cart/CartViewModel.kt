@@ -12,8 +12,7 @@ import woowacourse.shopping.presentation.state.UIState
 
 class CartViewModel(private val repository: CartRepository) :
     ViewModel(),
-    CartEventHandler,
-    CartItemCountHandler {
+    CartEventHandler {
     private val pageSize = PAGE_SIZE
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)

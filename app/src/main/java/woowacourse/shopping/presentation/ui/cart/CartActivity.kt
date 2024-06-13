@@ -38,7 +38,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerViewAdapter(): CartAdapter {
-        val adapter = CartAdapter(viewModel, viewModel)
+        val adapter = CartAdapter(viewModel)
         binding.recyclerView.adapter = adapter
         return adapter
     }

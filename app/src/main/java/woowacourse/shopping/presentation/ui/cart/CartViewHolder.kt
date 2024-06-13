@@ -9,10 +9,10 @@ class CartViewHolder(private val binding: ItemCartBinding) :
     fun bind(
         cartItem: CartItem,
         eventHandler: CartEventHandler,
-        countHandler: CartItemCountHandler,
+        // countHandler: CartItemCountHandler,
     ) {
         binding.cartItem = cartItem
         binding.eventHandler = eventHandler
-        binding.countHandler = countHandler
+        // binding.countHandler = countHandler
     }
 }

@@ -66,7 +66,7 @@ class DetailViewModel(
 
     fun createShoppingCartItem() {
         val product = shoppingProduct.value?.product ?: return
-        val quantity = shoppingProduct.value?.quantity ?: return
+        val quantity = shoppingProduct.value?.quantity() ?: return
         cartRepository.insert(product = product, quantity = quantity)
     }
 

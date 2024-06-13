@@ -5,9 +5,9 @@
 
     <data>
 
-        <variable
+  <!--      <variable
             name="countHandler"
-            type="woowacourse.shopping.presentation.ui.counter.CounterHandler"/>
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler"/>-->
 
         <variable
             name="eventHandler"
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             app:cartItem="@{cartItem}"
-            app:countHandler="@{countHandler}"
+            app:countHandler="@{eventHandler}"
             app:layout_constraintBottom_toTopOf="@id/tv_item_cart_price"
             app:layout_constraintEnd_toEndOf="@id/tv_item_cart_price" />
 
