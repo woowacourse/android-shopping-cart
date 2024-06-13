@@ -11,11 +11,15 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.DefaultCartRepository
+import woowacourse.shopping.data.recent.DefaultRecentProductRepository
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 import woowacourse.shopping.presentation.shopping.product.adpater.ProductAdapter
+import woowacourse.shopping.presentation.shopping.recent.RecentProductViewModel
+import woowacourse.shopping.presentation.shopping.recent.adapter.RecentAdapter
 import woowacourse.shopping.presentation.util.dp
 
 class ProductListFragment :
@@ -23,19 +27,29 @@ class ProductListFragment :
     override val viewModel by viewModels<ProductListViewModel> {
         ProductListViewModel.factory(
             DefaultShoppingRepository(),
+            DefaultCartRepository(requireContext()),
         )
     }
+    private val recentViewModel by viewModels<RecentProductViewModel> {
+        RecentProductViewModel.factory(DefaultRecentProductRepository(requireContext()))
+    }
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentProductAdapter: RecentAdapter
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadProducts()
         initAppBar()
         initViews()
         initObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadProducts()
+        recentViewModel.loadRecentProducts()
     }
 
     private fun initAppBar() {
@@ -68,22 +82,30 @@ class ProductListFragment :
     private fun initViews() {
         binding?.apply {
             productAdapter =
-                ProductAdapter(
-                    onClickItem = { navigateToDetailView(it) },
-                    onPlusItem = { viewModel.loadProducts() },
-                )
+                ProductAdapter(viewModel)
             rvProductList.adapter = productAdapter
             rvProductList.layoutManager =
                 GridLayoutManager(requireContext(), SPAN_COUNT).apply {
                     spanSizeLookup = spanSizeLookUp()
                 }
             rvProductList.addItemDecoration(ProductItemDecoration(12.dp))
+            recentProductAdapter = RecentAdapter(onClickItem = { navigateToDetailView(it) })
+            horizontalView.rvRecentProductList.adapter = recentProductAdapter
         }
     }
 
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
             productAdapter.updateProducts(it)
+        }
+
+        viewModel.clickedItemId.observe(viewLifecycleOwner) {
+            recentViewModel.addRecentProduct(it)
+            navigateToDetailView(it)
+        }
+
+        recentViewModel.recentProducts.observe(viewLifecycleOwner) {
+            recentProductAdapter.updateProducts(it)
         }
     }
 

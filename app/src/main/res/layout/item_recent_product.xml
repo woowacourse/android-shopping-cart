@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="recent"
+            type="woowacourse.shopping.domain.RecentProduct" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="98dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical">
+
+        <ImageView
+            imageUrl="@{recent.product.imageUrl}"
+            android:layout_width="match_parent"
+            android:layout_height="98dp" />
+
+        <TextView
+            android:text="@{recent.product.name}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingHorizontal="4dp"
+            android:paddingTop="7dp"
+            android:textAppearance="@style/B2"
+            tools:text="PET보틀" />
+    </LinearLayout>
+</layout>

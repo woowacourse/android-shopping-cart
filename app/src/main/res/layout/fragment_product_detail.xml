@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:recentProduct="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <variable
+            name="detailAction"
+            type="woowacourse.shopping.presentation.shopping.detail.DetailAction" />
 
         <variable
             name="vm"
@@ -50,24 +56,54 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="33dp"
-            android:text="@string/price_title"
+            android:text="@{@string/price_format(vm.product.price * vm.product.count)}"
             android:textAppearance="@style/B2"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title"
+            tools:text="4만원" />
 
-        <TextView
-            android:id="@+id/tv_product_price"
+        <include
+            android:id="@+id/item_product_count"
+            layout="@layout/item_product_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:text="@{@string/price_format(vm.product.price)}"
-            android:textAppearance="@style/B2"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_price_title"
+            android:layout_marginEnd="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_product_price_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_price_title"
-            tools:text="4만원" />
+            bind:countHandler="@{detailAction}"
+            bind:product="@{vm.product}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:background="@drawable/shape_retangular_4"
+            android:onClick="@{()->vm.navigateToRecentProduct()}"
+            android:orientation="vertical"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_product_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_price_title"
+            recentProduct:isVisible="@{vm.isRecentProductVisible}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:text="@string/last_view_product"
+                android:textColor="@color/mint"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{vm.lastViewedProduct.product.name}"
+                tools:text="PET보틀-정사각형(500ml)" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_product_cart"

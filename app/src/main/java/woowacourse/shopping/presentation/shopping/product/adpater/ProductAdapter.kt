@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemPlusProductBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.presentation.shopping.product.ProductAction
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class ProductAdapter(
-    private val onClickItem: (id: Long) -> Unit,
-    private val onPlusItem: () -> Unit,
+    private val productAction: ProductAction,
 ) :
     RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<ShoppingUiModel> = emptyList()
@@ -45,12 +45,15 @@ class ProductAdapter(
                         parent,
                         false,
                     )
-                ShoppingViewHolder.ProductViewHolder(view, onClickItem)
+                ShoppingViewHolder.ProductViewHolder(
+                    view,
+                    productAction,
+                )
             }
 
             ShoppingUiModel.ITEM_VIEW_TYPE_PLUS -> {
                 val view = ItemPlusProductBinding.inflate(layoutInflater, parent, false)
-                ShoppingViewHolder.PlusViewHolder(view, onPlusItem)
+                ShoppingViewHolder.PlusViewHolder(view, productAction)
             }
 
             else -> error("Invalid view type")

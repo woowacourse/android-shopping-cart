@@ -8,10 +8,15 @@ interface ShoppingDataSource {
         pageSize: Int,
     ): List<Product>
 
-    fun productById(id: Long): Product?
+    fun productById(id: Long): Product
 
     fun canLoadMoreProducts(
         currentPage: Int,
         pageSize: Int,
     ): Boolean
+
+    fun updateProductCount(
+        id: Long,
+        count: Int,
+    )
 }

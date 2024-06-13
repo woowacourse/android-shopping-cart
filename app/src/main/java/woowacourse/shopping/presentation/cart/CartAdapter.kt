@@ -2,24 +2,14 @@ package woowacourse.shopping.presentation.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
-class CartAdapter(private val onClickDeleteBtn: (product: CartProductUi) -> Unit) :
-    RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
-    private var products: List<CartProductUi> = emptyList()
-    private val updateHelper: ItemUpdateHelper<CartProductUi> =
-        ItemUpdateHelper<CartProductUi>(
-            adapter = this,
-            areItemsTheSame = { oldItem, newItem ->
-                oldItem.product.id == newItem.product.id
-            },
-            areContentsTheSame = { oldItem, newItem -> oldItem == newItem },
-        )
-
-    override fun getItemCount(): Int = products.size
-
+class CartAdapter(
+    private val cartAction: CartAction,
+) : ListAdapter<CartProductUi, CartAdapter.CartViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -30,32 +20,45 @@ class CartAdapter(private val onClickDeleteBtn: (product: CartProductUi) -> Unit
                 parent,
                 false,
             )
-        return CartViewHolder(binding, onClickDeleteBtn)
+        return CartViewHolder(binding, cartAction)
     }
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
-    }
-
-    fun updateProduct(newProducts: List<CartProductUi>) {
-        val oldProducts = products.toList()
-        products = newProducts
-        updateHelper.update(oldProducts, newProducts)
+        holder.bind(getItem(position))
     }
 
     class CartViewHolder(
         private val binding: ItemCartProductBinding,
-        private val onClickDeleteBtn: (product: CartProductUi) -> Unit,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+        private val cartAction: CartAction,
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
+            binding.cartAction = cartAction
             binding.ivCartItemDelete.setOnClickListener {
-                onClickDeleteBtn(product)
+                cartAction.deleteProduct(product)
             }
         }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<CartProductUi>() {
+                override fun areItemsTheSame(
+                    oldItem: CartProductUi,
+                    newItem: CartProductUi,
+                ): Boolean {
+                    return oldItem.product.id == newItem.product.id
+                }
+
+                override fun areContentsTheSame(
+                    oldItem: CartProductUi,
+                    newItem: CartProductUi,
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }

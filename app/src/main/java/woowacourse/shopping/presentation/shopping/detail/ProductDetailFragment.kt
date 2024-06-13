@@ -8,9 +8,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
+import woowacourse.shopping.data.recent.DefaultRecentProductRepository
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
@@ -22,7 +24,8 @@ class ProductDetailFragment :
     override val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModel.factory(
             DefaultShoppingRepository(),
-            DefaultCartRepository(),
+            DefaultCartRepository(requireContext()),
+            DefaultRecentProductRepository(requireContext()),
             productId,
         )
     }
@@ -33,14 +36,8 @@ class ProductDetailFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
         initAppBar()
-        binding?.btnProductCart?.setOnClickListener {
-            viewModel.addCartProduct()
-        }
-        viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
-            if (isAdded) {
-                navigateToShoppingCart()
-            }
-        }
+        initListeners()
+        initObservers()
     }
 
     private fun initAppBar() {
@@ -60,14 +57,33 @@ class ProductDetailFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
-                        return true
+                        (requireActivity() as? ShoppingNavigator)?.navigateToProductList(
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE,
+                        )
                     }
                     return false
                 }
             },
             viewLifecycleOwner,
         )
+    }
+
+    private fun initListeners() {
+        binding?.btnProductCart?.setOnClickListener {
+            viewModel.addCartProduct()
+        }
+        binding?.detailAction = viewModel
+    }
+
+    private fun initObservers() {
+        viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
+            if (isAdded) {
+                navigateToShoppingCart()
+            }
+        }
+        viewModel.onClickedLastViewedProduct.observe(viewLifecycleOwner) { id ->
+            (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
+        }
     }
 
     private fun navigateToShoppingCart() {

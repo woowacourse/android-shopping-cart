@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="cartAction"
+            type="woowacourse.shopping.presentation.cart.CartAction" />
 
         <variable
             name="cartProduct"
@@ -60,11 +64,23 @@
                 android:id="@+id/tv_cart_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{@string/price_format(cartProduct.product.totalPrice())}"
                 android:textAppearance="@style/B2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="@{@string/price_format(cartProduct.product.price)}"
                 tools:text="30_000원" />
+
+            <include
+                bind:countHandler="@{cartAction}"
+                android:id="@+id/item_product_count"
+                layout="@layout/item_product_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="14dp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_cart_product_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                bind:product="@{cartProduct.product}" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

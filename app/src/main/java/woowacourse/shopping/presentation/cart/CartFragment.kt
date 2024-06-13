@@ -8,18 +8,20 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
+import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 
 class CartFragment :
     BindingFragment<FragmentShoppingCartBinding>(R.layout.fragment_shopping_cart) {
     private lateinit var adapter: CartAdapter
     override val viewModel by viewModels<CartViewModel> {
         CartViewModel.factory(
-            DefaultCartRepository(),
+            DefaultCartRepository(requireContext()),
         )
     }
 
@@ -44,11 +46,14 @@ class CartFragment :
                 override fun onCreateMenu(
                     menu: Menu,
                     menuInflater: MenuInflater,
-                ) {}
+                ) {
+                }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == android.R.id.home) {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        (requireActivity() as? ShoppingNavigator)?.navigateToProductList(
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE,
+                        )
                         return true
                     }
                     return false
@@ -59,7 +64,7 @@ class CartFragment :
     }
 
     private fun initViews() {
-        adapter = CartAdapter(onClickDeleteBtn = { viewModel.deleteProduct(it) })
+        adapter = CartAdapter(viewModel)
         binding?.apply {
             rvShoppingCart.adapter = adapter
         }
@@ -67,7 +72,11 @@ class CartFragment :
 
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
-            adapter.updateProduct(it)
+            adapter.submitList(it)
+        }
+
+        viewModel.currentPage.observe(viewLifecycleOwner) { page ->
+            viewModel.loadProducts(page)
         }
     }
 

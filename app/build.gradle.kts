@@ -60,9 +60,14 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.squareup.leakcanary:leakcanary-android:2.7")
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("com.google.code.gson:gson:2.8.6")
+    kapt("androidx.room:room-compiler:2.6.1")
     // third-party
     implementation("com.github.bumptech.glide:glide:4.14.2")
     kapt("com.github.bumptech.glide:compiler:4.14.2")
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    implementation("com.google.code.gson:gson:2.9.0")
     // unit test
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.25.3")

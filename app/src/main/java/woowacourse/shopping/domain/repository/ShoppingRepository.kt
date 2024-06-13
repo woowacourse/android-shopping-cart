@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.shopping
+package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.Product
 
@@ -14,4 +14,9 @@ interface ShoppingRepository {
         currentPage: Int,
         pageSize: Int,
     ): Boolean
+
+    fun updateCount(
+        id: Long,
+        count: Int,
+    )
 }

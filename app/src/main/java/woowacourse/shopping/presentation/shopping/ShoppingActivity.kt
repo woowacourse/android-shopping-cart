@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.shopping
 
 import android.os.Bundle
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import woowacourse.shopping.R
@@ -44,5 +45,16 @@ class ShoppingActivity :
             )
             addToBackStack(ProductListFragment.TAG)
         }
+    }
+
+    override fun navigateToProductList(flag: Int) {
+        supportFragmentManager.popBackStack(
+            ProductListFragment.TAG,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE,
+        )
+    }
+
+    override fun popBackStack() {
+        onBackPressedDispatcher.onBackPressed()
     }
 }

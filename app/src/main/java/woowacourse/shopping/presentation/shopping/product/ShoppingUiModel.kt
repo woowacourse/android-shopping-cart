@@ -6,7 +6,15 @@ sealed class ShoppingUiModel(val viewType: Int) {
         val name: String,
         val price: Int,
         val imageUrl: String,
-    ) : ShoppingUiModel(ITEM_VIEW_TYPE_PRODUCT)
+        val count: Int = 0,
+        var isVisible: Boolean = false,
+    ) : ShoppingUiModel(ITEM_VIEW_TYPE_PRODUCT) {
+        init {
+            isVisible = count > 0 || isVisible
+        }
+
+        fun totalPrice(): Int = price * count
+    }
 
     data object LoadMore : ShoppingUiModel(ITEM_VIEW_TYPE_PLUS)
 

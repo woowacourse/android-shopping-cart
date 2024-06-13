@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.domain.cartProduct
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.util.getOrAwaitValue
 
@@ -43,10 +43,9 @@ class CartViewModelTest {
     @Test
     @DisplayName("현재 페이지가 1일 때, 다음 페이지로 이동하면, 페이지가 2가 된다")
     fun test1() {
-        // given
+        // given & when
         val nextPage = 2
-        // when
-        cartViewModel.plusPage()
+        cartViewModel.moveToNextPage()
         // then
         verify { cartRepository.canLoadMoreCartProducts(1) }
         cartViewModel.currentPage.getOrAwaitValue() shouldBe nextPage
@@ -56,7 +55,7 @@ class CartViewModelTest {
     @DisplayName("현재 페이지가 1 페이지라면, 이전 페이지로 이동할 수 없다")
     fun test2() {
         // when
-        cartViewModel.minusPage()
+        cartViewModel.moveToPreviousPage()
         // then
         cartViewModel.currentPage.getOrAwaitValue() shouldBe 1
     }
@@ -70,10 +69,10 @@ class CartViewModelTest {
         every { cartRepository.canLoadMoreCartProducts(4) } returns true
         every { cartRepository.canLoadMoreCartProducts(5) } returns false
         // when
-        cartViewModel.plusPage()
-        cartViewModel.plusPage()
-        cartViewModel.plusPage()
-        cartViewModel.plusPage()
+        cartViewModel.moveToNextPage()
+        cartViewModel.moveToNextPage()
+        cartViewModel.moveToNextPage()
+        cartViewModel.moveToNextPage()
         // then
         cartViewModel.canLoadNextPage.getOrAwaitValue() shouldBe false
     }

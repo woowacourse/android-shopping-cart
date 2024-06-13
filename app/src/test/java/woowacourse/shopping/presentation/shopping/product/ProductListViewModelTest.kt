@@ -10,8 +10,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.shopping.ShoppingRepository
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.product
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.util.getOrAwaitValue
@@ -21,6 +23,9 @@ class ProductListViewModelTest {
     @MockK
     lateinit var shoppingRepository: ShoppingRepository
 
+    @MockK
+    lateinit var cartRepository: CartRepository
+
     @InjectMockKs
     lateinit var productListViewModel: ProductListViewModel
 
@@ -29,9 +34,11 @@ class ProductListViewModelTest {
     fun `test`() {
         // given
         val product = product()
-        val expectProducts = listOf(product.toShoppingUiModel(), ShoppingUiModel.LoadMore)
+        val cartProduct = CartProduct(product, 1)
+        val expectProducts = listOf(product.toShoppingUiModel(false), ShoppingUiModel.LoadMore)
         every { shoppingRepository.products(0, 20) } returns listOf(product)
         every { shoppingRepository.canLoadMoreProducts(1, 20) } returns true
+        every { cartRepository.totalCartProducts() } returns listOf(cartProduct)
         // when
         productListViewModel.loadProducts()
         // then
@@ -45,9 +52,11 @@ class ProductListViewModelTest {
     fun test2() {
         // given
         val product = product()
-        val expectProducts = listOf(product.toShoppingUiModel())
+        val cartProduct = CartProduct(product, 1)
+        val expectProducts = listOf(product.toShoppingUiModel(false))
         every { shoppingRepository.products(0, 20) } returns listOf(product)
         every { shoppingRepository.canLoadMoreProducts(1, 20) } returns false
+        every { cartRepository.totalCartProducts() } returns listOf(cartProduct)
         // when
         productListViewModel.loadProducts()
         // then
@@ -62,8 +71,10 @@ class ProductListViewModelTest {
         // given
         val product = product()
         val loadMore = ShoppingUiModel.LoadMore
+        val cartProduct = CartProduct(product, 1)
         every { shoppingRepository.products(0, 20) } returns listOf(product)
         every { shoppingRepository.canLoadMoreProducts(1, 20) } returns true
+        every { cartRepository.totalCartProducts() } returns listOf(cartProduct)
         // when
         productListViewModel.loadProducts()
         // then
@@ -79,8 +90,10 @@ class ProductListViewModelTest {
         // given
         val product = product()
         val loadMore = ShoppingUiModel.LoadMore
+        val cartProduct = CartProduct(product, 1)
         every { shoppingRepository.products(0, 20) } returns listOf(product)
         every { shoppingRepository.canLoadMoreProducts(1, 20) } returns false
+        every { cartRepository.totalCartProducts() } returns listOf(cartProduct)
         // when
         productListViewModel.loadProducts()
         // then

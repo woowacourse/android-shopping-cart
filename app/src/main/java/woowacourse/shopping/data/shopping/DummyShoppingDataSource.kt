@@ -3,7 +3,7 @@ package woowacourse.shopping.data.shopping
 import woowacourse.shopping.domain.Product
 
 object DummyShoppingDataSource : ShoppingDataSource {
-    val products: List<Product> =
+    var products: List<Product> =
         List(100) {
             listOf(
                 Product(
@@ -55,8 +55,8 @@ object DummyShoppingDataSource : ShoppingDataSource {
         return products.subList(fromIndex, toIndex)
     }
 
-    override fun productById(id: Long): Product? {
-        return products.find { it.id == id }
+    override fun productById(id: Long): Product {
+        return products.find { it.id == id } ?: Product(0, 0, "", "")
     }
 
     override fun canLoadMoreProducts(
@@ -65,5 +65,20 @@ object DummyShoppingDataSource : ShoppingDataSource {
     ): Boolean {
         val fromIndex = currentPage * pageSize
         return fromIndex < products.size
+    }
+
+    override fun updateProductCount(
+        id: Long,
+        count: Int,
+    ) {
+        val updatedProducts =
+            products.map {
+                if (it.id == id) {
+                    it.copy(count = count)
+                } else {
+                    it
+                }
+            }
+        products = updatedProducts
     }
 }
