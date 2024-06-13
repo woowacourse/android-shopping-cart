@@ -66,52 +66,12 @@ fun setPrice(
 
 @BindingAdapter("app:visibility")
 fun setLoadMoreBtnVisibility(
-    view: TextView,
+    view: View,
     isVisible: Boolean?,
 ) {
     if (isVisible == true) {
         view.visibility = View.VISIBLE
     } else {
         view.visibility = View.GONE
-    }
-}
-
-@BindingAdapter("app:shoppingCounterVisibility")
-fun setVisibility(
-    view: View,
-    isVisible: Boolean?,
-) {
-    if (isVisible == true) {
-        if (view is ImageView) {
-            view.visibility = View.GONE
-        } else {
-            view.visibility = View.VISIBLE
-        }
-    } else {
-        if (view is ImageView) {
-            view.visibility = View.VISIBLE
-        } else {
-            view.visibility = View.GONE
-        }
-    }
-}
-
-@BindingAdapter("app:cartViewVisibility")
-fun setViewVisibility(
-    view: View,
-    isVisible: Boolean?,
-) {
-    if (isVisible == true) {
-        if (view is TextView) {
-            view.visibility = View.GONE
-        } else {
-            view.visibility = View.VISIBLE
-        }
-    } else {
-        if (view is TextView) {
-            view.visibility = View.VISIBLE
-        } else {
-            view.visibility = View.GONE
-        }
     }
 }

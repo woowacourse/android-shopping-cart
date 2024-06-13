@@ -69,6 +69,7 @@ class CartViewModel(private val repository: CartRepository) :
     private fun setUpUIState(page: @JvmSuppressWildcards Int): UIState<List<CartItem>> {
         val items = repository.findAllPagedItems(page, pageSize).items
         return if (items.isEmpty()) {
+            isCartEmpty()
             UIState.Empty
         } else {
             UIState.Success(items)
@@ -108,7 +109,7 @@ class CartViewModel(private val repository: CartRepository) :
     }
 
     fun isCartEmpty() {
-        _isEmpty.postValue(true)
+        _isEmpty.value = true
     }
 
     override fun navigateToShopping() {
