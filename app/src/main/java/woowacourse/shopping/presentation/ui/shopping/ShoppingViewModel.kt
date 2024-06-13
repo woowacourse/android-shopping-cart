@@ -162,27 +162,28 @@ class ShoppingViewModel(
     }
 
     override fun increaseCount(productId: Long) {
-        val shoppingProduct = _shoppingProducts.value?.find { it.product.id == productId }
+        val currentShoppingProducts = shoppingProducts.value?.map { it.copy() } ?: return
+        val shoppingProduct = currentShoppingProducts.find { it.product.id == productId }
         shoppingProduct?.increase()
         val product = shoppingItemsRepository.findProductItem(productId) ?: return
 
-        cartItemsRepository.insert(product, shoppingProduct?.quantity ?: 1)
-        _shoppingProducts.value = _shoppingProducts.value
+        cartItemsRepository.insert(product, shoppingProduct?.quantity() ?: 1)
+        _shoppingProducts.value = currentShoppingProducts
         updateCartCount()
     }
 
     override fun decreaseCount(productId: Long) {
-        val shoppingProduct = _shoppingProducts.value?.find { it.product.id == productId }
-        shoppingProduct?.decrease()
-        val quantity = shoppingProduct?.quantity ?: 0
+        val currentShoppingProducts = shoppingProducts.value?.map { it.copy() } ?: return
+        val shoppingProduct = currentShoppingProducts.find { it.product.id == productId } ?: return
+        shoppingProduct.decrease()
+        val quantity = shoppingProduct.quantity()
 
         if (quantity > 0) {
-            cartItemsRepository.updateQuantity(productId, shoppingProduct?.quantity ?: 1)
-            _shoppingProducts.value = _shoppingProducts.value
+            cartItemsRepository.update(productId, shoppingProduct?.quantity() ?: 1)
         } else {
             cartItemsRepository.deleteWithProductId(productId)
-            _shoppingProducts.value = _shoppingProducts.value
         }
+        _shoppingProducts.value = currentShoppingProducts
         updateCartCount()
     }
 

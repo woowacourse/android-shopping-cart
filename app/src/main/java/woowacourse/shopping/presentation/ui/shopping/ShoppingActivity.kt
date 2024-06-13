@@ -53,7 +53,6 @@ class ShoppingActivity : AppCompatActivity() {
     private fun setUpRecyclerView() {
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
         setUpRecyclerViewAdapter()
-        viewModel.hideLoadMore()
         checkLoadMoreBtnVisibility()
     }
 
