@@ -69,7 +69,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun emptyCart() {
-        viewModel.isCartEmpty()
+        viewModel.updateCartToEmpty()
         Toast.makeText(this, getString(R.string.empty_cart_message), Toast.LENGTH_LONG).show()
     }
 
