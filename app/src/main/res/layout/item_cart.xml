@@ -5,9 +5,13 @@
 
     <data>
 
+  <!--      <variable
+            name="countHandler"
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler"/>-->
+
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.cart.CartClickListener" />
+            name="eventHandler"
+            type="woowacourse.shopping.presentation.ui.cart.CartEventHandler" />
 
         <variable
             name="cartItem"
@@ -18,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:onClick="@{() -> clickListener.onItemClick(cartItem.productId)}"
+        android:onClick="@{() -> eventHandler.navigateToDetail(cartItem.productId)}"
         android:background="@drawable/shopping_cart_item_gridview">
 
         <TextView
@@ -48,7 +52,19 @@
             android:layout_marginBottom="18dp"
             tools:src="@drawable/ic_launcher_background" />
 
+        <include
+            android:id="@+id/btn_quantity"
+            layout="@layout/cartitem_quantity_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            app:cartItem="@{cartItem}"
+            app:countHandler="@{eventHandler}"
+            app:layout_constraintBottom_toTopOf="@id/tv_item_cart_price"
+            app:layout_constraintEnd_toEndOf="@id/tv_item_cart_price" />
+
         <TextView
+            android:id="@+id/tv_item_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
@@ -56,7 +72,7 @@
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:price="@{cartItem.price}"
+            app:price="@{cartItem.price*cartItem.quantity}"
             tools:text="10,000원" />
 
         <ImageView
@@ -64,7 +80,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="12dp"
-            android:onClick="@{() -> clickListener.onDeleteItemClick(cartItem.id)}"
+            android:onClick="@{() -> eventHandler.deleteCartItem(cartItem.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray_100" />

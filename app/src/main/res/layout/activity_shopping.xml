@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingClickListener" />
+            name="countHandler"
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler" />
 
         <variable
             name="viewModel"
@@ -21,32 +22,95 @@
         android:layout_height="match_parent"
         tools:context=".presentation.shopping.ShoppingActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar_main"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/gray_500"
-            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/main_menu"
-            app:title="Shopping"
-            app:titleTextColor="@color/white" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_product_list"
-            android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Shopping"
+                android:textColor="@color/white"
+                android:textSize="22dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_menu_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:onClick="@{() -> viewModel.onShoppingCartButtonClick()}"
+                android:padding="8dp"
+                android:src="@drawable/ic_cart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_cart_count"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/iv_cart_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_background_circle"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.onShoppingCartButtonClick()}"
+                android:text="@{String.valueOf(viewModel.cartCount)}"
+                android:textColor="@color/white"
+                android:visibility="@{viewModel.cartCount > 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="14dp"
-            android:layout_marginTop="14dp"
             app:layout_constraintBottom_toTopOf="@id/btn_load_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_main"
-            app:product="@{viewModel.products}"
-            tools:itemCount="10"
-            tools:listitem="@layout/item_product" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_main">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/horizontal_view"
+                    layout="@layout/recent_product_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:viewModel="@{viewModel}" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_product_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="14dp"
+                    android:layout_marginTop="14dp"
+                    app:layout_constraintBottom_toTopOf="@id/btn_load_more"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar_main"
+                    app:product="@{viewModel.products}"
+                    app:shoppingProducts="@{viewModel.shoppingProducts}"
+                    tools:itemCount="10"
+                    tools:listitem="@layout/item_product" />
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <TextView
             android:id="@+id/btn_load_more"
@@ -59,11 +123,10 @@
             android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:visibility="@{viewModel.showLoadMore}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_product_list"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:visibility="@{viewModel.showLoadMore}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

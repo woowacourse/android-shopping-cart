@@ -6,20 +6,18 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class CartActivity : AppCompatActivity(), CartClickListener {
+class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = CartRepositoryImpl((ShoppingApplication.getInstance()).database),
+            repository = CartRepositoryImpl(this),
         )
     }
 
@@ -31,15 +29,16 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        observeViewModel()
     }
 
     private fun setUpViews() {
-        setUpToolbar()
         setUpUIState()
     }
 
     private fun setUpRecyclerViewAdapter(): CartAdapter {
-        val adapter = CartAdapter(this)
+        val adapter = CartAdapter(viewModel)
         binding.recyclerView.adapter = adapter
         return adapter
     }
@@ -49,7 +48,7 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         viewModel.cartItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data, adapter)
-                is UIState.Empty -> {}
+                is UIState.Empty -> {} // emptyCart()
                 is UIState.Error ->
                     showError(
                         state.exception.message ?: getString(R.string.unknown_error),
@@ -69,21 +68,33 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarCart
-        setSupportActionBar(toolbar)
+    private fun emptyCart() {
+        viewModel.updateCartToEmpty()
+        Toast.makeText(this, getString(R.string.empty_cart_message), Toast.LENGTH_LONG).show()
+    }
 
-        toolbar.setNavigationOnClickListener {
-            finish()
+    private fun observeViewModel() {
+        viewModel.deleteCartItem.observe(this) {
+            it.getContentIfNotHandled()?.let { itemId ->
+                viewModel.deleteItem(itemId)
+            }
+        }
+
+        viewModel.navigateToDetail.observe(this) {
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
+            }
+        }
+
+        viewModel.navigateToShopping.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                finish()
+            }
         }
     }
 
-    override fun onItemClick(productId: Long) {
+    private fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
-    }
-
-    override fun onDeleteItemClick(itemId: Long) {
-        viewModel.deleteItem(itemId)
     }
 
     companion object {

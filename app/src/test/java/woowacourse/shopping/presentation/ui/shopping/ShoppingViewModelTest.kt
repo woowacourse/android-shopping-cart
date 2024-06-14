@@ -7,12 +7,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingViewModelTest {
     private lateinit var viewModel: ShoppingViewModel
+    private lateinit var testCartRepository: CartRepository
+    private var testRecentProductRepository: RecentProductRepository = mockk()
     private val repository: ShoppingItemsRepository = mockk()
 
     @BeforeEach
@@ -33,8 +38,11 @@ class ShoppingViewModelTest {
 
         every { repository.fetchProductsSize() } returns 100
         every { repository.fetchProductsWithIndex(any(), any()) } returns products
+        every { testRecentProductRepository.loadLatestList() } returns listOf<RecentProduct>()
 
-        viewModel = ShoppingViewModel(repository)
+        testCartRepository = FakeCartRepositoryImpl()
+
+        viewModel = ShoppingViewModel(repository, testCartRepository, testRecentProductRepository)
     }
 
     @Test

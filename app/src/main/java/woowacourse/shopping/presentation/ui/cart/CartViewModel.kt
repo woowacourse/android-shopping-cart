@@ -7,9 +7,12 @@ import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.presentation.event.Event
 import woowacourse.shopping.presentation.state.UIState
 
-class CartViewModel(private val repository: CartRepository) : ViewModel() {
+class CartViewModel(private val repository: CartRepository) :
+    ViewModel(),
+    CartEventHandler {
     private val pageSize = PAGE_SIZE
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
@@ -25,11 +28,12 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
             page == lastPage
         }
     private val _totalItemSize = MutableLiveData<Int>(repository.size())
+
     val totalItemSize: LiveData<Int> = _totalItemSize
+    private val _isPageControlVisible =
+        MutableLiveData<Boolean>(((totalItemSize.value ?: 0) > PAGE_SIZE))
 
-    private val _isPageControlVisible = MutableLiveData<Boolean>(((totalItemSize.value ?: 0) > PAGE_SIZE))
     val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
-
     private var lastPage: Int = DEFAULT_PAGE
 
     val cartItemsState: LiveData<UIState<List<CartItem>>> =
@@ -45,9 +49,26 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
             }
         }
 
+    private val _isEmpty = MutableLiveData<Boolean>(false)
+    val isEmpty: LiveData<Boolean>
+        get() = _isEmpty
+
+    private val _navigateToShopping = MutableLiveData<Event<Boolean>>()
+    val navigateToShopping: LiveData<Event<Boolean>>
+        get() = _navigateToShopping
+
+    private val _navigateToDetail = MutableLiveData<Event<Long>>()
+    val navigateToDetail: LiveData<Event<Long>>
+        get() = _navigateToDetail
+
+    private val _deleteCartItem = MutableLiveData<Event<Long>>()
+    val deleteCartItem: LiveData<Event<Long>>
+        get() = _deleteCartItem
+
     private fun setUpUIState(page: @JvmSuppressWildcards Int): UIState<List<CartItem>> {
         val items = repository.findAllPagedItems(page, pageSize).items
         return if (items.isEmpty()) {
+            updateCartToEmpty()
             UIState.Empty
         } else {
             UIState.Success(items)
@@ -86,7 +107,35 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
         loadPage()
     }
 
-    fun isCartEmpty(): Boolean = cartItemsState.value == UIState.Empty
+    fun updateCartToEmpty() {
+        _isEmpty.value = true
+    }
+
+    override fun navigateToShopping() {
+        _navigateToShopping.postValue(Event(true))
+    }
+
+    override fun navigateToDetail(productId: Long) {
+        _navigateToDetail.postValue(Event(productId))
+    }
+
+    override fun deleteCartItem(itemId: Long) {
+        _deleteCartItem.postValue(Event(itemId))
+    }
+
+    override fun increaseCount(productId: Long) {
+        val currentQuantity = repository.findQuantityWithProductId(productId)
+        repository.updateQuantityWithProductId(productId, currentQuantity + 1)
+        loadPage()
+    }
+
+    override fun decreaseCount(productId: Long) {
+        val currentQuantity = repository.findQuantityWithProductId(productId)
+        if (currentQuantity > 1) {
+            repository.updateQuantityWithProductId(productId, currentQuantity - 1)
+        }
+        loadPage()
+    }
 
     companion object {
         private const val PAGE_SIZE = 5

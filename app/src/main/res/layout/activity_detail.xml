@@ -5,13 +5,20 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.detail.DetailClickListener" />
+            name="eventHandler"
+            type="woowacourse.shopping.presentation.ui.detail.DetailEventHandler" />
+
+        <variable
+            name="countHandler"
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler" />
 
         <variable
             name="viewModel"
             type="woowacourse.shopping.presentation.ui.detail.DetailViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,17 +28,28 @@
         tools:context=".presentation.shopping.ShoppingActivity">
 
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar_detail"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/gray_500"
-            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/detail_menu"
-            app:titleTextColor="@color/white" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_menu_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:onClick="@{() -> viewModel.moveBack()}"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <ImageView
@@ -39,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="fitXY"
-            app:imageUrl="@{viewModel.product.imageUrl}"
+            app:imageUrl="@{viewModel.shoppingProduct.product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
             tools:layout_editor_absoluteX="-157dp"
             tools:src="@drawable/ic_launcher_background" />
@@ -49,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:layout_margin="18dp"
-            android:text="@{viewModel.product.name}"
+            android:text="@{viewModel.shoppingProduct.product.name}"
             android:textColor="@color/black"
             android:textSize="24dp"
             android:textStyle="bold"
@@ -64,29 +82,62 @@
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_product_name" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="16dp"
-            android:text="가격"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/tv_detail_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginStart="18dp"
             android:textColor="@color/black"
-            android:textSize="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            app:price="@{viewModel.product.price}"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_quantity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_quantity"
+            app:price="@{viewModel.shoppingProduct.product.price*viewModel.shoppingProduct.quantity}"
             tools:text="99,800원" />
+
+        <include
+            android:id="@+id/btn_quantity"
+            layout="@layout/product_quantity_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            app:countHandler="@{countHandler}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:shoppingProduct="@{viewModel.shoppingProduct}" />
+
+        <LinearLayout
+            android:id="@+id/recent_product_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:background="@drawable/shape_border"
+            android:onClick="@{() -> viewModel.onRecentProductClick(viewModel.recentProduct.productId)}"
+            android:orientation="vertical"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="16dp"
+            android:visibility="@{viewModel.recentProductVisibility == true ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/btn_put_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_price">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:text="@string/last_view_subject"
+                android:textColor="@color/primary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.recentProduct.productName}"
+                tools:text="PET보틀-정사각형(500ml)" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/btn_put_cart"
@@ -96,7 +147,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onAddToCartClick(viewModel.product.id)}"
+            android:onClick="@{() -> viewModel.addCartItem(viewModel.shoppingProduct.product.id)}"
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20dp"

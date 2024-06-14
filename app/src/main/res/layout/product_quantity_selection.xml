@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="shoppingProduct"
+            type="woowacourse.shopping.domain.model.ShoppingProduct" />
+
+        <variable
+            name="countHandler"
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/btn_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/round_button_left"
+            android:gravity="center"
+            android:text="−"
+            android:textSize="25dp"
+            android:onClick="@{() -> countHandler.decreaseCount(shoppingProduct.product.id)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@{String.valueOf(shoppingProduct.quantity)}"
+            android:textSize="23dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_minus"
+            app:layout_constraintStart_toEndOf="@id/btn_minus"
+            app:layout_constraintTop_toTopOf="@id/btn_minus"
+            tool:text="1" />
+
+
+        <TextView
+            android:id="@+id/btn_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/round_button_right"
+            android:gravity="center"
+            android:text="+"
+            android:textSize="25dp"
+            android:onClick="@{() -> countHandler.increaseCount(shoppingProduct.product.id)}"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_quantity"
+            app:layout_constraintStart_toEndOf="@+id/tv_quantity"
+            app:layout_constraintTop_toTopOf="@+id/tv_quantity" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

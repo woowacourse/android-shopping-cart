@@ -5,9 +5,19 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingClickListener" />
+            name="countHandler"
+            type="woowacourse.shopping.presentation.ui.counter.CounterHandler" />
+
+        <variable
+            name="shoppingProduct"
+            type="woowacourse.shopping.domain.model.ShoppingProduct" />
+
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingEventHandler" />
 
         <variable
             name="product"
@@ -17,7 +27,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="166dp"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> clickListener.onProductClick(product.id)}"
+        android:onClick="@{() -> eventHandler.onProductClick(product.id)}"
         android:padding="6dp">
 
         <ImageView
@@ -30,6 +40,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:color/holo_green_dark" />
+
+        <include
+            android:id="@+id/btn_quantity"
+            layout="@layout/product_quantity_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:shoppingProduct="@{shoppingProduct}"
+            app:countHandler="@{countHandler}"
+            android:visibility="@{shoppingProduct.quantity == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/add_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_plus"
+            android:onClick="@{() -> countHandler.increaseCount(product.id)}"
+            android:visibility="@{shoppingProduct.quantity == 0 ? View.VISIBLE : View.GONE}"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_product"
+            app:layout_constraintEnd_toEndOf="@+id/iv_product" />
+
 
         <TextView
             android:id="@+id/tv_name"

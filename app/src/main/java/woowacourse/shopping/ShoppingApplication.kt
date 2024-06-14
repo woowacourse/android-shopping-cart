@@ -1,16 +1,21 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.database.ShoppingDatabase
 
 class ShoppingApplication : Application() {
-    val database: CartDatabase by lazy { CartDatabase.getInstance(this) }
+    lateinit var shoppingDatabase: ShoppingDatabase
+        private set
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+        shoppingDatabase = ShoppingDatabase.getInstance(instance)
+    }
 
     companion object {
-        private var instance: ShoppingApplication? = null
+        private lateinit var instance: ShoppingApplication
 
-        fun getInstance(): ShoppingApplication {
-            return instance ?: ShoppingApplication()
-        }
+        fun getInstance(): ShoppingApplication = instance
     }
 }

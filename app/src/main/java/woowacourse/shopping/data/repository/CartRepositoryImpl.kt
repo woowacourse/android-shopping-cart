@@ -1,5 +1,7 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
+import android.content.Context
+import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.data.model.mapper
@@ -8,8 +10,8 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class CartRepositoryImpl(database: CartDatabase) : CartRepository {
-    private val dao = database.cartDao()
+class CartRepositoryImpl(context: Context) : CartRepository {
+    private val dao = ShoppingDatabase.getInstance(context).cartDao()
 
     override fun insert(
         product: Product,
@@ -28,10 +30,35 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         productId: Long,
         quantity: Int,
     ) {
-        val currentQuantity = findOrNullWithProductId(productId)?.quantity ?: 0
         threadAction {
-            dao.update(productId, currentQuantity + quantity)
+            dao.update(productId, quantity)
         }
+    }
+
+    override fun updateQuantity(
+        cartItemId: Long,
+        quantity: Int,
+    ) {
+        threadAction {
+            dao.updateQuantity(cartItemId, quantity)
+        }
+    }
+
+    override fun updateQuantityWithProductId(
+        productId: Long,
+        quantity: Int,
+    ) {
+        threadAction {
+            dao.updateQuantityWithProductId(productId, quantity)
+        }
+    }
+
+    override fun findQuantityWithProductId(productId: Long): Int {
+        var quantity = 0
+        threadAction {
+            quantity = dao.findQuantityWithProductId(productId)
+        }
+        return quantity
     }
 
     override fun size(): Int {
@@ -40,6 +67,14 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
             size = dao.size()
         }
         return size
+    }
+
+    override fun sumOfQuantity(): Int {
+        var sum = 0
+        threadAction {
+            sum = dao.sumOfQuantity()
+        }
+        return sum
     }
 
     override fun findOrNullWithProductId(productId: Long): CartItem? {
@@ -51,7 +86,7 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         return cartItemEntity?.toDomainModel()
     }
 
-    override fun find(cartItemId: Long): CartItem {
+    override fun findWithCartItemId(cartItemId: Long): CartItem {
         var cartItemEntity: CartItemEntity? = null
         threadAction {
             cartItemEntity = dao.find(cartItemId)
@@ -87,6 +122,12 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
     override fun delete(cartItemId: Long) {
         threadAction {
             dao.delete(cartItemId)
+        }
+    }
+
+    override fun deleteWithProductId(productId: Long) {
+        threadAction {
+            dao.deleteWithProductId(productId)
         }
     }
 
