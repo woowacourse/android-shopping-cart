@@ -8,6 +8,10 @@ android {
     namespace = "woowacourse.shopping"
     compileSdk = 35
 
+    buildFeatures {
+        dataBinding = true
+    }
+
     defaultConfig {
         applicationId = "woowacourse.shopping"
         minSdk = 26
