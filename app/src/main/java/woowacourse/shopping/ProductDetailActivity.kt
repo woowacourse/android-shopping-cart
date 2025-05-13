@@ -6,29 +6,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.databinding.ActivityProductBinding
+import com.bumptech.glide.Glide
+import woowacourse.shopping.databinding.ActivityDetailProductBinding
 
+class ProductDetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDetailProductBinding
 
-class ProductActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProductBinding
-    private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(
-            products,
-            this,
-        )
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_product)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cl_product)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        binding.rvProducts.adapter = productAdapter
-        binding.rvProducts.layoutManager = GridLayoutManager(this, 2)
+        Glide.with(this)
+            .load(products[0].imageUrl)
+            .placeholder(R.drawable.maxim_arabica)
+            .fallback(R.drawable.maxim_arabica)
+            .error(R.drawable.maxim_arabica)
+            .into(binding.ivProductDetail)
+        binding.tvProductDetailName.text = products[0].name
+        binding.tvProductDetailPrice.text = "99,800원"
     }
 }
