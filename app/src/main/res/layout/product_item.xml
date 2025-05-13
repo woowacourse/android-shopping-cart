@@ -4,10 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="productClickListener"
+            type="woowacourse.shopping.ui.productlist.ProductClickListener" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.product.Product" />
+
+        <variable
+            name="priceFormatter"
+            type="woowacourse.shopping.utils.PriceFormatter" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp">
+        android:onClick="@{() -> productClickListener.onClick(product)}"
+        android:paddingVertical="10dp">
 
         <ImageView
             android:id="@+id/iv_product_image"
@@ -19,6 +36,7 @@
             app:layout_constraintHeight_percent="0.8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:setImageWithGlide="@{product.imageUrl}"
             tools:src="@drawable/pants1" />
 
         <TextView
@@ -27,9 +45,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
             android:ellipsize="end"
             android:maxEms="10"
             android:singleLine="true"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -42,6 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
+            android:text="@{@string/price(priceFormatter.format(product.price))}"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_title"
