@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.domain
 
 data class Product(
     val name: String,

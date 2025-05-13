@@ -12,7 +12,7 @@
         android:id="@+id/cl_product"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ProductActivity">
+        tools:context=".presentation.product.ProductActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_product"

@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.presentation.product
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -6,12 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.R
+import woowacourse.shopping.databinding.ActivityProductBinding
+import woowacourse.shopping.domain.products
 
-class CartActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCartBinding
-    private val cartProductAdapter: CartProductAdapter by lazy {
-        CartProductAdapter(
+class ProductActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityProductBinding
+    private val productAdapter: ProductAdapter by lazy {
+        ProductAdapter(
             products,
             this,
         )
@@ -20,13 +22,13 @@ class CartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cl_cart)) { v, insets ->
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cl_product)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        binding.rvCartProduct.adapter = cartProductAdapter
+        binding.rvProducts.adapter = productAdapter
     }
 }

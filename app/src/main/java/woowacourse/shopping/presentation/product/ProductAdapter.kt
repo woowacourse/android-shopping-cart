@@ -1,11 +1,13 @@
-package woowacourse.shopping
+package woowacourse.shopping.presentation.product
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.domain.Product
 
 class ProductAdapter(
     private val products: List<Product>,
