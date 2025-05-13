@@ -10,4 +10,6 @@
 
     <color name="gray_55">#555555</color>
     <color name="mint">#04C092</color>
+    <color name="gray_aa">#aaaaaa</color>
+    <color name="transparent">#00000000</color>
 </resources>

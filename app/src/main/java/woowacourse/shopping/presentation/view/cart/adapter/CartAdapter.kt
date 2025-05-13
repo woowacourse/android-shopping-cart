@@ -1,13 +1,13 @@
-package woowacourse.shopping.presentation.view.catalog.adapter
+package woowacourse.shopping.presentation.view.cart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.ProductUiModel
 
-class CatalogAdapter(
+class CartAdapter(
     products: List<ProductUiModel> = emptyList(),
-    private val eventListener: CatalogEventListener,
-) : RecyclerView.Adapter<ProductViewHolder>() {
+    private val eventListener: CartEventListener,
+) : RecyclerView.Adapter<CartViewHolder>() {
     private val products = products.toMutableList()
 
     override fun getItemCount(): Int = products.size
@@ -15,10 +15,10 @@ class CatalogAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder.from(parent, eventListener)
+    ): CartViewHolder = CartViewHolder.from(parent, eventListener)
 
     override fun onBindViewHolder(
-        holder: ProductViewHolder,
+        holder: CartViewHolder,
         position: Int,
     ) {
         holder.bind(products[position])
@@ -31,7 +31,12 @@ class CatalogAdapter(
         notifyItemRangeInserted(previousSize, products.size)
     }
 
-    interface CatalogEventListener {
-        fun onProductClicked(product: ProductUiModel)
+    fun removeProduct(product: ProductUiModel) {
+        products.remove(product)
+        notifyItemRemoved(products.indexOf(product))
+    }
+
+    interface CartEventListener {
+        fun onProductDeletion(product: ProductUiModel)
     }
 }
