@@ -6,4 +6,8 @@
 
     <!-- 장바구니 페이지 -->
     <string name="shopping_cart_title">Cart</string>
+
+    <!-- 상품 상세 페이지 -->
+    <string name="product_detail_add_to_shopping_cart">장바구니 담기</string>
+    <string name="product_detail_price_title">가격</string>
 </resources>
