@@ -7,14 +7,14 @@
 
         <variable
             name="adapter"
-            type="woowacourse.shopping.ProductAdapter" />
+            type="woowacourse.shopping.view.product.ProductAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/productRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ProductsActivity">
+        tools:context=".view.product.ProductsActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
