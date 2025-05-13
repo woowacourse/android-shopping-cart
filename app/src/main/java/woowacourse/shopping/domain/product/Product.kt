@@ -9,16 +9,14 @@ data class Product(
         val dummies: List<Product>
             get() =
                 listOf(
-                    Product(1, "아메리카노", 4500),
-                    Product(2, "카페라떼", 5000),
-                    Product(3, "바닐라라떼", 5500),
-                    Product(4, "카라멜마끼아또", 5800),
-                    Product(5, "카푸치노", 5000),
-                    Product(6, "돌체라떼", 6000),
-                    Product(7, "콜드브루", 5200),
-                    Product(8, "헤이즐넛라떼", 5500),
-                    Product(9, "연유라떼", 5700),
-                    Product(10, "디카페인 아메리카노", 4700),
+                    Product(1, "럭키", 4000),
+                    Product(2, "아이다", 700),
+                    Product(3, "설백", 1_000),
+                    Product(4, "줌마", 1_000),
+                    Product(5, "잭슨", 20_000),
+                    Product(6, "곰도로스", 300),
+                    Product(7, "봉추", 3_800),
+                    Product(8, "비앙카", 36_000),
                 )
     }
 }
