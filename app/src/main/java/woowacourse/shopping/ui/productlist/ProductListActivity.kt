@@ -8,16 +8,17 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductDummy
-import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class ProductListActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityProductListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         applyWindowInsets()
 
         val adapter = productListAdapter()
