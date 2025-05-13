@@ -3,6 +3,7 @@ package woowacourse.shopping.product.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -29,6 +30,15 @@ class DetailActivity : AppCompatActivity() {
             binding.product = it
             showImage(it)
         }
+
+        binding.clickListener =
+            AddToCartClickListener { product ->
+                showToastMessage()
+            }
+    }
+
+    private fun showToastMessage() {
+        Toast.makeText(this, "장바구니에 상품이 추가되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun applyWindowInsets() {
