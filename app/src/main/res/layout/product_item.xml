@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="154dp"
+        android:layout_height="206dp">
+
+        <ImageView
+            android:id="@+id/imageView_product"
+            android:src="@drawable/iced_americano"
+            android:scaleType="centerCrop"
+            android:contentDescription="product_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="154dp"/>
+
+        <TextView
+            android:maxLines="1"
+            android:layout_marginStart="6dp"
+            android:id="@+id/textView_product_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView_product"
+            android:ellipsize="end"
+            android:maxWidth="139dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            tools:text="아이스 카페 아메리카노"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginStart="6dp"
+            android:id="@+id/textView_product_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView_product_name"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            tools:text="10,000원"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
