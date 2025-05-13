@@ -5,4 +5,5 @@
     <string name="menu_item_shopping_cart">장바구니</string>
     <string name="button_text_add_to_shopping_cart">장바구니 담기</string>
     <string name="text_price">가격</string>
+    <string name="template_price">%1$,d원</string>
 </resources>
