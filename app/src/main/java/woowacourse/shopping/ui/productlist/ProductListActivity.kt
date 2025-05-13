@@ -38,7 +38,9 @@ class ProductListActivity : AppCompatActivity() {
             items = ProductDummy.products,
             object : ProductClickListener {
                 override fun onClick(product: Product) {
-                    // 상세 페이지로 이동
+                    val intent =
+                        ProductDetailActivity.newIntent(this@ProductListActivity, product)
+                    startActivity(intent)
                 }
             },
         )
