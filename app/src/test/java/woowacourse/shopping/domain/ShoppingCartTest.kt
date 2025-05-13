@@ -36,4 +36,16 @@ class ShoppingCartTest {
         // then
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `장바구니는 상품을 제거할 수 있다`() {
+        // given
+        val shoppingCart = ShoppingCart(listOf(product1))
+        shoppingCart.removeProduct(product1)
+        // when
+        val actual = shoppingCart.products
+        val expected = listOf<Product>()
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
 }

@@ -11,4 +11,8 @@ class ShoppingCart(
     fun addProduct(product: Product) {
         _products.add(product)
     }
+
+    fun removeProduct(product: Product) {
+        _products.remove(product)
+    }
 }
