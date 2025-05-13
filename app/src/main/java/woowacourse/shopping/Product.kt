@@ -6,11 +6,36 @@ data class Product(
     val imageUrl: String,
 )
 
-val products: List<Product> = listOf(
-    Product("맥심 아라비카 100 리필 150g", 4240, "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg"),
-    Product("맥심 아라비카 100 리필 150g", 4240, "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg"),
-    Product("맥심 아라비카 100 리필 150g", 4240, "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg"),
-    Product("맥심 아라비카 100 리필 150g", 4240, "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg"),
-    Product("맥심 아라비카 100 리필 150g", 4240, "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg"),
-    Product("맥심 아라비카 100 리필 150g", 4240, "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg"),
-)
+val products: List<Product> =
+    listOf(
+        Product(
+            "맥심 아라비카 100 리필 150g",
+            9999,
+            "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
+        ),
+        Product(
+            "맥심 아라비카 100 리필 150g",
+            9000,
+            "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
+        ),
+        Product(
+            "맥심 아라비카 100 리필 150g",
+            9000,
+            "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
+        ),
+        Product(
+            "맥심 아라비카 100 리필 150g",
+            9000,
+            "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
+        ),
+        Product(
+            "맥심 아라비카 100 리필 150g",
+            9000,
+            "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_463.jpg",
+        ),
+        Product(
+            "맥심 아라비카 100 리필 150g",
+            9000,
+            "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
+        ),
+    )

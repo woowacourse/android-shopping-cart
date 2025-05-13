@@ -10,21 +10,28 @@ import woowacourse.shopping.databinding.FragmentProductsBinding
 
 class ProductsFragment : Fragment() {
     private lateinit var binding: FragmentProductsBinding
-    private val productsAdapter: ProductsAdapter by lazy { ProductsAdapter(products) }
+    private val productsAdapter: ProductsAdapter by lazy {
+        ProductsAdapter(
+            products,
+            requireContext(),
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?,
+    ): View {
         binding = FragmentProductsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvProducts.adapter = productsAdapter
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
-
     }
 }
