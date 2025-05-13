@@ -26,6 +26,7 @@
             app:titleTextColor="@color/white">
 
             <ImageButton
+                android:id="@+id/ib_back"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="start"

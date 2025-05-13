@@ -30,5 +30,8 @@ class CartActivity : AppCompatActivity() {
         }
 
         binding.rvCartProduct.adapter = cartProductAdapter
+        binding.ibBack.setOnClickListener {
+            finish()
+        }
     }
 }
