@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="text_cart">장바구니</string>
+    <string name="format_thousand_won">%,d원</string>
 </resources>
