@@ -6,14 +6,15 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Product
 
 class ShoppingCartViewModel : ViewModel() {
-    private val _products: MutableLiveData<List<Product>> = MutableLiveData(listOf())
-    val products: LiveData<List<Product>> get() = _products
+    private val _productsLiveData: MutableLiveData<List<Product>> = MutableLiveData(listOf())
+    val productsLiveData: LiveData<List<Product>> get() = _productsLiveData
+    val products: List<Product> get() = _productsLiveData.value ?: emptyList()
 
     fun addProduct(product: Product) {
-        _products.value = (_products.value ?: listOf()) + product
+        _productsLiveData.value = products + product
     }
 
     fun removeProduct(product: Product) {
-        _products.value = (_products.value ?: listOf()) - product
+        _productsLiveData.value = products - product
     }
 }
