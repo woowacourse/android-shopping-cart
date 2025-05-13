@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.shoppingcart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -34,5 +36,9 @@ class ShoppingCartActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }

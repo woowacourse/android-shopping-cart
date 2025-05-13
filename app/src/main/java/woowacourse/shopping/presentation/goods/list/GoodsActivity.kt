@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
+import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
 class GoodsActivity : AppCompatActivity() {
     private val binding: ActivityGoodsBinding by lazy {
@@ -48,6 +49,8 @@ class GoodsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
+                val intent = ShoppingCartActivity.newIntent(this)
+                startActivity(intent)
                 true
             }
 
