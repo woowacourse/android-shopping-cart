@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.product.catalog
 
 data class Product(
     val imageUrl: Int,
