@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -26,13 +25,13 @@ class ProductDetailActivity : AppCompatActivity() {
         applyWindowInsets()
         val product = intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java) ?: throw IllegalArgumentException("알 수 없는 값입니다.")
         binding.product = product
-        binding.detailClickListener = object : DetailClickListener {
-            override fun onAddToCartClick(product: Product) {
-                // 데이터 베이스에 저장한다
-                Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
+        binding.detailClickListener =
+            object : DetailClickListener {
+                override fun onAddToCartClick(product: Product) {
+                    // 데이터 베이스에 저장한다
+                    Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
+                }
             }
-
-        }
         binding.priceFormatter = PriceFormatter
     }
 
@@ -46,9 +45,10 @@ class ProductDetailActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_PRODUCT = "product"
+
         fun newIntent(
             context: Context,
-            product: Product
+            product: Product,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(
