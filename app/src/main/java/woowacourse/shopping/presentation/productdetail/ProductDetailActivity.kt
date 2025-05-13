@@ -33,6 +33,9 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel.product.observe(this) {
             binding.product = it
         }
+        binding.ibExit.setOnClickListener {
+            finish()
+        }
     }
 
     companion object {
