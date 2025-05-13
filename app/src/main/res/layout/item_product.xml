@@ -8,6 +8,9 @@
         <variable
             name="model"
             type="woowacourse.shopping.domain.Product" />
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -9,6 +9,7 @@ import kotlin.collections.mutableListOf
 
 class ProductAdapter(
     private val items: MutableList<Product> = mutableListOf(),
+    private val handler: ProductsAdapterEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun submitList(newItems: List<Product>) {
         val lastPosition = newItems.size
@@ -23,7 +24,7 @@ class ProductAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val bind = ItemProductBinding.inflate(inflater)
 
-        return ProductViewHodler(bind)
+        return ProductViewHodler(bind, handler)
     }
 
     override fun onBindViewHolder(

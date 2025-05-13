@@ -5,9 +5,13 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
 class ProductViewHodler(
-    private val bind: ItemProductBinding,
-) : RecyclerView.ViewHolder(bind.root) {
+    private val binding: ItemProductBinding,
+    private val handler: ProductsAdapterEventHandler,
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Product) {
-        bind.model = item
+        with(binding) {
+            model = item
+            eventHandler = handler
+        }
     }
 }
