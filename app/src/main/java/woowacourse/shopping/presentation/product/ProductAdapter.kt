@@ -15,7 +15,6 @@ fun ImageView.loadImage(url: String?) {
     Glide
         .with(this.context)
         .load(url)
-        .placeholder(R.drawable.ic_delete)
         .fallback(R.drawable.ic_delete)
         .error(R.drawable.ic_delete)
         .into(this)
@@ -23,13 +22,14 @@ fun ImageView.loadImage(url: String?) {
 
 class ProductAdapter(
     private var items: List<Product>,
+    private val onClick: (Product) -> Unit,
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ProductViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding)
+        return ProductViewHolder(binding, onClick)
     }
 
     override fun onBindViewHolder(
@@ -48,9 +48,19 @@ class ProductAdapter(
 
     class ProductViewHolder(
         val binding: ItemProductBinding,
+        val onClick: (Product) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
+        private var currentItem: Product? = null
+
+        init {
+            binding.root.setOnClickListener {
+                currentItem?.let { onClick(it) }
+            }
+        }
+
         fun bind(item: Product) {
             binding.product = item
+            currentItem = item
         }
     }
 }
