@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <string name="context_description_product_image">상품 이미지</string>
 </resources>
