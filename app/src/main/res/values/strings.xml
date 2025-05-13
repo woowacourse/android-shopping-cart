@@ -4,5 +4,9 @@
     <string name="text_price">%s원</string>
 
     <string name="label_price">가격</string>
+
     <string name="btn_shopping_cart">장바구니 담기</string>
+
+    <string name="action_cart">장바구니</string>
+    <string name="action_cancel">취소</string>
 </resources>
