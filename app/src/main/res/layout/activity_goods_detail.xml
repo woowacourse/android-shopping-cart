@@ -81,7 +81,6 @@
             android:id="@+id/btn_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/primary_color"
             android:onClick="@{() -> vm.addToShoppingCart()}"
             android:text="@string/btn_shopping_cart"
             android:textColor="@color/white"
