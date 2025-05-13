@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="format_price">%,d원</string>
+    <string name="text_product_detail_image">product_detail_image</string>
+    <string name="text_product_image">product_image</string>
+    <string name="text_price">가격</string>
+    <string name="text_add_to_cart">장바구니 담기</string>
 </resources>
