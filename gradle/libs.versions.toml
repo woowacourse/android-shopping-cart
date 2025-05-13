@@ -1,4 +1,5 @@
 [versions]
+activity-ktx = "1.8.2"
 android-gradle-plugin = "8.5.2"
 android-junit5 = "1.12.0.0"
 androidx-activity-ktx = "1.10.1"
@@ -15,15 +16,18 @@ junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 kotlin = "2.1.0"
 ktlint = "12.1.0"
+lifecycle-viewmodel-ktx = "2.9.0"
 mannodermaus-junit5 = "1.7.0"
 activity = "1.10.1"
 
 [libraries]
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidx-activity-ktx" }
+androidx-activity-ktx-v182 = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj-core" }

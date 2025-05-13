@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.glide)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.activity.ktx.v182)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
