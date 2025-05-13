@@ -3,4 +3,7 @@
 
     <!-- 상품 목록 페이지 -->
     <string name="product_price_format">%,d원</string>
+
+    <!-- 장바구니 페이지 -->
+    <string name="shopping_cart_title">Cart</string>
 </resources>

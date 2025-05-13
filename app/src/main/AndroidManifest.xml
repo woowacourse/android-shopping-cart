@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
+            android:name=".view.shoppingCart.ShoppingCartActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.product.ProductsActivity"
             android:exported="true">
             <intent-filter>
