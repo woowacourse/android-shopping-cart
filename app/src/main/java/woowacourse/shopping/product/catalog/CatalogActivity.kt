@@ -12,17 +12,19 @@ import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
-    private val binding: ActivityCatalogBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_catalog)
-    }
+    private lateinit var binding: ActivityCatalogBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
+        val mockProducts = MockProducts().mockProducts
+
         val adapter =
-            ProductAdapter(mockProducts().map { it.toUiModel() }) { product ->
+            ProductAdapter(mockProducts.map { it.toUiModel() }) { product ->
                 val intent = newIntent(this, product)
                 startActivity(intent)
             }
@@ -36,14 +38,4 @@ class CatalogActivity : AppCompatActivity() {
             insets
         }
     }
-
-    private fun mockProducts(): List<Product> =
-        listOf(
-            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-        )
 }
