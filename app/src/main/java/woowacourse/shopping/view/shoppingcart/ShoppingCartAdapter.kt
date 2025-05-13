@@ -24,7 +24,7 @@ class ShoppingCartAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ShoppingCartViewHolder {
-        val binding = ItemShoppingCartProductBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ItemShoppingCartProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ShoppingCartViewHolder(binding, handler)
     }
 }
