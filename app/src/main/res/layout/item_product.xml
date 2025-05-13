@@ -8,6 +8,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.product.Product" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@{product.name}"
+            app:imageUrl="@{imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/product_image_example" />
