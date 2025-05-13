@@ -4,6 +4,6 @@ import java.io.Serializable
 
 data class Goods(
     val name: String,
+    val imageUrl: String,
     val price: Int,
-    val imageRes: Int,
 ) : Serializable

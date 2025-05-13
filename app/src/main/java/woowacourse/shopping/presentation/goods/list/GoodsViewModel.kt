@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.util.DummyData
 
 class GoodsViewModel : ViewModel() {
-    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData(DummyData.GOODS)
+    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData(DummyData.dummyGoods)
 
     val goods: LiveData<List<Goods>>
         get() = _goods
