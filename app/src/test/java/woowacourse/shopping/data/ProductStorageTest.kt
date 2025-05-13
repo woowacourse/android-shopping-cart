@@ -11,7 +11,7 @@ class ProductStorageTest {
 
     @BeforeEach
     fun setUp() {
-        storage = ProductStorage()
+        storage = ProductStorageImpl()
     }
 
     @Test
