@@ -40,8 +40,5 @@ class ProductAdapter(
 
     class ProductViewHolder(
         val binding: ItemProductBinding,
-    ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-        }
-    }
+    ) : RecyclerView.ViewHolder(binding.root)
 }

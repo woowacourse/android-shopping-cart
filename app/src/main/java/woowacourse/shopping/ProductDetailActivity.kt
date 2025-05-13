@@ -22,7 +22,8 @@ class ProductDetailActivity : AppCompatActivity() {
             insets
         }
 
-        Glide.with(this)
+        Glide
+            .with(this)
             .load(products[0].imageUrl)
             .placeholder(R.drawable.maxim_arabica)
             .fallback(R.drawable.maxim_arabica)

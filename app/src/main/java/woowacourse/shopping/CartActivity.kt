@@ -16,6 +16,7 @@ class CartActivity : AppCompatActivity() {
             this,
         )
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

@@ -8,7 +8,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.databinding.ActivityProductBinding
 
-
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
     private val productAdapter: ProductAdapter by lazy {
