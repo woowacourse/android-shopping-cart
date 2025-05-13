@@ -7,14 +7,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.products
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val cartProductAdapter: CartProductAdapter by lazy {
         CartProductAdapter(
-            products,
+            DummyProducts.values,
             this,
         )
     }

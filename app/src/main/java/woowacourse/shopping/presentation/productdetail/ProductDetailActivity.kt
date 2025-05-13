@@ -8,8 +8,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
-import woowacourse.shopping.domain.products
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailProductBinding
@@ -26,12 +26,12 @@ class ProductDetailActivity : AppCompatActivity() {
 
         Glide
             .with(this)
-            .load(products[0].imageUrl)
+            .load(DummyProducts.values[0].imageUrl)
             .placeholder(R.drawable.ic_delete)
             .fallback(R.drawable.ic_delete)
             .error(R.drawable.ic_delete)
             .into(binding.ivProductDetail)
-        binding.tvProductDetailName.text = products[0].name
+        binding.tvProductDetailName.text = "aaaa"
         binding.tvProductDetailPrice.text = "99,800원"
     }
 }
