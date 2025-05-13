@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.presentation.goods.list
 
 import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +17,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.presentation.goods.list.GoodsActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
 class GoodsActivityTest {
