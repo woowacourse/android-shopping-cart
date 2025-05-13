@@ -3,11 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.product.catalog.ProductUiModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/cart_item_background">
 
         <TextView
@@ -19,6 +26,7 @@
             android:textColor="@color/gray_5"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:text="@{cartProduct.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="아이스 카페 아메리카노" />
@@ -51,6 +59,7 @@
             android:layout_marginBottom="17dp"
             android:textColor="@color/gray_5"
             android:textSize="16sp"
+            android:text="@{@string/format_price(cartProduct.price)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
