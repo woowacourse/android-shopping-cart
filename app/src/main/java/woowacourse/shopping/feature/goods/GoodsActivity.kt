@@ -1,12 +1,11 @@
-package woowacourse.shopping.goods
+package woowacourse.shopping.feature.goods
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
-import woowacourse.shopping.goods.adapter.GoodsAdapter
+import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 
 class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
