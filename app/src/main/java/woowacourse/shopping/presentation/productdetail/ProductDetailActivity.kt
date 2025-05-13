@@ -27,9 +27,9 @@ class ProductDetailActivity : AppCompatActivity() {
         Glide
             .with(this)
             .load(products[0].imageUrl)
-            .placeholder(R.drawable.maxim_arabica)
-            .fallback(R.drawable.maxim_arabica)
-            .error(R.drawable.maxim_arabica)
+            .placeholder(R.drawable.ic_delete)
+            .fallback(R.drawable.ic_delete)
+            .error(R.drawable.ic_delete)
             .into(binding.ivProductDetail)
         binding.tvProductDetailName.text = products[0].name
         binding.tvProductDetailPrice.text = "99,800원"

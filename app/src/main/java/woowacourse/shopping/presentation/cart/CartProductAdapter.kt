@@ -33,9 +33,9 @@ class CartProductAdapter(
             Glide
                 .with(context)
                 .load(cartProduct.imageUrl)
-                .placeholder(R.drawable.maxim_arabica)
-                .fallback(R.drawable.maxim_arabica)
-                .error(R.drawable.maxim_arabica)
+                .placeholder(R.drawable.ic_delete)
+                .fallback(R.drawable.ic_delete)
+                .error(R.drawable.ic_delete)
                 .into(ivCartProduct)
         }
     }
