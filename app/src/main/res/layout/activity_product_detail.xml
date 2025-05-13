@@ -10,7 +10,7 @@
 
         <variable
             name="handler"
-            type="woowacourse.shopping.ProductDetailEventHandler" />
+            type="woowacourse.shopping.view.detail.ProductDetailEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

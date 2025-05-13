@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.view
 
 import android.os.Build
 import android.os.Bundle

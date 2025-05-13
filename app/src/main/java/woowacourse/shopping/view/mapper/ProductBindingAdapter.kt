@@ -1,9 +1,10 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.mapper
 
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 
 @BindingAdapter("android:price")
 fun setPrice(

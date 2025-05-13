@@ -1,20 +1,23 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.shoppingcart
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
-import woowacourse.shopping.base.BaseActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.base.BaseActivity
+import woowacourse.shopping.view.getParcelableCompat
 
-class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart) {
+class ShoppingCartActivity :
+    BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initMenuBar()
-        val product = intent.extras?.getParcelableCompat<Product>(KEY_PRODUCT)
-            ?:throw IllegalArgumentException(ERR_PRODUCT_IS_NULL)
-
+        val product =
+            intent.extras?.getParcelableCompat<Product>(KEY_PRODUCT)
+                ?: throw IllegalArgumentException(ERR_PRODUCT_IS_NULL)
     }
 
     private fun initMenuBar() {

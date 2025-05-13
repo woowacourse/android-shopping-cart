@@ -9,7 +9,7 @@
 
         <variable
             name="handler"
-            type="woowacourse.shopping.ProductsEventHandler" />
+            type="woowacourse.shopping.view.main.ProductsEventHandler" />
 
     </data>
 

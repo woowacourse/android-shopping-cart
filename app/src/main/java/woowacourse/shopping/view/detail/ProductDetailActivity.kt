@@ -1,11 +1,14 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.detail
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import woowacourse.shopping.base.BaseActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.base.BaseActivity
+import woowacourse.shopping.view.getParcelableCompat
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
