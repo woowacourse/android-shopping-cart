@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.databinding.FragmentProductsBinding
+import woowacourse.shopping.databinding.FragmentProductBinding
 
-class ProductsFragment : Fragment() {
-    private lateinit var binding: FragmentProductsBinding
-    private val productsAdapter: ProductsAdapter by lazy {
-        ProductsAdapter(
+class ProductFragment : Fragment() {
+    private lateinit var binding: FragmentProductBinding
+    private val productAdapter: ProductAdapter by lazy {
+        ProductAdapter(
             products,
             requireContext(),
         )
@@ -22,7 +22,7 @@ class ProductsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentProductsBinding.inflate(inflater, container, false)
+        binding = FragmentProductBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -31,7 +31,7 @@ class ProductsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvProducts.adapter = productsAdapter
+        binding.rvProducts.adapter = productAdapter
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
     }
 }

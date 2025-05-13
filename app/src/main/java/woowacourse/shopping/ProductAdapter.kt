@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemProductBinding
 
-class ProductsAdapter(
+class ProductAdapter(
     private val products: List<Product>,
     private val context: Context,
-) : RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

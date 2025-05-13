@@ -9,32 +9,32 @@ data class Product(
 val products: List<Product> =
     listOf(
         Product(
-            "맥심 아라비카 100 리필 150g",
+            "맥심 모카골드 마일드",
             9999,
             "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
         ),
         Product(
-            "맥심 아라비카 100 리필 150g",
+            "맥심 모카골드 마일드",
             9000,
             "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
         ),
         Product(
-            "맥심 아라비카 100 리필 150g",
+            "맥심 모카골드 마일드",
             9000,
             "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
         ),
         Product(
-            "맥심 아라비카 100 리필 150g",
+            "맥심 모카골드 마일드",
             9000,
             "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
         ),
         Product(
-            "맥심 아라비카 100 리필 150g",
+            "맥심 모카골드 마일드",
             9000,
             "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_463.jpg",
         ),
         Product(
-            "맥심 아라비카 100 리필 150g",
+            "맥심 모카골드 마일드",
             9000,
             "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
         ),

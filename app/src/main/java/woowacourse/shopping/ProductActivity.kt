@@ -23,7 +23,7 @@ class ProductActivity : AppCompatActivity() {
         }
 
         supportFragmentManager.commit {
-            replace(R.id.fcv_products, ProductsFragment())
+            replace(R.id.fcv_products, ProductFragment())
         }
     }
 }
