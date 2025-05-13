@@ -5,10 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
+import kotlin.collections.mutableListOf
 
 class ProductAdapter(
-    private val items: List<Product>,
+    private val items: MutableList<Product> = mutableListOf(),
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    fun submitList(newItems: List<Product>) {
+        val lastPosition = newItems.size
+        items.addAll(newItems)
+        notifyItemRangeChanged(lastPosition, newItems.size)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

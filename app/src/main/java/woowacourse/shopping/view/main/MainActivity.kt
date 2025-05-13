@@ -28,9 +28,11 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val productAdapter = ProductAdapter()
+        binding.recyclerViewProduct.adapter = productAdapter
+
         viewModel.products.observe(this) { value ->
-            val productAdapter = ProductAdapter(value)
-            binding.recyclerViewProduct.adapter = productAdapter
+            productAdapter.submitList(value)
         }
     }
 
