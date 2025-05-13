@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.goods
+package woowacourse.shopping.presentation.goods.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
