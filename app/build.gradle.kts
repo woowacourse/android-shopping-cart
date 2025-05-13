@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
 
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
