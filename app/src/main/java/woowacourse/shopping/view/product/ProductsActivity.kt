@@ -12,9 +12,7 @@ import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 
 class ProductsActivity : AppCompatActivity() {
     private val binding: ActivityProductsBinding by lazy {
-        ActivityProductsBinding.inflate(
-            layoutInflater,
-        )
+        ActivityProductsBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

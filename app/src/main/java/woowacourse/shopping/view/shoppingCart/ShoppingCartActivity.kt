@@ -13,9 +13,7 @@ import woowacourse.shopping.domain.product.Product
 
 class ShoppingCartActivity : AppCompatActivity() {
     private val binding: ActivityShoppingCartBinding by lazy {
-        ActivityShoppingCartBinding.inflate(
-            layoutInflater,
-        )
+        ActivityShoppingCartBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +25,9 @@ class ShoppingCartActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         binding.adapter = ShoppingCartProductAdapter(Product.dummies)
+        binding.onClickBackButton = ::finish
     }
 
     companion object {
