@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="product_description">상품 이미지</string>
 </resources>
