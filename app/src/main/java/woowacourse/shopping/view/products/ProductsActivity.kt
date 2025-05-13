@@ -8,7 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Products
 
 class ProductsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductsBinding
@@ -18,25 +18,7 @@ class ProductsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
         adapter =
-            ProductsAdapter(
-                listOf(
-                    Product(
-                        imageUrl = "",
-                        title = "사탕",
-                        price = 10000,
-                    ),
-                    Product(
-                        imageUrl = "",
-                        title = "사탕",
-                        price = 10000,
-                    ),
-                    Product(
-                        imageUrl = "",
-                        title = "사탕",
-                        price = 10000,
-                    ),
-                ),
-            )
+            ProductsAdapter(Products().value)
         binding.rvProducts.adapter = adapter
 
         enableEdgeToEdge()

@@ -1,7 +1,7 @@
 package woowacourse.shopping.model
 
 data class Product(
-    val imageUrl: String,
     val title: String,
+    val imageUrl: String,
     val price: Int,
 )
