@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="button_color" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@color/teal_200</item>
+    </style>
+
+</resources>

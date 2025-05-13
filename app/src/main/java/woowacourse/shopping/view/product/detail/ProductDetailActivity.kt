@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.product
+package woowacourse.shopping.view.product.detail
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -6,23 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
-import woowacourse.shopping.data.dummy.ProductData
-import woowacourse.shopping.databinding.ActivityMainBinding
 
-class ProductCatalogActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-
+class ProductDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(binding.main)
+        setContentView(R.layout.activity_product_detail)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val productAdapter = ProductAdapter(ProductData.products)
-        binding.rvProducts.adapter = productAdapter
     }
 }
