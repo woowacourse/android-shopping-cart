@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.shoppingCart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +14,7 @@ import woowacourse.shopping.domain.product.Product
 class ShoppingCartActivity : AppCompatActivity() {
     private val binding: ActivityShoppingCartBinding by lazy {
         ActivityShoppingCartBinding.inflate(
-            layoutInflater
+            layoutInflater,
         )
     }
 
@@ -26,5 +28,9 @@ class ShoppingCartActivity : AppCompatActivity() {
             insets
         }
         binding.adapter = ShoppingCartProductAdapter(Product.dummies)
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }
