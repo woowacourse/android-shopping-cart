@@ -20,12 +20,13 @@ class CartActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
 
-        val adapter = CartAdapter(MockProducts().mockProducts.map { it.toUiModel() })
+        val cartProducts = MockProducts().mockProducts.map { it.toUiModel() }
+        val adapter = CartAdapter(cartProducts)
         binding.recyclerViewCart.adapter = adapter
     }
 
     private fun applyWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
