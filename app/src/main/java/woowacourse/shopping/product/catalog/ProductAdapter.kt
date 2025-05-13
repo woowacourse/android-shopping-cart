@@ -5,11 +5,12 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(
     private val products: List<Product>,
+    private val onProductClick: ProductClickListener,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder.from(parent)
+    ): ProductViewHolder = ProductViewHolder.from(parent, onProductClick)
 
     override fun onBindViewHolder(
         holder: ProductViewHolder,

@@ -18,7 +18,10 @@ class CatalogActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
-        val adapter = ProductAdapter(mockProducts())
+        val adapter =
+            ProductAdapter(mockProducts()) {
+                ProductClickListener {}
+            }
         binding.recyclerViewProducts.adapter = adapter
     }
 
@@ -32,11 +35,11 @@ class CatalogActivity : AppCompatActivity() {
 
     private fun mockProducts(): List<Product> =
         listOf(
-            Product(name = "아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
-            Product(name = "아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
+            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
+            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
+            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
+            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
+            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
+            Product(name = "아이스 카페 아메리카노", imageUrl = R.drawable.iced_americano, price = 10000),
         )
 }
