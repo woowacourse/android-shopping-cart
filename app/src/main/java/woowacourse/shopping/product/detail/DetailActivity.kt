@@ -7,15 +7,25 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.util.IntentCompat
 
 class DetailActivity : AppCompatActivity() {
+    private val binding: ActivityDetailBinding by lazy {
+        DataBindingUtil.setContentView(this, R.layout.activity_detail)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_detail)
         applyWindowInsets()
+
+        val product: ProductUiModel? =
+            IntentCompat.getParcelableExtra(intent, KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
+        product.let { binding.product = it }
     }
 
     private fun applyWindowInsets() {

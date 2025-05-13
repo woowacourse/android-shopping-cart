@@ -12,12 +12,13 @@ import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCatalogBinding
+    private val binding: ActivityCatalogBinding by lazy {
+        DataBindingUtil.setContentView(this, R.layout.activity_catalog)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
         val adapter =
