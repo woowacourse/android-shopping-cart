@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout>
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="woowacourse.shopping.view.shoppingcart.ShoppingCartViewModel" />
-
-        <variable
-            name="handler"
-            type="woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,66 +13,14 @@
             layout="@layout/toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/shopping_cart_list"
-            android:layout_width="match_parent"
+            android:id="@+id/rv_product_list"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="100dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintVertical_bias="0.0"
-            tools:listitem="@layout/item_shopping_cart_product" />
-
-        <Button
-            android:id="@+id/tv_pagination_left"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginTop="50dp"
-            android:backgroundTint="@color/pagination_color"
-            android:enabled="@{viewModel.productsLiveData.hasPrevious}"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:onClick="@{()->handler.onPagination(viewModel.productsLiveData.currentPage - 1)}"
-
-            android:text="@string/pagination_left"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@id/tv_pagination_number"
-            app:layout_constraintHorizontal_chainStyle="packed"
-
-            app:layout_constraintTop_toBottomOf="@+id/shopping_cart_list" />
-
-        <TextView
-            android:id="@+id/tv_pagination_number"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:text="@{String.valueOf(viewModel.productsLiveData.currentPage + 1)}"
-            android:textAlignment="center"
-            android:textColor="#555555"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_pagination_left"
-            tools:text="1" />
-
-        <Button
-            android:id="@+id/tv_pagination_right"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:backgroundTint="@color/pagination_color"
-            android:enabled="@{viewModel.productsLiveData.hasNext}"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:onClick="@{()->handler.onPagination(viewModel.productsLiveData.currentPage + 1)}"
-            android:text="@string/pagination_right"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            app:layout_constraintStart_toEndOf="@+id/tv_pagination_number"
-            app:layout_constraintTop_toTopOf="@+id/tv_pagination_left" />
+            tools:listitem="@layout/item_product" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

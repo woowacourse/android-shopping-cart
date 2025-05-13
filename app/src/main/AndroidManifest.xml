@@ -28,6 +28,12 @@
             android:name=".ProductDetailActivity"
             android:exported="false">
         </activity>
+
+        <activity
+            android:name=".ShoppingCartActivity"
+            android:exported="false"
+            >
+        </activity>
     </application>
 
 </manifest>
