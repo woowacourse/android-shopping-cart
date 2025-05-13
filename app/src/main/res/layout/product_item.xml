@@ -5,48 +5,55 @@
 
     <data>
 
+        <variable
+            name="product"
+            type="woowacourse.shopping.Product" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="154dp"
+        android:layout_marginBottom="12dp"
+        android:layout_width="wrap_content"
         android:layout_height="206dp">
 
         <ImageView
             android:id="@+id/imageView_product"
-            android:src="@drawable/iced_americano"
-            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="154dp"
             android:contentDescription="product_image"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="154dp"/>
+            android:src="@drawable/iced_americano" />
 
         <TextView
-            android:maxLines="1"
-            android:layout_marginStart="6dp"
             android:id="@+id/textView_product_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageView_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
             android:ellipsize="end"
             android:maxWidth="139dp"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            tools:text="아이스 카페 아메리카노"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView_product"
+            tools:text="아이스 카페 아메리카노" />
 
         <TextView
-            android:layout_marginStart="6dp"
             android:id="@+id/textView_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="@{@string/format_price(product.price)}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView_product_name"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            tools:text="10,000원"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
