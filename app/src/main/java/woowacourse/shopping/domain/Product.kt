@@ -4,5 +4,7 @@ data class Product(
     val id: Long,
     val name: String,
     val price: Price,
-    val poster: String,
-)
+    val imgUrl: String,
+) {
+    val priceValue: Int = price.value
+}
