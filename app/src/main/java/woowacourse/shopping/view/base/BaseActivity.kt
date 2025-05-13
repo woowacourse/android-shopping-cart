@@ -1,4 +1,4 @@
-package woowacourse.shopping.base
+package woowacourse.shopping.view.base
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

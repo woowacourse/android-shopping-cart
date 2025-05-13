@@ -7,10 +7,9 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
 class ProductsAdapter(
+    private val products: List<Product>,
     private val handler: ProductsEventHandler,
 ) : RecyclerView.Adapter<ProductsViewHolder>() {
-    private var products: List<Product> = listOf()
-
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(
@@ -28,14 +27,8 @@ class ProductsAdapter(
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context))
         return ProductsViewHolder(binding, handler)
     }
-
-    fun updateProducts(newProducts: List<Product>) {
-        products += newProducts
-    }
 }
 
 interface ProductsEventHandler {
     fun onProductSelected(product: Product)
-
-    fun onLoadMoreProducts(page: Int)
 }

@@ -14,7 +14,7 @@ fun setPrice(
     view.text = view.context.getString(R.string.template_price, price)
 }
 
-@BindingAdapter("shoppingCart:image")
+@BindingAdapter("android:image")
 fun setImage(
     view: ImageView,
     url: String,
@@ -22,5 +22,6 @@ fun setImage(
     Glide.with(view.context)
         .load(url)
         .placeholder(R.drawable.placeholder_product)
+        .override(154, 154)
         .into(view)
 }
