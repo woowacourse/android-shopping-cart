@@ -6,12 +6,13 @@ import woowacourse.shopping.domain.model.Goods
 
 class GoodsAdapter(
     private val items: List<Goods>,
+    private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): GoodsViewHolder {
-        return GoodsViewHolder(parent)
+        return GoodsViewHolder(parent, goodsClickListener)
     }
 
     override fun getItemCount(): Int = items.size

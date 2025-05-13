@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
 
 class GoodsActivity : AppCompatActivity() {
     private val binding: ActivityGoodsBinding by lazy {
@@ -30,7 +31,11 @@ class GoodsActivity : AppCompatActivity() {
         }
 
         binding.rvGoodsList.apply {
-            adapter = GoodsAdapter(viewModel.goods.value ?: listOf())
+            adapter =
+                GoodsAdapter(viewModel.goods.value ?: listOf()) { goods ->
+                    val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
+                    startActivity(intent)
+                }
             layoutManager = GridLayoutManager(this@GoodsActivity, 2)
         }
     }
@@ -43,7 +48,6 @@ class GoodsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                // go to shopping cart activity
                 true
             }
 

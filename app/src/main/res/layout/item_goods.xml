@@ -8,12 +8,17 @@
         <variable
             name="goods"
             type="woowacourse.shopping.domain.model.Goods" />
+
+        <variable
+            name="goodsClickListener"
+            type="woowacourse.shopping.presentation.goods.list.GoodsClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="6dp">
+        android:padding="6dp"
+        android:onClick="@{() -> goodsClickListener.onGoodsClick(goods)}">
 
         <ImageView
             android:id="@+id/iv_goods"
