@@ -6,15 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import woowacourse.shopping.databinding.ActivityProductsBinding
+import woowacourse.shopping.databinding.ActivityCatalogBinding
 
-class ProductsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProductsBinding
+class CatalogActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityCatalogBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
         val adapter = ProductAdapter(mockProducts())
