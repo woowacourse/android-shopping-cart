@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.shoppingcart.ShoppingCartClickListener" />
+
+        <variable
             name="goods"
             type="woowacourse.shopping.domain.model.Goods" />
     </data>
@@ -44,6 +48,7 @@
             android:id="@+id/btn_delete"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:onClick="@{() -> clickListener.onDeleteGoods(goods)}"
             android:background="@android:color/transparent"
             android:src="@drawable/btn_delete"
             app:layout_constraintEnd_toEndOf="parent"
