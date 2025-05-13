@@ -12,9 +12,9 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_marginBottom="12dp"
         android:layout_width="wrap_content"
-        android:layout_height="206dp">
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp">
 
         <ImageView
             android:id="@+id/imageView_product"
@@ -22,16 +22,17 @@
             android:layout_height="154dp"
             android:contentDescription="product_image"
             android:scaleType="centerCrop"
+            android:src="@drawable/iced_americano"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/iced_americano" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxWidth="139dp"
             android:maxLines="1"
