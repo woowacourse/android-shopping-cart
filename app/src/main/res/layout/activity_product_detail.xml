@@ -1,80 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/product_detail"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <include
-        android:id="@+id/toolbar_product_detail"
-        layout="@layout/toolbar_product_detail" />
+    <data>
 
-    <ImageView
-        android:id="@+id/iv_product_detail_image"
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/product_detail"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:contentDescription="@string/content_description_product_image"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/sample_product_detail_image" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_product_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="22dp"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_product_detail_image"
-        tools:text="[든든] 동원 스위트콘" />
+        <include
+            android:id="@+id/toolbar_product_detail"
+            layout="@layout/toolbar_product_detail" />
 
-    <View
-        android:id="@+id/view_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="22dp"
-        android:background="#AAAAAA"
-        app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
+        <ImageView
+            android:id="@+id/iv_product_detail_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:contentDescription="@string/content_description_product_image"
+            android:image="@{product.imageUrl}"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
+            tools:src="@drawable/sample_product_detail_image" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="19dp"
-        android:text="@string/text_price"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_divider" />
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="19dp"
+            android:layout_marginTop="22dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_product_detail_image"
+            tools:text="[든든] 동원 스위트콘" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
-        android:layout_marginEnd="19dp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_divider"
-        tools:text="99,800원" />
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="22dp"
+            android:background="#AAAAAA"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:backgroundTint="#04C09E"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="@string/button_text_add_to_shopping_cart"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:cornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="19dp"
+            android:text="@string/text_price"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="19dp"
+            android:price="@{product.price}"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_divider"
+            tools:text="99,800원" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="#04C09E"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/button_text_add_to_shopping_cart"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:cornerRadius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
