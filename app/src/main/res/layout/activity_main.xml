@@ -1,52 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <data>
+    <include layout="@layout/toolbar"/>
 
-        <variable
-            name="viewModel"
-            type="woowacourse.shopping.view.main.ProductsViewModel" />
-        <variable
-            name="handler"
-            type="woowacourse.shopping.view.main.ProductsEventHandler" />
-    </data>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".view.main.MainActivityTemplate">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/product_list"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/btn_load_more_products"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            tools:listitem="@layout/item_product" />
-
-        <Button
-            android:id="@+id/btn_load_more_products"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="48dp"
-            android:backgroundTint="@color/pagination_enabled"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:onClick="@{()->handler.onLoadMoreProducts(viewModel.productsLiveData.currentPage + 1)}"
-            android:text="@string/button_text_load_more"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:cornerRadius="0dp"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

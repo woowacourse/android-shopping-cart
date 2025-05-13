@@ -2,4 +2,5 @@
     <string name="app_name">Shopping</string>
 
     <string name="context_description_product_image">상품 이미지</string>
+    <string name="menu_item_shopping_cart">장바구니</string>
 </resources>
