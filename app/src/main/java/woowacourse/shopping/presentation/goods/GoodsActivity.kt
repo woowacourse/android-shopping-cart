@@ -1,6 +1,8 @@
 package woowacourse.shopping.presentation.goods
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +32,22 @@ class GoodsActivity : AppCompatActivity() {
         binding.rvGoodsList.apply {
             adapter = GoodsAdapter(viewModel.goods.value ?: listOf())
             layoutManager = GridLayoutManager(this@GoodsActivity, 2)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.action_bars, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_cart -> {
+                // go to shopping cart activity
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
