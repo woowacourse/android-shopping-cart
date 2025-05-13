@@ -26,6 +26,7 @@ class CatalogAdapter(
 
     fun updateProducts(products: List<ProductUiModel>) {
         val previousSize = getItemCount()
+        this.products.clear()
         this.products.addAll(products)
         notifyItemRangeInserted(previousSize, products.size)
     }

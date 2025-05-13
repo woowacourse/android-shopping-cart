@@ -21,7 +21,13 @@ class CatalogViewModel(
     }
 
     private fun fetchProducts() {
-        _products.value = dummyProducts.map { it.toUiModel() }
+        val newProducts = dummyProducts.map { it.toUiModel() }
+
+        _products.postValue(
+            (_products.value ?: emptyList())
+                .plus(newProducts)
+                .distinct(),
+        )
     }
 
     companion object {

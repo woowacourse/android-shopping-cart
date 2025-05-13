@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.view.catalog
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -31,8 +30,8 @@ class CatalogFragment :
     }
 
     private fun setCatalogAdapter() {
-        binding.recyclerViewProducts.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.recyclerViewProducts.addItemDecoration(GridSpacingItemDecoration(2, 12f))
+        binding.recyclerViewProducts.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
+        binding.recyclerViewProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, ITEM_SPACING))
         binding.recyclerViewProducts.adapter = catalogAdapter
     }
 
@@ -52,5 +51,10 @@ class CatalogFragment :
             )
             addToBackStack(null)
         }
+    }
+
+    companion object {
+        private const val SPAN_COUNT = 2
+        private const val ITEM_SPACING = 12f
     }
 }
