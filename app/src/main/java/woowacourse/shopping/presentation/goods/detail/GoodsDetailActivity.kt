@@ -32,7 +32,7 @@ class GoodsDetailActivity : AppCompatActivity() {
         }
 
         viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
-        binding.goods = viewModel.goods.value
+        binding.vm = viewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

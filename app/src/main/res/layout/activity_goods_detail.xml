@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="goods"
-            type="woowacourse.shopping.domain.model.Goods" />
+            name="vm"
+            type="woowacourse.shopping.presentation.goods.detail.GoodsDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/black"
-            app:goodsImage="@{goods.imageRes}"
+            app:goodsImage="@{vm.goods.imageRes}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{goods.name}"
+            android:text="@{vm.goods.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -71,12 +71,13 @@
             android:layout_marginEnd="18dp"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:goodsPrice="@{goods.price}"
+            app:goodsPrice="@{vm.goods.price}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="99,800원" />
 
         <Button
+            android:onClick="@{() -> vm.addToShoppingCart()}"
             android:id="@+id/btn_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
