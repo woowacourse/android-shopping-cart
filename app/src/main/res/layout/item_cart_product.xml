@@ -9,9 +9,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="12dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_cart_item"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="3dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp">
 
         <TextView
             android:id="@+id/tv_cart_product_name"

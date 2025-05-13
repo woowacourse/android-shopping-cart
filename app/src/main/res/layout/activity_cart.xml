@@ -11,6 +11,7 @@
         android:id="@+id/cl_cart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".presentation.cart.CartActivity">
 
         <androidx.appcompat.widget.Toolbar
@@ -46,8 +47,8 @@
             android:id="@+id/rv_cart_product"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="3dp"
-            android:padding="12dp"
+            android:layout_marginTop="4dp"
+            android:padding="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_cart"
