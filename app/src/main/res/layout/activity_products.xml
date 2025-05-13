@@ -20,7 +20,7 @@
             android:id="@+id/productToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray5"
+            android:background="@color/gray_5"
             android:gravity="center_vertical"
             android:minHeight="?attr/actionBarSize"
             android:orientation="horizontal"
@@ -60,7 +60,8 @@
             android:paddingBottom="8dp"
             app:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintTop_toBottomOf=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/productToolbar"
             app:spanCount="2"
             tools:listitem="@layout/item_product" />
 

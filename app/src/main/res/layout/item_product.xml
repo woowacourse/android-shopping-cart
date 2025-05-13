@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{@string/product_price_format(product.price)}"
-            android:textColor="@color/gray5"
+            android:textColor="@color/gray_5"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/productName"
