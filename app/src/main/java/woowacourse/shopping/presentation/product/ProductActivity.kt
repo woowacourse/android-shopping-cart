@@ -2,22 +2,18 @@ package woowacourse.shopping.presentation.product
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
-import woowacourse.shopping.domain.products
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
-    private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(
-            products,
-            this,
-        )
-    }
+    private val productAdapter: ProductAdapter by lazy { ProductAdapter(emptyList()) }
+    private val viewModel: ProductViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +25,19 @@ class ProductActivity : AppCompatActivity() {
             insets
         }
 
+        initAdapter()
+        observeViewModel()
+
+        viewModel.fetchData()
+    }
+
+    private fun initAdapter() {
         binding.rvProducts.adapter = productAdapter
+    }
+
+    private fun observeViewModel() {
+        viewModel.products.observe(this) {
+            productAdapter.setData(it)
+        }
     }
 }
