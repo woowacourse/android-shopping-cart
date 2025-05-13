@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toTopOf="title"
+            app:layout_constraintBottom_toTopOf="@id/text_view_price_title"
             app:layout_constraintTop_toBottomOf="@id/text_view_product_name" />
 
         <TextView
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="@{String.format(@string/detail_price_format, product.price)}"
+            android:text="@{String.format(@string/product_price_format, product.price)}"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="20sp"

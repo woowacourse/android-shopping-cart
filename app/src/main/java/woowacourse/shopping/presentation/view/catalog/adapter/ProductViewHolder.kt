@@ -7,11 +7,25 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.model.ProductUiModel
 
 class ProductViewHolder(
-    view: ViewGroup,
-) : RecyclerView.ViewHolder(ItemProductBinding.inflate(LayoutInflater.from(view.context), view, false).root) {
-    private val binding = ItemProductBinding.bind(itemView)
+    private val binding: ItemProductBinding,
+    eventListener: CatalogAdapter.CatalogEventListener,
+) : RecyclerView.ViewHolder(binding.root) {
+    init {
+        binding.eventListener = eventListener
+    }
 
     fun bind(product: ProductUiModel) {
         binding.product = product
+    }
+
+    companion object {
+        fun from(
+            parent: ViewGroup,
+            eventListener: CatalogAdapter.CatalogEventListener,
+        ): ProductViewHolder {
+            val binding =
+                ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ProductViewHolder(binding, eventListener)
+        }
     }
 }

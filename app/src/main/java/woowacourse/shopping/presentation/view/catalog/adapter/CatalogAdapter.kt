@@ -6,6 +6,7 @@ import woowacourse.shopping.presentation.model.ProductUiModel
 
 class CatalogAdapter(
     products: List<ProductUiModel> = emptyList(),
+    private val eventListener: CatalogEventListener,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private val products = products.toMutableList()
 
@@ -14,7 +15,7 @@ class CatalogAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder(parent)
+    ): ProductViewHolder = ProductViewHolder.from(parent, eventListener)
 
     override fun onBindViewHolder(
         holder: ProductViewHolder,
@@ -27,5 +28,9 @@ class CatalogAdapter(
         val previousSize = getItemCount()
         this.products.addAll(products)
         notifyItemRangeInserted(previousSize, products.size)
+    }
+
+    interface CatalogEventListener {
+        fun onProductClicked(product: ProductUiModel)
     }
 }
