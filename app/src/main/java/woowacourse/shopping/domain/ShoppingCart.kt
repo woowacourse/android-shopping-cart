@@ -7,4 +7,8 @@ class ShoppingCart(
     val products get() = _products.toList()
 
     val allPrice get() = products.sumOf { it.price }
+
+    fun addProduct(product: Product) {
+        _products.add(product)
+    }
 }
