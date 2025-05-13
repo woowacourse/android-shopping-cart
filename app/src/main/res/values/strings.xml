@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="goods_image_description">상품 이미지</string>
+
+    <!--    GoodsActivity-->
+    <string name="goods_price">%,d원</string>
 </resources>
