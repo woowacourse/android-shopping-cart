@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="goods"
+            type="woowacourse.shopping.domain.model.Goods" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -10,9 +17,11 @@
 
         <ImageView
             android:id="@+id/iv_goods"
-            android:layout_width="154dp"
-            android:layout_height="154dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:background="@color/black"
+            app:goodsImage="@{goods.imageRes}"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -24,8 +33,8 @@
             android:layout_marginStart="6dp"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:maxWidth="142dp"
             android:maxLines="1"
+            android:text="@{goods.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -38,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            app:goodsPrice="@{goods.price}"
             app:layout_constraintStart_toStartOf="@id/tv_goods_name"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name"
             tools:text="10,000원" />
