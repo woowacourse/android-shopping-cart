@@ -8,6 +8,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCatalogBinding
+import woowacourse.shopping.mapper.toUiModel
+import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
@@ -19,8 +21,9 @@ class CatalogActivity : AppCompatActivity() {
         applyWindowInsets()
 
         val adapter =
-            ProductAdapter(mockProducts()) {
-                ProductClickListener {}
+            ProductAdapter(mockProducts().map { it.toUiModel() }) { product ->
+                val intent = newIntent(this, product)
+                startActivity(intent)
             }
         binding.recyclerViewProducts.adapter = adapter
     }

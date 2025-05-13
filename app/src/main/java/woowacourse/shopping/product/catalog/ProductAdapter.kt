@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(
-    private val products: List<Product>,
+    private val products: List<ProductUiModel>,
     private val onProductClick: ProductClickListener,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
