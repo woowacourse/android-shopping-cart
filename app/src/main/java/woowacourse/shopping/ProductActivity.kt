@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.databinding.ActivityProductBinding
 
 
@@ -18,6 +17,7 @@ class ProductActivity : AppCompatActivity() {
             this,
         )
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,6 +29,5 @@ class ProductActivity : AppCompatActivity() {
         }
 
         binding.rvProducts.adapter = productAdapter
-        binding.rvProducts.layoutManager = GridLayoutManager(this, 2)
     }
 }
