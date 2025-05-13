@@ -10,7 +10,7 @@ class ProductTest {
     @Test
     fun `상품의 가격은 0보다 작으면 안된다`() {
         assertThrows<IllegalArgumentException> {
-            Product(1L, "아메리카노", -100)
+            Product("", "아메리카노", -100)
         }
     }
 
@@ -18,7 +18,7 @@ class ProductTest {
     @ValueSource(ints = [0, 100])
     fun `상품의 가격은 0보다 크면 된다`(price: Int) {
         assertDoesNotThrow {
-            Product(1L, "아메리카노", price)
+            Product("", "아메리카노", price)
         }
     }
 }

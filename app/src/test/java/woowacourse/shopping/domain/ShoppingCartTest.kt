@@ -10,8 +10,8 @@ class ShoppingCartTest {
 
     @BeforeEach
     fun setUp() {
-        product1 = Product(1L, "아메리카노", 2500)
-        product2 = Product(2L, "롱블랙", 2300)
+        product1 = Product("", "아메리카노", 2500)
+        product2 = Product("", "롱블랙", 2300)
     }
 
     @Test
