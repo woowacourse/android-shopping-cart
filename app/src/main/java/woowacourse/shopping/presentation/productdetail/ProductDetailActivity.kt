@@ -29,15 +29,12 @@ class ProductDetailActivity : AppCompatActivity() {
         }
         val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT_DETAIL)
 
-        Glide
-            .with(this)
-            .load(DummyProducts.values[0].imageUrl)
-            .placeholder(R.drawable.ic_delete)
-            .fallback(R.drawable.ic_delete)
-            .error(R.drawable.ic_delete)
-            .into(binding.ivProductDetail)
-        binding.tvProductDetailName.text = "aaaa"
-        binding.tvProductDetailPrice.text = "99,800원"
+        viewModel.fetchData(product)
+        viewModel.product.observe(this) {
+            binding.product = it
+        }
+    }
+
     companion object {
         private const val KEY_PRODUCT_DETAIL = "product_data"
 
