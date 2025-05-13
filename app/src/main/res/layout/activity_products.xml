@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="navigationListener"
+            type="woowacourse.shopping.model.CartNavigationListener" />
+
+    </data>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -11,7 +18,25 @@
         tools:context=".view.products.ProductsActivity"
         android:orientation="vertical">
 
-        <include layout="@layout/products_toolbar" />
+        <androidx.appcompat.widget.Toolbar android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/products_toolbar"
+            app:title="Shopping"
+            app:titleTextColor="@color/white"
+            android:background="@color/gray_5">
+
+            <ImageButton
+                android:onClick="@{()-> navigationListener.onClick()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_gravity="end"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_cart" />
+
+
+        </androidx.appcompat.widget.Toolbar>
 
 
         <androidx.recyclerview.widget.RecyclerView
