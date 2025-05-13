@@ -1,10 +1,12 @@
 package woowacourse.shopping.domain
 
+import java.io.Serializable
+
 data class Product(
     val imageUrl: String,
     val name: String,
     val price: Int,
-) {
+) : Serializable {
     init {
         require(price >= MINIMUM_PRODUCT_PRICE) { INVALID_PRICE_MESSAGE }
     }

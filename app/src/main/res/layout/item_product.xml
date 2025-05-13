@@ -7,10 +7,15 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="onClick"
+            type="woowacourse.shopping.view.product.OnProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="150dp"
+        android:onClick="@{() -> onClick.onItemClick(product)}"
         android:layout_height="wrap_content">
 
         <ImageView

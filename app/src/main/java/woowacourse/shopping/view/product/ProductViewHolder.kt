@@ -8,18 +8,27 @@ import woowacourse.shopping.domain.Product
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-) : RecyclerView.ViewHolder(
-        binding.root,
-    ) {
+    eventListener: OnProductListener,
+) : RecyclerView.ViewHolder(binding.root) {
+    private lateinit var currentItem: Product
+
+    init {
+        binding.onClick = eventListener
+    }
+
     fun bind(product: Product) {
+        currentItem = product
         binding.product = product
     }
 
     companion object {
-        fun from(parent: ViewGroup): ProductViewHolder {
+        fun from(
+            parent: ViewGroup,
+            eventListener: OnProductListener,
+        ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemProductBinding.inflate(inflater, parent, false)
-            return ProductViewHolder(binding)
+            return ProductViewHolder(binding, eventListener)
         }
     }
 }

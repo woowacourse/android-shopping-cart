@@ -8,6 +8,8 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.data.dummy.ProductData
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.product.detail.ProductDetailActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -22,7 +24,13 @@ class ProductCatalogActivity : AppCompatActivity() {
             insets
         }
 
-        val productAdapter = ProductAdapter(ProductData.products)
+        val productAdapter =
+            ProductAdapter(ProductData.products) { product -> handleProductDetail(product) }
         binding.rvProducts.adapter = productAdapter
+    }
+
+    private fun handleProductDetail(product: Product) {
+        val intent = ProductDetailActivity.newIntent(this, product)
+        startActivity(intent)
     }
 }
