@@ -4,10 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.ProductDetailEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,6 +83,7 @@
             tools:text="99,800원" />
 
         <Button
+            android:onClick="@{()->handler.onAddToCartSelected(product)}"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:backgroundTint="#04C09E"

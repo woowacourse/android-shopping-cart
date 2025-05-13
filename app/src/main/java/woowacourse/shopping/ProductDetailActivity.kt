@@ -7,7 +7,9 @@ import woowacourse.shopping.base.BaseActivity
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 
-class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
+class ProductDetailActivity :
+    BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
+    ProductDetailEventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val product: Product =
@@ -16,6 +18,11 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
                 return
             }
         binding.product = product
+        binding.handler = this
+    }
+
+    override fun onAddToCartSelected(product: Product) {
+        startActivity(ShoppingCartActivity.newIntent(this, product))
     }
 
     companion object {
@@ -30,4 +37,8 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
             }
         }
     }
+}
+
+interface ProductDetailEventHandler {
+    fun onAddToCartSelected(product: Product)
 }
