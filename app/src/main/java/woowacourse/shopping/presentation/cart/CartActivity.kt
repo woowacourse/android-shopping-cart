@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,5 +35,9 @@ class CartActivity : AppCompatActivity() {
         binding.ibBack.setOnClickListener {
             finish()
         }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

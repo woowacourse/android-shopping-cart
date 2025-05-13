@@ -36,6 +36,7 @@
                 android:textStyle="normal" />
 
             <ImageButton
+                android:id="@+id/ib_cart"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="end"

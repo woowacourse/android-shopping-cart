@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 
 class ProductActivity : AppCompatActivity() {
@@ -31,6 +32,7 @@ class ProductActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        binding.ibCart.setOnClickListener { navigateToCart() }
 
         initAdapter()
         observeViewModel()
@@ -50,6 +52,11 @@ class ProductActivity : AppCompatActivity() {
 
     private fun navigateToProductDetail(product: Product) {
         val intent = ProductDetailActivity.newIntent(this, product)
+        startActivity(intent)
+    }
+
+    private fun navigateToCart() {
+        val intent = CartActivity.newIntent(this)
         startActivity(intent)
     }
 }
