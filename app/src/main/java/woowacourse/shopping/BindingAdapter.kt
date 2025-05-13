@@ -2,11 +2,12 @@ package woowacourse.shopping
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 
-@BindingAdapter("imgRes")
-fun setImageViewResource(
+@BindingAdapter("imgUrl")
+fun loadImageFromUrl(
     imageView: ImageView,
-    resId: Int,
+    url: String,
 ) {
-    imageView.setImageResource(resId)
+    Glide.with(imageView.context).load(url).into(imageView)
 }
