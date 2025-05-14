@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.goods.list
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
@@ -24,20 +26,47 @@ class GoodsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val adapter =
+            GoodsAdapter(viewModel.goods.value ?: listOf()) { goods ->
+                val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
+                startActivity(intent)
+            }
+        setUpGoodsList(adapter)
+        setLoadButtonClickListener()
+        viewModel.goods.observe(this) { goods ->
+            adapter.updateItems(goods)
+        }
+    }
 
+    private fun setUpGoodsList(adapter: GoodsAdapter) {
         binding.rvGoodsList.apply {
-            adapter =
-                GoodsAdapter(viewModel.goods.value ?: listOf()) { goods ->
-                    val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
-                    startActivity(intent)
-                }
+            this.adapter = adapter
             layoutManager = GridLayoutManager(this@GoodsActivity, 2)
+            addOnScrollListener(
+                object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(
+                        recyclerView: RecyclerView,
+                        newState: Int,
+                    ) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (!binding.rvGoodsList.canScrollVertically(1) && viewModel.canLoadMore()) {
+                            binding.btnLoadMore.visibility = View.VISIBLE
+                        }
+                    }
+                },
+            )
+        }
+    }
+
+    private fun setLoadButtonClickListener() {
+        binding.btnLoadMore.setOnClickListener {
+            binding.btnLoadMore.visibility = View.GONE
+            viewModel.addGoods()
         }
     }
 
@@ -53,7 +82,6 @@ class GoodsActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }

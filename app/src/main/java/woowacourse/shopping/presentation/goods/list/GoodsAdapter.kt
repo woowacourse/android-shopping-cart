@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Goods
 
 class GoodsAdapter(
-    private val items: List<Goods>,
+    private var items: List<Goods>,
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
     override fun onCreateViewHolder(
@@ -22,5 +22,11 @@ class GoodsAdapter(
         position: Int,
     ) {
         holder.bind(items[position])
+    }
+
+    fun updateItems(goods: List<Goods>) {
+        val fromIndex = items.size
+        items = goods
+        notifyItemRangeChanged(fromIndex, items.size)
     }
 }
