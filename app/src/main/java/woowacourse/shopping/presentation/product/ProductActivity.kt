@@ -18,7 +18,7 @@ class ProductActivity : AppCompatActivity() {
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter { product -> navigateToProductDetail(product) }
     }
-    private val viewModel: ProductViewModel by viewModels()
+    private val viewModel: ProductViewModel by viewModels { ProductViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
