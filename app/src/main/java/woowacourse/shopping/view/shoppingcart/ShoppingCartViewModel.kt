@@ -13,10 +13,6 @@ class ShoppingCartViewModel : ViewModel() {
 
     val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
 
-    fun addProduct(product: Product) {
-        allProducts = allProducts + product
-    }
-
     fun removeProduct(product: Product) {
         val currentProductIndex = allProducts.indexOf(product)
         allProducts = allProducts - product

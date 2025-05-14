@@ -49,8 +49,6 @@ class ShoppingCartActivity :
     }
 
     companion object {
-        private const val KEY_PRODUCT = "product"
-
         fun newIntent(context: Context): Intent {
             return Intent(context, ShoppingCartActivity::class.java)
         }
