@@ -24,10 +24,10 @@
             imageUrl="@{product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/gray_88"
             android:contentDescription="@null"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/purple_200" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_view_product_name"
