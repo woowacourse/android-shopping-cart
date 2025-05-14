@@ -5,4 +5,8 @@ data class Product(
     val name: String,
     val imageUrl: String,
     val price: Int,
-)
+) {
+    companion object {
+        val INVALID_PRODUCT = Product(0, "", "", 0)
+    }
+}

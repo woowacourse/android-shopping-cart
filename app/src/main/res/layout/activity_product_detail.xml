@@ -84,6 +84,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/mint_1"
+            android:onClick="@{()->viewModel.addCartProduct()}"
             android:paddingVertical="12dp"
             android:text="장바구니 담기"
             android:textAlignment="center"
