@@ -14,7 +14,6 @@ import woowacourse.shopping.model.products.Product
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
-    private val productsCart: MutableList<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +21,18 @@ class CartActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.backImageBtn.setOnClickListener { finish() }
 
-        val intentProductCart = intent.getSerializableExtraData<Product>("product") ?: return
-        productsCart.add(intentProductCart)
+        val intentProductInCartData = intent.getSerializableExtraData<Product>("productInCart")
 
-        adapter = CartAdapter(productsCart)
+        intentProductInCartData?.let {
+            Cart.add(it)
+        }
+        adapter =
+            CartAdapter(Cart.productsInCart, onProductRemoveClickListener = {
+                intentProductInCartData?.let {
+                    Cart.remove(it)
+                    adapter.notifyDataSetChanged()
+                }
+            })
         binding.rvProductsInCart.adapter = adapter
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

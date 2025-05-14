@@ -29,7 +29,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.tvAddToCart.setOnClickListener {
             val intent =
                 Intent(this, CartActivity::class.java).apply {
-                    putExtra("product", intentProductData)
+                    putExtra("productInCart", intentProductData)
                 }
             startActivity(intent)
         }

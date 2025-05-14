@@ -8,6 +8,7 @@ import woowacourse.shopping.model.products.Product
 
 class CartAdapter(
     private val itemsInCart: List<Product>,
+    private val onProductRemoveClickListener: OnProductRemoveClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,7 +22,7 @@ class CartAdapter(
                 parent,
                 false,
             )
-        return CartViewHolder(holder)
+        return CartViewHolder(holder, onProductRemoveClickListener)
     }
 
     override fun getItemCount(): Int = itemsInCart.size

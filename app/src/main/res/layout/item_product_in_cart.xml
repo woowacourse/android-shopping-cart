@@ -7,6 +7,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.products.Product" />
+
+        <variable
+            name="onProductRemoveClickListener"
+            type="woowacourse.shopping.view.cart.OnProductRemoveClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
@@ -29,6 +33,8 @@
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageButton
+            android:id="@+id/remove_product_btn"
+            android:onClick="@{() -> onProductRemoveClickListener.onRemoveClick()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/white"
