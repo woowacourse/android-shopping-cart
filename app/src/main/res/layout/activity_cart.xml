@@ -15,5 +15,49 @@
             android:layout_height="match_parent"
             android:padding="2dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/selector_cart_previous"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/cart_page_previous"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
+            app:layout_constraintEnd_toStartOf="@+id/tv_cart_page"
+            app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
+
+        <TextView
+            android:id="@+id/tv_cart_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="62dp"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/selector_cart_next"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/page_cart_next"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
+            app:layout_constraintStart_toEndOf="@+id/tv_cart_page"
+            app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
