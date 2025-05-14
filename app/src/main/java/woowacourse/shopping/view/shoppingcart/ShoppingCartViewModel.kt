@@ -25,11 +25,13 @@ class ShoppingCartViewModel : ViewModel() {
     val products: List<Product> get() = _productsLiveData.value ?: requestProductsPage(0)
 
     fun addProduct(product: Product) {
-        _productsLiveData.value = products + product
+        _allProductsLiveData.value = _allProductsLiveData.value!! + product
     }
 
     fun removeProduct(product: Product) {
-        _productsLiveData.value = products - product
+        val currentProductIndex = _allProductsLiveData.value!!.indexOf(product)
+        _allProductsLiveData.value = _allProductsLiveData.value!! - product
+        requestProductsPage(currentProductIndex / PAGE_SIZE)
     }
 
     fun requestProductsPage(page: Int): List<Product> {
