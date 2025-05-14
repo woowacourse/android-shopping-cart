@@ -30,10 +30,21 @@ class ShoppingCartActivity :
             binding.rvShoppingCartList.adapter?.notifyDataSetChanged()
         }
         binding.rvShoppingCartList.adapter = adapter
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.handler = this
     }
 
     override fun onProductRemove(product: Product) {
         viewModel.removeProduct(product)
+    }
+
+    override fun onPaginationPrevious() {
+        viewModel.requestProductsPage((viewModel.pageLiveData.value ?: 0) - 1)
+    }
+
+    override fun onPaginationNext() {
+        viewModel.requestProductsPage((viewModel.pageLiveData.value ?: 0) + 1)
     }
 
     companion object {

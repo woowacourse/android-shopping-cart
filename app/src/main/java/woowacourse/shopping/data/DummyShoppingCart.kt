@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product

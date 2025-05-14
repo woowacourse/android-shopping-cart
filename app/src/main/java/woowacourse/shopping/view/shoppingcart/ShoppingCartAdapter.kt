@@ -35,4 +35,8 @@ class ShoppingCartAdapter(
 
 interface ShoppingCartEventHandler {
     fun onProductRemove(product: Product)
+
+    fun onPaginationPrevious()
+
+    fun onPaginationNext()
 }
