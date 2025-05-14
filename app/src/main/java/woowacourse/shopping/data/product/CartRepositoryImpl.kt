@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.product
 
-import kotlin.concurrent.thread
 import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.utils.toProduct
 import woowacourse.shopping.utils.toProductEntity
+import kotlin.concurrent.thread
 
 class CartRepositoryImpl(db: CartDatabase) : CartRepository {
     private val dao: CartDao = db.cartDao()

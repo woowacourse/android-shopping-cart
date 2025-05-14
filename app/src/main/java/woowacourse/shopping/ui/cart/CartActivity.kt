@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.product.CartDatabase
 import woowacourse.shopping.data.product.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.ui.productlist.ProductListActivity
 import woowacourse.shopping.ui.viewmodel.ProductViewModel
 import woowacourse.shopping.utils.ViewModelFactory
 
@@ -21,7 +23,7 @@ class CartActivity : AppCompatActivity() {
 
     private val viewModel: ProductViewModel by viewModels {
         ViewModelFactory.createProductViewModelFactory(
-            CartRepositoryImpl(CartDatabase.getInstance(this))
+            CartRepositoryImpl(CartDatabase.getInstance(this)),
         )
     }
 
@@ -30,10 +32,25 @@ class CartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
-
+        setSupportActionBar(binding.toolbarCart)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
         viewModel.products.observe(this) {
             binding.rvCart.adapter = CartAdapter(it)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                startActivity(ProductListActivity.newIntent(this))
+                finish()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun applyWindowInsets() {

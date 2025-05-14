@@ -17,7 +17,6 @@ import woowacourse.shopping.data.product.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productlist.ProductListActivity
 import woowacourse.shopping.utils.intentSerializable
 
