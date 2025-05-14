@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginTop="17dp"
-            android:background="@color/divider"
+            android:background="@color/light_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name" />

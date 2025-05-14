@@ -6,5 +6,5 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="primary_color">#FF04C09E</color>
-    <color name="divider">#FFAAAAAA</color>
+    <color name="light_gray">#FFAAAAAA</color>
 </resources>
