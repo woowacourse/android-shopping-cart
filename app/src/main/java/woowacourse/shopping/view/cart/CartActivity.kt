@@ -23,7 +23,6 @@ class CartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.backImageBtn.setOnClickListener { finish() }
-        val intentProductInCartData = intent.getSerializableExtraData<Product>("productInCart")
         adapter =
             CartAdapter(onProductRemoveClickListener = { product ->
                 viewModel.removeToCart(product)
@@ -33,6 +32,7 @@ class CartActivity : AppCompatActivity() {
             adapter.submit(it)
         }
 
+        val intentProductInCartData = intent.getSerializableExtraData<Product>("productInCart")
         intentProductInCartData?.let {
             viewModel.addToCart(intentProductInCartData)
         }
