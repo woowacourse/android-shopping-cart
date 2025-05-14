@@ -8,46 +8,6 @@ object DummyShoppingCart {
     val products =
         mutableListOf(
             Product(
-                "[병천아우내] 모듬순대",
-                11900,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/00fb05f8-cb19-4d21-84b1-5cf6b9988749.jpg",
-            ),
-            Product(
-                "[빙그래] 요맘때 파인트 710mL 3종 (택1)",
-                5000,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/73061aab-a2e2-443a-b0f9-f19b7110045e.jpg",
-            ),
-            Product(
-                "[애슐리] 크런치즈엣지 포테이토피자 495g",
-                10900,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/23efcafe-0765-478f-afe9-f9af7bb9b7df.jpg",
-            ),
-            Product(
-                "치밥하기 좋은 순살 바베큐치킨",
-                13990,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/f864b361-85da-4482-aec8-909397caac4e.jpg",
-            ),
-            Product(
-                "[이연복의 목란] 짜장면 2인분",
-                9980,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/90256eb2-b02f-493a-ab7a-29a8724254e4.jpeg",
-            ),
-            Product(
-                "[콜린스 다이닝] 마르게리타 미트볼",
-                11400,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/f92fa98a-524c-431e-a974-e32fcc8fe2ca.jpg",
-            ),
-            Product(
-                "[투다리] 푸짐한 김치어묵 우동전골",
-                13900,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/1568a441-bb45-4732-8a69-c599aa8ecfbf.jpg",
-            ),
-            Product(
-                "[투다리] 한우대창나베",
-                17200,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/997b370e-16a5-473d-9586-4dc97f1530aa.jpg",
-            ),
-            Product(
                 "[런던베이글뮤지엄] 베이글 6개 & 크림치즈 3개 세트",
                 42000,
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/3c68d05b-d392-4a38-8637-a25068220fa4.jpg",
