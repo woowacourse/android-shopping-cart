@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.db
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
@@ -13,6 +12,6 @@ interface CartDao {
     @Insert
     fun insertProduct(cartEntity: CartEntity)
 
-    @Delete
-    fun deleteProduct(cartEntity: CartEntity)
+    @Query("DELETE FROM cart WHERE product_id = :productId")
+    fun deleteByProductId(productId: Long)
 }

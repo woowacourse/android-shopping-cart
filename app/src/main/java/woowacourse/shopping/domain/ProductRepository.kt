@@ -5,5 +5,5 @@ interface ProductRepository {
 
     fun getCartProducts(): List<Product>
 
-    fun deleteProduct(product: Product)
+    fun deleteProduct(productId: Long)
 }
