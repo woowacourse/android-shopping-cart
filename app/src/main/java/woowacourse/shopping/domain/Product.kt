@@ -5,6 +5,8 @@ import java.io.Serializable
 data class Product(
     val id: Long,
     val name: String,
-    val price: Int,
+    private val _price: Price,
     val imageUrl: String,
-) : Serializable
+) : Serializable {
+    val price get() = _price.value
+}
