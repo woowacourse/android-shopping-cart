@@ -6,6 +6,7 @@ import woowacourse.shopping.domain.product.Product
 
 fun Product.toProductEntity(): ProductEntity {
     return ProductEntity(
+        id = this.id,
         imageUrl = this.imageUrl,
         name = this.name,
         price = this.price,
@@ -14,6 +15,7 @@ fun Product.toProductEntity(): ProductEntity {
 
 fun ProductEntity.toProduct(): Product {
     return Product(
+        id = this.id,
         imageUrl = this.imageUrl,
         name = this.name,
         _price = Money(this.price),

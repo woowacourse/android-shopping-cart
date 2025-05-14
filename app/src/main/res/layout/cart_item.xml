@@ -8,6 +8,9 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.product.Product" />
+        <variable
+            name="cartClickListener"
+            type="woowacourse.shopping.ui.cart.CartClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +42,7 @@
             android:layout_marginEnd="8dp"
             android:background="@color/white"
             android:contentDescription="@string/delete_description"
+            android:onClick="@{() -> cartClickListener.onClick(product)}"
             android:src="@drawable/close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
