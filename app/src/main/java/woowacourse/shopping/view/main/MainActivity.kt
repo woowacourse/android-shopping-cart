@@ -38,8 +38,11 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
 
     private fun initView() {
         val productsAdapter = ProductAdapter(handler = this)
-        binding.recyclerViewProduct.adapter = productsAdapter
-
+        binding.recyclerViewProduct.apply {
+            adapter = productsAdapter
+            setHasFixedSize(true)
+            setItemAnimator(null)
+        }
         viewModel.products.observe(this) { value ->
             productsAdapter.submitList(value)
         }
