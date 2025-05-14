@@ -11,13 +11,14 @@ import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
+import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 
-class GoodsActivity : AppCompatActivity() {
+class GoodsActivity :
+    AppCompatActivity(),
+    GoodsViewHolder.GoodsClickListener {
     private lateinit var binding: ActivityGoodsBinding
-    private val adapter: GoodsAdapter by lazy {
-        GoodsAdapter { goods -> navigate(goods) }
-    }
+    private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
     val viewModel: GoodsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,5 +54,9 @@ class GoodsActivity : AppCompatActivity() {
     private fun navigate(goods: Goods) {
         val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
         startActivity(intent)
+    }
+
+    override fun onClick(goods: Goods) {
+        navigate(goods)
     }
 }

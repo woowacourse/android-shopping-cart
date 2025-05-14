@@ -6,12 +6,14 @@ import woowacourse.shopping.domain.model.Goods
 
 class GoodsViewHolder(
     private val binding: ItemGoodsBinding,
+    private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(
-        goods: Goods,
-        onClick: (Goods) -> Unit,
-    ) {
+    fun bind(goods: Goods) {
         binding.goods = goods
-        itemView.setOnClickListener { onClick(goods) }
+        itemView.setOnClickListener { goodsClickListener.onClick(goods) }
+    }
+
+    interface GoodsClickListener {
+        fun onClick(goods: Goods)
     }
 }

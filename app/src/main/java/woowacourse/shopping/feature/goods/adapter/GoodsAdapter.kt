@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 
 class GoodsAdapter(
-    private val onClick: (Goods) -> Unit,
+    private val goodsClickListener: GoodsViewHolder.GoodsClickListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
     private val items: MutableList<Goods> = mutableListOf()
 
@@ -23,7 +23,7 @@ class GoodsAdapter(
     ): GoodsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemGoodsBinding.inflate(inflater, parent, false)
-        return GoodsViewHolder(binding)
+        return GoodsViewHolder(binding, goodsClickListener)
     }
 
     override fun onBindViewHolder(
@@ -31,7 +31,7 @@ class GoodsAdapter(
         position: Int,
     ) {
         val item: Goods = items[position]
-        holder.bind(item, onClick)
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int = items.size
