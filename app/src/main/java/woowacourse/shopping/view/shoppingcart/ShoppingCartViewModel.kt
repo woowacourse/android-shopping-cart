@@ -8,14 +8,14 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.page.Page
 
 class ShoppingCartViewModel : ViewModel() {
-    private var allProducts: Set<Product> = DummyShoppingCart.products.toSet()
+    private val allProducts: Set<Product> get() = DummyShoppingCart.products.toSet()
     private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
 
     val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
 
     fun removeProduct(product: Product) {
         val currentProductIndex = allProducts.indexOf(product)
-        allProducts = allProducts - product
+        DummyShoppingCart.products.remove(product)
         requestProductsPage(currentProductIndex / PAGE_SIZE)
     }
 

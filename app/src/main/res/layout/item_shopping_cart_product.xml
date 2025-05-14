@@ -52,6 +52,7 @@
             tools:src="@drawable/sample_product_detail_image" />
 
         <ImageView
+            android:id="@+id/iv_remove_item_product_icon"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginEnd="12dp"
