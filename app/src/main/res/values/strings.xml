@@ -4,4 +4,6 @@
     <string name="add_shopping_cart">장바구니 담기</string>
     <string name="product_price">%,d원</string>
     <string name="shopping">Shopping</string>
+    <string name="left_arrow"><![CDATA[<]]></string>
+    <string name="right_arrow"><![CDATA[>]]></string>
 </resources>

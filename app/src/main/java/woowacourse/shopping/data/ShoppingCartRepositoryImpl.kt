@@ -18,6 +18,17 @@ class ShoppingCartRepositoryImpl(
         return result
     }
 
+    override fun getPaged(
+        limit: Int,
+        offset: Int,
+    ): List<ShoppingProduct> {
+        var result = listOf<ShoppingProduct>()
+        thread {
+            result = dao.getPaged(limit, offset).toDomain()
+        }.join()
+        return result
+    }
+
     override fun insert(productId: Long) {
         thread {
             dao.insert(ShoppingCartEntity(productId = productId))

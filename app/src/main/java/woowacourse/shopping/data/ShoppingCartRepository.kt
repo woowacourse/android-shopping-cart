@@ -7,5 +7,10 @@ interface ShoppingCartRepository {
 
     fun getAll(): List<ShoppingProduct>
 
+    fun getPaged(
+        limit: Int,
+        offset: Int,
+    ): List<ShoppingProduct>
+
     fun delete(shoppingCartId: Long)
 }

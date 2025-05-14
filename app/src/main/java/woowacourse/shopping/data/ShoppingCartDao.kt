@@ -9,6 +9,12 @@ interface ShoppingCartDao {
     @Query("SELECT * from shopping_cart")
     fun getAll(): List<ShoppingCartEntity>
 
+    @Query("SELECT * FROM shopping_cart LIMIT :limit OFFSET :offset")
+    fun getPaged(
+        limit: Int,
+        offset: Int,
+    ): List<ShoppingCartEntity>
+
     @Insert
     fun insert(product: ShoppingCartEntity)
 

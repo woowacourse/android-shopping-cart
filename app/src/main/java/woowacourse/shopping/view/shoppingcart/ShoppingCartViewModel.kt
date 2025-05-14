@@ -17,6 +17,9 @@ class ShoppingCartViewModel(
     private val _removedProduct = MutableLiveData<ShoppingProduct>()
     val removedProduct: LiveData<ShoppingProduct> = _removedProduct
 
+    private val _pageNumber = MutableLiveData(FIRST_PAGE_NUMBER)
+    val pageNumber: LiveData<Int> = _pageNumber
+
     fun deleteProduct(shoppingProduct: ShoppingProduct) {
         repository.delete(shoppingProduct.id)
         products.remove(shoppingProduct)
@@ -37,5 +40,7 @@ class ShoppingCartViewModel(
                     throw IllegalArgumentException()
                 }
             }
+
+        private const val FIRST_PAGE_NUMBER = 1
     }
 }
