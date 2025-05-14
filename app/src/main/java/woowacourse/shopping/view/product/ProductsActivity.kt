@@ -2,6 +2,7 @@ package woowacourse.shopping.view.product
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -10,11 +11,15 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
+import woowacourse.shopping.view.showToast
 
 class ProductsActivity : AppCompatActivity() {
+    private val productAdapter: ProductAdapter =
+        ProductAdapter(emptyList(), ::navigateToProductDetail)
     private val binding: ActivityProductsBinding by lazy {
         ActivityProductsBinding.inflate(layoutInflater)
     }
+    private val viewModel: ProductsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +31,29 @@ class ProductsActivity : AppCompatActivity() {
             insets
         }
 
-        binding.adapter = ProductAdapter(Product.dummies, ::navigateToProductDetail)
+        initDataBinding()
+        handleEvents()
+        bindData()
+        viewModel.updateProducts()
+    }
+
+    private fun initDataBinding() {
+        binding.adapter = productAdapter
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
+    }
+
+    private fun handleEvents() {
+        viewModel.event.observe(this) { event: ProductsEvent ->
+            when (event) {
+                ProductsEvent.UPDATE_PRODUCT_FAILURE -> showToast(getString(R.string.products_update_products_error_message))
+            }
+        }
+    }
+
+    private fun bindData() {
+        viewModel.products.observe(this) { products: List<Product> ->
+            productAdapter.submitList(products)
+        }
     }
 
     private fun navigateToShoppingCart() {

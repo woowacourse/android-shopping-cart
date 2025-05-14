@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.product.Product
 
 class ProductAdapter(
-    private val items: List<Product>,
+    private var items: List<Product>,
     private val onSelectProduct: (Product) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
@@ -21,4 +21,9 @@ class ProductAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun submitList(items: List<Product>) {
+        this.items = items
+        notifyDataSetChanged()
+    }
 }

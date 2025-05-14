@@ -3,6 +3,7 @@
 
     <!-- 상품 목록 페이지 -->
     <string name="product_price_format">%,d원</string>
+    <string name="products_update_products_error_message">상품 목록을 불러오는 데 실패했습니다.</string>
 
     <!-- 장바구니 페이지 -->
     <string name="shopping_cart_title">Cart</string>
