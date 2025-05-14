@@ -7,4 +7,6 @@
     <string name="text_add_to_cart">장바구니 담기</string>
     <string name="text_cart">Cart</string>
     <string name="text_add_to_cart_success">장바구니에 상품이 추가되었습니다.</string>
+    <string name="text_menu_back">Back</string>
+    <string name="text_cart_action_bar">Cart</string>
 </resources>

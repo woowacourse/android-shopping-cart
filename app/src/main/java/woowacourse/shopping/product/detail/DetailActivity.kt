@@ -3,6 +3,8 @@ package woowacourse.shopping.product.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +27,7 @@ class DetailActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         applyWindowInsets()
+        setSupportActionBar()
 
         val product: ProductUiModel? = productFromIntent()
         product?.let {
@@ -39,8 +42,31 @@ class DetailActivity : AppCompatActivity() {
             }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail_back_menu_item, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.menu_detail_back -> {
+                finish()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    private fun setSupportActionBar() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowHomeEnabled(false)
+        supportActionBar?.title = ""
+    }
+
     private fun showToastMessage() {
-        Toast.makeText(this, getString(R.string.text_add_to_cart_success), Toast.LENGTH_SHORT).show()
+        Toast
+            .makeText(this, getString(R.string.text_add_to_cart_success), Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun applyWindowInsets() {

@@ -21,6 +21,7 @@ class CartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
+        setSupportActionBar()
 
         val cartProducts: List<ProductUiModel> = CartDatabase.cartProducts
         val adapter =
@@ -34,6 +35,16 @@ class CartActivity : AppCompatActivity() {
         }
 
         binding.lifecycleOwner = this
+    }
+
+    private fun setSupportActionBar() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.text_cart_action_bar)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return super.onSupportNavigateUp()
     }
 
     private fun applyWindowInsets() {
