@@ -20,7 +20,7 @@ class CartViewModel(
 
     fun fetchData() {
         thread {
-            _products.value = productRepository.getCartProducts()
+            _products.postValue(productRepository.getCartProducts())
         }
     }
 
