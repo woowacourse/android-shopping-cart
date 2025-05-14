@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
-            android:text='@{String.valueOf(product.price) + "원"}'
+            android:text="@{@string/detail_product_price(product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_detail_price_text"
