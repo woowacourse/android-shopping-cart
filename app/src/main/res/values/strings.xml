@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <string name="product_toolbar_text">Shopping</string>
+
+    <string name="detail_product_price_text">가격</string>
+    <string name="detail_product_add_cart">장바구니 담기</string>
+
+    <string name="cart_toolbar_text">Cart</string>
 </resources>

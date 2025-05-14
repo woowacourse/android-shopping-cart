@@ -19,6 +19,7 @@
             android:id="@+id/iv_product"
             android:layout_width="180dp"
             android:layout_height="180dp"
+            android:contentDescription="@null"
             android:scaleType="centerCrop"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +46,7 @@
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{String.valueOf(product.price) + "원"}'
+            android:text="@{price}"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv_product_name"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
