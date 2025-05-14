@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.page.Page
-import kotlin.math.min
 
 class ShoppingCartViewModel : ViewModel() {
     private var allProducts: Set<Product> = DummyShoppingCart.products.toSet()
@@ -25,11 +24,12 @@ class ShoppingCartViewModel : ViewModel() {
     }
 
     fun requestProductsPage(requestPage: Int) {
-        val page = Page.from(
-            allProducts.toList(),
-            requestPage,
-            PAGE_SIZE
-        )
+        val page =
+            Page.from(
+                allProducts.toList(),
+                requestPage,
+                PAGE_SIZE,
+            )
         _productsLiveData.value = page
     }
 

@@ -24,7 +24,7 @@ class MainActivity :
     }
 
     private fun initRecyclerview() {
-        val adapter = ProductsAdapter( this)
+        val adapter = ProductsAdapter(this)
         viewModel.requestProductsPage(0)
         binding.rvProductList.adapter = adapter
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
