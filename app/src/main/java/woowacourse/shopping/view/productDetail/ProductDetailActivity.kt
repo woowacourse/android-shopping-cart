@@ -36,7 +36,9 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         val product = intent.getProductExtra() ?: run {
-            Toast.makeText(this, "상품 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this, getString(R.string.product_not_provided_error_message), Toast.LENGTH_SHORT
+            ).show()
             return finish()
         }
         viewModel.updateProduct(product)
