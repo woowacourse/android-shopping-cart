@@ -38,9 +38,7 @@ class ProductsActivity : AppCompatActivity() {
         initDataBinding()
         handleEvents()
         bindData()
-        initAdapter()
         viewModel.updateProducts()
-
     }
 
     private fun initDataBinding() {
@@ -51,6 +49,11 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun handleEvents() {
+        handleEventsFromViewModel()
+        handleScrollEvent()
+    }
+
+    private fun handleEventsFromViewModel() {
         viewModel.event.observe(this) { event: ProductsEvent ->
             when (event) {
                 ProductsEvent.UPDATE_PRODUCT_FAILURE -> showToast(getString(R.string.products_update_products_error_message))
@@ -58,27 +61,35 @@ class ProductsActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleScrollEvent() {
+        binding.products.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int,
+                ) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val layoutManager = recyclerView.layoutManager as? GridLayoutManager ?: return
+
+                    val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
+                    val totalItemCount = layoutManager.itemCount
+
+                    if (lastVisibleItemPosition == totalItemCount - 1) {
+                        binding.productsMoreButton.isVisible = viewModel.loadable.value == true
+                    } else {
+                        binding.productsMoreButton.visibility = View.GONE
+                    }
+                }
+            },
+        )
+    }
+
     private fun bindData() {
         viewModel.products.observe(this) { products: List<Product> ->
             productAdapter.submitList(products)
         }
-    }
-
-    private fun initAdapter() {
-        binding.products.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val layoutManager = recyclerView.layoutManager as? GridLayoutManager ?: return
-
-                val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
-                val totalItemCount = layoutManager.itemCount
-
-                if (lastVisibleItemPosition == totalItemCount - 1) {
-                    binding.productsMoreButton.isVisible = viewModel.loadable.value == true
-                } else binding.productsMoreButton.visibility = View.GONE
-            }
-        })
     }
 
     private fun navigateToShoppingCart() {
