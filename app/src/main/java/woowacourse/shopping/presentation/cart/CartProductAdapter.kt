@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.cart
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +7,6 @@ import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.domain.Product
 
 class CartProductAdapter(
-    private val context: Context,
     private val onDeleteClick: (Product) -> Unit,
 ) : RecyclerView.Adapter<CartProductAdapter.CartProductViewHolder>() {
     private var products: List<Product> = emptyList()

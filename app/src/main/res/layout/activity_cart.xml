@@ -61,6 +61,7 @@
             android:layout_marginVertical="20dp"
             android:layout_marginStart="150dp"
             android:background="@drawable/round_btn_cart_previous"
+            android:contentDescription="@null"
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +79,8 @@
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
             app:layout_constraintEnd_toStartOf="@id/btn_cart_next"
             app:layout_constraintStart_toEndOf="@id/btn_cart_previous"
-            app:layout_constraintTop_toTopOf="@id/btn_cart_previous" />
+            app:layout_constraintTop_toTopOf="@id/btn_cart_previous"
+            tools:text="1" />
 
         <ImageButton
             android:id="@+id/btn_cart_next"
@@ -86,6 +88,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="12dp"
             android:background="@drawable/round_btn_cart_next"
+            android:contentDescription="@null"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
             app:layout_constraintStart_toEndOf="@id/tv_cart_page"

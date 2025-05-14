@@ -11,4 +11,5 @@
 
     <string name="cart_toolbar_text">Cart</string>
     <string name="cart_product_price">%,d원</string>
+    <string name="cart_delete_complete">상품이 삭제되었습니다.</string>
 </resources>
