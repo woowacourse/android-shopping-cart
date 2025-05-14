@@ -9,6 +9,10 @@
         <variable
             name="model"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.view.cart.adatper.CartAdapterEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +43,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:padding="12dp"
+            android:onClick="@{() -> eventHandler.onClickDeleteItem(model.id)}"
             android:src="@drawable/ic_close_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -13,10 +13,11 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adatper.CartAdapter
+import woowacourse.shopping.view.cart.adatper.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 
-class CartActivity : AppCompatActivity() {
+class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels { CartViewModelFactory() }
 
@@ -38,7 +39,10 @@ class CartActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
 
-        val cartAdapter = CartAdapter()
+        val cartAdapter =
+            CartAdapter {
+                viewModel.deleteProduct(it)
+            }
         binding.recyclerViewCart.apply {
             adapter = cartAdapter
             setHasFixedSize(true)
@@ -58,6 +62,10 @@ class CartActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onClickDeleteItem(id: Long) {
+        viewModel.deleteProduct(id)
     }
 
     companion object {

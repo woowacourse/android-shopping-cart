@@ -9,4 +9,8 @@ import woowacourse.shopping.domain.Product
 class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     private val _products = MutableLiveData(cartStorage.getAll())
     val products: LiveData<List<Product>> = _products
+
+    fun deleteProduct(id: Long) {
+        cartStorage.deleteProduct(id)
+    }
 }
