@@ -6,6 +6,7 @@ import woowacourse.shopping.domain.Product
 @Suppress("ktlint:standard:max-line-length")
 class ProductStorageImpl : ProductStorage {
     private val products = mutableMapOf<Long, Product>()
+    private val productsValues get() = products.values.toList()
 
     init {
         initialize()
@@ -248,5 +249,12 @@ class ProductStorageImpl : ProductStorage {
 
     override fun get(id: Long): Product = products[id] ?: throw IllegalArgumentException()
 
-    override fun getAll() = products.values.toList()
+    override fun getProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product> {
+        val fromIndex = page * pageSize
+        val toIndex = minOf(fromIndex + pageSize, products.size)
+        return productsValues.subList(fromIndex, toIndex)
+    }
 }

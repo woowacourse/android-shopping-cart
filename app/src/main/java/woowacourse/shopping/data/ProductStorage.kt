@@ -5,5 +5,8 @@ import woowacourse.shopping.domain.Product
 interface ProductStorage {
     operator fun get(id: Long): Product
 
-    fun getAll(): List<Product>
+    fun getProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product>
 }

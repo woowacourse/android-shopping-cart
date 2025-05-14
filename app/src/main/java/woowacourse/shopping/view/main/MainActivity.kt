@@ -3,12 +3,15 @@ package woowacourse.shopping.view.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
@@ -52,15 +55,41 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
 
     private fun initView() {
         val productsAdapter = ProductAdapter(handler = this)
+        binding.buttonLoad.setOnClickListener {
+            binding.buttonLoad.visibility = View.GONE
+            val layoutManager = binding.recyclerViewProduct.layoutManager as? LinearLayoutManager ?: throw IllegalArgumentException()
+
+            val visiblePosition = layoutManager.itemCount
+            val pageSize = 20
+            val currentPage = visiblePosition / pageSize
+
+            viewModel.loadProducts(currentPage, pageSize)
+        }
         binding.recyclerViewProduct.apply {
             adapter = productsAdapter
             setHasFixedSize(true)
             setItemAnimator(null)
-        }
+        }.addOnScrollListener(onScrollListener())
+
         viewModel.products.observe(this) { value ->
             productsAdapter.submitList(value)
         }
     }
+
+    private fun onScrollListener() =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int,
+            ) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    binding.buttonLoad.visibility = View.VISIBLE
+                } else if (dy < 1) {
+                    binding.buttonLoad.visibility = View.GONE
+                }
+            }
+        }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_action_bar_menu, menu)

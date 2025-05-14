@@ -13,6 +13,14 @@ class MainViewModel(
     val products: LiveData<List<Product>> = _products
 
     init {
-        _products.value = storage.getAll()
+        loadProducts(0, 20)
+    }
+
+    fun loadProducts(
+        page: Int,
+        pageSize: Int,
+    ) {
+        val loadedProducts = storage.getProducts(page, pageSize)
+        _products.value = (products.value ?: emptyList()) + loadedProducts
     }
 }
