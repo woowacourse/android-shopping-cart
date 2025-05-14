@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
-    val cartProducts: List<ProductUiModel>,
+    private val cartProducts: List<ProductUiModel>,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
