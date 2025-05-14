@@ -24,7 +24,7 @@ class ShoppingCartActivity :
         }
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
-            viewModel = viewModel
+            viewModel = this@ShoppingCartActivity.viewModel
             handler = this@ShoppingCartActivity
         }
     }
