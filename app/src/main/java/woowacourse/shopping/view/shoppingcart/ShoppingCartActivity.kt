@@ -9,6 +9,7 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.getParcelableCompat
+import woowacourse.shopping.view.page.Page
 
 class ShoppingCartActivity :
     BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
@@ -25,16 +26,15 @@ class ShoppingCartActivity :
             }
         viewModel.addProduct(product)
         viewModel.requestProductsPage(0)
-        val adapter = ShoppingCartAdapter(this)
-
-        viewModel.productsLiveData.observe(this) { page ->
-            adapter.updateProducts(page.items)
-            binding.rvShoppingCartList.adapter?.notifyDataSetChanged()
-        }
-        binding.rvShoppingCartList.adapter = adapter
+        viewModel.productsLiveData.observe(this) { page -> updateRecyclerView(page) }
+        binding.rvShoppingCartList.adapter = ShoppingCartAdapter(this)
         binding.viewModel = viewModel
-        binding.lifecycleOwner = this
         binding.handler = this
+    }
+
+    private fun updateRecyclerView(page: Page<Product>) {
+        (binding.rvShoppingCartList.adapter as ShoppingCartAdapter).updateProducts(page.items)
+        binding.rvShoppingCartList.adapter?.notifyDataSetChanged()
     }
 
     override fun onProductRemove(product: Product) {
