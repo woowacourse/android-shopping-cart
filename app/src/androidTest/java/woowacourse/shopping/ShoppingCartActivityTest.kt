@@ -5,10 +5,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.RecyclerViewMatcher.Companion.withRecyclerView
+import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.main.MainActivity
+import woowacourse.shopping.matcher.isDisplayed
+import woowacourse.shopping.matcher.matchSize
+import woowacourse.shopping.matcher.matchText
+import woowacourse.shopping.matcher.performClick
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 @Suppress("FunctionName")
