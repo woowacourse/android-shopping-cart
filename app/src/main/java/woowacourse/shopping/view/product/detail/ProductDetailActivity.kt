@@ -12,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.utils.getSerializableExtraCompat
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var viewModel: ProductDetailViewModel
@@ -35,11 +36,16 @@ class ProductDetailActivity : AppCompatActivity() {
             viewModel =
                 ViewModelProvider(
                     this,
-                    ProductDetailViewModel.provideFactory(product),
+                    ProductDetailViewModel.provideFactory(product, applicationContext),
                 )[ProductDetailViewModel::class.java]
         }
         binding.vm = viewModel
         binding.lifecycleOwner = this
+
+        viewModel.navigateEvent.observe(this) {
+            val intent = Intent(this, ShoppingCartActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     companion object {

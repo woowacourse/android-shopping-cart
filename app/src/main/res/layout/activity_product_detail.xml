@@ -88,6 +88,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="12dp"
             android:text="@string/add_shopping_cart"
+            android:onClick="@{() -> vm.addToShoppingCart()}"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"

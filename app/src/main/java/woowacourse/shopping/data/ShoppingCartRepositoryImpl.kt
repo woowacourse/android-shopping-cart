@@ -1,12 +1,14 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.MyApp
+import android.content.Context
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.domain.Product
 
 class ShoppingCartRepositoryImpl(
-    private val dao: ShoppingCartDao = ShoppingCartDatabase.getDataBase(MyApp.applicationContext).productDao(),
+    applicationContext: Context,
+    private val dao: ShoppingCartDao =
+        ShoppingCartDatabase.getDataBase(applicationContext).productDao(),
 ) : ShoppingCartRepository {
     override fun getAll(): List<Product> = dao.getAll().toDomain()
 
