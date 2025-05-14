@@ -27,7 +27,7 @@ class CartActivity : AppCompatActivity() {
             })
 
         viewModel.productsInCart.observe(this) {
-            adapter.submit(it)
+            adapter.updateProductsView(it)
         }
 
         binding.rvProductsInCart.adapter = adapter
