@@ -9,4 +9,6 @@
     <string name="text_add_to_cart_success">장바구니에 상품이 추가되었습니다.</string>
     <string name="text_menu_back">Back</string>
     <string name="text_cart_action_bar">Cart</string>
+    <string name="text_prev_button"><![CDATA[<]]></string>
+    <string name="text_next_button"><![CDATA[>]]></string>
 </resources>
