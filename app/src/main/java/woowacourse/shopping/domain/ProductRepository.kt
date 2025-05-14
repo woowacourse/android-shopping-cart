@@ -10,5 +10,10 @@ interface ProductRepository {
 
     fun getCartProducts(): List<Product>
 
+    fun getPagedCartProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product>
+
     fun deleteProduct(productId: Long)
 }

@@ -17,9 +17,14 @@ class CartViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
+    private var currentPage = 0
+    private val pageSize = 5
+
     fun fetchData() {
         thread {
-            _products.postValue(productRepository.getCartProducts())
+            val firstPage = productRepository.getPagedCartProducts(currentPage, pageSize)
+            _products.postValue(firstPage)
+            currentPage++
         }
     }
 

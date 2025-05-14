@@ -22,6 +22,11 @@ class ProductRepositoryImpl(
 
     override fun getCartProducts(): List<Product> = dao.getAllProduct().map { productEntity -> productEntity.toDomain() }
 
+    override fun getPagedCartProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product> = dao.getPagedProduct(pageSize, page).map { productEntity -> productEntity.toDomain() }
+
     override fun deleteProduct(productId: Long) {
         dao.deleteByProductId(productId = productId)
     }
