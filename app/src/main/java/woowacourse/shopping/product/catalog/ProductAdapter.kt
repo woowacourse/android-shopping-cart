@@ -30,7 +30,7 @@ class ProductAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == products.size) {
+        if (position == products.size && products.size % PRODUCT_SIZE_LIMIT == 0) {
             return LOAD_BUTTON
         }
         return PRODUCT
@@ -41,10 +41,11 @@ class ProductAdapter(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = products.size + 1
+    override fun getItemCount(): Int = if (products.size % PRODUCT_SIZE_LIMIT == 0) products.size + 1 else products.size
 
     companion object {
         private const val PRODUCT = 1
         private const val LOAD_BUTTON = 2
+        private const val PRODUCT_SIZE_LIMIT = 20
     }
 }

@@ -204,5 +204,30 @@ object MockProducts {
                 imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000003659]_20210428134252286.jpg",
                 price = 10000,
             ),
+            Product(
+                name = "여수 바다 유자 블렌디드",
+                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9200000004870]_20230905110300704.jpg",
+                price = 10000,
+            ),
+            Product(
+                name = "한라봉 천혜향 블렌디드",
+                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2024/07/[9200000005377]_20240701133052589.jpg",
+                price = 10000,
+            ),
+            Product(
+                name = "딸기 딜라이트 요거트 블렌디드",
+                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2025/04/[9200000003276]_20250410084448397.jpg",
+                price = 10000,
+            ),
+            Product(
+                name = "딸기 아사이 레모네이드 스타벅스 리프레셔",
+                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/07/[9200000004753]_20230720103623518.jpg",
+                price = 10000,
+            ),
+            Product(
+                name = "스타벅스 슬래머",
+                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000003659]_20210428134252286.jpg",
+                price = 10000,
+            ),
         )
 }

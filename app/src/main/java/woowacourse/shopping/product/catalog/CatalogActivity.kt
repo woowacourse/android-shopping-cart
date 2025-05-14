@@ -62,7 +62,7 @@ class CatalogActivity : AppCompatActivity() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int = if (position == adapter.itemCount - 1) 2 else 1
+                override fun getSpanSize(position: Int): Int = spanSizeByPosition(position, adapter.itemCount)
             }
         binding.recyclerViewProducts.layoutManager = gridLayoutManager
     }
@@ -81,4 +81,9 @@ class CatalogActivity : AppCompatActivity() {
             insets
         }
     }
+
+    private fun spanSizeByPosition(
+        position: Int,
+        itemCount: Int,
+    ): Int = if (position == itemCount - 1 && itemCount % 20 == 1) 2 else 1
 }
