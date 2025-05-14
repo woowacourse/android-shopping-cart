@@ -1,6 +1,8 @@
 package woowacourse.shopping.ui.productlist
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductDummy
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class ProductListActivity : AppCompatActivity() {
@@ -21,8 +24,25 @@ class ProductListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         applyWindowInsets()
 
+        setSupportActionBar(binding.toolbarProductList)
+
         val adapter = productListAdapter()
         binding.productsRecyclerView.adapter = adapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product_list, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_cart -> {
+                startActivity(CartActivity.newIntent(this))
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun applyWindowInsets() {
