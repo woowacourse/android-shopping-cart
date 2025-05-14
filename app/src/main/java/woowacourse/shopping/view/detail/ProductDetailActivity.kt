@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -15,6 +16,8 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
     ProductDetailEventHandler {
+    val viewModel: ProductDetailViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
@@ -35,7 +38,8 @@ class ProductDetailActivity :
     }
 
     override fun onAddToCartSelected(product: Product) {
-        startActivity(ShoppingCartActivity.newIntent(this, product))
+        viewModel.addProduct(product)
+        startActivity(ShoppingCartActivity.newIntent(this))
     }
 
     companion object {
