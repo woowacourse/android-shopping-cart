@@ -2,6 +2,7 @@ package woowacourse.shopping.view.base
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,11 @@ abstract class BaseActivity<T : ViewDataBinding>(
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    protected fun onUnexpectedError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        finish()
     }
 
     protected fun setSubActivityMenuBar(
