@@ -1,4 +1,6 @@
-package woowacourse.shopping.domain.model
+package woowacourse.shopping.data.repository
+
+import woowacourse.shopping.domain.model.Product
 
 val dummyProducts =
     listOf(
