@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.model.Goods
 
 object DummyData {
     @Suppress("ktlint:standard:max-line-length")
-    val dummyGoods =
+    private val dummyGoods =
         listOf(
             Goods(
                 "[병천아우내] 모듬순대",
@@ -157,4 +157,18 @@ object DummyData {
                 39700,
             ),
         )
+
+    fun getPagedGoods(
+        page: Int,
+        count: Int,
+    ): List<Goods> {
+        val fromIndex = page * count
+        val toIndex = minOf(fromIndex + count, dummyGoods.size)
+
+        return if (fromIndex in 0 until toIndex) {
+            dummyGoods.subList(fromIndex, toIndex).toList()
+        } else {
+            emptyList()
+        }
+    }
 }
