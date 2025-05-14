@@ -3,7 +3,7 @@ package woowacourse.shopping.domain
 import java.io.Serializable
 
 data class Product(
-    val id: Long,
+    val productId: Long,
     val name: String,
     private val _price: Price,
     val imageUrl: String,
