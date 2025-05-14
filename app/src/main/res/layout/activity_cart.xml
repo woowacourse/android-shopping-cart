@@ -37,6 +37,8 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="24dp"
             android:id="@+id/rv_products_in_cart"
             android:layout_width="match_parent"
             android:layout_height="0dp"

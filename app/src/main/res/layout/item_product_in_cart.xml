@@ -21,10 +21,10 @@
             android:id="@+id/product_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@{product.title}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@{product.title}"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
 
@@ -44,6 +44,7 @@
             android:layout_marginTop="20dp"
             android:contentDescription="@null"
             app:imageUrl="@{product.imageUrl}"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="@id/product_title"
             app:layout_constraintTop_toBottomOf="@id/product_title" />
 
@@ -51,7 +52,7 @@
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{product.price}"
+            android:text="@{String.format(@string/product_price_format,product.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
