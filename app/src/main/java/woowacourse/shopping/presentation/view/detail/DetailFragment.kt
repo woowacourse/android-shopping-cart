@@ -22,10 +22,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     ) {
         super.onViewCreated(view, savedInstanceState)
         initObserver()
+        initListener()
 
         val product = arguments.getParcelableCompat<ProductUiModel>(EXTRA_PRODUCT)
         binding.product = product
-
         binding.vm = viewModel
     }
 
@@ -36,6 +36,12 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
                 is UiState.Success -> navigateToScreen()
                 is UiState.Error -> {}
             }
+        }
+    }
+
+    private fun initListener() {
+        binding.btnClose.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
     }
 

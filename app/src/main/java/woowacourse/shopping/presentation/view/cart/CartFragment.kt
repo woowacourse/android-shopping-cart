@@ -31,6 +31,7 @@ class CartFragment :
         super.onViewCreated(view, savedInstanceState)
 
         initObserver()
+        initListener()
         setCartAdapter()
 
         requireActivity().onBackPressedDispatcher.addCallback(backCallback)
@@ -52,6 +53,12 @@ class CartFragment :
     private fun initObserver() {
         viewModel.products.observe(viewLifecycleOwner) {
             cartAdapter.updateProducts(it)
+        }
+    }
+
+    private fun initListener() {
+        binding.btnBack.setOnClickListener {
+            navigateToScreen()
         }
     }
 

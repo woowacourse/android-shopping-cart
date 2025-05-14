@@ -9,4 +9,10 @@
     <!-- Detail Screen -->
     <string name="detail_add_cart_button_text">장바구니 담기</string>
     <string name="detail_price_text">가격</string>
+
+    <!-- Cart Screen -->
+    <string name="toolbar_cart_title">Cart</string>
+
+    <!-- Catalog Screen -->
+    <string name="toolbar_catalog_title">Shopping</string>
 </resources>
