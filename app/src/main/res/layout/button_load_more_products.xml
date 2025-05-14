@@ -12,8 +12,8 @@
         android:insetBottom="0dp"
         android:text="@string/button_text_load_more"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:textStyle="bold"
-        app:cornerRadius="0dp" />
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

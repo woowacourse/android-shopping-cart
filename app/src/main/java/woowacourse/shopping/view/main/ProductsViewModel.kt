@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.DummyProducts
-import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.domain.Product
 import kotlin.math.min
 
@@ -20,7 +19,7 @@ class ProductsViewModel : ViewModel() {
     val products: List<Product> get() = _productsLiveData.value ?: requestProductsPage(1)
 
     fun requestProductsPage(page: Int): List<Product> {
-        val until = min(page*PAGE_SIZE, allProducts.size)
+        val until = min(page * PAGE_SIZE, allProducts.size)
         _productsLiveData.value = allProducts.toList().subList(0, until)
         _pageLiveData.value = page
         return _productsLiveData.value ?: emptyList()
