@@ -6,7 +6,14 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.RecyclerViewMatcher.Companion.withRecyclerView
+import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
+import woowacourse.shopping.matcher.isDisplayed
+import woowacourse.shopping.matcher.isEllipsized
+import woowacourse.shopping.matcher.matchSize
+import woowacourse.shopping.matcher.matchText
+import woowacourse.shopping.matcher.performClick
+import woowacourse.shopping.matcher.scrollToPosition
+import woowacourse.shopping.matcher.sizeGreaterThan
 import woowacourse.shopping.view.main.MainActivity
 
 @Suppress("FunctionName")

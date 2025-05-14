@@ -14,6 +14,9 @@ import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.matcher.isDisplayed
+import woowacourse.shopping.matcher.matchText
+import woowacourse.shopping.matcher.performClick
 import woowacourse.shopping.view.detail.ProductDetailActivity
 
 class ProductDetailActivityTest {

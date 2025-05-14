@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.matcher
 
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click

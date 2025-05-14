@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.matcher
 
 import android.content.res.Resources
 import android.view.View
