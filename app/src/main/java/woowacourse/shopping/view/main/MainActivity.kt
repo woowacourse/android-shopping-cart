@@ -57,12 +57,13 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         val productsAdapter = ProductAdapter(handler = this)
         binding.buttonLoad.setOnClickListener {
             binding.buttonLoad.visibility = View.GONE
-            val layoutManager = binding.recyclerViewProduct.layoutManager as? LinearLayoutManager ?: throw IllegalArgumentException()
+            val layoutManager =
+                binding.recyclerViewProduct.layoutManager as? LinearLayoutManager
+                    ?: throw IllegalArgumentException()
 
             val visiblePosition = layoutManager.itemCount
             val pageSize = 20
             val currentPage = visiblePosition / pageSize
-
             viewModel.loadProducts(currentPage, pageSize)
         }
         binding.recyclerViewProduct.apply {
@@ -74,6 +75,10 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         viewModel.products.observe(this) { value ->
             productsAdapter.submitList(value)
         }
+
+        viewModel.isLastPage.observe(this) { value ->
+            if (value) binding.buttonLoad.visibility = View.GONE
+        }
     }
 
     private fun onScrollListener() =
@@ -83,7 +88,8 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
                 dx: Int,
                 dy: Int,
             ) {
-                if (!recyclerView.canScrollVertically(1)) {
+                val isLastPage = viewModel.isLastPage.value ?: return
+                if (!isLastPage && !recyclerView.canScrollVertically(1)) {
                     binding.buttonLoad.visibility = View.VISIBLE
                 } else if (dy < 1) {
                     binding.buttonLoad.visibility = View.GONE

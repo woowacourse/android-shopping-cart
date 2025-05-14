@@ -30,7 +30,6 @@ class CartAdapter(
                     val position = items.indexOfFirst { it.id == id }
                     items.removeAt(position)
                     notifyItemRemoved(position)
-                    notifyItemRangeChanged(position, getItemCount() - position)
                 }
             },
         )

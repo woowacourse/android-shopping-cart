@@ -46,7 +46,6 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
         binding.recyclerViewCart.apply {
             adapter = cartAdapter
             setHasFixedSize(true)
-            setItemAnimator(null)
         }
 
         viewModel.products.observe(this) { value ->
@@ -60,6 +59,7 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

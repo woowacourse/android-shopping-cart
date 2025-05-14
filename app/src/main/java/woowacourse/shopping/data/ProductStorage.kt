@@ -9,4 +9,6 @@ interface ProductStorage {
         page: Int,
         pageSize: Int,
     ): List<Product>
+
+    fun productCount(): Int
 }
