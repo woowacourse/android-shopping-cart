@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.Product
@@ -17,7 +16,7 @@ class ShoppingCartActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initMenuBar()
+        setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
         val product =
             intent.extras?.getParcelableCompat<Product>(KEY_PRODUCT)
                 ?: throw IllegalArgumentException(ERR_PRODUCT_IS_NULL)
@@ -28,16 +27,6 @@ class ShoppingCartActivity :
             binding.rvShoppingCartList.adapter?.notifyDataSetChanged()
         }
         binding.rvShoppingCartList.adapter = adapter
-    }
-
-    private fun initMenuBar() {
-        val menuBar = binding.toolbar as Toolbar
-        menuBar.menu.findItem(R.id.menu_item_shopping_cart).isVisible = false
-        setSupportActionBar(menuBar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            title = "Cart"
-        }
     }
 
     companion object {

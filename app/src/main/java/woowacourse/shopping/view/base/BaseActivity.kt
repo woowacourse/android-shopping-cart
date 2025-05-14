@@ -1,17 +1,20 @@
 package woowacourse.shopping.view.base
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import woowacourse.shopping.R
 
 abstract class BaseActivity<T : ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
-) : AppCompatActivity(layoutResId) {
+) : AppCompatActivity() {
     protected lateinit var binding: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +29,19 @@ abstract class BaseActivity<T : ViewDataBinding>(
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    protected fun setSubActivityMenuBar(
+        title: String,
+        view: View,
+    ) {
+        val toolbar = view as Toolbar
+        toolbar.menu.findItem(R.id.menu_item_shopping_cart).isVisible = false
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            this.title = title
         }
     }
 }
