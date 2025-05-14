@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.productDetail.ProductDetailViewModel" />
+
+        <variable
+            name="productDetailEventListener"
+            type="woowacourse.shopping.view.productDetail.ProductDetailEvents" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
+                android:onClick="@{() -> productDetailEventListener.close()}"
                 android:padding="16dp"
                 android:src="@drawable/ic_close"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -98,6 +103,7 @@
             android:background="@color/mint"
             android:gravity="center"
             android:paddingVertical="12dp"
+            android:onClick="@{() -> productDetailEventListener.addToShoppingCart()}"
             android:text="@string/product_detail_add_to_shopping_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

@@ -14,7 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), ProductDetailEvents {
     private val viewModel: ProductDetailViewModel by viewModels()
     private val binding: ActivityProductDetailBinding by lazy {
         ActivityProductDetailBinding.inflate(layoutInflater)
@@ -44,9 +44,11 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel.updateProduct(product)
     }
 
+
     private fun bindViewModel() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        binding.productDetailEventListener = this
     }
 
     private fun Intent.getProductExtra(): Product? {
@@ -55,6 +57,14 @@ class ProductDetailActivity : AppCompatActivity() {
         } else {
             getSerializableExtra(EXTRA_PRODUCT) as? Product
         }
+    }
+
+    override fun close() {
+        finish()
+    }
+
+    override fun addToShoppingCart() {
+        // TODO: 장바구니에 Product 저장
     }
 
     companion object {
