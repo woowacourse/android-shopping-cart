@@ -2,6 +2,7 @@ package woowacourse.shopping.cart
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,6 +14,7 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
+    private val viewModel: CartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,9 +25,15 @@ class CartActivity : AppCompatActivity() {
         val cartProducts: List<ProductUiModel> = CartDatabase.cartProducts
         val adapter =
             CartAdapter(cartProducts) { cartProduct ->
-                CartDatabase.deleteCartProduct(cartProduct)
+                viewModel.deleteCartProduct(cartProduct)
             }
         binding.recyclerViewCart.adapter = adapter
+
+        viewModel.cartProducts.observe(this) { value ->
+            (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
+        }
+
+        binding.lifecycleOwner = this
     }
 
     private fun applyWindowInsets() {

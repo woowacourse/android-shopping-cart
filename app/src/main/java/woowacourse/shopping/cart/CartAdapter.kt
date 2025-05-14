@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
-    private val cartProducts: List<ProductUiModel>,
+    private var cartProducts: List<ProductUiModel>,
     private val onDeleteProductClick: DeleteProductClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
@@ -18,6 +18,11 @@ class CartAdapter(
         position: Int,
     ) {
         holder.bind(cartProducts[position])
+    }
+
+    fun setData(cartProducts: List<ProductUiModel>) {
+        this.cartProducts = cartProducts
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = cartProducts.size
