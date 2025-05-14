@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +43,7 @@ class ProductDetailActivity : AppCompatActivity() {
                 val cartEntity = product.toEntity()
                 db.cartDao().insertProduct(cartEntity)
             }
+            Toast.makeText(this, "상품이 장바구니에 담겼습니다.", Toast.LENGTH_SHORT).show()
         }
         binding.ibExit.setOnClickListener {
             finish()
