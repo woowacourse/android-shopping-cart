@@ -9,8 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.intent.getSerializableExtraData
-import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.viewmodel.cart.CartViewModel
 
 class CartActivity : AppCompatActivity() {
@@ -30,11 +28,6 @@ class CartActivity : AppCompatActivity() {
 
         viewModel.productsInCart.observe(this) {
             adapter.submit(it)
-        }
-
-        val intentProductInCartData = intent.getSerializableExtraData<Product>("productInCart")
-        intentProductInCartData?.let {
-            viewModel.addToCart(intentProductInCartData)
         }
 
         binding.rvProductsInCart.adapter = adapter
