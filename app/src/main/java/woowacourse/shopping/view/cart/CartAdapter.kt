@@ -7,9 +7,15 @@ import woowacourse.shopping.databinding.ItemProductInCartBinding
 import woowacourse.shopping.model.products.Product
 
 class CartAdapter(
-    private val itemsInCart: List<Product>,
+    private val itemsInCart: MutableList<Product> = mutableListOf(),
     private val onProductRemoveClickListener: OnProductRemoveClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
+    fun submit(items: List<Product>) {
+        val currentSize = itemsInCart.size
+        itemsInCart.addAll(items)
+        notifyItemRangeChanged(currentSize, items.size)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
