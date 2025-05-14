@@ -3,6 +3,7 @@ package woowacourse.shopping.data
 import woowacourse.shopping.domain.model.Goods
 
 object ShoppingDataBase {
+    private const val INDEX_OFFSET: Int = 1
     private val selectedGoods: MutableList<Goods> = mutableListOf()
 
     fun addItem(goods: Goods) {
@@ -13,5 +14,17 @@ object ShoppingDataBase {
         selectedGoods.remove(goods)
     }
 
-    fun getAll(): List<Goods> = selectedGoods.toList()
+    fun getPagedGoods(
+        page: Int,
+        count: Int,
+    ): List<Goods> {
+        val fromIndex = (page - INDEX_OFFSET) * count
+        val toIndex = minOf(fromIndex + count, selectedGoods.size)
+
+        return if (fromIndex in 0 until toIndex) {
+            selectedGoods.subList(fromIndex, toIndex).toList()
+        } else {
+            emptyList()
+        }
+    }
 }
