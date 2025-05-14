@@ -25,12 +25,12 @@ class MainActivity :
 
     private fun initRecyclerview() {
         val adapter = ProductsAdapter( this)
-        viewModel.requestProductsPage(1)
+        viewModel.requestProductsPage(0)
         binding.rvProductList.adapter = adapter
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
         binding.rvProductList.addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
-        viewModel.productsLiveData.observe(this) {
-            adapter.updateProducts(it)
+        viewModel.productsLiveData.observe(this) { page ->
+            adapter.updateProducts(page.items)
             binding.rvProductList.adapter?.notifyDataSetChanged()
         }
     }

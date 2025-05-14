@@ -40,7 +40,7 @@
             android:backgroundTint="@color/pagination_enabled"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onLoadMoreProducts(viewModel.pageLiveData + 1)}"
+            android:onClick="@{()->handler.onLoadMoreProducts(viewModel.productsLiveData.currentPage + 1)}"
             android:text="@string/button_text_load_more"
             android:textSize="20sp"
             android:textStyle="bold"
