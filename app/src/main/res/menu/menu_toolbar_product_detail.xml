@@ -4,5 +4,5 @@
     <item
         android:icon="@drawable/icon_close"
         android:title="@string/menu_item_shopping_cart"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 </menu>

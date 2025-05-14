@@ -6,12 +6,10 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.shoppingcart.ShoppingCartViewModel
 import kotlin.getValue
 
 class MainActivity :
@@ -37,7 +35,7 @@ class MainActivity :
                         if (
                             lastVisibleItemPosition == layoutManager.itemCount - 1 &&
                             viewModel.totalSize > viewModel.products.size
-                            ) {
+                        ) {
                             View.VISIBLE
                         } else {
                             View.GONE
