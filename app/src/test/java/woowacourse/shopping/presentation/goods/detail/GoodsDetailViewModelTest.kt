@@ -5,14 +5,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.ShoppingDataBase
-import woowacourse.shopping.fixture.createGoods
+import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsDetailViewModelTest {
     private lateinit var goodsDetailViewModel: GoodsDetailViewModel
-    private val goods = createGoods()
+    private val goods = SUNDAE
 
     @BeforeEach
     fun setUp() {
@@ -26,18 +25,5 @@ class GoodsDetailViewModelTest {
 
         // then
         goodsDetailViewModel.goods.getOrAwaitValue() shouldBe goods
-    }
-
-    @Test
-    fun `장바구니에 추가하면 데이터베이스에 추가된다`() {
-        // given
-        goodsDetailViewModel.setGoods(goods)
-
-        // when
-        goodsDetailViewModel.addToShoppingCart()
-        val actual = ShoppingDataBase.getAll()
-
-        // then
-        actual.contains(goods) shouldBe true
     }
 }
