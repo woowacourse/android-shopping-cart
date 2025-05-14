@@ -4,6 +4,7 @@
     <!--    GoodsActivity-->
     <string name="goods_image_description">상품 이미지</string>
     <string name="goods_price">%,d원</string>
+    <string name="goods_more_button">더보기</string>
 
     <!--    GoodsDetailsActivity-->
     <string name="goods_detail_image_description">상품 상세 이미지</string>

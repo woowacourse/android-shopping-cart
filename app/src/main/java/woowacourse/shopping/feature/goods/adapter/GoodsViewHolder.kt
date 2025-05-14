@@ -10,10 +10,10 @@ class GoodsViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(goods: Goods) {
         binding.goods = goods
-        itemView.setOnClickListener { goodsClickListener.onClick(goods) }
+        itemView.setOnClickListener { goodsClickListener.onClickGoods(goods) }
     }
 
     interface GoodsClickListener {
-        fun onClick(goods: Goods)
+        fun onClickGoods(goods: Goods)
     }
 }

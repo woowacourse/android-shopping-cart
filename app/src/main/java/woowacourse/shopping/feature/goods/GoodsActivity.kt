@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.feature.ScrollListener
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
@@ -29,12 +30,9 @@ class GoodsActivity :
         binding.lifecycleOwner = this
 
         binding.rvGoods.adapter = adapter
+        binding.viewModel = viewModel
 
-        viewModel.goods.observe(this) { value ->
-            adapter.setItems(value)
-        }
-
-        viewModel.loadGoods()
+        updateMoreButton()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -52,12 +50,21 @@ class GoodsActivity :
         return super.onOptionsItemSelected(item)
     }
 
+    private fun updateMoreButton() {
+        binding.rvGoods.addOnScrollListener(
+            ScrollListener(
+                shouldShowButton = { !viewModel.isFullLoaded() },
+                onVisibilityChange = viewModel::updateMoreButtonVisibility,
+            ),
+        )
+    }
+
     private fun navigate(goods: Goods) {
         val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
         startActivity(intent)
     }
 
-    override fun onClick(goods: Goods) {
+    override fun onClickGoods(goods: Goods) {
         navigate(goods)
     }
 }
