@@ -7,14 +7,14 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
 class ProductAdapter(
-    private val items: MutableList<Product> = mutableListOf(),
+    private var items: List<Product>,
     private val handler: ProductsAdapterEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun submitList(newItems: List<Product>) {
-        val lastPosition = newItems.size
-        items.clear()
-        items.addAll(newItems)
-        notifyItemRangeChanged(lastPosition, newItems.size)
+        val lastPosition = items.size
+        val subList = newItems.subList(lastPosition, newItems.size)
+        items = items + subList
+        notifyItemRangeInserted(lastPosition, newItems.size)
     }
 
     override fun onCreateViewHolder(

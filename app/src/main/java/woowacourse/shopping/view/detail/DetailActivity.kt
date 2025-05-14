@@ -23,27 +23,36 @@ class DetailActivity : AppCompatActivity(), DetailScreenEventHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-
         binding.lifecycleOwner = this@DetailActivity
         binding.eventHandler = this@DetailActivity
 
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
+        viewModel.load(productId)
 
+        initView()
+        observeViewModel()
+    }
+
+    private fun initView() {
+        enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
 
-        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
-        viewModel.load(productId)
-
+    private fun observeViewModel() {
         viewModel.product.observe(this) {
             binding.model = it
         }
+    }
+
+    override fun onClickAddToCart() {
+        viewModel.addProduct()
+        startActivity(CartActivity.newIntent(this))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -60,11 +69,6 @@ class DetailActivity : AppCompatActivity(), DetailScreenEventHandler {
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onClickAddToCart() {
-        viewModel.addProduct()
-        startActivity(CartActivity.newIntent(this))
     }
 
     companion object {

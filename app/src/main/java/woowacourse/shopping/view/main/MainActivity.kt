@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         }
     }
 
-    private fun observeViewModel()  {
+    private fun observeViewModel() {
         viewModel.products.observe(this) { value ->
             productsAdapter.submitList(value)
         }
