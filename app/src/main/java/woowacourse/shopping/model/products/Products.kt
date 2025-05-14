@@ -1,4 +1,4 @@
-package woowacourse.shopping.model
+package woowacourse.shopping.model.products
 
 data class Products(
     val value: List<Product> = dummyProducts,
