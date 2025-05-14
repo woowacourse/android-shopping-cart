@@ -2,18 +2,18 @@ package woowacourse.shopping.feature.cart.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.feature.GoodsUiModel
+import woowacourse.shopping.domain.model.Goods
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
     private val cartClickListener: CartClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(goods: GoodsUiModel) {
+    fun bind(goods: Goods) {
         binding.goods = goods
         itemView.setOnClickListener { cartClickListener.onClickDeleteButton(goods) }
     }
 
     interface CartClickListener {
-        fun onClickDeleteButton(goods: GoodsUiModel)
+        fun onClickDeleteButton(goods: Goods)
     }
 }

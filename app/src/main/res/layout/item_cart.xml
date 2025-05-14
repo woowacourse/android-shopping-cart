@@ -6,7 +6,7 @@
     <data>
         <variable
             name="goods"
-            type="woowacourse.shopping.feature.GoodsUiModel" />
+            type="woowacourse.shopping.domain.model.Goods" />
         <variable
             name="cartClickListener"
             type="woowacourse.shopping.feature.cart.adapter.CartViewHolder.CartClickListener" />

@@ -30,4 +30,10 @@ class CartRepositoryImpl(
             }
         }
     }
+
+    override fun delete(goods: Goods) {
+        thread {
+            cartDatabase.cartDao().delete(goods.toEntity())
+        }
+    }
 }

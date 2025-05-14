@@ -10,4 +10,6 @@ interface CartRepository {
         goods: Goods,
         onComplete: () -> Unit,
     )
+
+    fun delete(goods: Goods)
 }

@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.feature.GoodsUiModel
+import woowacourse.shopping.domain.model.Goods
 
 class CartAdapter(
     private val cartClickListener: CartViewHolder.CartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val items: MutableList<GoodsUiModel> = mutableListOf()
+    private val items: MutableList<Goods> = mutableListOf()
 
-    fun setItems(newItems: List<GoodsUiModel>) {
+    fun setItems(newItems: List<Goods>) {
         items.clear()
         items.addAll(newItems)
         notifyItemRangeChanged(0, itemCount)
@@ -30,7 +30,7 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        val item: GoodsUiModel = items[position]
+        val item: Goods = items[position]
         holder.bind(item)
     }
 

@@ -2,22 +2,43 @@ package woowacourse.shopping.feature.cart
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.feature.cart.adapter.CartAdapter
+import woowacourse.shopping.feature.cart.adapter.CartViewHolder
 
-class CartActivity : AppCompatActivity() {
-    private lateinit var binding: ItemCartBinding
+class CartActivity :
+    AppCompatActivity(),
+    CartViewHolder.CartClickListener {
+    private lateinit var binding: ActivityCartBinding
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(CartRepositoryImpl(CartDatabase.getDatabase(this)))
+    }
+    private val adapter: CartAdapter by lazy { CartAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding = ItemCartBinding.inflate(layoutInflater)
+        binding = ActivityCartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.lifecycleOwner = this
+        binding.rvGoods.adapter = adapter
+
+        viewModel.cart.observe(this) {
+            adapter.setItems(it)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) finish()
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onClickDeleteButton(goods: Goods) {
+        viewModel.delete(goods)
     }
 }
