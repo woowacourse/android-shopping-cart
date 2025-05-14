@@ -2,11 +2,13 @@ package woowacourse.shopping.presentation.cart
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
@@ -33,8 +35,46 @@ class CartActivity : AppCompatActivity() {
             finish()
         }
         initAdapter()
-        viewModel.products.observe(this) { cartProductAdapter.setData(it) }
+        viewModel.products.observe(this) {
+            cartProductAdapter.setData(it)
+        }
         viewModel.fetchData()
+
+        binding.btnCartPrevious.setOnClickListener {
+            val currentPage = viewModel.currentPage.value ?: 0
+            if (currentPage == 0) {
+                Toast.makeText(this, "첫 페이지입니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.changePage(next = false)
+            }
+        }
+
+        binding.btnCartNext.setOnClickListener {
+            val totalSize = viewModel.totalSize.value ?: 0
+            val pageSize = 5
+            val totalPages = (totalSize + pageSize - 1) / pageSize
+
+            val currentPage = viewModel.currentPage.value ?: 0
+            if (currentPage >= totalPages - 1) {
+                Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.changePage(next = true)
+            }
+        }
+
+        viewModel.currentPage.observe(this) { currentPage ->
+            if (currentPage == 0) {
+                binding.btnCartPrevious.backgroundTintList =
+                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray1))
+            }
+            val totalSize = viewModel.totalSize.value ?: 0
+            val pageSize = 5
+            val totalPages = (totalSize + pageSize - 1) / pageSize
+            if (currentPage == totalPages) {
+                binding.btnCartNext.backgroundTintList =
+                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray1))
+            }
+        }
     }
 
     private fun initAdapter() {
