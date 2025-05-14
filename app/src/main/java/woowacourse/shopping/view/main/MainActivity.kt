@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
 import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
@@ -45,10 +46,12 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.action_bar_menu, menu)
+        menuInflater.inflate(R.menu.main_action_bar_menu, menu)
         return true
     }
 
     override fun onSelectProduct(productId: Long) {
+        val intent = DetailActivity.newIntent(this, productId)
+        startActivity(intent)
     }
 }
