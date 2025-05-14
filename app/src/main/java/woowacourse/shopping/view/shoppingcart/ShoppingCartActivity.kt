@@ -22,10 +22,12 @@ class ShoppingCartActivity :
             intent.extras?.getParcelableCompat<Product>(KEY_PRODUCT)
                 ?: throw IllegalArgumentException(ERR_PRODUCT_IS_NULL)
         viewModel.addProduct(product)
+        val adapter = ShoppingCartAdapter(viewModel.products, this)
         viewModel.productsLiveData.observe(this) {
+            adapter.updateProducts(it)
             binding.rvShoppingCartList.adapter?.notifyDataSetChanged()
         }
-        binding.rvShoppingCartList.adapter = ShoppingCartAdapter(viewModel.products, this)
+        binding.rvShoppingCartList.adapter = adapter
     }
 
     private fun initMenuBar() {
