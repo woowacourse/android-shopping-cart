@@ -4,19 +4,30 @@ import android.content.Context
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.domain.Product
+import kotlin.concurrent.thread
 
 class ShoppingCartRepositoryImpl(
     applicationContext: Context,
     private val dao: ShoppingCartDao =
         ShoppingCartDatabase.getDataBase(applicationContext).productDao(),
 ) : ShoppingCartRepository {
-    override fun getAll(): List<Product> = dao.getAll().toDomain()
+    override fun getAll(): List<Product> {
+        var result = listOf<Product>()
+        thread {
+            result = dao.getAll().toDomain()
+        }.join()
+        return result
+    }
 
     override fun insertAll(vararg product: Product) {
-        dao.insertAll(*product.map { it.toEntity() }.toTypedArray())
+        thread {
+            dao.insertAll(*product.map { it.toEntity() }.toTypedArray())
+        }.join()
     }
 
     override fun delete(product: Product) {
-        dao.delete(product.toEntity())
+        thread {
+            dao.delete(product.toEntity())
+        }.join()
     }
 }

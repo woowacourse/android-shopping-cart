@@ -3,9 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.Product" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/style_product_edge"
         android:paddingHorizontal="12dp"
         android:paddingVertical="18dp">
 
@@ -22,6 +31,7 @@
             android:id="@+id/tv_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{product.name}"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +43,7 @@
             android:layout_width="140dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
@@ -42,6 +53,7 @@
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{String.format(@string/product_price, product.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

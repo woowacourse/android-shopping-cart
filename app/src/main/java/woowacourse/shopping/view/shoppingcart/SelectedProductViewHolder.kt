@@ -11,7 +11,10 @@ class SelectedProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     private lateinit var currentItem: Product
 
-    fun bind(product: Product) {}
+    fun bind(product: Product) {
+        currentItem = product
+        binding.product = product
+    }
 
     companion object {
         fun from(parent: ViewGroup): SelectedProductViewHolder {

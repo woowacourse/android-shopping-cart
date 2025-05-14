@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 
 class ShoppingCartActivity : AppCompatActivity() {
@@ -20,5 +21,10 @@ class ShoppingCartActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val repository = ShoppingCartRepositoryImpl(applicationContext)
+        val products = repository.getAll()
+        val adapter = SelectedProductAdapter(products)
+        binding.rvProducts.adapter = adapter
     }
 }

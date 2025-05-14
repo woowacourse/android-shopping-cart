@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.ShoppingCartRepository
 import woowacourse.shopping.data.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.Product
-import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     val product: Product,
@@ -18,9 +17,7 @@ class ProductDetailViewModel(
     val navigateEvent: LiveData<Unit> = _navigateEvent
 
     fun addToShoppingCart() {
-        thread {
-            repository.insertAll(product)
-        }.join()
+        repository.insertAll(product)
         _navigateEvent.value = Unit
     }
 
