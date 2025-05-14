@@ -3,4 +3,5 @@
     <string name="button_add_to_cart">장바구니 담기</string>
 
     <string name="product_price_format">%,d원</string>
+    <string name="add_to_cart_message">"장바구니에 담겼습니다"</string>
 </resources>

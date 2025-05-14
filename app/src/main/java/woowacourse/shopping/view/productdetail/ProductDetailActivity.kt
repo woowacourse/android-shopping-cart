@@ -30,7 +30,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         binding.tvAddToCart.setOnClickListener {
             viewModel.addToCart(intentProductData)
-            Toast.makeText(this, "장바구니에 담겼습니다", Toast.LENGTH_SHORT).show()
+            showAddToCartToastMessage()
             finish()
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -38,5 +38,9 @@ class ProductDetailActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun showAddToCartToastMessage() {
+        Toast.makeText(this, getString(R.string.add_to_cart_message), Toast.LENGTH_SHORT).show()
     }
 }

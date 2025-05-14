@@ -10,12 +10,6 @@ class CartAdapter(
     private val itemsInCart: MutableList<Product> = mutableListOf(),
     private val onProductRemoveClickListener: OnProductRemoveClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    fun submit(items: List<Product>) {
-        itemsInCart.clear()
-        itemsInCart.addAll(items)
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -38,5 +32,11 @@ class CartAdapter(
         position: Int,
     ) {
         holder.bind(itemsInCart[position])
+    }
+
+    fun updateProductsView(items: List<Product>) {
+        itemsInCart.clear()
+        itemsInCart.addAll(items)
+        notifyDataSetChanged()
     }
 }
