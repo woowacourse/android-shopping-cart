@@ -617,4 +617,4 @@ val dummyProducts =
             imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/010001.png",
             Price(10_000),
         ),
-    )
+    ).sortedBy { it.id }
