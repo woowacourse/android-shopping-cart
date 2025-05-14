@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.product
 
 import woowacourse.shopping.domain.product.Product
 
@@ -19,5 +19,3 @@ object ProductUrls {
 
     val Product.url: String? get() = urls[id] ?: DEFAULT_URL
 }
-
-
