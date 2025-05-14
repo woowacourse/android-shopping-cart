@@ -11,4 +11,6 @@
     <string name="product_detail_add_to_shopping_cart">장바구니 담기</string>
     <string name="product_detail_price_title">가격</string>
     <string name="product_not_provided_error_message">상품 정보를 불러오지 못했습니다.</string>
+    <string name="product_detail_add_shopping_cart_success_message">장바구니에 해당 상품이 추가되었습니다.</string>
+    <string name="product_detail_add_shopping_cart_error_message">장바구니에 해당 상품을 추가하는 데 실패했습니다.</string>
 </resources>

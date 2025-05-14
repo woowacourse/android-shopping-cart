@@ -3,7 +3,7 @@ package woowacourse.shopping.view.shoppingCart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.product.ProductUrls.url
+import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.product.Product
 
@@ -12,7 +12,7 @@ class ShoppingCartProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Product) {
         binding.product = item
-        binding.imageUrl = item.url
+        binding.imageUrl = item.imageUrl
     }
 
     companion object {
