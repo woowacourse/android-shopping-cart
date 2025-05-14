@@ -18,7 +18,7 @@ class CartAdapter(private val items: MutableList<Product> = mutableListOf()) :
         parent: ViewGroup,
         viewType: Int,
     ): CartViewHolder {
-        val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CartViewHolder(binding)
     }
 

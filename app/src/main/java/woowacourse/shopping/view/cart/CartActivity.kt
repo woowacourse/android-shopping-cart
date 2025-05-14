@@ -36,7 +36,10 @@ class CartActivity : AppCompatActivity() {
         val cartAdapter = CartAdapter()
         binding.recyclerViewCart.apply {
             adapter = cartAdapter
+            setHasFixedSize(true)
+            setItemAnimator(null)
         }
+
         viewModel.products.observe(this) { value ->
             cartAdapter.submitList(value)
         }
