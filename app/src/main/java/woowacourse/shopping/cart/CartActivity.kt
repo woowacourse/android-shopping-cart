@@ -21,7 +21,10 @@ class CartActivity : AppCompatActivity() {
         applyWindowInsets()
 
         val cartProducts: List<ProductUiModel> = CartDatabase.cartProducts
-        val adapter = CartAdapter(cartProducts)
+        val adapter =
+            CartAdapter(cartProducts) { cartProduct ->
+                CartDatabase.deleteCartProduct(cartProduct)
+            }
         binding.recyclerViewCart.adapter = adapter
     }
 

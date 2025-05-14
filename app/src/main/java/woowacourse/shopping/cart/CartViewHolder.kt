@@ -27,9 +27,13 @@ class CartViewHolder(
     }
 
     companion object {
-        fun from(parent: ViewGroup): CartViewHolder {
+        fun from(
+            parent: ViewGroup,
+            onDeleteProductClick: DeleteProductClickListener,
+        ): CartViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = CartItemBinding.inflate(inflater, parent, false)
+            binding.clickListener = onDeleteProductClick
             return CartViewHolder(binding)
         }
     }

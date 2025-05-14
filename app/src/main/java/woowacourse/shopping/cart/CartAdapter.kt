@@ -6,11 +6,12 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
     private val cartProducts: List<ProductUiModel>,
+    private val onDeleteProductClick: DeleteProductClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): CartViewHolder = CartViewHolder.from(parent)
+    ): CartViewHolder = CartViewHolder.from(parent, onDeleteProductClick)
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
