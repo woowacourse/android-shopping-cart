@@ -14,7 +14,7 @@ class CartAdapter(
     fun setItems(newItems: List<Goods>) {
         items.clear()
         items.addAll(newItems)
-        notifyItemRangeChanged(0, itemCount)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
@@ -23,6 +23,7 @@ class CartAdapter(
     ): CartViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartBinding.inflate(inflater, parent, false)
+        binding.cartClickListener = cartClickListener
         return CartViewHolder(binding, cartClickListener)
     }
 
