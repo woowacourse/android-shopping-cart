@@ -1,11 +1,15 @@
 package woowacourse.shopping.view.product
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
@@ -25,7 +29,7 @@ class ProductsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.productRoot)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.productsRoot)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -34,12 +38,16 @@ class ProductsActivity : AppCompatActivity() {
         initDataBinding()
         handleEvents()
         bindData()
+        initAdapter()
         viewModel.updateProducts()
+
     }
 
     private fun initDataBinding() {
         binding.adapter = productAdapter
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
     }
 
     private fun handleEvents() {
@@ -54,6 +62,23 @@ class ProductsActivity : AppCompatActivity() {
         viewModel.products.observe(this) { products: List<Product> ->
             productAdapter.submitList(products)
         }
+    }
+
+    private fun initAdapter() {
+        binding.products.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as? GridLayoutManager ?: return
+
+                val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                if (lastVisibleItemPosition == totalItemCount - 1) {
+                    binding.productsMoreButton.isVisible = viewModel.loadable.value == true
+                } else binding.productsMoreButton.visibility = View.GONE
+            }
+        })
     }
 
     private fun navigateToShoppingCart() {
