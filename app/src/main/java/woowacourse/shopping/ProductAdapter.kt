@@ -8,9 +8,10 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 
 class ProductAdapter(
-    private var items: List<Product> = emptyList<Product>(),
     private val onClickHandler: ProductViewHolder.OnClickHandler,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
+    private var items: List<Product> = emptyList<Product>()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

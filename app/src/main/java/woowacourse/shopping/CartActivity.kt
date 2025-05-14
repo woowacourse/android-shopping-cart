@@ -7,7 +7,7 @@ import kotlin.getValue
 
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels()
-    private val cartAdapter: CartAdapter = CartAdapter(onClickHandler = createAdapterOnClickHandler())
+    private val cartAdapter: CartAdapter = CartAdapter(createAdapterOnClickHandler())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

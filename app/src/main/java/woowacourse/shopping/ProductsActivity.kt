@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels()
-    private val productAdapter: ProductAdapter = ProductAdapter(onClickHandler = createAdapterOnClickHandler())
+    private val productAdapter: ProductAdapter = ProductAdapter(createAdapterOnClickHandler())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
