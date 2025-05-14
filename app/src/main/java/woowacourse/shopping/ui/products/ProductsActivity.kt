@@ -1,9 +1,12 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.products
 
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
+import woowacourse.shopping.ui.base.BaseActivity
+import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels()

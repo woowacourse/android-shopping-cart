@@ -1,8 +1,10 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.cart
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.ui.base.BaseActivity
 import kotlin.getValue
 
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {

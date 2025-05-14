@@ -1,11 +1,11 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.products
 
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 
-class CartViewHolder(
-    private val binding: ItemCartBinding,
+class ProductViewHolder(
+    private val binding: ItemProductBinding,
     onClickHandler: OnClickHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
