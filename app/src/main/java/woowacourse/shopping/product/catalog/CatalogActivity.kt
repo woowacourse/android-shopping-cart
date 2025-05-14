@@ -48,10 +48,16 @@ class CatalogActivity : AppCompatActivity() {
 
     private fun setProductAdapter() {
         val adapter =
-            ProductAdapter(emptyList()) { product ->
-                val intent = newIntent(this, product)
-                startActivity(intent)
+            ProductAdapter(
+                emptyList(),
+                ProductClickListener { product ->
+                    val intent = newIntent(this, product)
+                    startActivity(intent)
+                },
+            ) {
+                viewModel.loadCatalogProducts()
             }
+
         binding.recyclerViewProducts.adapter = adapter
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =

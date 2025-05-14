@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ProductAdapter(
     private var products: List<ProductUiModel>,
     private val onProductClick: ProductClickListener,
+    private val onLoadButtonClick: LoadButtonClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -14,7 +15,7 @@ class ProductAdapter(
         if (viewType == PRODUCT) {
             ProductViewHolder.from(parent, onProductClick)
         } else {
-            LoadButtonViewHolder.from(parent)
+            LoadButtonViewHolder.from(parent, onLoadButtonClick)
         }
 
     override fun onBindViewHolder(
@@ -24,10 +25,6 @@ class ProductAdapter(
         when (holder) {
             is ProductViewHolder -> {
                 holder.bind(products[position])
-            }
-
-            is LoadButtonViewHolder -> {
-                holder.bind()
             }
         }
     }
