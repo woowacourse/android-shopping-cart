@@ -17,10 +17,12 @@ class CartViewModel(
 
     fun addToCart(product: Product) {
         cart.add(product)
+        _productsInCart.value = cart.productsInCart
     }
 
     fun removeToCart(product: Product) {
         cart.remove(product)
+        _productsInCart.value = cart.productsInCart
     }
 
     companion object {

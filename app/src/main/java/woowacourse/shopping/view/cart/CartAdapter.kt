@@ -11,9 +11,9 @@ class CartAdapter(
     private val onProductRemoveClickListener: OnProductRemoveClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     fun submit(items: List<Product>) {
-        val currentSize = itemsInCart.size
+        itemsInCart.clear()
         itemsInCart.addAll(items)
-        notifyItemRangeChanged(currentSize, items.size)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
