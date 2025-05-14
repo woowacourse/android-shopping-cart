@@ -11,4 +11,4 @@ data class CartEntity(
     @ColumnInfo(name = "product_name") val name: String,
     @ColumnInfo(name = "product_imageUrl") val imageUrl: String,
     @ColumnInfo(name = "product_price") val price: Int,
-) 
+)

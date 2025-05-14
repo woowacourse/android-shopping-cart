@@ -14,7 +14,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private val cartProductAdapter: CartProductAdapter by lazy { CartProductAdapter(this) }
+    private lateinit var cartProductAdapter: CartProductAdapter
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +36,10 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
+        cartProductAdapter =
+            CartProductAdapter(this) { product ->
+                viewModel.deleteProduct(product)
+            }
         binding.rvCartProduct.adapter = cartProductAdapter
     }
 

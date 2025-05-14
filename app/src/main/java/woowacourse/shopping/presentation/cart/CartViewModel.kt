@@ -24,6 +24,13 @@ class CartViewModel(
         }
     }
 
+    fun deleteProduct(product: Product) {
+        thread {
+            productRepository.deleteProduct(product)
+            _products.postValue(productRepository.getCartProducts())
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
