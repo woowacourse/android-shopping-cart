@@ -9,6 +9,10 @@
             name="product"
             type="woowacourse.shopping.presentation.model.ProductUiModel" />
 
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.view.detail.DetailViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,6 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint"
+            android:onClick="@{() -> vm.addProduct(product)}"
             android:text="@string/detail_add_cart_button_text"
             android:textColor="@color/white"
             android:textSize="20sp"
