@@ -1,8 +1,8 @@
-package woowacourse.shopping.util
+package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.model.Goods
 
-object DummyData {
+object GoodsDataBase {
     @Suppress("ktlint:standard:max-line-length")
     private val dummyGoods =
         listOf(

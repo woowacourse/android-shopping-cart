@@ -3,8 +3,8 @@ package woowacourse.shopping.presentation.goods.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.GoodsDataBase
 import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.util.DummyData
 
 class GoodsViewModel : ViewModel() {
     private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
@@ -14,15 +14,15 @@ class GoodsViewModel : ViewModel() {
     private var page: Int = DEFAULT_PAGE
 
     init {
-        _goods.value = DummyData.getPagedGoods(page++, ITEM_COUNT)
+        _goods.value = GoodsDataBase.getPagedGoods(page++, ITEM_COUNT)
     }
 
     fun addGoods() {
-        _goods.value = _goods.value?.plus(DummyData.getPagedGoods(page++, ITEM_COUNT))
+        _goods.value = _goods.value?.plus(GoodsDataBase.getPagedGoods(page++, ITEM_COUNT))
     }
 
     fun canLoadMore(): Boolean {
-        return DummyData.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
+        return GoodsDataBase.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
     }
 
     companion object {
