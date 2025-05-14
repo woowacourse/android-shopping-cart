@@ -27,6 +27,8 @@ class CartRepositoryImpl(db: CartDatabase) : CartRepository {
     }
 
     override fun remove(product: Product) {
-        return dao.delete(product.toProductEntity())
+        thread {
+            dao.delete(product.toProductEntity())
+        }
     }
 }

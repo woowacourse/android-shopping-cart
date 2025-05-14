@@ -16,7 +16,7 @@ class ProductViewModel(
         update()
     }
 
-    private fun update() {
+    fun update() {
         repository.fetchAll { products ->
             _products.postValue(products)
         }
