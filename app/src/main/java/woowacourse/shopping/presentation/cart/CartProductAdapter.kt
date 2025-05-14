@@ -3,10 +3,7 @@ package woowacourse.shopping.presentation.cart
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.domain.Product
 
@@ -22,7 +19,7 @@ class CartProductAdapter(
     ): CartProductViewHolder {
         val view =
             ItemCartProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartProductViewHolder(view)
+        return CartProductViewHolder(view, onDeleteClick)
     }
 
     override fun onBindViewHolder(
@@ -30,21 +27,7 @@ class CartProductAdapter(
         position: Int,
     ) {
         val cartProduct = products[position]
-        holder.binding.apply {
-            tvCartProductName.text = cartProduct.name
-            tvCartProductPrice.text = cartProduct.price.toString()
-            Glide
-                .with(context)
-                .load(cartProduct.imageUrl)
-                .placeholder(R.drawable.ic_delete)
-                .fallback(R.drawable.ic_delete)
-                .error(R.drawable.ic_delete)
-                .into(ivCartProduct)
-        }
-        holder.binding.ibCartProductDelete.setOnClickListener {
-            onDeleteClick(cartProduct)
-            Toast.makeText(context, "상품이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-        }
+        CartProductViewHolder(holder.binding, onDeleteClick).bind(cartProduct)
     }
 
     override fun getItemCount(): Int = products.size
@@ -56,5 +39,19 @@ class CartProductAdapter(
 
     class CartProductViewHolder(
         val binding: ItemCartProductBinding,
-    ) : RecyclerView.ViewHolder(binding.root)
+        private val onDeleteClick: (Product) -> Unit,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        private lateinit var product: Product
+
+        init {
+            binding.ibCartProductDelete.setOnClickListener {
+                onDeleteClick(product)
+            }
+        }
+
+        fun bind(product: Product) {
+            binding.product = product
+            this.product = product
+        }
+    }
 }
