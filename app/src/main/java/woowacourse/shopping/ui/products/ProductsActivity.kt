@@ -10,6 +10,7 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.base.BaseActivity
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.products.ProductAdapter.OnClickHandler
 
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels()
@@ -19,10 +20,26 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         super.onCreate(savedInstanceState)
 
         binding.rvProducts.adapter = productAdapter
-        binding.rvProducts.layoutManager = GridLayoutManager(this, 2)
+        binding.rvProducts.layoutManager =
+            GridLayoutManager(this, 2).apply {
+                spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            val viewType = productAdapter.getItemViewType(position)
+                            return when (ItemViewType.entries[viewType]) {
+                                ItemViewType.PRODUCT -> 1
+                                ItemViewType.LOAD_MORE -> 2
+                            }
+                        }
+                    }
+            }
 
         viewModel.products.observe(this) { products ->
-            productAdapter.updateItems(products)
+            productAdapter.updateProductItems(products)
+            viewModel.updateIsLoadable()
+        }
+        viewModel.isLoadable.observe(this) { isLoadable ->
+            productAdapter.updateLoadMoreItem(isLoadable)
         }
 
         viewModel.updateProducts(20)
@@ -39,9 +56,13 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
     }
 
     private fun createAdapterOnClickHandler() =
-        object : ProductViewHolder.OnClickHandler {
+        object : OnClickHandler {
             override fun onProductClick(id: Int) {
                 navigateToProductDetail(id)
+            }
+
+            override fun onLoadMoreClick() {
+                viewModel.updateProducts(20)
             }
         }
 

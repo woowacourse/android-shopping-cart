@@ -1,38 +1,50 @@
 package woowacourse.shopping.ui.products
 
 import android.annotation.SuppressLint
-import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 
+@SuppressLint("NotifyDataSetChanged")
 class ProductAdapter(
-    private val onClickHandler: ProductViewHolder.OnClickHandler,
-) : RecyclerView.Adapter<ProductViewHolder>() {
-    private var items: List<Product> = emptyList<Product>()
+    private val onClickHandler: OnClickHandler,
+) : RecyclerView.Adapter<ItemViewHolder<Item, ViewDataBinding>>() {
+    private val items: MutableList<Item> = mutableListOf<Item>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder {
-        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding, onClickHandler)
-    }
+    ): ItemViewHolder<Item, ViewDataBinding> =
+        when (ItemViewType.entries[viewType]) {
+            ItemViewType.PRODUCT -> ProductViewHolder(parent, onClickHandler)
+            ItemViewType.LOAD_MORE -> LoadMoreViewHolder(parent, onClickHandler)
+        } as ItemViewHolder<Item, ViewDataBinding>
 
     override fun onBindViewHolder(
-        holder: ProductViewHolder,
+        holder: ItemViewHolder<Item, ViewDataBinding>,
         position: Int,
     ) {
-        val item: Product = items[position]
+        val item: Item = items[position]
         holder.bind(item)
     }
 
     override fun getItemCount(): Int = items.size
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(newItems: List<Product>) {
-        items = newItems
+    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
+
+    fun updateProductItems(newItems: List<Product>) {
+        items.clear()
+        items.addAll(newItems.map { Item.ProductItem(it) })
         notifyDataSetChanged()
     }
+
+    fun updateLoadMoreItem(isLoadable: Boolean) {
+        if (isLoadable) items.add(Item.LoadMoreItem)
+        notifyDataSetChanged()
+    }
+
+    interface OnClickHandler :
+        ProductViewHolder.OnClickHandler,
+        LoadMoreViewHolder.OnClickHandler
 }

@@ -1,19 +1,22 @@
 package woowacourse.shopping.ui.products
 
-import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.model.Product
 
 class ProductViewHolder(
-    private val binding: ItemProductBinding,
+    parent: ViewGroup,
     onClickHandler: OnClickHandler,
-) : RecyclerView.ViewHolder(binding.root) {
+) : ItemViewHolder<Item.ProductItem, ItemProductBinding>(
+        ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+    ) {
     init {
         binding.onClickHandler = onClickHandler
     }
 
-    fun bind(product: Product) {
-        binding.product = product
+    override fun bind(item: Item.ProductItem) {
+        super.bind(item)
+        binding.product = item.value
     }
 
     interface OnClickHandler {
