@@ -17,6 +17,6 @@ class ProductViewHolder(
     }
 
     interface OnClickHandler {
-        fun onClickProduct(product: Product)
+        fun onClickProduct(id: Int)
     }
 }

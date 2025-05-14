@@ -8,6 +8,7 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
+
         <variable
             name="onClickHandler"
             type="woowacourse.shopping.ProductViewHolder.OnClickHandler" />
@@ -16,8 +17,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:onClick="@{()->onClickHandler.onClickProduct(product)}">
+        android:onClick="@{()->onClickHandler.onClickProduct(product.id)}"
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/iv_product_preview"
