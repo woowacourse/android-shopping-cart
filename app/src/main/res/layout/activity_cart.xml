@@ -13,6 +13,7 @@
             android:id="@+id/rv_cart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp" />
+            android:padding="2dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
