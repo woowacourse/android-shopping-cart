@@ -19,7 +19,7 @@ class ProductsOnScrollListener(
         binding.btnLoadMoreProducts.visibility =
             if (
                 lastVisibleItemPosition == layoutManager.itemCount - 1 &&
-                viewModel.totalSize > viewModel.products.size
+                viewModel.totalSize > (recyclerView.adapter?.itemCount ?: 0)
             ) {
                 View.VISIBLE
             } else {

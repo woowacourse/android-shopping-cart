@@ -24,7 +24,8 @@ class MainActivity :
     }
 
     private fun initRecyclerview() {
-        val adapter = ProductsAdapter(viewModel.products, this)
+        val adapter = ProductsAdapter( this)
+        viewModel.requestProductsPage(1)
         binding.rvProductList.adapter = adapter
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
         binding.rvProductList.addOnScrollListener(ProductsOnScrollListener(binding, viewModel))

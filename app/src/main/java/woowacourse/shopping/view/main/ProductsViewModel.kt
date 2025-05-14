@@ -16,13 +16,10 @@ class ProductsViewModel : ViewModel() {
     val productsLiveData: LiveData<List<Product>> get() = _productsLiveData
     val pageLiveData: LiveData<Int> get() = _pageLiveData
 
-    val products: List<Product> get() = _productsLiveData.value ?: requestProductsPage(1)
-
-    fun requestProductsPage(page: Int): List<Product> {
+    fun requestProductsPage(page: Int) {
         val until = min(page * PAGE_SIZE, allProducts.size)
         _productsLiveData.value = allProducts.toList().subList(0, until)
         _pageLiveData.value = page
-        return _productsLiveData.value ?: emptyList()
     }
 
     companion object {
