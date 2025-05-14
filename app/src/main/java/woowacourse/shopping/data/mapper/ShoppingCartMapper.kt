@@ -6,13 +6,13 @@ import woowacourse.shopping.domain.ShoppingProduct
 fun List<ShoppingCartEntity>.toDomain() =
     this.map { entity ->
         ShoppingProduct(
-            position = entity.id,
+            id = entity.id,
             productId = entity.productId,
         )
     }
 
 fun ShoppingProduct.toEntity() =
     ShoppingCartEntity(
-        id = this.position,
+        id = this.id,
         productId = this.productId,
     )

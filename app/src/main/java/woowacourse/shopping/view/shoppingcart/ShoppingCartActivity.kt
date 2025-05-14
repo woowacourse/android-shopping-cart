@@ -38,6 +38,10 @@ class ShoppingCartActivity : AppCompatActivity() {
             ) { product ->
                 viewModel.deleteProduct(product)
             }
+
+        viewModel.removedProduct.observe(this) { value ->
+            adapter.removeItem(value)
+        }
         binding.rvProducts.adapter = adapter
     }
 }
