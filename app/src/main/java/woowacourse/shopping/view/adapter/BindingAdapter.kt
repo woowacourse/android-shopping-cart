@@ -6,7 +6,8 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 
 @BindingAdapter("imageUrl")
-fun ImageView.setImage(image: String) {
+fun ImageView.setImage(image: String?) {
+    image ?: return
     Glide
         .with(this.context)
         .load(image)

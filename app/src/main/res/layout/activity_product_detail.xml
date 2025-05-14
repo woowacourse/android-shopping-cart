@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="vm"
+            type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -23,7 +29,8 @@
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/ic_launcher_foreground" />
+                    tools:src="@drawable/ic_launcher_foreground"
+                    app:imageUrl="@{vm.product.imageUrl}"/>
 
                 <TextView
                     android:id="@+id/tv_detail_product_name"
@@ -36,7 +43,8 @@
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_detail_product_image"
-                    tools:text="아메리카노" />
+                    tools:text="아메리카노"
+                    android:text="@{vm.product.name}"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:id="@+id/divider"
@@ -50,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/product_price"
+                    android:text="@string/price"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +74,8 @@
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider"
-                    tools:text="2,500원" />
+                    tools:text="2,500원"
+                    android:text="@{String.format(@string/product_price, vm.product.price)}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
