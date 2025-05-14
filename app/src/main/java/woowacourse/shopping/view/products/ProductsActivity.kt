@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import woowacourse.shopping.CartActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.model.CartNavigationListener
-import woowacourse.shopping.model.Products
+import woowacourse.shopping.model.products.Products
+import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductsBinding
@@ -21,15 +21,19 @@ class ProductsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
         adapter =
-            ProductsAdapter(Products().value)
-        binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
-        binding.rvProducts.adapter = adapter
-
-        binding.navigationListener =
-            CartNavigationListener {
-                startActivity(Intent(this, CartActivity::class.java))
+            ProductsAdapter(Products().value) { product ->
+                val intent =
+                    Intent(this, ProductDetailActivity::class.java).apply {
+                        putExtra("product", product)
+                    }
+                startActivity(intent)
             }
 
+        binding.cartImageBtn.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+        binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
+        binding.rvProducts.adapter = adapter
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

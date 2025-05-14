@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.products.Product
 
 class ProductsAdapter(
     private val products: List<Product>,
+    private val productClickListener: (Product) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,7 +22,7 @@ class ProductsAdapter(
                 false,
             )
 
-        return ProductViewHolder(productBinding)
+        return ProductViewHolder(productBinding, productClickListener)
     }
 
     override fun getItemCount(): Int = products.size

@@ -7,10 +7,12 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.model.Product" />
+            type="woowacourse.shopping.model.products.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btn_selected_product"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
