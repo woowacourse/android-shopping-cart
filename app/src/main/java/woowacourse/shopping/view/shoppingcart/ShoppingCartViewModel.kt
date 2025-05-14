@@ -8,10 +8,7 @@ import woowacourse.shopping.domain.Product
 import kotlin.math.min
 
 class ShoppingCartViewModel : ViewModel() {
-    private val _allProductsLiveData: MutableLiveData<List<Product>> =
-        MutableLiveData(
-            DummyShoppingCart.products,
-        )
+    private var allProducts: Set<Product> = DummyShoppingCart.products.toSet()
     private val _productsLiveData: MutableLiveData<List<Product>> = MutableLiveData()
     private val _paginationLeftLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val _paginationRightLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -25,21 +22,21 @@ class ShoppingCartViewModel : ViewModel() {
     val products: List<Product> get() = _productsLiveData.value ?: requestProductsPage(0)
 
     fun addProduct(product: Product) {
-        _allProductsLiveData.value = _allProductsLiveData.value!! + product
+        allProducts = allProducts + product
     }
 
     fun removeProduct(product: Product) {
-        val currentProductIndex = _allProductsLiveData.value!!.indexOf(product)
-        _allProductsLiveData.value = _allProductsLiveData.value!! - product
+        val currentProductIndex = allProducts.indexOf(product)
+        allProducts = allProducts - product
         requestProductsPage(currentProductIndex / PAGE_SIZE)
     }
 
     fun requestProductsPage(page: Int): List<Product> {
         val from = page * PAGE_SIZE
-        val until = min(from + PAGE_SIZE, _allProductsLiveData.value!!.size)
-        _productsLiveData.value = _allProductsLiveData.value!!.subList(from, until)
+        val until = min(from + PAGE_SIZE, allProducts.size)
+        _productsLiveData.value = allProducts.toList().subList(from, until)
         _paginationLeftLiveData.value = page > 0
-        _paginationRightLiveData.value = until < _allProductsLiveData.value!!.size
+        _paginationRightLiveData.value = until < allProducts.size
         _pageLiveData.value = page
         return _productsLiveData.value ?: emptyList()
     }
