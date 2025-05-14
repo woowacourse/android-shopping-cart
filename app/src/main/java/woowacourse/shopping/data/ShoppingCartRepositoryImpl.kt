@@ -25,9 +25,9 @@ class ShoppingCartRepositoryImpl(
         }.join()
     }
 
-    override fun delete(product: Product) {
+    override fun delete(productId: Long) {
         thread {
-            dao.delete(product.toEntity())
+            dao.delete(productId)
         }.join()
     }
 }

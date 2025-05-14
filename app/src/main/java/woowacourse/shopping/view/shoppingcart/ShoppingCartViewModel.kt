@@ -11,7 +11,7 @@ class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
 ) : ViewModel() {
     fun deleteProduct(product: Product) {
-        repository.delete(product)
+        repository.delete(product.id)
     }
 
     companion object {

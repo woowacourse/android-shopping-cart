@@ -7,5 +7,5 @@ interface ShoppingCartRepository {
 
     fun getAll(): List<Product>
 
-    fun delete(product: Product)
+    fun delete(productId: Long)
 }
