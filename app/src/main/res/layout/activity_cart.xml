@@ -6,11 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".feature.cart.CartActivity">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="카트 액티비티 입니당">
 
-    </TextView>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_goods"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingHorizontal="18dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_cart" />
 </androidx.constraintlayout.widget.ConstraintLayout>

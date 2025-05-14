@@ -1,19 +1,10 @@
 package woowacourse.shopping.domain.model
 
-import woowacourse.shopping.feature.GoodsUiModel
-
 data class Goods(
     val name: String,
     val price: Int,
     val thumbnailUrl: String,
 ) {
-    fun toUi() =
-        GoodsUiModel(
-            name = name,
-            price = price,
-            thumbnailUrl = thumbnailUrl,
-        )
-
     companion object {
         val dummyGoods =
             listOf(

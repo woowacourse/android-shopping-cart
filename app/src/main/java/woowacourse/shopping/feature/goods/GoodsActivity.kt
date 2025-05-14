@@ -13,6 +13,7 @@ import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
+import woowacourse.shopping.util.toUi
 
 class GoodsActivity :
     AppCompatActivity(),
