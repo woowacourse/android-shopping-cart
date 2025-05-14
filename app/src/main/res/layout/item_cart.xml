@@ -3,6 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="onClickHandler"
+            type="woowacourse.shopping.CartViewHolder.OnClickHandler" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="152dp">

@@ -1,5 +1,30 @@
 package woowacourse.shopping
 
+import android.os.Bundle
+import androidx.activity.viewModels
 import woowacourse.shopping.databinding.ActivityCartBinding
+import kotlin.getValue
 
-class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart)
+class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
+    private val viewModel: CartViewModel by viewModels()
+    private val cartAdapter: CartAdapter = CartAdapter(onClickHandler = createAdapterOnClickHandler())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding.rvCart.adapter = cartAdapter
+
+        viewModel.products.observe(this) { products ->
+            cartAdapter.replaceItems(products)
+        }
+
+        viewModel.updateProducts(5)
+    }
+
+    private fun createAdapterOnClickHandler() =
+        object : CartViewHolder.OnClickHandler {
+            override fun onClickProduct(id: Int) {
+                viewModel.removeCartProduct(id)
+            }
+        }
+}
