@@ -10,6 +10,7 @@ class ShoppingCartAdapter(
     private val handler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var products: List<Product> = listOf()
+
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(
