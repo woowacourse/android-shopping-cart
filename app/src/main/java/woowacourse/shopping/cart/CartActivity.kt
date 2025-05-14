@@ -8,9 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -23,18 +21,13 @@ class CartActivity : AppCompatActivity() {
         applyWindowInsets()
         setSupportActionBar()
 
-        val cartProducts: List<ProductUiModel> = CartDatabase.cartProducts
-        val adapter =
-            CartAdapter(cartProducts) { cartProduct ->
+        binding.recyclerViewCart.adapter =
+            CartAdapter(emptyList()) { cartProduct ->
                 viewModel.deleteCartProduct(cartProduct)
             }
-        binding.recyclerViewCart.adapter = adapter
-
         viewModel.cartProducts.observe(this) { value ->
             (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
         }
-
-        binding.lifecycleOwner = this
     }
 
     private fun setSupportActionBar() {

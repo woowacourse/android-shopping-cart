@@ -13,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityCatalogBinding
 import woowacourse.shopping.mapper.toUiModel
+import woowacourse.shopping.product.catalog.MockProducts.mockProducts
 import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
@@ -25,14 +26,12 @@ class CatalogActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
-        val mockProducts = MockProducts().mockProducts
-
-        val adapter =
-            ProductAdapter(mockProducts.map { it.toUiModel() }) { product ->
+        val mockProducts: List<ProductUiModel> = mockProducts.map { it.toUiModel() }
+        binding.recyclerViewProducts.adapter =
+            ProductAdapter(mockProducts) { product ->
                 val intent = newIntent(this, product)
                 startActivity(intent)
             }
-        binding.recyclerViewProducts.adapter = adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

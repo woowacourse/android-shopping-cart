@@ -14,6 +14,7 @@ class CartViewModel : ViewModel() {
 
     init {
         products += CartDatabase.cartProducts
+        _cartProducts.value = products
     }
 
     fun deleteCartProduct(cartProduct: ProductUiModel) {

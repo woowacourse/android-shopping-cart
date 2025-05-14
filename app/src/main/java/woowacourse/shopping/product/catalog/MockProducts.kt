@@ -1,6 +1,6 @@
 package woowacourse.shopping.product.catalog
 
-class MockProducts {
+object MockProducts {
     val mockProducts =
         listOf(
             Product(

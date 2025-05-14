@@ -28,18 +28,13 @@ class DetailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         applyWindowInsets()
         setSupportActionBar()
+        setAddToCartClickListener()
 
         val product: ProductUiModel? = productFromIntent()
         product?.let {
             binding.product = it
             showImage(it)
         }
-
-        binding.clickListener =
-            AddToCartClickListener { product ->
-                showToastMessage()
-                CartDatabase.insertCartProduct(product)
-            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -56,6 +51,14 @@ class DetailActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+
+    private fun setAddToCartClickListener() {
+        binding.clickListener =
+            AddToCartClickListener { product ->
+                showToastMessage()
+                CartDatabase.insertCartProduct(product)
+            }
+    }
 
     private fun setSupportActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
