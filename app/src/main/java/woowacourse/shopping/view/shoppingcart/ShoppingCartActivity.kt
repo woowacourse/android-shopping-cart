@@ -19,18 +19,24 @@ class ShoppingCartActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
-        val product = intent.getParcelableCompat<Product>(KEY_PRODUCT)
-        if (product != null) viewModel.addProduct(product)
-        viewModel.requestProductsPage(0)
-        viewModel.productsLiveData.observe(this) { page -> updateRecyclerView(page) }
-        binding.rvShoppingCartList.adapter = ShoppingCartAdapter(this)
-        binding.viewModel = viewModel
-        binding.handler = this
+        intent.getParcelableCompat<Product>(KEY_PRODUCT)
+            ?.let { product -> viewModel.addProduct(product) }
+        viewModel.apply {
+            requestProductsPage(0)
+            productsLiveData.observe(this@ShoppingCartActivity) { page -> updateRecyclerView(page) }
+        }
+        binding.apply {
+            rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
+            viewModel = viewModel
+            handler = this@ShoppingCartActivity
+        }
     }
 
     private fun updateRecyclerView(page: Page<Product>) {
-        (binding.rvShoppingCartList.adapter as ShoppingCartAdapter).updateProducts(page.items)
-        binding.rvShoppingCartList.adapter?.notifyDataSetChanged()
+        binding.rvShoppingCartList.adapter.apply {
+            (this as ShoppingCartAdapter).updateProducts(page.items)
+            notifyDataSetChanged()
+        }
     }
 
     override fun onProductRemove(product: Product) {

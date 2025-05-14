@@ -2,7 +2,6 @@ package woowacourse.shopping.view.main
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,7 +11,6 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.page.Page
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
 
 class MainActivity :
@@ -23,8 +21,10 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar as Toolbar)
-        binding.viewModel = viewModel
-        binding.handler = this
+        binding.apply {
+            this.viewModel = viewModel
+            handler = this@MainActivity
+        }
         initRecyclerview()
     }
 
@@ -33,27 +33,23 @@ class MainActivity :
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_item_shopping_cart) {
-            val intent = ShoppingCartActivity.newIntent(this)
-            startActivity(intent)
-        } else {
-            super.onOptionsItemSelected(item)
-        }
-        return true
-    }
-
     private fun initRecyclerview() {
-        binding.rvProductList.adapter = ProductsAdapter(this)
-        binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
-        binding.rvProductList.addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
-        viewModel.requestProductsPage(0)
-        viewModel.productsLiveData.observe(this) { page -> updateRecyclerView(page) }
+        binding.rvProductList.apply {
+            adapter = ProductsAdapter(this@MainActivity)
+            layoutManager = GridLayoutManager(this@MainActivity, 2)
+            addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
+        }
+        viewModel.apply {
+            requestProductsPage(0)
+            productsLiveData.observe(this@MainActivity) { page -> updateRecyclerView(page) }
+        }
     }
 
     private fun updateRecyclerView(page: Page<Product>) {
-        (binding.rvProductList.adapter as ProductsAdapter).updateProducts(page.items)
-        binding.rvProductList.adapter?.notifyDataSetChanged()
+        binding.rvProductList.adapter.apply {
+            (this as ProductsAdapter).updateProducts(page.items)
+            notifyDataSetChanged()
+        }
     }
 
     override fun onProductSelected(product: Product) {

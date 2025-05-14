@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -24,21 +23,14 @@ class ProductDetailActivity :
                 onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
-        binding.product = product
-        binding.handler = this
+        binding.apply {
+            this.product = product
+            handler = this@ProductDetailActivity
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_item_close) {
-            finish()
-        } else {
-            super.onOptionsItemSelected(item)
-        }
         return true
     }
 
