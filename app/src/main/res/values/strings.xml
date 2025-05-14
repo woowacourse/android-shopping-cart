@@ -11,4 +11,5 @@
     <string name="error_product_is_null">상품 정보가 로드되지 못했습니다.</string>
     <string name="pagination_left"><![CDATA[<]]></string>
     <string name="pagination_right"><![CDATA[>]]></string>
+    <string name="button_text_load_more">더보기</string>
 </resources>
