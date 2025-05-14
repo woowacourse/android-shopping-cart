@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
@@ -83,12 +84,12 @@
             tools:text="99,800원" />
 
         <Button
-            android:onClick="@{()->handler.onAddToCartSelected(product)}"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:backgroundTint="#04C09E"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:onClick="@{()->handler.onAddToCartSelected(product)}"
             android:text="@string/button_text_add_to_shopping_cart"
             android:textSize="20sp"
             android:textStyle="bold"

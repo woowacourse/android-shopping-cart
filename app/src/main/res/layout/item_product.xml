@@ -17,9 +17,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="154dp"
-        android:padding="10dp"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> handler.onProductSelected(product)}">
+        android:onClick="@{() -> handler.onProductSelected(product)}"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/iv_product_image"
@@ -27,8 +27,8 @@
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
             android:image="@{product.imageUrl}"
-            app:layout_constraintDimensionRatio="1:1"
             android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
