@@ -35,12 +35,10 @@ class ProductAdapter(
     }
 
     fun submitList(newItems: List<Product>) {
-        val previousSize = items.size
         val insertedItems = newItems
             .map(ProductItem::ProductType) + ProductItem.ReadMoreType
-        val newItemCount = insertedItems.size - previousSize
         items.clear()
         items.addAll(insertedItems)
-        notifyItemRangeInserted(previousSize, newItemCount)
+        notifyDataSetChanged()
     }
 }

@@ -3,7 +3,7 @@ package woowacourse.shopping.data
 import woowacourse.shopping.model.Product
 import kotlin.math.min
 
-class ProductRepository(
+class ProductRepository {
     private val products: List<Product> =
         List(43) {
             Product(
@@ -12,7 +12,7 @@ class ProductRepository(
                 imageUrl = "https://avatars.githubusercontent.com/u/112997521?v=4"
             )
         }
-) {
+
     private var offset = 0
 
     fun getNextPage(): List<Product> {
