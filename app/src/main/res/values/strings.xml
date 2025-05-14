@@ -9,6 +9,7 @@
     <string name="btn_shopping_cart">장바구니 담기</string>
     <string name="btn_next_page"><![CDATA[>]]></string>
     <string name="btn_previous_page"><![CDATA[<]]></string>
+    <string name="btn_load_more">Load More</string>
 
     <string name="action_cart">장바구니</string>
     <string name="action_cancel">취소</string>
