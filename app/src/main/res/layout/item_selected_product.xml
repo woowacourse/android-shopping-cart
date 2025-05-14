@@ -8,6 +8,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="onRemoveClick"
+            type="woowacourse.shopping.view.shoppingcart.OnRemoveProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +29,8 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_cancel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{() -> onRemoveClick.onClickCancel(product)}"/>
 
         <TextView
             android:id="@+id/tv_product_name"

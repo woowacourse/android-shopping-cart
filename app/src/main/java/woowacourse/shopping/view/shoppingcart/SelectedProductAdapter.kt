@@ -6,11 +6,12 @@ import woowacourse.shopping.domain.Product
 
 class SelectedProductAdapter(
     private val products: List<Product>,
+    private val eventListener: OnRemoveProductListener,
 ) : RecyclerView.Adapter<SelectedProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): SelectedProductViewHolder = SelectedProductViewHolder.from(parent)
+    ): SelectedProductViewHolder = SelectedProductViewHolder.from(parent, eventListener)
 
     override fun getItemCount(): Int = products.size
 
