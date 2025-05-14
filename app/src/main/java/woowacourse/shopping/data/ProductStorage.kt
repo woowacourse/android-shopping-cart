@@ -10,5 +10,8 @@ interface ProductStorage {
         pageSize: Int,
     ): List<Product>
 
-    fun productCount(): Int
+    fun notHasMoreProduct(
+        page: Int,
+        pageSize: Int,
+    ): Boolean
 }

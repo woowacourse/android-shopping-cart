@@ -12,20 +12,19 @@ class MainViewModel(
     private val _products = MutableLiveData(emptyList<Product>())
     val products: LiveData<List<Product>> = _products
 
-    private val _isLastPage = MutableLiveData(false)
-    val isLastPage: LiveData<Boolean> = _isLastPage
-
-    init {
-        loadProducts(0, 20)
-    }
+    private val _loadable = MutableLiveData(false)
+    val loadable: LiveData<Boolean> = _loadable
 
     fun loadProducts(
         page: Int,
         pageSize: Int,
     ) {
-        val loadedProducts = storage.getProducts(page, pageSize)
+        val newPage = page / pageSize
+        val loadedProducts = storage.getProducts(newPage, pageSize)
+
         val currentList = _products.value ?: emptyList()
         _products.value = currentList + loadedProducts
-        _isLastPage.value = products.value?.count() == storage.productCount()
+
+        _loadable.value = storage.notHasMoreProduct(newPage + 1, pageSize)
     }
 }

@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="adapter"
+            type="woowacourse.shopping.view.main.adapter.ProductAdapter" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -15,6 +22,7 @@
             android:id="@+id/recycler_view_product"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/button_load"
             app:layout_constraintTop_toTopOf="parent"

@@ -24,21 +24,74 @@ import kotlin.getValue
 
 class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     private val viewModel: MainViewModel by viewModels { MainViewModelFactory() }
+    private val productsAdapter: ProductAdapter by lazy {
+        ProductAdapter(viewModel.products.value ?: emptyList(), this)
+    }
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
+        binding.adapter = productsAdapter
+        viewModel.loadProducts(0, PAGE_SIZE)
 
+        initView()
+        observeViewModel()
+    }
+
+    private fun initView() {
+        enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        initView()
+        binding.recyclerViewProduct.apply {
+            adapter = productsAdapter
+            setHasFixedSize(true)
+            setItemAnimator(null)
+        }.addOnScrollListener(onScrollListener())
+
+        binding.buttonLoad.setOnClickListener {
+            binding.buttonLoad.visibility = View.GONE
+            val layoutManager = binding.recyclerViewProduct.layoutManager as? LinearLayoutManager
+
+            val visiblePosition = layoutManager?.itemCount
+            viewModel.loadProducts(visiblePosition ?: 0, PAGE_SIZE)
+        }
+    }
+
+    private fun observeViewModel()  {
+        viewModel.products.observe(this) { value ->
+            productsAdapter.submitList(value)
+        }
+
+        viewModel.loadable.observe(this) { value ->
+            if (!value) binding.buttonLoad.visibility = View.GONE
+        }
+    }
+
+    private fun onScrollListener() =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(
+                recyclerView: RecyclerView,
+                dx: Int,
+                dy: Int,
+            ) {
+                val loadable = viewModel.loadable.value ?: return
+                if (!loadable && !recyclerView.canScrollVertically(1)) {
+                    binding.buttonLoad.visibility = View.VISIBLE
+                } else if (dy < 1) {
+                    binding.buttonLoad.visibility = View.GONE
+                }
+            }
+        }
+
+    override fun onSelectProduct(productId: Long) {
+        val intent = DetailActivity.newIntent(this, productId)
+        startActivity(intent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -53,57 +106,12 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         }
     }
 
-    private fun initView() {
-        val productsAdapter = ProductAdapter(handler = this)
-        binding.buttonLoad.setOnClickListener {
-            binding.buttonLoad.visibility = View.GONE
-            val layoutManager =
-                binding.recyclerViewProduct.layoutManager as? LinearLayoutManager
-                    ?: throw IllegalArgumentException()
-
-            val visiblePosition = layoutManager.itemCount
-            val pageSize = 20
-            val currentPage = visiblePosition / pageSize
-            viewModel.loadProducts(currentPage, pageSize)
-        }
-        binding.recyclerViewProduct.apply {
-            adapter = productsAdapter
-            setHasFixedSize(true)
-            setItemAnimator(null)
-        }.addOnScrollListener(onScrollListener())
-
-        viewModel.products.observe(this) { value ->
-            productsAdapter.submitList(value)
-        }
-
-        viewModel.isLastPage.observe(this) { value ->
-            if (value) binding.buttonLoad.visibility = View.GONE
-        }
-    }
-
-    private fun onScrollListener() =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int,
-                dy: Int,
-            ) {
-                val isLastPage = viewModel.isLastPage.value ?: return
-                if (!isLastPage && !recyclerView.canScrollVertically(1)) {
-                    binding.buttonLoad.visibility = View.VISIBLE
-                } else if (dy < 1) {
-                    binding.buttonLoad.visibility = View.GONE
-                }
-            }
-        }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_action_bar_menu, menu)
         return true
     }
 
-    override fun onSelectProduct(productId: Long) {
-        val intent = DetailActivity.newIntent(this, productId)
-        startActivity(intent)
+    companion object {
+        const val PAGE_SIZE = 20
     }
 }

@@ -244,9 +244,9 @@ class ProductStorageImpl : ProductStorage {
             ),
             Product(
                 id = 39,
-                name = "[더건강한] 닭가슴살 2종 (100g*4) (택1)",
-                price = Price(12980),
-                imgUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/3d8a3861-f778-44ef-bff1-d665be4d8f19.jpg",
+                name = "[애슐리] 홈스토랑 볶음밥 6종 (4개입) (택1)",
+                price = Price(11900),
+                imgUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/26376544-1943-4773-8665-7f7a1fa1dfb5.jpg",
             ),
         ).forEach {
             products[it.id] = it
@@ -259,10 +259,16 @@ class ProductStorageImpl : ProductStorage {
         page: Int,
         pageSize: Int,
     ): List<Product> {
-        val fromIndex = minOf(page * pageSize, products.size - 1)
+        val fromIndex = page * pageSize
         val toIndex = minOf(fromIndex + pageSize, products.size)
         return productsValues.subList(fromIndex, toIndex)
     }
 
-    override fun productCount(): Int = products.count()
+    override fun notHasMoreProduct(
+        page: Int,
+        pageSize: Int,
+    ): Boolean {
+        val fromIndex = page * pageSize
+        return fromIndex >= products.size
+    }
 }
