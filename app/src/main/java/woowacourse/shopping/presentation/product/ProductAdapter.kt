@@ -21,9 +21,10 @@ fun ImageView.loadImage(url: String?) {
 }
 
 class ProductAdapter(
-    private var items: List<Product>,
     private val onClick: (Product) -> Unit,
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+    private lateinit var items: List<Product>
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -43,7 +44,6 @@ class ProductAdapter(
 
     fun setData(list: List<Product>) {
         items = list
-        notifyDataSetChanged()
     }
 
     class ProductViewHolder(

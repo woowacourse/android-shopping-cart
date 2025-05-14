@@ -16,10 +16,7 @@ import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
     private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(
-            emptyList(),
-            { product -> navigateToProductDetail(product) },
-        )
+        ProductAdapter { product -> navigateToProductDetail(product) }
     }
     private val viewModel: ProductViewModel by viewModels()
 
