@@ -14,13 +14,15 @@ import woowacourse.shopping.data.product.CartDatabase
 import woowacourse.shopping.data.product.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.viewmodel.ProductViewModel
-import woowacourse.shopping.utils.Factory
+import woowacourse.shopping.utils.ViewModelFactory
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
 
     private val viewModel: ProductViewModel by viewModels {
-        Factory.createProductVM(CartRepositoryImpl(CartDatabase.getInstance(this)))
+        ViewModelFactory.createProductViewModelFactory(
+            CartRepositoryImpl(CartDatabase.getInstance(this))
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
