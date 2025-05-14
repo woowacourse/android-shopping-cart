@@ -1,10 +1,15 @@
 package woowacourse.shopping.feature.goods
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 
@@ -28,6 +33,21 @@ class GoodsActivity : AppCompatActivity() {
         }
 
         viewModel.loadGoods()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.nav_cart, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_cart -> {
+                val intent = Intent(this, CartActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun navigate(goods: Goods) {

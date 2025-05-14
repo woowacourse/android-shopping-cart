@@ -8,4 +8,8 @@
     <!--    GoodsDetailsActivity-->
     <string name="goods_detail_image_description">상품 상세 이미지</string>
     <string name="goods_details_cart_button">장바구니 담기</string>
+
+    <!--    CartActivity-->
+    <string name="nav_cart_icon_title">카트 아이콘</string>
+    <string name="cart_action_bar_name">Cart</string>
 </resources>
