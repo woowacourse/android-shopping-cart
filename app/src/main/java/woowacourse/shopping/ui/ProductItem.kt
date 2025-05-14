@@ -10,7 +10,7 @@ sealed interface ProductItem {
         }
 
     data class ProductType(val product: Product) : ProductItem
-    object ReadMoreType : ProductItem
+    data object ReadMoreType : ProductItem
 
     companion object {
         const val PRODUCT_TYPE = 0
