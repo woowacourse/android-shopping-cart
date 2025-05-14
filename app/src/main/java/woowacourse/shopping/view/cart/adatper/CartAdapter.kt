@@ -7,14 +7,14 @@ import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.Product
 
 class CartAdapter(
-    private val items: MutableList<Product> = mutableListOf(),
-    private val onClickDelete: (Long) -> Unit,
-) :
-    RecyclerView.Adapter<CartViewHolder>() {
-    fun submitList(newItems: List<Product>) {
-        val lastPosition = newItems.size
-        items.addAll(newItems)
-        notifyItemRangeChanged(lastPosition, newItems.size)
+    private var items: List<Product>,
+    private val handler: CartAdapterEventHandler,
+) : RecyclerView.Adapter<CartViewHolder>() {
+    fun removeItemAt(position: Int) {
+        val newItems = items.toMutableList()
+        newItems.removeAt(position)
+        items = newItems
+        notifyItemRemoved(position)
     }
 
     override fun onCreateViewHolder(
@@ -22,17 +22,7 @@ class CartAdapter(
         viewType: Int,
     ): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(
-            binding,
-            object : CartAdapterEventHandler {
-                override fun onClickDeleteItem(id: Long) {
-                    onClickDelete(id)
-                    val position = items.indexOfFirst { it.id == id }
-                    items.removeAt(position)
-                    notifyItemRemoved(position)
-                }
-            },
-        )
+        return CartViewHolder(binding, handler)
     }
 
     override fun getItemCount(): Int = items.size

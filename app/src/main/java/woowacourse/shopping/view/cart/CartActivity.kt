@@ -20,37 +20,48 @@ import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels { CartViewModelFactory() }
+    private val cartAdapter by lazy {
+        CartAdapter(
+            items = viewModel.products.value ?: emptyList(),
+            handler = this,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.lifecycleOwner = this
+        binding.adapter = cartAdapter
+
+        initView()
+        observeViewModel()
+    }
+
+    private fun initView() {
+        enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        initView()
-    }
-
-    private fun initView() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Cart"
+        supportActionBar?.title = getString(R.string.action_bar_title_cart_screen)
 
-        val cartAdapter =
-            CartAdapter {
-                viewModel.deleteProduct(it)
-            }
         binding.recyclerViewCart.apply {
-            adapter = cartAdapter
+            setItemAnimator(null)
             setHasFixedSize(true)
         }
+    }
 
-        viewModel.products.observe(this) { value ->
-            cartAdapter.submitList(value)
+    private fun observeViewModel() {
+        viewModel.removeItemPosition.observe(this) { value ->
+            cartAdapter.removeItemAt(value)
         }
+    }
+
+    override fun onClickDeleteItem(id: Long) {
+        viewModel.deleteProduct(id)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -62,10 +73,6 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onClickDeleteItem(id: Long) {
-        viewModel.deleteProduct(id)
     }
 
     companion object {

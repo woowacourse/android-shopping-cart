@@ -4,7 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data />
+    <data>
+
+        <variable
+            name="adapter"
+            type="woowacourse.shopping.view.cart.adatper.CartAdapter" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -18,6 +23,7 @@
             android:id="@+id/recycler_view_cart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
