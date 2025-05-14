@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.product.Product
 
-class ShoppingCartProductAdapter(
-    private val items: List<Product>,
-) : RecyclerView.Adapter<ShoppingCartProductViewHolder>() {
+class ShoppingCartProductAdapter : RecyclerView.Adapter<ShoppingCartProductViewHolder>() {
+    private var items: List<Product> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -20,4 +20,9 @@ class ShoppingCartProductAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun submitList(items: List<Product>) {
+        this.items = items
+        notifyDataSetChanged()
+    }
 }

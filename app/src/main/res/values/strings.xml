@@ -7,6 +7,7 @@
 
     <!-- 장바구니 페이지 -->
     <string name="shopping_cart_title">Cart</string>
+    <string name="shopping_cart_update_shopping_cart_error_message">장바구니를 불러오는 데 실패했습니다.</string>
 
     <!-- 상품 상세 페이지 -->
     <string name="product_detail_add_to_shopping_cart">장바구니 담기</string>

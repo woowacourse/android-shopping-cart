@@ -39,19 +39,6 @@ class ProductDetailActivity :
         handleEvents()
     }
 
-    private fun handleEvents() {
-        viewModel.event.observe(this) { event: ProductDetailEvent ->
-            @StringRes
-            val messageResourceId: Int =
-                when (event) {
-                    ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> R.string.product_detail_add_shopping_cart_success_message
-                    ProductDetailEvent.ADD_SHOPPING_CART_FAILURE -> R.string.product_detail_add_shopping_cart_error_message
-                }
-
-            showToast(getString(messageResourceId))
-        }
-    }
-
     private fun initViewModel() {
         val product =
             intent.getProductExtra() ?: run {
@@ -66,18 +53,31 @@ class ProductDetailActivity :
         viewModel.updateProduct(product)
     }
 
-    private fun bindViewModel() {
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
-        binding.productDetailEventListener = this
-    }
-
     private fun Intent.getProductExtra(): Product? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getSerializableExtra(EXTRA_PRODUCT, Product::class.java)
         } else {
             getSerializableExtra(EXTRA_PRODUCT) as? Product
         }
+
+    private fun bindViewModel() {
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.productDetailEventListener = this
+    }
+
+    private fun handleEvents() {
+        viewModel.event.observe(this) { event: ProductDetailEvent ->
+            @StringRes
+            val messageResourceId: Int =
+                when (event) {
+                    ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> R.string.product_detail_add_shopping_cart_success_message
+                    ProductDetailEvent.ADD_SHOPPING_CART_FAILURE -> R.string.product_detail_add_shopping_cart_error_message
+                }
+
+            showToast(getString(messageResourceId))
+        }
+    }
 
     override fun close() {
         finish()
