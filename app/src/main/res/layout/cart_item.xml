@@ -5,22 +5,28 @@
 
     <data>
 
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.product.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:layout_marginHorizontal="18dp"
+        android:layout_marginVertical="12dp"
         android:background="@drawable/cart_item_shape">
 
         <TextView
             android:id="@+id/tv_cart_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="18dp"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginTop="18dp"
-            android:layout_marginStart="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[이든] 동원 스위트콘" />
@@ -29,33 +35,37 @@
             android:id="@+id/btn_close"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@color/white"
-            android:src="@drawable/close"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:background="@color/white"
             android:contentDescription="@string/delete_description"
+            android:src="@drawable/close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:layout_width="150dp"
             android:layout_height="75dp"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
             android:contentDescription="@string/product_description"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_cart_name" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_cart_name"
+            app:setImageWithGlide="@{product.imageUrl}"
+            tools:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/tv_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/deep_gray"
-            android:layout_marginBottom="17dp"
             android:layout_marginEnd="12dp"
+            android:layout_marginBottom="17dp"
+            android:textColor="@color/deep_gray"
+            android:textSize="16sp"
+            setFormattedPrice="@{product.price}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="999,999,999,999,900원"/>
+            tools:text="999,999,999,999,900원" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

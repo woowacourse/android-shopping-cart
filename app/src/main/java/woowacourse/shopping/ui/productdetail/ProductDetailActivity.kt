@@ -16,7 +16,6 @@ import woowacourse.shopping.data.product.CartRepositoryImpl
 import woowacourse.shopping.data.product.toProductEntity
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.utils.PriceFormatter
 import woowacourse.shopping.utils.intentSerializable
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -37,7 +36,6 @@ class ProductDetailActivity : AppCompatActivity() {
                     Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
                 }
             }
-        binding.priceFormatter = PriceFormatter
     }
 
     private fun applyWindowInsets() {

@@ -13,11 +13,6 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.product.Product" />
-
-        <variable
-            name="priceFormatter"
-            type="woowacourse.shopping.utils.PriceFormatter" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:text="@{@string/price(priceFormatter.format(product.price))}"
+            setFormattedPrice="@{product.price}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
