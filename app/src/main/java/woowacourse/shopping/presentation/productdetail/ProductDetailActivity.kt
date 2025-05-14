@@ -43,7 +43,7 @@ class ProductDetailActivity : AppCompatActivity() {
                 val cartEntity = product.toEntity()
                 db.cartDao().insertProduct(cartEntity)
             }
-            Toast.makeText(this, "상품이 장바구니에 담겼습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.product_detail_add_cart), Toast.LENGTH_SHORT).show()
         }
         binding.ibExit.setOnClickListener {
             finish()
