@@ -10,9 +10,10 @@ import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.domain.Product
 
 class CartProductAdapter(
-    private val products: List<Product>,
     private val context: Context,
 ) : RecyclerView.Adapter<CartProductAdapter.CartProductViewHolder>() {
+    private var products: List<Product> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -41,6 +42,10 @@ class CartProductAdapter(
     }
 
     override fun getItemCount(): Int = products.size
+
+    fun setData(list: List<Product>) {
+        products = list
+    }
 
     class CartProductViewHolder(
         val binding: ItemCartProductBinding,

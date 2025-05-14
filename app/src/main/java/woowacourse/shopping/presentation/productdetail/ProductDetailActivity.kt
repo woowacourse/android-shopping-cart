@@ -10,9 +10,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartMapper.toEntity
+import woowacourse.shopping.data.db.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.getSerializableExtraCompat
+import kotlin.concurrent.thread
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailProductBinding
@@ -32,6 +35,13 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel.fetchData(product)
         viewModel.product.observe(this) {
             binding.product = it
+        }
+        binding.btnProductDetailAddCart.setOnClickListener {
+            thread {
+                val db = CartDatabase.getInstance(this)
+                val cartEntity = product.toEntity()
+                db.cartDao().insertProduct(cartEntity)
+            }
         }
         binding.ibExit.setOnClickListener {
             finish()
