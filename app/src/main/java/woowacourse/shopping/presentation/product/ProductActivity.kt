@@ -33,7 +33,6 @@ class ProductActivity : AppCompatActivity() {
 
         initAdapter()
         observeViewModel()
-
         viewModel.fetchData()
     }
 

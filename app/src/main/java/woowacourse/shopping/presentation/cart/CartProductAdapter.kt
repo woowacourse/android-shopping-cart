@@ -45,6 +45,7 @@ class CartProductAdapter(
 
     fun setData(list: List<Product>) {
         products = list
+        notifyDataSetChanged()
     }
 
     class CartProductViewHolder(

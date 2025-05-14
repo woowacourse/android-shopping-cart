@@ -14,11 +14,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private val cartProductAdapter: CartProductAdapter by lazy {
-        CartProductAdapter(
-            this,
-        )
-    }
+    private val cartProductAdapter: CartProductAdapter by lazy { CartProductAdapter(this) }
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,12 +26,17 @@ class CartActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        viewModel.fetchData()
-        binding.rvCartProduct.adapter = cartProductAdapter
-        viewModel.products.observe(this) { cartProductAdapter.setData(it) }
+
         binding.ibBack.setOnClickListener {
             finish()
         }
+        initAdapter()
+        viewModel.products.observe(this) { cartProductAdapter.setData(it) }
+        viewModel.fetchData()
+    }
+
+    private fun initAdapter() {
+        binding.rvCartProduct.adapter = cartProductAdapter
     }
 
     companion object {
