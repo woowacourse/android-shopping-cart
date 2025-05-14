@@ -9,6 +9,7 @@
     <string name="goods_detail_image_description">상품 상세 이미지</string>
     <string name="goods_details_cart_button">장바구니 담기</string>
     <string name="goods_detail_price">가격</string>
+    <string name="goods_detail_cart_insert_complete_toast_message">상품이 장바구니에 담겼습니다!</string>
 
     <!--    CartActivity-->
     <string name="nav_cart_icon_title">카트 아이콘</string>

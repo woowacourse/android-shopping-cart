@@ -7,6 +7,9 @@
         <variable
             name="goods"
             type="woowacourse.shopping.feature.GoodsUiModel" />
+        <variable
+            name="insertCallback"
+            type="kotlin.jvm.functions.Function1&lt;woowacourse.shopping.feature.GoodsUiModel, kotlin.Unit>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,6 +85,8 @@
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:clickable="true"
+            android:onClick="@{() -> insertCallback.invoke(goods)}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
