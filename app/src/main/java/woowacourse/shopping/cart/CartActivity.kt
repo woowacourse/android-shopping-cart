@@ -7,9 +7,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.mapper.toUiModel
-import woowacourse.shopping.product.catalog.MockProducts
+import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -20,7 +20,7 @@ class CartActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
 
-        val cartProducts = MockProducts().mockProducts.map { it.toUiModel() }
+        val cartProducts: List<ProductUiModel> = CartDatabase.cartProducts
         val adapter = CartAdapter(cartProducts)
         binding.recyclerViewCart.adapter = adapter
     }

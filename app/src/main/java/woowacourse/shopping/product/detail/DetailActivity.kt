@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.util.IntentCompat
@@ -34,11 +35,12 @@ class DetailActivity : AppCompatActivity() {
         binding.clickListener =
             AddToCartClickListener { product ->
                 showToastMessage()
+                CartDatabase.insertCartProduct(product)
             }
     }
 
     private fun showToastMessage() {
-        Toast.makeText(this, "장바구니에 상품이 추가되었습니다.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.text_add_to_cart_success), Toast.LENGTH_SHORT).show()
     }
 
     private fun applyWindowInsets() {
