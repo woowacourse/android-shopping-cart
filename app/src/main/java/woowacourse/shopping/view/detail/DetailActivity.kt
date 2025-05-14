@@ -13,43 +13,36 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), DetailScreenEventHandler {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels { DetailViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        binding.lifecycleOwner = this
-        setContentView(binding.root)
+
+        binding.lifecycleOwner = this@DetailActivity
+        binding.eventHandler = this@DetailActivity
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        intent.getLongExtra(EXTRAS_MOVIE_ID, 0).let {
-            viewModel.load(it)
-        }
+        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
+        viewModel.load(productId)
 
-        viewModel.product.observe(this) { value ->
-            binding.model = value
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_bar_close -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        viewModel.product.observe(this) {
+            binding.model = it
         }
     }
 
@@ -58,16 +51,32 @@ class DetailActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_bar_close -> {
+                finish()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onClickAddToCart() {
+        viewModel.addProduct()
+        startActivity(CartActivity.newIntent(this))
+    }
+
     companion object {
+        private const val EXTRA_PRODUCT_ID = "extra_product_id"
+
         fun newIntent(
             context: Context,
             productId: Long,
         ): Intent {
             return Intent(context, DetailActivity::class.java).apply {
-                putExtra(EXTRAS_MOVIE_ID, productId)
+                putExtra(EXTRA_PRODUCT_ID, productId)
             }
         }
-
-        private const val EXTRAS_MOVIE_ID = "extras_movie_id"
     }
 }
