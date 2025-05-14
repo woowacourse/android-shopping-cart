@@ -9,15 +9,11 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyShoppingCart
-import woowacourse.shopping.matcher.isDisplayed
-import woowacourse.shopping.matcher.matchText
-import woowacourse.shopping.matcher.performClick
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.detail.ProductDetailActivity
 
 class ProductDetailActivityTest {
@@ -29,6 +25,12 @@ class ProductDetailActivityTest {
     @Before
     fun setUp() {
         val fakeContext = ApplicationProvider.getApplicationContext<Context>()
+        val product =
+            Product(
+                "[병천아우내] 모듬순대",
+                11900,
+                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/00fb05f8-cb19-4d21-84b1-5cf6b9988749.jpg",
+            )
         val intent = ProductDetailActivity.newIntent(fakeContext, product)
         scenario = ActivityScenario.launch(intent)
     }
@@ -43,13 +45,14 @@ class ProductDetailActivityTest {
 
     @Test
     fun 장바구니_담기를_클릭하면_장바구니에_상품이_담긴다() {
+        val product =
+            Product(
+                "[병천아우내] 모듬순대",
+                11900,
+                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/00fb05f8-cb19-4d21-84b1-5cf6b9988749.jpg",
+            )
         onView(withId(R.id.btn_add_to_cart)).performClick()
-        onView(withId(R.id.shopping_cart_list)).isDisplayed()
-        assertThat(DummyShoppingCart.products).contains(product)
-    }
-
-    @After
-    fun tearDown() {
-        DummyShoppingCart.products.remove(product)
+        onView(withId(R.id.rv_shopping_cart_list)).isDisplayed()
+        assert(DummyShoppingCart.products.contains(product))
     }
 }
