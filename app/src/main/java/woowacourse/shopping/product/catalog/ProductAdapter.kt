@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(
-    private val products: List<ProductUiModel>,
+    private var products: List<ProductUiModel>,
     private val onProductClick: ProductClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
@@ -32,11 +32,22 @@ class ProductAdapter(
         }
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemViewType(position: Int): Int {
+        if (position == products.size) {
+            return LOAD_BUTTON
+        }
+        return PRODUCT
+    }
+
+    fun setData(products: List<ProductUiModel>) {
+        this.products = products
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int = products.size + 1
 
     companion object {
         private const val PRODUCT = 1
         private const val LOAD_BUTTON = 2
-        private const val PAGE_SIZE = 20
     }
 }
