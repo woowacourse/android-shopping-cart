@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.productlist
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -64,5 +66,11 @@ class ProductListActivity : AppCompatActivity() {
                 }
             },
         )
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent {
+            return Intent(context, ProductListActivity::class.java)
+        }
     }
 }

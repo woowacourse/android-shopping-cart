@@ -7,5 +7,6 @@
     <string name="message_add_cart">장바구니에 상품을 담았습니다.</string>
     <string name="delete_description">삭제</string>
     <string name="menu_cart">cart</string>
+    <string name="close">닫기</string>
 
 </resources>
