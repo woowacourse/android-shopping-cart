@@ -18,6 +18,8 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
         super.onCreate(savedInstanceState)
         supportActionBar?.title = null
         viewModel.updateProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
+
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.onAddCartProductClick = ::addCartProduct
     }

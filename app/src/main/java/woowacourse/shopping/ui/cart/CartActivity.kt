@@ -18,13 +18,17 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Cart"
 
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         binding.rvCart.adapter = cartAdapter
 
         viewModel.products.observe(this) { products ->
             cartAdapter.replaceItems(products)
         }
 
-        viewModel.updateCartProducts(5)
+        viewModel.currentPage.observe(this) { page ->
+            viewModel.updateCartProducts()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

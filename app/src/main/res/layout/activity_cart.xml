@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.ui.cart.CartViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_cart"
         android:layout_width="match_parent"
@@ -16,48 +23,64 @@
             android:padding="2dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/selector_cart_previous"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:text="@string/cart_page_previous"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
-            app:layout_constraintEnd_toStartOf="@+id/tv_cart_page"
-            app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
-
-        <TextView
-            android:id="@+id/tv_cart_page"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="62dp"
-            android:textColor="@color/gray_5"
-            android:textSize="22sp"
-            android:textStyle="bold"
+            android:gravity="center"
+            app:isGone="@{viewModel.maxPageCount == 1}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="0" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/selector_cart_next"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:text="@string/page_cart_next"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
-            app:layout_constraintStart_toEndOf="@+id/tv_cart_page"
-            app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/selector_cart_previous"
+                android:clickable="true"
+                android:enabled="@{viewModel.currentPage != 1}"
+                android:onClick="@{()->viewModel.decreasePageCount()}"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:text="@string/cart_page_previous"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
+                app:layout_constraintEnd_toStartOf="@+id/tv_cart_page"
+                app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
+
+            <TextView
+                android:id="@+id/tv_cart_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{String.valueOf(viewModel.currentPage)}"
+                android:textColor="@color/gray_5"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/selector_cart_next"
+                android:clickable="true"
+                android:enabled="@{viewModel.currentPage != viewModel.maxPageCount}"
+                android:onClick="@{()->viewModel.increasePageCount()}"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:text="@string/page_cart_next"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
+                app:layout_constraintStart_toEndOf="@+id/tv_cart_page"
+                app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
