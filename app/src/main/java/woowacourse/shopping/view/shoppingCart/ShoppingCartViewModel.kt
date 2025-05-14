@@ -28,4 +28,16 @@ class ShoppingCartViewModel(
             }
         }
     }
+
+    fun removeShoppingCartProduct(product: Product) {
+        thread {
+            runCatching {
+                shoppingCartRepository.remove(product)
+            }.onSuccess {
+                updateShoppingCart()
+            }.onFailure {
+                _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
+            }
+        }
+    }
 }

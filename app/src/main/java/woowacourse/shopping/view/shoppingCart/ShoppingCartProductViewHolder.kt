@@ -9,17 +9,25 @@ import woowacourse.shopping.domain.product.Product
 
 class ShoppingCartProductViewHolder(
     private val binding: ItemShoppingCartProductBinding,
+    onRemoveProduct: (product: Product) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
+    init {
+        binding.onRemoveProduct = onRemoveProduct
+    }
+
     fun bind(item: Product) {
         binding.product = item
         binding.imageUrl = item.imageUrl
     }
 
     companion object {
-        fun from(parent: ViewGroup): ShoppingCartProductViewHolder {
+        fun from(
+            parent: ViewGroup,
+            onRemoveProduct: (Product) -> Unit,
+        ): ShoppingCartProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemShoppingCartProductBinding.inflate(layoutInflater, parent, false)
-            return ShoppingCartProductViewHolder(binding)
+            return ShoppingCartProductViewHolder(binding, onRemoveProduct)
         }
     }
 }

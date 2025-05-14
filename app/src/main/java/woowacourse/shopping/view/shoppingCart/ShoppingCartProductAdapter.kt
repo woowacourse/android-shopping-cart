@@ -4,13 +4,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.product.Product
 
-class ShoppingCartProductAdapter : RecyclerView.Adapter<ShoppingCartProductViewHolder>() {
+class ShoppingCartProductAdapter(
+    private val onRemoveProduct: (product: Product) -> Unit,
+) : RecyclerView.Adapter<ShoppingCartProductViewHolder>() {
     private var items: List<Product> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ShoppingCartProductViewHolder = ShoppingCartProductViewHolder.from(parent)
+    ): ShoppingCartProductViewHolder = ShoppingCartProductViewHolder.from(parent, onRemoveProduct)
 
     override fun onBindViewHolder(
         holder: ShoppingCartProductViewHolder,
