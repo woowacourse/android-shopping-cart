@@ -27,6 +27,9 @@ class ShoppingCartActivity : AppCompatActivity() {
         setUpScreen()
         setupAppBar()
 
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
         val adapter =
             ShoppingCartAdapter(viewModel.goods.value ?: listOf()) { goods ->
                 viewModel.deleteGoods(goods)
@@ -36,8 +39,8 @@ class ShoppingCartActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
         }
 
-        viewModel.goods.observe(this) { newList ->
-            adapter.updateItems(newList)
+        viewModel.goods.observe(this) { goods ->
+            adapter.updateItems(goods)
         }
     }
 
