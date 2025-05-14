@@ -19,12 +19,8 @@ class ShoppingCartActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
-        val product =
-            intent.getParcelableCompat<Product>(KEY_PRODUCT) ?: run {
-                onUnexpectedError(getString(R.string.error_product_is_null))
-                return
-            }
-        viewModel.addProduct(product)
+        val product = intent.getParcelableCompat<Product>(KEY_PRODUCT)
+        if (product != null) viewModel.addProduct(product)
         viewModel.requestProductsPage(0)
         viewModel.productsLiveData.observe(this) { page -> updateRecyclerView(page) }
         binding.rvShoppingCartList.adapter = ShoppingCartAdapter(this)
@@ -51,6 +47,10 @@ class ShoppingCartActivity :
 
     companion object {
         private const val KEY_PRODUCT = "product"
+
+        fun newIntent(context: Context): Intent {
+            return Intent(context, ShoppingCartActivity::class.java)
+        }
 
         fun newIntent(
             context: Context,
