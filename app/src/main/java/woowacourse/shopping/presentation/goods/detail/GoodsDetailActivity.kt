@@ -24,15 +24,19 @@ class GoodsDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUpScreen()
+
+        viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
+        binding.vm = viewModel
+    }
+
+    private fun setUpScreen() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
-        binding.vm = viewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

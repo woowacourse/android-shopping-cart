@@ -25,12 +25,8 @@ class GoodsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        setUpScreen()
+
         val adapter =
             GoodsAdapter(viewModel.goods.value ?: listOf()) { goods ->
                 val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
@@ -40,6 +36,15 @@ class GoodsActivity : AppCompatActivity() {
         setLoadButtonClickListener()
         viewModel.goods.observe(this) { goods ->
             adapter.updateItems(goods)
+        }
+    }
+
+    private fun setUpScreen() {
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
     }
 
