@@ -16,8 +16,8 @@ class ProductDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val product: Product =
-            intent.extras?.getParcelableCompat(KEY_PRODUCT) ?: run {
-                finish()
+            intent.getParcelableCompat(KEY_PRODUCT) ?: run {
+                onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
         binding.product = product

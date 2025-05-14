@@ -11,15 +11,18 @@ import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.getParcelableCompat
 
 class ShoppingCartActivity :
-    BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart), ShoppingCartEventHandler {
+    BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
+    ShoppingCartEventHandler {
     private val viewModel: ShoppingCartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
         val product =
-            intent.extras?.getParcelableCompat<Product>(KEY_PRODUCT)
-                ?: throw IllegalArgumentException(ERR_PRODUCT_IS_NULL)
+            intent.getParcelableCompat<Product>(KEY_PRODUCT) ?: run {
+                onUnexpectedError(getString(R.string.error_product_is_null))
+                return
+            }
         viewModel.addProduct(product)
         val adapter = ShoppingCartAdapter(viewModel.products, this)
         viewModel.productsLiveData.observe(this) {
@@ -29,9 +32,12 @@ class ShoppingCartActivity :
         binding.rvShoppingCartList.adapter = adapter
     }
 
+    override fun onProductRemove(product: Product) {
+        viewModel.removeProduct(product)
+    }
+
     companion object {
         private const val KEY_PRODUCT = "product"
-        private const val ERR_PRODUCT_IS_NULL = "상품 정보가 로드되지 못했습니다"
 
         fun newIntent(
             context: Context,
@@ -41,9 +47,5 @@ class ShoppingCartActivity :
                 putExtra(KEY_PRODUCT, product)
             }
         }
-    }
-
-    override fun onProductRemove(product: Product) {
-        viewModel.removeProduct(product)
     }
 }
