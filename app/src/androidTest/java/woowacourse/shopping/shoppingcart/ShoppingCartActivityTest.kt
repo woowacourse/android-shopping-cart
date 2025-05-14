@@ -27,13 +27,13 @@ class ShoppingCartActivityTest {
     @Before
     fun setUp() {
         ShoppingDataBase.addItem(createGoods())
-
         val intent = Intent(ApplicationProvider.getApplicationContext(), ShoppingCartActivity::class.java)
         scenario = ActivityScenario.launch(intent)
     }
 
     @After
     fun tearDown() {
+        ShoppingDataBase.removeItem(createGoods())
         scenario.close()
     }
 
