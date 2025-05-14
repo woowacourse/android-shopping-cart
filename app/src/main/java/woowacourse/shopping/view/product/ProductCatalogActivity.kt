@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.product
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -27,6 +28,12 @@ class ProductCatalogActivity : AppCompatActivity() {
         val productAdapter =
             ProductAdapter(ProductData.products) { product -> handleProductDetail(product) }
         binding.rvProducts.adapter = productAdapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_shopping_cart, menu)
+        return true
     }
 
     private fun handleProductDetail(product: Product) {

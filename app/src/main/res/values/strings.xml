@@ -3,4 +3,5 @@
     <string name="price">가격</string>
     <string name="add_shopping_cart">장바구니 담기</string>
     <string name="product_price">%,d원</string>
+    <string name="shopping">Shopping</string>
 </resources>
