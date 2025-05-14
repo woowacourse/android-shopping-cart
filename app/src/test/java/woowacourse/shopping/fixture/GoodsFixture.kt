@@ -15,3 +15,6 @@ fun createGoods(
         "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/00fb05f8-cb19-4d21-84b1-5cf6b9988749.jpg",
         price,
     )
+
+val SUNDAE = createGoods()
+val ICE_CREAM = createGoods("[빙그래] 요맘때 파인트 710mL 3종 (택1)", 5000)
