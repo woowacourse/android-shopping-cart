@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.Product
 
 object DummyShoppingCart {
     val products =
-        listOf(
+        mutableListOf(
             Product(
                 "[병천아우내] 모듬순대",
                 11900,

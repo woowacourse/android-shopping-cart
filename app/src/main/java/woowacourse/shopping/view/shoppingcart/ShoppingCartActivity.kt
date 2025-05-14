@@ -8,7 +8,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
-import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.page.Page
 
 class ShoppingCartActivity :
@@ -19,8 +18,6 @@ class ShoppingCartActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
-        intent.getParcelableCompat<Product>(KEY_PRODUCT)
-            ?.let { product -> viewModel.addProduct(product) }
         viewModel.apply {
             requestProductsPage(0)
             productsLiveData.observe(this@ShoppingCartActivity) { page -> updateRecyclerView(page) }
@@ -56,15 +53,6 @@ class ShoppingCartActivity :
 
         fun newIntent(context: Context): Intent {
             return Intent(context, ShoppingCartActivity::class.java)
-        }
-
-        fun newIntent(
-            context: Context,
-            product: Product,
-        ): Intent {
-            return Intent(context, ShoppingCartActivity::class.java).apply {
-                putExtra(KEY_PRODUCT, product)
-            }
         }
     }
 }
