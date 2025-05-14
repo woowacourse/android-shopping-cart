@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -14,6 +15,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = "Cart"
 
         binding.rvCart.adapter = cartAdapter
 
@@ -22,6 +25,11 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
         }
 
         viewModel.updateCartProducts(5)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun createAdapterOnClickHandler() =

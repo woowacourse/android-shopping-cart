@@ -33,15 +33,10 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.item_cart -> {
-                navigateToCart()
-                true
-            }
-
-            else -> false
-        }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.item_cart) navigateToCart()
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun createAdapterOnClickHandler() =
         object : ProductViewHolder.OnClickHandler {
