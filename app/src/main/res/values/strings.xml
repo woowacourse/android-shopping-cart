@@ -3,6 +3,7 @@
 
     <string name="product_toolbar_text">Shopping</string>
     <string name="product_price">%,d원</string>
+    <string name="product_btn_load_more">상품 더보기</string>
 
     <string name="detail_product_price_text">가격</string>
     <string name="detail_product_price">%,d원</string>

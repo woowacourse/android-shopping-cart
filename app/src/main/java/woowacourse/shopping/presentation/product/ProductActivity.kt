@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.domain.Product
@@ -16,7 +17,10 @@ import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
     private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter { product -> navigateToProductDetail(product) }
+        ProductAdapter(
+            onClick = { product -> navigateToProductDetail(product) },
+            onClickLoadMore = { viewModel.loadMore() },
+        )
     }
     private val viewModel: ProductViewModel by viewModels { ProductViewModel.Factory }
 
@@ -37,12 +41,28 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
+        val layoutManager = GridLayoutManager(this, 2)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val itemCount = productAdapter.itemCount
+                    val showLoadMore = viewModel.showLoadMore.value ?: false
+                    return if (position == itemCount - 1 && showLoadMore) 2 else 1
+                }
+            }
+        binding.rvProducts.layoutManager = layoutManager
         binding.rvProducts.adapter = productAdapter
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) {
-            productAdapter.setData(it)
+        viewModel.products.observe(this) { products ->
+            val showLoadMore = viewModel.showLoadMore.value ?: false
+            productAdapter.setData(products, showLoadMore)
+        }
+
+        viewModel.showLoadMore.observe(this) { showLoadMore ->
+            val products = viewModel.products.value.orEmpty()
+            productAdapter.setData(products, showLoadMore)
         }
     }
 

@@ -10,6 +10,16 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
     override fun getProducts(): List<Product> = DummyProducts.values
 
+    override fun getPagedProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product> {
+        val fromIndex = page * pageSize
+        val toIndex = minOf(fromIndex + pageSize, DummyProducts.values.size)
+        if (fromIndex >= DummyProducts.values.size) return emptyList()
+        return DummyProducts.values.subList(fromIndex, toIndex)
+    }
+
     override fun getCartProducts(): List<Product> = dao.getAllProduct().map { productEntity -> productEntity.toDomain() }
 
     override fun deleteProduct(productId: Long) {
