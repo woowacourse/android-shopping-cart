@@ -35,4 +35,6 @@ class ProductsAdapter(
 
 interface ProductsEventHandler {
     fun onProductSelected(product: Product)
+
+    fun onLoadMoreProducts(page: Int)
 }

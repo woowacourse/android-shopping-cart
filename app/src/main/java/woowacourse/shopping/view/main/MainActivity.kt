@@ -1,10 +1,8 @@
 package woowacourse.shopping.view.main
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
@@ -19,33 +17,17 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.handler = this
+        initRecyclerview()
+    }
+
+    private fun initRecyclerview() {
         val adapter = ProductsAdapter(viewModel.products, this)
         binding.rvProductList.adapter = adapter
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
-        binding.rvProductList.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                    binding.btnLoadMoreProducts.visibility =
-                        if (
-                            lastVisibleItemPosition == layoutManager.itemCount - 1 &&
-                            viewModel.totalSize > viewModel.products.size
-                        ) {
-                            View.VISIBLE
-                        } else {
-                            View.GONE
-                        }
-                }
-            },
-        )
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
+        binding.rvProductList.addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
         viewModel.productsLiveData.observe(this) {
             adapter.updateProducts(it)
             binding.rvProductList.adapter?.notifyDataSetChanged()
@@ -54,5 +36,9 @@ class MainActivity :
 
     override fun onProductSelected(product: Product) {
         startActivity(ProductDetailActivity.newIntent(this, product))
+    }
+
+    override fun onLoadMoreProducts(page: Int) {
+        viewModel.requestProductsPage(page)
     }
 }
