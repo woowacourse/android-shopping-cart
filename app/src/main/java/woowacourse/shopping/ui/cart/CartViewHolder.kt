@@ -17,6 +17,6 @@ class CartViewHolder(
     }
 
     interface OnClickHandler {
-        fun onClickProduct(id: Int)
+        fun onRemoveCartProductClick(id: Int)
     }
 }

@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -16,6 +17,13 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
 
         viewModel.updateProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
         binding.viewModel = viewModel
+        binding.onAddCartProductClick = ::addCartProduct
+    }
+
+    private fun addCartProduct() {
+        viewModel.addCartProduct()
+        Toast.makeText(this, "성공적으로 장바구니에 담겼습니다!", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     companion object {

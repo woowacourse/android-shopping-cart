@@ -25,7 +25,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
 
     private fun createAdapterOnClickHandler() =
         object : CartViewHolder.OnClickHandler {
-            override fun onClickProduct(id: Int) {
+            override fun onRemoveCartProductClick(id: Int) {
                 viewModel.removeCartProduct(id)
             }
         }

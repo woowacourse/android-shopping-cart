@@ -27,7 +27,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
 
     private fun createAdapterOnClickHandler() =
         object : ProductViewHolder.OnClickHandler {
-            override fun onClickProduct(id: Int) {
+            override fun onProductClick(id: Int) {
                 navigateToProductDetail(id)
             }
         }
