@@ -8,6 +8,7 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.page.Page
 import kotlin.getValue
 
 class MainActivity :
@@ -17,22 +18,22 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.handler = this
         initRecyclerview()
     }
 
     private fun initRecyclerview() {
-        val adapter = ProductsAdapter(this)
-        viewModel.requestProductsPage(0)
-        binding.rvProductList.adapter = adapter
+        binding.rvProductList.adapter = ProductsAdapter(this)
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
         binding.rvProductList.addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
-        viewModel.productsLiveData.observe(this) { page ->
-            adapter.updateProducts(page.items)
-            binding.rvProductList.adapter?.notifyDataSetChanged()
-        }
+        viewModel.requestProductsPage(0)
+        viewModel.productsLiveData.observe(this) { page -> updateRecyclerView(page) }
+    }
+
+    private fun updateRecyclerView(page: Page<Product>) {
+        (binding.rvProductList.adapter as ProductsAdapter).updateProducts(page.items)
+        binding.rvProductList.adapter?.notifyDataSetChanged()
     }
 
     override fun onProductSelected(product: Product) {
