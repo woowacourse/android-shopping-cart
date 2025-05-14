@@ -5,7 +5,10 @@ import woowacourse.shopping.domain.model.Product
 interface CartRepository {
     fun getCartItems(callback: (List<Product>) -> Unit)
 
-    fun deleteCartItem(id: Long)
+    fun deleteCartItem(
+        id: Long,
+        callback: (Long) -> Unit,
+    )
 
     fun addCartItem(
         product: Product,

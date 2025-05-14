@@ -7,6 +7,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartBinding
+import woowacourse.shopping.presentation.UiState
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
@@ -53,6 +54,15 @@ class CartFragment :
     private fun initObserver() {
         viewModel.products.observe(viewLifecycleOwner) {
             cartAdapter.updateProducts(it)
+        }
+        viewModel.deleteState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    cartAdapter.removeProduct(it.data)
+                }
+                is UiState.Error -> {}
+            }
         }
     }
 

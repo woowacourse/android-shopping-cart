@@ -6,6 +6,18 @@ import woowacourse.shopping.domain.model.Product
 val dummyProducts =
     listOf(
         Product(
+            id = 921,
+            name = "빠모",
+            imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/092101.png",
+            Price(10_000),
+        ),
+        Product(
+            id = 393,
+            name = "팽도리",
+            imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/039301.png",
+            Price(10_000),
+        ),
+        Product(
             id = 1,
             name = "이상해씨",
             imageUrl = "https://data1.pokemonkorea.co.kr/newdata/pokedex/mid/000101.png",

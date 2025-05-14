@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.presentation.UiState
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toUiModel
 
@@ -16,18 +17,23 @@ class CartViewModel(
     private val _products = MutableLiveData<List<ProductUiModel>>()
     val products: LiveData<List<ProductUiModel>> = _products
 
+    private val _deleteState = MutableLiveData<UiState<Long>>()
+    val deleteState: LiveData<UiState<Long>> = _deleteState
+
     init {
         fetchShoppingCart()
     }
 
     private fun fetchShoppingCart() {
-        cartRepository.getCartItems {
-            _products.postValue(it.map { it.toUiModel() })
+        cartRepository.getCartItems { products ->
+            _products.postValue(products.map { it.toUiModel() })
         }
     }
 
     fun deleteProduct(product: ProductUiModel) {
-        _products.value = _products.value?.minus(product)
+        cartRepository.deleteCartItem(product.id) {
+            _deleteState.postValue(UiState.Success(it))
+        }
     }
 
     companion object {

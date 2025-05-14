@@ -31,9 +31,10 @@ class CartAdapter(
         notifyItemRangeInserted(previousSize, products.size)
     }
 
-    fun removeProduct(product: ProductUiModel) {
-        products.remove(product)
-        notifyItemRemoved(products.indexOf(product))
+    fun removeProduct(id: Long) {
+        val index = products.indexOfFirst { it.id == id }
+        products.removeAt(index)
+        notifyItemRemoved(index)
     }
 
     interface CartEventListener {

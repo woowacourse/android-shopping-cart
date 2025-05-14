@@ -16,8 +16,13 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun deleteCartItem(id: Long) {
-        thread { cartDao.delete(id) }
+    override fun deleteCartItem(
+        id: Long,
+        callback: (Long) -> Unit,
+    ) {
+        thread {
+            cartDao.delete(id).let { callback(id) }
+        }
     }
 
     override fun addCartItem(
