@@ -12,9 +12,16 @@
         <variable
             name="imageUrl"
             type="String" />
+
+        <variable
+            name="onSelectProduct"
+            type="kotlin.jvm.functions.Function1" />
+
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> onSelectProduct.invoke(product)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"

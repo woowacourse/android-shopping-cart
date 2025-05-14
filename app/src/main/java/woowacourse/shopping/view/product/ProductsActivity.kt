@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 
 class ProductsActivity : AppCompatActivity() {
@@ -25,11 +26,15 @@ class ProductsActivity : AppCompatActivity() {
             insets
         }
 
-        binding.adapter = ProductAdapter(Product.dummies)
+        binding.adapter = ProductAdapter(Product.dummies, ::navigateToProductDetail)
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
     }
 
     private fun navigateToShoppingCart() {
         startActivity(ShoppingCartActivity.newIntent(this))
+    }
+
+    private fun navigateToProductDetail(product: Product) {
+        startActivity(ProductDetailActivity.newIntent(this, product))
     }
 }

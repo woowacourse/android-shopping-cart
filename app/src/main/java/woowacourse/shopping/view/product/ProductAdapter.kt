@@ -6,11 +6,12 @@ import woowacourse.shopping.domain.product.Product
 
 class ProductAdapter(
     private val items: List<Product>,
+    private val onSelectProduct: (Product) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder.from(parent)
+    ): ProductViewHolder = ProductViewHolder.from(parent, onSelectProduct)
 
     override fun onBindViewHolder(
         holder: ProductViewHolder,

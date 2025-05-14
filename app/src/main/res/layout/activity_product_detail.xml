@@ -6,19 +6,15 @@
     <data>
 
         <variable
-            name="imageUrl"
-            type="String" />
-
-        <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
+            name="viewModel"
+            type="woowacourse.shopping.view.productDetail.ProductDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/productDetailRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.product.ProductDetailActivity">
+        tools:context=".view.productDetail.ProductDetailActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/productDetailToolbar"
@@ -46,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
-            app:imageUrl="@{imageUrl}"
+            app:imageUrl="@{viewModel.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/productDetailToolbar" />
 
@@ -56,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{product.name}"
+            android:text="@{viewModel.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -88,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
             android:gravity="end"
-            android:text="@{@string/product_price_format(product.price)}"
+            android:text="@{@string/product_price_format(viewModel.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
