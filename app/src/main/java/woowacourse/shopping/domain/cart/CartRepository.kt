@@ -7,7 +7,7 @@ interface CartRepository {
 
     fun fetch(id: Long): Product
 
-    fun fetchAll(): List<Product>
+    fun fetchAll(callback: (List<Product>) -> Unit)
 
     fun remove(product: Product)
 }
