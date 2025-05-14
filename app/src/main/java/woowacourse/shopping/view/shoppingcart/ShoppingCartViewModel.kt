@@ -5,21 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.page.Page
 import kotlin.math.min
 
 class ShoppingCartViewModel : ViewModel() {
     private var allProducts: Set<Product> = DummyShoppingCart.products.toSet()
-    private val _productsLiveData: MutableLiveData<List<Product>> = MutableLiveData()
-    private val _paginationLeftLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val _paginationRightLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val _pageLiveData: MutableLiveData<Int> = MutableLiveData()
+    private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
 
-    val productsLiveData: LiveData<List<Product>> get() = _productsLiveData
-    val paginationLeftLiveData: LiveData<Boolean> get() = _paginationLeftLiveData
-    val paginationRightLiveData: LiveData<Boolean> get() = _paginationRightLiveData
-    val pageLiveData: LiveData<Int> get() = _pageLiveData
-
-    val products: List<Product> get() = _productsLiveData.value ?: requestProductsPage(0)
+    val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
 
     fun addProduct(product: Product) {
         allProducts = allProducts + product
@@ -31,14 +24,13 @@ class ShoppingCartViewModel : ViewModel() {
         requestProductsPage(currentProductIndex / PAGE_SIZE)
     }
 
-    fun requestProductsPage(page: Int): List<Product> {
-        val from = page * PAGE_SIZE
-        val until = min(from + PAGE_SIZE, allProducts.size)
-        _productsLiveData.value = allProducts.toList().subList(from, until)
-        _paginationLeftLiveData.value = page > 0
-        _paginationRightLiveData.value = until < allProducts.size
-        _pageLiveData.value = page
-        return _productsLiveData.value ?: emptyList()
+    fun requestProductsPage(requestPage: Int) {
+        val page = Page.from(
+            allProducts.toList(),
+            requestPage,
+            PAGE_SIZE
+        )
+        _productsLiveData.value = page
     }
 
     companion object {
