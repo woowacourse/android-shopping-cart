@@ -3,6 +3,9 @@ package woowacourse.shopping.view.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
@@ -15,6 +18,7 @@ class ProductDetailActivity :
     ProductDetailEventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(binding.toolbarProductDetail as Toolbar)
         val product: Product =
             intent.getParcelableCompat(KEY_PRODUCT) ?: run {
                 onUnexpectedError(getString(R.string.error_product_is_null))
@@ -22,6 +26,20 @@ class ProductDetailActivity :
             }
         binding.product = product
         binding.handler = this
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_item_close) {
+            finish()
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     override fun onAddToCartSelected(product: Product) {
