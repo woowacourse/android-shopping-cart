@@ -7,31 +7,60 @@ import woowacourse.shopping.presentation.model.ProductUiModel
 class CatalogAdapter(
     products: List<ProductUiModel> = emptyList(),
     private val eventListener: CatalogEventListener,
-) : RecyclerView.Adapter<ProductViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val products = products.toMutableList()
+    var hasMore = false
+        private set
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = products.size + if (hasMore) 1 else 0
+
+    override fun getItemViewType(position: Int): Int =
+        if (position == products.size && hasMore) {
+            CatalogItem.CatalogType.LOAD_MORE.ordinal
+        } else {
+            CatalogItem.CatalogType.PRODUCT.ordinal
+        }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder.from(parent, eventListener)
+    ): RecyclerView.ViewHolder =
+        when (viewType) {
+            CatalogItem.CatalogType.LOAD_MORE.ordinal ->
+                LoadMoreViewHolder.from(
+                    parent,
+                    eventListener,
+                )
+
+            CatalogItem.CatalogType.PRODUCT.ordinal -> ProductViewHolder.from(parent, eventListener)
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
 
     override fun onBindViewHolder(
-        holder: ProductViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
+        when (holder) {
+            is ProductViewHolder -> holder.bind(products[position])
+            is LoadMoreViewHolder -> {}
+        }
     }
 
-    fun updateProducts(products: List<ProductUiModel>) {
+    fun updateProducts(
+        products: List<ProductUiModel>,
+        hasMore: Boolean,
+    ) {
         val previousSize = itemCount
         this.products.clear()
         this.products.addAll(products)
+        this.hasMore = hasMore
+
         notifyItemRangeInserted(previousSize, products.size)
     }
 
     interface CatalogEventListener {
         fun onProductClicked(product: ProductUiModel)
+
+        fun onLoadMoreClicked()
     }
 }

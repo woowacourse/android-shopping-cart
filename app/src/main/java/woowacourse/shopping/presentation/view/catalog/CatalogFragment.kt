@@ -32,11 +32,31 @@ class CatalogFragment :
         setCatalogAdapter()
     }
 
+    override fun onProductClicked(product: ProductUiModel) {
+        navigateToScreen(DetailFragment::class.java, DetailFragment.newBundle(product))
+    }
+
+    override fun onLoadMoreClicked() {
+        viewModel.fetchProducts()
+    }
+
     private fun setCatalogAdapter() {
-        binding.recyclerViewProducts.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
+        binding.recyclerViewProducts.layoutManager =
+            GridLayoutManager(requireContext(), DEFAULT_SPAN_COUNT).apply {
+                spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int =
+                            if (position == catalogAdapter.itemCount - 1 && catalogAdapter.hasMore) {
+                                LOAD_MORE_SPAN_COUNT
+                            } else {
+                                1
+                            }
+                    }
+            }
+
         binding.recyclerViewProducts.addItemDecoration(
             GridSpacingItemDecoration(
-                SPAN_COUNT,
+                DEFAULT_SPAN_COUNT,
                 ITEM_SPACING,
             ),
         )
@@ -45,7 +65,7 @@ class CatalogFragment :
 
     private fun initObserver() {
         viewModel.products.observe(viewLifecycleOwner) { products ->
-            catalogAdapter.updateProducts(products)
+            catalogAdapter.updateProducts(products.first, products.second)
         }
     }
 
@@ -53,10 +73,6 @@ class CatalogFragment :
         binding.btnNavigateCart.setOnClickListener {
             navigateToScreen(CartFragment::class.java)
         }
-    }
-
-    override fun onProductClicked(product: ProductUiModel) {
-        navigateToScreen(DetailFragment::class.java, DetailFragment.newBundle(product))
     }
 
     private fun navigateToScreen(
@@ -71,7 +87,8 @@ class CatalogFragment :
     }
 
     companion object {
-        private const val SPAN_COUNT = 2
+        private const val LOAD_MORE_SPAN_COUNT = 2
+        private const val DEFAULT_SPAN_COUNT = 2
         private const val ITEM_SPACING = 12f
     }
 }

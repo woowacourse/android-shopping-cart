@@ -11,5 +11,6 @@ class ShoppingApplication : Application() {
 
     private fun initRepository() {
         RepositoryProvider.initCartRepository(this)
+        RepositoryProvider.initProductRepository()
     }
 }
