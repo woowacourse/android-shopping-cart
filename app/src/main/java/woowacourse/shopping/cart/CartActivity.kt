@@ -21,8 +21,10 @@ class CartActivity : AppCompatActivity() {
         applyWindowInsets()
         setSupportActionBar()
 
+        binding.lifecycleOwner = this
+
         binding.recyclerViewCart.adapter =
-            CartAdapter(emptyList()) { cartProduct ->
+            CartAdapter(emptyList(), viewModel) { cartProduct ->
                 viewModel.deleteCartProduct(cartProduct)
             }
         viewModel.cartProducts.observe(this) { value ->
