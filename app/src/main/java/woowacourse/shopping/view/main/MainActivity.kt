@@ -22,7 +22,7 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar as Toolbar)
         binding.apply {
-            this.viewModel = viewModel
+            viewModel = this@MainActivity.viewModel
             handler = this@MainActivity
         }
         initRecyclerview()
