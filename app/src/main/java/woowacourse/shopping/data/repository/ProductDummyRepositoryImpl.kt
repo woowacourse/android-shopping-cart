@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.repository
 
+import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
 
 object ProductDummyRepositoryImpl {
