@@ -31,10 +31,10 @@ class ShoppingCartActivity : AppCompatActivity() {
             )[ShoppingCartViewModel::class.java]
 
         val repository = ShoppingCartRepositoryImpl(applicationContext)
-        val products = repository.getAll()
+        val shoppingProducts = repository.getAll()
         val adapter =
             SelectedProductAdapter(
-                products,
+                shoppingProducts,
             ) { product ->
                 viewModel.deleteProduct(product)
             }

@@ -1,24 +1,27 @@
 package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.mapper.toProductDomain
 import woowacourse.shopping.databinding.ItemSelectedProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 
 class SelectedProductViewHolder(
     private val binding: ItemSelectedProductBinding,
     eventListener: OnRemoveProductListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private lateinit var currentItem: Product
+    private lateinit var currentItem: ShoppingProduct
 
     init {
-        binding.onRemoveClick = eventListener
+        binding.onRemoveClick =
+            OnClickListener { eventListener.onClickCancel(currentItem) }
     }
 
-    fun bind(product: Product) {
-        currentItem = product
-        binding.product = product
+    fun bind(shoppingProduct: ShoppingProduct) {
+        currentItem = shoppingProduct
+        binding.product = shoppingProduct.productId.toProductDomain()
     }
 
     companion object {

@@ -2,10 +2,10 @@ package woowacourse.shopping.view.shoppingcart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 
 class SelectedProductAdapter(
-    private val products: List<Product>,
+    private val products: List<ShoppingProduct>,
     private val eventListener: OnRemoveProductListener,
 ) : RecyclerView.Adapter<SelectedProductViewHolder>() {
     override fun onCreateViewHolder(

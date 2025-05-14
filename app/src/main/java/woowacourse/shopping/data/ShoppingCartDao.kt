@@ -6,12 +6,12 @@ import androidx.room.Query
 
 @Dao
 interface ShoppingCartDao {
-    @Query("SELECT * from productEntity")
-    fun getAll(): List<ProductEntity>
+    @Query("SELECT * from shopping_cart")
+    fun getAll(): List<ShoppingCartEntity>
 
     @Insert
-    fun insertAll(vararg product: ProductEntity)
+    fun insert(product: ShoppingCartEntity)
 
-    @Query("DELETE from productEntity WHERE product_id == :productId")
-    fun delete(productId: Long)
+    @Query("DELETE from shopping_cart WHERE id == :shoppingCartId")
+    fun delete(shoppingCartId: Long)
 }

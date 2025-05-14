@@ -1,11 +1,11 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 
 interface ShoppingCartRepository {
-    fun insertAll(vararg product: Product)
+    fun insert(productId: Long)
 
-    fun getAll(): List<Product>
+    fun getAll(): List<ShoppingProduct>
 
-    fun delete(productId: Long)
+    fun delete(shoppingCartId: Long)
 }

@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.ShoppingCartRepository
 import woowacourse.shopping.data.ShoppingCartRepositoryImpl
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 
 class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
 ) : ViewModel() {
-    fun deleteProduct(product: Product) {
-        repository.delete(product.id)
+    fun deleteProduct(shoppingProduct: ShoppingProduct) {
+        repository.delete(shoppingProduct.position)
     }
 
     companion object {

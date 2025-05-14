@@ -17,7 +17,7 @@ class ProductDetailViewModel(
     val navigateEvent: LiveData<Unit> = _navigateEvent
 
     fun addToShoppingCart() {
-        repository.insertAll(product)
+        repository.insert(product.id)
         _navigateEvent.value = Unit
     }
 
