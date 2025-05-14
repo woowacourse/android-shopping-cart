@@ -12,7 +12,7 @@ class CartViewModel : ViewModel() {
 
     val cartDummyRepository = CartDummyRepositoryImpl
 
-    fun updateProducts(count: Int) {
+    fun updateCartProducts(count: Int) {
         val newProducts = cartDummyRepository.fetchCartProducts(count, products.value?.lastOrNull()?.id ?: 0)
         _products.value = products.value?.plus(newProducts)
     }
