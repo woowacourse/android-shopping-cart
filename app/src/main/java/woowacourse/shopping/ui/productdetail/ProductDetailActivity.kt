@@ -11,10 +11,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.CartDatabase
-import woowacourse.shopping.data.product.CartRepository
 import woowacourse.shopping.data.product.CartRepositoryImpl
-import woowacourse.shopping.data.product.toProductEntity
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.utils.intentSerializable
 
@@ -32,7 +31,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.detailClickListener =
             object : DetailClickListener {
                 override fun onAddToCartClick(product: Product) {
-                    cartRepository.add(product.toProductEntity())
+                    cartRepository.add(product)
                     Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
                 }
             }
