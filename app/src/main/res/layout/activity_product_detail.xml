@@ -77,7 +77,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.valueOf(viewModel.product.price)}"
+                android:text="@{@string/products_price(viewModel.product.price)}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="99,800원" />
