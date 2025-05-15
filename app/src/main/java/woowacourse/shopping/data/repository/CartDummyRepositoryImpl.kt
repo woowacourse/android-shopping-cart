@@ -30,4 +30,8 @@ object CartDummyRepositoryImpl {
     fun removeCartProduct(id: Int) {
         cart.removeIf { it.id == id }
     }
+
+    fun clearCart() {
+        cart.clear()
+    }
 }
