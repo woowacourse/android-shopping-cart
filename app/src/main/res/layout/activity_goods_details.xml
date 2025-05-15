@@ -64,6 +64,7 @@
             tools:text="가격" />
 
         <TextView
+            android:id="@+id/tv_goods_details_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -77,6 +78,7 @@
             tools:text="99,800원" />
 
         <TextView
+            android:id="@+id/tv_add_cart_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/cyan"

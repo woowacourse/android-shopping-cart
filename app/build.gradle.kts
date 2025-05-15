@@ -62,6 +62,7 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
@@ -70,6 +71,9 @@ dependencies {
     androidTestImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.mannodermaus.junit5.core)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.espresso.intents)
+    androidTestImplementation(libs.androidx.core.testing.v200)
     kapt(libs.compiler)
     kapt(libs.androidx.room.compiler)
 }
