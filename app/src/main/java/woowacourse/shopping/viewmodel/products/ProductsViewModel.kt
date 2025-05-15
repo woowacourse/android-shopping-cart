@@ -13,14 +13,15 @@ import woowacourse.shopping.model.products.Products
 class ProductsViewModel(
     private val products: Products,
 ) : ViewModel() {
-    private val _productsInShop = MutableLiveData(products.value)
+    private val _productsInShop = MutableLiveData<List<Product>>()
     val productsInShop: LiveData<List<Product>> get() = _productsInShop
     private val pageSize = 20
-    private var currentPage = 1
-    private val loadedList =
-        mutableListOf<Product>().apply {
-            addAll(products.value.take(pageSize))
-        }
+    private var currentPage = 0
+    private val loadedItems = mutableListOf<Product>()
+
+    init {
+        loadNextPage()
+    }
 
     fun loadNextPage() {
         val nextStart = currentPage * pageSize
@@ -28,8 +29,8 @@ class ProductsViewModel(
 
         if (nextStart < products.value.size) {
             val nextItems = products.value.subList(nextStart, nextEnd)
-            loadedList.addAll(nextItems)
-            _productsInShop.value = loadedList
+            loadedItems.addAll(nextItems)
+            _productsInShop.value = loadedItems.toList()
             currentPage++
         }
     }

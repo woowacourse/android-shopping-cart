@@ -2,7 +2,6 @@ package woowacourse.shopping.view.products
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.activity.enableEdgeToEdge
@@ -38,7 +37,7 @@ class ProductsActivity : AppCompatActivity() {
             }
 
         viewModel.productsInShop.observe(this) { list ->
-            adapter.submit(list)
+            adapter.updateProductsView(list)
         }
 
         binding.cartImageBtn.setOnClickListener {
@@ -56,14 +55,15 @@ class ProductsActivity : AppCompatActivity() {
                     val layoutManager = recyclerView.layoutManager as GridLayoutManager
                     val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
                     val totalItemCount: Int = adapter.itemCount
-                    Log.d("TAG", "onScrolled: $totalItemCount")
-
-                    if (lastVisibleItemPosition > totalItemCount - 1) {
-                        binding.btnMore.visibility = VISIBLE
-                        binding.btnMore.setOnClickListener {
+                    val moreBtn = binding.btnMore
+                    if (lastVisibleItemPosition >= totalItemCount - 1) {
+                        moreBtn.visibility = VISIBLE
+                        moreBtn.setOnClickListener {
                             it.visibility = GONE
                             viewModel.loadNextPage()
                         }
+                    } else {
+                        moreBtn.visibility = GONE
                     }
                 }
             },

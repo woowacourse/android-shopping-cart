@@ -34,7 +34,7 @@ class ProductsAdapter(
         holder.bind(products[position])
     }
 
-    fun submit(list: List<Product>) {
+    fun updateProductsView(list: List<Product>) {
         products.clear()
         products.addAll(list)
         notifyDataSetChanged()
