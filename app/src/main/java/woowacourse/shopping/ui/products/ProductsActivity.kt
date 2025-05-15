@@ -19,30 +19,9 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.rvProducts.adapter = productsAdapter
-        binding.rvProducts.layoutManager =
-            GridLayoutManager(this, 2).apply {
-                spanSizeLookup =
-                    object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            val viewType = productsAdapter.getItemViewType(position)
-                            return when (ProductsItemViewType.entries[viewType]) {
-                                ProductsItemViewType.PRODUCT -> 1
-                                ProductsItemViewType.LOAD_MORE -> 2
-                            }
-                        }
-                    }
-            }
-
-        viewModel.products.observe(this) { products ->
-            productsAdapter.updateProductItems(products)
-            viewModel.updateIsLoadable()
-        }
-        viewModel.isLoadable.observe(this) { isLoadable ->
-            productsAdapter.updateLoadMoreItem(isLoadable)
-        }
-
-        viewModel.updateProducts(20)
+        initViewBinding()
+        initObservers()
+        viewModel.updateProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -62,7 +41,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
             }
 
             override fun onLoadMoreClick() {
-                viewModel.updateProducts(20)
+                viewModel.updateProducts()
             }
         }
 
@@ -74,5 +53,40 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
         startActivity(intent)
+    }
+
+    private fun initViewBinding() {
+        binding.rvProducts.adapter = productsAdapter
+        binding.rvProducts.layoutManager = createLayoutManager()
+    }
+
+    private fun createLayoutManager(): GridLayoutManager =
+        GridLayoutManager(this, GRID_LAYOUT_SIZE).apply {
+            spanSizeLookup =
+                object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        val viewType = productsAdapter.getItemViewType(position)
+                        return when (ProductsItemViewType.entries[viewType]) {
+                            ProductsItemViewType.PRODUCT -> PRODUCT_LAYOUT_SIZE
+                            ProductsItemViewType.LOAD_MORE -> LOAD_MORE_LAYOUT_SIZE
+                        }
+                    }
+                }
+        }
+
+    private fun initObservers() {
+        viewModel.products.observe(this) { products ->
+            productsAdapter.updateProductItems(products)
+            viewModel.updateIsLoadable()
+        }
+        viewModel.isLoadable.observe(this) { isLoadable ->
+            productsAdapter.updateLoadMoreItem(isLoadable)
+        }
+    }
+
+    companion object {
+        private const val GRID_LAYOUT_SIZE: Int = 2
+        private const val PRODUCT_LAYOUT_SIZE: Int = 1
+        private const val LOAD_MORE_LAYOUT_SIZE: Int = 2
     }
 }
