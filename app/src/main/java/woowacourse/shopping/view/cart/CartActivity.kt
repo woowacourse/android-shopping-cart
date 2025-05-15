@@ -1,9 +1,11 @@
 package woowacourse.shopping.view.cart
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
@@ -22,12 +24,59 @@ class CartActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.backImageBtn.setOnClickListener { finish() }
         adapter =
-            CartAdapter(onProductRemoveClickListener = { product ->
-                viewModel.removeToCart(product)
-            })
+            CartAdapter(onProductRemoveClickListener = { product -> viewModel.removeToCart(product) })
 
+        viewModel.loadedItems.observe(this) {
+            adapter.updateProductsView(it)
+        }
         viewModel.productsInCart.observe(this) {
             adapter.updateProductsView(it)
+            if (viewModel.isOnlyOnePage()) {
+                binding.layoutPageButtons.visibility = View.GONE
+            }
+        }
+
+        viewModel.pageCount.observe(this) { pageCount ->
+            binding.tvPageCount.text = pageCount.toString()
+            if (viewModel.isFirstPage(pageCount)) {
+                binding.btnPreviousPage.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.gray_6,
+                    ),
+                )
+            } else {
+                binding.btnPreviousPage.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.aqua_green,
+                    ),
+                )
+            }
+
+            if (viewModel.isLastPage(pageCount)) {
+                binding.btnNextPage.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.gray_6,
+                    ),
+                )
+            } else {
+                binding.btnNextPage.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.aqua_green,
+                    ),
+                )
+            }
+        }
+
+        binding.btnPreviousPage.setOnClickListener {
+            viewModel.loadPreviousPage()
+        }
+
+        binding.btnNextPage.setOnClickListener {
+            viewModel.loadNextPage()
         }
 
         binding.rvProductsInCart.adapter = adapter
