@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation
 
 import io.mockk.mockk
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,6 +25,6 @@ class ProductDetailViewModelTest {
         viewModel.fetchData(FIXTURE.DUMMY_PRODUCT)
 
         val product = viewModel.product.getOrAwaitValue()
-        Assertions.assertThat(product).isEqualTo(FIXTURE.DUMMY_PRODUCT)
+        assertThat(product).isEqualTo(FIXTURE.DUMMY_PRODUCT)
     }
 }
