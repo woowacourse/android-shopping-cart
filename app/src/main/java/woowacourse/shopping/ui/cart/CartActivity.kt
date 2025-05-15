@@ -15,7 +15,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.productlist.ProductListActivity
 import woowacourse.shopping.ui.viewmodel.CartViewModel
@@ -24,63 +23,66 @@ import woowacourse.shopping.utils.ViewModelFactory
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
 
-    val cartRepository: CartRepository by lazy { CartRepositoryImpl(CartDatabase.getInstance(this)) }
-
     private val viewModel: CartViewModel by viewModels {
         ViewModelFactory.createCartViewModelFactory(
             CartRepositoryImpl(CartDatabase.getInstance(this)),
         )
     }
 
+    private lateinit var cartAdapter: CartAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
+
+        initAppbar()
+        initAdapter()
+        initObserve()
+    }
+
+    private fun initAppbar() {
         setSupportActionBar(binding.toolbarCart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+    }
 
-        viewModel.products.observe(this) {
-            binding.rvCart.adapter = CartAdapter(it, object : CartClickListener {
+    private fun initAdapter() {
+        cartAdapter = CartAdapter(
+            items = mutableListOf(),
+            cartClickListener = object : CartClickListener {
                 override fun onClick(product: Product) {
-                    cartRepository.remove(product)
+                    viewModel.deleteProduct(product)
                     viewModel.update()
                 }
-            })
+            }
+        )
+
+        binding.rvCart.adapter = cartAdapter
+        binding.btnPrevious.setOnClickListener { viewModel.moveToPrevious() }
+        binding.btnNext.setOnClickListener { viewModel.moveToNext() }
+    }
+
+    private fun initObserve() {
+        viewModel.products.observe(this) {
+            cartAdapter.updateItem(it)
         }
 
         viewModel.pageNumber.observe(this) {
-            binding.btnPrevious.apply {
-                setOnClickListener {
-                    viewModel.moveToPrevious()
-                }
-            }
-
-            binding.btnNext.setOnClickListener {
-                viewModel.moveToNext()
-            }
-
             binding.tvPageNumber.text = it.toString()
-
-            if (it == 1) {
-                binding.btnPrevious.backgroundTintList =
-                    ColorStateList.valueOf(getColor(R.color.button_inactive))
-                binding.btnNext.backgroundTintList =
-                    ColorStateList.valueOf(getColor(R.color.button_active))
-            } else if (viewModel.isLastPage()/*마지막 페이지 일 때 */) {
-                binding.btnPrevious.backgroundTintList =
-                    ColorStateList.valueOf(getColor(R.color.button_active))
-                binding.btnNext.backgroundTintList =
-                    ColorStateList.valueOf(getColor(R.color.button_inactive))
-            } else {
-                binding.btnPrevious.backgroundTintList =
-                    ColorStateList.valueOf(getColor(R.color.button_active))
-                binding.btnNext.backgroundTintList =
-                    ColorStateList.valueOf(getColor(R.color.button_active))
-            }
+            updateButtonTint(it)
         }
+    }
+
+    private fun updateButtonTint(it: Int?) {
+        val page = it ?: 1
+        binding.btnPrevious.backgroundTintList =
+            ColorStateList.valueOf(getColor(if (page == 1) R.color.button_inactive else R.color.button_active))
+
+        binding.btnNext.backgroundTintList =
+            ColorStateList.valueOf(getColor(if (viewModel.isLastPage()) R.color.button_inactive else R.color.button_active))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

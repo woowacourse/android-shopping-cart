@@ -51,4 +51,8 @@ class CartViewModel(
             update()
         }
     }
+
+    fun deleteProduct(product: Product) {
+        repository.remove(product)
+    }
 }
