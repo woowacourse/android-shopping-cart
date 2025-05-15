@@ -6,7 +6,7 @@ import woowacourse.shopping.databinding.LoadMoreItemBinding
 class LoadMoreViewHolder(
     binding: LoadMoreItemBinding,
     loadMoreClickListener: LoadMoreClickListener,
-): RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.loadMoreClickListener = loadMoreClickListener
     }

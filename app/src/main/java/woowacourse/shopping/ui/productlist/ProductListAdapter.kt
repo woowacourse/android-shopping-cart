@@ -43,7 +43,10 @@ class ProductListAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         when (holder) {
             is ProductItemViewHolder -> holder.bind(items[position] as ProductListViewType.ProductItemType)
         }
