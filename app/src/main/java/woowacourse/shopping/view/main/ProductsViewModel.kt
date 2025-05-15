@@ -21,7 +21,7 @@ class ProductsViewModel : ViewModel() {
                 requestPage,
                 PAGE_SIZE,
             )
-        _productsLiveData.value = _productsLiveData.value?.plus(page) ?: page
+        _productsLiveData.value = page
     }
 
     companion object {
