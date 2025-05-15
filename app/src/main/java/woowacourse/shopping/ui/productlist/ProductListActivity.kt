@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -34,7 +36,36 @@ class ProductListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         applyWindowInsets()
 
+        initViews()
+        initObserver()
+    }
+
+    private fun applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    private fun initViews() {
         setSupportActionBar(binding.toolbarProductList)
+
+        val layoutManager = GridLayoutManager(this, 2).apply {
+            spanSizeLookup = object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val viewType = binding.productsRecyclerView.adapter?.getItemViewType(position)
+                    return when (viewType) {
+                        R.layout.product_item -> 1
+                        else -> 2
+                    }
+                }
+            }
+        }
+        binding.productsRecyclerView.layoutManager = layoutManager
+    }
+
+    private fun initObserver() {
         viewModel.products.observe(this) {
             binding.productsRecyclerView.adapter = productListAdapter(it)
         }
@@ -51,16 +82,7 @@ class ProductListActivity : AppCompatActivity() {
                 startActivity(CartActivity.newIntent(this))
             }
         }
-
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun applyWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
     }
 
     private fun productListAdapter(item: List<ProductListViewType>): ProductListAdapter {
