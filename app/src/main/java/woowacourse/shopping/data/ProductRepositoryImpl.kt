@@ -9,5 +9,9 @@ class ProductRepositoryImpl : ProductRepository {
     override fun getPaged(
         limit: Int,
         offset: Int,
-    ): List<Product> = ProductData.products.subList(offset, limit + offset)
+    ): List<Product> {
+        val endIndex = (offset + limit).coerceAtMost(ProductData.products.size)
+        if (offset >= ProductData.products.size) return emptyList()
+        return ProductData.products.subList(offset, endIndex)
+    }
 }
