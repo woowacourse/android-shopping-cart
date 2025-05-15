@@ -9,12 +9,19 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartViewModel : ViewModel() {
     private val products = mutableListOf<ProductUiModel>()
-    private val allCartProducts = CartDatabase.cartProducts
+    private val allCartProducts get() = CartDatabase.cartProducts
 
     private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
     val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
 
-    val page = MutableLiveData<Int>(INITIAL_PAGE)
+    private val _isNextButtonEnabled = MutableLiveData<Boolean>(false)
+    val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
+
+    private val _isPrevButtonEnabled = MutableLiveData<Boolean>(false)
+    val isPrevButtonEnabled: LiveData<Boolean> = _isPrevButtonEnabled
+
+    private val _page = MutableLiveData<Int>(INITIAL_PAGE)
+    val page: LiveData<Int> = _page
 
     init {
         products += allCartProducts
@@ -25,7 +32,8 @@ class CartViewModel : ViewModel() {
         products.remove(cartProduct)
         _cartProducts.value = products
         CartDatabase.deleteCartProduct(cartProduct)
-        Log.d("deleteCart", "$allCartProducts, $products, $cartProducts")
+
+        loadCartProducts()
     }
 
     fun onClick(dir: Int) {
@@ -40,14 +48,27 @@ class CartViewModel : ViewModel() {
         loadCartProducts()
     }
 
-    fun isNextButtonEnabled(): Boolean = allCartProducts.size > 5
+    fun isNextButtonEnabled(): Boolean {
+        val currentPage = page.value ?: INITIAL_PAGE
+        val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
+
+        _isNextButtonEnabled.value = currentPage < lastPage
+
+        return _isNextButtonEnabled.value == true
+    }
+
+    fun isPrevButtonEnabled(): Boolean {
+        val currentPage = page.value ?: INITIAL_PAGE
+        _isPrevButtonEnabled.value = currentPage >= 1
+        return isPrevButtonEnabled.value == true
+    }
 
     private fun increasePage() {
-        page.value = page.value?.plus(1)
+        _page.value = page.value?.plus(1)
     }
 
     private fun decreasePage() {
-        page.value = page.value?.minus(1)
+        _page.value = page.value?.minus(1)
     }
 
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {

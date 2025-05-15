@@ -17,7 +17,7 @@ class CartAdapter(
         if (viewType == CART_PRODUCT) {
             CartViewHolder.from(parent, onDeleteProductClick)
         } else {
-            PaginationButtonViewHolder.from(parent, cartViewModel, onPaginationButtonClick)
+            PaginationButtonViewHolder.from(parent, onPaginationButtonClick)
         }
 
     override fun onBindViewHolder(
@@ -26,7 +26,12 @@ class CartAdapter(
     ) {
         when (holder) {
             is CartViewHolder -> holder.bind(cartProducts[position])
-            is PaginationButtonViewHolder -> holder.bind(cartViewModel.page.value ?: 1)
+            is PaginationButtonViewHolder ->
+                holder.bind(
+                    page = cartViewModel.page.value ?: 1,
+                    isNextButtonEnabled = cartViewModel.isNextButtonEnabled(),
+                    isPrevButtonEnabled = cartViewModel.isPrevButtonEnabled(),
+                )
         }
     }
 
@@ -44,7 +49,8 @@ class CartAdapter(
 
     override fun getItemCount(): Int =
         if (cartProducts.size > 5 ||
-            cartViewModel.isNextButtonEnabled()
+            cartViewModel.isNextButtonEnabled() ||
+            cartViewModel.isPrevButtonEnabled()
         ) {
             cartProducts.size + 1
         } else {

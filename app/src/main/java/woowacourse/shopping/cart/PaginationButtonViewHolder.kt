@@ -8,14 +8,20 @@ import woowacourse.shopping.databinding.PaginationButtonItemBinding
 class PaginationButtonViewHolder(
     private val binding: PaginationButtonItemBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(page: Int) {
-        binding.textViewPage.text = (page + 1).toString()
+    fun bind(
+        page: Int,
+        isNextButtonEnabled: Boolean,
+        isPrevButtonEnabled: Boolean,
+    ) {
+        binding.page = page + 1
+        binding.isNextButtonEnabled = isNextButtonEnabled
+        binding.isPrevButtonEnabled = isPrevButtonEnabled
+        binding.executePendingBindings()
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            cartViewModel: CartViewModel,
             onPaginationButtonClick: PaginationButtonClickListener,
         ): PaginationButtonViewHolder {
             val inflater = LayoutInflater.from(parent.context)
