@@ -40,14 +40,7 @@ class CartAdapter(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int =
-        if (cartProducts.size % 5 == 0 &&
-            cartProducts.isNotEmpty()
-        ) {
-            cartProducts.size + 1
-        } else {
-            cartProducts.size
-        }
+    override fun getItemCount(): Int = if (cartProducts.size >= 5) cartProducts.size + 1 else cartProducts.size
 
     companion object {
         private const val CART_PRODUCT = 1

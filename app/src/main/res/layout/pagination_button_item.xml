@@ -26,6 +26,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:onClick="@{() -> viewModel.onClick(1)}"
                 android:id="@+id/button_prev"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -50,6 +51,7 @@
                 tools:text="1" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:onClick="@{() -> viewModel.onClick(2)}"
                 android:id="@+id/button_next"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
