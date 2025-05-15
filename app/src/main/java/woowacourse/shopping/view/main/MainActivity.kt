@@ -32,8 +32,10 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.lifecycleOwner = this
-        binding.adapter = productsAdapter
+        with(binding) {
+            lifecycleOwner = this@MainActivity
+            adapter = productsAdapter
+        }
         viewModel.loadProducts(0, PAGE_SIZE)
 
         initView()
@@ -48,28 +50,26 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
             insets
         }
 
-        binding.recyclerViewProduct.apply {
-            adapter = productsAdapter
-            setHasFixedSize(true)
-            setItemAnimator(null)
-        }.addOnScrollListener(onScrollListener())
+        with(binding) {
+            recyclerViewProduct.apply {
+                adapter = productsAdapter
+                setHasFixedSize(true)
+                setItemAnimator(null)
+            }.addOnScrollListener(onScrollListener())
 
-        binding.buttonLoad.setOnClickListener {
-            binding.buttonLoad.visibility = View.GONE
-            val layoutManager = binding.recyclerViewProduct.layoutManager as? LinearLayoutManager
+            buttonLoad.setOnClickListener {
+                buttonLoad.visibility = View.GONE
+                val layoutManager = recyclerViewProduct.layoutManager as? LinearLayoutManager
 
-            val visiblePosition = layoutManager?.itemCount
-            viewModel.loadProducts(visiblePosition ?: 0, PAGE_SIZE)
+                val visiblePosition = layoutManager?.itemCount
+                viewModel.loadProducts(visiblePosition ?: 0, PAGE_SIZE)
+            }
         }
     }
 
     private fun observeViewModel() {
         viewModel.products.observe(this) { value ->
             productsAdapter.submitList(value)
-        }
-
-        viewModel.loadable.observe(this) { value ->
-            if (!value) binding.buttonLoad.visibility = View.GONE
         }
     }
 
