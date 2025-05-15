@@ -77,6 +77,6 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
 
     companion object {
         private const val INITIAL_PAGE_NO = 1
-        private const val PAGE_SIZE = 5
+        const val PAGE_SIZE = 5
     }
 }

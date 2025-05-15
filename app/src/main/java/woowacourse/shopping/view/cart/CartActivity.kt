@@ -9,13 +9,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adatper.CartAdapter
 import woowacourse.shopping.view.cart.adatper.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
+import woowacourse.shopping.view.cart.vm.CartViewModel.Companion.PAGE_SIZE
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 
 class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEventHandler {
@@ -38,7 +38,7 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEve
             vm = viewModel
         }
 
-        viewModel.loadCarts(viewModel.pageNo.value ?: 1, 5)
+        viewModel.loadCarts(viewModel.pageNo.value ?: 1, PAGE_SIZE)
 
         initView()
         observeViewModel()
@@ -63,14 +63,6 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEve
     private fun observeViewModel() {
         viewModel.products.observe(this) { value ->
             cartAdapter.submitList(value)
-        }
-
-        viewModel.pageState.observe(this) { value ->
-            with(binding) {
-                pager.isVisible = value.pageVisibility
-                buttonForward.isEnabled = value.nextPageEnabled
-                buttonPrevious.isEnabled = value.previousPageEnabled
-            }
         }
     }
 

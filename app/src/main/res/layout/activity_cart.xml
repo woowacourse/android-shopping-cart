@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="vm"
             type="woowacourse.shopping.view.cart.vm.CartViewModel" />
@@ -42,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
+            android:visibility="@{vm.pageState.pageVisibility ? View.VISIBLE : View.GONE}"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,6 +53,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:src="@drawable/ic_previous"
+            android:enabled="@{vm.pageState.previousPageEnabled}"
             android:onClick="@{() -> eventHandler.onClickPreviousPage()}"
             android:background="@drawable/previous_button_shape"
             android:inset="0dp"/>
@@ -70,6 +72,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:src="@drawable/ic_forward"
+            android:enabled="@{vm.pageState.nextPageEnabled}"
             android:onClick="@{() -> eventHandler.onClickNextPage()}"
             android:background="@drawable/forward_button_shape"
             android:inset="0dp"/>
