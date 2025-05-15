@@ -43,7 +43,12 @@ class ProductDetailActivity : AppCompatActivity() {
                 val cartEntity = product.toEntity()
                 db.cartDao().insertProduct(cartEntity)
             }
-            Toast.makeText(this, getString(R.string.product_detail_add_cart), Toast.LENGTH_SHORT).show()
+            Toast
+                .makeText(
+                    this,
+                    getString(R.string.product_detail_add_cart_toast),
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
         binding.ibExit.setOnClickListener {
             finish()

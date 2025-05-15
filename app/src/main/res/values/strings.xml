@@ -5,12 +5,14 @@
     <string name="product_price">%,d원</string>
     <string name="product_btn_load_more">상품 더보기</string>
 
-    <string name="detail_product_price_text">가격</string>
-    <string name="detail_product_price">%,d원</string>
-    <string name="detail_product_add_cart">장바구니 담기</string>
+    <string name="product_detail_price_text">가격</string>
+    <string name="product_detail_price">%,d원</string>
+    <string name="product_detail_add_cart">장바구니 담기</string>
+    <string name="product_detail_add_cart_toast">상품이 장바구니에 담겼습니다.</string>
 
     <string name="cart_toolbar_text">Cart</string>
     <string name="cart_product_price">%,d원</string>
     <string name="cart_delete_complete">상품이 삭제되었습니다.</string>
-    <string name="product_detail_add_cart">상품이 장바구니에 담겼습니다.</string>
+    <string name="cart_first_page_toast">첫번째 페이지입니다.</string>
+    <string name="cart_last_page_toast">마지막 페이지입니다.</string>
 </resources>
