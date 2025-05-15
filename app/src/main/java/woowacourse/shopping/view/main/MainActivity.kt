@@ -48,7 +48,7 @@ class MainActivity :
     private fun updateRecyclerView(page: Page<Product>) {
         binding.rvProductList.adapter.apply {
             (this as ProductsAdapter).updateProducts(page.items)
-            notifyDataSetChanged()
+            notifyItemInserted(itemCount)
         }
     }
 

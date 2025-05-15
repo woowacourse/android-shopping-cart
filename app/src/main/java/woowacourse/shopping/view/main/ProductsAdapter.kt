@@ -30,7 +30,7 @@ class ProductsAdapter(
     }
 
     fun updateProducts(newProducts: List<Product>) {
-        products = newProducts
+        products += newProducts
     }
 }
 
