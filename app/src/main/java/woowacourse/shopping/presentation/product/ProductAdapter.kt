@@ -7,16 +7,6 @@ import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
-@BindingAdapter("imageUrl")
-fun ImageView.loadImage(url: String?) {
-    Glide
-        .with(this.context)
-        .load(url)
-        .fallback(R.drawable.ic_delete)
-        .error(R.drawable.ic_delete)
-        .into(this)
-}
-
 class ProductAdapter(
     private val onClick: (Product) -> Unit,
     private val onClickLoadMore: () -> Unit,
