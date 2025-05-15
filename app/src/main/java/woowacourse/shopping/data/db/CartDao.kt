@@ -6,8 +6,8 @@ import androidx.room.Query
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM ProductEntity")
-    fun getAll(): Boolean
+    @Query("SELECT EXISTS(SELECT 1 FROM ProductEntity WHERE id > :id)")
+    fun existsItemAfterId(id: Long): Boolean
 
     @Query("SELECT * FROM ProductEntity ORDER BY id DESC Limit :limit OFFSET :offset")
     fun getCartItemPaged(

@@ -24,6 +24,9 @@ class CartViewModel(
     private val _page = MutableLiveData(DEFAULT_PAGE)
     val page: LiveData<Int> = _page
 
+    private val _hasMore = MutableLiveData<Boolean>()
+    val hasMore: LiveData<Boolean> = _hasMore
+
     private val limit: Int = 5
 
     init {
@@ -33,14 +36,13 @@ class CartViewModel(
     fun fetchShoppingCart(isNextPage: Boolean) {
         val currentPage = _page.value ?: DEFAULT_PAGE
 
-        if (!isNextPage && currentPage < DEFAULT_PAGE) return
-
         val newPage = calculatePage(isNextPage, currentPage)
         val newOffset = (newPage - DEFAULT_PAGE) * limit
 
-        cartRepository.getCartItems(limit = limit, offset = newOffset) { products ->
+        cartRepository.getCartItems(limit = limit, offset = newOffset) { products, hasMore ->
             _products.postValue(products.map { it.toUiModel() })
             _page.postValue(newPage)
+            _hasMore.postValue(hasMore)
         }
     }
 

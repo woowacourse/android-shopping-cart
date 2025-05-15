@@ -6,7 +6,7 @@ interface CartRepository {
     fun getCartItems(
         limit: Int,
         offset: Int,
-        callback: (List<Product>) -> Unit,
+        callback: (List<Product>, Boolean) -> Unit,
     )
 
     fun deleteCartItem(

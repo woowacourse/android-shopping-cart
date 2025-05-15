@@ -1,6 +1,5 @@
 package woowacourse.shopping.data
 
-import android.util.Log
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.mapper.toProduct
 import woowacourse.shopping.data.mapper.toProductEntity
@@ -14,17 +13,17 @@ class CartRepositoryImpl(
     override fun getCartItems(
         limit: Int,
         offset: Int,
-        callback: (List<Product>) -> Unit,
+        callback: (List<Product>, Boolean) -> Unit,
     ) {
         thread {
-            Log.d("tama_log", "REPO : $offset")
-            callback(
+            val products =
                 cartDao
                     .getCartItemPaged(
                         limit = limit,
                         offset = offset,
-                    ).map { it.toProduct() },
-            )
+                    ).map { it.toProduct() }
+            val hasMore = products.lastOrNull()?.let { cartDao.existsItemAfterId(it.id) } ?: false
+            callback(products, hasMore)
         }
     }
 
