@@ -14,15 +14,24 @@ class ProductCatalogViewModel(
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> = _products
 
-    private var currentPage = 1
+    private val _captureProducts = MutableLiveData<List<Product>>()
+    val captureProducts: LiveData<List<Product>> = _captureProducts
+
+    private val _currentPage = MutableLiveData<Int>(1)
+    val currentPage: LiveData<Int> = _currentPage
 
     init {
         loadProducts()
     }
 
     fun loadMoreProducts() {
-        val newProducts = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
-        currentPage++
+        val newProducts =
+            repository.getPaged(
+                PRODUCT_SIZE_LIMIT,
+                currentPage.value?.times(PRODUCT_SIZE_LIMIT) ?: 0,
+            )
+        _currentPage.value = _currentPage.value?.plus(1)
+        _captureProducts.value = newProducts
         _products.value = _products.value?.plus(newProducts)
     }
 

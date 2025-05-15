@@ -2,7 +2,6 @@ package woowacourse.shopping.view.product.catalog
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -59,8 +58,11 @@ class ProductCatalogActivity : AppCompatActivity() {
         binding.rvProducts.layoutManager = gridLayoutManager
 
         viewModel.products.observe(this) { products ->
-            Log.d("asdf", "productssize : ${products.size}")
             productAdapter.setItems(products)
+        }
+
+        viewModel.currentPage.observe(this) { value ->
+            productAdapter.updateItems(value)
         }
     }
 

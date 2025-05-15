@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.product.catalog
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
@@ -46,8 +45,10 @@ class ProductAdapter(
     fun setItems(newItems: List<Product>) {
         products.clear()
         products.addAll(newItems)
-        Log.d("asdf", "productssize : ${products.size}")
-        notifyDataSetChanged()
+    }
+
+    fun updateItems(value: Int) {
+        notifyItemRangeChanged(value * PRODUCT_SIZE_LIMIT, PRODUCT_SIZE_LIMIT)
     }
 
     companion object {
