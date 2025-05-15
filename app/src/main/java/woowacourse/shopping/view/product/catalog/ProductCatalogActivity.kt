@@ -41,16 +41,16 @@ class ProductCatalogActivity : AppCompatActivity() {
         val productAdapter =
             ProductAdapter(
                 products = emptyList(),
-                productsEventListener = { product -> handleProductDetail(product) },
+                productsEventListener = { product -> navigateToProductDetail(product) },
                 loadEventListener = viewModel::loadMoreProducts,
             )
         binding.rvProducts.adapter = productAdapter
-        val gridLayoutManager = GridLayoutManager(this, 2)
+        val gridLayoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
         gridLayoutManager.spanSizeLookup =
             object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int =
                     when (productAdapter.getItemViewType(position)) {
-                        LOAD_MORE -> 2
+                        LOAD_MORE -> GRID_SPAN_COUNT
                         else -> 1
                     }
             }
@@ -80,8 +80,12 @@ class ProductCatalogActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun handleProductDetail(product: Product) {
+    private fun navigateToProductDetail(product: Product) {
         val intent = ProductDetailActivity.newIntent(this, product)
         startActivity(intent)
+    }
+
+    companion object {
+        private const val GRID_SPAN_COUNT = 2
     }
 }
