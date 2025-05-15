@@ -26,6 +26,16 @@ class ProductActivityTest {
     }
 
     @Test
+    fun 툴바에_앱이름이_표시된다() {
+        onView(withId(R.id.tv_product_toolbar_title)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun 툴바에_장바구니_버튼이_표시된다() {
+        onView(withId(R.id.ib_cart)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun `상품_목록이_표시된다`() {
         onView(withId(R.id.cl_product))
             .check(matches(isDisplayed()))

@@ -2,15 +2,13 @@ package woowacourse.shopping.presentation
 
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.domain.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.domain.getOrAwaitValue
 import woowacourse.shopping.presentation.product.ProductViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -38,7 +36,7 @@ class ProductViewModelTest {
         viewModel.fetchData()
 
         val products = viewModel.products.getOrAwaitValue()
-        assertThat(products).hasSize(10)
+        Assertions.assertThat(products).hasSize(10)
     }
 
     @Test
@@ -47,7 +45,7 @@ class ProductViewModelTest {
         viewModel.loadMore()
 
         val products = viewModel.products.getOrAwaitValue()
-        assertThat(products).hasSize(20)
+        Assertions.assertThat(products).hasSize(20)
     }
 
     @Test
@@ -56,7 +54,7 @@ class ProductViewModelTest {
         repeat(3) { viewModel.loadMore() }
 
         val showLoadMore = viewModel.showLoadMore.getOrAwaitValue()
-        assertThat(showLoadMore).isTrue()
+        Assertions.assertThat(showLoadMore).isTrue()
     }
 
     @Test
@@ -65,6 +63,6 @@ class ProductViewModelTest {
         repeat(4) { viewModel.loadMore() }
 
         val showLoadMore = viewModel.showLoadMore.getOrAwaitValue()
-        assertThat(showLoadMore).isFalse()
+        Assertions.assertThat(showLoadMore).isFalse()
     }
 }

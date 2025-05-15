@@ -1,13 +1,15 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.presentation
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import java.util.concurrent.CountDownLatch
 
 fun <T> LiveData<T>.getOrAwaitValue(): T {
     var value: T? = null
-    val latch = java.util.concurrent.CountDownLatch(1)
+    val latch = CountDownLatch(1)
 
     val observer =
-        object : androidx.lifecycle.Observer<T> {
+        object : Observer<T> {
             override fun onChanged(t: T) {
                 value = t
                 latch.countDown()

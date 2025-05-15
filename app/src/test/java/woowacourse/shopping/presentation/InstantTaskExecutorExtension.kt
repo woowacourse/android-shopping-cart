@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.presentation
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor
