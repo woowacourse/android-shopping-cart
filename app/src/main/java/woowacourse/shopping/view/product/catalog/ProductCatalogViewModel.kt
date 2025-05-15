@@ -14,15 +14,25 @@ class ProductCatalogViewModel(
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> = _products
 
+    private var currentPage = 1
+
     init {
         loadProducts()
     }
 
+    fun loadMoreProducts() {
+        val newProducts = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
+        currentPage++
+        _products.value = _products.value?.plus(newProducts)
+    }
+
     private fun loadProducts() {
-        _products.value = repository.getAll()
+        _products.value = repository.getPaged(PRODUCT_SIZE_LIMIT, 0)
     }
 
     companion object {
+        private const val PRODUCT_SIZE_LIMIT = 20
+
         fun provideFactory(repository: ProductRepository = ProductRepositoryImpl()): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

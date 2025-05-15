@@ -1,21 +1,25 @@
 package woowacourse.shopping.view.product.catalog
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.product.OnProductListener
 
 class ProductAdapter(
-    private var products: List<Product>,
-    private val eventListener: OnProductListener,
+    products: List<Product>,
+    private val productsEventListener: OnProductListener,
+    private val loadEventListener: OnLoadEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val products = products.toMutableList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            PRODUCT -> ProductViewHolder.from(parent, eventListener)
-            LOAD_MORE -> LoadMoreViewHolder.from(parent)
+            PRODUCT -> ProductViewHolder.from(parent, productsEventListener)
+            LOAD_MORE -> LoadMoreViewHolder.from(parent, loadEventListener)
             else -> throw IllegalArgumentException()
         }
 
@@ -40,7 +44,9 @@ class ProductAdapter(
         }
 
     fun setItems(newItems: List<Product>) {
-        products = newItems
+        products.clear()
+        products.addAll(newItems)
+        Log.d("asdf", "productssize : ${products.size}")
         notifyDataSetChanged()
     }
 

@@ -2,6 +2,7 @@ package woowacourse.shopping.view.product.catalog
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -38,7 +39,12 @@ class ProductCatalogActivity : AppCompatActivity() {
                 ProductCatalogViewModel.provideFactory(),
             )[ProductCatalogViewModel::class.java]
 
-        val productAdapter = ProductAdapter(emptyList()) { product -> handleProductDetail(product) }
+        val productAdapter =
+            ProductAdapter(
+                products = emptyList(),
+                productsEventListener = { product -> handleProductDetail(product) },
+                loadEventListener = viewModel::loadMoreProducts,
+            )
         binding.rvProducts.adapter = productAdapter
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =
@@ -53,6 +59,7 @@ class ProductCatalogActivity : AppCompatActivity() {
         binding.rvProducts.layoutManager = gridLayoutManager
 
         viewModel.products.observe(this) { products ->
+            Log.d("asdf", "productssize : ${products.size}")
             productAdapter.setItems(products)
         }
     }
