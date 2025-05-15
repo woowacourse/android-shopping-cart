@@ -8,8 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.dummy.ProductData
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
@@ -17,6 +17,7 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private lateinit var viewModel: ProductCatalogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +29,18 @@ class ProductCatalogActivity : AppCompatActivity() {
             insets
         }
 
-        val productAdapter =
-            ProductAdapter(ProductData.products) { product -> handleProductDetail(product) }
+        viewModel =
+            ViewModelProvider(
+                this,
+                ProductCatalogViewModel.provideFactory(),
+            )[ProductCatalogViewModel::class.java]
+
+        val productAdapter = ProductAdapter(emptyList()) { product -> handleProductDetail(product) }
         binding.rvProducts.adapter = productAdapter
+
+        viewModel.products.observe(this) { products ->
+            productAdapter.setItems(products)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

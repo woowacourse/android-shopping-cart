@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
 
 class ProductAdapter(
-    private val products: List<Product>,
+    private var products: List<Product>,
     private val eventListener: OnProductListener,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
@@ -20,5 +20,10 @@ class ProductAdapter(
         position: Int,
     ) {
         holder.bind(products[position])
+    }
+
+    fun setItems(newItems: List<Product>) {
+        products = newItems
+        notifyDataSetChanged()
     }
 }
