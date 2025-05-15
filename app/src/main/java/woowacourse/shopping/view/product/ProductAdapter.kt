@@ -5,24 +5,34 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.product.Product
 
 class ProductAdapter(
-    private var items: List<Product>,
     private val onSelectProduct: (Product) -> Unit,
-) : RecyclerView.Adapter<ProductViewHolder>() {
+    private val onLoad: () -> Unit,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var items: List<ProductsItem> = emptyList()
+
+    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder.of(parent, onSelectProduct)
+    ): RecyclerView.ViewHolder = when (ProductsItem.ItemType.from(viewType)) {
+        ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, onSelectProduct)
+        ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, onLoad)
+    }
 
     override fun onBindViewHolder(
-        holder: ProductViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        holder.bind(items[position])
+        when (holder) {
+            is ProductViewHolder -> holder.bind(items[position] as ProductsItem.ProductItem)
+            is ProductMoreViewHolder -> holder.bind(items[position] as ProductsItem.LoadItem)
+        }
     }
 
     override fun getItemCount(): Int = items.size
 
-    fun submitList(items: List<Product>) {
+    fun submitList(items: List<ProductsItem>) {
         this.items = items
         notifyDataSetChanged()
     }

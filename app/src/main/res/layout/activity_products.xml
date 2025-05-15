@@ -70,29 +70,11 @@
             android:paddingBottom="8dp"
             app:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/productsMoreButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/productsToolbar"
             app:spanCount="2"
             tools:listitem="@layout/item_product" />
 
-        <TextView
-            android:id="@+id/productsMoreButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/gray_e3"
-            android:foreground="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:minHeight="0dp"
-            android:onClick="@{() -> viewModel.updateProducts()}"
-            android:padding="12dp"
-            android:text="@string/products_more_button"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/products" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.product.repository
 
-import android.util.Log
 import woowacourse.shopping.data.product.entity.ProductEntity
 import woowacourse.shopping.data.product.storage.ProductsStorage
 import woowacourse.shopping.data.product.storage.VolatileProductsStorage

@@ -15,9 +15,9 @@ class ProductViewHolder(
         binding.onSelectProduct = onSelectProduct
     }
 
-    fun bind(item: Product) {
-        binding.product = item
-        binding.imageUrl = item.imageUrl
+    fun bind(item: ProductsItem.ProductItem) {
+        binding.product = item.product
+        binding.imageUrl = item.product.imageUrl
     }
 
     companion object {

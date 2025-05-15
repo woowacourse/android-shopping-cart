@@ -1,15 +1,12 @@
 package woowacourse.shopping.view.product
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
@@ -18,12 +15,13 @@ import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 import woowacourse.shopping.view.showToast
 
 class ProductsActivity : AppCompatActivity() {
-    private val productAdapter: ProductAdapter =
-        ProductAdapter(emptyList(), ::navigateToProductDetail)
     private val binding: ActivityProductsBinding by lazy {
         ActivityProductsBinding.inflate(layoutInflater)
     }
     private val viewModel: ProductsViewModel by viewModels()
+    private val productAdapter: ProductAdapter by lazy {
+        ProductAdapter(::navigateToProductDetail, viewModel::updateProducts)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +34,20 @@ class ProductsActivity : AppCompatActivity() {
         }
 
         initDataBinding()
-        handleEvents()
+        handleEventsFromViewModel()
         bindData()
         viewModel.updateProducts()
+
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int =
+                when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
+                    ProductsItem.ItemType.PRODUCT -> 1
+                    ProductsItem.ItemType.MORE -> 2
+                }
+        }
+
+        binding.products.layoutManager = gridLayoutManager
     }
 
     private fun initDataBinding() {
@@ -46,11 +55,6 @@ class ProductsActivity : AppCompatActivity() {
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-    }
-
-    private fun handleEvents() {
-        handleEventsFromViewModel()
-        handleScrollEvent()
     }
 
     private fun handleEventsFromViewModel() {
@@ -61,33 +65,8 @@ class ProductsActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleScrollEvent() {
-        binding.products.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    super.onScrolled(recyclerView, dx, dy)
-
-                    val layoutManager = recyclerView.layoutManager as? GridLayoutManager ?: return
-
-                    val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
-                    val totalItemCount = layoutManager.itemCount
-
-                    if (lastVisibleItemPosition == totalItemCount - 1) {
-                        binding.productsMoreButton.isVisible = viewModel.loadable.value == true
-                    } else {
-                        binding.productsMoreButton.visibility = View.GONE
-                    }
-                }
-            },
-        )
-    }
-
     private fun bindData() {
-        viewModel.products.observe(this) { products: List<Product> ->
+        viewModel.products.observe(this) { products: List<ProductsItem> ->
             productAdapter.submitList(products)
         }
     }

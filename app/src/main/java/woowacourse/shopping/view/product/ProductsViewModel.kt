@@ -6,31 +6,38 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
 import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.product.ProductsItem.LoadItem
+import woowacourse.shopping.view.product.ProductsItem.ProductItem
 import kotlin.concurrent.thread
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository = DefaultProductsRepository(),
 ) : ViewModel() {
-    private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
-    val products: LiveData<List<Product>> get() = _products
+    private val _products: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
+    val products: LiveData<List<ProductsItem>> get() = _products
 
     private val _event: MutableLiveData<ProductsEvent> = MutableLiveData()
     val event: LiveData<ProductsEvent> get() = _event
 
-    private val _loadable: MutableLiveData<Boolean> = MutableLiveData()
-    val loadable: LiveData<Boolean> get() = _loadable
+    private var loadable: Boolean = false
 
     fun updateProducts() {
         thread {
             runCatching {
+                val lastProductId: Long? =
+                    (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
                 productsRepository.load(
-                    products.value?.lastOrNull()?.id,
+                    lastProductId,
                     LOAD_PRODUCTS_SIZE,
                 )
-            }.onSuccess { products: List<Product> ->
-                _products.postValue(this.products.value?.plus(products))
-                _loadable.postValue(productsRepository.loadable)
+            }.onSuccess { newProducts: List<Product> ->
+                val products: List<ProductsItem> = products.value?.dropLast(1) ?: emptyList()
+                loadable = productsRepository.loadable
+                _products.postValue(
+                    products + newProducts.map(::ProductItem) + LoadItem(loadable)
+                )
             }.onFailure {
+                it.printStackTrace()
                 _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
             }
         }
