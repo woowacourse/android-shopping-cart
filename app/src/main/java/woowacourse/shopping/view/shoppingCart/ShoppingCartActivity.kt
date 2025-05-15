@@ -11,7 +11,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.showToast
 
 class ShoppingCartActivity :
@@ -39,7 +38,7 @@ class ShoppingCartActivity :
         bindData()
         handleEvents()
 
-        viewModel.updateShoppingCart(5)
+        viewModel.updateShoppingCart()
     }
 
     private fun initDataBinding() {
@@ -48,7 +47,7 @@ class ShoppingCartActivity :
     }
 
     private fun bindData() {
-        viewModel.shoppingCart.observe(this) { shoppingCart: List<Product> ->
+        viewModel.shoppingCart.observe(this) { shoppingCart: List<ShoppingCartItem> ->
             shoppingCartProductAdapter.submitList(shoppingCart)
         }
     }

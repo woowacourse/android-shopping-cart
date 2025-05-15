@@ -18,15 +18,17 @@ class ShoppingCartProductAdapter(
     ): RecyclerView.ViewHolder {
         val viewType: ShoppingCartItem.ItemType = ShoppingCartItem.ItemType.from(viewType)
         return when (viewType) {
-            ShoppingCartItem.ItemType.PRODUCT -> ShoppingCartProductViewHolder.of(
-                parent,
-                onRemoveProduct,
-            )
+            ShoppingCartItem.ItemType.PRODUCT ->
+                ShoppingCartProductViewHolder.of(
+                    parent,
+                    onRemoveProduct,
+                )
 
-            ShoppingCartItem.ItemType.PAGINATION -> ShoppingCartPaginationViewHolder.of(
-                parent,
-                onShoppingCartPaginationListener,
-            )
+            ShoppingCartItem.ItemType.PAGINATION ->
+                ShoppingCartPaginationViewHolder.of(
+                    parent,
+                    onShoppingCartPaginationListener,
+                )
         }
     }
 
@@ -47,4 +49,3 @@ class ShoppingCartProductAdapter(
         notifyDataSetChanged()
     }
 }
-
