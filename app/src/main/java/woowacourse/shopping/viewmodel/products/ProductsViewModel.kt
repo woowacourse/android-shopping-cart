@@ -18,6 +18,8 @@ class ProductsViewModel(
     private val pageSize = 20
     private var currentPage = 0
     private val loadedItems = mutableListOf<Product>()
+    private val _isAllProductsFetched = MutableLiveData(false)
+    val isAllProductsFetched: LiveData<Boolean> get() = _isAllProductsFetched
 
     init {
         loadNextPage()
@@ -32,6 +34,8 @@ class ProductsViewModel(
             loadedItems.addAll(nextItems)
             _productsInShop.value = loadedItems.toList()
             currentPage++
+
+            if (nextEnd == products.value.size) _isAllProductsFetched.value = true
         }
     }
 

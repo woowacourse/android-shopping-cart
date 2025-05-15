@@ -40,6 +40,10 @@ class ProductsActivity : AppCompatActivity() {
             adapter.updateProductsView(list)
         }
 
+        viewModel.isAllProductsFetched.observe(this) { value ->
+            if (value) binding.btnMore.visibility = GONE
+        }
+
         binding.cartImageBtn.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
@@ -56,8 +60,14 @@ class ProductsActivity : AppCompatActivity() {
                     val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
                     val totalItemCount: Int = adapter.itemCount
                     val moreBtn = binding.btnMore
+
                     if (lastVisibleItemPosition >= totalItemCount - 1) {
-                        moreBtn.visibility = VISIBLE
+                        val isBottom = viewModel.isAllProductsFetched.value ?: false
+                        if (isBottom) {
+                            binding.btnMore.visibility = GONE
+                        } else {
+                            moreBtn.visibility = VISIBLE
+                        }
                         moreBtn.setOnClickListener {
                             it.visibility = GONE
                             viewModel.loadNextPage()
