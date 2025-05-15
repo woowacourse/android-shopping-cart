@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.CartDummyRepositoryImpl
 import woowacourse.shopping.domain.model.Product
 
-class CartViewModel : ViewModel() {
+class CartViewModel(
+    private val cartDummyRepository: CartDummyRepositoryImpl = CartDummyRepositoryImpl,
+) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList<Product>())
     val products: LiveData<List<Product>> get() = _products
 
@@ -15,8 +17,6 @@ class CartViewModel : ViewModel() {
 
     private val _maxPageCount: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE_COUNT)
     val maxPageCount: LiveData<Int> get() = _maxPageCount
-
-    val cartDummyRepository = CartDummyRepositoryImpl
 
     init {
         updateCartProducts()
@@ -46,7 +46,7 @@ class CartViewModel : ViewModel() {
     }
 
     companion object {
-        private const val INITIAL_PAGE_COUNT: Int = 1
-        private const val DEFAULT_PAGE_STEP: Int = 1
+        const val INITIAL_PAGE_COUNT: Int = 1
+        const val DEFAULT_PAGE_STEP: Int = 1
     }
 }
