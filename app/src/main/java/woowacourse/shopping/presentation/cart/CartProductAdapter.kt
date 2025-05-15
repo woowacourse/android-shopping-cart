@@ -15,23 +15,26 @@ class CartProductAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): CartProductViewHolder {
-        val view =
-            ItemCartProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartProductViewHolder(view, onDeleteClick)
+        val binding =
+            ItemCartProductBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
+        return CartProductViewHolder(binding, onDeleteClick)
     }
 
     override fun onBindViewHolder(
         holder: CartProductViewHolder,
         position: Int,
     ) {
-        val cartProduct = products[position]
-        CartProductViewHolder(holder.binding, onDeleteClick).bind(cartProduct)
+        holder.bind(products[position])
     }
 
     override fun getItemCount(): Int = products.size
 
-    fun setData(list: List<Product>) {
-        products = list
+    fun setData(newList: List<Product>) {
+        products = newList
         notifyDataSetChanged()
     }
 
