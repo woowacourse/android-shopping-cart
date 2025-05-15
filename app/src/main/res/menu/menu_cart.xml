@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_cart"
         android:icon="@drawable/icons_colorizer"
-        android:title="@st기ring/back"
+        android:title="@string/back"
         app:showAsAction="always">
 
     </item>
