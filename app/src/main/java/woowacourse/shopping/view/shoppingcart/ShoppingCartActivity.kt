@@ -34,6 +34,9 @@ class ShoppingCartActivity : AppCompatActivity() {
                 viewModel.deleteProduct(product)
             }
         binding.rvProducts.adapter = adapter
+
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
         binding.eventListener =
             object : OnClickArrowListener {
                 override fun onClickLeftPage() {

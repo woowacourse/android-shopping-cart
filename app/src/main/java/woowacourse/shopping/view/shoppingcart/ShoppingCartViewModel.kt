@@ -13,15 +13,14 @@ import woowacourse.shopping.view.PagedResult
 class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
 ) : ViewModel() {
-//    private val products = repository.getAll().toMutableList()
-
     private val _removedProduct = MutableLiveData<ShoppingProduct>()
     val removedProduct: LiveData<ShoppingProduct> = _removedProduct
 
     private val _shoppingProduct = MutableLiveData<PagedResult<ShoppingProduct>>()
     val shoppingProduct: LiveData<PagedResult<ShoppingProduct>> = _shoppingProduct
 
-    private var currentPage = 0
+    private var _currentPage = MutableLiveData(0)
+    val currentPage: LiveData<Int> = _currentPage
 
     init {
         loadProducts()
@@ -29,7 +28,6 @@ class ShoppingCartViewModel(
 
     fun deleteProduct(shoppingProduct: ShoppingProduct) {
         repository.delete(shoppingProduct.id)
-//        products.remove(shoppingProduct)
         _removedProduct.value = shoppingProduct
     }
 
@@ -37,16 +35,16 @@ class ShoppingCartViewModel(
         val result =
             repository.getPaged(
                 SHOPPING_PRODUCT_SIZE_LIMIT,
-                currentPage * SHOPPING_PRODUCT_SIZE_LIMIT,
+                (_currentPage.value ?: 0) * SHOPPING_PRODUCT_SIZE_LIMIT,
             )
         _shoppingProduct.value = PagedResult(result.items, result.hasNext)
-        currentPage++
+        _currentPage.value = _currentPage.value?.plus(1)
     }
 
     private fun loadProducts() {
-        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, currentPage)
+        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: 0)
         _shoppingProduct.value = PagedResult(result.items, result.hasNext)
-        currentPage++
+        _currentPage.value = _currentPage.value?.plus(1)
     }
 
     companion object {
