@@ -10,6 +10,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.FakeProductStorage
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.ext.getOrAwaitValue
 import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3
