@@ -49,7 +49,6 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
         supportActionBar?.title = getString(R.string.action_bar_title_cart_screen)
 
         binding.recyclerViewCart.apply {
-            setItemAnimator(null)
             setHasFixedSize(true)
         }
     }
