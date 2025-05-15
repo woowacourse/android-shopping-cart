@@ -7,7 +7,6 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartBinding
-import woowacourse.shopping.presentation.UiState
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
@@ -55,17 +54,18 @@ class CartFragment :
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        viewModel.page.observe(viewLifecycleOwner) {
+            binding.recyclerViewCart.smoothScrollToPosition(0)
+        }
+
         viewModel.products.observe(viewLifecycleOwner) {
             cartAdapter.updateProducts(it)
         }
+
         viewModel.deleteState.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Loading -> {}
-                is UiState.Success -> {
-                    cartAdapter.removeProduct(it.data)
-                    viewModel.fetchShoppingCart(isNextPage = false, isRefresh = true)
-                }
-                is UiState.Error -> {}
+            it?.let {
+                cartAdapter.removeProduct(it)
+                viewModel.fetchShoppingCart(isNextPage = false, isRefresh = true)
             }
         }
     }

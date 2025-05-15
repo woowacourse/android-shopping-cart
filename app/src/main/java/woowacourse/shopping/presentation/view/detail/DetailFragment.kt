@@ -7,7 +7,6 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentDetailBinding
-import woowacourse.shopping.presentation.UiState
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.extension.getParcelableCompat
 import woowacourse.shopping.presentation.model.ProductUiModel
@@ -31,11 +30,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
     private fun initObserver() {
         viewModel.saveState.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Loading -> {}
-                is UiState.Success -> navigateToScreen()
-                is UiState.Error -> {}
-            }
+            it?.let { navigateToScreen() }
         }
     }
 

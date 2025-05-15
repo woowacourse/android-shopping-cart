@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.presentation.UiState
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toUiModel
 import kotlin.math.max
@@ -18,8 +17,8 @@ class CartViewModel(
     private val _products = MutableLiveData<List<ProductUiModel>>()
     val products: LiveData<List<ProductUiModel>> = _products
 
-    private val _deleteState = MutableLiveData<UiState<Long>>()
-    val deleteState: LiveData<UiState<Long>> = _deleteState
+    private val _deleteState = MutableLiveData<Long>()
+    val deleteState: LiveData<Long> = _deleteState
 
     private val _page = MutableLiveData(DEFAULT_PAGE)
     val page: LiveData<Int> = _page
@@ -52,7 +51,7 @@ class CartViewModel(
 
     fun deleteProduct(product: ProductUiModel) {
         cartRepository.deleteCartItem(product.id) {
-            _deleteState.postValue(UiState.Success(it))
+            _deleteState.postValue(it)
         }
     }
 

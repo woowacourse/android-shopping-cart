@@ -7,21 +7,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.presentation.UiState
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toProduct
 
 class DetailViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _saveState = MutableLiveData<UiState<Unit>>(UiState.Loading)
-    val saveState: LiveData<UiState<Unit>> = _saveState
+    private val _saveState = MutableLiveData<Unit>()
+    val saveState: LiveData<Unit> = _saveState
 
     fun addProduct(product: ProductUiModel) {
-        _saveState.value = UiState.Loading
-
         repository.addCartItem(product.toProduct()) {
-            _saveState.postValue(UiState.Success(Unit))
+            _saveState.postValue(Unit)
         }
     }
 
