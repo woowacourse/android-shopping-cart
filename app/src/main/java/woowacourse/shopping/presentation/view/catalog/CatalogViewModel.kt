@@ -28,10 +28,10 @@ class CatalogViewModel(
 
         lastId = newProductsUiModels.lastOrNull()?.id ?: 0
 
-        val newvalue = (_products.value?.first ?: emptyList()).plus(newProductsUiModels).distinct()
+        val updatedProducts = (_products.value?.first ?: emptyList()).plus(newProductsUiModels).distinct()
 
         _products.postValue(
-            newvalue to hasMore,
+            updatedProducts to hasMore,
         )
     }
 
