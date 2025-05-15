@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.products
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.ProductsAdapter.OnClickHandler
 
+@SuppressLint("NotifyDataSetChanged")
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels()
     private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
@@ -81,6 +83,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         }
         viewModel.isLoadable.observe(this) { isLoadable ->
             productsAdapter.updateLoadMoreItem(isLoadable)
+            productsAdapter.notifyDataSetChanged()
         }
     }
 

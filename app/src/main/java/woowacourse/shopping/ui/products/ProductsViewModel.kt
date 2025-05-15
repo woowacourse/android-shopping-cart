@@ -16,14 +16,12 @@ class ProductsViewModel(
     val isLoadable: LiveData<Boolean> get() = _isLoadable
 
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        val newProducts =
-            productsDummyRepository.fetchProducts(count, products.value?.lastOrNull()?.id ?: 0)
+        val newProducts = productsDummyRepository.fetchProducts(count, products.value?.lastOrNull()?.id ?: 0)
         _products.value = products.value?.plus(newProducts)
     }
 
     fun updateIsLoadable() {
-        _isLoadable.value =
-            productsDummyRepository.fetchIsProductsLoadable(products.value?.lastOrNull()?.id ?: 0)
+        _isLoadable.value = productsDummyRepository.fetchIsProductsLoadable(products.value?.lastOrNull()?.id ?: 0)
     }
 
     companion object {

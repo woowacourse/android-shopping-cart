@@ -36,12 +36,10 @@ class ProductsAdapter(
     fun updateProductItems(newItems: List<Product>) {
         productsItems.clear()
         productsItems.addAll(newItems.map { ProductsItem.ProductProductsItem(it) })
-        notifyDataSetChanged()
     }
 
     fun updateLoadMoreItem(isLoadable: Boolean) {
         if (isLoadable) productsItems.add(ProductsItem.LoadMoreProductsItem)
-        notifyDataSetChanged()
     }
 
     interface OnClickHandler :
