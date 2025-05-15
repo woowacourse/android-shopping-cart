@@ -6,19 +6,27 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDummy
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.viewmodel.ProductListViewModel
+import woowacourse.shopping.utils.ViewModelFactory
 
 class ProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
+    private val viewModel: ProductListViewModel by viewModels {
+        ViewModelFactory.createProductViewModelFactory(
+            ProductRepositoryImpl()
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +35,9 @@ class ProductListActivity : AppCompatActivity() {
         applyWindowInsets()
 
         setSupportActionBar(binding.toolbarProductList)
-
-        val adapter = productListAdapter()
-        binding.productsRecyclerView.adapter = adapter
+        viewModel.products.observe(this) {
+            binding.productsRecyclerView.adapter = productListAdapter(it)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -55,16 +63,20 @@ class ProductListActivity : AppCompatActivity() {
         }
     }
 
-    private fun productListAdapter(): ProductListAdapter {
+    private fun productListAdapter(item: List<ProductListViewType>): ProductListAdapter {
         return ProductListAdapter(
-            items = ProductDummy.products,
-            object : ProductClickListener {
+            items = item,
+            productClickListener = object : ProductClickListener {
                 override fun onClick(product: Product) {
                     val intent =
                         ProductDetailActivity.newIntent(this@ProductListActivity, product)
                     startActivity(intent)
                 }
             },
+            loadMoreClickListener = {
+                viewModel.loadProducts()
+                binding.productsRecyclerView.adapter?.notifyDataSetChanged()
+            }
         )
     }
 
