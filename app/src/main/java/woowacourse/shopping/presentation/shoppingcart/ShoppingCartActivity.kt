@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shoppingcart
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -21,7 +20,6 @@ class ShoppingCartActivity : AppCompatActivity() {
     }
     private val viewModel: ShoppingCartViewModel by viewModels()
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen()
