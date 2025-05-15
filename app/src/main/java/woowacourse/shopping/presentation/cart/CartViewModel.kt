@@ -45,7 +45,9 @@ class CartViewModel(
     fun deleteProduct(product: Product) {
         thread {
             productRepository.deleteProduct(product.productId)
-            _products.postValue(productRepository.getCartProducts())
+            _products.postValue(
+                productRepository.getPagedCartProducts(PAGE_SIZE, (_currentPage.value) ?: 0),
+            )
         }
     }
 
