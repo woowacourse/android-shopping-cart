@@ -14,13 +14,15 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.showToast
 
-class ShoppingCartActivity : AppCompatActivity() {
+class ShoppingCartActivity :
+    AppCompatActivity(),
+    OnShoppingCartPaginationListener {
     private val viewModel: ShoppingCartViewModel by viewModels()
     private val binding: ActivityShoppingCartBinding by lazy {
         ActivityShoppingCartBinding.inflate(layoutInflater)
     }
     private val shoppingCartProductAdapter by lazy {
-        ShoppingCartProductAdapter(viewModel::removeShoppingCartProduct)
+        ShoppingCartProductAdapter(viewModel::removeShoppingCartProduct, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +67,14 @@ class ShoppingCartActivity : AppCompatActivity() {
 
             showToast(getString(messageResourceId))
         }
+    }
+
+    override fun onMinusPage() {
+        viewModel.minusPage()
+    }
+
+    override fun onPlusPage() {
+        viewModel.plusPage()
     }
 
     companion object {

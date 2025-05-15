@@ -17,6 +17,9 @@ class ShoppingCartViewModel(
     private val _event: MutableLiveData<ShoppingCartEvent> = MutableLiveData()
     val event: LiveData<ShoppingCartEvent> get() = _event
 
+    private val _page: MutableLiveData<Int> = MutableLiveData(1)
+    val page: LiveData<Int> get() = _page
+
     fun updateShoppingCart() {
         thread {
             runCatching {
@@ -39,5 +42,13 @@ class ShoppingCartViewModel(
                 _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
             }
         }
+    }
+
+    fun plusPage() {
+        _page.value = (page.value ?: 1).plus(1)
+    }
+
+    fun minusPage() {
+        _page.value = (page.value ?: 1).minus(1).coerceAtLeast(1)
     }
 }

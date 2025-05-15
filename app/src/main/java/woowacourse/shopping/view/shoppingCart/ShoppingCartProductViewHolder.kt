@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 
 class ShoppingCartProductViewHolder(
     private val binding: ItemShoppingCartProductBinding,
@@ -15,13 +16,13 @@ class ShoppingCartProductViewHolder(
         binding.onRemoveProduct = onRemoveProduct
     }
 
-    fun bind(item: Product) {
-        binding.product = item
-        binding.imageUrl = item.imageUrl
+    fun bind(item: ProductItem) {
+        binding.product = item.product
+        binding.imageUrl = item.product.imageUrl
     }
 
     companion object {
-        fun from(
+        fun of(
             parent: ViewGroup,
             onRemoveProduct: (Product) -> Unit,
         ): ShoppingCartProductViewHolder {

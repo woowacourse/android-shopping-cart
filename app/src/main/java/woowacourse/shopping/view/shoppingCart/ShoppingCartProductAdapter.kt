@@ -6,25 +6,45 @@ import woowacourse.shopping.domain.product.Product
 
 class ShoppingCartProductAdapter(
     private val onRemoveProduct: (product: Product) -> Unit,
-) : RecyclerView.Adapter<ShoppingCartProductViewHolder>() {
-    private var items: List<Product> = emptyList()
+    private val onShoppingCartPaginationListener: OnShoppingCartPaginationListener,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var items: List<ShoppingCartItem> = emptyList()
+
+    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ShoppingCartProductViewHolder = ShoppingCartProductViewHolder.from(parent, onRemoveProduct)
+    ): RecyclerView.ViewHolder {
+        val viewType: ShoppingCartItem.ItemType = ShoppingCartItem.ItemType.from(viewType)
+        return when (viewType) {
+            ShoppingCartItem.ItemType.PRODUCT -> ShoppingCartProductViewHolder.of(
+                parent,
+                onRemoveProduct,
+            )
+
+            ShoppingCartItem.ItemType.PAGINATION -> ShoppingCartPaginationViewHolder.of(
+                parent,
+                onShoppingCartPaginationListener,
+            )
+        }
+    }
 
     override fun onBindViewHolder(
-        holder: ShoppingCartProductViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        holder.bind(items[position])
+        when (holder) {
+            is ShoppingCartProductViewHolder -> holder.bind(items[position] as ShoppingCartItem.ProductItem)
+            is ShoppingCartPaginationViewHolder -> holder.bind(items[position] as ShoppingCartItem.PaginationItem)
+        }
     }
 
     override fun getItemCount(): Int = items.size
 
-    fun submitList(items: List<Product>) {
+    fun submitList(items: List<ShoppingCartItem>) {
         this.items = items
         notifyDataSetChanged()
     }
 }
+
