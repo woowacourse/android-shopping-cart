@@ -6,11 +6,11 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.product.OnProductListener
 
 class ProductAdapter(
-    products: List<Product>,
     private val productsEventListener: OnProductListener,
     private val loadEventListener: OnLoadEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val products = products.toMutableList()
+    private val products = mutableListOf<Product>()
+    private var hasNext: Boolean = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -22,8 +22,7 @@ class ProductAdapter(
             else -> throw IllegalArgumentException()
         }
 
-    override fun getItemCount(): Int =
-        if (products.size % PRODUCT_SIZE_LIMIT == 0) products.size + LOAD_MORE_BUTTON_COUNT else products.size
+    override fun getItemCount(): Int = products.size + if (hasNext) LOAD_MORE_BUTTON_COUNT else 0
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
@@ -35,26 +34,27 @@ class ProductAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int =
-        if (position % PRODUCT_SIZE_LIMIT == 0 && position == products.size) {
-            LOAD_MORE
-        } else {
-            PRODUCT
-        }
+    override fun getItemViewType(position: Int): Int = if (hasNext && position == products.size) LOAD_MORE else PRODUCT
 
-    fun setItems(newItems: List<Product>) {
-        products.clear()
+    fun addItems(
+        newItems: List<Product>,
+        hasNext: Boolean,
+    ) {
+        val startIndex = products.size
         products.addAll(newItems)
-    }
+        this.hasNext = hasNext
+        notifyItemRangeInserted(startIndex, newItems.size)
 
-    fun updateItems(value: Int) {
-        notifyItemRangeChanged(value * PRODUCT_SIZE_LIMIT, PRODUCT_SIZE_LIMIT)
+        if (!hasNext) {
+            notifyItemRemoved(products.size)
+        } else if (startIndex == 0) {
+            notifyItemInserted(products.size)
+        }
     }
 
     companion object {
         const val PRODUCT = 0
         const val LOAD_MORE = 1
-        private const val PRODUCT_SIZE_LIMIT = 20
         private const val LOAD_MORE_BUTTON_COUNT = 1
     }
 }

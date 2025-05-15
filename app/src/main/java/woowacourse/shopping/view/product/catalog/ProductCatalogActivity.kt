@@ -40,7 +40,6 @@ class ProductCatalogActivity : AppCompatActivity() {
 
         val productAdapter =
             ProductAdapter(
-                products = emptyList(),
                 productsEventListener = { product -> navigateToProductDetail(product) },
                 loadEventListener = viewModel::loadMoreProducts,
             )
@@ -57,12 +56,8 @@ class ProductCatalogActivity : AppCompatActivity() {
 
         binding.rvProducts.layoutManager = gridLayoutManager
 
-        viewModel.products.observe(this) { products ->
-            productAdapter.setItems(products)
-        }
-
-        viewModel.currentPage.observe(this) { value ->
-            productAdapter.updateItems(value)
+        viewModel.products.observe(this) { value ->
+            productAdapter.addItems(value.items, value.hasNext)
         }
     }
 

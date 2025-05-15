@@ -7,33 +7,34 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.PagedResult
 
 class ProductCatalogViewModel(
     private val repository: ProductRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> = _products
+    private val _products = MutableLiveData<PagedResult<Product>>()
+    val products: LiveData<PagedResult<Product>> = _products
 
-    private val _currentPage = MutableLiveData(0)
-    val currentPage: LiveData<Int> = _currentPage
+    private var currentPage = 0
 
     init {
         loadProducts()
     }
 
     fun loadMoreProducts() {
-        val newProducts =
+        val result =
             repository.getPaged(
                 PRODUCT_SIZE_LIMIT,
-                currentPage.value?.times(PRODUCT_SIZE_LIMIT) ?: 0,
+                currentPage * PRODUCT_SIZE_LIMIT,
             )
-        _currentPage.value = _currentPage.value?.plus(1)
-        _products.value = _products.value?.plus(newProducts)
+        _products.value = PagedResult(result.items, result.hasNext)
+        currentPage++
     }
 
     private fun loadProducts() {
-        _products.value = repository.getPaged(PRODUCT_SIZE_LIMIT, 0)
-        _currentPage.value = currentPage.value?.plus(1)
+        val result = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage)
+        _products.value = PagedResult(result.items, result.hasNext)
+        currentPage++
     }
 
     companion object {

@@ -8,5 +8,5 @@ interface ProductRepository {
     fun getPaged(
         limit: Int,
         offset: Int,
-    ): List<Product>
+    ): PagedResult<Product>
 }
