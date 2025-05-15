@@ -10,10 +10,10 @@ class CartViewModel : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList<Product>())
     val products: LiveData<List<Product>> get() = _products
 
-    private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(1)
+    private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE_COUNT)
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private val _maxPageCount: MutableLiveData<Int> = MutableLiveData<Int>(1)
+    private val _maxPageCount: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE_COUNT)
     val maxPageCount: LiveData<Int> get() = _maxPageCount
 
     val cartDummyRepository = CartDummyRepositoryImpl
@@ -24,7 +24,8 @@ class CartViewModel : ViewModel() {
     }
 
     fun updateCartProducts() {
-        _products.value = cartDummyRepository.fetchCartProducts(currentPage.value ?: 1)
+        _products.value =
+            cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE_COUNT)
     }
 
     fun removeCartProduct(id: Int) {
@@ -32,15 +33,20 @@ class CartViewModel : ViewModel() {
         _products.value = products.value?.filter { it.id != id }
     }
 
-    fun increasePageCount() {
-        _currentPage.value = currentPage.value?.plus(1)
+    fun increasePageCount(step: Int = DEFAULT_PAGE_STEP) {
+        _currentPage.value = currentPage.value?.plus(step)
     }
 
-    fun decreasePageCount() {
-        _currentPage.value = currentPage.value?.minus(1)
+    fun decreasePageCount(step: Int = DEFAULT_PAGE_STEP) {
+        _currentPage.value = currentPage.value?.minus(step)
     }
 
     fun updateMaxPageCount() {
         _maxPageCount.value = cartDummyRepository.fetchMaxPageCount()
+    }
+
+    companion object {
+        private const val INITIAL_PAGE_COUNT: Int = 1
+        private const val DEFAULT_PAGE_STEP: Int = 1
     }
 }
