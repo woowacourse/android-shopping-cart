@@ -13,8 +13,8 @@ data class Goods(
     companion object {
         fun of(
             name: String,
-            imageUrl: String,
             price: Int,
+            imageUrl: String,
         ): Goods =
             Goods(
                 Name(name),
