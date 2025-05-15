@@ -39,7 +39,7 @@ class ShoppingCartActivity :
         bindData()
         handleEvents()
 
-        viewModel.updateShoppingCart()
+        viewModel.updateShoppingCart(5)
     }
 
     private fun initDataBinding() {

@@ -20,7 +20,7 @@ class ShoppingCartViewModel(
     private val _page: MutableLiveData<Int> = MutableLiveData(1)
     val page: LiveData<Int> get() = _page
 
-    fun updateShoppingCart() {
+    fun updateShoppingCart(count: Int) {
         thread {
             runCatching {
                 shoppingCartRepository.products

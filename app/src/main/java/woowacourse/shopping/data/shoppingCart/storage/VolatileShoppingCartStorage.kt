@@ -3,8 +3,14 @@ package woowacourse.shopping.data.shoppingCart.storage
 import woowacourse.shopping.data.product.entity.ProductEntity
 
 object VolatileShoppingCartStorage : ShoppingCartStorage {
-    override var products: List<ProductEntity> = emptyList()
-        private set
+    private var products: List<ProductEntity> = emptyList()
+
+    override fun load(
+        start: Int,
+        endExclusive: Int
+    ): List<ProductEntity> {
+        return products.subList(start, endExclusive)
+    }
 
     override fun add(product: ProductEntity) {
         products += product

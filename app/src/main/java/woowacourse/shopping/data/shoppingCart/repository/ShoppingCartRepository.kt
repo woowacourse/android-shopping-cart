@@ -3,7 +3,7 @@ package woowacourse.shopping.data.shoppingCart.repository
 import woowacourse.shopping.domain.product.Product
 
 interface ShoppingCartRepository {
-    val products: List<Product>
+    fun load(page: Int, count: Int): List<Product>
 
     fun add(product: Product)
 
