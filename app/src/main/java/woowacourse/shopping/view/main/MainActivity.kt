@@ -81,9 +81,9 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
                 dy: Int,
             ) {
                 val loadable = viewModel.loadable.value ?: return
-                if (!loadable && !recyclerView.canScrollVertically(1)) {
+                if (!loadable && !recyclerView.canScrollVertically(RECYCLER_VIEW_END_POSITION)) {
                     binding.buttonLoad.visibility = View.VISIBLE
-                } else if (dy < 1) {
+                } else if (dy < RECYCLER_VIEW_END_POSITION) {
                     binding.buttonLoad.visibility = View.GONE
                 }
             }
@@ -113,5 +113,6 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
 
     companion object {
         const val PAGE_SIZE = 20
+        private const val RECYCLER_VIEW_END_POSITION = 1
     }
 }
