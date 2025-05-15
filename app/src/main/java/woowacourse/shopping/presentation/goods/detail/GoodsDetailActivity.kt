@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -27,7 +28,12 @@ class GoodsDetailActivity : AppCompatActivity() {
         setUpScreen()
 
         viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
-        binding.vm = viewModel
+        binding.goods = viewModel.goods.value
+
+        binding.btnShoppingCart.setOnClickListener {
+            viewModel.addToShoppingCart()
+            Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setUpScreen() {
