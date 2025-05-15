@@ -6,7 +6,7 @@ import org.junit.Rule
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.product.catalog.fixture.FakeMockProducts
-import woowacourse.shopping.product.catalog.util.InstantTaskExecutorExtension
+import woowacourse.shopping.util.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CatalogViewModelTest {
