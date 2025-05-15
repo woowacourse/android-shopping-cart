@@ -16,42 +16,57 @@ import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
+    private val viewModel: ProductViewModel by viewModels { ProductViewModel.Factory }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
             onClick = { product -> navigateToProductDetail(product) },
             onClickLoadMore = { viewModel.loadMore() },
         )
     }
-    private val viewModel: ProductViewModel by viewModels { ProductViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cl_product)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        binding.ibCart.setOnClickListener { navigateToCart() }
+        binding.lifecycleOwner = this
 
+        initInsets()
         initAdapter()
+        initListeners()
         observeViewModel()
         viewModel.fetchData()
     }
 
+    private fun initInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.clProduct) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
     private fun initAdapter() {
-        val layoutManager = GridLayoutManager(this, 2)
-        layoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    val itemCount = productAdapter.itemCount
-                    val showLoadMore = viewModel.showLoadMore.value ?: false
-                    return if (position == itemCount - 1 && showLoadMore) 2 else 1
+        binding.rvProducts.apply {
+            layoutManager =
+                GridLayoutManager(context, 2).apply {
+                    spanSizeLookup = createSpanSizeLookup()
                 }
+            adapter = productAdapter
+        }
+    }
+
+    private fun createSpanSizeLookup(): GridLayoutManager.SpanSizeLookup {
+        return object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                val isLastItem = position == productAdapter.itemCount - 1
+                val shouldExpand = viewModel.showLoadMore.value ?: false
+                return if (isLastItem && shouldExpand) 2 else 1
             }
-        binding.rvProducts.layoutManager = layoutManager
-        binding.rvProducts.adapter = productAdapter
+        }
+    }
+
+    private fun initListeners() {
+        binding.ibCart.setOnClickListener { navigateToCart() }
     }
 
     private fun observeViewModel() {
