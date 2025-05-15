@@ -26,16 +26,12 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         initInsets()
-        observeViewModel()
 
         val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT_DETAIL)
-        viewModel.fetchData(product)
+        initListeners(product)
+        observeViewModel()
 
-        binding.btnProductDetailAddCart.setOnClickListener {
-            viewModel.addToCart(product)
-            showToast(R.string.product_detail_add_cart_toast)
-        }
-        binding.ibExit.setOnClickListener { finish() }
+        viewModel.fetchData(product)
     }
 
     private fun initInsets() {
@@ -44,6 +40,14 @@ class ProductDetailActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun initListeners(product: Product) {
+        binding.btnProductDetailAddCart.setOnClickListener {
+            viewModel.addToCart(product)
+            showToast(R.string.product_detail_add_cart_toast)
+        }
+        binding.ibExit.setOnClickListener { finish() }
     }
 
     private fun observeViewModel() {
