@@ -67,4 +67,5 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
+    testImplementation(libs.androidx.core.testing)
 }
