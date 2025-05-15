@@ -16,12 +16,10 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.title = null
-        viewModel.updateProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
 
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-        binding.onAddCartProductClick = ::addCartProduct
+        removeSupportActionBarTitle()
+        updateProductDetail()
+        initViewBinding()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -32,6 +30,20 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.item_product_detail_close) finish()
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun removeSupportActionBarTitle() {
+        supportActionBar?.title = null
+    }
+
+    private fun updateProductDetail() {
+        viewModel.updateProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
+    }
+
+    private fun initViewBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.onAddCartProductClick = ::addCartProduct
     }
 
     private fun addCartProduct() {
