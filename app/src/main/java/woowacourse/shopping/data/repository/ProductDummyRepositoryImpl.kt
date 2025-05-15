@@ -4,9 +4,11 @@ import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
 
 object ProductDummyRepositoryImpl {
+    private const val INITIAL_PRODUCT_ID: Int = 0
+
     fun fetchProducts(
         count: Int,
-        lastId: Int = 0,
+        lastId: Int = INITIAL_PRODUCT_ID,
     ): List<Product> = dummyProducts.filter { it.id > lastId }.take(count)
 
     fun fetchProductDetail(id: Int): Product? = dummyProducts.find { it.id == id }
