@@ -18,6 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/product_item"
         android:onClick="@{() -> productClickListener.onClick(product)}"
         android:paddingVertical="10dp">
 
