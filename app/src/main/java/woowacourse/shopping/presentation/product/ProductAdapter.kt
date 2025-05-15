@@ -1,14 +1,9 @@
 package woowacourse.shopping.presentation.product
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
+import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
@@ -50,14 +45,20 @@ class ProductAdapter(
     ): RecyclerView.ViewHolder =
         if (viewType == VIEW_TYPE_PRODUCT) {
             val binding =
-                ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemProductBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false,
+                )
             ProductViewHolder(binding, onClick)
         } else {
-            val view =
-                LayoutInflater
-                    .from(parent.context)
-                    .inflate(R.layout.item_load_more, parent, false)
-            LoadMoreViewHolder(view)
+            val binding =
+                ItemLoadMoreBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false,
+                )
+            LoadMoreViewHolder(binding)
         }
 
     override fun onBindViewHolder(
@@ -94,12 +95,10 @@ class ProductAdapter(
     }
 
     class LoadMoreViewHolder(
-        private val view: View,
-    ) : RecyclerView.ViewHolder(view) {
+        private val binding: ItemLoadMoreBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(onClickLoadMore: () -> Unit) {
-            view.findViewById<Button>(R.id.btnLoadMore).setOnClickListener {
-                onClickLoadMore()
-            }
+            binding.btnLoadMore.setOnClickListener { onClickLoadMore() }
         }
     }
 

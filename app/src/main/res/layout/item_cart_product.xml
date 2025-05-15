@@ -41,7 +41,8 @@
             android:scaleType="center"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintStart_toStartOf="@id/tv_cart_product_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name" />
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name"
+            tools:src="@drawable/ic_launcher_background" />
 
         <ImageButton
             android:id="@+id/ib_cart_product_delete"
