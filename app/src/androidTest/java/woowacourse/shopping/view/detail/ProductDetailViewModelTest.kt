@@ -1,0 +1,20 @@
+package woowacourse.shopping.view.detail
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import org.junit.Rule
+import org.junit.Test
+import woowacourse.shopping.data.DummyShoppingCart
+import woowacourse.shopping.product
+
+@Suppress("FunctionName")
+class ProductDetailViewModelTest {
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    @Test
+    fun 상품을_추가할_수_있다() {
+        val viewModel = ProductDetailViewModel()
+        viewModel.addProduct(product)
+        assert(DummyShoppingCart.products.contains(product))
+    }
+}
