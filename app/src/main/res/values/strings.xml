@@ -10,6 +10,8 @@
     <string name="shopping_cart_title">Cart</string>
     <string name="shopping_cart_update_shopping_cart_error_message">장바구니를 불러오는 데 실패했습니다.</string>
     <string name="shopping_cart_remove_shopping_cart_product_error_message">장바구니에 담긴 상품을 제거하는 데 실패했습니다.</string>
+    <string name="shopping_cart_pagination_minus_button"><![CDATA[<]]></string>
+    <string name="shopping_cart_pagination_plus_button"><![CDATA[>]]></string>
 
     <!-- 상품 상세 페이지 -->
     <string name="product_detail_add_to_shopping_cart">장바구니 담기</string>
