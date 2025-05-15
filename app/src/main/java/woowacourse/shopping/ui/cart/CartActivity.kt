@@ -27,7 +27,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     }
 
     private fun initSupportActionBar() {
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.cart_title)
     }
 
