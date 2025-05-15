@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="eventListener"
+            type="woowacourse.shopping.view.shoppingcart.OnClickArrowListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -35,7 +41,8 @@
                 android:text="@string/left_arrow"
                 app:layout_constraintEnd_toStartOf="@id/tv_page_number"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:onClick="@{() -> eventListener.onClickLeftPage()}"/>
 
             <TextView
                 android:id="@+id/tv_page_number"
@@ -57,7 +64,8 @@
                 android:text="@string/right_arrow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_page_number"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:onClick="@{() -> eventListener.onClickRightPage()}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

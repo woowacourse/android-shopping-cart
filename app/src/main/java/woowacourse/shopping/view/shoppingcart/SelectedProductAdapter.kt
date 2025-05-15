@@ -1,31 +1,43 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.ShoppingProduct
 
 class SelectedProductAdapter(
-    products: List<ShoppingProduct>,
-    private val eventListener: OnRemoveProductListener,
+    private val removeEventListener: OnRemoveProductListener,
 ) : RecyclerView.Adapter<SelectedProductViewHolder>() {
+    private val shoppingProducts = mutableListOf<ShoppingProduct>()
+    private var hasNext: Boolean = false
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): SelectedProductViewHolder = SelectedProductViewHolder.from(parent, eventListener)
+    ): SelectedProductViewHolder = SelectedProductViewHolder.from(parent, removeEventListener)
 
-    private val products = products.toMutableList()
-
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = shoppingProducts.size
 
     fun removeItem(shoppingProduct: ShoppingProduct) {
-        notifyItemRemoved(products.indexOf(shoppingProduct))
-        products.remove(shoppingProduct)
+        notifyItemRemoved(shoppingProducts.indexOf(shoppingProduct))
+        shoppingProducts.remove(shoppingProduct)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItems(
+        newItems: List<ShoppingProduct>,
+        hasNext: Boolean,
+    ) {
+        shoppingProducts.clear()
+        shoppingProducts.addAll(newItems)
+        this.hasNext = hasNext
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(
         holder: SelectedProductViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
+        holder.bind(shoppingProducts[position])
     }
 }

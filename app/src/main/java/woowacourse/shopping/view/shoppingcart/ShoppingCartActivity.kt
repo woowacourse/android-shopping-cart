@@ -7,7 +7,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 
 class ShoppingCartActivity : AppCompatActivity() {
@@ -30,18 +29,29 @@ class ShoppingCartActivity : AppCompatActivity() {
                 ShoppingCartViewModel.provideFactory(applicationContext),
             )[ShoppingCartViewModel::class.java]
 
-        val repository = ShoppingCartRepositoryImpl(applicationContext)
-        val shoppingProducts = repository.getAll()
         val adapter =
-            SelectedProductAdapter(
-                shoppingProducts,
-            ) { product ->
+            SelectedProductAdapter { product ->
                 viewModel.deleteProduct(product)
             }
         binding.rvProducts.adapter = adapter
+        binding.eventListener =
+            object : OnClickArrowListener {
+                override fun onClickLeftPage() {
+                    // TODO
+                }
+
+                override fun onClickRightPage() {
+                    viewModel.loadMoreShoppingProducts()
+                }
+            }
 
         viewModel.removedProduct.observe(this) { value ->
             adapter.removeItem(value)
+        }
+
+        viewModel.shoppingProduct.observe(this) { value ->
+            adapter.updateItems(value.items, value.hasNext)
+            if (!value.hasNext) binding.btnRight.isEnabled = false
         }
         binding.rvProducts.adapter = adapter
     }
