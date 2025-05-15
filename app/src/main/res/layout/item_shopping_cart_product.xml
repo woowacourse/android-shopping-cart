@@ -25,9 +25,10 @@
 
         <TextView
             android:id="@+id/tv_shopping_cart_item"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_marginEnd="28dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{product.name}"
@@ -35,6 +36,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/iv_shopping_cart_image"
+            app:layout_constraintEnd_toStartOf="@id/iv_remove_item_product_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
