@@ -49,14 +49,14 @@ class GoodsActivity : AppCompatActivity() {
     private fun setUpGoodsList(adapter: GoodsAdapter) {
         binding.rvGoodsList.apply {
             this.adapter = adapter
-            layoutManager = GridLayoutManager(this@GoodsActivity, 2)
+            layoutManager = GridLayoutManager(this@GoodsActivity, SPAN_COUNT)
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(
                         recyclerView: RecyclerView,
                         newState: Int,
                     ) {
-                        if (!binding.rvGoodsList.canScrollVertically(1) && viewModel.canLoadMore()) {
+                        if (!binding.rvGoodsList.canScrollVertically(SCROLL_DIRECTION) && viewModel.canLoadMore()) {
                             binding.btnLoadMore.visibility = View.VISIBLE
                         }
                     }
@@ -91,5 +91,10 @@ class GoodsActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        private const val SPAN_COUNT: Int = 2
+        private const val SCROLL_DIRECTION: Int = 1
     }
 }

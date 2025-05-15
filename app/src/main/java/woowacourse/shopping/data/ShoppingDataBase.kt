@@ -4,6 +4,7 @@ import woowacourse.shopping.domain.model.Goods
 
 object ShoppingDataBase {
     private const val INDEX_OFFSET: Int = 1
+    private const val MINIMUM_INDEX: Int = 0
     private val selectedGoods: MutableList<Goods> = mutableListOf()
 
     fun addItem(goods: Goods) {
@@ -21,7 +22,7 @@ object ShoppingDataBase {
         val fromIndex = (page - INDEX_OFFSET) * count
         val toIndex = minOf(fromIndex + count, selectedGoods.size)
 
-        return if (fromIndex in 0 until toIndex) {
+        return if (fromIndex in MINIMUM_INDEX until toIndex) {
             selectedGoods.subList(fromIndex, toIndex).toList()
         } else {
             emptyList()
