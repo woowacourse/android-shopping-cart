@@ -16,7 +16,8 @@ class ShoppingCartViewModel : ViewModel() {
     fun removeProduct(product: Product) {
         val currentProductIndex = allProducts.indexOf(product)
         DummyShoppingCart.products.remove(product)
-        requestProductsPage(currentProductIndex / PAGE_SIZE)
+        val pageNumber = pageNumberAfterRemoval(currentProductIndex)
+        requestProductsPage(pageNumber)
     }
 
     fun requestProductsPage(requestPage: Int) {
@@ -27,6 +28,18 @@ class ShoppingCartViewModel : ViewModel() {
                 PAGE_SIZE,
             )
         _productsLiveData.value = page
+    }
+
+    private fun pageNumberAfterRemoval(index: Int): Int {
+        val productsCount = allProducts.size
+        val currentPageNumber = index / PAGE_SIZE
+        val newPageNumber =
+            if (productsCount % PAGE_SIZE == 0 && index == productsCount) {
+                currentPageNumber - 1
+            } else {
+                currentPageNumber
+            }
+        return newPageNumber.coerceAtLeast(0)
     }
 
     companion object {
