@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.view.cart.CartViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,10 +49,55 @@
             android:id="@+id/recycler_view_cart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="60dp"
             android:paddingHorizontal="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/text_view_page"
             app:layout_constraintTop_toBottomOf="@id/toolbar_cart"
             tools:listitem="@layout/item_cart" />
+
+        <ImageButton
+            android:id="@+id/btn_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:contentDescription="@null"
+            android:onClick="@{() -> vm.fetchShoppingCart(false)}"
+            android:padding="4dp"
+            android:src="@drawable/ic_left"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_page"
+            app:layout_constraintEnd_toStartOf="@id/text_view_page"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_page" />
+
+        <TextView
+            android:id="@+id/text_view_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="60dp"
+            android:text="@{String.valueOf(vm.page)}"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_right"
+            app:layout_constraintStart_toEndOf="@id/btn_left"
+            tools:text="1" />
+
+        <ImageButton
+            android:id="@+id/btn_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:contentDescription="@null"
+            android:onClick="@{() -> vm.fetchShoppingCart(true)}"
+            android:padding="4dp"
+            android:src="@drawable/ic_right"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_page"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_view_page"
+            app:layout_constraintTop_toTopOf="@id/text_view_page" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

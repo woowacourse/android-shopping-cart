@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.UiState
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toUiModel
+import kotlin.math.max
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -20,13 +21,26 @@ class CartViewModel(
     private val _deleteState = MutableLiveData<UiState<Long>>()
     val deleteState: LiveData<UiState<Long>> = _deleteState
 
+    private val _page = MutableLiveData(DEFAULT_PAGE)
+    val page: LiveData<Int> = _page
+
+    private val limit: Int = 5
+
     init {
-        fetchShoppingCart()
+        fetchShoppingCart(false)
     }
 
-    private fun fetchShoppingCart() {
-        cartRepository.getCartItems { products ->
+    fun fetchShoppingCart(isNextPage: Boolean) {
+        val currentPage = _page.value ?: DEFAULT_PAGE
+
+        if (!isNextPage && currentPage < DEFAULT_PAGE) return
+
+        val newPage = calculatePage(isNextPage, currentPage)
+        val newOffset = (newPage - DEFAULT_PAGE) * limit
+
+        cartRepository.getCartItems(limit = limit, offset = newOffset) { products ->
             _products.postValue(products.map { it.toUiModel() })
+            _page.postValue(newPage)
         }
     }
 
@@ -36,7 +50,21 @@ class CartViewModel(
         }
     }
 
+    private fun calculatePage(
+        isNextPage: Boolean,
+        currentPage: Int,
+    ): Int =
+        if (isNextPage) {
+            currentPage + DEFAULT_PAGE
+        } else {
+            max(
+                DEFAULT_PAGE,
+                currentPage - DEFAULT_PAGE,
+            )
+        }
+
     companion object {
+        private const val DEFAULT_PAGE = 1
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(

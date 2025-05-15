@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import android.util.Log
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.mapper.toProduct
 import woowacourse.shopping.data.mapper.toProductEntity
@@ -10,9 +11,20 @@ import kotlin.concurrent.thread
 class CartRepositoryImpl(
     private val cartDao: CartDao,
 ) : CartRepository {
-    override fun getCartItems(callback: (List<Product>) -> Unit) {
+    override fun getCartItems(
+        limit: Int,
+        offset: Int,
+        callback: (List<Product>) -> Unit,
+    ) {
         thread {
-            callback(cartDao.getAll().map { it.toProduct() })
+            Log.d("tama_log", "REPO : $offset")
+            callback(
+                cartDao
+                    .getCartItemPaged(
+                        limit = limit,
+                        offset = offset,
+                    ).map { it.toProduct() },
+            )
         }
     }
 

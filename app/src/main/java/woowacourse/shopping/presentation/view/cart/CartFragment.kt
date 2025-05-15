@@ -52,6 +52,9 @@ class CartFragment :
     }
 
     private fun initObserver() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
         viewModel.products.observe(viewLifecycleOwner) {
             cartAdapter.updateProducts(it)
         }

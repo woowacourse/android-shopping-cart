@@ -25,10 +25,10 @@ class CartAdapter(
     }
 
     fun updateProducts(products: List<ProductUiModel>) {
-        val previousSize = itemCount
         this.products.clear()
         this.products.addAll(products)
-        notifyItemRangeInserted(previousSize, products.size)
+
+        notifyItemRangeChanged(0, products.size)
     }
 
     fun removeProduct(id: Long) {
