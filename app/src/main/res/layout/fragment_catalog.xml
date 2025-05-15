@@ -45,7 +45,7 @@
             android:id="@+id/recycler_view_products"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="20dp"
+            android:paddingHorizontal="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_catalog"
             tools:listitem="@layout/item_product" />

@@ -29,7 +29,7 @@ class GridSpacingItemDecoration(
             getLeftPadding(column),
             ZERO,
             getRightPadding(column),
-            spacingPx,
+            ZERO,
         )
     }
 
