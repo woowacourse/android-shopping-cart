@@ -12,4 +12,11 @@ interface CartRepository {
     )
 
     fun delete(goods: Goods)
+
+    fun getPage(
+        limit: Int,
+        offset: Int,
+    ): LiveData<List<Goods>>
+
+    fun getAllItemsSize(): LiveData<Int>
 }

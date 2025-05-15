@@ -16,4 +16,13 @@ interface CartDao {
 
     @Delete
     fun delete(cartEntity: CartEntity)
+
+    @Query("SELECT * FROM cart LIMIT :limit OFFSET :offset")
+    fun getPage(
+        limit: Int,
+        offset: Int,
+    ): LiveData<List<CartEntity>>
+
+    @Query("SELECT COUNT(*) FROM cart")
+    fun getAllItemsSize(): LiveData<Int>
 }

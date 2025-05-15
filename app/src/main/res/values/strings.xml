@@ -17,4 +17,6 @@
     <string name="cart_action_bar_name">Cart</string>
     <string name="cart_item_delete_button_description">장바구니 아이템 삭제 버튼</string>
     <string name="cart_item_image_description">장바구니 아이템 이미지</string>
+    <string name="cart_left_page_button"><![CDATA[<]]></string>
+    <string name="cart_right_page_button"><![CDATA[>]]></string>
 </resources>

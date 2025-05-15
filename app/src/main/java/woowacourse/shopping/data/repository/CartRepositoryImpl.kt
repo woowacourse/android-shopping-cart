@@ -36,4 +36,14 @@ class CartRepositoryImpl(
             cartDatabase.cartDao().delete(goods.toEntity())
         }
     }
+
+    override fun getPage(
+        limit: Int,
+        offset: Int,
+    ): LiveData<List<Goods>> =
+        cartDatabase.cartDao().getPage(limit, offset).map { entities ->
+            entities.map { it.toDomain() }
+        }
+
+    override fun getAllItemsSize(): LiveData<Int> = cartDatabase.cartDao().getAllItemsSize()
 }

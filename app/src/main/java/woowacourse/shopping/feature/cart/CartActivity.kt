@@ -27,10 +27,9 @@ class CartActivity :
         setContentView(binding.root)
         binding.lifecycleOwner = this
         binding.rvGoods.adapter = adapter
+        binding.viewModel = viewModel
 
-        viewModel.cart.observe(this) {
-            adapter.setItems(it)
-        }
+        updatePageButton()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -40,5 +39,12 @@ class CartActivity :
 
     override fun onClickDeleteButton(goods: Goods) {
         viewModel.delete(goods)
+    }
+
+    private fun updatePageButton() {
+        viewModel.totalItemsCount.observe(this) { value ->
+            viewModel.totalItems = value
+            viewModel.updatePageButtonVisibility()
+        }
     }
 }
