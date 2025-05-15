@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.ShoppingCartEntity
+import woowacourse.shopping.data.shoppingcart.ShoppingCartEntity
 import woowacourse.shopping.domain.ShoppingProduct
 
 fun List<ShoppingCartEntity>.toDomain() =

@@ -7,7 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 
 class ShoppingCartActivity : AppCompatActivity() {

@@ -1,6 +1,7 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.shoppingcart
 
 import android.content.Context
+import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.ShoppingProduct
 import kotlin.concurrent.thread

@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.ShoppingCartRepository
-import woowacourse.shopping.data.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.Product
 
 class ProductDetailViewModel(

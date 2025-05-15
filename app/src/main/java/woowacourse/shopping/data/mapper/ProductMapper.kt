@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.ProductEntity
 import woowacourse.shopping.data.dummy.ProductData
+import woowacourse.shopping.data.product.ProductEntity
 import woowacourse.shopping.domain.Product
 
 fun List<ProductEntity>.toDomain() =
