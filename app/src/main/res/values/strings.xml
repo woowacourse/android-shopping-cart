@@ -3,4 +3,5 @@
     <string name="products_price">%,d원</string>
     <string name="cart_page_previous"><![CDATA[<]]></string>
     <string name="page_cart_next"><![CDATA[>]]></string>
+    <string name="cart_title">Cart</string>
 </resources>

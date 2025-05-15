@@ -15,13 +15,29 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Cart"
 
+        initSupportActionBar()
+        initViewBinding()
+        initObservers()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) finish()
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun initSupportActionBar() {
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = getString(R.string.cart_title)
+    }
+
+    private fun initViewBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.rvCart.adapter = cartAdapter
+    }
 
+    private fun initObservers() {
         viewModel.products.observe(this) { products ->
             cartAdapter.replaceItems(products)
         }
@@ -29,11 +45,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
         viewModel.currentPage.observe(this) { page ->
             viewModel.updateCartProducts()
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) finish()
-        return super.onOptionsItemSelected(item)
     }
 
     private fun createAdapterOnClickHandler() =
