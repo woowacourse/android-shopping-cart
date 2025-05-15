@@ -38,13 +38,13 @@ class CartFragment :
         requireActivity().onBackPressedDispatcher.addCallback(backCallback)
     }
 
-    override fun onProductDeletion(product: ProductUiModel) {
-        viewModel.deleteProduct(product)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         backCallback.remove()
+    }
+
+    override fun onProductDeletion(product: ProductUiModel) {
+        viewModel.deleteProduct(product)
     }
 
     private fun initActionBar() {

@@ -26,69 +26,62 @@ class CatalogFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-
-        initObserver()
+        initObservers()
         initListener()
-        setCatalogAdapter()
+        initRecyclerView()
     }
 
     override fun onProductClicked(product: ProductUiModel) {
-        navigateToScreen(DetailFragment::class.java, DetailFragment.newBundle(product))
+        navigateTo(DetailFragment::class.java, DetailFragment.newBundle(product))
     }
 
     override fun onLoadMoreClicked() {
         viewModel.fetchProducts()
     }
 
-    private fun setCatalogAdapter() {
-        binding.recyclerViewProducts.layoutManager =
-            GridLayoutManager(requireContext(), DEFAULT_SPAN_COUNT).apply {
-                spanSizeLookup =
-                    object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int =
-                            if (position == catalogAdapter.itemCount - 1 && catalogAdapter.hasMore) {
-                                LOAD_MORE_SPAN_COUNT
-                            } else {
-                                1
-                            }
-                    }
-            }
-
-        binding.recyclerViewProducts.addItemDecoration(
-            GridSpacingItemDecoration(
-                DEFAULT_SPAN_COUNT,
-                ITEM_SPACING,
-            ),
-        )
-        binding.recyclerViewProducts.adapter = catalogAdapter
-    }
-
-    private fun initObserver() {
-        viewModel.products.observe(viewLifecycleOwner) { products ->
-            catalogAdapter.updateProducts(products.first, products.second)
+    private fun initObservers() {
+        viewModel.products.observe(viewLifecycleOwner) { (items, hasMore) ->
+            catalogAdapter.updateProducts(items, hasMore)
         }
     }
 
     private fun initListener() {
         binding.btnNavigateCart.setOnClickListener {
-            navigateToScreen(CartFragment::class.java)
+            navigateTo(CartFragment::class.java)
         }
     }
 
-    private fun navigateToScreen(
-        fragment: Class<out Fragment>,
+    private fun initRecyclerView() {
+        val gridLayoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
+        gridLayoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val isLastPosition = position == catalogAdapter.itemCount - SINGLE_SPAN
+                    return if (isLastPosition && catalogAdapter.hasMore) SPAN_COUNT else SINGLE_SPAN
+                }
+            }
+
+        binding.recyclerViewProducts.apply {
+            layoutManager = gridLayoutManager
+            addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, ITEM_SPACING_DP))
+            adapter = catalogAdapter
+        }
+    }
+
+    private fun navigateTo(
+        fragmentClass: Class<out Fragment>,
         bundle: Bundle? = null,
     ) {
         parentFragmentManager.commit {
             setReorderingAllowed(true)
-            replace(R.id.shopping_fragment_container, fragment, bundle)
+            replace(R.id.shopping_fragment_container, fragmentClass, bundle)
             addToBackStack(null)
         }
     }
 
     companion object {
-        private const val LOAD_MORE_SPAN_COUNT = 2
-        private const val DEFAULT_SPAN_COUNT = 2
-        private const val ITEM_SPACING = 12f
+        private const val SPAN_COUNT = 2
+        private const val SINGLE_SPAN = 1
+        private const val ITEM_SPACING_DP = 12f
     }
 }
