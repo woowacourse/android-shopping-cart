@@ -20,24 +20,29 @@ class CartActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
         setSupportActionBar()
+        setCartProductAdapter()
+        observeCartProducts()
+    }
 
-        binding.lifecycleOwner = this
+    private fun setSupportActionBar() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.text_cart_action_bar)
+    }
 
+    private fun setCartProductAdapter() {
         binding.recyclerViewCart.adapter =
             CartAdapter(emptyList(), viewModel, { cartProduct ->
                 viewModel.deleteCartProduct(cartProduct)
             }) { dir ->
                 viewModel.onClick(dir)
             }
+    }
 
+    private fun observeCartProducts() {
         viewModel.cartProducts.observe(this) { value ->
             (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
         }
-    }
-
-    private fun setSupportActionBar() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.text_cart_action_bar)
+        binding.lifecycleOwner = this
     }
 
     override fun onSupportNavigateUp(): Boolean {
