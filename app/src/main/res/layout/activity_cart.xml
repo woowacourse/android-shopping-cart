@@ -26,5 +26,40 @@
             android:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/button_previous"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/ic_previous"
+            android:background="@drawable/previous_button_shape"
+            android:inset="0dp"/>
+
+        <TextView
+            android:id="@+id/text_view_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/gray"
+            tools:text="5"
+            android:padding="11dp" />
+
+        <ImageButton
+            android:id="@+id/button_forward"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/ic_forward"
+            android:background="@drawable/forward_button_shape"
+            android:inset="0dp"/>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
