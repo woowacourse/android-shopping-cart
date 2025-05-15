@@ -2,6 +2,7 @@ package woowacourse.shopping.view.main
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
@@ -57,6 +58,7 @@ class MainActivity :
     }
 
     override fun onLoadMoreProducts(page: Int) {
+        binding.btnLoadMoreProducts.visibility = View.GONE
         viewModel.requestProductsPage(page)
     }
 }
