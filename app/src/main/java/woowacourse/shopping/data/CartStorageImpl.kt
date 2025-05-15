@@ -91,6 +91,7 @@ object CartStorageImpl : CartStorage {
     ): List<Product> {
         val fromIndex = page * pageSize
         val toIndex = minOf(fromIndex + pageSize, cart.size)
+        if (fromIndex < 0) return emptyList()
         return cart.toList().subList(fromIndex, toIndex)
     }
 
