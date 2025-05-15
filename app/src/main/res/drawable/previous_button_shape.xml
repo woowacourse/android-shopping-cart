@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape
+            android:shape="rectangle">
+            <corners
+                android:topLeftRadius="4dp"
+                android:bottomLeftRadius="4dp"
+                />
+            <solid android:color="@color/light_gray"/>
+        </shape>
+    </item>
+    <item>
+        <shape
+            android:shape="rectangle">
+            <corners
+                android:topLeftRadius="4dp"
+                android:bottomLeftRadius="4dp"
+                />
+            <solid android:color="@color/turquoise"/>
+        </shape>
+    </item>
+</selector>

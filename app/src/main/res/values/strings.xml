@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="text_cart">장바구니</string>
+    <string name="format_thousand_won">%,d원</string>
+    <string name="text_exit">종료</string>
+    <string name="text_price">가격</string>
+    <string name="text_add_to_cart">장바구니 담기</string>
+
+    <string name="action_bar_title_cart_screen">Cart</string>
 </resources>
