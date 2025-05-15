@@ -65,10 +65,6 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEve
             cartAdapter.submitList(value)
         }
 
-        viewModel.removeItemPosition.observe(this) { value ->
-            cartAdapter.removeItemAt(value)
-        }
-
         viewModel.pageState.observe(this) { value ->
             with(binding) {
                 pager.isVisible = value.pageVisibility

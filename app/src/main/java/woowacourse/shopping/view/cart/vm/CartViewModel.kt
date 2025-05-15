@@ -10,9 +10,6 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> = _products
 
-    private val _removeItemPosition = MutableLiveData<Int>()
-    val removeItemPosition: LiveData<Int> = _removeItemPosition
-
     private val _pageState: MutableLiveData<PageState> = MutableLiveData(PageState())
     val pageState: LiveData<PageState> get() = _pageState
 
@@ -27,9 +24,12 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
         val nextPageIndex = (pageNo.value ?: 1)
         loadCarts(nextPageIndex, PAGE_SIZE)
 
-        if (products.value?.isEmpty() == true) {
+        val isCartEmpty = products.value?.isEmpty() == true
+
+        if (isCartEmpty) {
             val previousPageIndex = nextPageIndex - 1
-            _pageNo.value = ((_pageNo.value ?: 0) - 1).coerceAtLeast(1)
+            val lastPageIndex = ((_pageNo.value ?: 0) - 1).coerceAtLeast(1)
+            _pageNo.value = lastPageIndex
             loadCarts(previousPageIndex, PAGE_SIZE)
         }
     }
