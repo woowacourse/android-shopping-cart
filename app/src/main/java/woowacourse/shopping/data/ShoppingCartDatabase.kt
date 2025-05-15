@@ -8,7 +8,7 @@ import woowacourse.shopping.data.product.ProductEntity
 import woowacourse.shopping.data.shoppingcart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingcart.ShoppingCartEntity
 
-@Database(entities = [ProductEntity::class, ShoppingCartEntity::class], version = 2)
+@Database(entities = [ProductEntity::class, ShoppingCartEntity::class], version = 1)
 abstract class ShoppingCartDatabase : RoomDatabase() {
     abstract fun shoppingCartDao(): ShoppingCartDao
 
