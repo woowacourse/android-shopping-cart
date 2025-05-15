@@ -14,7 +14,7 @@ class CartAdapter(
     fun setItems(newItems: List<Goods>) {
         items.clear()
         items.addAll(newItems)
-        notifyDataSetChanged()
+        notifyItemRangeChanged(ITEM_START_POSITION, ITEM_END_POSITION)
     }
 
     override fun onCreateViewHolder(
@@ -36,4 +36,9 @@ class CartAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    companion object {
+        private const val ITEM_START_POSITION = 0
+        private const val ITEM_END_POSITION = 5
+    }
 }
