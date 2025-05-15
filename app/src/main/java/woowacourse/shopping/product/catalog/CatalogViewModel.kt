@@ -17,17 +17,26 @@ class CatalogViewModel : ViewModel() {
         loadCatalogProducts(PAGE_SIZE)
     }
 
-    fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
+    fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
+        increasePage()
+        loadCatalogProducts(pageSize)
+    }
+
+    fun isLoadButtonEnabled(): Boolean {
+        val totalLoaded = _catalogProducts.value?.size ?: 0
+        return totalLoaded < mockProducts.size
+    }
+
+    fun increasePage() {
+        page.value = page.value?.plus(1)
+    }
+
+    private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
         val fromIndex = (page.value ?: 0) * pageSize
         val toIndex = minOf(fromIndex + pageSize, mockProducts.size)
         val pagedProducts: List<ProductUiModel> =
             mockProducts.subList(fromIndex, toIndex).map { it.toUiModel() }
         _catalogProducts.value = _catalogProducts.value?.plus(pagedProducts)
-        increasePage()
-    }
-
-    fun increasePage() {
-        page.value = page.value?.plus(1)
     }
 
     companion object {

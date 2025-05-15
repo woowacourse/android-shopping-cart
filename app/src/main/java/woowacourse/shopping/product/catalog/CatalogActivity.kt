@@ -50,12 +50,13 @@ class CatalogActivity : AppCompatActivity() {
         val adapter =
             ProductAdapter(
                 emptyList(),
+                viewModel,
                 ProductClickListener { product ->
                     val intent = newIntent(this, product)
                     startActivity(intent)
                 },
             ) {
-                viewModel.loadCatalogProducts()
+                viewModel.loadNextCatalogProducts()
             }
 
         binding.recyclerViewProducts.adapter = adapter
