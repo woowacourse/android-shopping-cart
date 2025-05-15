@@ -8,6 +8,7 @@ class CartAdapter(
     private var cartProducts: List<ProductUiModel>,
     private val cartViewModel: CartViewModel,
     private val onDeleteProductClick: DeleteProductClickListener,
+    private val onPaginationButtonClick: PaginationButtonClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -16,7 +17,7 @@ class CartAdapter(
         if (viewType == CART_PRODUCT) {
             CartViewHolder.from(parent, onDeleteProductClick)
         } else {
-            PaginationButtonViewHolder.from(parent, cartViewModel)
+            PaginationButtonViewHolder.from(parent, cartViewModel, onPaginationButtonClick)
         }
 
     override fun onBindViewHolder(
@@ -25,6 +26,7 @@ class CartAdapter(
     ) {
         when (holder) {
             is CartViewHolder -> holder.bind(cartProducts[position])
+            is PaginationButtonViewHolder -> holder.bind(cartViewModel.page.value ?: 1)
         }
     }
 
@@ -40,7 +42,14 @@ class CartAdapter(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = if (cartProducts.size >= 5) cartProducts.size + 1 else cartProducts.size
+    override fun getItemCount(): Int =
+        if (cartProducts.size > 5 ||
+            cartViewModel.isNextButtonEnabled()
+        ) {
+            cartProducts.size + 1
+        } else {
+            cartProducts.size
+        }
 
     companion object {
         private const val CART_PRODUCT = 1

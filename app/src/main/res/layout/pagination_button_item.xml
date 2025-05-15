@@ -6,9 +6,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="woowacourse.shopping.cart.CartViewModel" />
-
+            name="clickListener"
+            type="woowacourse.shopping.cart.PaginationButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +25,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:onClick="@{() -> viewModel.onClick(1)}"
+                android:onClick="@{() -> clickListener.onClick(1)}"
                 android:id="@+id/button_prev"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -38,7 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:text="@{viewModel.page.toString()}"
+                android:id="@+id/textView_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp"
@@ -51,7 +50,7 @@
                 tools:text="1" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:onClick="@{() -> viewModel.onClick(2)}"
+                android:onClick="@{() -> clickListener.onClick(2)}"
                 android:id="@+id/button_next"
                 android:layout_width="42dp"
                 android:layout_height="42dp"

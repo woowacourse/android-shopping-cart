@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,12 +25,22 @@ class CartViewModel : ViewModel() {
         products.remove(cartProduct)
         _cartProducts.value = products
         CartDatabase.deleteCartProduct(cartProduct)
+        Log.d("deleteCart", "$allCartProducts, $products, $cartProducts")
     }
 
     fun onClick(dir: Int) {
+        if (page.value == 0 && dir == PREV_BUTTON) {
+            return
+        }
+        if ((allCartProducts.size / 5) == page.value && dir == NEXT_BUTTON) {
+            return
+        }
+
         if (dir == NEXT_BUTTON) increasePage() else decreasePage()
         loadCartProducts()
     }
+
+    fun isNextButtonEnabled(): Boolean = allCartProducts.size > 5
 
     private fun increasePage() {
         page.value = page.value?.plus(1)
@@ -49,6 +60,7 @@ class CartViewModel : ViewModel() {
         }
         val pagedProducts = allCartProducts.subList(startIndex, endIndex)
         _cartProducts.value = pagedProducts
+        Log.d("loadCart", "$allCartProducts, $products, $cartProducts")
     }
 
     companion object {

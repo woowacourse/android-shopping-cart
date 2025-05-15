@@ -24,9 +24,12 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         binding.recyclerViewCart.adapter =
-            CartAdapter(emptyList(), viewModel) { cartProduct ->
+            CartAdapter(emptyList(), viewModel, { cartProduct ->
                 viewModel.deleteCartProduct(cartProduct)
+            }) { dir ->
+                viewModel.onClick(dir)
             }
+
         viewModel.cartProducts.observe(this) { value ->
             (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
         }
