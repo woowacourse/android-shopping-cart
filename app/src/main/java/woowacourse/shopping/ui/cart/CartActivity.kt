@@ -50,14 +50,16 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        cartAdapter = CartAdapter(
-            items = mutableListOf(),
-            cartClickListener = object : CartClickListener {
-                override fun onClick(product: Product) {
-                    viewModel.deleteProduct(product)
-                }
-            }
-        )
+        cartAdapter =
+            CartAdapter(
+                items = mutableListOf(),
+                cartClickListener =
+                    object : CartClickListener {
+                        override fun onClick(product: Product) {
+                            viewModel.deleteProduct(product)
+                        }
+                    },
+            )
 
         binding.rvCart.adapter = cartAdapter
         binding.btnPrevious.setOnClickListener { viewModel.moveToPrevious() }

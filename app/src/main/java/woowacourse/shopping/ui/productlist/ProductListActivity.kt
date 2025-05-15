@@ -26,7 +26,7 @@ class ProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
     private val viewModel: ProductListViewModel by viewModels {
         ViewModelFactory.createProductViewModelFactory(
-            ProductRepositoryImpl()
+            ProductRepositoryImpl(),
         )
     }
     private lateinit var productListAdapter: ProductListAdapter
@@ -52,31 +52,35 @@ class ProductListActivity : AppCompatActivity() {
     private fun initViews() {
         setSupportActionBar(binding.toolbarProductList)
 
-        val customLayoutManager = GridLayoutManager(this, 2).apply {
-            spanSizeLookup = object : SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    val viewType = binding.productsRecyclerView.adapter?.getItemViewType(position)
-                    return when (viewType) {
-                        R.layout.product_item -> 1
-                        else -> 2
+        val customLayoutManager =
+            GridLayoutManager(this, 2).apply {
+                spanSizeLookup =
+                    object : SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            val viewType = binding.productsRecyclerView.adapter?.getItemViewType(position)
+                            return when (viewType) {
+                                R.layout.product_item -> 1
+                                else -> 2
+                            }
+                        }
                     }
-                }
             }
-        }
 
-        productListAdapter = ProductListAdapter(
-            items = emptyList(),
-            productClickListener = object : ProductClickListener {
-                override fun onClick(product: Product) {
-                    val intent =
-                        ProductDetailActivity.newIntent(this@ProductListActivity, product)
-                    startActivity(intent)
-                }
-            },
-            loadMoreClickListener = {
-                viewModel.loadProducts()
-            }
-        )
+        productListAdapter =
+            ProductListAdapter(
+                items = emptyList(),
+                productClickListener =
+                    object : ProductClickListener {
+                        override fun onClick(product: Product) {
+                            val intent =
+                                ProductDetailActivity.newIntent(this@ProductListActivity, product)
+                            startActivity(intent)
+                        }
+                    },
+                loadMoreClickListener = {
+                    viewModel.loadProducts()
+                },
+            )
 
         binding.productsRecyclerView.apply {
             adapter = productListAdapter

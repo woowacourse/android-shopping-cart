@@ -107,7 +107,7 @@ object ProductDummy {
                 imageUrl = "https://image.msscdn.net/thumbnails/images/goods_img/20210901/2101924/2101924_17138482498938_big.jpg?w=1200",
                 name = "플레인 더비 슈즈 [블랙]",
                 _price = Money(89_890),
-            ), // 기존 더미 마지막
+            ),
             Product(
                 id = 18L,
                 imageUrl = "https://image.msscdn.net/thumbnails/images/goods_img/20220215/2359611/2359611_17024446698621_big.jpg?w=1200",

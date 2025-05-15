@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.productlist
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ProductItemBinding
-import woowacourse.shopping.domain.product.Product
 
 class ProductItemViewHolder(
     private val binding: ProductItemBinding,

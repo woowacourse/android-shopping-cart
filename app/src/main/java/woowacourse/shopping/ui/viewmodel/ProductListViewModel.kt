@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,8 +7,8 @@ import woowacourse.shopping.domain.product.ProductRepository
 import woowacourse.shopping.ui.productlist.ProductListViewType
 
 class ProductListViewModel(
-    private val productRepository: ProductRepository
-): ViewModel() {
+    private val productRepository: ProductRepository,
+) : ViewModel() {
     private val _products = MutableLiveData<List<ProductListViewType>>(emptyList())
     val products: LiveData<List<ProductListViewType>> get() = _products
     private var pageNumber = 0
@@ -28,6 +27,4 @@ class ProductListViewModel(
             _products.value = originProducts + newProducts
         }
     }
-
-
 }

@@ -8,5 +8,8 @@ interface ProductRepository {
 
     fun fetchById(id: Long): Product?
 
-    fun canMoreLoad(pageNumber: Int, loadSize: Int): Boolean
+    fun canMoreLoad(
+        pageNumber: Int,
+        loadSize: Int,
+    ): Boolean
 }

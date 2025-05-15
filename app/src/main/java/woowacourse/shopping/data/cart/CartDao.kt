@@ -15,7 +15,10 @@ interface CartDao {
     fun findById(id: Long): ProductEntity
 
     @Query("SELECT * FROM cart LIMIT :limit OFFSET :offset")
-    fun findPagedItems(limit: Int, offset: Int): List<ProductEntity>
+    fun findPagedItems(
+        limit: Int,
+        offset: Int,
+    ): List<ProductEntity>
 
     @Insert
     fun insert(productEntity: ProductEntity)

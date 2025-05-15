@@ -13,7 +13,6 @@ class CartAdapter(
     private var items: List<Product>,
     private val cartClickListener: CartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
