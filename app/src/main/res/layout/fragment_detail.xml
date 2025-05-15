@@ -39,7 +39,7 @@
         </Toolbar>
 
         <ImageView
-            android:id="@+id/image_view_product"
+            android:id="@+id/image_view_detail_product"
             imageUrl="@{product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -58,7 +58,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/divider"
-            app:layout_constraintTop_toBottomOf="@id/image_view_product"
+            app:layout_constraintTop_toBottomOf="@id/image_view_detail_product"
             tools:text="나이키 에어포스" />
 
         <com.google.android.material.divider.MaterialDivider
@@ -82,6 +82,7 @@
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
+            android:id="@+id/text_view_detail_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
