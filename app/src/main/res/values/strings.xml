@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <string name="text_price">%s원</string>
+    <string name="text_save_goods">장바구니에 상품이 담겼습니다</string>
+
+    <string name="label_price">가격</string>
+    <string name="label_shopping_cart_title">Cart</string>
+
+    <string name="btn_shopping_cart">장바구니 담기</string>
+    <string name="btn_next_page"><![CDATA[>]]></string>
+    <string name="btn_previous_page"><![CDATA[<]]></string>
+    <string name="btn_load_more">Load More</string>
+
+    <string name="action_cart">장바구니</string>
+    <string name="action_cancel">취소</string>
 </resources>
