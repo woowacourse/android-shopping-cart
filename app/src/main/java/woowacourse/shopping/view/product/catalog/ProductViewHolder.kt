@@ -1,10 +1,11 @@
-package woowacourse.shopping.view.product
+package woowacourse.shopping.view.product.catalog
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.product.OnProductListener
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,

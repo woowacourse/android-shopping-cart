@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
@@ -14,18 +15,19 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="150dp"
-        android:onClick="@{() -> onClick.onItemClick(product)}"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> onClick.onItemClick(product)}">
 
         <ImageView
             android:id="@+id/iv_product_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:imageUrl="@{product.imageUrl}"
             tools:src="@drawable/ic_launcher_foreground" />
 
         <TextView
@@ -36,23 +38,23 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_product_image"
-            tools:text="PET보틀-정사각(370ml)"
-            android:text="@{product.name}"/>
+            tools:text="PET보틀-정사각(370ml)" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{String.format(`%,d`, product.price)}"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv_product_name"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
-            tools:text="10,000원"
-            android:text="@{String.format(`%,d`, product.price)}"/>
+            tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

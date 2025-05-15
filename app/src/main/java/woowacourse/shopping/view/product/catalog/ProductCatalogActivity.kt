@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.product
+package woowacourse.shopping.view.product.catalog
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,14 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.product.catalog.ProductAdapter.Companion.LOAD_MORE
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy { ActivityProductCatalogBinding.inflate(layoutInflater) }
     private lateinit var viewModel: ProductCatalogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +40,17 @@ class ProductCatalogActivity : AppCompatActivity() {
 
         val productAdapter = ProductAdapter(emptyList()) { product -> handleProductDetail(product) }
         binding.rvProducts.adapter = productAdapter
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup =
+            object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int =
+                    when (productAdapter.getItemViewType(position)) {
+                        LOAD_MORE -> 2
+                        else -> 1
+                    }
+            }
+
+        binding.rvProducts.layoutManager = gridLayoutManager
 
         viewModel.products.observe(this) { products ->
             productAdapter.setItems(products)
