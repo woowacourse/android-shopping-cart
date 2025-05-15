@@ -41,10 +41,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
         viewModel.products.observe(this) { products ->
             cartAdapter.replaceItems(products)
         }
-
-        viewModel.currentPage.observe(this) { page ->
-            viewModel.updateCartProducts()
-        }
     }
 
     private fun createAdapterOnClickHandler() =

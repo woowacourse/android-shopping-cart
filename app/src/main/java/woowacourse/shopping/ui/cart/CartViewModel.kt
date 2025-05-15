@@ -12,41 +12,44 @@ class CartViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList<Product>())
     val products: LiveData<List<Product>> get() = _products
 
-    private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE_COUNT)
+    private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private val _maxPageCount: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE_COUNT)
-    val maxPageCount: LiveData<Int> get() = _maxPageCount
+    private val _maxPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
+    val maxPage: LiveData<Int> get() = _maxPage
 
     init {
         updateCartProducts()
-        updateMaxPageCount()
     }
 
     fun updateCartProducts() {
-        _products.value =
-            cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE_COUNT)
+        _products.value = cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE)
+        if (products.value.isNullOrEmpty()) decreasePage()
+        updateMaxPage()
+    }
+
+    fun updateMaxPage() {
+        _maxPage.value = cartDummyRepository.fetchMaxPageCount()
     }
 
     fun removeCartProduct(id: Int) {
         cartDummyRepository.removeCartProduct(id)
-        _products.value = products.value?.filter { it.id != id }
+        updateCartProducts()
     }
 
-    fun increasePageCount(step: Int = DEFAULT_PAGE_STEP) {
+    fun increasePage(step: Int = DEFAULT_PAGE_STEP) {
         _currentPage.value = currentPage.value?.plus(step)
+        updateCartProducts()
     }
 
-    fun decreasePageCount(step: Int = DEFAULT_PAGE_STEP) {
+    fun decreasePage(step: Int = DEFAULT_PAGE_STEP) {
+        if (currentPage.value == INITIAL_PAGE) return
         _currentPage.value = currentPage.value?.minus(step)
-    }
-
-    fun updateMaxPageCount() {
-        _maxPageCount.value = cartDummyRepository.fetchMaxPageCount()
+        updateCartProducts()
     }
 
     companion object {
-        const val INITIAL_PAGE_COUNT: Int = 1
+        const val INITIAL_PAGE: Int = 1
         const val DEFAULT_PAGE_STEP: Int = 1
     }
 }
