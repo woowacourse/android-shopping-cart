@@ -9,7 +9,7 @@ interface CartDao {
     @Query("SELECT EXISTS(SELECT 1 FROM ProductEntity WHERE id > :id)")
     fun existsItemAfterId(id: Long): Boolean
 
-    @Query("SELECT * FROM ProductEntity ORDER BY id DESC Limit :limit OFFSET :offset")
+    @Query("SELECT * FROM ProductEntity ORDER BY id ASC Limit :limit OFFSET :offset")
     fun getCartItemPaged(
         limit: Int,
         offset: Int,

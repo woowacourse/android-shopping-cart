@@ -28,7 +28,7 @@ class CartAdapter(
         this.products.clear()
         this.products.addAll(products)
 
-        notifyItemRangeChanged(0, products.size)
+        notifyDataSetChanged()
     }
 
     fun removeProduct(id: Long) {
