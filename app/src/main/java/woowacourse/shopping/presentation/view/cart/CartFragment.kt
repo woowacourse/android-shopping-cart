@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.view.cart
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
@@ -30,11 +31,15 @@ class CartFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
 
+        initActionBar()
         initObserver()
-        initListener()
         setCartAdapter()
 
         requireActivity().onBackPressedDispatcher.addCallback(backCallback)
+    }
+
+    override fun onProductDeletion(product: ProductUiModel) {
+        viewModel.deleteProduct(product)
     }
 
     override fun onDestroyView() {
@@ -42,12 +47,13 @@ class CartFragment :
         backCallback.remove()
     }
 
-    override fun onProductDeletion(product: ProductUiModel) {
-        viewModel.deleteProduct(product)
-    }
+    private fun initActionBar() {
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbarCart)
 
-    private fun setCartAdapter() {
-        binding.recyclerViewCart.adapter = cartAdapter
+        binding.toolbarCart.setNavigationIcon(R.drawable.ic_arrow)
+        binding.toolbarCart.setNavigationOnClickListener {
+            navigateToScreen()
+        }
     }
 
     private fun initObserver() {
@@ -70,10 +76,8 @@ class CartFragment :
         }
     }
 
-    private fun initListener() {
-        binding.btnBack.setOnClickListener {
-            navigateToScreen()
-        }
+    private fun setCartAdapter() {
+        binding.recyclerViewCart.adapter = cartAdapter
     }
 
     private fun navigateToScreen() {
