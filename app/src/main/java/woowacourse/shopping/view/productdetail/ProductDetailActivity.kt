@@ -12,11 +12,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.intent.getSerializableExtraData
 import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.viewmodel.cart.CartViewModel
+import woowacourse.shopping.viewmodel.productdetail.ProductDetailViewModel
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +24,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         val intentProductData = intent.getSerializableExtraData<Product>("product") ?: return
         binding.product = intentProductData
+
         binding.closeImageBtn.setOnClickListener {
             finish()
         }
