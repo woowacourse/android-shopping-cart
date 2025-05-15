@@ -11,7 +11,7 @@ class ProductAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder.from(parent, onSelectProduct)
+    ): ProductViewHolder = ProductViewHolder.of(parent, onSelectProduct)
 
     override fun onBindViewHolder(
         holder: ProductViewHolder,

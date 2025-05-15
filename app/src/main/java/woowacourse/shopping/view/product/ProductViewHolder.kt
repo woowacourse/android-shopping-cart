@@ -21,7 +21,7 @@ class ProductViewHolder(
     }
 
     companion object {
-        fun from(
+        fun of(
             parent: ViewGroup,
             onSelectProduct: (Product) -> Unit,
         ): ProductViewHolder {
