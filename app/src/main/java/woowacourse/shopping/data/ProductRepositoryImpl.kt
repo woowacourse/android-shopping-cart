@@ -9,11 +9,13 @@ class ProductRepositoryImpl(
     override fun loadProducts(
         lastItemId: Long,
         loadSize: Int,
-    ): Pair<List<Product>, Boolean> {
+        callback: (List<Product>, Boolean) -> Unit,
+    ) {
         val products = products.filter { it.id > lastItemId }.take(loadSize)
-        val lastId = products.lastOrNull()?.id ?: return products to false
+        val lastId = products.lastOrNull()?.id ?: return callback(products, false)
+
         val hasMore = this.products.any { it.id > lastId }
 
-        return products to hasMore
+        callback(products, hasMore)
     }
 }

@@ -16,27 +16,29 @@ class CatalogViewModel(
     private val _products = MutableLiveData<Pair<List<ProductUiModel>, Boolean>>()
     val products: LiveData<Pair<List<ProductUiModel>, Boolean>> = _products
 
-    private var lastId: Long = 0
+    private val loadSize: Int = 20
+    private var lastId: Long = DEFAULT_ID
 
     init {
         fetchProducts()
     }
 
     fun fetchProducts() {
-        val (newProducts, hasMore) = productRepository.loadProducts(lastId, LOAD_SIZE)
-        val newProductsUiModels = newProducts.map { it.toUiModel() }
+        productRepository.loadProducts(lastId, loadSize) { newProducts, hasMore ->
+            val newProductsUiModels = newProducts.map { it.toUiModel() }
 
-        lastId = newProductsUiModels.lastOrNull()?.id ?: 0
+            lastId = newProductsUiModels.lastOrNull()?.id ?: DEFAULT_ID
 
-        val updatedProducts = (_products.value?.first ?: emptyList()).plus(newProductsUiModels).distinct()
+            val updatedProducts = (_products.value?.first ?: emptyList()).plus(newProductsUiModels).distinct()
 
-        _products.postValue(
-            updatedProducts to hasMore,
-        )
+            _products.postValue(
+                updatedProducts to hasMore,
+            )
+        }
     }
 
     companion object {
-        private const val LOAD_SIZE = 20
+        private const val DEFAULT_ID = 0L
 
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {

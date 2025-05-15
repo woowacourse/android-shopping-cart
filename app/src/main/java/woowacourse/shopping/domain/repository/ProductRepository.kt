@@ -6,5 +6,6 @@ interface ProductRepository {
     fun loadProducts(
         lastItemId: Long,
         loadSize: Int,
-    ): Pair<List<Product>, Boolean>
+        callback: (List<Product>, Boolean) -> Unit,
+    )
 }
