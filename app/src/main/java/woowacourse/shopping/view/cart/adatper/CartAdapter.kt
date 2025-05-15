@@ -10,6 +10,11 @@ class CartAdapter(
     private var items: List<Product>,
     private val handler: CartAdapterEventHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
+    fun submitList(newItems: List<Product>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
+
     fun removeItemAt(position: Int) {
         val newItems = items.toMutableList()
         newItems.removeAt(position)

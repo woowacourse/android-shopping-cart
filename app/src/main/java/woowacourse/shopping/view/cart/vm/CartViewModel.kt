@@ -22,11 +22,12 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     private var hasEverShownNextPage = false
 
     fun deleteProduct(productId: Long) {
-        val position = _products.value?.indexOfFirst { it.id == productId } ?: -1
-        _products.value = _products.value?.filter { it.id != productId }
-
-        _removeItemPosition.value = position
+        // 삭제할 아이템을 제외한 목록
         cartStorage.deleteProduct(productId)
+
+        // 1. 만약 장바구니 상품이 더 있으면 하나 가져오기
+        val nextPageIndex = (pageNo.value ?: 1)
+        loadCarts(nextPageIndex, PAGE_SIZE)
     }
 
     fun addPage() {
