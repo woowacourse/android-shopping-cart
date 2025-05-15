@@ -51,11 +51,15 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { cartProductAdapter.setData(it) }
+        viewModel.products.observe(this) {
+            cartProductAdapter.setData(it)
+            val currentPage = viewModel.currentPage.value ?: 0
+            updatePaginationUI(currentPage)
+        }
         viewModel.currentPage.observe(this) { currentPage ->
             updatePaginationUI(currentPage)
         }
-        viewModel.totalSize.observe(this) {
+        viewModel.totalSize.observe(this) { totalSize ->
             val currentPage = viewModel.currentPage.value ?: 0
             updatePaginationUI(currentPage)
         }

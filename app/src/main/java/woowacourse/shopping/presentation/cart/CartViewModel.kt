@@ -21,6 +21,8 @@ class CartViewModel(
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int> get() = _currentPage
 
+    private var productCount = 0
+
     fun fetchData() {
         thread {
             val totalSize = productRepository.getCartProducts().size
@@ -45,10 +47,24 @@ class CartViewModel(
     fun deleteProduct(product: Product) {
         thread {
             productRepository.deleteProduct(product.productId)
-            _products.postValue(
-                productRepository.getPagedCartProducts(PAGE_SIZE, (_currentPage.value) ?: 0),
-            )
+            productCount =
+                productRepository.getPagedCartProducts(PAGE_SIZE, (_currentPage.value) ?: 0).size
+            if (productCount == 5) {
+                _currentPage.postValue(_currentPage.value ?: 1)
+                val totalSize = productRepository.getCartProducts().size
+                _totalSize.postValue(totalSize)
+                calculateTotalPages()
+            } else {
+                _products.postValue(
+                    productRepository.getPagedCartProducts(
+                        PAGE_SIZE,
+                        (_currentPage.value) ?: 0,
+                    ),
+                )
+                return@thread
+            }
         }
+        changePage(false)
     }
 
     fun calculateTotalPages(): Int {
