@@ -11,7 +11,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import kotlin.concurrent.thread
 
 class CartViewModel(
     private val productRepository: ProductRepository,
@@ -26,12 +25,13 @@ class CartViewModel(
     private var productCount = 0
 
     fun fetchData() {
-        thread {
-            val totalSize = productRepository.getCartProducts().size
-            _totalSize.postValue(totalSize)
-            val firstPage =
-                productRepository.getPagedCartProducts(PAGE_SIZE, (_currentPage.value) ?: 0)
-            _products.postValue(firstPage)
+        productRepository.getCartProducts { allProducts ->
+            _totalSize.postValue(allProducts.size)
+        }
+
+        val currentPage = _currentPage.value ?: 0
+        productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { pagedProducts ->
+            _products.postValue(pagedProducts)
         }
     }
 
@@ -40,30 +40,34 @@ class CartViewModel(
         val newPage = if (next) current + 1 else maxOf(0, current - 1)
         _currentPage.value = newPage
 
-        thread {
-            val newProducts = productRepository.getPagedCartProducts(PAGE_SIZE, newPage)
+        productRepository.getPagedCartProducts(PAGE_SIZE, newPage) { newProducts ->
             _products.postValue(newProducts)
         }
     }
 
     fun deleteProduct(product: Product) {
-        thread {
-            val currentPage = _currentPage.value ?: 0
+        val currentPage = _currentPage.value ?: 0
 
-            productRepository.deleteProduct(product.productId)
-            productCount = productRepository.getPagedCartProducts(PAGE_SIZE, currentPage).size
+        productRepository.deleteProduct(product.productId) {
+            productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { pagedProducts ->
+                productCount = pagedProducts.size
 
-            if (productCount == 0) {
-                _currentPage.postValue(currentPage)
-                val totalSize = productRepository.getCartProducts().size
-                _totalSize.postValue(totalSize)
-                calculateTotalPages()
+                if (productCount == 0) {
+                    _currentPage.postValue(currentPage)
+                    productRepository.getCartProducts { allProducts ->
+                        _totalSize.postValue(allProducts.size)
+                    }
 
-                Handler(Looper.getMainLooper()).post {
-                    changePage(false)
+                    calculateTotalPages()
+                    Handler(Looper.getMainLooper()).post {
+                        changePage(false)
+                    }
+                } else {
+                    productRepository.getPagedCartProducts(
+                        PAGE_SIZE,
+                        currentPage,
+                    ) { _products.postValue(it) }
                 }
-            } else {
-                _products.postValue(productRepository.getPagedCartProducts(PAGE_SIZE, currentPage))
             }
         }
     }

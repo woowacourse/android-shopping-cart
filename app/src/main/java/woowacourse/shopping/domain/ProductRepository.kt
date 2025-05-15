@@ -8,14 +8,18 @@ interface ProductRepository {
         pageSize: Int,
     ): List<Product>
 
-    fun getCartProducts(): List<Product>
+    fun getCartProducts(onComplete: (List<Product>) -> Unit)
 
     fun getPagedCartProducts(
-        pageSize: Int,
+        limit: Int,
         page: Int,
-    ): List<Product>
+        onComplete: (List<Product>) -> Unit,
+    )
 
     fun insertProduct(product: Product)
 
-    fun deleteProduct(productId: Long)
+    fun deleteProduct(
+        productId: Long,
+        onComplete: () -> Unit,
+    )
 }

@@ -9,7 +9,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -22,9 +21,7 @@ class ProductDetailViewModel(
     }
 
     fun addToCart(product: Product) {
-        thread {
-            productRepository.insertProduct(product)
-        }
+        productRepository.insertProduct(product)
     }
 
     companion object {
