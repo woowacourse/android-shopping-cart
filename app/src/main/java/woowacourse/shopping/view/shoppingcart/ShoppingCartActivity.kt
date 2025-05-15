@@ -40,7 +40,7 @@ class ShoppingCartActivity : AppCompatActivity() {
         binding.eventListener =
             object : OnClickArrowListener {
                 override fun onClickLeftPage() {
-                    // TODO
+                    viewModel.loadPreviousShoppingProducts()
                 }
 
                 override fun onClickRightPage() {
@@ -54,7 +54,7 @@ class ShoppingCartActivity : AppCompatActivity() {
 
         viewModel.shoppingProduct.observe(this) { value ->
             adapter.updateItems(value.items, value.hasNext)
-            if (!value.hasNext) binding.btnRight.isEnabled = false
+            binding.btnRight.isEnabled = value.hasNext
         }
         binding.rvProducts.adapter = adapter
     }

@@ -47,7 +47,8 @@
                 app:layout_constraintEnd_toStartOf="@id/tv_page_number"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:onClick="@{() -> eventListener.onClickLeftPage()}"/>
+                android:onClick="@{() -> eventListener.onClickLeftPage()}"
+                android:enabled="@{viewmodel.currentPage > 1}"/>
 
             <TextView
                 android:id="@+id/tv_page_number"
