@@ -29,7 +29,7 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
 
         if (products.value?.isEmpty() == true) {
             val previousPageIndex = nextPageIndex - 1
-            _pageNo.value = (_pageNo.value ?: 0) - 1
+            _pageNo.value = ((_pageNo.value ?: 0) - 1).coerceAtLeast(1)
             loadCarts(previousPageIndex, PAGE_SIZE)
         }
     }
