@@ -8,4 +8,14 @@ interface CartStorage {
     fun getAll(): List<Product>
 
     fun deleteProduct(id: Long)
+
+    fun getProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product>
+
+    fun notHasNextPage(
+        page: Int,
+        pageSize: Int,
+    ): Boolean
 }

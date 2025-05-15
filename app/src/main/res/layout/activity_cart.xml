@@ -7,8 +7,16 @@
     <data>
 
         <variable
+            name="vm"
+            type="woowacourse.shopping.view.cart.vm.CartViewModel" />
+
+        <variable
             name="adapter"
             type="woowacourse.shopping.view.cart.adatper.CartAdapter" />
+
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.view.cart.CartScreenEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,11 +30,15 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_cart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:adapter="@{adapter}"
+            android:layout_marginBottom="60dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/pager"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <LinearLayout
+            android:id="@+id/pager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
@@ -40,6 +52,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:src="@drawable/ic_previous"
+            android:onClick="@{() -> eventHandler.onClickPreviousPage()}"
             android:background="@drawable/previous_button_shape"
             android:inset="0dp"/>
 
@@ -49,7 +62,7 @@
             android:layout_height="wrap_content"
             android:textSize="22sp"
             android:textColor="@color/gray"
-            tools:text="5"
+            android:text="@{String.valueOf(vm.pageNo)}"
             android:padding="11dp" />
 
         <ImageButton
@@ -57,6 +70,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:src="@drawable/ic_forward"
+            android:onClick="@{() -> eventHandler.onClickNextPage()}"
             android:background="@drawable/forward_button_shape"
             android:inset="0dp"/>
         </LinearLayout>
