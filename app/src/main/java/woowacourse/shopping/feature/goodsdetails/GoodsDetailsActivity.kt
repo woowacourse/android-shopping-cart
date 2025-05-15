@@ -3,6 +3,8 @@ package woowacourse.shopping.feature.goodsdetails
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
@@ -26,6 +28,20 @@ class GoodsDetailsActivity : AppCompatActivity() {
         goods = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
         binding.goods = goods
         binding.insertCallback = { insert(goods) }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.nav_close, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_close -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun insert(goods: GoodsUiModel) {

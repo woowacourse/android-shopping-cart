@@ -20,7 +20,8 @@
             android:label="@string/cart_action_bar_name"/>
         <activity
             android:name=".feature.goodsdetails.GoodsDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/goods_detail_action_bar_name"/>
         <activity
             android:name=".feature.goods.GoodsActivity"
             android:exported="true">
