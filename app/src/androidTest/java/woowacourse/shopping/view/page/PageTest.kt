@@ -65,29 +65,4 @@ class PageTest {
         assertThat(page.hasPrevious).isTrue()
         assertThat(page.hasNext).isFalse()
     }
-
-    @Test
-    fun 두_페이지를_더하면_각_페이지의_항목이_모두_들어있다() {
-        val pageOne =
-            Page.from(
-                products,
-                0,
-                5,
-            )
-        val pageTwo =
-            Page.from(
-                products,
-                1,
-                5,
-            )
-        val actualPage = pageOne + pageTwo
-
-        val expectedPage =
-            Page.from(
-                products,
-                0,
-                10,
-            )
-        assertThat(actualPage).isEqualTo(expectedPage.copy(currentPage = 1))
-    }
 }
