@@ -31,7 +31,7 @@ class CartViewModel(
         return this.size <= size
     }
 
-    fun update() {
+    private fun update() {
         val pageNumber = pageNumber.value ?: 1
         repository.fetchPagedItems(5, (pageNumber - 1) * 5) { products ->
             _products.postValue(products)
@@ -54,5 +54,6 @@ class CartViewModel(
 
     fun deleteProduct(product: Product) {
         repository.remove(product)
+        _products.value = _products.value?.filter { it.id != product.id }
     }
 }

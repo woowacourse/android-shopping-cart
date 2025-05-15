@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productlist
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -9,12 +10,12 @@ import woowacourse.shopping.databinding.LoadMoreItemBinding
 import woowacourse.shopping.databinding.ProductItemBinding
 
 class ProductListAdapter(
-    private val items: List<ProductListViewType>,
+    private var items: List<ProductListViewType>,
     private val productClickListener: ProductClickListener,
     private val loadMoreClickListener: LoadMoreClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
-        return when(items[position]) {
+        return when (items[position]) {
             is ProductListViewType.ProductItemType -> R.layout.product_item
             is ProductListViewType.LoadMoreType -> R.layout.load_more_item
         }
@@ -25,15 +26,19 @@ class ProductListAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when(viewType) {
+        return when (viewType) {
             R.layout.product_item -> {
-                val binding: ProductItemBinding = DataBindingUtil.inflate(inflater, R.layout.product_item, parent, false)
+                val binding: ProductItemBinding =
+                    DataBindingUtil.inflate(inflater, R.layout.product_item, parent, false)
                 ProductItemViewHolder(binding, productClickListener)
             }
+
             R.layout.load_more_item -> {
-                val binding: LoadMoreItemBinding = DataBindingUtil.inflate(inflater, R.layout.load_more_item, parent, false)
+                val binding: LoadMoreItemBinding =
+                    DataBindingUtil.inflate(inflater, R.layout.load_more_item, parent, false)
                 LoadMoreViewHolder(binding, loadMoreClickListener)
             }
+
             else -> throw IllegalArgumentException("지원하지 않는 타입입니다.")
         }
     }
@@ -45,4 +50,10 @@ class ProductListAdapter(
     }
 
     override fun getItemCount() = items.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(it: List<ProductListViewType>?) {
+        items = it.orEmpty()
+        notifyDataSetChanged()
+    }
 }

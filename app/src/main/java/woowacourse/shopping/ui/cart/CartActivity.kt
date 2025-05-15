@@ -55,7 +55,6 @@ class CartActivity : AppCompatActivity() {
             cartClickListener = object : CartClickListener {
                 override fun onClick(product: Product) {
                     viewModel.deleteProduct(product)
-                    viewModel.update()
                 }
             }
         )
@@ -82,7 +81,7 @@ class CartActivity : AppCompatActivity() {
             ColorStateList.valueOf(getColor(if (page == 1) R.color.button_inactive else R.color.button_active))
 
         binding.btnNext.backgroundTintList =
-            ColorStateList.valueOf(getColor(if (viewModel.isLastPage()) R.color.button_inactive else R.color.button_active))
+            ColorStateList.valueOf(getColor(if (page != 1 && viewModel.isLastPage()) R.color.button_inactive else R.color.button_active))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
