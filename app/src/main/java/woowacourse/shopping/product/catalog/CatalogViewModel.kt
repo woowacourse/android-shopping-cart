@@ -3,8 +3,8 @@ package woowacourse.shopping.product.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.MockProducts.mockProducts
 import woowacourse.shopping.mapper.toUiModel
-import woowacourse.shopping.product.catalog.MockProducts.mockProducts
 
 class CatalogViewModel : ViewModel() {
     private val _catalogProducts =

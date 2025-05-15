@@ -1,4 +1,6 @@
-package woowacourse.shopping.product.catalog
+package woowacourse.shopping.data
+
+import woowacourse.shopping.product.catalog.Product
 
 object MockProducts {
     val mockProducts =
