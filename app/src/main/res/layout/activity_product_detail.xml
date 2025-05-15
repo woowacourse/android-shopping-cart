@@ -65,7 +65,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="가격"
+                android:text="@string/product_detail_price"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -89,7 +89,7 @@
             android:background="@color/mint_1"
             android:onClick="@{()->onAddCartProductClick.invoke()}"
             android:paddingVertical="12dp"
-            android:text="장바구니 담기"
+            android:text="@string/product_detail_cart_add"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="24sp"

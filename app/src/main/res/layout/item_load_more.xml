@@ -25,7 +25,7 @@
             android:background="@drawable/bg_products_mint_1_radius_8dp"
             android:onClick="@{()->onClickHandler.onLoadMoreClick()}"
             android:padding="6dp"
-            android:text="더보기"
+            android:text="@string/products_load_more"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"

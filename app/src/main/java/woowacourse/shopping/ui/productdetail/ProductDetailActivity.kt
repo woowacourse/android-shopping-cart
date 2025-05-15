@@ -48,7 +48,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
 
     private fun addCartProduct() {
         viewModel.addCartProduct()
-        Toast.makeText(this, "성공적으로 장바구니에 담겼습니다!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
         finish()
     }
 

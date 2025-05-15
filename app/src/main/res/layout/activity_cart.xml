@@ -78,7 +78,7 @@
                 android:onClick="@{()->viewModel.increasePageCount(viewModel.DEFAULT_PAGE_STEP)}"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
-                android:text="@string/page_cart_next"
+                android:text="@string/cart_page_next"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
