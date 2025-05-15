@@ -22,6 +22,8 @@ class ProductCatalogActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductCatalogBinding.inflate(layoutInflater) }
     private lateinit var viewModel: ProductCatalogViewModel
 
+    private lateinit var productAdapter: ProductAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,27 +40,8 @@ class ProductCatalogActivity : AppCompatActivity() {
                 ProductCatalogViewModel.provideFactory(),
             )[ProductCatalogViewModel::class.java]
 
-        val productAdapter =
-            ProductAdapter(
-                productsEventListener = { product -> navigateToProductDetail(product) },
-                loadEventListener = viewModel::loadMoreProducts,
-            )
-        binding.rvProducts.adapter = productAdapter
-        val gridLayoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
-        gridLayoutManager.spanSizeLookup =
-            object : SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int =
-                    when (productAdapter.getItemViewType(position)) {
-                        LOAD_MORE -> GRID_SPAN_COUNT
-                        else -> 1
-                    }
-            }
-
-        binding.rvProducts.layoutManager = gridLayoutManager
-
-        viewModel.products.observe(this) { value ->
-            productAdapter.addItems(value.items, value.hasNext)
-        }
+        initRecyclerView()
+        initObservers()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,6 +56,33 @@ class ProductCatalogActivity : AppCompatActivity() {
             startActivity(intent)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun initRecyclerView() {
+        productAdapter =
+            ProductAdapter(
+                productsEventListener = { product -> navigateToProductDetail(product) },
+                loadEventListener = viewModel::loadMoreProducts,
+            )
+
+        binding.rvProducts.adapter = productAdapter
+        val gridLayoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
+        gridLayoutManager.spanSizeLookup =
+            object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int =
+                    when (productAdapter.getItemViewType(position)) {
+                        LOAD_MORE -> GRID_SPAN_COUNT
+                        else -> 1
+                    }
+            }
+
+        binding.rvProducts.layoutManager = gridLayoutManager
+    }
+
+    private fun initObservers() {
+        viewModel.products.observe(this) { value ->
+            productAdapter.addItems(value.items, value.hasNext)
+        }
     }
 
     private fun navigateToProductDetail(product: Product) {

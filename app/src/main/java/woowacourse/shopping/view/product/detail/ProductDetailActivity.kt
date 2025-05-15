@@ -28,20 +28,22 @@ class ProductDetailActivity : AppCompatActivity() {
             insets
         }
 
-        val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT)
+        val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT) ?: return
+        initViewModel(product)
+        initObservers()
+    }
 
-        if (product == null) {
-            return
-        } else {
-            viewModel =
-                ViewModelProvider(
-                    this,
-                    ProductDetailViewModel.provideFactory(product, applicationContext),
-                )[ProductDetailViewModel::class.java]
-        }
+    private fun initViewModel(product: Product) {
+        viewModel =
+            ViewModelProvider(
+                this,
+                ProductDetailViewModel.provideFactory(product, applicationContext),
+            )[ProductDetailViewModel::class.java]
         binding.vm = viewModel
         binding.lifecycleOwner = this
+    }
 
+    private fun initObservers() {
         viewModel.navigateEvent.observe(this) {
             val intent = Intent(this, ShoppingCartActivity::class.java)
             startActivity(intent)

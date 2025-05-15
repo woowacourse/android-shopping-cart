@@ -19,7 +19,7 @@ class ShoppingCartViewModel(
     private val _shoppingProduct = MutableLiveData<PagedResult<ShoppingProduct>>()
     val shoppingProduct: LiveData<PagedResult<ShoppingProduct>> = _shoppingProduct
 
-    private var _currentPage = MutableLiveData(0)
+    private var _currentPage = MutableLiveData(FIRST_PAGE_NUMBER)
     val currentPage: LiveData<Int> = _currentPage
 
     init {
@@ -35,26 +35,26 @@ class ShoppingCartViewModel(
         val result =
             repository.getPaged(
                 SHOPPING_PRODUCT_SIZE_LIMIT,
-                (_currentPage.value ?: 0) * SHOPPING_PRODUCT_SIZE_LIMIT,
+                (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
             )
         _shoppingProduct.value = PagedResult(result.items, result.hasNext)
-        _currentPage.value = _currentPage.value?.plus(1)
+        _currentPage.value = _currentPage.value?.plus(ADD_PAGE_NUMBER)
     }
 
     fun loadPreviousShoppingProducts() {
-        _currentPage.value = _currentPage.value?.minus(1)
+        _currentPage.value = _currentPage.value?.minus(ADD_PAGE_NUMBER)
         val result =
             repository.getPaged(
                 SHOPPING_PRODUCT_SIZE_LIMIT,
-                (_currentPage.value?.minus(1) ?: 0) * SHOPPING_PRODUCT_SIZE_LIMIT,
+                (_currentPage.value?.minus(ADD_PAGE_NUMBER) ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
             )
         _shoppingProduct.value = PagedResult(result.items, result.hasNext)
     }
 
     private fun loadProducts() {
-        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: 0)
+        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
         _shoppingProduct.value = PagedResult(result.items, result.hasNext)
-        _currentPage.value = _currentPage.value?.plus(1)
+        _currentPage.value = _currentPage.value?.plus(ADD_PAGE_NUMBER)
     }
 
     companion object {
@@ -72,7 +72,8 @@ class ShoppingCartViewModel(
                 }
             }
 
-        private const val FIRST_PAGE_NUMBER = 1
+        private const val FIRST_PAGE_NUMBER = 0
+        private const val ADD_PAGE_NUMBER = 1
         private const val SHOPPING_PRODUCT_SIZE_LIMIT = 5
     }
 }

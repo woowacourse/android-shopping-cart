@@ -13,6 +13,8 @@ class ShoppingCartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityShoppingCartBinding.inflate(layoutInflater) }
     private lateinit var viewModel: ShoppingCartViewModel
 
+    private lateinit var adapter: SelectedProductAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,12 +31,20 @@ class ShoppingCartActivity : AppCompatActivity() {
                 ShoppingCartViewModel.provideFactory(applicationContext),
             )[ShoppingCartViewModel::class.java]
 
-        val adapter =
+        initRecyclerView()
+        initBindings()
+        initObservers()
+    }
+
+    private fun initRecyclerView() {
+        adapter =
             SelectedProductAdapter { product ->
                 viewModel.deleteProduct(product)
             }
         binding.rvProducts.adapter = adapter
+    }
 
+    private fun initBindings() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         binding.eventListener =
@@ -47,7 +57,9 @@ class ShoppingCartActivity : AppCompatActivity() {
                     viewModel.loadMoreShoppingProducts()
                 }
             }
+    }
 
+    private fun initObservers() {
         viewModel.removedProduct.observe(this) { value ->
             adapter.removeItem(value)
         }
@@ -56,6 +68,5 @@ class ShoppingCartActivity : AppCompatActivity() {
             adapter.updateItems(value.items, value.hasNext)
             binding.btnRight.isEnabled = value.hasNext
         }
-        binding.rvProducts.adapter = adapter
     }
 }
