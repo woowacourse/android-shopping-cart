@@ -4,25 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.presentation.BaseActivity
 
-class ShoppingCartActivity : AppCompatActivity() {
-    private val binding: ActivityShoppingCartBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
-    }
+class ShoppingCartActivity : BaseActivity() {
+    private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
     private val viewModel: ShoppingCartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUpScreen()
+        setUpScreen(binding.root)
         setupAppBar()
 
         binding.vm = viewModel
@@ -36,15 +30,6 @@ class ShoppingCartActivity : AppCompatActivity() {
 
         viewModel.goods.observe(this) { goods ->
             adapter.updateItems(goods)
-        }
-    }
-
-    private fun setUpScreen() {
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
         }
     }
 

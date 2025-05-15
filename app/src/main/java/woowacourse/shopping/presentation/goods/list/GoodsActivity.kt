@@ -4,29 +4,23 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
-class GoodsActivity : AppCompatActivity() {
-    private val binding: ActivityGoodsBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_goods)
-    }
+class GoodsActivity : BaseActivity() {
+    private val binding by bind<ActivityGoodsBinding>(R.layout.activity_goods)
     private val viewModel: GoodsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUpScreen()
+        setUpScreen(binding.root)
 
         val adapter = GoodsAdapter { goods -> navigateToDetail(goods) }
         setUpGoodsList(adapter)
@@ -34,15 +28,6 @@ class GoodsActivity : AppCompatActivity() {
 
         viewModel.goods.observe(this) { goods ->
             adapter.updateItems(goods)
-        }
-    }
-
-    private fun setUpScreen() {
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
         }
     }
 
