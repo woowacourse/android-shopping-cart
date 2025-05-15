@@ -24,7 +24,7 @@ class CartAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartBinding.inflate(inflater, parent, false)
         binding.cartClickListener = cartClickListener
-        return CartViewHolder(binding, cartClickListener)
+        return CartViewHolder(binding)
     }
 
     override fun onBindViewHolder(
