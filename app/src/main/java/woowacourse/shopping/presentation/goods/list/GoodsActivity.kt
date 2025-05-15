@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
@@ -27,13 +28,10 @@ class GoodsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setUpScreen()
 
-        val adapter =
-            GoodsAdapter(viewModel.goods.value ?: listOf()) { goods ->
-                val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
-                startActivity(intent)
-            }
+        val adapter = GoodsAdapter { goods -> navigateToDetail(goods) }
         setUpGoodsList(adapter)
         setLoadButtonClickListener()
+
         viewModel.goods.observe(this) { goods ->
             adapter.updateItems(goods)
         }
@@ -58,7 +56,6 @@ class GoodsActivity : AppCompatActivity() {
                         recyclerView: RecyclerView,
                         newState: Int,
                     ) {
-                        super.onScrollStateChanged(recyclerView, newState)
                         if (!binding.rvGoodsList.canScrollVertically(1) && viewModel.canLoadMore()) {
                             binding.btnLoadMore.visibility = View.VISIBLE
                         }
@@ -66,6 +63,11 @@ class GoodsActivity : AppCompatActivity() {
                 },
             )
         }
+    }
+
+    private fun navigateToDetail(goods: Goods) {
+        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
+        startActivity(intent)
     }
 
     private fun setLoadButtonClickListener() {
