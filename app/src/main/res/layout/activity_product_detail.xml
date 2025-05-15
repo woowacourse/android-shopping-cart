@@ -88,7 +88,7 @@
             android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/mint_Green"
+            android:background="@color/mint_green"
             android:text="@string/button_add_to_cart"
             android:textSize="20sp"
             android:textStyle="bold"
