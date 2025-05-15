@@ -33,10 +33,14 @@ class CartViewModel(
         fetchShoppingCart(false)
     }
 
-    fun fetchShoppingCart(isNextPage: Boolean) {
+    fun fetchShoppingCart(
+        isNextPage: Boolean,
+        isRefresh: Boolean = false,
+    ) {
         val currentPage = _page.value ?: DEFAULT_PAGE
 
-        val newPage = calculatePage(isNextPage, currentPage)
+        val newPage = (calculatePage(isNextPage, currentPage, isRefresh))
+
         val newOffset = (newPage - DEFAULT_PAGE) * limit
 
         cartRepository.getCartItems(limit = limit, offset = newOffset) { products, hasMore ->
@@ -55,8 +59,11 @@ class CartViewModel(
     private fun calculatePage(
         isNextPage: Boolean,
         currentPage: Int,
-    ): Int =
-        if (isNextPage) {
+        isRefresh: Boolean,
+    ): Int {
+        if (isRefresh) return currentPage
+
+        return if (isNextPage) {
             currentPage + DEFAULT_PAGE
         } else {
             max(
@@ -64,6 +71,7 @@ class CartViewModel(
                 currentPage - DEFAULT_PAGE,
             )
         }
+    }
 
     companion object {
         private const val DEFAULT_PAGE = 1

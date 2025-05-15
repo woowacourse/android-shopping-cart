@@ -63,6 +63,7 @@ class CartFragment :
                 is UiState.Loading -> {}
                 is UiState.Success -> {
                     cartAdapter.removeProduct(it.data)
+                    viewModel.fetchShoppingCart(isNextPage = false, isRefresh = true)
                 }
                 is UiState.Error -> {}
             }
