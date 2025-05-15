@@ -15,6 +15,8 @@ class ShoppingCartPaginationViewHolder(
 
     fun bind(item: ShoppingCartItem.PaginationItem) {
         binding.page = item.page
+        binding.shoppingCartPageCountPlusButton.isEnabled = item.nextEnabled
+        binding.shoppingCartPageCountMinusButton.isEnabled = item.previousEnabled
     }
 
     companion object {

@@ -9,9 +9,18 @@ import woowacourse.shopping.domain.product.Product
 class DefaultShoppingCartRepository(
     private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage
 ) : ShoppingCartRepository {
+    override var hasNext: Boolean = false
+        private set
+    override var hasPrevious: Boolean = false
+        private set
+
+
     override fun load(page: Int, count: Int): List<Product> {
         val start: Int = (page - 1) * count
         val endExclusive: Int = page * count
+
+        hasNext = endExclusive < shoppingCartStorage.size
+        hasPrevious = count < shoppingCartStorage.size && page != 1
 
         return shoppingCartStorage.load(start, endExclusive).map(ProductEntity::toDomain)
     }

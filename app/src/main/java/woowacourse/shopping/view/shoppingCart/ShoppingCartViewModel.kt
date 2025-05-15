@@ -19,17 +19,25 @@ class ShoppingCartViewModel(
     private val _event: MutableLiveData<ShoppingCartEvent> = MutableLiveData()
     val event: LiveData<ShoppingCartEvent> get() = _event
 
-    private val _page: MutableLiveData<Int> = MutableLiveData(1)
-    val page: LiveData<Int> get() = _page
+    private var page: Int = 1
 
     fun updateShoppingCart() {
         thread {
             runCatching {
-                shoppingCartRepository.load(page.value ?: 1, COUNT_PER_PAGE)
+                shoppingCartRepository.load(page, COUNT_PER_PAGE)
             }.onSuccess { products: List<Product> ->
-                _shoppingCart.postValue(
-                    products.map(::ProductItem) + PaginationItem(page.value ?: 1),
-                )
+                val paginationItem: PaginationItem =
+                    (shoppingCart.value?.last() as? PaginationItem)?.copy(
+                        page = page,
+                        nextEnabled = shoppingCartRepository.hasNext,
+                        previousEnabled = shoppingCartRepository.hasPrevious
+                    )
+                        ?: PaginationItem(
+                            page,
+                            shoppingCartRepository.hasNext,
+                            false,
+                        )
+                _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
             }.onFailure {
                 _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
             }
@@ -49,12 +57,12 @@ class ShoppingCartViewModel(
     }
 
     fun plusPage() {
-        _page.value = (page.value ?: 1).plus(1)
+        page++
         updateShoppingCart()
     }
 
     fun minusPage() {
-        _page.value = (page.value ?: 1).minus(1).coerceAtLeast(1)
+        page = page.minus(1).coerceAtLeast(1)
         updateShoppingCart()
     }
 

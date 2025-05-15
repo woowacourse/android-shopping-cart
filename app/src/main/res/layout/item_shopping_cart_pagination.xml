@@ -56,7 +56,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/background_shopping_cart_pagination_plus_button"
-            android:enabled="false"
             android:gravity="center"
             android:onClick="@{() -> onShoppingCartPaginationListener.onPlusPage()}"
             android:paddingHorizontal="15dp"

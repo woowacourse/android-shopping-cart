@@ -12,7 +12,11 @@ sealed interface ShoppingCartItem {
         override val viewType: ItemType = ItemType.PRODUCT
     }
 
-    data class PaginationItem(val page: Int) : ShoppingCartItem {
+    data class PaginationItem(
+        val page: Int,
+        val nextEnabled: Boolean,
+        val previousEnabled: Boolean,
+    ) : ShoppingCartItem {
         override val viewType: ItemType = ItemType.PAGINATION
     }
 
