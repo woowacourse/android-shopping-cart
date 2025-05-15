@@ -11,7 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductDummy
+import woowacourse.shopping.data.product.ProductDummy
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.cart.CartActivity

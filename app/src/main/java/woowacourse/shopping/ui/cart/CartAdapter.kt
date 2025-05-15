@@ -5,10 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.CartDatabase
-import woowacourse.shopping.data.product.CartRepositoryImpl
 import woowacourse.shopping.databinding.CartItemBinding
-import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
 
 class CartAdapter(

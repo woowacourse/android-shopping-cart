@@ -12,8 +12,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.CartDatabase
-import woowacourse.shopping.data.product.CartRepositoryImpl
+import woowacourse.shopping.data.cart.CartDatabase
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product

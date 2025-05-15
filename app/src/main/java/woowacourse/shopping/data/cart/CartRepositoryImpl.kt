@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
@@ -22,6 +22,13 @@ class CartRepositoryImpl(db: CartDatabase) : CartRepository {
     override fun fetchAll(callback: (List<Product>) -> Unit) {
         thread {
             val products = dao.findAll().map { productEntity -> productEntity.toProduct() }
+            callback(products)
+        }
+    }
+
+    override fun fetchPagedItems(limit: Int, offset: Int, callback: (List<Product>) -> Unit) {
+        thread {
+            val products = dao.findPagedItems(limit, offset).map { productEntity -> productEntity.toProduct() }
             callback(products)
         }
     }
