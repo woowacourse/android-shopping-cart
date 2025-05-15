@@ -37,7 +37,7 @@
                 android:src="@drawable/ic_back" />
 
             <TextView
-                android:id="@+id/tv_product_toolbar_title"
+                android:id="@+id/tv_cart_toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cart_toolbar_text"

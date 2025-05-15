@@ -37,7 +37,7 @@ class ProductActivityTest {
 
     @Test
     fun `상품_목록이_표시된다`() {
-        onView(withId(R.id.cl_product))
+        onView(withId(R.id.rv_products))
             .check(matches(isDisplayed()))
     }
 
