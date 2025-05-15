@@ -17,17 +17,7 @@ class PagingTest {
     @Before
     fun setUp() {
         paging = Paging()
-        fakeCartStorage =
-            FakeCartStorage(
-                products =
-                    mutableListOf(
-                        Product(1L, "맥북", Price(1000), ""),
-                        Product(2L, "아이폰", Price(2000), ""),
-                        Product(3L, "에어팟", Price(3000), ""),
-                        Product(4L, "매직키보드", Price(4000), ""),
-                        Product(5L, "에어팟맥스", Price(5000), ""),
-                    ),
-            )
+        fakeCartStorage = FakeCartStorage()
     }
 
     @Test
