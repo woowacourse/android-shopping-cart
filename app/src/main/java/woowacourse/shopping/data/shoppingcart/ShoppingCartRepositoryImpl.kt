@@ -4,6 +4,7 @@ import android.content.Context
 import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.view.PagedResult
 import kotlin.concurrent.thread
 
 class ShoppingCartRepositoryImpl(
@@ -22,12 +23,22 @@ class ShoppingCartRepositoryImpl(
     override fun getPaged(
         limit: Int,
         offset: Int,
-    ): List<ShoppingProduct> {
-        var result = listOf<ShoppingProduct>()
+    ): PagedResult<ShoppingProduct> {
+        var total = 0
         thread {
-            result = dao.getPaged(limit, offset).toDomain()
+            total = dao.count()
         }.join()
-        return result
+
+        if (offset >= total) return PagedResult(emptyList(), false)
+
+        val endIndex = (offset + limit).coerceAtMost(total)
+        var items = listOf<ShoppingProduct>()
+        thread {
+            items = dao.getPaged(endIndex - offset, offset).toDomain()
+        }.join()
+
+        val hasNext = endIndex < total
+        return PagedResult(items, hasNext)
     }
 
     override fun insert(productId: Long) {
