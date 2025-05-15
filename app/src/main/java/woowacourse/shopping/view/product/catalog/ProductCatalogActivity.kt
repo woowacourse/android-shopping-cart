@@ -20,25 +20,24 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductCatalogBinding.inflate(layoutInflater) }
-    private lateinit var viewModel: ProductCatalogViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            ProductCatalogViewModel.provideFactory(),
+        )[ProductCatalogViewModel::class.java]
+    }
 
     private lateinit var productAdapter: ProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(binding.main)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        viewModel =
-            ViewModelProvider(
-                this,
-                ProductCatalogViewModel.provideFactory(),
-            )[ProductCatalogViewModel::class.java]
 
         initRecyclerView()
         initObservers()
@@ -61,11 +60,18 @@ class ProductCatalogActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         productAdapter =
             ProductAdapter(
-                productsEventListener = { product -> navigateToProductDetail(product) },
-                loadEventListener = viewModel::loadMoreProducts,
-            )
+                object : ProductCatalogEventHandler {
+                    override fun onProductClick(item: Product) {
+                        navigateToProductDetail(item)
+                    }
 
+                    override fun onMoreClick() {
+                        viewModel.loadMoreProducts()
+                    }
+                },
+            )
         binding.rvProducts.adapter = productAdapter
+
         val gridLayoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
         gridLayoutManager.spanSizeLookup =
             object : SpanSizeLookup() {
@@ -75,13 +81,12 @@ class ProductCatalogActivity : AppCompatActivity() {
                         else -> 1
                     }
             }
-
         binding.rvProducts.layoutManager = gridLayoutManager
     }
 
     private fun initObservers() {
         viewModel.products.observe(this) { value ->
-            productAdapter.addItems(value.items, value.hasNext)
+            productAdapter.addAll(value.items, value.hasNext)
         }
     }
 

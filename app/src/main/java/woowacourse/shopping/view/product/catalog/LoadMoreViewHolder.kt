@@ -6,21 +6,25 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 
 class LoadMoreViewHolder(
-    private val binding: ItemLoadMoreBinding,
-    eventListener: OnLoadEventListener,
+    binding: ItemLoadMoreBinding,
+    eventHandler: EventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onLoadClick = eventListener
+        binding.handler = eventHandler
+    }
+
+    interface EventHandler {
+        fun onMoreClick()
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            eventListener: OnLoadEventListener,
+            eventHandler: EventHandler,
         ): LoadMoreViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemLoadMoreBinding.inflate(inflater, parent, false)
-            return LoadMoreViewHolder(binding, eventListener)
+            return LoadMoreViewHolder(binding, eventHandler)
         }
     }
 }

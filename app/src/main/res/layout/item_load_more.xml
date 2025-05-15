@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="onLoadClick"
-            type="woowacourse.shopping.view.product.catalog.OnLoadEventListener" />
+            name="handler"
+            type="woowacourse.shopping.view.product.catalog.LoadMoreViewHolder.EventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,11 +18,12 @@
             android:id="@+id/btn_load_more"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> onLoadClick.onLoadClick()}"
+            android:onClick="@{() -> handler.onMoreClick()}"
             android:padding="8dp"
             android:text="@string/load_more"
             android:textSize="16sp"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

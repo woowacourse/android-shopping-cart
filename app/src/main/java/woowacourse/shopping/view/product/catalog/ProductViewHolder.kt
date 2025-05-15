@@ -5,31 +5,31 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.OnProductListener
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    eventListener: OnProductListener,
+    eventHandler: EventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private lateinit var currentItem: Product
-
     init {
-        binding.onClick = eventListener
+        binding.handler = eventHandler
     }
 
     fun bind(product: Product) {
-        currentItem = product
         binding.product = product
+    }
+
+    interface EventHandler {
+        fun onProductClick(item: Product)
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            eventListener: OnProductListener,
+            eventHandler: EventHandler,
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemProductBinding.inflate(inflater, parent, false)
-            return ProductViewHolder(binding, eventListener)
+            return ProductViewHolder(binding, eventHandler)
         }
     }
 }

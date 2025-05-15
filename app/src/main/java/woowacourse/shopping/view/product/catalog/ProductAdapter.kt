@@ -3,13 +3,11 @@ package woowacourse.shopping.view.product.catalog
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.OnProductListener
 
 class ProductAdapter(
-    private val productsEventListener: OnProductListener,
-    private val loadEventListener: OnLoadEventListener,
+    private val eventHandler: ProductCatalogEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val products = mutableListOf<Product>()
+    private val items = mutableListOf<Product>()
     private var hasNext: Boolean = false
 
     override fun onCreateViewHolder(
@@ -17,38 +15,38 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            PRODUCT -> ProductViewHolder.from(parent, productsEventListener)
-            LOAD_MORE -> LoadMoreViewHolder.from(parent, loadEventListener)
+            PRODUCT -> ProductViewHolder.from(parent, eventHandler)
+            LOAD_MORE -> LoadMoreViewHolder.from(parent, eventHandler)
             else -> throw IllegalArgumentException()
         }
 
-    override fun getItemCount(): Int = products.size + if (hasNext) LOAD_MORE_BUTTON_COUNT else 0
+    override fun getItemCount(): Int = items.size + if (hasNext) LOAD_MORE_BUTTON_COUNT else 0
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
         when (getItemViewType(position)) {
-            PRODUCT -> (holder as ProductViewHolder).bind(products[position])
+            PRODUCT -> (holder as ProductViewHolder).bind(items[position])
             LOAD_MORE -> {}
         }
     }
 
-    override fun getItemViewType(position: Int): Int = if (hasNext && position == products.size) LOAD_MORE else PRODUCT
+    override fun getItemViewType(position: Int): Int = if (hasNext && position == items.size) LOAD_MORE else PRODUCT
 
-    fun addItems(
+    fun addAll(
         newItems: List<Product>,
         hasNext: Boolean,
     ) {
-        val startIndex = products.size
-        products.addAll(newItems)
-        this.hasNext = hasNext
+        val startIndex = items.size
+        items.addAll(newItems)
         notifyItemRangeInserted(startIndex, newItems.size)
 
+        this.hasNext = hasNext
         if (!hasNext) {
-            notifyItemRemoved(products.size)
+            notifyItemRemoved(items.size)
         } else if (startIndex == 0) {
-            notifyItemInserted(products.size)
+            notifyItemInserted(items.size)
         }
     }
 
