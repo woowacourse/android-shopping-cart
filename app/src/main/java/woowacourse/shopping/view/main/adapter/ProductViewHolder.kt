@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
-class ProductViewHodler(
+class ProductViewHolder(
     private val binding: ItemProductBinding,
     private val handler: ProductsAdapterEventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {

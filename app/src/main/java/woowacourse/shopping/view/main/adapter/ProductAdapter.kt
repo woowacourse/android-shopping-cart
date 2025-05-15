@@ -24,14 +24,14 @@ class ProductAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val bind = ItemProductBinding.inflate(inflater)
 
-        return ProductViewHodler(bind, handler)
+        return ProductViewHolder(bind, handler)
     }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        (holder as ProductViewHodler).bind(items[position])
+        (holder as ProductViewHolder).bind(items[position])
     }
 
     override fun getItemCount(): Int = items.size
