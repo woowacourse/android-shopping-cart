@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.cart
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -46,25 +48,24 @@ class CartViewModel(
 
     fun deleteProduct(product: Product) {
         thread {
+            val currentPage = _currentPage.value ?: 0
+
             productRepository.deleteProduct(product.productId)
-            productCount =
-                productRepository.getPagedCartProducts(PAGE_SIZE, (_currentPage.value) ?: 0).size
-            if (productCount == 5) {
-                _currentPage.postValue(_currentPage.value ?: 1)
+            productCount = productRepository.getPagedCartProducts(PAGE_SIZE, currentPage).size
+
+            if (productCount == 0) {
+                _currentPage.postValue(currentPage)
                 val totalSize = productRepository.getCartProducts().size
                 _totalSize.postValue(totalSize)
                 calculateTotalPages()
+
+                Handler(Looper.getMainLooper()).post {
+                    changePage(false)
+                }
             } else {
-                _products.postValue(
-                    productRepository.getPagedCartProducts(
-                        PAGE_SIZE,
-                        (_currentPage.value) ?: 0,
-                    ),
-                )
-                return@thread
+                _products.postValue(productRepository.getPagedCartProducts(PAGE_SIZE, currentPage))
             }
         }
-        changePage(false)
     }
 
     fun calculateTotalPages(): Int {
