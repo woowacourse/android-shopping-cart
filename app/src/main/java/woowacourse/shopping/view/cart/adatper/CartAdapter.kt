@@ -15,13 +15,6 @@ class CartAdapter(
         notifyDataSetChanged()
     }
 
-    fun removeItemAt(position: Int) {
-        val newItems = items.toMutableList()
-        newItems.removeAt(position)
-        items = newItems
-        notifyItemRemoved(position)
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
