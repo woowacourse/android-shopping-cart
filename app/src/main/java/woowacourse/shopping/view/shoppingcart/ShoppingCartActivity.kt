@@ -31,8 +31,10 @@ class ShoppingCartActivity :
 
     private fun updateRecyclerView(page: Page<Product>) {
         binding.rvShoppingCartList.adapter.apply {
-            (this as ShoppingCartAdapter).updateProducts(page.items)
-            notifyDataSetChanged()
+            val adapter = this as ShoppingCartAdapter
+            val previousCount = itemCount
+            adapter.updateProducts(page.items)
+            notifyItemRangeChanged(0, previousCount)
         }
     }
 
