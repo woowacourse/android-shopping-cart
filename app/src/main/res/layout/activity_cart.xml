@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.cart.CartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="1"
+            android:text="@{String.valueOf(vm.currentPage + 1)}"
             android:textColor="@color/gray5"
             android:textSize="22sp"
             android:textStyle="normal"

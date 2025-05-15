@@ -21,13 +21,12 @@ class CartViewModel(
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int> get() = _currentPage
 
-    private val pageSize = 5
-
     fun fetchData() {
         thread {
-            _totalSize.postValue(productRepository.getCartProducts().size)
+            val totalSize = productRepository.getCartProducts().size
+            _totalSize.postValue(totalSize)
             val firstPage =
-                productRepository.getPagedCartProducts(pageSize, (_currentPage.value) ?: 0)
+                productRepository.getPagedCartProducts(PAGE_SIZE, (_currentPage.value) ?: 0)
             _products.postValue(firstPage)
         }
     }
@@ -38,7 +37,7 @@ class CartViewModel(
         _currentPage.value = newPage
 
         thread {
-            val newProducts = productRepository.getPagedCartProducts(pageSize, newPage)
+            val newProducts = productRepository.getPagedCartProducts(PAGE_SIZE, newPage)
             _products.postValue(newProducts)
         }
     }
@@ -50,7 +49,14 @@ class CartViewModel(
         }
     }
 
+    fun calculateTotalPages(): Int {
+        val total = _totalSize.value ?: 0
+        return (total + PAGE_SIZE - 1) / PAGE_SIZE
+    }
+
     companion object {
+        private const val PAGE_SIZE = 5
+
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {

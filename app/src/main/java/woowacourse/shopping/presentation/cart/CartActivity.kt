@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -18,73 +19,87 @@ import woowacourse.shopping.domain.Product
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private lateinit var cartProductAdapter: CartProductAdapter
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val cartProductAdapter by lazy { CartProductAdapter(::deleteProduct) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cl_cart)) { v, insets ->
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
+        initInsets()
+        initViews()
+        observeViewModel()
+    }
+
+    private fun initInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.clCart) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
 
-        binding.ibBack.setOnClickListener {
-            finish()
+    private fun initViews() {
+        binding.ibBack.setOnClickListener { finish() }
+        binding.rvCartProduct.adapter = cartProductAdapter
+        binding.btnCartPrevious.setOnClickListener { moveToPreviousPage() }
+        binding.btnCartNext.setOnClickListener { moveToNextPage() }
+    }
+
+    private fun observeViewModel() {
+        viewModel.products.observe(this) { cartProductAdapter.setData(it) }
+        viewModel.currentPage.observe(this) { currentPage ->
+            updatePaginationUI(currentPage)
         }
-        initAdapter()
-        viewModel.products.observe(this) {
-            cartProductAdapter.setData(it)
+        viewModel.totalSize.observe(this) {
+            val currentPage = viewModel.currentPage.value ?: 0
+            updatePaginationUI(currentPage)
         }
         viewModel.fetchData()
+    }
 
-        binding.btnCartPrevious.setOnClickListener {
-            val currentPage = viewModel.currentPage.value ?: 0
-            if (currentPage == 0) {
-                Toast.makeText(this, "첫 페이지입니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                viewModel.changePage(next = false)
-            }
-        }
-
-        binding.btnCartNext.setOnClickListener {
-            val totalSize = viewModel.totalSize.value ?: 0
-            val pageSize = 5
-            val totalPages = (totalSize + pageSize - 1) / pageSize
-
-            val currentPage = viewModel.currentPage.value ?: 0
-            if (currentPage >= totalPages - 1) {
-                Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                viewModel.changePage(next = true)
-            }
-        }
-
-        viewModel.currentPage.observe(this) { currentPage ->
-            if (currentPage == 0) {
-                binding.btnCartPrevious.backgroundTintList =
-                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray1))
-            }
-            val totalSize = viewModel.totalSize.value ?: 0
-            val pageSize = 5
-            val totalPages = (totalSize + pageSize - 1) / pageSize
-            if (currentPage == totalPages) {
-                binding.btnCartNext.backgroundTintList =
-                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.gray1))
-            }
+    private fun moveToPreviousPage() {
+        if ((viewModel.currentPage.value ?: 0) == 0) {
+            showToast(R.string.cart_first_page_toast)
+        } else {
+            viewModel.changePage(next = false)
         }
     }
 
-    private fun initAdapter() {
-        cartProductAdapter = CartProductAdapter { product -> delete(product) }
-        binding.rvCartProduct.adapter = cartProductAdapter
+    private fun moveToNextPage() {
+        val currentPage = viewModel.currentPage.value ?: 0
+        val totalPages = viewModel.calculateTotalPages()
+
+        if (currentPage >= totalPages - 1) {
+            showToast(R.string.cart_last_page_toast)
+        } else {
+            viewModel.changePage(next = true)
+        }
     }
 
-    private fun delete(product: Product) {
+    private fun updatePaginationUI(currentPage: Int) {
+        val totalPages = viewModel.calculateTotalPages()
+
+        binding.btnCartPrevious.setCyanOrGrayTint(isEnabled = currentPage > 0)
+        binding.btnCartNext.setCyanOrGrayTint(isEnabled = currentPage < totalPages - 1)
+    }
+
+    private fun deleteProduct(product: Product) {
         viewModel.deleteProduct(product)
-        Toast.makeText(this, getString(R.string.cart_delete_complete), Toast.LENGTH_SHORT).show()
+        showToast(R.string.cart_delete_complete)
+    }
+
+    private fun showToast(messageResId: Int) {
+        Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun ImageButton.setCyanOrGrayTint(isEnabled: Boolean) {
+        val colorRes = if (isEnabled) R.color.cyan else R.color.gray1
+        backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
     }
 
     companion object {
