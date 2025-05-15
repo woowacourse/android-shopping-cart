@@ -33,7 +33,7 @@ class ShoppingCartViewModel(
 
     fun loadMoreShoppingProducts() {
         val result =
-            repository.getPaged(
+            repository.getPagedProducts(
                 SHOPPING_PRODUCT_SIZE_LIMIT,
                 (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
             )
@@ -44,7 +44,7 @@ class ShoppingCartViewModel(
     fun loadPreviousShoppingProducts() {
         _currentPage.value = _currentPage.value?.minus(ADD_PAGE_NUMBER)
         val result =
-            repository.getPaged(
+            repository.getPagedProducts(
                 SHOPPING_PRODUCT_SIZE_LIMIT,
                 (_currentPage.value?.minus(ADD_PAGE_NUMBER) ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
             )
@@ -52,7 +52,7 @@ class ShoppingCartViewModel(
     }
 
     private fun loadProducts() {
-        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
+        val result = repository.getPagedProducts(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
         _shoppingProduct.value = PagedResult(result.items, result.hasNext)
         _currentPage.value = _currentPage.value?.plus(ADD_PAGE_NUMBER)
     }

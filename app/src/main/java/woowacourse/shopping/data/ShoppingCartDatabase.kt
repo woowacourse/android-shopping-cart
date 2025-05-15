@@ -13,6 +13,8 @@ abstract class ShoppingCartDatabase : RoomDatabase() {
     abstract fun shoppingCartDao(): ShoppingCartDao
 
     companion object {
+        private const val DATABASE_NAME = "shopping_database"
+
         @Volatile
         private var instance: ShoppingCartDatabase? = null
 
@@ -23,10 +25,9 @@ abstract class ShoppingCartDatabase : RoomDatabase() {
                         .databaseBuilder(
                             context.applicationContext,
                             ShoppingCartDatabase::class.java,
-                            "product_database",
+                            DATABASE_NAME,
                         ).build()
                 Companion.instance = instance
-
                 instance
             }
     }

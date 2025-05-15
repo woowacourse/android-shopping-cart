@@ -20,7 +20,7 @@ class ShoppingCartRepositoryImpl(
         return result
     }
 
-    override fun getPaged(
+    override fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): PagedResult<ShoppingProduct> {

@@ -7,7 +7,7 @@ import woowacourse.shopping.view.PagedResult
 class ProductRepositoryImpl : ProductRepository {
     override fun getAll(): List<Product> = ProductData.products
 
-    override fun getPaged(
+    override fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): PagedResult<Product> {

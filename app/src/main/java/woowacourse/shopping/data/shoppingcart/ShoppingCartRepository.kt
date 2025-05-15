@@ -8,7 +8,7 @@ interface ShoppingCartRepository {
 
     fun getAll(): List<ShoppingProduct>
 
-    fun getPaged(
+    fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): PagedResult<ShoppingProduct>

@@ -6,7 +6,7 @@ import woowacourse.shopping.view.PagedResult
 interface ProductRepository {
     fun getAll(): List<Product>
 
-    fun getPaged(
+    fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): PagedResult<Product>

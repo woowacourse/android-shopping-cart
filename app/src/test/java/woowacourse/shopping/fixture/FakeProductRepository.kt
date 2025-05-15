@@ -17,7 +17,7 @@ class FakeProductRepository : ProductRepository {
 
     override fun getAll(): List<Product> = fakeProducts
 
-    override fun getPaged(
+    override fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): PagedResult<Product> {
