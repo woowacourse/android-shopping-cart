@@ -8,16 +8,6 @@ data class Page<T>(
     val hasNext: Boolean,
     val currentPage: Int,
 ) {
-    operator fun plus(page: Page<T>?): Page<T> {
-        page ?: return this
-        return Page(
-            items = this.items + page.items,
-            hasPrevious = this.hasPrevious,
-            hasNext = page.hasNext,
-            currentPage = page.currentPage,
-        )
-    }
-
     companion object {
         fun <T> from(
             allItems: List<T>,
