@@ -25,10 +25,10 @@ class ProductStorageTest {
         assertEquals(
             result,
             Product(
-                id = 1L,
-                name = "PET보틀-정사각(370ml)",
-                poster = "pet_bottle_square_370ml",
-                price = Price(10000),
+                1L,
+                "마리오 그린올리브 300g",
+                Price(3980),
+                "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/27/41/8412707034127_1.png",
             ),
         )
     }
