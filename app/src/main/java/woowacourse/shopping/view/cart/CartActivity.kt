@@ -15,7 +15,6 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adatper.CartAdapter
 import woowacourse.shopping.view.cart.adatper.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
-import woowacourse.shopping.view.cart.vm.CartViewModel.Companion.PAGE_SIZE
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 
 class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEventHandler {
@@ -38,7 +37,7 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEve
             vm = viewModel
         }
 
-        viewModel.loadCarts(viewModel.pageNo.value ?: 1, PAGE_SIZE)
+        viewModel.loadCarts()
 
         initView()
         observeViewModel()

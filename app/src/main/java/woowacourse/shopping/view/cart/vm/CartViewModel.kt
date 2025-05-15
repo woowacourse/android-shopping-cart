@@ -5,78 +5,47 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.CartStorage
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
+import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 
 class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
+    private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> = _products
 
-    private val _pageState: MutableLiveData<PageState> = MutableLiveData(PageState())
-    val pageState: LiveData<PageState> get() = _pageState
+    private val _pageState = MutableLiveData<PageState>()
+    val pageState: LiveData<PageState> = _pageState
 
-    private val _pageNo = MutableLiveData(INITIAL_PAGE_NO)
+    private val _pageNo = MutableLiveData<Int>()
     val pageNo: LiveData<Int> = _pageNo
 
-    private var hasEverShownNextPage = false
+    private fun updatePageNoText() {
+        _pageNo.value = paging.getPageNo()
+    }
 
     fun deleteProduct(productId: Long) {
         cartStorage.deleteProduct(productId)
+        loadCarts()
 
-        val nextPageIndex = (pageNo.value ?: 1)
-        loadCarts(nextPageIndex, PAGE_SIZE)
-
-        val isCartEmpty = products.value?.isEmpty() == true
-
-        if (isCartEmpty) {
-            val previousPageIndex = nextPageIndex - 1
-            val lastPageIndex = ((_pageNo.value ?: 0) - 1).coerceAtLeast(1)
-            _pageNo.value = lastPageIndex
-            loadCarts(previousPageIndex, PAGE_SIZE)
+        if (paging.resetToLastPageIfEmpty(_products.value)) {
+            loadCarts()
         }
     }
 
     fun addPage() {
-        val next = (pageNo.value ?: INITIAL_PAGE_NO) + 1
-        _pageNo.value = next
-        loadCarts(next, PAGE_SIZE)
+        paging.moveToNextPage()
+        loadCarts()
     }
 
     fun subPage() {
-        val prev = (pageNo.value ?: INITIAL_PAGE_NO) - 1
-        if (prev < INITIAL_PAGE_NO) return
-        _pageNo.value = prev
-        loadCarts(prev, PAGE_SIZE)
+        paging.moveToPreviousPage()
+        loadCarts()
     }
 
-    fun loadCarts(
-        pageNo: Int,
-        pageSize: Int,
-    ) {
-        val nextPageIndex = pageNo - 1
-        val loadedProducts = cartStorage.getProducts(nextPageIndex, pageSize)
-        _products.value = loadedProducts
-
-        updatePageState(pageNo, pageSize)
-    }
-
-    private fun updatePageState(
-        pageNo: Int,
-        pageSize: Int,
-    ) {
-        val hasNext = !cartStorage.notHasNextPage(pageNo, pageSize)
-        if (hasNext) {
-            hasEverShownNextPage = true
-        }
-
-        _pageState.value =
-            _pageState.value?.copy(
-                previousPageEnabled = pageNo > INITIAL_PAGE_NO,
-                nextPageEnabled = hasNext,
-                pageVisibility = hasEverShownNextPage,
-            )
-    }
-
-    companion object {
-        private const val INITIAL_PAGE_NO = 1
-        const val PAGE_SIZE = 5
+    fun loadCarts() {
+        val products = cartStorage.getProducts(paging.getPageNo() - 1, PAGE_SIZE)
+        _products.value = products
+        _pageState.value = paging.createPageState(cartStorage)
+        updatePageNoText()
     }
 }

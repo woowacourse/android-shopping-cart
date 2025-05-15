@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="woowacourse.shopping.view.cart.vm.CartViewModel" />
@@ -31,51 +33,51 @@
             android:id="@+id/recycler_view_cart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:adapter="@{adapter}"
             android:layout_marginBottom="60dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:adapter="@{adapter}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/pager"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/pager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
-            android:visibility="@{vm.pageState.pageVisibility ? View.VISIBLE : View.GONE}"
             android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{vm.pageState.pageVisibility ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/button_previous"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_previous"
-            android:enabled="@{vm.pageState.previousPageEnabled}"
-            android:onClick="@{() -> eventHandler.onClickPreviousPage()}"
-            android:background="@drawable/previous_button_shape"
-            android:inset="0dp"/>
+            <ImageButton
+                android:id="@+id/button_previous"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/previous_button_shape"
+                android:enabled="@{vm.pageState.previousPageEnabled}"
+                android:inset="0dp"
+                android:onClick="@{() -> eventHandler.onClickPreviousPage()}"
+                android:src="@drawable/ic_previous" />
 
-        <TextView
-            android:id="@+id/text_view_page"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textColor="@color/gray"
-            android:text="@{String.valueOf(vm.pageNo)}"
-            android:padding="11dp" />
+            <TextView
+                android:id="@+id/text_view_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="11dp"
+                android:text="@{vm.pageNo.toString()}"
+                android:textColor="@color/gray"
+                android:textSize="22sp" />
 
-        <ImageButton
-            android:id="@+id/button_forward"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_forward"
-            android:enabled="@{vm.pageState.nextPageEnabled}"
-            android:onClick="@{() -> eventHandler.onClickNextPage()}"
-            android:background="@drawable/forward_button_shape"
-            android:inset="0dp"/>
+            <ImageButton
+                android:id="@+id/button_forward"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/forward_button_shape"
+                android:enabled="@{vm.pageState.nextPageEnabled}"
+                android:inset="0dp"
+                android:onClick="@{() -> eventHandler.onClickNextPage()}"
+                android:src="@drawable/ic_forward" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
