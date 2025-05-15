@@ -12,11 +12,6 @@ class ProductRepositoryImpl: ProductRepository {
         return products.subList(fromIndex, toIndex)
     }
 
-    //1
-    // fromIdx = 1 * 20
-
-    // 40-34
-
     override fun fetchById(id: Long): Product? {
         return products.find { product -> product.id == id }
     }
