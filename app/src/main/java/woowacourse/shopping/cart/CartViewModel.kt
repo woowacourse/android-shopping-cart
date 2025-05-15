@@ -4,11 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.CartProductDataSource
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-class CartViewModel : ViewModel() {
+class CartViewModel(
+    private val dataSource: CartProductDataSource = CartDatabase,
+) : ViewModel() {
     private val products = mutableListOf<ProductUiModel>()
-    private val allCartProducts get() = CartDatabase.cartProducts
+    private val allCartProducts get() = dataSource.cartProducts()
 
     private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
     val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
@@ -30,7 +33,7 @@ class CartViewModel : ViewModel() {
     fun deleteCartProduct(cartProduct: ProductUiModel) {
         products.remove(cartProduct)
         _cartProducts.value = products
-        CartDatabase.deleteCartProduct(cartProduct)
+        dataSource.deleteCartProduct(cartProduct)
 
         loadCartProducts()
     }
