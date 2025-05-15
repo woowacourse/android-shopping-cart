@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Goods
 
 class ShoppingCartAdapter(
-    private var items: List<Goods>,
     private val clickListener: ShoppingCartClickListener,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
+    private var items: List<Goods> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

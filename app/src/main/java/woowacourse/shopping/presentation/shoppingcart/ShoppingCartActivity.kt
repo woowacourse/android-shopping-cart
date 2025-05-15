@@ -28,10 +28,7 @@ class ShoppingCartActivity : AppCompatActivity() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-        val adapter =
-            ShoppingCartAdapter(viewModel.goods.value ?: listOf()) { goods ->
-                viewModel.deleteGoods(goods)
-            }
+        val adapter = ShoppingCartAdapter { goods -> viewModel.deleteGoods(goods) }
         binding.rvSelectedGoodsList.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
