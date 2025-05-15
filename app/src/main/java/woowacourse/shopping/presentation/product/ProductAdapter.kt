@@ -30,12 +30,18 @@ class ProductAdapter(
     private var showLoadMore: Boolean = false
 
     fun setData(
-        list: List<Product>,
+        newList: List<Product>,
         showLoadMore: Boolean,
     ) {
-        this.items = list
+        val oldSize = items.size
+        val newSize = newList.size
+
+        val insertItemSize = newSize - oldSize
+        this.items = newList
         this.showLoadMore = showLoadMore
-        notifyDataSetChanged()
+        if (insertItemSize > 0) {
+            notifyItemRangeInserted(oldSize, insertItemSize)
+        }
     }
 
     override fun onCreateViewHolder(

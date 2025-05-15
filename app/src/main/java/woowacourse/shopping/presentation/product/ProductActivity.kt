@@ -51,6 +51,7 @@ class ProductActivity : AppCompatActivity() {
                 GridLayoutManager(context, 2).apply {
                     spanSizeLookup = createSpanSizeLookup()
                 }
+            itemAnimator = null
             adapter = productAdapter
         }
     }
@@ -59,7 +60,7 @@ class ProductActivity : AppCompatActivity() {
         return object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val isLastItem = position == productAdapter.itemCount - 1
-                val shouldExpand = viewModel.showLoadMore.value ?: false
+                val shouldExpand = viewModel.showLoadMore.value == true
                 return if (isLastItem && shouldExpand) 2 else 1
             }
         }
@@ -71,7 +72,7 @@ class ProductActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.products.observe(this) { products ->
-            val showLoadMore = viewModel.showLoadMore.value ?: false
+            val showLoadMore = viewModel.showLoadMore.value == true
             productAdapter.setData(products, showLoadMore)
         }
 
