@@ -3,13 +3,18 @@ package woowacourse.shopping.product.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.MockProducts
 import woowacourse.shopping.data.MockProducts.mockProducts
-import woowacourse.shopping.mapper.toUiModel
+import woowacourse.shopping.data.ProductsDataSource
 
-class CatalogViewModel : ViewModel() {
+class CatalogViewModel(
+    private val dataSource: ProductsDataSource = MockProducts,
+) : ViewModel() {
     private val _catalogProducts =
         MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
     val catalogProducts: LiveData<List<ProductUiModel>> = _catalogProducts
+
+    val mockProducts get() = dataSource.getProducts()
 
     val page = MutableLiveData<Int>(INITIAL_PAGE)
 
@@ -34,8 +39,7 @@ class CatalogViewModel : ViewModel() {
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
         val fromIndex = (page.value ?: 0) * pageSize
         val toIndex = minOf(fromIndex + pageSize, mockProducts.size)
-        val pagedProducts: List<ProductUiModel> =
-            mockProducts.subList(fromIndex, toIndex).map { it.toUiModel() }
+        val pagedProducts: List<ProductUiModel> = mockProducts.subList(fromIndex, toIndex)
         _catalogProducts.value = _catalogProducts.value?.plus(pagedProducts)
     }
 
