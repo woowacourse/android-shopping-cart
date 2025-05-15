@@ -12,13 +12,43 @@ class CartViewModel(
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
+    private val _pageNumber = MutableLiveData(1)
+    val pageNumber: LiveData<Int> get() = _pageNumber
+
+    private var size: Int = 0
+        private set
+
     init {
+        repository.fetchSize {
+            size = it
+        }
         update()
     }
 
+    fun isLastPage(): Boolean {
+        val pageNumber = pageNumber.value ?: 1
+        val size = pageNumber * 5
+        return this.size <= size
+    }
+
     fun update() {
-        repository.fetchAll { products ->
+        val pageNumber = pageNumber.value ?: 1
+        repository.fetchPagedItems(5, (pageNumber - 1) * 5) { products ->
             _products.postValue(products)
+        }
+    }
+
+    fun moveToPrevious() {
+        if ((_pageNumber.value ?: 1) > 1) {
+            _pageNumber.value = _pageNumber.value?.minus(1)
+            update()
+        }
+    }
+
+    fun moveToNext() {
+        if (!isLastPage()) {
+            _pageNumber.value = _pageNumber.value?.plus(1)
+            update()
         }
     }
 }

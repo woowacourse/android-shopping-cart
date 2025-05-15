@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.cart
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -40,14 +41,45 @@ class CartActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+
         viewModel.products.observe(this) {
             binding.rvCart.adapter = CartAdapter(it, object : CartClickListener {
                 override fun onClick(product: Product) {
                     cartRepository.remove(product)
                     viewModel.update()
-                    binding.rvCart.adapter!!.notifyDataSetChanged()
                 }
             })
+        }
+
+        viewModel.pageNumber.observe(this) {
+            binding.btnPrevious.apply {
+                setOnClickListener {
+                    viewModel.moveToPrevious()
+                }
+            }
+
+            binding.btnNext.setOnClickListener {
+                viewModel.moveToNext()
+            }
+
+            binding.tvPageNumber.text = it.toString()
+
+            if (it == 1) {
+                binding.btnPrevious.backgroundTintList =
+                    ColorStateList.valueOf(getColor(R.color.button_inactive))
+                binding.btnNext.backgroundTintList =
+                    ColorStateList.valueOf(getColor(R.color.button_active))
+            } else if (viewModel.isLastPage()/*마지막 페이지 일 때 */) {
+                binding.btnPrevious.backgroundTintList =
+                    ColorStateList.valueOf(getColor(R.color.button_active))
+                binding.btnNext.backgroundTintList =
+                    ColorStateList.valueOf(getColor(R.color.button_inactive))
+            } else {
+                binding.btnPrevious.backgroundTintList =
+                    ColorStateList.valueOf(getColor(R.color.button_active))
+                binding.btnNext.backgroundTintList =
+                    ColorStateList.valueOf(getColor(R.color.button_active))
+            }
         }
     }
 

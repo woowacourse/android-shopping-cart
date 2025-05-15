@@ -12,4 +12,6 @@ interface CartRepository {
     fun fetchPagedItems(limit: Int, offset: Int, callback: (List<Product>) -> Unit)
 
     fun remove(product: Product)
+
+    fun fetchSize(callback: (Int) -> Unit)
 }

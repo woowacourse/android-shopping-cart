@@ -25,4 +25,7 @@ interface CartDao {
 
     @Delete
     fun delete(productEntity: ProductEntity)
+
+    @Query("SELECT COUNT(*) FROM cart ")
+    fun size(): Int
 }
