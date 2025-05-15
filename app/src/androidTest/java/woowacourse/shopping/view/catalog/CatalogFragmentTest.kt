@@ -1,7 +1,5 @@
 package woowacourse.shopping.view.catalog
 
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
@@ -12,10 +10,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import org.hamcrest.Description
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.TypeSafeMatcher
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
@@ -24,6 +19,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
 import woowacourse.shopping.presentation.view.catalog.CatalogFragment
+import woowacourse.shopping.util.nthChildOf
 
 class CatalogFragmentTest {
     private val fakeRepository =
@@ -81,28 +77,5 @@ class CatalogFragmentTest {
                 isDescendantOfA(nthChildOf(withId(R.id.recycler_view_products), 0)),
             ),
         ).check(matches(withText(dummyProductsFixture[21].name)))
-    }
-
-    private fun nthChildOf(
-        parentMatcher: Matcher<View>,
-        childPosition: Int,
-    ): Matcher<View> {
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("position $childPosition of parent ")
-                parentMatcher.describeTo(description)
-            }
-
-            public override fun matchesSafely(view: View): Boolean {
-                if (view.parent !is ViewGroup) return false
-                val parent = view.parent as ViewGroup
-
-                return (
-                    parentMatcher.matches(parent) &&
-                        parent.childCount > childPosition &&
-                        parent.getChildAt(childPosition) == view
-                )
-            }
-        }
     }
 }
