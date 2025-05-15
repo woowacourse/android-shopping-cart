@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.products
 
-enum class ItemViewType {
+enum class ProductsItemViewType {
     PRODUCT,
     LOAD_MORE,
 }

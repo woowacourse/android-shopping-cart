@@ -10,36 +10,36 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.base.BaseActivity
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.products.ProductAdapter.OnClickHandler
+import woowacourse.shopping.ui.products.ProductsAdapter.OnClickHandler
 
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels()
-    private val productAdapter: ProductAdapter = ProductAdapter(createAdapterOnClickHandler())
+    private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.rvProducts.adapter = productAdapter
+        binding.rvProducts.adapter = productsAdapter
         binding.rvProducts.layoutManager =
             GridLayoutManager(this, 2).apply {
                 spanSizeLookup =
                     object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
-                            val viewType = productAdapter.getItemViewType(position)
-                            return when (ItemViewType.entries[viewType]) {
-                                ItemViewType.PRODUCT -> 1
-                                ItemViewType.LOAD_MORE -> 2
+                            val viewType = productsAdapter.getItemViewType(position)
+                            return when (ProductsItemViewType.entries[viewType]) {
+                                ProductsItemViewType.PRODUCT -> 1
+                                ProductsItemViewType.LOAD_MORE -> 2
                             }
                         }
                     }
             }
 
         viewModel.products.observe(this) { products ->
-            productAdapter.updateProductItems(products)
+            productsAdapter.updateProductItems(products)
             viewModel.updateIsLoadable()
         }
         viewModel.isLoadable.observe(this) { isLoadable ->
-            productAdapter.updateLoadMoreItem(isLoadable)
+            productsAdapter.updateLoadMoreItem(isLoadable)
         }
 
         viewModel.updateProducts(20)

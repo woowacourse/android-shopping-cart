@@ -7,14 +7,14 @@ import woowacourse.shopping.databinding.ItemProductBinding
 class ProductViewHolder(
     parent: ViewGroup,
     onClickHandler: OnClickHandler,
-) : ItemViewHolder<Item.ProductItem, ItemProductBinding>(
+) : ProductsItemViewHolder<ProductsItem.ProductProductsItem, ItemProductBinding>(
         ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
     ) {
     init {
         binding.onClickHandler = onClickHandler
     }
 
-    override fun bind(item: Item.ProductItem) {
+    override fun bind(item: ProductsItem.ProductProductsItem) {
         super.bind(item)
         binding.product = item.value
     }
