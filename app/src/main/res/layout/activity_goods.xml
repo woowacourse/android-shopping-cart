@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.feature.goods.GoodsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_goods"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="14dp"
+            app:items="@{viewModel.goods}"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/btn_more"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:spanCount="2"
+            tools:listitem="@layout/item_goods" />
+
+        <Button
+            android:id="@+id/btn_more"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/goods_more_button"
+            android:textColor="@color/white"
+            android:onClick="@{() -> viewModel.addPage()}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:visible="@{viewModel.showMoreButton}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
