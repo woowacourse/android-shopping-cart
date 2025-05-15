@@ -12,7 +12,7 @@ import woowacourse.shopping.domain.ProductRepository
 import kotlin.concurrent.thread
 
 class CartViewModel(
-    val productRepository: ProductRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products

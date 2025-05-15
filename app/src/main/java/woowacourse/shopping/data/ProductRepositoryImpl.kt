@@ -1,6 +1,7 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.data.CartMapper.toDomain
+import woowacourse.shopping.data.CartMapper.toEntity
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
@@ -30,6 +31,10 @@ class ProductRepositoryImpl(
         return dao
             .getPagedProduct(pageSize, offset)
             .map { productEntity -> productEntity.toDomain() }
+    }
+
+    override fun insertProduct(product: Product) {
+        dao.insertProduct(product.toEntity())
     }
 
     override fun deleteProduct(productId: Long) {

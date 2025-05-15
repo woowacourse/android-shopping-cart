@@ -11,48 +11,49 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartMapper.toEntity
-import woowacourse.shopping.data.db.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.getSerializableExtraCompat
-import kotlin.concurrent.thread
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailProductBinding
-    private val viewModel: ProductDetailViewModel by viewModels()
+    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_product)
+        binding.lifecycleOwner = this
+
+        initInsets()
+        observeViewModel()
+
+        val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT_DETAIL)
+        viewModel.fetchData(product)
+
+        binding.btnProductDetailAddCart.setOnClickListener {
+            viewModel.addToCart(product)
+            showToast(R.string.product_detail_add_cart_toast)
+        }
+        binding.ibExit.setOnClickListener { finish() }
+    }
+
+    private fun initInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT_DETAIL)
+    }
 
-        viewModel.fetchData(product)
+    private fun observeViewModel() {
         viewModel.product.observe(this) {
             binding.product = it
         }
-        binding.btnProductDetailAddCart.setOnClickListener {
-            thread {
-                val db = CartDatabase.getInstance(this)
-                val cartEntity = product.toEntity()
-                db.cartDao().insertProduct(cartEntity)
-            }
-            Toast
-                .makeText(
-                    this,
-                    getString(R.string.product_detail_add_cart_toast),
-                    Toast.LENGTH_SHORT,
-                ).show()
-        }
-        binding.ibExit.setOnClickListener {
-            finish()
-        }
+    }
+
+    private fun showToast(messageResId: Int) {
+        Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
     }
 
     companion object {

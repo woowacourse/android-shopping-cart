@@ -15,5 +15,7 @@ interface ProductRepository {
         page: Int,
     ): List<Product>
 
+    fun insertProduct(product: Product)
+
     fun deleteProduct(productId: Long)
 }
