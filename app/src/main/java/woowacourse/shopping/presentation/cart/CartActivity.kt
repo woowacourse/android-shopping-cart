@@ -59,7 +59,7 @@ class CartActivity : AppCompatActivity() {
         viewModel.currentPage.observe(this) { currentPage ->
             updatePaginationUI(currentPage)
         }
-        viewModel.totalSize.observe(this) { totalSize ->
+        viewModel.totalSize.observe(this) { _ ->
             val currentPage = viewModel.currentPage.value ?: 0
             updatePaginationUI(currentPage)
         }

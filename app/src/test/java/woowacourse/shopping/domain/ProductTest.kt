@@ -14,7 +14,7 @@ class ProductTest {
 
     @Test
     fun `상품은 id를 가진다`() {
-        assertThat(product.id).isEqualTo(0)
+        assertThat(product.productId).isEqualTo(0)
     }
 
     @Test
