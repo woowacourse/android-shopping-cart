@@ -14,8 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cartScreenContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.products.ProductsActivity">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cartProductItemsContainer"
@@ -51,10 +50,7 @@
                 android:text="@string/cart_page_previous"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/cartPageText"
-                app:layout_constraintEnd_toStartOf="@+id/cartPageText"
-                app:layout_constraintTop_toTopOf="@+id/cartPageText" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/cartPageText"
@@ -64,9 +60,6 @@
                 android:textColor="@color/gray_5"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 tools:text="0" />
 
             <TextView
@@ -82,10 +75,7 @@
                 android:text="@string/cart_page_next"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/cartPageText"
-                app:layout_constraintStart_toEndOf="@+id/cartPageText"
-                app:layout_constraintTop_toTopOf="@+id/cartPageText" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <ImageView
