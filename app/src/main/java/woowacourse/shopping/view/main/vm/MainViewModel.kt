@@ -12,19 +12,16 @@ class MainViewModel(
     private val _products = MutableLiveData(emptyList<Product>())
     val products: LiveData<List<Product>> = _products
 
-    private val _loadable = MutableLiveData(false)
-    val loadable: LiveData<Boolean> = _loadable
+    private val _loadState = MutableLiveData<LoadState>()
+    val loadState: LiveData<LoadState> = _loadState
 
-    fun loadProducts(
-        page: Int,
-        pageSize: Int,
-    ) {
-        val newPage = page / pageSize
+    fun loadProducts(pageSize: Int) {
+        val newPage = (products.value?.size ?: 0) / pageSize
         val loadedProducts = storage.getProducts(newPage, pageSize)
 
         val currentList = _products.value ?: emptyList()
         _products.value = currentList + loadedProducts
 
-        _loadable.value = storage.notHasMoreProduct(newPage + 1, pageSize)
+        _loadState.value = LoadState.of(storage.hasMoreProduct(newPage + 1, pageSize))
     }
 }
