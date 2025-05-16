@@ -30,11 +30,11 @@ class DetailActivity : AppCompatActivity(), DetailScreenEventHandler {
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
 
-        initView()
+        setUpSystemBars()
         observeViewModel()
     }
 
-    private fun initView() {
+    private fun setUpSystemBars() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
