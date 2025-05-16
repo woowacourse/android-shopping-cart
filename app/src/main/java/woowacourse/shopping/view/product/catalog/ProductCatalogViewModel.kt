@@ -3,9 +3,7 @@ package woowacourse.shopping.view.product.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.domain.Product
 
 class ProductCatalogViewModel(
@@ -31,17 +29,6 @@ class ProductCatalogViewModel(
     }
 
     companion object {
-        fun provideFactory(repository: ProductRepository = ProductRepositoryImpl()): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    if (modelClass.isAssignableFrom(ProductCatalogViewModel::class.java)) {
-                        return ProductCatalogViewModel(repository) as T
-                    }
-                    throw IllegalArgumentException()
-                }
-            }
-
         private const val FIRST_OFFSET = 0
         private const val PRODUCT_SIZE_LIMIT = 20
     }

@@ -1,19 +1,16 @@
 package woowacourse.shopping.view.cart
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
-import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.ShoppingProduct
 
 class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _product = MutableLiveData<List<ShoppingProduct>>()
-    val product: LiveData<List<ShoppingProduct>> = _product
+    private val _products = MutableLiveData<List<ShoppingProduct>>()
+    val products: LiveData<List<ShoppingProduct>> = _products
 
     private val _removedProduct = MutableLiveData<ShoppingProduct>()
     val removedProduct: LiveData<ShoppingProduct> = _removedProduct
@@ -41,29 +38,15 @@ class ShoppingCartViewModel(
     private fun loadPage(page: Int) {
         val result = repository.getPagedProducts(PAGE_SIZE, (page - 1) * PAGE_SIZE)
         _hasNext.value = result.hasNext
-        _product.value = result.items
+        _products.value = result.items
     }
 
-    fun deleteProduct(shoppingProduct: ShoppingProduct) {
-        repository.delete(shoppingProduct.id)
-        _removedProduct.value = shoppingProduct
+    fun deleteProduct(product: ShoppingProduct) {
+        repository.delete(product.id)
+        _removedProduct.value = product
     }
 
     companion object {
-        fun provideFactory(
-            applicationContext: Context,
-            repository: ShoppingCartRepository = ShoppingCartRepositoryImpl(applicationContext),
-        ): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    if (modelClass.isAssignableFrom(ShoppingCartViewModel::class.java)) {
-                        return ShoppingCartViewModel(repository) as T
-                    }
-                    throw IllegalArgumentException()
-                }
-            }
-
         private const val FIRST_PAGE_NUMBER = 1
         private const val PAGE_SIZE = 5
     }

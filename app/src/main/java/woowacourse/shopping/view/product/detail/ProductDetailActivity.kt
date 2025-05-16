@@ -15,31 +15,34 @@ import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.view.cart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
-    private lateinit var viewModel: ProductDetailViewModel
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
+    private lateinit var viewModel: ProductDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUpView()
+        val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT) ?: return
+        initViewModel(product)
+        initObservers()
+    }
+
+    private fun setUpView() {
         enableEdgeToEdge()
-        setContentView(binding.main)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT) ?: return
-        initViewModel(product)
-        initObservers()
     }
 
     private fun initViewModel(product: Product) {
         viewModel =
             ViewModelProvider(
                 this,
-                ProductDetailViewModel.provideFactory(product, applicationContext),
+                ProductDetailViewModelFactory(product, applicationContext),
             )[ProductDetailViewModel::class.java]
-        binding.vm = viewModel
+        binding.viewmodel = viewModel
         binding.lifecycleOwner = this
     }
 

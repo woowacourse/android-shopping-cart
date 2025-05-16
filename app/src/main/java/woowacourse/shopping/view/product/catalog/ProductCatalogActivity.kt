@@ -24,7 +24,7 @@ class ProductCatalogActivity : AppCompatActivity() {
     private val viewModel by lazy {
         ViewModelProvider(
             this,
-            ProductCatalogViewModel.provideFactory(),
+            ProductCatalogViewModelFactory(),
         )[ProductCatalogViewModel::class.java]
     }
 

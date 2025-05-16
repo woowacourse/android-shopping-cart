@@ -17,7 +17,7 @@ class ShoppingCartActivity : AppCompatActivity() {
     private val viewModel by lazy {
         ViewModelProvider(
             this,
-            ShoppingCartViewModel.provideFactory(applicationContext),
+            ShoppingCartViewModelFactory(applicationContext),
         )[ShoppingCartViewModel::class.java]
     }
 
@@ -74,7 +74,7 @@ class ShoppingCartActivity : AppCompatActivity() {
             adapter.removeItem(value)
         }
 
-        viewModel.product.observe(this) { value ->
+        viewModel.products.observe(this) { value ->
             adapter.updateItems(value)
         }
     }
