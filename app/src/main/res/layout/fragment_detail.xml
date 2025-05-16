@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.presentation.model.ProductUiModel" />
-
-        <variable
             name="vm"
             type="woowacourse.shopping.presentation.view.detail.DetailViewModel" />
 
@@ -40,7 +36,7 @@
 
         <ImageView
             android:id="@+id/image_view_detail_product"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{vm.product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@null"
@@ -53,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="@{product.name}"
+            android:text="@{vm.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -86,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="@{String.format(@string/product_price_format, product.price)}"
+            android:text="@{String.format(@string/product_price_format, vm.product.price)}"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="20sp"

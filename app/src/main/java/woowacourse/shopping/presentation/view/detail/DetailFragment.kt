@@ -2,7 +2,6 @@ package woowacourse.shopping.presentation.view.detail
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -31,15 +30,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
         viewModel.saveState.observe(viewLifecycleOwner) {
             it?.let { navigateToScreen() }
-        }
-
-        viewModel.product.observe(viewLifecycleOwner) {
-            if (it == null) {
-                Toast.makeText(requireContext(), "상품 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
-                return@observe
-            }
-
-            binding.product = it
         }
     }
 
