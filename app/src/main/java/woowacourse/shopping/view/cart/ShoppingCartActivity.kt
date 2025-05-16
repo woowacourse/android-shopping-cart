@@ -25,6 +25,13 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUpView()
+        initRecyclerView()
+        initBindings()
+        initObservers()
+    }
+
+    private fun setUpView() {
         enableEdgeToEdge()
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -32,20 +39,17 @@ class ShoppingCartActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        initRecyclerView()
-        initBindings()
-        initObservers()
     }
 
     private fun initRecyclerView() {
         adapter =
             CartProductAdapter(
-                object : CartProductEventHandler {
-                    override fun onItemRemoveClick(product: ShoppingProduct) {
-                        viewModel.deleteProduct(product)
-                    }
-                },
+                eventHandler =
+                    object : CartProductEventHandler {
+                        override fun onItemRemoveClick(product: ShoppingProduct) {
+                            viewModel.deleteProduct(product)
+                        }
+                    },
             )
         binding.rvProducts.adapter = adapter
     }
@@ -56,11 +60,11 @@ class ShoppingCartActivity : AppCompatActivity() {
         binding.handler =
             object : ShoppingCartEventHandler {
                 override fun onPreviousPageClick() {
-                    viewModel.loadPreviousShoppingProducts()
+                    viewModel.loadPreviousProducts()
                 }
 
                 override fun onNextPageClick() {
-                    viewModel.loadNextShoppingProducts()
+                    viewModel.loadNextProducts()
                 }
             }
     }
@@ -70,9 +74,8 @@ class ShoppingCartActivity : AppCompatActivity() {
             adapter.removeItem(value)
         }
 
-        viewModel.shoppingProduct.observe(this) { value ->
-            adapter.updateItems(value.items, value.hasNext)
-            binding.btnRight.isEnabled = value.hasNext
+        viewModel.product.observe(this) { value ->
+            adapter.updateItems(value)
         }
     }
 }
