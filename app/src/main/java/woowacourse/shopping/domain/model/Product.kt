@@ -7,6 +7,6 @@ data class Product(
     val price: Int,
 ) {
     companion object {
-        val INVALID_PRODUCT = Product(0, "", "", 0)
+        val EMPTY_PRODUCT = Product(0, "", "", 0)
     }
 }
