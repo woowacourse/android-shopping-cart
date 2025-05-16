@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true">
 
     <data>
 
         <variable
             name="viewModel"
             type="woowacourse.shopping.ui.productdetail.ProductDetailViewModel" />
+
         <variable
             name="onAddCartProductClick"
             type="kotlin.jvm.functions.Function0" />
