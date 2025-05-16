@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.ShoppingProduct
 
 class CartProductAdapter(
     items: List<ShoppingProduct> = emptyList(),
-    private val eventHandler: CartProductEventHandler,
+    private val eventHandler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
     private val items = items.toMutableList()
 

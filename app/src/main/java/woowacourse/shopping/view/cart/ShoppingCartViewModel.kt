@@ -5,10 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.ShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.view.cart.adapter.ShoppingCartEventHandler
 
 class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
-) : ViewModel() {
+) : ViewModel(),
+    ShoppingCartEventHandler {
     private val _products = MutableLiveData<List<ShoppingProduct>>()
     val products: LiveData<List<ShoppingProduct>> = _products
 
@@ -23,6 +25,10 @@ class ShoppingCartViewModel(
 
     init {
         loadPage(FIRST_PAGE_NUMBER)
+    }
+
+    override fun onProductRemoveClick(item: ShoppingProduct) {
+        deleteProduct(item)
     }
 
     fun loadNextProducts() {
@@ -41,7 +47,7 @@ class ShoppingCartViewModel(
         _products.value = result.items
     }
 
-    fun deleteProduct(product: ShoppingProduct) {
+    private fun deleteProduct(product: ShoppingProduct) {
         repository.delete(product.id)
         _removedProduct.value = product
     }

@@ -10,13 +10,13 @@ import woowacourse.shopping.domain.ShoppingProduct
 
 class CartProductViewHolder(
     private val binding: ItemSelectedProductBinding,
-    eventHandler: CartProductEventHandler,
+    eventHandler: EventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     private lateinit var currentItem: ShoppingProduct
 
     init {
         binding.onRemoveClick =
-            OnClickListener { eventHandler.onItemRemoveClick(currentItem) }
+            OnClickListener { eventHandler.onProductRemoveClick(currentItem) }
     }
 
     fun bind(product: ShoppingProduct) {
@@ -24,10 +24,14 @@ class CartProductViewHolder(
         binding.product = product.productId.toProductDomain()
     }
 
+    interface EventHandler {
+        fun onProductRemoveClick(item: ShoppingProduct)
+    }
+
     companion object {
         fun from(
             parent: ViewGroup,
-            eventListener: CartProductEventHandler,
+            eventListener: EventHandler,
         ): CartProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemSelectedProductBinding.inflate(inflater, parent, false)

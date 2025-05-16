@@ -8,9 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.view.cart.adapter.CartProductAdapter
-import woowacourse.shopping.view.cart.adapter.CartProductEventHandler
 
 class ShoppingCartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityShoppingCartBinding.inflate(layoutInflater) }
@@ -42,31 +40,13 @@ class ShoppingCartActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        adapter =
-            CartProductAdapter(
-                eventHandler =
-                    object : CartProductEventHandler {
-                        override fun onItemRemoveClick(product: ShoppingProduct) {
-                            viewModel.deleteProduct(product)
-                        }
-                    },
-            )
+        adapter = CartProductAdapter(eventHandler = viewModel)
         binding.rvProducts.adapter = adapter
     }
 
     private fun initBindings() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        binding.handler =
-            object : ShoppingCartEventHandler {
-                override fun onPreviousPageClick() {
-                    viewModel.loadPreviousProducts()
-                }
-
-                override fun onNextPageClick() {
-                    viewModel.loadNextProducts()
-                }
-            }
     }
 
     private fun initObservers() {
