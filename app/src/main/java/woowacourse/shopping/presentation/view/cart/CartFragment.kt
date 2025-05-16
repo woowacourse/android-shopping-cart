@@ -64,11 +64,13 @@ class CartFragment :
             it?.let { cartAdapter.replaceAll(it) }
         }
 
-        viewModel.deleteState.observe(viewLifecycleOwner) {
-            it?.let {
-                cartAdapter.removeCartById(it)
-                viewModel.fetchShoppingCart(isNextPage = false, isRefresh = true)
-            }
+        viewModel.deleteEvent.observe(viewLifecycleOwner) {
+            cartAdapter.removeCartById(it)
+            viewModel.fetchCartItems(isNextPage = false, isRefresh = true)
+        }
+
+        viewModel.refreshEvent.observe(viewLifecycleOwner) {
+            cartAdapter.refresh(it)
         }
     }
 
