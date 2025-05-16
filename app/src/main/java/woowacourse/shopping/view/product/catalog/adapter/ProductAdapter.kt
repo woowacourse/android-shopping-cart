@@ -15,10 +15,9 @@ class ProductAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
-        when (viewType) {
-            PRODUCT -> ProductViewHolder.from(parent, eventHandler)
-            LOAD_MORE -> LoadMoreViewHolder.from(parent, eventHandler)
-            else -> throw IllegalArgumentException()
+        when (Type.entries[viewType]) {
+            Type.PRODUCT -> ProductViewHolder.from(parent, eventHandler)
+            Type.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventHandler)
         }
 
     override fun getItemCount(): Int = items.size + if (hasNext) LOAD_MORE_BUTTON_COUNT else 0
@@ -27,13 +26,14 @@ class ProductAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        when (getItemViewType(position)) {
-            PRODUCT -> (holder as ProductViewHolder).bind(items[position])
-            LOAD_MORE -> {}
+        when (Type.entries[getItemViewType(position)]) {
+            Type.PRODUCT -> (holder as ProductViewHolder).bind(items[position])
+            Type.LOAD_MORE -> {}
         }
     }
 
-    override fun getItemViewType(position: Int): Int = if (hasNext && position == items.size) LOAD_MORE else PRODUCT
+    override fun getItemViewType(position: Int): Int =
+        if (hasNext && position == items.size) Type.LOAD_MORE.ordinal else Type.PRODUCT.ordinal
 
     fun updateItems(
         newItems: List<Product>,
@@ -52,9 +52,12 @@ class ProductAdapter(
         }
     }
 
+    enum class Type {
+        PRODUCT,
+        LOAD_MORE,
+    }
+
     companion object {
-        const val PRODUCT = 0
-        const val LOAD_MORE = 1
         private const val LOAD_MORE_BUTTON_COUNT = 1
     }
 }
