@@ -34,7 +34,7 @@ class CatalogAdapter(
         }
     }
 
-    fun updateProducts(products: List<CatalogItem>) {
+    fun appendProducts(products: List<CatalogItem>) {
         val previousSize = itemCount
         this.products.clear()
         this.products.addAll(products)

@@ -24,14 +24,14 @@ class CartAdapter(
         holder.bind(products[position])
     }
 
-    fun updateProducts(products: List<CartItemUiModel>) {
+    fun replaceAll(products: List<CartItemUiModel>) {
         this.products.clear()
         this.products.addAll(products)
 
         notifyDataSetChanged()
     }
 
-    fun removeProduct(id: Long) {
+    fun removeCartById(id: Long) {
         val index = products.indexOfFirst { it.id == id }
         products.removeAt(index)
         notifyItemRemoved(index)

@@ -42,7 +42,7 @@ class CatalogFragment :
 
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) { items ->
-            catalogAdapter.updateProducts(items)
+            catalogAdapter.appendProducts(items)
         }
     }
 
