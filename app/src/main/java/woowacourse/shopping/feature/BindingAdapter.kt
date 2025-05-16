@@ -1,9 +1,7 @@
 package woowacourse.shopping.feature
 
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -29,11 +27,6 @@ fun RecyclerView.bindItems(items: List<Goods>?) {
 }
 
 @BindingAdapter("visible")
-fun Button.setVisible(visible: Boolean) {
-    this.visibility = if (visible) View.VISIBLE else View.GONE
-}
-
-@BindingAdapter("layout_visible")
-fun LinearLayout.setVisible(visible: Boolean) {
+fun View.setVisible(visible: Boolean) {
     this.visibility = if (visible) View.VISIBLE else View.GONE
 }
