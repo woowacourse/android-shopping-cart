@@ -1,12 +1,10 @@
 package woowacourse.shopping.ui.products
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
 
-@SuppressLint("NotifyDataSetChanged")
 class ProductsAdapter(
     private val onClickHandler: OnClickHandler,
 ) : RecyclerView.Adapter<ProductsItemViewHolder<ProductsItem, ViewDataBinding>>() {
@@ -91,8 +89,8 @@ class ProductsAdapter(
         }
     }
 
-    fun updateLoadMoreItem(isLoadable: Boolean) {
-        if (isLoadable) addItem(ProductsItem.LoadMoreItem)
+    fun updateHasMoreItem(hasMore: Boolean) {
+        if (hasMore) addItem(ProductsItem.LoadMoreItem)
     }
 
     interface OnClickHandler :

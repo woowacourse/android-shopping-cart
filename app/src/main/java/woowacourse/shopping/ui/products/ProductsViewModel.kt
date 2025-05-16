@@ -12,16 +12,18 @@ class ProductsViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList<Product>())
     val products: LiveData<List<Product>> get() = _products
 
-    private val _isLoadable: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoadable: LiveData<Boolean> get() = _isLoadable
+    private val _hasMoreProducts: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasMoreProducts: LiveData<Boolean> get() = _hasMoreProducts
+
+    private val maxProductId: Int get() = products.value?.maxOfOrNull { it.id } ?: 0
 
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        val newProducts = productsDummyRepository.fetchProducts(count, products.value?.lastOrNull()?.id ?: 0)
+        val newProducts = productsDummyRepository.fetchProducts(count, maxProductId)
         _products.value = products.value?.plus(newProducts)
     }
 
-    fun updateIsLoadable() {
-        _isLoadable.value = productsDummyRepository.fetchIsProductsLoadable(products.value?.lastOrNull()?.id ?: 0)
+    fun updateHasMoreProducts() {
+        _hasMoreProducts.value = productsDummyRepository.fetchHasMoreProducts(maxProductId)
     }
 
     companion object {

@@ -28,15 +28,15 @@ class ProductsViewModelTest {
     }
 
     @Test
-    fun `isLoadable 값이 설정된다`() {
+    fun `hasMoreProducts 값이 설정된다`() {
         // given
         viewModel.updateProducts(Int.MAX_VALUE)
 
         // when
-        viewModel.updateIsLoadable()
+        viewModel.updateHasMoreProducts()
 
         // then
-        val actual = viewModel.isLoadable.getOrAwaitValue()
+        val actual = viewModel.hasMoreProducts.getOrAwaitValue()
         Assertions.assertFalse(actual)
     }
 }

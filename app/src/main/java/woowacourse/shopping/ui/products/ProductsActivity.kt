@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.products
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,7 +12,6 @@ import woowacourse.shopping.ui.common.DataBindingActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.ProductsAdapter.OnClickHandler
 
-@SuppressLint("NotifyDataSetChanged")
 class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels()
     private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
@@ -47,13 +45,13 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
             }
         }
 
-    private fun navigateToProductDetail(id: Int) {
-        val intent = ProductDetailActivity.newIntent(this, id)
+    private fun navigateToCart() {
+        val intent = CartActivity.newIntent(this)
         startActivity(intent)
     }
 
-    private fun navigateToCart() {
-        val intent = CartActivity.newIntent(this)
+    private fun navigateToProductDetail(id: Int) {
+        val intent = ProductDetailActivity.newIntent(this, id)
         startActivity(intent)
     }
 
@@ -80,10 +78,10 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     private fun initObservers() {
         viewModel.products.observe(this) { products ->
             productsAdapter.submitItems(products)
-            viewModel.updateIsLoadable()
+            viewModel.updateHasMoreProducts()
         }
-        viewModel.isLoadable.observe(this) { isLoadable ->
-            productsAdapter.updateLoadMoreItem(isLoadable)
+        viewModel.hasMoreProducts.observe(this) { hasMore ->
+            productsAdapter.updateHasMoreItem(hasMore)
         }
     }
 

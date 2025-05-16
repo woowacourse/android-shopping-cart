@@ -14,5 +14,5 @@ object ProductDummyRepositoryImpl {
 
     fun fetchProductDetail(id: Int): Product? = dummyProducts.find { it.id == id }
 
-    fun fetchIsProductsLoadable(lastId: Int): Boolean = dummyProducts.maxOfOrNull { it.id > lastId } == true
+    fun fetchHasMoreProducts(lastId: Int): Boolean = dummyProducts.maxOfOrNull { it.id > lastId } ?: false
 }
