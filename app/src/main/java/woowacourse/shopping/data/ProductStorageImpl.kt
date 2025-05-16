@@ -248,6 +248,18 @@ class ProductStorageImpl : ProductStorage {
                 price = Price(11900),
                 imgUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/26376544-1943-4773-8665-7f7a1fa1dfb5.jpg",
             ),
+            Product(
+                id = 40,
+                name = "[애슐리] 홈스토랑 볶음밥 6종 (4개입) (택1)",
+                price = Price(11900),
+                imgUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/26376544-1943-4773-8665-7f7a1fa1dfb5.jpg",
+            ),
+            Product(
+                id = 41,
+                name = "[애슐리] 홈스토랑 볶음밥 6종 (4개입) (택1)",
+                price = Price(11900),
+                imgUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/26376544-1943-4773-8665-7f7a1fa1dfb5.jpg",
+            ),
         ).forEach {
             products[it.id] = it
         }
@@ -264,11 +276,11 @@ class ProductStorageImpl : ProductStorage {
         return productsValues.subList(fromIndex, toIndex)
     }
 
-    override fun notHasMoreProduct(
+    override fun hasMoreProduct(
         page: Int,
         pageSize: Int,
     ): Boolean {
         val fromIndex = page * pageSize
-        return fromIndex >= products.size
+        return fromIndex < products.size
     }
 }

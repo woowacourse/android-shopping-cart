@@ -23,11 +23,11 @@ class FakeProductStorage : ProductStorage {
         return products.subList(from, to)
     }
 
-    override fun notHasMoreProduct(
+    override fun hasMoreProduct(
         page: Int,
         pageSize: Int,
     ): Boolean {
         val from = page * pageSize
-        return from >= products.size
+        return from <= products.size
     }
 }
