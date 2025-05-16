@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.custom
+package woowacourse.shopping.presentation.ui.decorations
 
 import android.content.res.Resources
 import android.graphics.Rect
