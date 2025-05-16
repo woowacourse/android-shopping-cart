@@ -7,14 +7,14 @@ import woowacourse.shopping.databinding.ItemLoadMoreBinding
 class LoadMoreViewHolder(
     parent: ViewGroup,
     onClickHandler: OnClickHandler,
-) : ProductsItemViewHolder<ProductsItem.LoadMoreProductsItem, ItemLoadMoreBinding>(
+) : ProductsItemViewHolder<ProductsItem.LoadMoreItem, ItemLoadMoreBinding>(
         ItemLoadMoreBinding.inflate(LayoutInflater.from(parent.context), parent, false),
     ) {
     init {
         binding.onClickHandler = onClickHandler
     }
 
-    interface OnClickHandler {
+    fun interface OnClickHandler {
         fun onLoadMoreClick()
     }
 }

@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.model.Product
 class ProductsAdapter(
     private val onClickHandler: OnClickHandler,
 ) : RecyclerView.Adapter<ProductsItemViewHolder<ProductsItem, ViewDataBinding>>() {
-    private val productsItems: MutableList<ProductsItem> = mutableListOf<ProductsItem>()
+    private val items: MutableList<ProductsItem> = mutableListOf<ProductsItem>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,21 +25,74 @@ class ProductsAdapter(
         holder: ProductsItemViewHolder<ProductsItem, ViewDataBinding>,
         position: Int,
     ) {
-        val productsItem: ProductsItem = productsItems[position]
+        val productsItem: ProductsItem = items[position]
         holder.bind(productsItem)
     }
 
-    override fun getItemCount(): Int = productsItems.size
+    override fun getItemCount(): Int = items.size
 
-    override fun getItemViewType(position: Int): Int = productsItems[position].viewType.ordinal
+    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
-    fun updateProductItems(newItems: List<Product>) {
-        productsItems.clear()
-        productsItems.addAll(newItems.map { ProductsItem.ProductProductsItem(it) })
+    fun submitItems(newItems: List<Product>) {
+        val newProductItems = newItems.map { ProductsItem.ProductItem(it) }
+        val oldProductItems = items.toList()
+
+        for ((position, newItem) in newProductItems.withIndex()) {
+            val oldItem = oldProductItems.getOrNull(position)
+
+            when {
+                oldItem == null -> addItem(newItem)
+                !isItemTheSame(oldItem, newItem) || !isContentTheSame(oldItem, newItem) -> updateItem(position, newItem)
+            }
+        }
+
+        if (oldProductItems.size > newProductItems.size) {
+            for (position in oldProductItems.lastIndex downTo newProductItems.size) {
+                removeItem(position)
+            }
+        }
+
+        items.removeAll { item -> item is ProductsItem.LoadMoreItem }
+    }
+
+    private fun isItemTheSame(
+        oldItem: ProductsItem,
+        newItem: ProductsItem,
+    ): Boolean = oldItem.id == newItem.id
+
+    private fun isContentTheSame(
+        oldItem: ProductsItem,
+        newItem: ProductsItem,
+    ): Boolean =
+        when (oldItem) {
+            is ProductsItem.ProductItem -> oldItem.value == (newItem as ProductsItem.ProductItem).value
+            is ProductsItem.LoadMoreItem -> true
+        }
+
+    private fun updateItem(
+        position: Int,
+        newItem: ProductsItem,
+    ) {
+        if (position in 0 until items.size) {
+            items[position] = newItem
+            notifyItemChanged(position)
+        }
+    }
+
+    private fun addItem(item: ProductsItem) {
+        items.add(item)
+        notifyItemInserted(items.size - 1)
+    }
+
+    private fun removeItem(position: Int) {
+        if (position in 0 until items.size) {
+            items.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 
     fun updateLoadMoreItem(isLoadable: Boolean) {
-        if (isLoadable) productsItems.add(ProductsItem.LoadMoreProductsItem)
+        if (isLoadable) addItem(ProductsItem.LoadMoreItem)
     }
 
     interface OnClickHandler :

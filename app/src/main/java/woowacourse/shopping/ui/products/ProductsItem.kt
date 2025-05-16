@@ -7,9 +7,17 @@ import woowacourse.shopping.ui.products.ProductsItemViewType.PRODUCT
 sealed class ProductsItem(
     val viewType: ProductsItemViewType,
 ) {
-    data class ProductProductsItem(
-        val value: Product,
-    ) : ProductsItem(PRODUCT)
+    abstract val id: Int
 
-    data object LoadMoreProductsItem : ProductsItem(LOAD_MORE)
+    data class ProductItem(
+        val value: Product,
+    ) : ProductsItem(PRODUCT) {
+        override val id: Int
+            get() = value.id
+    }
+
+    data object LoadMoreItem : ProductsItem(LOAD_MORE) {
+        override val id: Int = LOAD_MORE_ITEM_ID
+        private const val LOAD_MORE_ITEM_ID = -1
+    }
 }

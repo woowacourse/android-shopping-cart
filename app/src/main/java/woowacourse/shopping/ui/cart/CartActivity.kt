@@ -35,11 +35,12 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.rvCart.adapter = cartAdapter
+        binding.rvCart.itemAnimator = null
     }
 
     private fun initObservers() {
         viewModel.products.observe(this) { products ->
-            cartAdapter.replaceItems(products)
+            cartAdapter.submitItems(products)
         }
     }
 

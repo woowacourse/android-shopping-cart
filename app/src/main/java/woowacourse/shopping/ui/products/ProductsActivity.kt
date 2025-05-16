@@ -60,6 +60,7 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     private fun initViewBinding() {
         binding.rvProducts.adapter = productsAdapter
         binding.rvProducts.layoutManager = createLayoutManager()
+        binding.rvProducts.itemAnimator = null
     }
 
     private fun createLayoutManager(): GridLayoutManager =
@@ -78,12 +79,11 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
 
     private fun initObservers() {
         viewModel.products.observe(this) { products ->
-            productsAdapter.updateProductItems(products)
+            productsAdapter.submitItems(products)
             viewModel.updateIsLoadable()
         }
         viewModel.isLoadable.observe(this) { isLoadable ->
             productsAdapter.updateLoadMoreItem(isLoadable)
-            productsAdapter.notifyDataSetChanged()
         }
     }
 
