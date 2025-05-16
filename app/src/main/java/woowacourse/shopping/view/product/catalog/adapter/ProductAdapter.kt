@@ -1,13 +1,14 @@
-package woowacourse.shopping.view.product.catalog
+package woowacourse.shopping.view.product.catalog.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
 
 class ProductAdapter(
+    items: List<Product> = emptyList(),
     private val eventHandler: ProductCatalogEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val items = mutableListOf<Product>()
+    private val items = items.toMutableList()
     private var hasNext: Boolean = false
 
     override fun onCreateViewHolder(
@@ -34,19 +35,20 @@ class ProductAdapter(
 
     override fun getItemViewType(position: Int): Int = if (hasNext && position == items.size) LOAD_MORE else PRODUCT
 
-    fun addAll(
+    fun updateItems(
         newItems: List<Product>,
         hasNext: Boolean,
     ) {
-        val startIndex = items.size
+        val positionStart = items.size
+        val itemCount = newItems.size - positionStart
+
+        items.clear()
         items.addAll(newItems)
-        notifyItemRangeInserted(startIndex, newItems.size)
+        notifyItemRangeInserted(positionStart, itemCount)
 
         this.hasNext = hasNext
         if (!hasNext) {
             notifyItemRemoved(items.size)
-        } else if (startIndex == 0) {
-            notifyItemInserted(items.size)
         }
     }
 

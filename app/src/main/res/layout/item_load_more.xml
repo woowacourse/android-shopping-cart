@@ -6,7 +6,7 @@
 
         <variable
             name="handler"
-            type="woowacourse.shopping.view.product.catalog.LoadMoreViewHolder.EventHandler" />
+            type="woowacourse.shopping.view.product.catalog.adapter.LoadMoreViewHolder.EventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

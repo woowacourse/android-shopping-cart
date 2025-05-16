@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.product.catalog
+package woowacourse.shopping.view.product.catalog.adapter
 
 interface ProductCatalogEventHandler :
     ProductViewHolder.EventHandler,

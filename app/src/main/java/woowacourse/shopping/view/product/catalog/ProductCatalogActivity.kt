@@ -15,7 +15,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.cart.ShoppingCartActivity
-import woowacourse.shopping.view.product.catalog.ProductAdapter.Companion.LOAD_MORE
+import woowacourse.shopping.view.product.catalog.adapter.ProductAdapter
+import woowacourse.shopping.view.product.catalog.adapter.ProductAdapter.Companion.LOAD_MORE
+import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogEventHandler
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
@@ -31,14 +33,7 @@ class ProductCatalogActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
+        setUpView()
         initRecyclerView()
         initObservers()
     }
@@ -57,18 +52,29 @@ class ProductCatalogActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun setUpView() {
+        enableEdgeToEdge()
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
     private fun initRecyclerView() {
         productAdapter =
             ProductAdapter(
-                object : ProductCatalogEventHandler {
-                    override fun onProductClick(item: Product) {
-                        navigateToProductDetail(item)
-                    }
+                eventHandler =
+                    object : ProductCatalogEventHandler {
+                        override fun onProductClick(item: Product) {
+                            navigateToProductDetail(item)
+                        }
 
-                    override fun onMoreClick() {
-                        viewModel.loadMoreProducts()
-                    }
-                },
+                        override fun onMoreClick() {
+                            viewModel.loadMoreProducts()
+                        }
+                    },
             )
         binding.rvProducts.adapter = productAdapter
 
@@ -86,7 +92,7 @@ class ProductCatalogActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.products.observe(this) { value ->
-            productAdapter.addAll(value.items, value.hasNext)
+            productAdapter.updateItems(value, viewModel.hasNext)
         }
     }
 
