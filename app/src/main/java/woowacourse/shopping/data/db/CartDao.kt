@@ -2,22 +2,36 @@ package woowacourse.shopping.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 
 @Dao
 interface CartDao {
-    @Query("SELECT EXISTS(SELECT 1 FROM ProductEntity WHERE id > :id)")
-    fun existsItemAfterId(id: Long): Boolean
+    @Query("SELECT EXISTS(SELECT 1 FROM CartEntity WHERE createdAt < :createdAt)")
+    fun existsItemCreatedBefore(createdAt: Long): Boolean
 
-    @Query("SELECT * FROM ProductEntity ORDER BY id ASC Limit :limit OFFSET :offset")
+    @Query("SELECT * FROM CartEntity ORDER BY createdAt DESC Limit :limit OFFSET :offset")
     fun getCartItemPaged(
         limit: Int,
         offset: Int,
-    ): List<ProductEntity>
+    ): List<CartEntity>
 
-    @Query("DELETE FROM ProductEntity WHERE id = :id")
+    @Query("DELETE FROM CartEntity WHERE cartId = :id")
     fun delete(id: Long)
 
-    @Insert
-    fun insert(product: ProductEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(product: CartEntity)
+
+    @Query("SELECT * FROM CartEntity WHERE productId = :productId")
+    fun findByProductId(productId: Long): CartEntity?
+
+    @Query("UPDATE CartEntity SET quantity = quantity + 1 WHERE productId = :productId")
+    fun updateQuantity(productId: Long)
+
+    @Transaction
+    fun insertOrUpdate(product: CartEntity) {
+        val existingProduct = findByProductId(product.productId)
+        if (existingProduct == null) insert(product) else updateQuantity(product.productId)
+    }
 }

@@ -7,17 +7,31 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toProduct
+import woowacourse.shopping.presentation.model.toUiModel
 
 class DetailViewModel(
-    private val repository: CartRepository,
+    private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
+    private val _product = MutableLiveData<ProductUiModel>()
+    val product: LiveData<ProductUiModel> = _product
+
     private val _saveState = MutableLiveData<Unit>()
     val saveState: LiveData<Unit> = _saveState
 
-    fun addProduct(product: ProductUiModel) {
-        repository.addCartItem(product.toProduct()) {
+    fun fetchProduct(productId: Long) {
+        productRepository.findProductById(productId) { product ->
+            product?.let { _product.postValue(it.toUiModel()) }
+        }
+    }
+
+    fun addProduct() {
+        val product = _product.value ?: return
+
+        cartRepository.addCartItem(product.toProduct()) {
             _saveState.postValue(Unit)
         }
     }
@@ -29,8 +43,9 @@ class DetailViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val repository = RepositoryProvider.cartRepository
-                    return DetailViewModel(repository) as T
+                    val cartRepository = RepositoryProvider.cartRepository
+                    val productRepository = RepositoryProvider.productRepository
+                    return DetailViewModel(cartRepository, productRepository) as T
                 }
             }
     }

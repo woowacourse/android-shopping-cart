@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Shopping</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Product Item -->
     <string name="product_price_format">%,d원</string>
+
+    <!-- Cart Item -->
+    <string name="cart_item_price_format">%,d원 (%d개)</string>
 
     <!-- Detail Screen -->
     <string name="detail_add_cart_button_text">장바구니 담기</string>

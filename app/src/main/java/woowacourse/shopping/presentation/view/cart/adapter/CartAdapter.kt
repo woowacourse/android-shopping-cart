@@ -2,10 +2,10 @@ package woowacourse.shopping.presentation.view.cart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.model.CartItemUiModel
 
 class CartAdapter(
-    products: List<ProductUiModel> = emptyList(),
+    products: List<CartItemUiModel> = emptyList(),
     private val eventListener: CartEventListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val products = products.toMutableList()
@@ -24,7 +24,7 @@ class CartAdapter(
         holder.bind(products[position])
     }
 
-    fun updateProducts(products: List<ProductUiModel>) {
+    fun updateProducts(products: List<CartItemUiModel>) {
         this.products.clear()
         this.products.addAll(products)
 
@@ -38,6 +38,6 @@ class CartAdapter(
     }
 
     interface CartEventListener {
-        fun onProductDeletion(product: ProductUiModel)
+        fun onProductDeletion(cartItem: CartItemUiModel)
     }
 }

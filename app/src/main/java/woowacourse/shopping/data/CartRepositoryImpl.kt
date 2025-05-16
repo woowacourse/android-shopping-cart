@@ -1,8 +1,10 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.data.db.CartDao
-import woowacourse.shopping.data.mapper.toProduct
+import woowacourse.shopping.data.db.CartEntity
+import woowacourse.shopping.data.mapper.toCartItem
 import woowacourse.shopping.data.mapper.toProductEntity
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
@@ -13,17 +15,11 @@ class CartRepositoryImpl(
     override fun getCartItems(
         limit: Int,
         offset: Int,
-        callback: (List<Product>, Boolean) -> Unit,
+        callback: (List<CartItem>, Boolean) -> Unit,
     ) {
         thread {
-            val products =
-                cartDao
-                    .getCartItemPaged(
-                        limit = limit,
-                        offset = offset,
-                    ).map { it.toProduct() }
-            val hasMore = products.lastOrNull()?.let { cartDao.existsItemAfterId(it.id) } ?: false
-            callback(products, hasMore)
+            val products = cartDao.getCartItemPaged(limit, offset)
+            callback(products.map { it.toCartItem() }, products.isHasMore())
         }
     }
 
@@ -41,7 +37,12 @@ class CartRepositoryImpl(
         callback: () -> Unit,
     ) {
         thread {
-            cartDao.insert(product.toProductEntity()).let { callback() }
+            cartDao.insertOrUpdate(product.toProductEntity()).let { callback() }
         }
+    }
+
+    private fun List<CartEntity>.isHasMore(): Boolean {
+        val lastCreatedAt = this.lastOrNull()?.createdAt
+        return lastCreatedAt != null && cartDao.existsItemCreatedBefore(lastCreatedAt)
     }
 }

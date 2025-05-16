@@ -103,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint"
-            android:onClick="@{() -> vm.addProduct(product)}"
+            android:onClick="@{() -> vm.addProduct()}"
             android:text="@string/detail_add_cart_button_text"
             android:textColor="@color/white"
             android:textSize="20sp"

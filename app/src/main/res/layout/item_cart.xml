@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.presentation.model.ProductUiModel" />
+            name="cartItem"
+            type="woowacourse.shopping.presentation.model.CartItemUiModel" />
 
         <variable
             name="eventListener"
@@ -29,7 +29,7 @@
             android:layout_height="32dp"
             android:backgroundTint="@color/transparent"
             android:contentDescription="@null"
-            android:onClick="@{() -> eventListener.onProductDeletion(product)}"
+            android:onClick="@{() -> eventListener.onProductDeletion(cartItem)}"
             android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +38,7 @@
             android:id="@+id/cart_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{product.name}"
+            android:text="@{cartItem.product.name}"
             android:textColor="@color/gray_55"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -54,7 +54,7 @@
             android:layout_marginTop="20dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{cartItem.product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/text_view_price"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,7 @@
             android:id="@+id/text_view_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{String.format(@string/product_price_format, product.price)}"
+            android:text="@{String.format(@string/cart_item_price_format, cartItem.totalPrice, cartItem.quantity)}"
             android:textAlignment="textEnd"
             android:textColor="@color/gray_55"
             android:textSize="20sp"
@@ -73,7 +73,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_product"
             tools:text="99,800원" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

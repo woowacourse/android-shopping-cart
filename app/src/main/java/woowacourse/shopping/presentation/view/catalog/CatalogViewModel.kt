@@ -25,15 +25,13 @@ class CatalogViewModel(
 
     fun fetchProducts() {
         productRepository.loadProducts(lastId, loadSize) { newProducts, hasMore ->
-            val newProductsUiModels = newProducts.map { it.toUiModel() }
+            lastId = newProducts.lastOrNull()?.id ?: DEFAULT_ID
 
-            lastId = newProductsUiModels.lastOrNull()?.id ?: DEFAULT_ID
+            val currentProducts = _products.value?.first ?: emptyList()
+            val newProductsUiModel = newProducts.map { it.toUiModel() }
+            val updatedProducts = currentProducts.plus(newProductsUiModel).distinct()
 
-            val updatedProducts = (_products.value?.first ?: emptyList()).plus(newProductsUiModels).distinct()
-
-            _products.postValue(
-                updatedProducts to hasMore,
-            )
+            _products.postValue(updatedProducts to hasMore)
         }
     }
 

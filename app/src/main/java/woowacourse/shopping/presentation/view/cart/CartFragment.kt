@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BaseFragment
-import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.model.CartItemUiModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
 
 class CartFragment :
@@ -43,8 +43,8 @@ class CartFragment :
         backCallback.remove()
     }
 
-    override fun onProductDeletion(product: ProductUiModel) {
-        viewModel.deleteProduct(product)
+    override fun onProductDeletion(cartItem: CartItemUiModel) {
+        viewModel.deleteCartItem(cartItem)
     }
 
     private fun initActionBar() {
@@ -60,12 +60,8 @@ class CartFragment :
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.page.observe(viewLifecycleOwner) {
-            binding.recyclerViewCart.smoothScrollToPosition(0)
-        }
-
-        viewModel.products.observe(viewLifecycleOwner) {
-            cartAdapter.updateProducts(it)
+        viewModel.cartItems.observe(viewLifecycleOwner) {
+            it?.let { cartAdapter.updateProducts(it) }
         }
 
         viewModel.deleteState.observe(viewLifecycleOwner) {

@@ -2,14 +2,13 @@ package woowacourse.shopping.presentation.view.detail
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentDetailBinding
 import woowacourse.shopping.presentation.base.BaseFragment
-import woowacourse.shopping.presentation.extension.getParcelableCompat
-import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.view.cart.CartFragment
 
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
@@ -23,14 +22,24 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         initObserver()
         initListener()
 
-        val product = arguments.getParcelableCompat<ProductUiModel>(EXTRA_PRODUCT)
-        binding.product = product
-        binding.vm = viewModel
+        val productId = arguments?.getLong(EXTRA_PRODUCT) ?: return
+        viewModel.fetchProduct(productId)
     }
 
     private fun initObserver() {
+        binding.vm = viewModel
+
         viewModel.saveState.observe(viewLifecycleOwner) {
             it?.let { navigateToScreen() }
+        }
+
+        viewModel.product.observe(viewLifecycleOwner) {
+            if (it == null) {
+                Toast.makeText(requireContext(), "상품 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+                return@observe
+            }
+
+            binding.product = it
         }
     }
 
@@ -50,9 +59,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     companion object {
         private const val EXTRA_PRODUCT = "product"
 
-        fun newBundle(product: ProductUiModel) =
+        fun newBundle(productId: Long) =
             bundleOf(
-                EXTRA_PRODUCT to product,
+                EXTRA_PRODUCT to productId,
             )
     }
 }
