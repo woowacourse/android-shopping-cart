@@ -3,6 +3,7 @@ package woowacourse.shopping.view.product.detail
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.Product
 
@@ -13,7 +14,8 @@ class ProductDetailViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-            val repository = ShoppingCartRepositoryImpl(applicationContext)
+            val database = ShoppingCartDatabase.getDataBase(applicationContext)
+            val repository = ShoppingCartRepositoryImpl(database.shoppingCartDao)
             return ProductDetailViewModel(product, repository) as T
         }
         throw IllegalArgumentException()

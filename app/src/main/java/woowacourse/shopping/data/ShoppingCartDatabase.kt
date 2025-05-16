@@ -10,7 +10,7 @@ import woowacourse.shopping.data.shoppingcart.ShoppingCartEntity
 
 @Database(entities = [ProductEntity::class, ShoppingCartEntity::class], version = 1)
 abstract class ShoppingCartDatabase : RoomDatabase() {
-    abstract fun shoppingCartDao(): ShoppingCartDao
+    abstract val shoppingCartDao: ShoppingCartDao
 
     companion object {
         private const val DATABASE_NAME = "shopping_database"
