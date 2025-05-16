@@ -10,9 +10,11 @@
     <string name="product_detail_cart_add_success">성공적으로 장바구니에 담겼습니다!</string>
     <string name="product_detail_price">가격</string>
     <string name="product_detail_cart_add">장바구니 담기</string>
+    <string name="product_detail_close">닫기</string>
 
     <!--    장바구니-->
     <string name="cart_title">Cart</string>
     <string name="cart_page_previous"><![CDATA[<]]></string>
     <string name="cart_page_next"><![CDATA[>]]></string>
+    <string name="products_cart">장바구니</string>
 </resources>

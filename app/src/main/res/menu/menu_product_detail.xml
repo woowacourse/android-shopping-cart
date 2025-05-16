@@ -4,6 +4,6 @@
     <item
         android:id="@+id/item_product_detail_close"
         android:icon="@drawable/ic_product_detail_close"
-        android:title="닫기"
+        android:title="@string/product_detail_close"
         app:showAsAction="always" />
 </menu>
