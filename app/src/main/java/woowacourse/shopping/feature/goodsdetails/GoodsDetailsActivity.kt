@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
@@ -13,11 +14,16 @@ import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.GoodsUiModel
+import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.util.toDomain
+import kotlin.getValue
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
     private lateinit var goods: GoodsUiModel
+    private val viewModel: GoodsDetailsViewModel by viewModels {
+        ViewModelFactory { GoodsDetailsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +33,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
         goods = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
         binding.goods = goods
-        binding.insertCallback = { insert(goods) }
+        binding.insertCallback = { insertToCart(goods) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -44,8 +50,8 @@ class GoodsDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun insert(goods: GoodsUiModel) {
-        CartRepositoryImpl(CartDatabase.getDatabase(this)).insert(goods.toDomain()) {
+    fun insertToCart(goods: GoodsUiModel) {
+        viewModel.insertToCart(goods.toDomain()) {
             Toast
                 .makeText(
                     this,

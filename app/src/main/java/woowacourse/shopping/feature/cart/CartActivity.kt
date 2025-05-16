@@ -16,7 +16,7 @@ class CartActivity :
     CartViewHolder.CartClickListener {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
-        CartViewModelFactory(CartRepositoryImpl(CartDatabase.getDatabase(this)))
+        ViewModelFactory { CartViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
     }
     private val adapter: CartAdapter by lazy { CartAdapter(this) }
 
