@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.cart.ShoppingCartActivity
 import woowacourse.shopping.view.product.catalog.adapter.ProductAdapter
-import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogEventHandler
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
@@ -62,19 +60,7 @@ class ProductCatalogActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        productAdapter =
-            ProductAdapter(
-                eventHandler =
-                    object : ProductCatalogEventHandler {
-                        override fun onProductClick(item: Product) {
-                            navigateToProductDetail(item)
-                        }
-
-                        override fun onMoreClick() {
-                            viewModel.loadProducts()
-                        }
-                    },
-            )
+        productAdapter = ProductAdapter(eventHandler = viewModel)
         binding.rvProducts.adapter = productAdapter
 
         val gridLayoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
@@ -93,11 +79,11 @@ class ProductCatalogActivity : AppCompatActivity() {
         viewModel.products.observe(this) { value ->
             productAdapter.updateItems(value, viewModel.hasNext)
         }
-    }
 
-    private fun navigateToProductDetail(product: Product) {
-        val intent = ProductDetailActivity.newIntent(this, product)
-        startActivity(intent)
+        viewModel.selectedProduct.observe(this) { value ->
+            val intent = ProductDetailActivity.newIntent(this, value)
+            startActivity(intent)
+        }
     }
 
     companion object {
