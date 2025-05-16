@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain
 
-data class ShoppingProduct(
+data class CartProduct(
     val id: Long,
-    val productId: Long,
+    val product: Product,
 )

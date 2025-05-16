@@ -22,4 +22,6 @@ fun Product.toEntity() =
         price = this.price,
     )
 
-fun Long.toProductDomain() = ProductData.products.find { it.id == this } ?: throw IllegalArgumentException()
+fun Long.toProduct(): Product = ProductData.products.find { it.id == this } ?: throw IllegalArgumentException()
+
+fun Product.toId(): Long = ProductData.products.find { it == this }?.id ?: throw IllegalArgumentException()

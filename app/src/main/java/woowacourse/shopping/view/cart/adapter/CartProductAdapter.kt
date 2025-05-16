@@ -2,10 +2,10 @@ package woowacourse.shopping.view.cart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.domain.CartProduct
 
 class CartProductAdapter(
-    items: List<ShoppingProduct> = emptyList(),
+    items: List<CartProduct> = emptyList(),
     private val eventHandler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
     private val items = items.toMutableList()
@@ -17,12 +17,12 @@ class CartProductAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun removeItem(product: ShoppingProduct) {
+    fun removeItem(product: CartProduct) {
         notifyItemRemoved(items.indexOf(product))
         items.remove(product)
     }
 
-    fun updateItems(newItems: List<ShoppingProduct>) {
+    fun updateItems(newItems: List<CartProduct>) {
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()

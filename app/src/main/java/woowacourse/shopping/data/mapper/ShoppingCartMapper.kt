@@ -1,18 +1,18 @@
 package woowacourse.shopping.data.mapper
 
 import woowacourse.shopping.data.cart.ShoppingCartEntity
-import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.domain.CartProduct
 
 fun List<ShoppingCartEntity>.toDomain() =
     this.map { entity ->
-        ShoppingProduct(
+        CartProduct(
             id = entity.id,
-            productId = entity.productId,
+            product = entity.productId.toProduct(),
         )
     }
 
-fun ShoppingProduct.toEntity() =
+fun CartProduct.toEntity() =
     ShoppingCartEntity(
         id = this.id,
-        productId = this.productId,
+        productId = this.product.toId(),
     )
