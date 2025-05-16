@@ -6,6 +6,22 @@ import woowacourse.shopping.domain.repository.ProductRepository
 class ProductRepositoryImpl(
     private val products: List<Product>,
 ) : ProductRepository {
+    override fun findProductById(
+        id: Long,
+        callback: (Product?) -> Unit,
+    ) {
+        val product = products.find { it.id == id }
+        callback(product)
+    }
+
+    override fun findProductsByIds(
+        ids: List<Long>,
+        callback: (List<Product>) -> Unit,
+    ) {
+        val products = products.filter { ids.contains(it.id) }
+        callback(products)
+    }
+
     override fun loadProducts(
         lastItemId: Long,
         loadSize: Int,
