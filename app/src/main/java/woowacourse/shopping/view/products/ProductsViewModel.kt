@@ -1,4 +1,4 @@
-package woowacourse.shopping.viewmodel.products
+package woowacourse.shopping.view.products
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

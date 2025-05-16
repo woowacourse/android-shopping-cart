@@ -1,4 +1,4 @@
-package woowacourse.shopping.viewmodel.cart
+package woowacourse.shopping.view.cart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.view.cart.Cart
 
 class CartViewModel(
     private val cart: Cart,

@@ -12,7 +12,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.intent.getSerializableExtraData
 import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.viewmodel.productdetail.ProductDetailViewModel
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
