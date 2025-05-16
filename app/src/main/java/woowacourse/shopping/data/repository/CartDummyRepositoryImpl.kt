@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
 
+// TODO: CartRepositoryImpl 및 Domain layer 내부 CartRepository 구현
 object CartDummyRepositoryImpl {
     private const val COLLECTION_POSITION_OFFSET: Int = 1
     private const val LOAD_ITEM_COUNT: Int = 5

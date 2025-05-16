@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
 
+// TODO: ProductRepositoryImpl 및 Domain layer 내부 ProductRepository 구현
 object ProductDummyRepositoryImpl {
     private const val INITIAL_PRODUCT_ID: Int = 0
 
