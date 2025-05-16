@@ -5,10 +5,6 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
-
-        <variable
             name="onClickHandler"
             type="woowacourse.shopping.ui.products.LoadMoreViewHolder.OnClickHandler" />
     </data>
