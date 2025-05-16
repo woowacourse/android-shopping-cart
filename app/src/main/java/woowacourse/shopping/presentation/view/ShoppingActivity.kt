@@ -22,7 +22,7 @@ class ShoppingActivity : AppCompatActivity() {
 
         setWindowInsets()
         setActionBar()
-        navigateToScreen()
+        if (savedInstanceState == null) navigateToScreen()
     }
 
     private fun setWindowInsets() {
