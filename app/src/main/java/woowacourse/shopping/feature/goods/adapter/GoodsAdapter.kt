@@ -12,9 +12,12 @@ class GoodsAdapter(
     private val items: MutableList<Goods> = mutableListOf()
 
     fun setItems(newItems: List<Goods>) {
+        val positionStart = itemCount - newItems.size
+        val newItemCount = newItems.size
+
         items.clear()
         items.addAll(newItems)
-        notifyItemRangeChanged(0, itemCount)
+        notifyItemRangeInserted(positionStart, newItemCount)
     }
 
     override fun onCreateViewHolder(
