@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.shoppingcart
+package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.data.mapper.toDomain

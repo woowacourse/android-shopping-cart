@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.ShoppingCartDatabase
-import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.cart.ShoppingCartRepositoryImpl
 
 class ShoppingCartViewModelFactory(
     private val applicationContext: Context,

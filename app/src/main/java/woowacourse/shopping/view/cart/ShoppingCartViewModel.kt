@@ -3,7 +3,7 @@ package woowacourse.shopping.view.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.data.cart.ShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingProduct
 
 class ShoppingCartViewModel(

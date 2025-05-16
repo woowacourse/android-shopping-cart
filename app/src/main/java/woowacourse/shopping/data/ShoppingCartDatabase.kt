@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import woowacourse.shopping.data.cart.ShoppingCartDao
+import woowacourse.shopping.data.cart.ShoppingCartEntity
 import woowacourse.shopping.data.product.ProductEntity
-import woowacourse.shopping.data.shoppingcart.ShoppingCartDao
-import woowacourse.shopping.data.shoppingcart.ShoppingCartEntity
 
 @Database(entities = [ProductEntity::class, ShoppingCartEntity::class], version = 1)
 abstract class ShoppingCartDatabase : RoomDatabase() {
