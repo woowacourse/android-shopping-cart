@@ -35,13 +35,17 @@ class ShoppingCartViewModel(
     }
 
     fun loadNextProducts() {
-        _page.value = _page.value?.plus(1)
-        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
+        if (_hasNext.value != true) return
+        val nextPage = _page.value?.plus(1) ?: FIRST_PAGE_NUMBER
+        loadPage(nextPage)
+        _page.value = nextPage
     }
 
     fun loadPreviousProducts() {
-        _page.value = _page.value?.minus(1)
-        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
+        if (_hasPrevious.value != true) return
+        val previousPage = _page.value?.minus(1) ?: FIRST_PAGE_NUMBER
+        loadPage(previousPage)
+        _page.value = previousPage
     }
 
     private fun loadPage(page: Int) {
