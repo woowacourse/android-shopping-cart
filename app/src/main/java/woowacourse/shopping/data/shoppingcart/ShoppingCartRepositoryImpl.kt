@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.shoppingcart
 
 import android.content.Context
+import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.ShoppingProduct
-import woowacourse.shopping.view.PagedResult
 import kotlin.concurrent.thread
 
 class ShoppingCartRepositoryImpl(

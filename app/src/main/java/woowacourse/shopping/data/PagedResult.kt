@@ -1,4 +1,4 @@
-package woowacourse.shopping.view
+package woowacourse.shopping.data
 
 data class PagedResult<T>(
     val items: List<T>,

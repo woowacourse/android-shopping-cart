@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.shoppingcart
 
+import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.domain.ShoppingProduct
-import woowacourse.shopping.view.PagedResult
 
 interface ShoppingCartRepository {
     fun insert(productId: Long)

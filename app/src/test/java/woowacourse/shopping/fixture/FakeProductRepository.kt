@@ -1,8 +1,8 @@
 package woowacourse.shopping.fixture
 
+import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.PagedResult
 
 class FakeProductRepository : ProductRepository {
     private val fakeProducts =
