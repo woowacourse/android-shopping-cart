@@ -10,7 +10,7 @@ fun setImageBindingAdapter(
     imageUrl: String,
 ) {
     Glide
-        .with(imageView.context)
+        .with(imageView)
         .load(imageUrl)
         .into(imageView)
 }
