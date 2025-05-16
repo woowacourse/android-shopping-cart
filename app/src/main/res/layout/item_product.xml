@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.presentation.model.ProductUiModel" />
+
+        <variable
+            name="eventListener"
+            type="woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter.CatalogEventListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> eventListener.onProductClicked(product)}">
+
+        <ImageView
+            android:id="@+id/image_view_product"
+            imageUrl="@{product.imageUrl}"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/gray_88"
+            android:contentDescription="@null"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/image_view_product"
+            tools:text="나이키 에어포스 1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{String.format(@string/product_price_format, product.price)}"
+            android:textColor="@color/gray_55"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/text_view_product_name"
+            app:layout_constraintStart_toStartOf="@id/text_view_product_name"
+            app:layout_constraintTop_toBottomOf="@id/text_view_product_name"
+            tools:text="10,000원" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
