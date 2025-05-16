@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.CartStorage
-import woowacourse.shopping.data.ProductStorage
+import woowacourse.shopping.data.storage.ProductStorage
 import woowacourse.shopping.domain.Product
 
 class DetailViewModel(

@@ -1,0 +1,72 @@
+package woowacourse.shopping.data.repository
+
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.storage.ProductStorage
+import woowacourse.shopping.fixture.productFixture1
+import woowacourse.shopping.fixture.productFixture2
+
+class ProductRepositoryImplTest {
+    private val storage: ProductStorage = mockk()
+    private val productRepository = ProductRepositoryImpl(storage)
+
+    @Test
+    fun `Id에_해당하는_상품을_가져온다`() {
+        // given
+        val productId = 1L
+        val expectedProduct = productFixture1
+        every { storage[productId] } returns expectedProduct
+
+        // when
+        val actualProduct = productRepository[productId]
+
+        // then
+        assertEquals(expectedProduct, actualProduct)
+        verify(exactly = 1) { storage[productId] }
+    }
+
+    @Test
+    fun `첫_번째_페이지의_상품을_가져온다`() {
+        // given
+        val page = 0
+        val pageSize = 10
+        val fromIndex = 0
+        val toIndex = fromIndex + pageSize
+        val expectedProducts =
+            listOf(
+                productFixture1,
+                productFixture2,
+            )
+
+        every { storage.singlePage(fromIndex, toIndex) } returns expectedProducts
+
+        // when
+        val actualProducts = productRepository.loadSinglePage(page, pageSize)
+
+        // Then
+        assertEquals(expectedProducts, actualProducts)
+        verify(exactly = 1) { storage.singlePage(fromIndex, toIndex) }
+    }
+
+    @Test
+    fun `빈_페이지를_요청하면_빈_리스트를_반환한다`() {
+        // given
+        val page = 10
+        val pageSize = 20
+        val fromIndex = page * pageSize
+        val toIndex = fromIndex + pageSize
+
+        every { storage.singlePage(fromIndex, toIndex) } returns emptyList()
+
+        // when
+        val actualProducts = productRepository.loadSinglePage(page, pageSize)
+
+        // then
+        assertTrue(actualProducts.isEmpty())
+        verify(exactly = 1) { storage.singlePage(fromIndex, toIndex) }
+    }
+}

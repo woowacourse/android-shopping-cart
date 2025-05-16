@@ -36,8 +36,6 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
             lifecycleOwner = this@MainActivity
             adapter = productsAdapter
         }
-        viewModel.loadProducts(PAGE_SIZE)
-
         setUpSystemBar()
         setupRecyclerView()
         observeViewModel()
@@ -97,7 +95,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     }
 
     override fun onLoadMoreItems() {
-        viewModel.loadProducts(PAGE_SIZE)
+        viewModel.loadProducts(productsAdapter.itemCount, PAGE_SIZE)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
