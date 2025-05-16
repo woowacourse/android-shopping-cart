@@ -1,38 +1,70 @@
 package woowacourse.shopping.view.main.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductBinding
+import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.core.base.BaseViewHolder
 
 class ProductAdapter(
-    private var items: List<Product>,
+    items: List<ProductRvItems>,
     private val handler: ProductsAdapterEventHandler,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    fun submitList(newItems: List<Product>) {
+) : RecyclerView.Adapter<BaseViewHolder<ViewBinding>>() {
+    private val items: MutableList<ProductRvItems> = items.toMutableList()
+
+    fun addProductItems(newItems: List<Product>) {
         val lastPosition = items.size
-        val subList = newItems.subList(lastPosition, newItems.size)
-        items = items + subList
+        items.clear()
+        items.addAll(newItems.map(ProductRvItems::ProductItem))
+
         notifyItemRangeInserted(lastPosition, newItems.size)
+    }
+
+    fun addLoadItem() {
+        items.add(ProductRvItems.LoadItem)
+        notifyItemInserted(items.size - 1)
+    }
+
+    fun removeLoadItem() {
+        val index = items.indexOfFirst { it is ProductRvItems.LoadItem }
+        if (index != -1) {
+            items.removeAt(index)
+            notifyItemRemoved(index)
+        }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val bind = ItemProductBinding.inflate(inflater)
+    ): BaseViewHolder<ViewBinding> {
+        return (
+            when (ProductRvItems.ViewType.entries[viewType]) {
+                ProductRvItems.ViewType.VIEW_TYPE_PRODUCT ->
+                    ProductViewHolder(
+                        parent,
+                        handler,
+                    )
 
-        return ProductViewHolder(bind, handler)
+                ProductRvItems.ViewType.VIEW_TYPE_LOAD ->
+                    LoadViewHolder(
+                        parent,
+                        handler,
+                    )
+            }
+        ) as BaseViewHolder<ViewBinding>
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: BaseViewHolder<ViewBinding>,
         position: Int,
     ) {
-        (holder as ProductViewHolder).bind(items[position])
+        when (val item = items[position]) {
+            is ProductRvItems.ProductItem -> (holder as ProductViewHolder).bind(item)
+            is ProductRvItems.LoadItem -> (holder as LoadViewHolder).bind(item)
+        }
     }
 
     override fun getItemCount(): Int = items.size
+
+    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 }

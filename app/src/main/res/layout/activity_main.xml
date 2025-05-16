@@ -28,21 +28,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:adapter="@{adapter}"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/button_load"
-            app:layout_constraintTop_toTopOf="parent"
-            app:spanCount="2" />
-
-        <Button
-            android:id="@+id/button_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="더보기"
-            android:visibility="@{vm.loadable ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_product" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

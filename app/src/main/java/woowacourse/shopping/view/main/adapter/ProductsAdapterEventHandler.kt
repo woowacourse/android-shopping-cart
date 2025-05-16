@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.main.adapter
 
-fun interface ProductsAdapterEventHandler {
+interface ProductsAdapterEventHandler {
     fun onSelectProduct(productId: Long)
+
+    fun onLoadMoreItems()
 }

@@ -3,21 +3,21 @@ package woowacourse.shopping.view.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
+import woowacourse.shopping.view.main.adapter.ProductRvItems
 import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
+import woowacourse.shopping.view.main.vm.LoadState
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 import kotlin.getValue
@@ -25,7 +25,7 @@ import kotlin.getValue
 class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     private val viewModel: MainViewModel by viewModels { MainViewModelFactory() }
     private val productsAdapter: ProductAdapter by lazy {
-        ProductAdapter(viewModel.products.value ?: emptyList(), this)
+        ProductAdapter(emptyList(), this)
     }
     private lateinit var binding: ActivityMainBinding
 
@@ -36,62 +36,68 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
             lifecycleOwner = this@MainActivity
             adapter = productsAdapter
         }
-        viewModel.loadProducts(0, PAGE_SIZE)
+        viewModel.loadProducts(PAGE_SIZE)
 
-        initView()
+        setUpSystemBar()
+        setupRecyclerView()
         observeViewModel()
     }
 
-    private fun initView() {
+    private fun setUpSystemBar() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        with(binding) {
-            recyclerViewProduct.apply {
-                adapter = productsAdapter
-                setHasFixedSize(true)
-                setItemAnimator(null)
-            }.addOnScrollListener(onScrollListener())
-
-            buttonLoad.setOnClickListener {
-                buttonLoad.visibility = View.GONE
-                val layoutManager = recyclerViewProduct.layoutManager as? LinearLayoutManager
-
-                val visiblePosition = layoutManager?.itemCount
-                viewModel.loadProducts(visiblePosition ?: 0, PAGE_SIZE)
-            }
-        }
     }
 
-    private fun observeViewModel() {
-        viewModel.products.observe(this) { value ->
-            productsAdapter.submitList(value)
+    private fun setupRecyclerView() =
+        with(binding.recyclerViewProduct) {
+            adapter = productsAdapter
+            layoutManager =
+                GridLayoutManager(this@MainActivity, 2).apply {
+                    spanSizeLookup = setSpanSizeLookup()
+                }
+            setHasFixedSize(true)
+            itemAnimator = null
         }
-    }
 
-    private fun onScrollListener() =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int,
-                dy: Int,
-            ) {
-                val loadable = viewModel.loadable.value ?: return
-                if (!loadable && !recyclerView.canScrollVertically(RECYCLER_VIEW_END_POSITION)) {
-                    binding.buttonLoad.visibility = View.VISIBLE
-                } else if (dy < RECYCLER_VIEW_END_POSITION) {
-                    binding.buttonLoad.visibility = View.GONE
+    private fun setSpanSizeLookup() =
+        object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (productsAdapter.getItemViewType(position)) {
+                    ProductRvItems.ViewType.VIEW_TYPE_PRODUCT.ordinal -> 1
+                    ProductRvItems.ViewType.VIEW_TYPE_LOAD.ordinal -> 2
+                    else -> throw IllegalArgumentException()
                 }
             }
         }
 
+    private fun observeViewModel() {
+        viewModel.products.observe(this) { value ->
+            productsAdapter.addProductItems(value)
+        }
+
+        viewModel.loadState.observe(this) { value ->
+            value?.let { changeLoadState(it) }
+        }
+    }
+
+    private fun changeLoadState(loadState: LoadState) {
+        when (loadState) {
+            LoadState.CanLoad -> productsAdapter.addLoadItem()
+            LoadState.CannotLoad -> productsAdapter.removeLoadItem()
+        }
+    }
+
     override fun onSelectProduct(productId: Long) {
         val intent = DetailActivity.newIntent(this, productId)
         startActivity(intent)
+    }
+
+    override fun onLoadMoreItems() {
+        viewModel.loadProducts(PAGE_SIZE)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -113,6 +119,5 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
 
     companion object {
         const val PAGE_SIZE = 20
-        private const val RECYCLER_VIEW_END_POSITION = 1
     }
 }

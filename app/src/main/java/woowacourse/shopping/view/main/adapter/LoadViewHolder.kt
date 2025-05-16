@@ -2,24 +2,21 @@ package woowacourse.shopping.view.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.view.core.base.BaseViewHolder
 
-class ProductViewHolder(
+class LoadViewHolder(
     parent: ViewGroup,
     private val handler: ProductsAdapterEventHandler,
-) : BaseViewHolder<ItemProductBinding>(
+) : BaseViewHolder<ItemLoadBinding>(
         binding =
-            ItemProductBinding.inflate(
+            ItemLoadBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
             ),
     ) {
-    fun bind(item: ProductRvItems.ProductItem) {
-        with(binding) {
-            model = item
-            eventHandler = handler
-        }
+    fun bind(item: ProductRvItems.LoadItem) {
+        binding.eventHandler = handler
     }
 }

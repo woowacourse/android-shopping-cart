@@ -3,6 +3,7 @@ package woowacourse.shopping.view
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -15,6 +16,7 @@ import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3
 import woowacourse.shopping.fixture.productFixture4
+import woowacourse.shopping.view.main.vm.LoadState
 import woowacourse.shopping.view.main.vm.MainViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -43,7 +45,7 @@ class MainViewModelTest {
             ),
         )
         // when
-        viewModel.loadProducts(page, pageSize)
+        viewModel.loadProducts(pageSize)
 
         // then
         val expected =
@@ -72,23 +74,21 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `다음 페이지에 상품이 없으면 loadable은 true가 된다`() {
+    fun `다음 페이지에 상품이 없으면 로딩 상태는 로딩할 수 없음이 된다`() {
         // given
-        val page = 2
         val pageSize = 3
         fakeStorage.setProducts(emptyList())
 
         // when
-        viewModel.loadProducts(page, pageSize)
+        viewModel.loadProducts(pageSize)
 
         // then
-        assertThat(viewModel.loadable.getOrAwaitValue()).isTrue
+        assertEquals(viewModel.loadState.getOrAwaitValue(), LoadState.CannotLoad)
     }
 
     @Test
     fun `기존 상품 목록에 이어서 새로운 상품이 추가된다`() {
         // given
-        val page = 2
         val pageSize = 2
         fakeStorage.setProducts(
             listOf(
@@ -99,7 +99,8 @@ class MainViewModelTest {
             ),
         )
         // when
-        viewModel.loadProducts(page, pageSize)
+        viewModel.loadProducts(pageSize)
+        viewModel.loadProducts(pageSize)
         // then
         val expected =
             listOf(
@@ -116,7 +117,8 @@ class MainViewModelTest {
                     "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/85/00/8005121000085_1.png",
                 ),
             )
+        val result = viewModel.products.getOrAwaitValue().subList(2, 4)
 
-        assertThat(viewModel.products.getOrAwaitValue()).isEqualTo(expected)
+        assertThat(result).isEqualTo(expected)
     }
 }

@@ -7,7 +7,7 @@
     <data>
         <variable
             name="model"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.view.main.adapter.ProductRvItems.ProductItem" />
         <variable
             name="eventHandler"
             type="woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler" />
@@ -17,11 +17,11 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> eventHandler.onSelectProduct(model.id)}">
+        android:onClick="@{() -> eventHandler.onSelectProduct(model.item.id)}">
 
         <ImageView
             android:id="@+id/image_view_product"
-            setImage="@{model.imgUrl}"
+            setImage="@{model.item.imgUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
             android:scaleType="centerCrop"
@@ -42,7 +42,7 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@{model.name}"
+            android:text="@{model.item.name}"
             app:layout_constraintTop_toBottomOf="@id/image_view_product"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +58,7 @@
             android:layout_marginEnd="16dp"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@{@string/format_thousand_won(model.priceValue)}"
+            android:text="@{@string/format_thousand_won(model.item.priceValue)}"
             app:layout_constraintTop_toBottomOf="@id/textView_product_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

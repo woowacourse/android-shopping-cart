@@ -20,8 +20,9 @@ class MainViewModel(
         val loadedProducts = storage.getProducts(newPage, pageSize)
 
         val currentList = _products.value ?: emptyList()
-        _products.value = currentList + loadedProducts
+        val loadable = storage.hasMoreProduct(newPage + 1, pageSize)
 
-        _loadState.value = LoadState.of(storage.hasMoreProduct(newPage + 1, pageSize))
+        _products.value = currentList + loadedProducts
+        _loadState.value = LoadState.of(loadable)
     }
 }
