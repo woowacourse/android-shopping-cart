@@ -7,9 +7,9 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.ui.base.BaseActivity
+import woowacourse.shopping.ui.common.DataBindingActivity
 
-class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
+class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels()
     private val cartAdapter: CartAdapter = CartAdapter(createAdapterOnClickHandler())
 
