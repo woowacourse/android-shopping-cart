@@ -13,6 +13,7 @@ import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.ui.decorations.GridSpacingItemDecoration
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
+import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
 import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class CatalogFragment :
@@ -40,8 +41,8 @@ class CatalogFragment :
     }
 
     private fun initObservers() {
-        viewModel.products.observe(viewLifecycleOwner) { (items, hasMore) ->
-            catalogAdapter.updateProducts(items, hasMore)
+        viewModel.products.observe(viewLifecycleOwner) { items ->
+            catalogAdapter.updateProducts(items)
         }
     }
 
@@ -55,9 +56,13 @@ class CatalogFragment :
         val gridLayoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    val isLastPosition = position == catalogAdapter.itemCount - SINGLE_SPAN
-                    return if (isLastPosition && catalogAdapter.hasMore) SPAN_COUNT else SINGLE_SPAN
+                override fun getSpanSize(position: Int): Int = if (isFullSpanLoadMoreItem(position)) SPAN_COUNT else SINGLE_SPAN
+
+                private fun isFullSpanLoadMoreItem(position: Int): Boolean {
+                    val isLastPosition = position == catalogAdapter.itemCount - 1
+                    val isLoadMoreType =
+                        catalogAdapter.getItemViewType(position) == CatalogItem.CatalogType.LOAD_MORE.ordinal
+                    return isLastPosition && isLoadMoreType
                 }
             }
 
