@@ -34,8 +34,8 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
     private fun initViewBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.rvCart.adapter = cartAdapter
-        binding.rvCart.itemAnimator = null
+        binding.cartProductItemsContainer.adapter = cartAdapter
+        binding.cartProductItemsContainer.itemAnimator = null
     }
 
     private fun initObservers() {

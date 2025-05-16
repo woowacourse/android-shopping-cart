@@ -21,7 +21,7 @@
         android:padding="6dp">
 
         <ImageView
-            android:id="@+id/iv_product_preview"
+            android:id="@+id/productPreviewImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
@@ -33,7 +33,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/tv_product_name"
+            android:id="@+id/productNameText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -48,11 +48,11 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_product_preview"
+            app:layout_constraintTop_toBottomOf="@id/productPreviewImage"
             tools:text="PET 보틀 - 정사각형 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구" />
 
         <TextView
-            android:id="@+id/tv_product_price"
+            android:id="@+id/productPriceText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -62,7 +62,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_name"
+            app:layout_constraintTop_toBottomOf="@id/productNameText"
             tools:text="10,000원" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

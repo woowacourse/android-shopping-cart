@@ -56,9 +56,9 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     }
 
     private fun initViewBinding() {
-        binding.rvProducts.adapter = productsAdapter
-        binding.rvProducts.layoutManager = createLayoutManager()
-        binding.rvProducts.itemAnimator = null
+        binding.productItemsContainer.adapter = productsAdapter
+        binding.productItemsContainer.layoutManager = createLayoutManager()
+        binding.productItemsContainer.itemAnimator = null
     }
 
     private fun createLayoutManager(): GridLayoutManager =

@@ -22,7 +22,7 @@
         android:background="@drawable/bg_cart_white_radius_4dp_stroke_gray_4">
 
         <TextView
-            android:id="@+id/tv_cart_product_name"
+            android:id="@+id/cartProductNameText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
@@ -33,7 +33,7 @@
             android:textColor="@color/gray_5"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/iv_cart_product_remove"
+            app:layout_constraintEnd_toStartOf="@id/cartProductRemoveButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
@@ -46,11 +46,11 @@
             android:scaleType="centerCrop"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name"
+            app:layout_constraintTop_toBottomOf="@id/cartProductNameText"
             tools:src="@color/black" />
 
         <ImageView
-            android:id="@+id/iv_cart_product_remove"
+            android:id="@+id/cartProductRemoveButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"

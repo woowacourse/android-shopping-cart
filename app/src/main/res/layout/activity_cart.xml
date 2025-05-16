@@ -12,23 +12,23 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_cart"
+        android:id="@+id/cartScreenContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.products.ProductsActivity">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_cart"
+            android:id="@+id/cartProductItemsContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="20dp"
             android:padding="2dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/ll_cart_page"
+            app:layout_constraintBottom_toTopOf="@id/cartPageNavigator"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/ll_cart_page"
+            android:id="@+id/cartPageNavigator"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="62dp"
@@ -52,12 +52,12 @@
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
-                app:layout_constraintEnd_toStartOf="@+id/tv_cart_page"
-                app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
+                app:layout_constraintBottom_toBottomOf="@+id/cartPageText"
+                app:layout_constraintEnd_toStartOf="@+id/cartPageText"
+                app:layout_constraintTop_toTopOf="@+id/cartPageText" />
 
             <TextView
-                android:id="@+id/tv_cart_page"
+                android:id="@+id/cartPageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{String.valueOf(viewModel.currentPage)}"
@@ -83,9 +83,9 @@
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_cart_page"
-                app:layout_constraintStart_toEndOf="@+id/tv_cart_page"
-                app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
+                app:layout_constraintBottom_toBottomOf="@+id/cartPageText"
+                app:layout_constraintStart_toEndOf="@+id/cartPageText"
+                app:layout_constraintTop_toTopOf="@+id/cartPageText" />
         </LinearLayout>
 
         <ImageView
