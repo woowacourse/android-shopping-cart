@@ -29,7 +29,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         binding.vm = viewModel
 
         viewModel.saveState.observe(viewLifecycleOwner) {
-            it?.let { navigateToScreen() }
+            navigateToScreen()
         }
     }
 

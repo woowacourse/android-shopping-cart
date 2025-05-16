@@ -11,6 +11,8 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toProduct
 import woowacourse.shopping.presentation.model.toUiModel
+import woowacourse.shopping.presentation.util.MutableSingleLiveData
+import woowacourse.shopping.presentation.util.SingleLiveData
 
 class DetailViewModel(
     private val cartRepository: CartRepository,
@@ -19,8 +21,8 @@ class DetailViewModel(
     private val _product = MutableLiveData<ProductUiModel>()
     val product: LiveData<ProductUiModel> = _product
 
-    private val _saveState = MutableLiveData<Unit>()
-    val saveState: LiveData<Unit> = _saveState
+    private val _saveState = MutableSingleLiveData<Unit>()
+    val saveState: SingleLiveData<Unit> = _saveState
 
     fun fetchProduct(productId: Long) {
         productRepository.findProductById(productId) { product ->
