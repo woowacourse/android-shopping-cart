@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -57,5 +59,9 @@ class ShoppingCartActivity : AppCompatActivity() {
         viewModel.products.observe(this) { value ->
             adapter.updateItems(value)
         }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }

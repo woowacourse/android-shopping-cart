@@ -48,7 +48,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.navigateEvent.observe(this) {
-            val intent = Intent(this, ShoppingCartActivity::class.java)
+            val intent = ShoppingCartActivity.newIntent(this)
             startActivity(intent)
         }
     }
