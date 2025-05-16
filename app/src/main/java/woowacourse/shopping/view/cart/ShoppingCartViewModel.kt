@@ -23,6 +23,9 @@ class ShoppingCartViewModel(
     private val _hasNext = MutableLiveData(false)
     val hasNext: LiveData<Boolean> = _hasNext
 
+    private val _hasPrevious = MutableLiveData(false)
+    val hasPrevious: LiveData<Boolean> = _hasPrevious
+
     init {
         loadPage(FIRST_PAGE_NUMBER)
     }
@@ -44,6 +47,7 @@ class ShoppingCartViewModel(
     private fun loadPage(page: Int) {
         val result = repository.getPagedProducts(PAGE_SIZE, (page - 1) * PAGE_SIZE)
         _hasNext.value = result.hasNext
+        _hasPrevious.value = page != FIRST_PAGE_NUMBER
         _products.value = result.items
     }
 

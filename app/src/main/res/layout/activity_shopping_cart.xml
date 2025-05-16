@@ -39,7 +39,7 @@
                 android:id="@+id/btn_left"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:enabled="@{viewmodel.page > 1}"
+                android:enabled="@{viewmodel.hasPrevious}"
                 android:onClick="@{() -> viewmodel.loadPreviousProducts()}"
                 android:text="@string/left_arrow"
                 android:textColor="@color/white"
