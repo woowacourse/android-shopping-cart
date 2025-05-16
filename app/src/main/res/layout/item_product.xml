@@ -24,7 +24,7 @@
             android:id="@+id/image_view_product"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/gray_88"
+            android:background="@color/gray_81"
             android:contentDescription="@null"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
