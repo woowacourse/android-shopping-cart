@@ -87,5 +87,15 @@
                 app:layout_constraintStart_toEndOf="@+id/tv_cart_page"
                 app:layout_constraintTop_toTopOf="@+id/tv_cart_page" />
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_cart_empty"
+            app:isGone="@{!viewModel.products.empty}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
