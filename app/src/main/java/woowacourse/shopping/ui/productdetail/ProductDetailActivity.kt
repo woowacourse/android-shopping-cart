@@ -20,6 +20,12 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
         removeSupportActionBarTitle()
         updateProductDetail()
         initViewBinding()
+        viewModel.putProductFlag.observe(this) {
+            Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
+        }
+        viewModel.finishFlag.observe(this) {
+            finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -43,13 +49,6 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
     private fun initViewBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.onAddCartProductClick = ::addCartProduct
-    }
-
-    private fun addCartProduct() {
-        viewModel.addCartProduct()
-        Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
-        finish()
     }
 
     companion object {
