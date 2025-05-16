@@ -72,7 +72,7 @@ class ProductCatalogActivity : AppCompatActivity() {
                         }
 
                         override fun onMoreClick() {
-                            viewModel.loadMoreProducts()
+                            viewModel.loadProducts()
                         }
                     },
             )

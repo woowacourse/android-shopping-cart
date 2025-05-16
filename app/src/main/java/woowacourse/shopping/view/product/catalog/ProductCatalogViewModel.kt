@@ -23,18 +23,7 @@ class ProductCatalogViewModel(
         loadProducts()
     }
 
-    fun loadMoreProducts() {
-        val result =
-            repository.getPagedProducts(
-                PRODUCT_SIZE_LIMIT,
-                offset,
-            )
-        hasNext = result.hasNext
-        _products.value = products.value.orEmpty() + result.items
-        offset += result.items.size
-    }
-
-    private fun loadProducts() {
+    fun loadProducts() {
         val result = repository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset)
         hasNext = result.hasNext
         _products.value = products.value.orEmpty() + result.items
@@ -42,9 +31,6 @@ class ProductCatalogViewModel(
     }
 
     companion object {
-        private const val FIRST_OFFSET = 0
-        private const val PRODUCT_SIZE_LIMIT = 20
-
         fun provideFactory(repository: ProductRepository = ProductRepositoryImpl()): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
@@ -55,5 +41,8 @@ class ProductCatalogViewModel(
                     throw IllegalArgumentException()
                 }
             }
+
+        private const val FIRST_OFFSET = 0
+        private const val PRODUCT_SIZE_LIMIT = 20
     }
 }
