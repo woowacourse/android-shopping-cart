@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shoppingcart
+package woowacourse.shopping.view.cart
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -31,7 +31,7 @@ class ShoppingCartViewModel(
         _removedProduct.value = shoppingProduct
     }
 
-    fun loadMoreShoppingProducts() {
+    fun loadNextShoppingProducts() {
         val result =
             repository.getPagedProducts(
                 SHOPPING_PRODUCT_SIZE_LIMIT,

@@ -12,7 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.utils.getSerializableExtraCompat
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.view.cart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var viewModel: ProductDetailViewModel

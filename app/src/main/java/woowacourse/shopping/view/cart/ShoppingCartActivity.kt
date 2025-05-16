@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shoppingcart
+package woowacourse.shopping.view.cart
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -8,12 +8,20 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.view.cart.adapter.CartProductAdapter
+import woowacourse.shopping.view.cart.adapter.CartProductEventHandler
 
 class ShoppingCartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityShoppingCartBinding.inflate(layoutInflater) }
-    private lateinit var viewModel: ShoppingCartViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            ShoppingCartViewModel.provideFactory(applicationContext),
+        )[ShoppingCartViewModel::class.java]
+    }
 
-    private lateinit var adapter: SelectedProductAdapter
+    private lateinit var adapter: CartProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +33,6 @@ class ShoppingCartActivity : AppCompatActivity() {
             insets
         }
 
-        viewModel =
-            ViewModelProvider(
-                this,
-                ShoppingCartViewModel.provideFactory(applicationContext),
-            )[ShoppingCartViewModel::class.java]
-
         initRecyclerView()
         initBindings()
         initObservers()
@@ -38,23 +40,27 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         adapter =
-            SelectedProductAdapter { product ->
-                viewModel.deleteProduct(product)
-            }
+            CartProductAdapter(
+                object : CartProductEventHandler {
+                    override fun onItemRemoveClick(product: ShoppingProduct) {
+                        viewModel.deleteProduct(product)
+                    }
+                },
+            )
         binding.rvProducts.adapter = adapter
     }
 
     private fun initBindings() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        binding.eventListener =
-            object : OnClickArrowListener {
-                override fun onClickLeftPage() {
+        binding.handler =
+            object : ShoppingCartEventHandler {
+                override fun onPreviousPageClick() {
                     viewModel.loadPreviousShoppingProducts()
                 }
 
-                override fun onClickRightPage() {
-                    viewModel.loadMoreShoppingProducts()
+                override fun onNextPageClick() {
+                    viewModel.loadNextShoppingProducts()
                 }
             }
     }

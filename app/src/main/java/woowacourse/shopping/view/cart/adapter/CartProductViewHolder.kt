@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shoppingcart
+package woowacourse.shopping.view.cart.adapter
 
 import android.view.LayoutInflater
 import android.view.View.OnClickListener
@@ -8,30 +8,30 @@ import woowacourse.shopping.data.mapper.toProductDomain
 import woowacourse.shopping.databinding.ItemSelectedProductBinding
 import woowacourse.shopping.domain.ShoppingProduct
 
-class SelectedProductViewHolder(
+class CartProductViewHolder(
     private val binding: ItemSelectedProductBinding,
-    eventListener: OnRemoveProductListener,
+    eventHandler: CartProductEventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     private lateinit var currentItem: ShoppingProduct
 
     init {
         binding.onRemoveClick =
-            OnClickListener { eventListener.onClickCancel(currentItem) }
+            OnClickListener { eventHandler.onItemRemoveClick(currentItem) }
     }
 
-    fun bind(shoppingProduct: ShoppingProduct) {
-        currentItem = shoppingProduct
-        binding.product = shoppingProduct.productId.toProductDomain()
+    fun bind(product: ShoppingProduct) {
+        currentItem = product
+        binding.product = product.productId.toProductDomain()
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            eventListener: OnRemoveProductListener,
-        ): SelectedProductViewHolder {
+            eventListener: CartProductEventHandler,
+        ): CartProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemSelectedProductBinding.inflate(inflater, parent, false)
-            return SelectedProductViewHolder(binding, eventListener)
+            return CartProductViewHolder(binding, eventListener)
         }
     }
 }

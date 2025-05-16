@@ -7,18 +7,18 @@
 
         <variable
             name="viewmodel"
-            type="woowacourse.shopping.view.shoppingcart.ShoppingCartViewModel" />
+            type="woowacourse.shopping.view.cart.ShoppingCartViewModel" />
 
         <variable
-            name="eventListener"
-            type="woowacourse.shopping.view.shoppingcart.OnClickArrowListener" />
+            name="handler"
+            type="woowacourse.shopping.view.cart.ShoppingCartEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.shoppingcart.ShoppingCartActivity">
+        tools:context=".view.cart.ShoppingCartActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"
@@ -44,7 +44,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:enabled="@{viewmodel.currentPage > 1}"
-                android:onClick="@{() -> eventListener.onClickLeftPage()}"
+                android:onClick="@{() -> handler.onPreviousPageClick()}"
                 android:text="@string/left_arrow"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -71,7 +71,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/style_right_arrow"
-                android:onClick="@{() -> eventListener.onClickRightPage()}"
+                android:onClick="@{() -> handler.onNextPageClick()}"
                 android:text="@string/right_arrow"
                 android:textColor="@color/white"
                 android:textSize="20sp"

@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.cart.ShoppingCartActivity
 import woowacourse.shopping.view.product.catalog.ProductAdapter.Companion.LOAD_MORE
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductCatalogBinding.inflate(layoutInflater) }
