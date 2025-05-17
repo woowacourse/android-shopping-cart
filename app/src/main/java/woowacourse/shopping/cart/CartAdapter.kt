@@ -2,6 +2,7 @@ package woowacourse.shopping.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.R
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
@@ -14,7 +15,7 @@ class CartAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
-        if (viewType == CART_PRODUCT) {
+        if (viewType == VIEW_TYPE_CART_PRODUCT) {
             CartViewHolder.from(parent, onDeleteProductClick)
         } else {
             PaginationButtonViewHolder.from(parent, onPaginationButtonClick)
@@ -37,9 +38,9 @@ class CartAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (position == cartProducts.size) {
-            return PAGINATION_BUTTON
+            return VIEW_TYPE_PAGINATION_BUTTON
         }
-        return CART_PRODUCT
+        return VIEW_TYPE_CART_PRODUCT
     }
 
     fun setData(cartProducts: List<ProductUiModel>) {
@@ -58,7 +59,7 @@ class CartAdapter(
         }
 
     companion object {
-        private const val CART_PRODUCT = 1
-        private const val PAGINATION_BUTTON = 2
+        private val VIEW_TYPE_CART_PRODUCT = R.layout.product_item
+        private val VIEW_TYPE_PAGINATION_BUTTON = R.layout.pagination_button_item
     }
 }
