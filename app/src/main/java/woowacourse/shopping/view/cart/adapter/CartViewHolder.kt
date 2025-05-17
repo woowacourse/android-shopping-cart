@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.cart.adatper
+package woowacourse.shopping.view.cart.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding

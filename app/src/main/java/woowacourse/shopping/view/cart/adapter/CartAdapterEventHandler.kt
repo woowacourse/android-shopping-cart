@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.cart.adatper
+package woowacourse.shopping.view.cart.adapter
 
 interface CartAdapterEventHandler {
     fun onClickDeleteItem(id: Long)

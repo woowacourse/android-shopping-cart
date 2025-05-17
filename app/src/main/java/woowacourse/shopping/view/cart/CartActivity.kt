@@ -13,8 +13,8 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.view.cart.adatper.CartAdapter
-import woowacourse.shopping.view.cart.adatper.CartAdapterEventHandler
+import woowacourse.shopping.view.cart.adapter.CartAdapter
+import woowacourse.shopping.view.cart.adapter.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 
