@@ -18,7 +18,7 @@ import woowacourse.shopping.view.cart.adatper.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 
-class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEventHandler {
+class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
@@ -37,7 +37,6 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEve
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         with(binding) {
             lifecycleOwner = this@CartActivity
-            eventHandler = this@CartActivity
             adapter = cartAdapter
             vm = viewModel
         }
@@ -72,14 +71,6 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEve
 
     override fun onClickDeleteItem(id: Long) {
         viewModel.deleteProduct(id)
-    }
-
-    override fun onClickNextPage() {
-        viewModel.addPage()
-    }
-
-    override fun onClickPreviousPage() {
-        viewModel.subPage()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
