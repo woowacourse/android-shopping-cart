@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.view.main.MainActivity.Companion.PAGE_SIZE
 
 class MainViewModel(
     private val productRepository: ProductRepository,
@@ -31,5 +30,9 @@ class MainViewModel(
 
         _products.value = currentList + result.products
         _loadState.value = LoadState.of(result.hasNextPage)
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }
