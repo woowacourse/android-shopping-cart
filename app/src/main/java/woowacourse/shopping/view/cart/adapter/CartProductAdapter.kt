@@ -18,8 +18,9 @@ class CartProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun removeItem(product: CartProduct) {
-        notifyItemRemoved(items.indexOf(product))
+        val position = items.indexOf(product)
         items.remove(product)
+        notifyItemRemoved(position)
     }
 
     fun updateItems(newItems: List<CartProduct>) {

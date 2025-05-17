@@ -11,11 +11,14 @@ class ProductRepositoryImpl : ProductRepository {
         limit: Int,
         offset: Int,
     ): PagedResult<Product> {
+        require(offset >= 0)
+        require(limit > 0)
+
         val total = getAll().size
         if (offset >= total) return PagedResult(emptyList(), false)
 
         val endIndex = (offset + limit).coerceAtMost(total)
-        val items = ProductData.products.subList(offset, endIndex)
+        val items = getAll().subList(offset, endIndex)
         val hasNext = endIndex < total
 
         return PagedResult(items, hasNext)
