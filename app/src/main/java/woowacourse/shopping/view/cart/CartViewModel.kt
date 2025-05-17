@@ -81,7 +81,7 @@ class CartViewModel(
                     extras.createSavedStateHandle()
 
                     return CartViewModel(
-                        Cart,
+                        CartImpl,
                     ) as T
                 }
             }

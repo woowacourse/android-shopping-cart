@@ -9,6 +9,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.view.cart.Cart
+import woowacourse.shopping.view.cart.CartImpl
 
 class ProductDetailViewModel(
     private val cart: Cart,
@@ -40,7 +41,7 @@ class ProductDetailViewModel(
                     extras.createSavedStateHandle()
 
                     return ProductDetailViewModel(
-                        Cart,
+                        CartImpl,
                     ) as T
                 }
             }

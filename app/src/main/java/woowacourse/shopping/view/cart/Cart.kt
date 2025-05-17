@@ -2,14 +2,10 @@ package woowacourse.shopping.view.cart
 
 import woowacourse.shopping.model.products.Product
 
-object Cart {
-    val productsInCart = mutableListOf<Product>()
+interface Cart {
+    val productsInCart: MutableList<Product>
 
-    fun add(product: Product) {
-        productsInCart.add(product)
-    }
+    fun add(product: Product)
 
-    fun remove(product: Product) {
-        productsInCart.remove(product)
-    }
+    fun remove(product: Product)
 }
