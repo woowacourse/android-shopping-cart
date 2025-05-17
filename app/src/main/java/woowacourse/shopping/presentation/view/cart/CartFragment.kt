@@ -48,7 +48,7 @@ class CartFragment :
     }
 
     private fun initActionBar() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbarCart)
+        (requireActivity() as? AppCompatActivity)?.setSupportActionBar(binding.toolbarCart)
 
         binding.toolbarCart.setNavigationIcon(R.drawable.ic_arrow)
         binding.toolbarCart.setNavigationOnClickListener {

@@ -1,9 +1,12 @@
 package woowacourse.shopping.view.cart
 
+import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isNotClickable
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -13,13 +16,17 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
 import woowacourse.shopping.presentation.view.cart.CartFragment
+import woowacourse.shopping.util.clickOnViewChild
 import woowacourse.shopping.util.nthChildOf
 
 class CartFragmentTest {
+    private lateinit var fragmentScenario: FragmentScenario<CartFragment>
+
     private val fakeRepository =
         object : CartRepository {
             private val shoppingCart = dummyProductsFixture.take(15).toMutableList()
@@ -27,11 +34,16 @@ class CartFragmentTest {
             override fun getCartItems(
                 limit: Int,
                 offset: Int,
-                callback: (List<Product>, Boolean) -> Unit,
+                callback: (List<CartItem>, Boolean) -> Unit,
             ) {
                 val products = shoppingCart.subList(offset, offset + limit)
-                val hasMore = products.lastOrNull()?.let { shoppingCart.any { product -> it.id < product.id } } ?: false
-                callback(products, hasMore)
+                val hasMore =
+                    products
+                        .lastOrNull()
+                        ?.let { shoppingCart.any { product -> it.id < product.id } } ?: false
+
+                val cartItems = products.map { CartItem(it.id, it.id, 1) }
+                callback(cartItems, hasMore)
             }
 
             override fun deleteCartItem(
@@ -44,15 +56,17 @@ class CartFragmentTest {
             override fun addCartItem(
                 product: Product,
                 callback: () -> Unit,
-            ) {}
+            ) {
+            }
         }
 
     @Before
     fun setup() {
         RepositoryProvider.initCartRepository(fakeRepository)
-        launchFragmentInContainer(
-            themeResId = R.style.Theme_Shopping,
-        ) { CartFragment() }
+        fragmentScenario =
+            launchFragmentInContainer(
+                themeResId = R.style.Theme_Shopping,
+            ) { CartFragment() }
     }
 
     @Test
@@ -72,7 +86,7 @@ class CartFragmentTest {
     }
 
     @Test
-    fun `다음_페이지_버튼을_누르면_페이지_수가_감소한다`() {
+    fun `이전_페이지_버튼을_누르면_페이지_수가_감소한다`() {
         onView(withId(R.id.btn_right)).perform(click())
         onView(withId(R.id.btn_right)).perform(click())
 
@@ -96,5 +110,30 @@ class CartFragmentTest {
         onView(withId(R.id.text_view_page)).check(matches(withText("3")))
 
         onView(withId(R.id.btn_right)).check(matches(isNotClickable()))
+    }
+
+    @Test
+    fun `장바구니에_담긴_상품을_제거할_수_있다`() {
+        onView(
+            allOf(
+                withId(R.id.cart_item_name),
+                isDescendantOfA(nthChildOf(withId(R.id.recycler_view_cart), 0)),
+            ),
+        ).check(matches(withText(dummyProductsFixture[0].name)))
+
+        onView(withId(R.id.recycler_view_cart))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    clickOnViewChild(R.id.btn_remove_cart),
+                ),
+            )
+
+        onView(
+            allOf(
+                withId(R.id.cart_item_name),
+                isDescendantOfA(nthChildOf(withId(R.id.recycler_view_cart), 0)),
+            ),
+        ).check(matches(withText(dummyProductsFixture[1].name)))
     }
 }
