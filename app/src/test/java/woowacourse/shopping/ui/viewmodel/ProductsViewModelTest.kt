@@ -14,7 +14,7 @@ class ProductsViewModelTest {
 
     @BeforeEach
     fun setup() {
-        viewModel = ProductsViewModel()
+        viewModel = ProductsViewModel(FakeProductRepository())
     }
 
     @Test

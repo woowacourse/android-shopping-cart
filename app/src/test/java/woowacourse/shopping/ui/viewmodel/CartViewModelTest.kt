@@ -1,11 +1,12 @@
 package woowacourse.shopping.ui.viewmodel
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.data.dummyProducts
-import woowacourse.shopping.data.repository.CartDummyRepositoryImpl
 import woowacourse.shopping.ui.cart.CartViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
@@ -16,15 +17,13 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setup() {
-        CartDummyRepositoryImpl.clearCart()
-        dummyProducts.take(10).forEach { CartDummyRepositoryImpl.addCartProduct(it) }
-        viewModel = CartViewModel()
+        viewModel = CartViewModel(FakeCartRepository().apply { this.storage = dummyProducts.take(9).toMutableList() })
     }
 
     @Test
     fun `초기화 시 products 값이 장바구니 목록으로 설정된다`() {
         val products = viewModel.products.getOrAwaitValue()
-        Assertions.assertTrue(products.isNotEmpty())
+        assertTrue(products.isNotEmpty())
     }
 
     @Test
@@ -33,32 +32,31 @@ class CartViewModelTest {
         val targetId = before.first().id
 
         viewModel.removeCartProduct(targetId)
-
         val after = viewModel.products.getOrAwaitValue()
-        Assertions.assertFalse(after.any { it.id == targetId })
+
+        assertFalse(after.any { it.id == targetId })
     }
 
     @Test
     fun `increasePage 호출 시 currentPage 값이 증가하고 products가 갱신된다`() {
         val beforePage = viewModel.currentPage.getOrAwaitValue()
+
         viewModel.increasePage()
-
         val afterPage = viewModel.currentPage.getOrAwaitValue()
-        Assertions.assertEquals(beforePage + 1, afterPage)
 
-        val products = viewModel.products.getOrAwaitValue()
-        Assertions.assertTrue(products.isNotEmpty())
+        assertEquals(beforePage + 1, afterPage)
+        assertTrue(viewModel.products.getOrAwaitValue().isNotEmpty())
     }
 
     @Test
     fun `decreasePage 호출 시 currentPage 값이 감소하고 products가 갱신된다`() {
         viewModel.increasePage()
-        val increasedPage = viewModel.currentPage.getOrAwaitValue()
+        val increased = viewModel.currentPage.getOrAwaitValue()
 
         viewModel.decreasePage()
-        val decreasedPage = viewModel.currentPage.getOrAwaitValue()
+        val decreased = viewModel.currentPage.getOrAwaitValue()
 
-        Assertions.assertEquals(increasedPage - 1, decreasedPage)
+        assertEquals(increased - 1, decreased)
     }
 
     @Test
@@ -66,6 +64,6 @@ class CartViewModelTest {
         viewModel.updateMaxPage()
         val maxPage = viewModel.maxPage.getOrAwaitValue()
 
-        Assertions.assertTrue(maxPage >= 1)
+        assertTrue(maxPage >= 1)
     }
 }

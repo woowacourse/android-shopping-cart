@@ -3,15 +3,15 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
 
-object ProductDummyRepositoryImpl {
-    private const val INITIAL_PRODUCT_ID: Int = 0
+object ProductDummyRepositoryImpl : ProductRepository {
+    const val INITIAL_PRODUCT_ID: Int = 0
 
-    fun fetchProducts(
+    override fun fetchProducts(
         count: Int,
-        lastId: Int = INITIAL_PRODUCT_ID,
+        lastId: Int,
     ): List<Product> = dummyProducts.filter { it.id > lastId }.take(count)
 
-    fun fetchProductDetail(id: Int): Product? = dummyProducts.find { it.id == id }
+    override fun fetchProductDetail(id: Int): Product? = dummyProducts.find { it.id == id }
 
-    fun fetchIsProductsLoadable(lastId: Int): Boolean = dummyProducts.maxOfOrNull { it.id > lastId } == true
+    override fun fetchIsProductsLoadable(lastId: Int): Boolean = dummyProducts.maxOfOrNull { it.id > lastId } == true
 }

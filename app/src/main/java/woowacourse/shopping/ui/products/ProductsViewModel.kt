@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.ProductDummyRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.domain.model.Product
 
 class ProductsViewModel(
-    private val productsDummyRepository: ProductDummyRepositoryImpl = ProductDummyRepositoryImpl,
+    private val productsRepository: ProductRepository = ProductDummyRepositoryImpl,
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList<Product>())
     val products: LiveData<List<Product>> get() = _products
@@ -16,12 +17,12 @@ class ProductsViewModel(
     val isLoadable: LiveData<Boolean> get() = _isLoadable
 
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        val newProducts = productsDummyRepository.fetchProducts(count, products.value?.lastOrNull()?.id ?: 0)
+        val newProducts = productsRepository.fetchProducts(count, products.value?.lastOrNull()?.id ?: 0)
         _products.value = products.value?.plus(newProducts)
     }
 
     fun updateIsLoadable() {
-        _isLoadable.value = productsDummyRepository.fetchIsProductsLoadable(products.value?.lastOrNull()?.id ?: 0)
+        _isLoadable.value = productsRepository.fetchIsProductsLoadable(products.value?.lastOrNull()?.id ?: 0)
     }
 
     companion object {
