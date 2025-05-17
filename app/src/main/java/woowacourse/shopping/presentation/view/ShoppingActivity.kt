@@ -21,7 +21,6 @@ class ShoppingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setWindowInsets()
-        setActionBar()
 
         if (savedInstanceState == null) navigateToScreen()
     }
@@ -34,10 +33,6 @@ class ShoppingActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-    }
-
-    private fun setActionBar() {
-        supportActionBar
     }
 
     private fun navigateToScreen() {
