@@ -8,14 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.presentation.productdetail.ProductDetailViewModel
+import woowacourse.shopping.presentation.SingleLiveData
 
 class CartViewModel(
     private val productRepository: ProductRepository,
-) : ViewModel() {
+) : ViewModel(),
+    CartClickHandler {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
     private var _totalSize: MutableLiveData<Int> = MutableLiveData()
@@ -23,27 +25,37 @@ class CartViewModel(
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int> get() = _currentPage
 
+    val toastMessage = SingleLiveData<Int>()
+
     private var productCount = 0
 
-    fun fetchData() {
-        productRepository.getCartProducts { allProducts ->
-            _totalSize.postValue(allProducts.size)
+    fun loadItems() {
+        val page = _currentPage.value ?: 0
+        productRepository.getPagedCartProducts(PAGE_SIZE, page) { pagedProducts ->
+            _products.postValue(pagedProducts)
         }
 
-        val currentPage = _currentPage.value ?: 0
-        productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { pagedProducts ->
-            _products.postValue(pagedProducts)
+        productRepository.getCartProducts { allProducts ->
+            _totalSize.postValue(allProducts.size)
         }
     }
 
     fun changePage(next: Boolean) {
-        val current = _currentPage.value ?: 0
-        val newPage = if (next) current + 1 else maxOf(0, current - 1)
-        _currentPage.value = newPage
+        val currentPage = _currentPage.value ?: 0
+        val totalPages = calculateTotalPages()
 
-        productRepository.getPagedCartProducts(PAGE_SIZE, newPage) { newProducts ->
-            _products.postValue(newProducts)
+        if (!next && currentPage == 0) {
+            toastMessage.value = R.string.cart_first_page_toast
+            return
         }
+
+        if (next && currentPage >= totalPages - 1) {
+            toastMessage.value = R.string.cart_last_page_toast
+            return
+        }
+
+        _currentPage.value = if (next) currentPage + 1 else currentPage - 1
+        loadItems()
     }
 
     fun deleteProduct(product: Product) {
@@ -54,20 +66,19 @@ class CartViewModel(
                 productCount = pagedProducts.size
 
                 if (productCount == 0) {
-                    _currentPage.postValue(currentPage)
                     productRepository.getCartProducts { allProducts ->
                         _totalSize.postValue(allProducts.size)
                     }
 
-                    calculateTotalPages()
                     Handler(Looper.getMainLooper()).post {
                         changePage(false)
                     }
                 } else {
-                    productRepository.getPagedCartProducts(
-                        PAGE_SIZE,
-                        currentPage,
-                    ) { _products.postValue(it) }
+                    _products.postValue(pagedProducts)
+
+                    productRepository.getCartProducts { allProducts ->
+                        _totalSize.postValue(allProducts.size)
+                    }
                 }
             }
         }
@@ -76,6 +87,14 @@ class CartViewModel(
     fun calculateTotalPages(): Int {
         val total = _totalSize.value ?: 0
         return (total + PAGE_SIZE - 1) / PAGE_SIZE
+    }
+
+    override fun onClickPrevious() {
+        changePage(next = false)
+    }
+
+    override fun onClickNext() {
+        changePage(next = true)
     }
 
     companion object {
