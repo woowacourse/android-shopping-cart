@@ -6,11 +6,15 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 
 @BindingAdapter("imageUrl")
-fun ImageView.loadImage(url: String?) {
+fun setLoadImage(
+    view: ImageView,
+    url: String?,
+) {
     Glide
-        .with(this.context)
+        .with(view.context)
         .load(url)
+        .placeholder(R.drawable.ic_loading)
         .fallback(R.drawable.ic_delete)
         .error(R.drawable.ic_delete)
-        .into(this)
+        .into(view)
 }
