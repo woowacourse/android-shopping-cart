@@ -1,10 +1,11 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.storage
 
+import woowacourse.shopping.domain.CartResult
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 
 @Suppress("ktlint:standard:max-line-length")
-class FakeCartStorage : CartStorage {
+object CartStorage {
     private val cart: MutableSet<Product> =
         mutableSetOf(
             Product(
@@ -75,36 +76,23 @@ class FakeCartStorage : CartStorage {
             ),
         )
 
-    fun setCart(carts: List<Product>) {
-        cart.clear()
-        cart.addAll(carts)
-    }
-
-    override fun insert(item: Product) {
+    fun insertProduct(item: Product) {
         cart.add(item)
     }
 
-    override fun getAll(): List<Product> = cart.map { it.copy() }
-
-    override fun deleteProduct(id: Long) {
+    fun deleteProduct(id: Long) {
         cart.removeIf { it.id == id }
     }
 
-    override fun getProducts(
-        page: Int,
-        pageSize: Int,
-    ): List<Product> {
-        val fromIndex = page * pageSize
-        val toIndex = minOf(fromIndex + pageSize, cart.size)
-        if (fromIndex < 0) return emptyList()
-        return cart.toList().subList(fromIndex, toIndex)
-    }
+    fun singlePage(
+        fromIndex: Int,
+        toIndex: Int,
+    ): CartResult {
+        val endIndex = minOf(toIndex, cart.size)
 
-    override fun notHasNextPage(
-        page: Int,
-        pageSize: Int,
-    ): Boolean {
-        val fromIndex = page * pageSize
-        return fromIndex >= cart.size
+        val result = cart.toList().subList(fromIndex, endIndex)
+        val hasNextPage = endIndex < cart.size
+
+        return CartResult(result, hasNextPage)
     }
 }

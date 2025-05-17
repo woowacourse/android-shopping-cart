@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.cart.vm
 
-import woowacourse.shopping.data.CartStorage
 import woowacourse.shopping.domain.Product
 
 class Paging(
@@ -30,13 +29,13 @@ class Paging(
         return false
     }
 
-    fun createPageState(cartStorage: CartStorage): PageState {
-        val hasNext = !cartStorage.notHasNextPage(currentPage, pageSize)
-        if (hasNext) hasEverShownNextPage = true
+    fun createPageState(hasNextPage: Boolean): PageState {
+        if (hasNextPage) hasEverShownNextPage = true
 
         return PageState(
+            page = currentPage,
             previousPageEnabled = currentPage > initialPage,
-            nextPageEnabled = hasNext,
+            nextPageEnabled = hasNextPage,
             pageVisibility = hasEverShownNextPage,
         )
     }
