@@ -1,5 +1,7 @@
 package woowacourse.shopping.feature.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -56,5 +58,9 @@ class CartActivity :
         viewModel.page.observe(this) {
             viewModel.updatePageButton()
         }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }
