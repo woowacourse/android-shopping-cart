@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.BuildConfig
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -19,7 +20,7 @@ abstract class CartDatabase : RoomDatabase() {
                     .databaseBuilder(
                         context.applicationContext,
                         CartDatabase::class.java,
-                        "cart_db",
+                        BuildConfig.DB_NAME,
                     ).build()
                     .also { instance = it }
             }
