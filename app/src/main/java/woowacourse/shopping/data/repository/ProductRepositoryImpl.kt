@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.storage.ProductStorage
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.ProductResult
 import woowacourse.shopping.domain.repository.ProductRepository
-import kotlin.collections.get
 
 class ProductRepositoryImpl(
     private val productStorage: ProductStorage,
@@ -13,9 +13,8 @@ class ProductRepositoryImpl(
     override fun loadSinglePage(
         page: Int,
         pageSize: Int,
-    ): List<Product> {
+    ): ProductResult {
         val fromIndex = page * pageSize
-        if (fromIndex < 0) return emptyList()
         val toIndex = fromIndex + pageSize
         return productStorage.singlePage(fromIndex, toIndex)
     }

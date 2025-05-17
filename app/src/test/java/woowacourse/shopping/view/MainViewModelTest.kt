@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.domain.product.ProductResult
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
 import woowacourse.shopping.fixture.productFixture1
@@ -33,9 +34,9 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `초기화 시 첫 페이지를 로드한다`() {
+    fun `초기화시_첫_페이지를_로드한다`() {
         // given
-        val expected = listOf(productFixture1, productFixture2)
+        val expected = ProductResult(listOf(productFixture1, productFixture2), false)
         every { productRepository.loadSinglePage(0, PAGE_SIZE) } returns expected
 
         // when
@@ -49,8 +50,8 @@ class MainViewModelTest {
     @Test
     fun `다음_페이지를_로드하고_기존_목록에_추가한다`() {
         // given
-        val page1 = listOf(productFixture1, productFixture2)
-        val page2 = listOf(productFixture3, productFixture4)
+        val page1 = ProductResult(listOf(productFixture1, productFixture2), false)
+        val page2 = ProductResult(listOf(productFixture3, productFixture4), true)
 
         every { productRepository.loadSinglePage(0, 20) } returns page1
         every { productRepository.loadSinglePage(1, 20) } returns page2
