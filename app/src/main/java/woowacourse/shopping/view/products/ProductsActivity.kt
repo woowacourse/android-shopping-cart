@@ -9,8 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.model.products.Product
@@ -27,40 +25,42 @@ class ProductsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        adapter = ProductsAdapter { product -> navigateToProductDetail(product) }
-
-        viewModel.productsInShop.observe(this) { list ->
-            adapter.updateProductsView(list)
-        }
-
-        viewModel.navigateToCart.observe(this) {
-            startActivity(Intent(this, CartActivity::class.java))
-        }
-
-        binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
-        binding.rvProducts.addOnScrollListener(
-            object : OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                    val lastVisibleItemPosition: Int = layoutManager.findLastVisibleItemPosition()
-                    val totalItemCount: Int = adapter.itemCount
-                    val isAllFetched = viewModel.isAllProductsFetched.value ?: false
-                    val canLoadMore = lastVisibleItemPosition >= totalItemCount - 1 && !isAllFetched
-                    viewModel.updateButtonVisibility(canLoadMore)
-                }
-            },
-        )
-        binding.rvProducts.adapter = adapter
+        initRecyclerView()
+        observeProductsView()
+        observeNavigateToCart()
+        setupScrollListenerForMoreButton()
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun setupScrollListenerForMoreButton() {
+        binding.rvProducts.addOnScrollListener(
+            ProductsScrollListener(binding.rvProducts.layoutManager as GridLayoutManager) { canLoadMore ->
+                val isAllFetched = viewModel.isAllProductsFetched.value ?: false
+                viewModel.updateButtonVisibility(canLoadMore && !isAllFetched)
+            },
+        )
+    }
+
+    private fun initRecyclerView() {
+        adapter = ProductsAdapter { product -> navigateToProductDetail(product) }
+        binding.rvProducts.adapter = adapter
+        binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
+    }
+
+    private fun observeProductsView() {
+        viewModel.productsInShop.observe(this) { list ->
+            adapter.updateProductsView(list)
+        }
+    }
+
+    private fun observeNavigateToCart() {
+        viewModel.navigateToCart.observe(this) {
+            startActivity(Intent(this, CartActivity::class.java))
         }
     }
 
