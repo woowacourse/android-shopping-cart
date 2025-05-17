@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.productdetail
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -11,8 +13,19 @@ import woowacourse.shopping.view.cart.Cart
 class ProductDetailViewModel(
     private val cart: Cart,
 ) : ViewModel() {
-    fun addToCart(product: Product) {
+    private val _addToCart = MutableLiveData<Unit>()
+    val addToCart: LiveData<Unit> = _addToCart
+
+    private val _closeProductDetail = MutableLiveData<Unit>()
+    val closeProductDetail: LiveData<Unit> = _closeProductDetail
+
+    fun onCloseClicked() {
+        _closeProductDetail.value = Unit
+    }
+
+    fun onAddToCartClicked(product: Product) {
         cart.add(product)
+        _addToCart.value = Unit
     }
 
     companion object {

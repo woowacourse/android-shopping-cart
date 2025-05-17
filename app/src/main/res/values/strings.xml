@@ -5,4 +5,5 @@
 
     <string name="product_price_format">%,d원</string>
     <string name="add_to_cart_message">"장바구니에 담겼습니다"</string>
+    <string name="price_text">가격</string>
 </resources>

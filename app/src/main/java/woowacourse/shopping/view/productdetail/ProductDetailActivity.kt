@@ -12,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.intent.getSerializableExtraData
 import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.view.products.ProductsActivity.Companion.PRODUCT_DATA_KEY
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
@@ -21,22 +22,30 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        val intentProductData = intent.getSerializableExtraData<Product>("product") ?: return
+        binding.viewModel = viewModel
+
+        val intentProductData = intent.getSerializableExtraData<Product>(PRODUCT_DATA_KEY) ?: return
         binding.product = intentProductData
 
-        binding.closeImageBtn.setOnClickListener {
-            finish()
-        }
-
-        binding.tvAddToCart.setOnClickListener {
-            viewModel.addToCart(intentProductData)
-            showAddToCartToastMessage()
-            finish()
-        }
+        observeCloseProductDetail()
+        observeAddToCart()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun observeAddToCart() {
+        viewModel.addToCart.observe(this) {
+            showAddToCartToastMessage()
+            finish()
+        }
+    }
+
+    private fun observeCloseProductDetail() {
+        viewModel.closeProductDetail.observe(this) {
+            finish()
         }
     }
 
