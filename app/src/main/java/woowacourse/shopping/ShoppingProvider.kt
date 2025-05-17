@@ -1,14 +1,13 @@
 package woowacourse.shopping
 
-import android.content.Context
-import woowacourse.shopping.data.ShoppingCartDatabase
-import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 
 object ShoppingProvider {
-    lateinit var shoppingCartRepository: ShoppingCartRepositoryImpl
+    private var _shoppingCartRepository: ShoppingCartRepository? = null
 
-    fun initProductRepository(context: Context) {
-        val database = ShoppingCartDatabase.getDataBase(context)
-        shoppingCartRepository = ShoppingCartRepositoryImpl(database.shoppingCartDao())
+    val shoppingCartRepository: ShoppingCartRepository get() = _shoppingCartRepository ?: throw IllegalArgumentException()
+
+    fun initProductRepository(repository: ShoppingCartRepository) {
+        _shoppingCartRepository = repository
     }
 }
