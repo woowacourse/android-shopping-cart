@@ -20,8 +20,8 @@ class CartViewModel(
     CartClickHandler {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
-    private var _totalSize: MutableLiveData<Int> = MutableLiveData()
-    val totalSize: LiveData<Int> get() = _totalSize
+    private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
+    val totalPages: LiveData<Int> get() = _totalPages
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int> get() = _currentPage
 
@@ -36,13 +36,13 @@ class CartViewModel(
         }
 
         productRepository.getCartProducts { allProducts ->
-            _totalSize.postValue(allProducts.size)
+            updateTotalPages(allProducts.size)
         }
     }
 
     fun changePage(next: Boolean) {
         val currentPage = _currentPage.value ?: 0
-        val totalPages = calculateTotalPages()
+        val totalPages = _totalPages.value ?: 0
 
         if (!next && currentPage == 0) {
             toastMessage.value = R.string.cart_first_page_toast
@@ -67,7 +67,7 @@ class CartViewModel(
 
                 if (productCount == 0) {
                     productRepository.getCartProducts { allProducts ->
-                        _totalSize.postValue(allProducts.size)
+                        updateTotalPages(allProducts.size)
                     }
 
                     Handler(Looper.getMainLooper()).post {
@@ -77,16 +77,11 @@ class CartViewModel(
                     _products.postValue(pagedProducts)
 
                     productRepository.getCartProducts { allProducts ->
-                        _totalSize.postValue(allProducts.size)
+                        updateTotalPages(allProducts.size)
                     }
                 }
             }
         }
-    }
-
-    fun calculateTotalPages(): Int {
-        val total = _totalSize.value ?: 0
-        return (total + PAGE_SIZE - 1) / PAGE_SIZE
     }
 
     override fun onClickPrevious() {
@@ -95,6 +90,10 @@ class CartViewModel(
 
     override fun onClickNext() {
         changePage(next = true)
+    }
+
+    private fun updateTotalPages(totalSize: Int) {
+        _totalPages.postValue((totalSize + PAGE_SIZE - 1) / PAGE_SIZE)
     }
 
     companion object {

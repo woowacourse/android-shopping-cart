@@ -57,42 +57,7 @@ class CartActivity : AppCompatActivity() {
 
         viewModel.products.observe(this) {
             cartProductAdapter.setData(it)
-            val currentPage = viewModel.currentPage.value ?: 0
-            updatePaginationUI(currentPage)
         }
-        viewModel.currentPage.observe(this) { currentPage ->
-            updatePaginationUI(currentPage)
-        }
-        viewModel.totalSize.observe(this) { _ ->
-            val currentPage = viewModel.currentPage.value ?: 0
-            updatePaginationUI(currentPage)
-        }
-    }
-
-    private fun moveToPreviousPage() {
-        if ((viewModel.currentPage.value ?: 0) == 0) {
-            showToast(R.string.cart_first_page_toast)
-        } else {
-            viewModel.changePage(next = false)
-        }
-    }
-
-    private fun moveToNextPage() {
-        val currentPage = viewModel.currentPage.value ?: 0
-        val totalPages = viewModel.calculateTotalPages()
-
-        if (currentPage >= totalPages - 1) {
-            showToast(R.string.cart_last_page_toast)
-        } else {
-            viewModel.changePage(next = true)
-        }
-    }
-
-    private fun updatePaginationUI(currentPage: Int) {
-        val totalPages = viewModel.calculateTotalPages()
-
-        binding.btnCartPrevious.setCyanOrGrayTint(isEnabled = currentPage > 0)
-        binding.btnCartNext.setCyanOrGrayTint(isEnabled = currentPage < totalPages - 1)
     }
 
     private fun deleteProduct(product: Product) {
