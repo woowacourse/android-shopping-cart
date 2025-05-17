@@ -8,6 +8,8 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +27,7 @@
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_delete" />
+            tools:src="@drawable/ic_loading" />
 
         <TextView
             android:id="@+id/tv_product_name"

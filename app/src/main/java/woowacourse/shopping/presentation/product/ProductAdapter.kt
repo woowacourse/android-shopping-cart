@@ -68,17 +68,9 @@ class ProductAdapter(
         private val binding: ItemProductBinding,
         private val onClick: (Product) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private var currentItem: Product? = null
-
-        init {
-            binding.root.setOnClickListener {
-                currentItem?.let(onClick)
-            }
-        }
-
         fun bind(item: Product) {
             binding.product = item
-            currentItem = item
+            binding.clProductItem.setOnClickListener { onClick(item) }
             binding.executePendingBindings()
         }
     }
