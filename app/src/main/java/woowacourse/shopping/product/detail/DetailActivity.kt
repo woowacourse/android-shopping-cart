@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailBinding
@@ -33,7 +32,6 @@ class DetailActivity : AppCompatActivity() {
         val product: ProductUiModel? = productFromIntent()
         product?.let {
             binding.product = it
-            showImage(it)
         }
     }
 
@@ -82,16 +80,6 @@ class DetailActivity : AppCompatActivity() {
 
     private fun productFromIntent(): ProductUiModel? =
         IntentCompat.getParcelableExtra(intent, KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
-
-    private fun showImage(product: ProductUiModel) {
-        Glide
-            .with(binding.root)
-            .load(product.imageUrl)
-            .placeholder(R.drawable.iced_americano)
-            .fallback(R.drawable.iced_americano)
-            .error(R.drawable.iced_americano)
-            .into(binding.imageViewProductDetail)
-    }
 
     companion object {
         private const val KEY_PRODUCT_DETAIL = "productDetail"

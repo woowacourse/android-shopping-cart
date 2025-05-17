@@ -36,6 +36,7 @@
             tools:text="아이스 카페 아메리카노" />
 
         <ImageView
+            app:loadImage="@{cartProduct.imageUrl}"
             android:id="@+id/imageView_cart_product"
             android:layout_width="136dp"
             android:layout_height="72dp"

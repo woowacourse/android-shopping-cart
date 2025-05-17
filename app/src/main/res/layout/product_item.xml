@@ -23,6 +23,7 @@
         >
 
         <ImageView
+            app:loadImage="@{product.imageUrl}"
             android:id="@+id/imageView_product"
             android:layout_width="match_parent"
             android:layout_height="154dp"
