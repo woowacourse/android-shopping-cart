@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
@@ -23,7 +24,9 @@ import woowacourse.shopping.view.main.vm.MainViewModelFactory
 import kotlin.getValue
 
 class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
-    private val viewModel: MainViewModel by viewModels { MainViewModelFactory() }
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory((application as App).container.productRepository)
+    }
     private val productsAdapter: ProductAdapter by lazy {
         ProductAdapter(emptyList(), this)
     }

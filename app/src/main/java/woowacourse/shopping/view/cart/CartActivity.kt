@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adatper.CartAdapter
@@ -19,7 +20,11 @@ import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 
 class CartActivity : AppCompatActivity(), CartAdapterEventHandler, CartScreenEventHandler {
     private lateinit var binding: ActivityCartBinding
-    private val viewModel: CartViewModel by viewModels { CartViewModelFactory() }
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            (application as App).container.cartRepository,
+        )
+    }
     private val cartAdapter by lazy {
         CartAdapter(
             items = viewModel.products.value ?: emptyList(),
