@@ -4,17 +4,17 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.model.Goods
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
-    private val cartDatabase: CartDatabase,
+    private val shoppingDatabase: ShoppingDatabase,
 ) : CartRepository {
     override fun getAll(): LiveData<List<Goods>> =
-        cartDatabase.cartDao().getAll().map { entities ->
+        shoppingDatabase.cartDao().getAll().map { entities ->
             entities.map { it.toDomain() }
         }
 
@@ -23,7 +23,7 @@ class CartRepositoryImpl(
         onComplete: () -> Unit,
     ) {
         thread {
-            cartDatabase.cartDao().insertAll(goods.toEntity())
+            shoppingDatabase.cartDao().insertAll(goods.toEntity())
 
             Handler(Looper.getMainLooper()).post {
                 onComplete()
@@ -33,7 +33,7 @@ class CartRepositoryImpl(
 
     override fun delete(goods: Goods) {
         thread {
-            cartDatabase.cartDao().delete(goods.toEntity())
+            shoppingDatabase.cartDao().delete(goods.toEntity())
         }
     }
 
@@ -41,9 +41,9 @@ class CartRepositoryImpl(
         limit: Int,
         offset: Int,
     ): LiveData<List<Goods>> =
-        cartDatabase.cartDao().getPage(limit, offset).map { entities ->
+        shoppingDatabase.cartDao().getPage(limit, offset).map { entities ->
             entities.map { it.toDomain() }
         }
 
-    override fun getAllItemsSize(): LiveData<Int> = cartDatabase.cartDao().getAllItemsSize()
+    override fun getAllItemsSize(): LiveData<Int> = shoppingDatabase.cartDao().getAllItemsSize()
 }

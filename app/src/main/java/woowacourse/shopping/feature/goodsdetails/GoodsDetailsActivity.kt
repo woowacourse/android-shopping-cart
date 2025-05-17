@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.GoodsUiModel
@@ -45,7 +45,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
     }
 
     private fun insert(goods: GoodsUiModel) {
-        CartRepositoryImpl(CartDatabase.getDatabase(this)).insert(goods.toDomain()) {
+        CartRepositoryImpl(ShoppingDatabase.getDatabase(this)).insert(goods.toDomain()) {
             Toast
                 .makeText(
                     this,
