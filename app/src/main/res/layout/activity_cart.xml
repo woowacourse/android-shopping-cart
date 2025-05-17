@@ -8,6 +8,10 @@
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.cart.CartViewModel" />
+
+        <variable
+            name="clickHandler"
+            type="woowacourse.shopping.presentation.cart.CartClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,7 +72,8 @@
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_cart_product" />
+            app:layout_constraintTop_toBottomOf="@id/rv_cart_product"
+            app:onClickPrevious="@{clickHandler}" />
 
         <TextView
             android:id="@+id/tv_cart_page"
@@ -95,7 +100,8 @@
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
             app:layout_constraintStart_toEndOf="@id/tv_cart_page"
-            app:layout_constraintTop_toTopOf="@id/btn_cart_previous" />
+            app:layout_constraintTop_toTopOf="@id/btn_cart_previous"
+            app:onClickNext="@{clickHandler}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

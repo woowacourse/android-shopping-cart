@@ -28,11 +28,13 @@ class CartActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.vm = viewModel
+        binding.clickHandler = viewModel
         binding.lifecycleOwner = this
 
         initInsets()
         initViews()
         observeViewModel()
+        viewModel.loadItems()
     }
 
     private fun initInsets() {
@@ -46,11 +48,13 @@ class CartActivity : AppCompatActivity() {
     private fun initViews() {
         binding.ibBack.setOnClickListener { finish() }
         binding.rvCartProduct.adapter = cartProductAdapter
-        binding.btnCartPrevious.setOnClickListener { moveToPreviousPage() }
-        binding.btnCartNext.setOnClickListener { moveToNextPage() }
     }
 
     private fun observeViewModel() {
+        viewModel.toastMessage.observe(this) { resId ->
+            Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
+        }
+
         viewModel.products.observe(this) {
             cartProductAdapter.setData(it)
             val currentPage = viewModel.currentPage.value ?: 0
@@ -63,7 +67,6 @@ class CartActivity : AppCompatActivity() {
             val currentPage = viewModel.currentPage.value ?: 0
             updatePaginationUI(currentPage)
         }
-        viewModel.fetchData()
     }
 
     private fun moveToPreviousPage() {
