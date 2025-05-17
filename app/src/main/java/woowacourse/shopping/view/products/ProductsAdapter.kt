@@ -37,6 +37,6 @@ class ProductsAdapter(
     fun updateProductsView(list: List<Product>) {
         products.clear()
         products.addAll(list)
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, list.size)
     }
 }

@@ -15,17 +15,25 @@ class ProductsViewModel(
 ) : ViewModel() {
     private val _productsInShop = MutableLiveData<List<Product>>()
     val productsInShop: LiveData<List<Product>> get() = _productsInShop
-    private val pageSize = 20
-    private var currentPage = 0
-    private val loadedItems = mutableListOf<Product>()
+
     private val _isAllProductsFetched = MutableLiveData(false)
     val isAllProductsFetched: LiveData<Boolean> get() = _isAllProductsFetched
 
+    private val _isLoadMoreButtonVisible = MutableLiveData(false)
+    val isLoadMoreButtonVisible: LiveData<Boolean> = _isLoadMoreButtonVisible
+
+    private val _navigateToCart = MutableLiveData<Unit>()
+    val navigateToCart: LiveData<Unit> get() = _navigateToCart
+
+    private var currentPage = 0
+    private val loadedItems = mutableListOf<Product>()
+
     init {
-        loadNextPage()
+        loadPage()
     }
 
-    fun loadNextPage() {
+    fun loadPage() {
+        val pageSize = 20
         val nextStart = currentPage * pageSize
         val nextEnd = minOf(nextStart + pageSize, products.value.size)
 
@@ -34,9 +42,16 @@ class ProductsViewModel(
             loadedItems.addAll(nextItems)
             _productsInShop.value = loadedItems.toList()
             currentPage++
-
             if (nextEnd == products.value.size) _isAllProductsFetched.value = true
         }
+    }
+
+    fun updateButtonVisibility(isVisible: Boolean) {
+        _isLoadMoreButtonVisible.value = isVisible
+    }
+
+    fun onCartClicked() {
+        _navigateToCart.value = Unit
     }
 
     companion object {
