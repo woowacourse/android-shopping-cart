@@ -44,7 +44,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun insert(goods: GoodsUiModel) {
+    private fun insert(goods: GoodsUiModel) {
         CartRepositoryImpl(CartDatabase.getDatabase(this)).insert(goods.toDomain()) {
             Toast
                 .makeText(
