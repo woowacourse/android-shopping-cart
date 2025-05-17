@@ -9,6 +9,7 @@ import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.CartItemUiModel
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
@@ -17,6 +18,7 @@ import kotlin.math.max
 
 class CartViewModel(
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _cartItems = MutableLiveData<List<CartItemUiModel>>()
     val cartItems: LiveData<List<CartItemUiModel>> = _cartItems
@@ -76,7 +78,7 @@ class CartViewModel(
     ) {
         val productIds = cartItems.map { it.productId }
 
-        RepositoryProvider.productRepository.findProductsByIds(productIds) { foundProducts ->
+        productRepository.findProductsByIds(productIds) { foundProducts ->
             val productMap = foundProducts.associateBy { it.id }
             val uiModels = cartItems.mapUiModels(productMap)
 
@@ -106,8 +108,9 @@ class CartViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val repository = RepositoryProvider.cartRepository
-                    return CartViewModel(repository) as T
+                    val cartRepository = RepositoryProvider.cartRepository
+                    val productRepository = RepositoryProvider.productRepository
+                    return CartViewModel(cartRepository, productRepository) as T
                 }
             }
     }

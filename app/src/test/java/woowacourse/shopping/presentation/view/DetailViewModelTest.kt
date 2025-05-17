@@ -18,7 +18,7 @@ class DetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = DetailViewModel(fakeCartRepository, fakeProductRepository)
+        viewModel = DetailViewModel(fakeCartRepository(), fakeProductRepository)
     }
 
     @Test

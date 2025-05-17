@@ -4,9 +4,9 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
-val fakeCartRepository =
+fun fakeCartRepository() =
     object : CartRepository {
-        private val cart = mutableListOf<CartItem>()
+        private val cart = MutableList(10) { CartItem(it.toLong(), it.toLong(), 1) }
         private var nextId = 1L
 
         override fun getCartItems(
