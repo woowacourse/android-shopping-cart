@@ -50,7 +50,11 @@ class CartFragmentTest {
                 id: Long,
                 callback: (Long) -> Unit,
             ) {
-                shoppingCart.indexOfFirst { it.id == id }.let { callback(id) }
+                val index = shoppingCart.indexOfFirst { it.id == id }
+                if (index != -1) {
+                    shoppingCart.removeAt(index)
+                }
+                callback(id)
             }
 
             override fun addCartItem(
@@ -71,12 +75,7 @@ class CartFragmentTest {
 
     @Test
     fun `장바구니_아이팀을_확인할_수_있다`() {
-        onView(
-            allOf(
-                withId(R.id.cart_item_name),
-                isDescendantOfA(nthChildOf(withId(R.id.recycler_view_cart), 0)),
-            ),
-        ).check(matches(withText(dummyProductsFixture[0].name)))
+        firstProductInRecyclerView().check(matches(withText(dummyProductsFixture[0].name)))
     }
 
     @Test
@@ -114,12 +113,7 @@ class CartFragmentTest {
 
     @Test
     fun `장바구니에_담긴_상품을_제거할_수_있다`() {
-        onView(
-            allOf(
-                withId(R.id.cart_item_name),
-                isDescendantOfA(nthChildOf(withId(R.id.recycler_view_cart), 0)),
-            ),
-        ).check(matches(withText(dummyProductsFixture[0].name)))
+        firstProductInRecyclerView().check(matches(withText(dummyProductsFixture[0].name)))
 
         onView(withId(R.id.recycler_view_cart))
             .perform(
@@ -129,11 +123,14 @@ class CartFragmentTest {
                 ),
             )
 
+        firstProductInRecyclerView().check(matches(withText(dummyProductsFixture[1].name)))
+    }
+
+    private fun firstProductInRecyclerView() =
         onView(
             allOf(
                 withId(R.id.cart_item_name),
                 isDescendantOfA(nthChildOf(withId(R.id.recycler_view_cart), 0)),
             ),
-        ).check(matches(withText(dummyProductsFixture[1].name)))
-    }
+        )
 }

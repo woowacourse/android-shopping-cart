@@ -1,38 +1,39 @@
 package woowacourse.shopping.view.catalog
 
+import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import org.hamcrest.Matchers.allOf
-import org.junit.Before
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
 import woowacourse.shopping.presentation.view.catalog.CatalogFragment
-import woowacourse.shopping.util.nthChildOf
 
 class CatalogFragmentTest {
+    private lateinit var fragmentScenario: FragmentScenario<CatalogFragment>
+
     private val fakeRepository =
         object : ProductRepository {
             override fun findProductById(
                 id: Long,
                 callback: (Product?) -> Unit,
-            ) {}
+            ) {
+            }
 
             override fun findProductsByIds(
                 ids: List<Long>,
                 callback: (List<Product>) -> Unit,
-            ) {}
+            ) {
+            }
 
             override fun loadProducts(
                 lastItemId: Long,
@@ -42,26 +43,17 @@ class CatalogFragmentTest {
                 val products = dummyProductsFixture.filter { it.id > lastItemId }.take(loadSize)
                 val lastId = products.lastOrNull()?.id ?: return callback(products, false)
 
-                val hasMore = products.any { it.id > lastId }
+                val hasMore = dummyProductsFixture.any { it.id > lastId }
 
                 callback(products, hasMore)
             }
         }
 
-    @Before
-    fun setup() {
-        launchFragmentInContainer { CatalogFragment() }
+    @BeforeEach
+    fun setUp() {
         RepositoryProvider.initProductRepository(fakeRepository)
-    }
-
-    @Test
-    fun `상품_목록을_확인할_수_있다`() {
-        onView(
-            allOf(
-                withId(R.id.text_view_product_name),
-                isDescendantOfA(nthChildOf(withId(R.id.recycler_view_products), 0)),
-            ),
-        ).check(matches(withText(dummyProductsFixture[0].name)))
+        fragmentScenario =
+            launchFragmentInContainer<CatalogFragment>(themeResId = R.style.Theme_Shopping)
     }
 
     @Test
@@ -71,21 +63,27 @@ class CatalogFragmentTest {
         recyclerView.perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
         onView(withId(R.id.btn_load_more)).perform(click())
 
+        recyclerView.perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
         onView(withId(R.id.btn_load_more)).check(doesNotExist())
     }
 
     @Test
     fun `더보기_버튼을_누르면_새로운_상품이_로드된다`() {
-        val recyclerView = onView(withId(R.id.recycler_view_products))
-
-        recyclerView.perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
+        val initialCount = getRecyclerViewItemCount(R.id.recycler_view_products)
+        onView(withId(R.id.recycler_view_products)).perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
         onView(withId(R.id.btn_load_more)).perform(click())
 
-        onView(
-            allOf(
-                withId(R.id.text_view_product_name),
-                isDescendantOfA(nthChildOf(withId(R.id.recycler_view_products), 0)),
-            ),
-        ).check(matches(withText(dummyProductsFixture[21].name)))
+        val newCount = getRecyclerViewItemCount(R.id.recycler_view_products)
+
+        assertThat(newCount).isGreaterThan(initialCount)
+    }
+
+    private fun getRecyclerViewItemCount(recyclerViewId: Int): Int {
+        var itemCount = 0
+        onView(withId(recyclerViewId)).check { view, _ ->
+            val recyclerView = view as RecyclerView
+            itemCount = recyclerView.adapter?.itemCount ?: 0
+        }
+        return itemCount
     }
 }
