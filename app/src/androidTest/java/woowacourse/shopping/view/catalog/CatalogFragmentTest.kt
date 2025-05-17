@@ -36,16 +36,21 @@ class CatalogFragmentTest {
             }
 
             override fun loadProducts(
-                lastItemId: Long,
+                offset: Int,
                 loadSize: Int,
                 callback: (List<Product>, Boolean) -> Unit,
             ) {
-                val products = dummyProductsFixture.filter { it.id > lastItemId }.take(loadSize)
-                val lastId = products.lastOrNull()?.id ?: return callback(products, false)
+                val totalSize = dummyProductsFixture.size
 
-                val hasMore = dummyProductsFixture.any { it.id > lastId }
+                if (offset >= totalSize) {
+                    callback(emptyList(), false)
+                    return
+                }
 
-                callback(products, hasMore)
+                val sublist = dummyProductsFixture.drop(offset).take(loadSize)
+                val hasMore = offset + loadSize < totalSize
+
+                callback(sublist, hasMore)
             }
         }
 

@@ -18,20 +18,25 @@ class ProductRepositoryImpl(
         ids: List<Long>,
         callback: (List<Product>) -> Unit,
     ) {
-        val products = products.filter { ids.contains(it.id) }
-        callback(products)
+        val filteredProducts = products.filter { it.id in ids }
+        callback(filteredProducts)
     }
 
     override fun loadProducts(
-        lastItemId: Long,
+        offset: Int,
         loadSize: Int,
         callback: (List<Product>, Boolean) -> Unit,
     ) {
-        val products = products.filter { it.id > lastItemId }.take(loadSize)
-        val lastId = products.lastOrNull()?.id ?: return callback(products, false)
+        val totalSize = products.size
 
-        val hasMore = this.products.any { it.id > lastId }
+        if (offset >= totalSize) {
+            callback(emptyList(), false)
+            return
+        }
 
-        callback(products, hasMore)
+        val sublist = products.drop(offset).take(loadSize)
+        val hasMore = offset + loadSize < totalSize
+
+        callback(sublist, hasMore)
     }
 }

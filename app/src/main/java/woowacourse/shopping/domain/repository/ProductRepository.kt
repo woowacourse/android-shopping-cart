@@ -14,7 +14,7 @@ interface ProductRepository {
     )
 
     fun loadProducts(
-        lastItemId: Long,
+        offset: Int,
         loadSize: Int,
         callback: (List<Product>, Boolean) -> Unit,
     )

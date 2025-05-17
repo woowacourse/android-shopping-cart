@@ -17,16 +17,18 @@ class CatalogViewModel(
     private val _products = MutableLiveData<List<CatalogItem>>()
     val products: LiveData<List<CatalogItem>> = _products
 
-    private val loadSize: Int = 20
-    private var lastId: Long = DEFAULT_ID
+    private val limit: Int = 20
+    private var page: Int = 0
+    private var offset: Int = 0
 
     init {
         fetchProducts()
     }
 
     fun fetchProducts() {
-        productRepository.loadProducts(lastId, loadSize) { newProducts, hasMore ->
-            lastId = newProducts.lastOrNull()?.id ?: DEFAULT_ID
+        productRepository.loadProducts(offset, limit) { newProducts, hasMore ->
+            page++
+            offset = page * limit
 
             val existingItems = extractExistingProductItems()
             val newItems = convertToProductItems(newProducts)
@@ -62,8 +64,6 @@ class CatalogViewModel(
         }
 
     companion object {
-        private const val DEFAULT_ID = 0L
-
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(
