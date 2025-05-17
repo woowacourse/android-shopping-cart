@@ -1,12 +1,11 @@
 package woowacourse.shopping.view.shoppingcart
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
-import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.view.PagedResult
 
@@ -58,10 +57,7 @@ class ShoppingCartViewModel(
     }
 
     companion object {
-        fun provideFactory(
-            applicationContext: Context,
-            repository: ShoppingCartRepository = ShoppingCartRepositoryImpl(applicationContext),
-        ): ViewModelProvider.Factory =
+        fun provideFactory(repository: ShoppingCartRepository = ShoppingProvider.shoppingCartRepository): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {

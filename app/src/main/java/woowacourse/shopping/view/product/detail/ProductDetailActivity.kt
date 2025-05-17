@@ -37,7 +37,7 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(
                 this,
-                ProductDetailViewModel.provideFactory(product, applicationContext),
+                ProductDetailViewModel.provideFactory(product),
             )[ProductDetailViewModel::class.java]
         binding.vm = viewModel
         binding.lifecycleOwner = this

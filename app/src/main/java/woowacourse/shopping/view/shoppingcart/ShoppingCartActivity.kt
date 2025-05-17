@@ -28,7 +28,7 @@ class ShoppingCartActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(
                 this,
-                ShoppingCartViewModel.provideFactory(applicationContext),
+                ShoppingCartViewModel.provideFactory(),
             )[ShoppingCartViewModel::class.java]
 
         initRecyclerView()

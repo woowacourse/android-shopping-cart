@@ -1,16 +1,12 @@
 package woowacourse.shopping.data.shoppingcart
 
-import android.content.Context
-import woowacourse.shopping.data.ShoppingCartDatabase
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.view.PagedResult
 import kotlin.concurrent.thread
 
 class ShoppingCartRepositoryImpl(
-    applicationContext: Context,
-    private val dao: ShoppingCartDao =
-        ShoppingCartDatabase.getDataBase(applicationContext).shoppingCartDao(),
+    private val dao: ShoppingCartDao,
 ) : ShoppingCartRepository {
     override fun getAll(): List<ShoppingProduct> {
         var result = listOf<ShoppingProduct>()
