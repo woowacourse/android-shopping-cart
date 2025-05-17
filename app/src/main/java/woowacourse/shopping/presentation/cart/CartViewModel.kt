@@ -27,16 +27,14 @@ class CartViewModel(
 
     val toastMessage = SingleLiveData<Int>()
 
-    private var productCount = 0
-
     fun loadItems() {
         val page = _currentPage.value ?: 0
         productRepository.getPagedCartProducts(PAGE_SIZE, page) { pagedProducts ->
             _products.postValue(pagedProducts)
         }
 
-        productRepository.getCartProducts { allProducts ->
-            updateTotalPages(allProducts.size)
+        productRepository.getCartProductCount { count ->
+            updateTotalPage(count)
         }
     }
 
@@ -63,21 +61,18 @@ class CartViewModel(
 
         productRepository.deleteProduct(product.productId) {
             productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { pagedProducts ->
-                productCount = pagedProducts.size
 
-                if (productCount == 0) {
-                    productRepository.getCartProducts { allProducts ->
-                        updateTotalPages(allProducts.size)
-                    }
-
-                    Handler(Looper.getMainLooper()).post {
-                        changePage(false)
+                if (pagedProducts.isEmpty()) {
+                    productRepository.getCartProductCount { count ->
+                        updateTotalPage(count)
+                        Handler(Looper.getMainLooper()).post {
+                            changePage(false)
+                        }
                     }
                 } else {
                     _products.postValue(pagedProducts)
-
-                    productRepository.getCartProducts { allProducts ->
-                        updateTotalPages(allProducts.size)
+                    productRepository.getCartProductCount { count ->
+                        updateTotalPage(count)
                     }
                 }
             }
@@ -92,7 +87,7 @@ class CartViewModel(
         changePage(next = true)
     }
 
-    private fun updateTotalPages(totalSize: Int) {
+    private fun updateTotalPage(totalSize: Int) {
         _totalPages.postValue((totalSize + PAGE_SIZE - 1) / PAGE_SIZE)
     }
 

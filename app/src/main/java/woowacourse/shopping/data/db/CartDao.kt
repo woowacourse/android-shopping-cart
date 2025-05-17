@@ -9,6 +9,9 @@ interface CartDao {
     @Query("SELECT * FROM cart")
     fun getAllProduct(): List<CartEntity>
 
+    @Query("SELECT COUNT(*) FROM cart")
+    fun getCartProductCount(): Int
+
     @Query("SELECT * FROM cart LIMIT :pageSize OFFSET :offset ")
     fun getPagedProduct(
         pageSize: Int,

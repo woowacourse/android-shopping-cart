@@ -22,6 +22,13 @@ class ProductRepositoryImpl(
         return DummyProducts.values.subList(fromIndex, toIndex)
     }
 
+    override fun getCartProductCount(onComplete: (Int) -> Unit) {
+        thread {
+            val totalCartCount = dao.getCartProductCount()
+            onComplete(totalCartCount)
+        }
+    }
+
     override fun getCartProducts(onComplete: (List<Product>) -> Unit) {
         thread {
             val products = dao.getAllProduct().map { productEntity -> productEntity.toDomain() }

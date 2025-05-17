@@ -8,6 +8,8 @@ interface ProductRepository {
         pageSize: Int,
     ): List<Product>
 
+    fun getCartProductCount(onComplete: (Int) -> Unit)
+
     fun getCartProducts(onComplete: (List<Product>) -> Unit)
 
     fun getPagedCartProducts(
