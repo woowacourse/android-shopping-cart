@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.product
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
@@ -36,12 +37,12 @@ class ProductAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            VIEW_TYPE_PRODUCT -> {
+            R.layout.item_product -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
                 ProductViewHolder(binding, onClick)
             }
 
-            VIEW_TYPE_LOAD_MORE -> {
+            R.layout.item_load_more -> {
                 val binding = ItemLoadMoreBinding.inflate(inflater, parent, false)
                 LoadMoreViewHolder(binding, onClickLoadMore)
             }
@@ -62,7 +63,7 @@ class ProductAdapter(
 
     override fun getItemCount(): Int = items.size + if (showLoadMore) 1 else 0
 
-    override fun getItemViewType(position: Int): Int = if (position < items.size) VIEW_TYPE_PRODUCT else VIEW_TYPE_LOAD_MORE
+    override fun getItemViewType(position: Int): Int = if (position < items.size) R.layout.item_product else R.layout.item_load_more
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
@@ -83,9 +84,9 @@ class ProductAdapter(
             binding.btnLoadMore.setOnClickListener { onClickLoadMore() }
         }
     }
-
-    companion object {
-        private const val VIEW_TYPE_PRODUCT = 0
-        private const val VIEW_TYPE_LOAD_MORE = 1
-    }
+//
+//    companion object {
+//        private const val VIEW_TYPE_PRODUCT = 0
+//        private const val VIEW_TYPE_LOAD_MORE = 1
+//    }
 }
