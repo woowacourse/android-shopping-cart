@@ -56,13 +56,12 @@ class CatalogFragment :
         val gridLayoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int = if (isFullSpanLoadMoreItem(position)) SPAN_COUNT else SINGLE_SPAN
-
-                private fun isFullSpanLoadMoreItem(position: Int): Boolean {
-                    val isLastPosition = position == catalogAdapter.itemCount - 1
-                    val isLoadMoreType =
-                        catalogAdapter.getItemViewType(position) == CatalogItem.CatalogType.LOAD_MORE.ordinal
-                    return isLastPosition && isLoadMoreType
+                override fun getSpanSize(position: Int): Int {
+                    val viewType = catalogAdapter.getItemViewType(position)
+                    return when (CatalogItem.CatalogType.entries[viewType]) {
+                        CatalogItem.CatalogType.PRODUCT -> SINGLE_SPAN
+                        CatalogItem.CatalogType.LOAD_MORE -> SPAN_COUNT
+                    }
                 }
             }
 
