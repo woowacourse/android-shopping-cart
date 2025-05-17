@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="goods"
+            type="woowacourse.shopping.domain.model.Goods" />
+        <variable
+            name="cartClickListener"
+            type="woowacourse.shopping.feature.cart.adapter.CartViewHolder.CartClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/cart_item_background">
+
+
+        <TextView
+            android:id="@+id/tv_cart_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="60dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{goods.name}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="[굿즈-키홀더] 봇치 더 록! 애니판 테쿠토코 쵸이데카 아크릴키홀더B" />
+
+        <ImageView
+            android:id="@+id/iv_cart_item_image"
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/cart_item_image_description"
+            android:scaleType="centerCrop"
+            app:imgUrl="@{goods.thumbnailUrl}"
+            app:layout_constraintStart_toStartOf="@+id/tv_cart_item_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_cart_item_name"
+            app:srcCompat="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/tv_cart_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="108dp"
+            android:text="@{@string/goods_price(goods.price)}"
+            android:textSize="16sp"
+            android:textColor="@color/gray_700"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="84,400원" />
+
+        <ImageView
+            android:id="@+id/iv_cart_item_delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/cart_item_delete_button_description"
+            android:onClick="@{() -> cartClickListener.onClickDeleteButton(goods)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close_gray" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
