@@ -11,7 +11,7 @@ class ProductViewHolder(
     fun bind(item: Product) {
         binding.product = item
         binding.btnSelectedProduct.setOnClickListener {
-            productClickListener.invoke(item)
+            productClickListener(item)
         }
     }
 }
