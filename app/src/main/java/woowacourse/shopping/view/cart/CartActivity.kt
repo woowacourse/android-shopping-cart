@@ -43,11 +43,12 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
 
         viewModel.loadCarts()
 
+        setUpSystemBars()
         initView()
         observeViewModel()
     }
 
-    private fun initView() {
+    private fun setUpSystemBars() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -57,7 +58,9 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.action_bar_title_cart_screen)
+    }
 
+    private fun initView() {
         binding.recyclerViewCart.apply {
             setHasFixedSize(true)
         }
