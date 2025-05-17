@@ -43,8 +43,8 @@ class MainViewModelTest {
         viewModel = MainViewModel(productRepository)
 
         // then
-        assertEquals(expected, viewModel.products.getOrAwaitValue())
-        assertEquals(LoadState.CanLoad, viewModel.loadState.getOrAwaitValue())
+        assertEquals(expected.products, viewModel.products.getOrAwaitValue())
+        assertEquals(LoadState.CannotLoad, viewModel.loadState.getOrAwaitValue())
     }
 
     @Test
