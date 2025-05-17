@@ -24,6 +24,16 @@ import woowacourse.shopping.util.nthChildOf
 class CatalogFragmentTest {
     private val fakeRepository =
         object : ProductRepository {
+            override fun findProductById(
+                id: Long,
+                callback: (Product?) -> Unit,
+            ) {}
+
+            override fun findProductsByIds(
+                ids: List<Long>,
+                callback: (List<Product>) -> Unit,
+            ) {}
+
             override fun loadProducts(
                 lastItemId: Long,
                 loadSize: Int,
