@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.data.Cart
+import woowacourse.shopping.data.CartImpl
 import woowacourse.shopping.model.products.Product
 
 class CartViewModel(
