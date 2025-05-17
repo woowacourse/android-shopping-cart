@@ -42,6 +42,9 @@ android {
             excludes += "win32-x86*/**"
         }
     }
+    testOptions {
+        animationsDisabled = true
+    }
     buildFeatures {
         dataBinding = true
     }
