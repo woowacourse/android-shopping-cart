@@ -14,8 +14,6 @@ class CatalogViewModel(
         MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
     val catalogProducts: LiveData<List<ProductUiModel>> = _catalogProducts
 
-    val mockProducts get() = dataSource.getProducts()
-
     val page = MutableLiveData<Int>(INITIAL_PAGE)
 
     init {
@@ -38,8 +36,9 @@ class CatalogViewModel(
 
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
         val fromIndex = (page.value ?: 0) * pageSize
-        val toIndex = minOf(fromIndex + pageSize, mockProducts.size)
-        val pagedProducts: List<ProductUiModel> = mockProducts.subList(fromIndex, toIndex)
+        val toIndex = minOf(fromIndex + pageSize, dataSource.getProductsSize())
+
+        val pagedProducts = dataSource.getSubListedProducts(fromIndex, toIndex)
         _catalogProducts.value = _catalogProducts.value?.plus(pagedProducts)
     }
 

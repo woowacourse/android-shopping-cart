@@ -7,6 +7,13 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 object MockProducts : ProductsDataSource {
     override fun getProducts(): List<ProductUiModel> = mockProducts.map { it.toUiModel() }
 
+    override fun getProductsSize(): Int = mockProducts.size
+
+    override fun getSubListedProducts(
+        startIndex: Int,
+        lastIndex: Int,
+    ): List<ProductUiModel> = mockProducts.subList(startIndex, lastIndex).map { it.toUiModel() }
+
     val mockProducts =
         listOf(
             Product(
