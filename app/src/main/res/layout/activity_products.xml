@@ -53,7 +53,7 @@
             android:id="@+id/btn_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="더보기"
+            android:text="@string/button_load_more"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
