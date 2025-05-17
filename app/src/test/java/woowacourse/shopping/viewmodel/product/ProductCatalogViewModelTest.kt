@@ -1,3 +1,5 @@
+package woowacourse.shopping.viewmodel.product
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -9,8 +11,8 @@ import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductCatalogViewModelTest {
-    private lateinit var repository: ProductRepository
     private lateinit var viewModel: ProductCatalogViewModel
+    private lateinit var repository: ProductRepository
 
     @BeforeEach
     fun setup() {
