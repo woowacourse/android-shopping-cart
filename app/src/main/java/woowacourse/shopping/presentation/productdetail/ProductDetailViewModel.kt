@@ -27,13 +27,7 @@ class ProductDetailViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
-                initializer {
-                    val productRepository =
-                        ShoppingApplication.instance.provideProductRepository()
-                    ProductDetailViewModel(
-                        productRepository = productRepository,
-                    )
-                }
+                initializer { ProductDetailViewModel(ShoppingApplication.provideProductRepository()) }
             }
     }
 }

@@ -12,15 +12,15 @@ class ShoppingApplication : Application() {
         instance = this
     }
 
-    fun provideProductRepository(): ProductRepository = ProductRepositoryImpl(providerCartDao())
-
-    fun providerCartDao(): CartDao {
-        val db = CartDatabase.getInstance(applicationContext)
-        return db.cartDao()
-    }
-
     companion object {
         lateinit var instance: ShoppingApplication
             private set
+
+        fun provideProductRepository(): ProductRepository = ProductRepositoryImpl(providerCartDao())
+
+        private fun providerCartDao(): CartDao {
+            val db = CartDatabase.getInstance(this.instance)
+            return db.cartDao()
+        }
     }
 }
