@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.storage.ProductStorage
+import woowacourse.shopping.domain.product.ProductResult
 import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 
@@ -36,19 +37,22 @@ class ProductRepositoryImplTest {
         val pageSize = 10
         val fromIndex = 0
         val toIndex = fromIndex + pageSize
-        val expectedProducts =
-            listOf(
-                productFixture1,
-                productFixture2,
+        val excepted =
+            ProductResult(
+                listOf(
+                    productFixture1,
+                    productFixture2,
+                ),
+                false,
             )
 
-        every { storage.singlePage(fromIndex, toIndex) } returns expectedProducts
+        every { storage.singlePage(fromIndex, toIndex) } returns excepted
 
         // when
         val actualProducts = productRepository.loadSinglePage(page, pageSize)
 
         // Then
-        assertEquals(expectedProducts, actualProducts)
+        assertEquals(excepted, actualProducts)
         verify(exactly = 1) { storage.singlePage(fromIndex, toIndex) }
     }
 
@@ -60,13 +64,14 @@ class ProductRepositoryImplTest {
         val fromIndex = page * pageSize
         val toIndex = fromIndex + pageSize
 
-        every { storage.singlePage(fromIndex, toIndex) } returns emptyList()
+        every { storage.singlePage(fromIndex, toIndex) } returns ProductResult(emptyList(), true)
 
         // when
-        val actualProducts = productRepository.loadSinglePage(page, pageSize)
+        val actual = productRepository.loadSinglePage(page, pageSize)
 
         // then
-        assertTrue(actualProducts.isEmpty())
+        assertTrue(actual.products.isEmpty())
+        assertTrue(actual.hasNextPage)
         verify(exactly = 1) { storage.singlePage(fromIndex, toIndex) }
     }
 }

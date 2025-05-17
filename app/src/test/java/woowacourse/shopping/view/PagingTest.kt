@@ -5,8 +5,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Price
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.cart.vm.Paging
 
 class PagingTest {

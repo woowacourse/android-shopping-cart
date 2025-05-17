@@ -3,7 +3,7 @@ package woowacourse.shopping.view.main.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.core.base.BaseViewHolder
 
 class ProductAdapter(

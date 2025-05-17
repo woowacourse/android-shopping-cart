@@ -1,6 +1,7 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.ProductResult
 
 interface ProductRepository {
     operator fun get(id: Long): Product
@@ -8,5 +9,5 @@ interface ProductRepository {
     fun loadSinglePage(
         page: Int,
         pageSize: Int,
-    ): List<Product>
+    ): ProductResult
 }

@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.cart.vm
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Product
 
 class Paging(
     private val initialPage: Int = INITIAL_PAGE_NO,

@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.CartResult
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Product
 
 interface CartRepository {
     fun insert(item: Product)

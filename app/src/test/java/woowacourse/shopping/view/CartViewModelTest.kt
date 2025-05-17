@@ -14,8 +14,8 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.storage.CartStorage
 import woowacourse.shopping.domain.CartResult
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Price
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.ext.getOrAwaitValue
 import woowacourse.shopping.view.cart.vm.CartViewModel

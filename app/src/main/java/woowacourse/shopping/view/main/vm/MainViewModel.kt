@@ -3,7 +3,7 @@ package woowacourse.shopping.view.main.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.main.MainActivity.Companion.PAGE_SIZE
 
@@ -25,11 +25,11 @@ class MainViewModel(
         pageSize: Int,
     ) {
         val newPage = itemCount / pageSize
-        val loadedProducts = productRepository.loadSinglePage(newPage, pageSize)
-
         val currentList = _products.value ?: emptyList()
 
-        _products.value = currentList + loadedProducts
-        _loadState.value = LoadState.of(loadedProducts.isNotEmpty())
+        val result = productRepository.loadSinglePage(newPage, pageSize)
+
+        _products.value = currentList + result.products
+        _loadState.value = LoadState.of(result.hasNextPage)
     }
 }

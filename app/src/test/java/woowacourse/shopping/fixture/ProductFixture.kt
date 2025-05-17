@@ -1,7 +1,7 @@
 package woowacourse.shopping.fixture
 
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Price
+import woowacourse.shopping.domain.product.Product
 
 val productFixture1 =
     Product(

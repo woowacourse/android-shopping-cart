@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.storage.CartStorage
 import woowacourse.shopping.domain.CartResult
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Price
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3

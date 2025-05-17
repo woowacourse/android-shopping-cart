@@ -2,7 +2,7 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.storage.CartStorage
 import woowacourse.shopping.domain.CartResult
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(private val storage: CartStorage) : CartRepository {

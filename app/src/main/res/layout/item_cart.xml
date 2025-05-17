@@ -8,7 +8,7 @@
 
         <variable
             name="model"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.domain.product.Product" />
 
         <variable
             name="eventHandler"

@@ -3,6 +3,7 @@ package woowacourse.shopping.domain
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import woowacourse.shopping.domain.product.Price
 
 class PriceTest {
     @ParameterizedTest
