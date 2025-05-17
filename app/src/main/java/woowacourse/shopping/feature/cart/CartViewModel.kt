@@ -26,6 +26,11 @@ class CartViewModel(
     private val _isRightPageEnable = MutableLiveData(false)
     val isRightPageEnable: LiveData<Boolean> get() = _isRightPageEnable
 
+    fun getPosition(goods: Goods): Int? {
+        val idx = cart.value?.indexOf(goods) ?: return null
+        return if (idx >= 0) idx else null
+    }
+
     fun delete(goods: Goods) {
         val endPage = ((totalItems - 1) / PAGE_SIZE) + 1
         if (currentPage == endPage && (totalItems - 1) == ((currentPage - 1) * PAGE_SIZE)) {
@@ -63,7 +68,7 @@ class CartViewModel(
         }
     }
 
-    fun getProducts(page: Int): LiveData<List<Goods>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)
+    private fun getProducts(page: Int): LiveData<List<Goods>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)
 
     fun updatePageButtonVisibility() {
         _showPageButton.value = totalItems > PAGE_SIZE

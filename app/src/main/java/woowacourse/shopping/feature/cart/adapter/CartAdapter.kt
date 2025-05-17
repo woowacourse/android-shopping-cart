@@ -11,10 +11,26 @@ class CartAdapter(
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val items: MutableList<Goods> = mutableListOf()
 
+    fun removeItem(position: Int) {
+        notifyItemRemoved(position)
+    }
+
     fun setItems(newItems: List<Goods>) {
+        val oldItems = items.toList()
         items.clear()
         items.addAll(newItems)
-        notifyItemRangeChanged(ITEM_START_POSITION, ITEM_END_POSITION)
+
+        if (newItems.size < oldItems.size) {
+            notifyItemRangeRemoved(newItems.size, oldItems.size - newItems.size)
+        }
+        newItems.forEachIndexed { index, newGoods ->
+            if (index < oldItems.size && newGoods != oldItems[index]) {
+                notifyItemChanged(index)
+            }
+        }
+        if (newItems.size > oldItems.size) {
+            notifyItemRangeInserted(oldItems.size, newItems.size - oldItems.size)
+        }
     }
 
     override fun onCreateViewHolder(
@@ -36,9 +52,4 @@ class CartAdapter(
     }
 
     override fun getItemCount(): Int = items.size
-
-    companion object {
-        private const val ITEM_START_POSITION = 0
-        private const val ITEM_END_POSITION = 5
-    }
 }

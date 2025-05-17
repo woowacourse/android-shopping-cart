@@ -39,6 +39,8 @@ class CartActivity :
     }
 
     override fun onClickDeleteButton(goods: Goods) {
+        val deletedIndex: Int? = viewModel.getPosition(goods)
+        deletedIndex?.let { adapter.removeItem(it) }
         viewModel.delete(goods)
     }
 
