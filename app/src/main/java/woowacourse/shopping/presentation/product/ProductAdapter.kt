@@ -32,33 +32,31 @@ class ProductAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder =
-        if (viewType == VIEW_TYPE_PRODUCT) {
-            val binding =
-                ItemProductBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false,
-                )
-            ProductViewHolder(binding, onClick)
-        } else {
-            val binding =
-                ItemLoadMoreBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false,
-                )
-            LoadMoreViewHolder(binding)
+    ): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+
+        return when (viewType) {
+            VIEW_TYPE_PRODUCT -> {
+                val binding = ItemProductBinding.inflate(inflater, parent, false)
+                ProductViewHolder(binding, onClick)
+            }
+
+            VIEW_TYPE_LOAD_MORE -> {
+                val binding = ItemLoadMoreBinding.inflate(inflater, parent, false)
+                LoadMoreViewHolder(binding, onClickLoadMore)
+            }
+
+            else -> throw IllegalArgumentException("Invalid view type")
         }
+    }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        if (holder is ProductViewHolder) {
-            holder.bind(items[position])
-        } else if (holder is LoadMoreViewHolder) {
-            holder.bind(onClickLoadMore)
+        when (holder) {
+            is ProductViewHolder -> holder.bind(items[position])
+            is LoadMoreViewHolder -> Unit
         }
     }
 
@@ -67,27 +65,29 @@ class ProductAdapter(
     override fun getItemViewType(position: Int): Int = if (position < items.size) VIEW_TYPE_PRODUCT else VIEW_TYPE_LOAD_MORE
 
     class ProductViewHolder(
-        val binding: ItemProductBinding,
-        val onClick: (Product) -> Unit,
+        private val binding: ItemProductBinding,
+        private val onClick: (Product) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         private var currentItem: Product? = null
 
         init {
             binding.root.setOnClickListener {
-                currentItem?.let { onClick(it) }
+                currentItem?.let(onClick)
             }
         }
 
         fun bind(item: Product) {
             binding.product = item
             currentItem = item
+            binding.executePendingBindings()
         }
     }
 
     class LoadMoreViewHolder(
-        private val binding: ItemLoadMoreBinding,
+        binding: ItemLoadMoreBinding,
+        onClickLoadMore: () -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(onClickLoadMore: () -> Unit) {
+        init {
             binding.btnLoadMore.setOnClickListener { onClickLoadMore() }
         }
     }
