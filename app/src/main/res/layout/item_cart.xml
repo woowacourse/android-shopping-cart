@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.presentation.model.CartItemUiModel" />
+
+        <variable
+            name="eventListener"
+            type="woowacourse.shopping.presentation.view.cart.adapter.CartAdapter.CartEventListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/shape_cart_item"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_remove_cart"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:backgroundTint="@color/transparent"
+            android:contentDescription="@null"
+            android:onClick="@{() -> eventListener.onProductDeletion(cartItem)}"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cart_item_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{cartItem.product.name}"
+            android:textColor="@color/gray_55"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/btn_remove_cart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="나이키 에어 포스" />
+
+        <ImageView
+            android:id="@+id/image_view_product"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{cartItem.product.imageUrl}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/text_view_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cart_item_name"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/text_view_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{String.format(@string/cart_item_price_format, cartItem.totalPrice, cartItem.quantity)}"
+            android:textAlignment="textEnd"
+            android:textColor="@color/gray_55"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_product"
+            tools:text="99,800원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
