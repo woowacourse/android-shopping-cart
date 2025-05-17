@@ -19,11 +19,11 @@ class CartViewModel(
 ) : ViewModel(),
     CartClickHandler {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
-    val products: LiveData<List<Product>> get() = _products
+    val products: LiveData<List<Product>> = _products
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
-    val totalPages: LiveData<Int> get() = _totalPages
+    val totalPages: LiveData<Int> = _totalPages
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
-    val currentPage: LiveData<Int> get() = _currentPage
+    val currentPage: LiveData<Int> = _currentPage
 
     val toastMessage = SingleLiveData<Int>()
 

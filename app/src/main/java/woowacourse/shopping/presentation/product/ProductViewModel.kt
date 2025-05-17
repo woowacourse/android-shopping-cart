@@ -15,9 +15,9 @@ class ProductViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
-    val products: LiveData<List<Product>> get() = _products
+    val products: LiveData<List<Product>> = _products
     private val _showLoadMore: MutableLiveData<Boolean> = MutableLiveData(true)
-    val showLoadMore: LiveData<Boolean> get() = _showLoadMore
+    val showLoadMore: LiveData<Boolean> = _showLoadMore
 
     private var currentPage = 0
     private val pageSize = 10

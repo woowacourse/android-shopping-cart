@@ -14,7 +14,7 @@ class ProductDetailViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
-    val product: LiveData<Product> get() = _product
+    val product: LiveData<Product> = _product
 
     fun fetchData(product: Product) {
         _product.value = product
