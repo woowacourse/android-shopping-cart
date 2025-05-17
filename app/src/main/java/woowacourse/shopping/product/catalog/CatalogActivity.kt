@@ -5,20 +5,22 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
+import woowacourse.shopping.data.MockProducts
 import woowacourse.shopping.databinding.ActivityCatalogBinding
+import woowacourse.shopping.product.catalog.CatalogViewModel.Companion.factory
 import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
-    private val viewModel: CatalogViewModel by viewModels()
+    private lateinit var viewModel: CatalogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class CatalogActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
+        setViewModel()
         setProductAdapter()
         observeCatalogProducts()
     }
@@ -45,6 +48,14 @@ class CatalogActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+
+    private fun setViewModel() {
+        viewModel =
+            ViewModelProvider(
+                this,
+                factory(MockProducts),
+            )[CatalogViewModel::class.java]
+    }
 
     private fun setProductAdapter() {
         val adapter =

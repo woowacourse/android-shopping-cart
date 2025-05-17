@@ -3,12 +3,12 @@ package woowacourse.shopping.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.CartDatabase
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.CartProductDataSource
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartViewModel(
-    private val dataSource: CartProductDataSource = CartDatabase,
+    private val dataSource: CartProductDataSource,
 ) : ViewModel() {
     private val products = mutableListOf<ProductUiModel>()
     private val allCartProducts get() = dataSource.cartProducts()
@@ -95,5 +95,16 @@ class CartViewModel(
     companion object {
         private const val PAGE_SIZE = 5
         private const val INITIAL_PAGE = 0
+
+        fun factory(dataSource: CartProductDataSource): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
+                        return CartViewModel(dataSource) as T
+                    }
+                    throw IllegalArgumentException("Unknown ViewModel class")
+                }
+            }
     }
 }

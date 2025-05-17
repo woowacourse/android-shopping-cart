@@ -2,23 +2,27 @@ package woowacourse.shopping.cart
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.CartViewModel.Companion.factory
+import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private val viewModel: CartViewModel by viewModels()
+    private lateinit var viewModel: CartViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
+
+        setViewModel()
         setSupportActionBar()
         setCartProductAdapter()
         observeCartProducts()
@@ -27,6 +31,14 @@ class CartActivity : AppCompatActivity() {
     private fun setSupportActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.text_cart_action_bar)
+    }
+
+    private fun setViewModel() {
+        viewModel =
+            ViewModelProvider(
+                this,
+                factory(CartDatabase),
+            )[CartViewModel::class.java]
     }
 
     private fun setCartProductAdapter() {
