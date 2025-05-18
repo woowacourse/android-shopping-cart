@@ -1,22 +1,23 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
     fun getCartItems(
         limit: Int,
         offset: Int,
-        callback: (List<CartItem>, Boolean) -> Unit,
+        onResult: (Result<PageableItem<CartItem>>) -> Unit,
     )
 
     fun deleteCartItem(
         id: Long,
-        callback: (Long) -> Unit,
+        onResult: (Result<Long>) -> Unit,
     )
 
     fun addCartItem(
         product: Product,
-        callback: () -> (Unit),
+        onResult: (Result<Unit>) -> (Unit),
     )
 }

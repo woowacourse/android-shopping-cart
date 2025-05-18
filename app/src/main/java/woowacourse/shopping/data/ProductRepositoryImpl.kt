@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
@@ -8,35 +9,43 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
     override fun findProductById(
         id: Long,
-        callback: (Product?) -> Unit,
+        onResult: (Result<Product>) -> Unit,
     ) {
-        val product = products.find { it.id == id }
-        callback(product)
+        val result =
+            runCatching {
+                products.find { it.id == id }
+                    ?: throw NoSuchElementException("${id}에 해당하는 상품을 찾을 수 없습니다.")
+            }
+        onResult(result)
     }
 
     override fun findProductsByIds(
         ids: List<Long>,
-        callback: (List<Product>) -> Unit,
+        onResult: (Result<List<Product>>) -> Unit,
     ) {
-        val filteredProducts = products.filter { it.id in ids }
-        callback(filteredProducts)
+        val result = runCatching { products.filter { it.id in ids } }
+        onResult(result)
     }
 
     override fun loadProducts(
         offset: Int,
         loadSize: Int,
-        callback: (List<Product>, Boolean) -> Unit,
+        onResult: (Result<PageableItem<Product>>) -> Unit,
     ) {
-        val totalSize = products.size
+        val result =
+            runCatching {
+                val totalSize = products.size
 
-        if (offset >= totalSize) {
-            callback(emptyList(), false)
-            return
-        }
+                if (offset >= totalSize) {
+                    return@runCatching PageableItem(emptyList(), false)
+                }
 
-        val sublist = products.drop(offset).take(loadSize)
-        val hasMore = offset + loadSize < totalSize
+                val sublist = products.drop(offset).take(loadSize)
+                val hasMore = offset + loadSize < totalSize
 
-        callback(sublist, hasMore)
+                PageableItem(sublist, hasMore)
+            }
+
+        onResult(result)
     }
 }

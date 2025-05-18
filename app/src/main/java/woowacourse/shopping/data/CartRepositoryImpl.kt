@@ -4,10 +4,11 @@ import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.data.mapper.toCartItem
 import woowacourse.shopping.data.mapper.toProductEntity
+import woowacourse.shopping.data.util.runCatchingInThread
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDao: CartDao,
@@ -15,30 +16,35 @@ class CartRepositoryImpl(
     override fun getCartItems(
         limit: Int,
         offset: Int,
-        callback: (List<CartItem>, Boolean) -> Unit,
+        onResult: (Result<PageableItem<CartItem>>) -> Unit,
     ) {
-        thread {
-            val products = cartDao.getCartItemPaged(limit, offset)
-            callback(products.map { it.toCartItem() }, products.isHasMore())
-        }
+        runCatchingInThread(
+            block = {
+                val products = cartDao.getCartItemPaged(limit, offset)
+                PageableItem(products.map { it.toCartItem() }, products.isHasMore())
+            },
+            callback = onResult,
+        )
     }
 
     override fun deleteCartItem(
         id: Long,
-        callback: (Long) -> Unit,
+        onResult: (Result<Long>) -> Unit,
     ) {
-        thread {
-            cartDao.delete(id).let { callback(id) }
-        }
+        runCatchingInThread(
+            block = { cartDao.delete(id).let { id } },
+            callback = onResult,
+        )
     }
 
     override fun addCartItem(
         product: Product,
-        callback: () -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
-        thread {
-            cartDao.insertOrUpdate(product.toProductEntity()).let { callback() }
-        }
+        runCatchingInThread(
+            block = { cartDao.insertOrUpdate(product.toProductEntity()) },
+            callback = onResult,
+        )
     }
 
     private fun List<CartEntity>.isHasMore(): Boolean {
