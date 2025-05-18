@@ -39,7 +39,7 @@ class CartViewModel(
         loadCartProducts()
     }
 
-    fun onClick(dir: Int) {
+    fun onPaginationButtonClick(dir: Int) {
         val currentPage = page.value ?: INITIAL_PAGE
         val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
 

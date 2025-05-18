@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartItem.PaginationButtonItem
-import woowacourse.shopping.cart.CartItem.ProductItem
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
@@ -34,11 +33,14 @@ class CartActivity : AppCompatActivity() {
 
     private fun setCartProductAdapter() {
         binding.recyclerViewCart.adapter =
-            CartAdapter(emptyList(), { cartProduct ->
-                viewModel.deleteCartProduct(ProductItem(cartProduct))
-            }) { dir ->
-                viewModel.onClick(dir)
-            }
+            CartAdapter(
+                cartItems = emptyList(),
+                onDeleteProductClick =
+                    DeleteProductClickListener {
+                        viewModel::deleteCartProduct
+                    },
+                onPaginationButtonClick = viewModel::onPaginationButtonClick,
+            )
     }
 
     private fun observeCartViewModel() {

@@ -42,6 +42,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="18dp"
             android:scaleType="centerCrop"
+            app:imageUrl="@{cartProduct}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/textView_cart_product_name"
             app:layout_constraintTop_toBottomOf="@id/textView_cart_product_name"
