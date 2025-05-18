@@ -2,20 +2,20 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.model.Goods
 
-object ShoppingDataBase {
+object ShoppingDataBase : ShoppingRepository {
     private const val INDEX_OFFSET: Int = 1
     private const val MINIMUM_INDEX: Int = 0
     private val selectedGoods: MutableList<Goods> = mutableListOf()
 
-    fun addItem(goods: Goods) {
+    override fun addItem(goods: Goods) {
         selectedGoods.add(goods)
     }
 
-    fun removeItem(goods: Goods) {
+    override fun removeItem(goods: Goods) {
         selectedGoods.remove(goods)
     }
 
-    fun getPagedGoods(
+    override fun getPagedGoods(
         page: Int,
         count: Int,
     ): List<Goods> {
