@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -64,10 +65,12 @@ class CartViewModelTest {
         val pageState = viewModel.pageState.getOrAwaitValue()
         val state = viewModel.pageState.getOrAwaitValue()
 
-        assertThat(products).hasSize(5)
-        assertThat(pageState.page).isEqualTo(1)
-        assertThat(state.nextPageEnabled).isTrue()
-        assertThat(state.previousPageEnabled).isFalse()
+        assertAll(
+            { assertThat(products).hasSize(5) },
+            { assertThat(pageState.page).isEqualTo(1) },
+            { assertThat(state.nextPageEnabled).isTrue() },
+            { assertThat(state.previousPageEnabled).isFalse() },
+        )
     }
 
     @Test
