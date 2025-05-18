@@ -1,16 +1,17 @@
 package woowacourse.shopping.data.cartRepository
 
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.uimodel.CartItem
 
 interface CartRepository {
-    fun getAllProducts(onResult: (List<Product>) -> Unit)
+    fun getAllProductsSize(onResult: (Int) -> Unit)
 
     fun getProducts(
         limit: Int,
-        onResult: (List<Product>) -> Unit,
+        onResult: (List<CartItem>) -> Unit,
     )
 
     fun addProduct(product: Product)
 
-    fun deleteProduct(productId: Long)
+    fun deleteProduct(cartItemId: Long)
 }

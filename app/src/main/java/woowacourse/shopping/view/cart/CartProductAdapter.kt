@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.uimodel.CartItem
 
 class CartProductAdapter(
-    private val onDeleteClick: (Product, Int) -> Unit,
+    private val onDeleteClick: (CartItem, Int) -> Unit,
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
-    private var products: List<Product> = emptyList()
+    private var products: List<CartItem> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,7 +37,7 @@ class CartProductAdapter(
         notifyItemRemoved(position)
     }
 
-    fun setData(products: List<Product>) {
+    fun setData(products: List<CartItem>) {
         this.products = products
         notifyDataSetChanged()
     }

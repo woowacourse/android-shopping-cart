@@ -10,8 +10,8 @@
             type="int" />
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+            name="cartItem"
+            type="woowacourse.shopping.uimodel.CartItem" />
 
         <variable
             name="toDelete"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{cartItem.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="맥심 마일드" />
@@ -47,7 +47,7 @@
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{cartItem.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_cart_product_name"
             app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name" />
@@ -58,7 +58,7 @@
             android:layout_height="48dp"
             android:backgroundTint="@color/white"
             android:contentDescription="@null"
-            android:onClick="@{() -> toDelete.invoke(product, position)}"
+            android:onClick="@{() -> toDelete.invoke(cartItem, position)}"
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_product_name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +69,7 @@
             style="@style/CartPriceStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/cart_price(product.price)}"
+            android:text="@{@string/cart_price(cartItem.price)}"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
             app:layout_constraintEnd_toEndOf="@id/ib_cart_product_delete"
             tools:text="100,000원" />

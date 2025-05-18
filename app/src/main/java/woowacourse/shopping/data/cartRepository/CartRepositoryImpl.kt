@@ -1,11 +1,12 @@
 package woowacourse.shopping.data.cartRepository
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import woowacourse.shopping.data.cartRepository.CartMapper.toDomain
 import woowacourse.shopping.data.cartRepository.CartMapper.toEntity
+import woowacourse.shopping.data.cartRepository.CartMapper.toUiModel
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.uimodel.CartItem
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl private constructor(
@@ -21,19 +22,19 @@ class CartRepositoryImpl private constructor(
 
     private val cartDao = database.cartDao()
 
-    override fun getAllProducts(onResult: (List<Product>) -> Unit) {
+    override fun getAllProductsSize(onResult: (Int) -> Unit) {
         thread {
             val products = cartDao.getAllProducts().map { it.toDomain() }
-            onResult(products)
+            onResult(products.size)
         }
     }
 
     override fun getProducts(
         limit: Int,
-        onResult: (List<Product>) -> Unit,
+        onResult: (List<CartItem>) -> Unit,
     ) {
         thread {
-            val products = cartDao.getLimitProducts(limit).map { product -> product.toDomain() }
+            val products = cartDao.getLimitProducts(limit).map { product -> product.toUiModel() }
             onResult(products)
         }
     }
@@ -45,10 +46,9 @@ class CartRepositoryImpl private constructor(
         }
     }
 
-    override fun deleteProduct(productId: Long) {
+    override fun deleteProduct(cartItemId: Long) {
         thread {
-            Log.d("test", "$productId")
-            cartDao.deleteById(productId)
+            cartDao.deleteById(cartItemId)
         }
     }
 

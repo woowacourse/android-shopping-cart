@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.uimodel.CartItem
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -25,13 +25,16 @@ class CartActivity : AppCompatActivity() {
 
         initDataBinding()
         initView()
-        initAdapter()
         bindData()
+        initAdapter()
     }
 
     private fun initDataBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.toBack = ::finish
+        binding.currentPage = viewModel.currentPage.value ?: 1
+        binding.toPrevious = ::navigateToPrevious
+        binding.toNext = ::navigateToNext
     }
 
     private fun initView() {
@@ -48,9 +51,18 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun bindData() {
+        viewModel.fetchInfo()
         viewModel.fetchData()
         viewModel.totalProductsCount.observe(this) { totalProductsCount ->
             isPaginationButtonVisible(totalProductsCount)
+        }
+        viewModel.currentPage.observe(this) { currentPage ->
+            if (currentPage > 1) {
+                binding.btnCartPrevious.setBackgroundResource(R.color.cyan)
+            }
+//            if (currentPage < viewModel.totalPage) {
+//                binding.btnCartNext.setBackgroundResource(R.color.cyan)
+//            }
         }
         viewModel.products.observe(this) { cartProductAdapter.setData(it) }
     }
@@ -68,14 +80,33 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun deleteProduct(
-        product: Product,
+        cartItem: CartItem,
         position: Int,
     ) {
-        viewModel.deleteProduct(product)
+        viewModel.deleteProduct(cartItem)
         cartProductAdapter.removeProduct(position)
         Toast
             .makeText(this, R.string.cart_product_delete, Toast.LENGTH_SHORT)
             .show()
+    }
+
+    private fun navigateToPrevious() {
+        viewModel.minusPage()
+        val currentPage = viewModel.currentPage.value ?: 1
+        cartProductAdapter.notifyItemRangeChanged(
+            (currentPage - 1) * A_PAGE_ITEM_COUNT,
+            A_PAGE_ITEM_COUNT,
+        )
+    }
+
+    private fun navigateToNext() {
+        viewModel.plusPage()
+        viewModel.fetchData()
+        val currentPage = viewModel.currentPage.value ?: 1
+        cartProductAdapter.notifyItemRangeChanged(
+            (currentPage - 1) * A_PAGE_ITEM_COUNT,
+            A_PAGE_ITEM_COUNT,
+        )
     }
 
     companion object {

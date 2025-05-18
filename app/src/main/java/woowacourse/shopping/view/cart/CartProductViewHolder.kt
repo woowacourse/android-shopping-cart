@@ -2,21 +2,21 @@ package woowacourse.shopping.view.cart
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.uimodel.CartItem
 
 class CartProductViewHolder(
     val binding: ItemCartProductBinding,
-    val onDeleteClick: (Product, Int) -> Unit,
+    val onDeleteClick: (CartItem, Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.toDelete = onDeleteClick
     }
 
     fun bind(
-        product: Product,
+        cartItem: CartItem,
         position: Int,
     ) {
-        binding.product = product
+        binding.cartItem = cartItem
         binding.position = position
     }
 }
