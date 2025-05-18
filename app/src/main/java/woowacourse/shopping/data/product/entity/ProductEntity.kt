@@ -15,15 +15,12 @@ data class ProductEntity(
             price = price,
         )
     }
-
-    companion object {
-        fun Product.toEntity(): ProductEntity {
-            return ProductEntity(
-                id = id,
-                name = name,
-                price = price,
-            )
-        }
-    }
 }
 
+fun Product.toEntity(): ProductEntity {
+    return ProductEntity(
+        id = id,
+        name = name,
+        price = price,
+    )
+}
