@@ -14,6 +14,7 @@ import woowacourse.shopping.presentation.ui.decorations.GridSpacingItemDecoratio
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
+import woowacourse.shopping.presentation.view.catalog.event.CatalogMessageEvent
 import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class CatalogFragment :
@@ -43,6 +44,12 @@ class CatalogFragment :
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) { items ->
             catalogAdapter.appendProducts(items)
+        }
+
+        viewModel.toastEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                CatalogMessageEvent.FETCH_PRODUCTS_FAILURE -> showToast(R.string.catalog_screen_event_message_fetch_product_failure)
+            }
         }
     }
 

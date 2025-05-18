@@ -6,37 +6,50 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.toUiModel
+import woowacourse.shopping.presentation.util.MutableSingleLiveData
+import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
+import woowacourse.shopping.presentation.view.catalog.event.CatalogMessageEvent
 
 class CatalogViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
+    private val _toastEvent = MutableSingleLiveData<CatalogMessageEvent>()
+    val toastEvent: SingleLiveData<CatalogMessageEvent> = _toastEvent
+
     private val _products = MutableLiveData<List<CatalogItem>>()
     val products: LiveData<List<CatalogItem>> = _products
 
     private val limit: Int = 20
     private var page: Int = 0
-    private var offset: Int = 0
 
     init {
         fetchProducts()
     }
 
     fun fetchProducts() {
-        productRepository.loadProducts(offset, limit) { newProducts, hasMore ->
-            page++
-            offset = page * limit
+        val newOffset = page * limit
 
-            val existingItems = extractExistingProductItems()
-            val newItems = convertToProductItems(newProducts)
-            val mergedItems = mergeWithoutDuplicates(existingItems, newItems)
-            val finalItems = buildFinalProductList(mergedItems, hasMore)
-
-            _products.postValue(finalItems)
+        productRepository.loadProducts(newOffset, limit) { result ->
+            result
+                .onSuccess { pageableItem -> loadProductsSuccessHandler(pageableItem) }
+                .onFailure { _toastEvent.postValue(CatalogMessageEvent.FETCH_PRODUCTS_FAILURE) }
         }
+    }
+
+    private fun loadProductsSuccessHandler(pageableItem: PageableItem<Product>) {
+        page++
+
+        val existingItems = extractExistingProductItems()
+        val newItems = convertToProductItems(pageableItem.items)
+        val mergedItems = mergeWithoutDuplicates(existingItems, newItems)
+        val finalItems = buildFinalProductList(mergedItems, pageableItem.hasMore)
+
+        _products.postValue(finalItems)
     }
 
     private fun extractExistingProductItems(): List<CatalogItem.ProductItem> =
