@@ -1,6 +1,7 @@
 package woowacourse.shopping.cart
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.CartItem.ProductItem
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
@@ -32,7 +34,7 @@ class CartActivity : AppCompatActivity() {
     private fun setCartProductAdapter() {
         binding.recyclerViewCart.adapter =
             CartAdapter(emptyList(), viewModel, { cartProduct ->
-                viewModel.deleteCartProduct(cartProduct)
+                viewModel.deleteCartProduct(ProductItem(cartProduct))
             }) { dir ->
                 viewModel.onClick(dir)
             }
@@ -40,7 +42,15 @@ class CartActivity : AppCompatActivity() {
 
     private fun observeCartProducts() {
         viewModel.cartProducts.observe(this) { value ->
-            (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
+            Log.d("P_SIZE_OBSERVER", "${viewModel.cartProducts.value?.size}")
+
+            val cartItems =
+                if (viewModel.isNextButtonEnabled() || viewModel.isPrevButtonEnabled()) {
+                    value + CartItem.PaginationButtonItem
+                } else {
+                    value
+                }
+            (binding.recyclerViewCart.adapter as CartAdapter).setData(cartItems)
         }
         binding.lifecycleOwner = this
     }

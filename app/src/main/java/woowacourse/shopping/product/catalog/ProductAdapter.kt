@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(
     private var products: List<ProductUiModel>,
-    private val catalogViewModel: CatalogViewModel,
+    private val totalDataSize: Int,
     val onProductClick: ProductClickListener,
     private val onLoadButtonClick: LoadButtonClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -38,11 +38,16 @@ class ProductAdapter(
     }
 
     fun setData(products: List<ProductUiModel>) {
+        val positionStart = this.products.size
+        val itemCount = products.size - positionStart
         this.products = products
-        notifyDataSetChanged()
+
+        notifyItemRangeInserted(positionStart + 1, itemCount)
     }
 
-    override fun getItemCount(): Int = products.size + if (catalogViewModel.isLoadButtonEnabled()) 1 else 0
+    override fun getItemCount(): Int = products.size + if (isLoadable()) 1 else 0
+
+    private fun isLoadable(): Boolean = products.size < totalDataSize
 
     companion object {
         private const val PRODUCT = 1

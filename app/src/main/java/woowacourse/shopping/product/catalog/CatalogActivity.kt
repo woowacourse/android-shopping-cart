@@ -2,6 +2,7 @@ package woowacourse.shopping.product.catalog
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -50,7 +51,7 @@ class CatalogActivity : AppCompatActivity() {
         val adapter =
             ProductAdapter(
                 emptyList(),
-                viewModel,
+                viewModel.mockProducts.size,
                 ProductClickListener { product ->
                     val intent = newIntent(this, product)
                     startActivity(intent)
@@ -71,6 +72,7 @@ class CatalogActivity : AppCompatActivity() {
     private fun observeCatalogProducts() {
         viewModel.catalogProducts.observe(this) { value ->
             (binding.recyclerViewProducts.adapter as ProductAdapter).setData(value)
+            Log.d("VIEW_POSITION", "${binding.recyclerViewProducts.adapter?.itemCount}개")
         }
         binding.lifecycleOwner = this
     }

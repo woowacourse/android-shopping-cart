@@ -2,14 +2,18 @@ package woowacourse.shopping.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
-    private var cartProducts: List<ProductUiModel>,
+    private var cartItems: List<CartItem>,
     private val cartViewModel: CartViewModel,
     private val onDeleteProductClick: DeleteProductClickListener,
     private val onPaginationButtonClick: PaginationButtonClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    fun setData(cartProducts: List<CartItem>) {
+        this.cartItems = cartProducts
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,7 +29,7 @@ class CartAdapter(
         position: Int,
     ) {
         when (holder) {
-            is CartViewHolder -> holder.bind(cartProducts[position])
+            is CartViewHolder -> holder.bind((cartItems[position] as CartItem.ProductItem).productItem)
             is PaginationButtonViewHolder ->
                 holder.bind(
                     page = cartViewModel.page.value ?: 1,
@@ -35,27 +39,13 @@ class CartAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (position == cartProducts.size) {
-            return PAGINATION_BUTTON
+    override fun getItemViewType(position: Int): Int =
+        when (cartItems[position]) {
+            CartItem.PaginationButtonItem -> PAGINATION_BUTTON
+            is CartItem.ProductItem -> CART_PRODUCT
         }
-        return CART_PRODUCT
-    }
 
-    fun setData(cartProducts: List<ProductUiModel>) {
-        this.cartProducts = cartProducts
-        notifyDataSetChanged()
-    }
-
-    override fun getItemCount(): Int =
-        if (cartProducts.size > 5 ||
-            cartViewModel.isNextButtonEnabled() ||
-            cartViewModel.isPrevButtonEnabled()
-        ) {
-            cartProducts.size + 1
-        } else {
-            cartProducts.size
-        }
+    override fun getItemCount(): Int = cartItems.size
 
     companion object {
         private const val CART_PRODUCT = 1

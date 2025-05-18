@@ -3,18 +3,19 @@ package woowacourse.shopping.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.cart.CartItem
+import woowacourse.shopping.cart.CartItem.ProductItem
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.CartProductDataSource
-import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartViewModel(
     private val dataSource: CartProductDataSource = CartDatabase,
 ) : ViewModel() {
-    private val products = mutableListOf<ProductUiModel>()
-    private val allCartProducts get() = dataSource.cartProducts()
+    private val products = mutableListOf<CartItem>()
+    private val allCartProducts: List<CartItem> get() = dataSource.cartProducts().map { ProductItem(it) }
 
-    private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
-    val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
+    private val _cartProducts = MutableLiveData<List<CartItem>>()
+    val cartProducts: LiveData<List<CartItem>> = _cartProducts
 
     private val _isNextButtonEnabled = MutableLiveData<Boolean>(false)
     val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
@@ -30,10 +31,10 @@ class CartViewModel(
         loadCartProducts()
     }
 
-    fun deleteCartProduct(cartProduct: ProductUiModel) {
+    fun deleteCartProduct(cartProduct: ProductItem) {
         products.remove(cartProduct)
         _cartProducts.value = products
-        dataSource.deleteCartProduct(cartProduct)
+        dataSource.deleteCartProduct(cartProduct.productItem)
 
         loadCartProducts()
     }
