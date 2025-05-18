@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="eventHandler"
-            type="woowacourse.shopping.view.detail.DetailScreenEventHandler" />
+            name="vm"
+            type="woowacourse.shopping.view.detail.vm.DetailViewModel" />
 
         <variable
             name="model"
@@ -86,7 +86,7 @@
             android:insetBottom="0dp"
             app:cornerRadius="0dp"
             android:text="@string/text_add_to_cart"
-            android:onClick="@{() -> eventHandler.onClickAddToCart()}"
+            android:onClick="@{() -> vm.addProduct()}"
             android:backgroundTint="#04C09E"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

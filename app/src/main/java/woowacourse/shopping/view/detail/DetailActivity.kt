@@ -18,7 +18,7 @@ import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
 
-class DetailActivity : AppCompatActivity(), DetailScreenEventHandler {
+class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
@@ -31,7 +31,7 @@ class DetailActivity : AppCompatActivity(), DetailScreenEventHandler {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         binding.lifecycleOwner = this@DetailActivity
-        binding.eventHandler = this@DetailActivity
+        binding.vm = viewModel
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
@@ -54,10 +54,15 @@ class DetailActivity : AppCompatActivity(), DetailScreenEventHandler {
         viewModel.product.observe(this) {
             binding.model = it
         }
+
+        viewModel.event.observe(this) {
+            when (it) {
+                DetailScreenEvent.MoveToCart -> navigateToCart()
+            }
+        }
     }
 
-    override fun onClickAddToCart() {
-        viewModel.addProduct()
+    private fun navigateToCart() {
         startActivity(CartActivity.newIntent(this))
     }
 
