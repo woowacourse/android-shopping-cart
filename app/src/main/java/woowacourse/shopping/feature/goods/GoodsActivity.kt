@@ -14,14 +14,14 @@ import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
+import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
 import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.util.toUi
 
 class GoodsActivity :
     AppCompatActivity(),
-    GoodsViewHolder.GoodsClickListener {
+    GoodsClickListener {
     private lateinit var binding: ActivityGoodsBinding
     private val viewModel: GoodsViewModel by viewModels()
     private val goodsAdapter by lazy { GoodsAdapter(this) }
