@@ -13,16 +13,16 @@ import woowacourse.shopping.view.model.toUiModel
 import woowacourse.shopping.view.page.Page
 
 class InventoryViewModel(repository: InventoryRepository) : ViewModel() {
-    private val allProducts: Set<ProductUiModel> = repository.getAll().map(Product::toUiModel).toSet()
+    private val products: List<ProductUiModel> = repository.getAll().map(Product::toUiModel)
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
     val items: LiveData<List<InventoryItem>> get() = _items
-    val totalSize: Int get() = allProducts.size
+    val totalSize: Int get() = products.size
 
     fun requestPage() {
         _items.value = _items.value?.minus(ShowMore)
         val page =
             Page.from(
-                allProducts.toList(),
+                products.toList(),
                 (_items.value?.size ?: 0) / PAGE_SIZE,
                 PAGE_SIZE,
             )
