@@ -23,7 +23,7 @@ class ProductsViewModel(
     private val _isLoadMoreButtonVisible = MutableLiveData(false)
     val isLoadMoreButtonVisible: LiveData<Boolean> = _isLoadMoreButtonVisible
 
-    private var currentPage = 0
+    private var currentPage = INITIAL_PAGE
     private val loadedItems = mutableListOf<Product>()
 
     init {
@@ -31,7 +31,7 @@ class ProductsViewModel(
     }
 
     fun loadPage() {
-        val pageSize = 20
+        val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
         val nextEnd = minOf(nextStart + pageSize, productRepository.dummyProducts.size)
 
@@ -49,6 +49,9 @@ class ProductsViewModel(
     }
 
     companion object {
+        private const val INITIAL_PAGE = 0
+        private const val PAGE_SIZE = 20
+
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

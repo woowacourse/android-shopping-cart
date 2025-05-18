@@ -32,7 +32,7 @@ class CartViewModel(
     private val _isLastPage = MutableLiveData<Boolean>()
     val isLastPage: LiveData<Boolean> = _isLastPage
 
-    private val pageSize = 5
+    private val pageSize = PAGE_SIZE
 
     init {
         loadPage(1)
@@ -42,11 +42,11 @@ class CartViewModel(
         cartRepository.remove(product)
         _products.value = cartRepository.products
         _isOnlyOnePage.value = checkOnlyOnePage()
-        loadPage(_pageCount.value ?: 1)
+        loadPage(_pageCount.value ?: INITIAL_PAGE)
     }
 
     fun loadNextPage() {
-        val nextPage = (_pageCount.value ?: 1) + 1
+        val nextPage = (_pageCount.value ?: INITIAL_PAGE) + 1
         val maxPage = ((cartRepository.products.size - 1) / pageSize) + 1
         if (nextPage <= maxPage) {
             loadPage(nextPage)
@@ -54,8 +54,8 @@ class CartViewModel(
     }
 
     fun loadPreviousPage() {
-        val prevPage = (_pageCount.value ?: 1) - 1
-        if (prevPage >= 1) {
+        val prevPage = (_pageCount.value ?: INITIAL_PAGE) - 1
+        if (prevPage >= INITIAL_PAGE) {
             loadPage(prevPage)
         }
     }
@@ -85,6 +85,9 @@ class CartViewModel(
     }
 
     companion object {
+        private const val PAGE_SIZE = 5
+        private const val INITIAL_PAGE = 1
+
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
