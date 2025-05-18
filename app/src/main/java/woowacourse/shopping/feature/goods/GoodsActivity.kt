@@ -5,13 +5,17 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.util.component1
+import androidx.core.util.component2
+import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.feature.ScrollListener
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
+import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.util.toUi
 
@@ -19,8 +23,10 @@ class GoodsActivity :
     AppCompatActivity(),
     GoodsViewHolder.GoodsClickListener {
     private lateinit var binding: ActivityGoodsBinding
-    private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
     private val viewModel: GoodsViewModel by viewModels()
+    private val goodsAdapter by lazy { GoodsAdapter(this) }
+    private val moreButtonAdapter by lazy { MoreButtonAdapter { viewModel.addPage() } }
+    private val concatAdapter by lazy { ConcatAdapter(goodsAdapter, moreButtonAdapter) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +34,25 @@ class GoodsActivity :
         setContentView(binding.root)
         binding.lifecycleOwner = this
 
-        binding.rvGoods.adapter = adapter
+        binding.rvGoods.adapter = concatAdapter
         binding.viewModel = viewModel
 
-        updateMoreButton()
+        binding.rvGoods.layoutManager = getLayoutManager()
+    }
+
+    private fun getLayoutManager(): GridLayoutManager {
+        val layoutManager = GridLayoutManager(this, 2)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val (adapter, _) = concatAdapter.getWrappedAdapterAndPosition(position)
+                    return when (adapter) {
+                        is GoodsAdapter -> 1
+                        else -> 2
+                    }
+                }
+            }
+        return layoutManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,15 +68,6 @@ class GoodsActivity :
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun updateMoreButton() {
-        binding.rvGoods.addOnScrollListener(
-            ScrollListener(
-                shouldShowButton = { !viewModel.isFullLoaded() },
-                onVisibilityChange = viewModel::updateMoreButtonVisibility,
-            ),
-        )
     }
 
     private fun navigate(goods: Goods) {

@@ -23,6 +23,7 @@ ktlint = "12.1.0"
 lifecycle-viewmodel-ktx = "2.9.0"
 mannodermaus-junit5 = "1.7.0"
 activity = "1.10.1"
+recyclerview = "1.4.0"
 room-runtime = "2.7.1"
 
 [libraries]
@@ -36,6 +37,7 @@ androidx-core-testing-v200 = { module = "androidx.arch.core:core-testing", versi
 androidx-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "androidx-espresso-core" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
