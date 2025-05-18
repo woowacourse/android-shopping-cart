@@ -14,10 +14,10 @@ class ProductsViewModel(
     private val products: Products,
 ) : ViewModel() {
     private val _productsInShop = MutableLiveData<List<Product>>()
-    val productsInShop: LiveData<List<Product>> get() = _productsInShop
+    val productsInShop: LiveData<List<Product>> = _productsInShop
 
     private val _isAllProductsFetched = MutableLiveData(false)
-    val isAllProductsFetched: LiveData<Boolean> get() = _isAllProductsFetched
+    val isAllProductsFetched: LiveData<Boolean> = _isAllProductsFetched
 
     private val _isLoadMoreButtonVisible = MutableLiveData(false)
     val isLoadMoreButtonVisible: LiveData<Boolean> = _isLoadMoreButtonVisible

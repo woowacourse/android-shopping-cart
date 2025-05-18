@@ -15,22 +15,22 @@ class CartViewModel(
     private val cart: Cart,
 ) : ViewModel() {
     private val _productsInCart = MutableLiveData(cart.productsInCart)
-    val productsInCart: LiveData<MutableList<Product>> get() = _productsInCart
+    val productsInCart: LiveData<MutableList<Product>> = _productsInCart
 
     private val _pageCount = MutableLiveData(1)
-    val pageCount: LiveData<Int> get() = _pageCount
+    val pageCount: LiveData<Int> = _pageCount
 
     private val _loadedItems = MutableLiveData<List<Product>>()
-    val loadedItems: LiveData<List<Product>> get() = _loadedItems
+    val loadedItems: LiveData<List<Product>> = _loadedItems
 
     private val _isOnlyOnePage = MutableLiveData<Boolean>()
     val isOnlyOnePage: LiveData<Boolean> = _isOnlyOnePage
 
     private val _isFirstPage = MutableLiveData<Boolean>()
-    val isFirstPage: LiveData<Boolean> get() = _isFirstPage
+    val isFirstPage: LiveData<Boolean> = _isFirstPage
 
     private val _isLastPage = MutableLiveData<Boolean>()
-    val isLastPage: LiveData<Boolean> get() = _isLastPage
+    val isLastPage: LiveData<Boolean> = _isLastPage
 
     private val pageSize = 5
 
