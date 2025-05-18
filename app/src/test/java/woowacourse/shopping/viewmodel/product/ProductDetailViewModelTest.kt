@@ -26,7 +26,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `장바구니에 상품을 추가하면 repository에 저장된다`() {
         // when
-        viewModel.addToShoppingCart()
+        viewModel.onProductAddClick()
 
         // then
         val cartProducts = repository.getAll()
@@ -37,7 +37,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `장바구니에 상품을 추가한 후 event가 발생한다`() {
         // when
-        viewModel.addToShoppingCart()
+        viewModel.onProductAddClick()
 
         // then
         assertEquals(Unit, viewModel.navigateEvent.value)
