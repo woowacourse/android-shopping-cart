@@ -28,7 +28,7 @@ class ShoppingCartViewModelTest {
     @BeforeEach
     fun setUp() {
         mockkObject(ShoppingDataBase)
-        shoppingCartViewModel = ShoppingCartViewModel()
+        shoppingCartViewModel = ShoppingCartViewModel(ShoppingDataBase)
     }
 
     @AfterEach
@@ -79,7 +79,7 @@ class ShoppingCartViewModelTest {
     fun `다음 상품 목록이 존재하면 다음 페이지는 존재한다`() {
         // given
         every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf(createGoods())
-        shoppingCartViewModel = ShoppingCartViewModel()
+        shoppingCartViewModel = ShoppingCartViewModel(ShoppingDataBase)
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe true
@@ -89,7 +89,7 @@ class ShoppingCartViewModelTest {
     fun `다음 상품 목록이 존재하지 않으면 다음 페이지는 존재하지 않는다`() {
         // given
         every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf()
-        shoppingCartViewModel = ShoppingCartViewModel()
+        shoppingCartViewModel = ShoppingCartViewModel(ShoppingDataBase)
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe false

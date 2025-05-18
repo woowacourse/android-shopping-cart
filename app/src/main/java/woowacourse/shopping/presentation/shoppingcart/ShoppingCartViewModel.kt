@@ -3,11 +3,15 @@ package woowacourse.shopping.presentation.shoppingcart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.ShoppingDataBase
-import woowacourse.shopping.data.ShoppingDataBase.getPagedGoods
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.data.ShoppingRepository
 import woowacourse.shopping.domain.model.Goods
 
-class ShoppingCartViewModel : ViewModel() {
+class ShoppingCartViewModel(
+    private val shoppingRepository: ShoppingRepository,
+) : ViewModel() {
     private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
     val goods: LiveData<List<Goods>>
         get() = _goods
@@ -29,7 +33,7 @@ class ShoppingCartViewModel : ViewModel() {
     }
 
     fun deleteGoods(goods: Goods) {
-        ShoppingDataBase.removeItem(goods)
+        shoppingRepository.removeItem(goods)
         updateState()
     }
 
@@ -44,7 +48,7 @@ class ShoppingCartViewModel : ViewModel() {
     }
 
     private fun updateState() {
-        _goods.value = getPagedGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT)
+        _goods.value = shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT)
         updateNextPage()
         updatePreviousPage()
     }
@@ -54,12 +58,23 @@ class ShoppingCartViewModel : ViewModel() {
     }
 
     private fun updateNextPage() {
-        _hasNextPage.value = getPagedGoods(_page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_VALUE, ITEM_COUNT).isNotEmpty()
+        _hasNextPage.value =
+            shoppingRepository.getPagedGoods(
+                _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_VALUE,
+                ITEM_COUNT,
+            ).isNotEmpty()
     }
 
     companion object {
         private const val ITEM_COUNT: Int = 5
         private const val DEFAULT_VALUE: Int = 1
         private const val PAGE_CHANGE_AMOUNT: Int = 1
+
+        fun provideFactory(shoppingRepository: ShoppingRepository): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    ShoppingCartViewModel(shoppingRepository)
+                }
+            }
     }
 }

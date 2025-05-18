@@ -7,12 +7,15 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ShoppingDataBase
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.BaseActivity
 
 class ShoppingCartActivity : BaseActivity() {
     private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
-    private val viewModel: ShoppingCartViewModel by viewModels()
+    private val viewModel: ShoppingCartViewModel by viewModels {
+        ShoppingCartViewModel.provideFactory(ShoppingDataBase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
