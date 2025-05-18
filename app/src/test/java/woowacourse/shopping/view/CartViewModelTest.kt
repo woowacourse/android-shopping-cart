@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -69,11 +70,13 @@ class CartViewModelTest {
         val products = viewModel.products.getOrAwaitValue()
         val pageState = viewModel.pageState.getOrAwaitValue()
 
-        assertThat(products).hasSize(5)
-        assertThat(products.map { it.id }).containsExactly(1L, 2L, 3L, 4L, 5L)
-        assertThat(pageState.page).isEqualTo(1)
-        assertThat(pageState.nextPageEnabled).isTrue()
-        assertThat(pageState.previousPageEnabled).isFalse()
+        assertAll(
+            { assertThat(products).hasSize(5) },
+            { assertThat(products.map { it.id }).containsExactly(1L, 2L, 3L, 4L, 5L) },
+            { assertThat(pageState.page).isEqualTo(1) },
+            { assertThat(pageState.nextPageEnabled).isTrue() },
+            { assertThat(pageState.previousPageEnabled).isFalse() },
+        )
     }
 
     @Test
@@ -86,9 +89,11 @@ class CartViewModelTest {
         val pageState = viewModel.pageState.getOrAwaitValue()
         val products = viewModel.products.getOrAwaitValue()
 
-        assertThat(pageState.page).isEqualTo(3)
-        assertThat(products).hasSize(1)
-        assertThat(products.first().id).isEqualTo(11L)
+        assertAll(
+            { assertThat(pageState.page).isEqualTo(3) },
+            { assertThat(products).hasSize(1) },
+            { assertThat(products.first().id).isEqualTo(11L) },
+        )
     }
 
     @Test
@@ -104,9 +109,11 @@ class CartViewModelTest {
         val pageState = viewModel.pageState.getOrAwaitValue()
         val products = viewModel.products.getOrAwaitValue()
 
-        assertThat(pageState.page).isEqualTo(2)
-        assertThat(products).hasSize(5)
-        assertThat(products.map { it.id }).containsExactly(6L, 7L, 8L, 9L, 10L)
+        assertAll(
+            { assertThat(pageState.page).isEqualTo(2) },
+            { assertThat(products).hasSize(5) },
+            { assertThat(products.map { it.id }).containsExactly(6L, 7L, 8L, 9L, 10L) },
+        )
     }
 
     @Test
