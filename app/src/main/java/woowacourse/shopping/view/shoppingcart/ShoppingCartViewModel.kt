@@ -106,6 +106,9 @@ class ShoppingCartViewModel(
         offset: Int,
     ): List<ShoppingProduct> {
         val total = this.size
+
+        if (offset >= total) return emptyList()
+
         val endIndex = (offset + limit).coerceAtMost(total)
         return this.subList(offset, endIndex)
     }
