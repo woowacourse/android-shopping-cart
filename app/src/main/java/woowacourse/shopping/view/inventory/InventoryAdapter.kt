@@ -1,41 +1,52 @@
 package woowacourse.shopping.view.inventory
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.model.InventoryItem
+import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.model.InventoryItem.ShowMoreButton
+import woowacourse.shopping.view.model.InventoryItemType
 
 class ProductsAdapter(
     private val handler: InventoryEventHandler,
-) : RecyclerView.Adapter<InventoryViewHolder>() {
-    private var products: List<Product> = listOf()
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var items: List<InventoryItem> = listOf()
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = items.size
+
+    override fun getItemViewType(position: Int): Int {
+        return items[position].type.id
+    }
 
     override fun onBindViewHolder(
-        holder: InventoryViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        val item = products[position]
-        holder.bind(item)
+        val item = items[position]
+        when (holder) {
+            is ProductViewHolder -> holder.bind(item as ProductUiModel)
+            is ShowMoreViewHolder -> holder.bind(item as ShowMoreButton)
+        }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): InventoryViewHolder {
-        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context))
-        return InventoryViewHolder(binding, handler)
+    ): RecyclerView.ViewHolder {
+        return when (viewType) {
+            InventoryItemType.PRODUCT.id -> ProductViewHolder(parent, handler)
+            InventoryItemType.SHOW_MORE_BUTTON.id -> ShowMoreViewHolder(parent, handler)
+            else -> throw IllegalStateException()
+        }
     }
 
-    fun updateProducts(newProducts: List<Product>) {
-        products += newProducts
+    fun updateProducts(newProducts: List<ProductUiModel>) {
+        items += newProducts
     }
 }
 
 interface InventoryEventHandler {
-    fun onProductSelected(product: Product)
+    fun onProductSelected(product: ProductUiModel)
 
     fun onLoadMoreProducts(page: Int)
 }
