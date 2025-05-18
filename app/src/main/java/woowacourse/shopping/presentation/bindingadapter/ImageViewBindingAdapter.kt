@@ -11,7 +11,7 @@ fun setLoadImage(
     url: String?,
 ) {
     Glide
-        .with(view.context)
+        .with(view)
         .load(url)
         .placeholder(R.drawable.ic_loading)
         .fallback(R.drawable.ic_delete)
