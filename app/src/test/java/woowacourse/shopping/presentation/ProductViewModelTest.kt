@@ -32,7 +32,7 @@ class ProductViewModelTest {
     }
 
     @Test
-    fun `fetchData는 첫 페이지 10개를 반환한다`() {
+    fun `fetchData 초기 호출 시 상품 10개를 반환한다`() {
         viewModel.fetchData()
 
         val products = viewModel.products.getOrAwaitValue()
@@ -40,7 +40,7 @@ class ProductViewModelTest {
     }
 
     @Test
-    fun `loadMore는 다음 페이지를 추가한다`() {
+    fun `loadMore 호출 시 상품 10개가 추가된다`() {
         viewModel.fetchData()
         viewModel.loadMore()
 
@@ -49,7 +49,7 @@ class ProductViewModelTest {
     }
 
     @Test
-    fun `모든 데이터를 불러오지 않으면 더보기 버튼은 false가 된다`() {
+    fun `모든 데이터를 불러오지 않으면 더보기 버튼은 true가 된다`() {
         viewModel.fetchData()
         repeat(3) { viewModel.loadMore() }
 
