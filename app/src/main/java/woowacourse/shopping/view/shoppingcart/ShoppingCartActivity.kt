@@ -66,7 +66,10 @@ class ShoppingCartActivity : AppCompatActivity() {
 
         viewModel.cacheShoppingCartProduct.observe(this) { value ->
             adapter.updateItems(value)
-            binding.btnRight.isEnabled = true
+        }
+
+        viewModel.hasNext.observe(this) { value ->
+            binding.btnRight.isEnabled = value
         }
     }
 }

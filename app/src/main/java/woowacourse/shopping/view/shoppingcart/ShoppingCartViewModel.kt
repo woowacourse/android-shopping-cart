@@ -24,6 +24,9 @@ class ShoppingCartViewModel(
 
     private val loadedPages = mutableSetOf<Int>()
 
+    private var _hasNext = MutableLiveData<Boolean>()
+    val hasNext: LiveData<Boolean> = _hasNext
+
     init {
         loadProducts()
     }
@@ -41,6 +44,7 @@ class ShoppingCartViewModel(
 
         if (loadedPages.contains(page)) {
             cached()
+            checkCacheHasNext()
             return
         }
 
@@ -53,11 +57,33 @@ class ShoppingCartViewModel(
         shoppingProducts = shoppingProducts.plus(result)
         loadedPages.add(page)
         cached()
+        checkHasNext()
+    }
+
+    private fun checkHasNext() {
+        val result =
+            repository.getPaged(
+                SHOPPING_PRODUCT_SIZE_LIMIT,
+                (_currentPage.value?.plus(1) ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
+            )
+
+        _hasNext.value = result != emptyList<ShoppingProduct>()
+    }
+
+    private fun checkCacheHasNext() {
+        val result =
+            shoppingProducts.getCache(
+                SHOPPING_PRODUCT_SIZE_LIMIT,
+                (_currentPage.value?.plus(1) ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
+            )
+
+        _hasNext.value = result != emptyList<ShoppingProduct>()
     }
 
     fun loadPreviousShoppingProducts() {
         _currentPage.value = _currentPage.value?.minus(ADD_PAGE_NUMBER)
         cached()
+        checkCacheHasNext()
     }
 
     private fun loadProducts() {
@@ -66,14 +92,13 @@ class ShoppingCartViewModel(
         shoppingProducts = result
         loadedPages.add(page)
         cached()
+        checkHasNext()
     }
 
     private fun cached() {
-        _cacheShoppingCartProduct.value =
-            shoppingProducts.getCache(
-                SHOPPING_PRODUCT_SIZE_LIMIT,
-                (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
-            )
+        val offset = (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT
+        val cache = shoppingProducts.getCache(SHOPPING_PRODUCT_SIZE_LIMIT, offset)
+        _cacheShoppingCartProduct.value = cache
     }
 
     private fun List<ShoppingProduct>.getCache(
