@@ -76,7 +76,7 @@ class ShoppingCartViewModelTest {
     }
 
     @Test
-    fun `다음 페이지가 존재할 경우 true다`() {
+    fun `다음 상품 목록이 존재하면 다음 페이지는 존재한다`() {
         // given
         every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf(createGoods())
         shoppingCartViewModel = ShoppingCartViewModel()
@@ -86,7 +86,7 @@ class ShoppingCartViewModelTest {
     }
 
     @Test
-    fun `다음 페이지가 존재하지 않을 경우 false다`() {
+    fun `다음 상품 목록이 존재하지 않으면 다음 페이지는 존재하지 않는다`() {
         // given
         every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf()
         shoppingCartViewModel = ShoppingCartViewModel()

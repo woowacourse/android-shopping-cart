@@ -48,7 +48,7 @@ class ShoppingCartActivityTest {
     }
 
     @Test
-    fun `x_버튼을_누르면_사라진다`() {
+    fun `x_버튼을_누르면_해당_상품이_사라진다`() {
         // given
         onView(withId(R.id.rv_selected_goods_list))
             .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(0))
