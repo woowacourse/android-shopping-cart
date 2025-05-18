@@ -14,6 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.view.cart.ShoppingCartActivity
 import woowacourse.shopping.view.product.catalog.adapter.ProductAdapter
+import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 
 class ProductCatalogActivity : AppCompatActivity() {
@@ -66,17 +67,17 @@ class ProductCatalogActivity : AppCompatActivity() {
         gridLayoutManager.spanSizeLookup =
             object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int =
-                    when (ProductAdapter.Type.entries[productAdapter.getItemViewType(position)]) {
-                        ProductAdapter.Type.LOAD_MORE -> GRID_SPAN_COUNT
-                        ProductAdapter.Type.PRODUCT -> 1
+                    when (ProductCatalogItem.ViewType.entries[productAdapter.getItemViewType(position)]) {
+                        ProductCatalogItem.ViewType.LOAD_MORE -> GRID_SPAN_COUNT
+                        ProductCatalogItem.ViewType.PRODUCT -> 1
                     }
             }
         binding.rvProducts.layoutManager = gridLayoutManager
     }
 
     private fun initObservers() {
-        viewModel.products.observe(this) { value ->
-            productAdapter.updateItems(value, viewModel.hasNext)
+        viewModel.productItems.observe(this) { value ->
+            productAdapter.updateItems(value)
         }
 
         viewModel.selectedProduct.observe(this) { value ->

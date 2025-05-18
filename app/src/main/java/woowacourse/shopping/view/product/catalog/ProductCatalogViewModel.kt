@@ -6,24 +6,24 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogEventHandler
+import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
 
 class ProductCatalogViewModel(
     private val repository: ProductRepository,
 ) : ViewModel(),
     ProductCatalogEventHandler {
-    private val items = mutableListOf<Product>()
-    private val _products = MutableLiveData<List<Product>>(items)
-    val products: LiveData<List<Product>> = _products
+    private val products = mutableListOf<Product>()
+
+    private val _productItems = MutableLiveData<List<ProductCatalogItem>>()
+    val productItems: LiveData<List<ProductCatalogItem>> = _productItems
 
     private val _selectedProduct = MutableLiveData<Product>()
     val selectedProduct: LiveData<Product> = _selectedProduct
 
     private var offset = FIRST_OFFSET
-    var hasNext = false
-        private set
 
     init {
-        loadProducts()
+        loadMoreProducts()
     }
 
     override fun onProductClick(item: Product) {
@@ -31,14 +31,15 @@ class ProductCatalogViewModel(
     }
 
     override fun onMoreClick() {
-        loadProducts()
+        loadMoreProducts()
     }
 
-    private fun loadProducts() {
+    private fun loadMoreProducts() {
         val result = repository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset)
-        hasNext = result.hasNext
-        _products.value = products.value.orEmpty() + result.items
+        products.addAll(result.items)
         offset += result.items.size
+        val items = products.map { ProductCatalogItem.ProductItem(it) }
+        _productItems.value = if (result.hasNext) items + ProductCatalogItem.LoadMoreItem else items
     }
 
     companion object {
