@@ -9,7 +9,7 @@ import org.junit.Test
 import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.isEllipsized
-import woowacourse.shopping.matcher.matchSize
+import woowacourse.shopping.matcher.matchSizeWithViewType
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
 import woowacourse.shopping.matcher.scrollToPosition
@@ -45,14 +45,13 @@ class InventoryActivityTest {
 
     @Test
     fun 상품의_목록은_20개_단위로_표시된다() {
-        onView(withId(R.id.rv_product_list)).check(matchSize(20))
+        onView(withId(R.id.rv_product_list)).check(matchSizeWithViewType(20, R.layout.item_inventory_product))
     }
 
     @Test
     fun 더보기_버튼을_눌러서_상품을_추가_로드할_수_있다() {
-        onView(withId(R.id.rv_product_list)).perform(scrollToPosition(19))
-        Thread.sleep(1000)
-        onView(withId(R.id.btn_load_more_products)).performClick()
+        onView(withId(R.id.rv_product_list)).perform(scrollToPosition(20))
+        onView(withId(R.id.btn_show_more)).performClick()
         onView(withId(R.id.rv_product_list)).check(sizeGreaterThan(20))
     }
 

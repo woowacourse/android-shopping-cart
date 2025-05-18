@@ -6,6 +6,7 @@ import org.junit.Test
 import woowacourse.shopping.data.DummyInventoryRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.view.model.InventoryItem
 import woowacourse.shopping.view.model.toUiModel
 import woowacourse.shopping.view.page.Page
 
@@ -24,8 +25,10 @@ class InventoryViewModelTest {
                 0,
                 20,
             )
-        viewModel.requestProductsPage(0)
-        assert(viewModel.productsLiveData.getOrAwaitValue() == page)
+        viewModel.requestPage()
+        val products = viewModel.items.getOrAwaitValue().filterIsInstance<InventoryItem.ProductUiModel>()
+
+        assert(products == page.items)
     }
 
     @Test

@@ -109,6 +109,30 @@ fun matchSize(size: Int): ViewAssertion {
     }
 }
 
+fun matchSizeWithViewType(
+    size: Int,
+    viewType: Int,
+): ViewAssertion {
+    return ViewAssertion { view, noViewFoundException ->
+        if (noViewFoundException != null) {
+            throw noViewFoundException
+        }
+        if (view !is RecyclerView) {
+            fail("Assertion failed: View is not a RecyclerView. Found: ${view?.javaClass?.name}")
+        }
+
+        val recyclerView = view as RecyclerView
+        val itemCount = recyclerView.adapter?.itemCount ?: 0
+        val matchingViewCount =
+            (0..<itemCount).filter { i ->
+                recyclerView.adapter?.getItemViewType(i) == viewType
+            }.size
+        if (matchingViewCount != size) {
+            fail("Assertion failed: RecyclerView item count with matching view type is not $size. Found: $matchingViewCount")
+        }
+    }
+}
+
 fun sizeGreaterThan(size: Int): ViewAssertion {
     return ViewAssertion { view, noViewFoundException ->
         if (noViewFoundException != null) {
