@@ -5,13 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 
 class CartViewModel(
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
+
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> = _products
 
@@ -40,7 +43,10 @@ class CartViewModel(
     fun loadCarts() {
         val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
 
-        _products.value = result.products
+        _products.value =
+            result
+                .products
+                .map { productRepository[it.productId] }
         _pageState.value = paging.createPageState(result.hasNextPage)
     }
 }
