@@ -6,12 +6,16 @@
     <data>
 
         <variable
+            name="position"
+            type="int" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
 
         <variable
             name="toDelete"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function2" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,7 +58,7 @@
             android:layout_height="48dp"
             android:backgroundTint="@color/white"
             android:contentDescription="@null"
-            android:onClick="@{() -> toDelete.invoke()}"
+            android:onClick="@{() -> toDelete.invoke(product, position)}"
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_product_name"
             app:layout_constraintEnd_toEndOf="parent"
