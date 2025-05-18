@@ -75,11 +75,6 @@ class CartActivity : AppCompatActivity() {
         Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
     }
 
-    private fun ImageButton.setCyanOrGrayTint(isEnabled: Boolean) {
-        val colorRes = if (isEnabled) R.color.cyan else R.color.gray1
-        backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, colorRes))
-    }
-
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }

@@ -84,9 +84,4 @@ class ProductAdapter(
             binding.btnLoadMore.setOnClickListener { onClickLoadMore() }
         }
     }
-//
-//    companion object {
-//        private const val VIEW_TYPE_PRODUCT = 0
-//        private const val VIEW_TYPE_LOAD_MORE = 1
-//    }
 }
