@@ -2,14 +2,11 @@ package woowacourse.shopping.presentation.cart
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
@@ -32,8 +29,10 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         initInsets()
-        initViews()
+        initAdapter()
+        setupToolbar()
         observeViewModel()
+
         viewModel.loadItems()
     }
 
@@ -45,14 +44,21 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViews() {
-        binding.ibBack.setOnClickListener { finish() }
+    private fun initAdapter() {
         binding.rvCartProduct.adapter = cartProductAdapter
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.tbCart)
+        binding.tbCart.apply {
+            setNavigationIcon(R.drawable.ic_back)
+            setNavigationOnClickListener { finish() }
+        }
     }
 
     private fun observeViewModel() {
         viewModel.toastMessage.observe(this) { resId ->
-            Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
+            showToast(resId)
         }
 
         viewModel.products.observe(this) {

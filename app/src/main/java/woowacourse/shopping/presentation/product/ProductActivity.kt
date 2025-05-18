@@ -1,6 +1,8 @@
 package woowacourse.shopping.presentation.product
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -31,11 +33,27 @@ class ProductActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         initInsets()
+        setupToolbar()
         initAdapter()
-        initListeners()
         observeViewModel()
+
         viewModel.fetchData()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.action_cart -> {
+                navigateToCart()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
 
     private fun initInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.clProduct) { view, insets ->
@@ -43,6 +61,10 @@ class ProductActivity : AppCompatActivity() {
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.tbProduct)
     }
 
     private fun initAdapter() {
@@ -64,10 +86,6 @@ class ProductActivity : AppCompatActivity() {
                 return if (isLastItem && shouldExpand) 2 else 1
             }
         }
-    }
-
-    private fun initListeners() {
-        binding.ibCart.setOnClickListener { navigateToCart() }
     }
 
     private fun observeViewModel() {

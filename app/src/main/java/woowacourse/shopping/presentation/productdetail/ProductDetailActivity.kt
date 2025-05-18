@@ -3,6 +3,8 @@ package woowacourse.shopping.presentation.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -26,13 +28,29 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         initInsets()
+        setupToolbar()
 
         val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT_DETAIL)
+
         initListeners(product)
         observeViewModel()
-
         viewModel.fetchData(product)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product_detail, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.action_product_detail_close -> {
+                finish()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
 
     private fun initInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -42,12 +60,16 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupToolbar() {
+        setSupportActionBar(binding.tbDetailProduct)
+        supportActionBar?.title = null
+    }
+
     private fun initListeners(product: Product) {
         binding.btnProductDetailAddCart.setOnClickListener {
             viewModel.addToCart(product)
             showToast(R.string.product_detail_add_cart_toast)
         }
-        binding.ibExit.setOnClickListener { finish() }
     }
 
     private fun observeViewModel() {

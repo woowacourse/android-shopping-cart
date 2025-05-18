@@ -22,30 +22,10 @@
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/menu_product"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextColor="@color/white">
-
-            <TextView
-                android:id="@+id/tv_product_toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:text="@string/product_toolbar_text"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="normal" />
-
-            <ImageButton
-                android:id="@+id/ib_cart"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="12dp"
-                android:backgroundTint="@color/gray5"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_cart" />
-
-        </androidx.appcompat.widget.Toolbar>
+            app:title="@string/product_toolbar_text"
+            app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"
