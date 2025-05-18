@@ -16,17 +16,16 @@ class MainViewModel(
     val loadState: LiveData<LoadState> = _loadState
 
     init {
-        loadProducts(0, PAGE_SIZE)
+        loadProducts()
     }
 
-    fun loadProducts(
-        itemCount: Int,
-        pageSize: Int,
-    ) {
-        val newPage = itemCount / pageSize
+    fun loadProducts() {
+        val itemCount = (_products.value?.size ?: 0) + 1
+
+        val newPage = itemCount / PAGE_SIZE
         val currentList = _products.value ?: emptyList()
 
-        val result = productRepository.loadSinglePage(newPage, pageSize)
+        val result = productRepository.loadSinglePage(newPage, PAGE_SIZE)
 
         _products.value = currentList + result.products
         _loadState.value = LoadState.of(result.hasNextPage)

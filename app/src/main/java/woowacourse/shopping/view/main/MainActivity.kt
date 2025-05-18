@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     }
 
     override fun onLoadMoreItems() {
-        viewModel.loadProducts(productsAdapter.itemCount, PAGE_SIZE)
+        viewModel.loadProducts()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
