@@ -29,27 +29,14 @@ class ProductDetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         applyWindowInsets()
-        val product =
-            intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java)
-                ?: throw IllegalArgumentException("알 수 없는 값입니다.")
-
-        setSupportActionBar(binding.toolbarProductDetail)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        binding.product = product
-        binding.detailClickListener =
-            object : DetailClickListener {
-                override fun onAddToCartClick(product: Product) {
-                    cartRepository.add(product)
-                    Toast.makeText(
-                        this@ProductDetailActivity,
-                        R.string.message_add_cart,
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            }
-
         setOnBackPressedCallback()
+
+        initViews()
+    }
+
+    private fun initViews() {
+        initAppbar()
+        initProductDetailInfos()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,8 +74,32 @@ class ProductDetailActivity : AppCompatActivity() {
         )
     }
 
+    private fun initAppbar() {
+        setSupportActionBar(binding.toolbarProductDetail)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun initProductDetailInfos() {
+        binding.product = getIntentProduct()
+        binding.detailClickListener =
+            DetailClickListener { product ->
+                cartRepository.add(product)
+                Toast.makeText(
+                    this@ProductDetailActivity,
+                    R.string.message_add_cart,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+    }
+
+    private fun getIntentProduct(): Product {
+        return intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java)
+            ?: throw IllegalArgumentException(ERROR_INVALID_INTENT_VALUE)
+    }
+
     companion object {
-        private const val EXTRA_PRODUCT = "product"
+        private const val EXTRA_PRODUCT = "EXTRA_PRODUCT"
+        private const val ERROR_INVALID_INTENT_VALUE = "알 수 없는 값입니다."
 
         fun newIntent(
             context: Context,
