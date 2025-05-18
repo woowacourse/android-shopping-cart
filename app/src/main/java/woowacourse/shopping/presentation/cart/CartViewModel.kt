@@ -24,6 +24,8 @@ class CartViewModel(
     val totalPages: LiveData<Int> = _totalPages
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int> = _currentPage
+    private val _toastMessage = SingleLiveData<Int>()
+    val toastMessage: LiveData<Int> = _toastMessage
 
     val toastMessage = SingleLiveData<Int>()
 
@@ -43,12 +45,12 @@ class CartViewModel(
         val totalPages = _totalPages.value ?: 0
 
         if (!next && currentPage == 0) {
-            toastMessage.value = R.string.cart_first_page_toast
+            _toastMessage.value = R.string.cart_first_page_toast
             return
         }
 
         if (next && currentPage >= totalPages - 1) {
-            toastMessage.value = R.string.cart_last_page_toast
+            _toastMessage.value = R.string.cart_last_page_toast
             return
         }
 
