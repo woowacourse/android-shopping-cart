@@ -10,5 +10,9 @@
     <string name="close">닫기</string>
     <string name="back">뒤로가기</string>
     <string name="load_more">더 보기</string>
+    <string name="dialog_exit_title">프로그램 종료</string>
+    <string name="dialog_exit_message">프로그램을 종료하시겠습니까?</string>
+    <string name="dialog_exit_positive">종료</string>
+    <string name="dialog_exit_negative">닫기</string>
 
 </resources>

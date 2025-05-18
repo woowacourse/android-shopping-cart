@@ -1,12 +1,12 @@
 package woowacourse.shopping.ui.productlist
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -36,9 +36,24 @@ class ProductListActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         applyWindowInsets()
+        setOnBackPressedCallback()
 
         initViews()
         initObserver()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product_list, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_cart -> {
+                startActivity(CartActivity.newIntent(this))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun applyWindowInsets() {
@@ -49,6 +64,31 @@ class ProductListActivity : AppCompatActivity() {
         }
     }
 
+    private fun setOnBackPressedCallback() {
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    showExitDialog()
+                }
+            },
+        )
+    }
+
+    private fun showExitDialog() {
+        AlertDialog
+            .Builder(this)
+            .setTitle(getString(R.string.dialog_exit_title))
+            .setMessage(getString(R.string.dialog_exit_message))
+            .setPositiveButton(getString(R.string.dialog_exit_positive)) { _, _ ->
+                finish()
+            }
+            .setNegativeButton(getString(R.string.dialog_exit_negative)) { dialog, _ ->
+                dialog.dismiss()
+            }.setCancelable(false)
+            .show()
+    }
+
     private fun initViews() {
         setSupportActionBar(binding.toolbarProductList)
 
@@ -57,7 +97,8 @@ class ProductListActivity : AppCompatActivity() {
                 spanSizeLookup =
                     object : SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
-                            val viewType = binding.productsRecyclerView.adapter?.getItemViewType(position)
+                            val viewType =
+                                binding.productsRecyclerView.adapter?.getItemViewType(position)
                             return when (viewType) {
                                 R.layout.product_item -> 1
                                 else -> 2
@@ -91,26 +132,6 @@ class ProductListActivity : AppCompatActivity() {
     private fun initObserver() {
         viewModel.products.observe(this) {
             productListAdapter.update(it)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_product_list, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_cart -> {
-                startActivity(CartActivity.newIntent(this))
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        fun newIntent(context: Context): Intent {
-            return Intent(context, ProductListActivity::class.java)
         }
     }
 }

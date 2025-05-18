@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,7 +18,6 @@ import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.ui.productlist.ProductListActivity
 import woowacourse.shopping.utils.intentSerializable
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -29,17 +29,27 @@ class ProductDetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         applyWindowInsets()
-        val product = intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java) ?: throw IllegalArgumentException("알 수 없는 값입니다.")
+        val product =
+            intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java)
+                ?: throw IllegalArgumentException("알 수 없는 값입니다.")
+
         setSupportActionBar(binding.toolbarProductDetail)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
         binding.product = product
         binding.detailClickListener =
             object : DetailClickListener {
                 override fun onAddToCartClick(product: Product) {
                     cartRepository.add(product)
-                    Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@ProductDetailActivity,
+                        R.string.message_add_cart,
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 }
             }
+
+        setOnBackPressedCallback()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,13 +58,14 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.menu_close -> {
-                startActivity(ProductListActivity.newIntent(this))
+                finish()
+                true
             }
-        }
 
-        return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun applyWindowInsets() {
@@ -63,6 +74,17 @@ class ProductDetailActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun setOnBackPressedCallback() {
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    finish()
+                }
+            },
+        )
     }
 
     companion object {
