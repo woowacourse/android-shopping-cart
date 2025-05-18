@@ -36,11 +36,3 @@ class ShoppingCartAdapter(
         notifyItemRangeChanged(0, oldCount)
     }
 }
-
-interface ShoppingCartEventHandler {
-    fun onProductRemove(product: Product)
-
-    fun onPaginationPrevious()
-
-    fun onPaginationNext()
-}

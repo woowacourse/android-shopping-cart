@@ -46,9 +46,3 @@ class ProductsAdapter(
         notifyItemInserted(itemCount)
     }
 }
-
-interface InventoryEventHandler {
-    fun onProductSelected(product: ProductUiModel)
-
-    fun onLoadMoreProducts()
-}

@@ -61,7 +61,3 @@ class ProductDetailActivity :
         }
     }
 }
-
-interface ProductDetailEventHandler {
-    fun onAddToCartSelected(product: ProductUiModel)
-}
