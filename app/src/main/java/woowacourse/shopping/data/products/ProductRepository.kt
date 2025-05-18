@@ -1,4 +1,6 @@
-package woowacourse.shopping.model.products
+package woowacourse.shopping.data.products
+
+import woowacourse.shopping.model.product.Product
 
 interface ProductRepository {
     val dummyProducts: List<Product>

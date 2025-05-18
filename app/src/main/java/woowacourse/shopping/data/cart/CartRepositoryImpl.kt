@@ -1,8 +1,8 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.model.product.Product
 
-object CartImpl : Cart {
+object CartRepositoryImpl : CartRepository {
     override val products = mutableListOf<Product>()
 
     override fun add(product: Product) {

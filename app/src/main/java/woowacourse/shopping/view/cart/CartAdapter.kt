@@ -2,7 +2,7 @@ package woowacourse.shopping.view.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.model.product.Product
 
 class CartAdapter(
     private val itemsInCart: MutableList<Product> = mutableListOf(),

@@ -7,18 +7,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.data.Cart
-import woowacourse.shopping.data.CartImpl
-import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.model.product.Product
 
 class ProductDetailViewModel(
-    private val cart: Cart,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _addToCart = MutableLiveData<Unit>()
     val addToCart: LiveData<Unit> = _addToCart
 
     fun onAddToCartClicked(product: Product) {
-        cart.add(product)
+        cartRepository.add(product)
         _addToCart.value = Unit
     }
 
@@ -34,7 +34,7 @@ class ProductDetailViewModel(
                     extras.createSavedStateHandle()
 
                     return ProductDetailViewModel(
-                        CartImpl,
+                        CartRepositoryImpl,
                     ) as T
                 }
             }

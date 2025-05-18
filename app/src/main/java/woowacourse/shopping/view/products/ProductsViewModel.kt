@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.model.products.ProductRepository
-import woowacourse.shopping.model.products.ProductRepositoryImpl
+import woowacourse.shopping.data.products.ProductRepository
+import woowacourse.shopping.data.products.ProductRepositoryImpl
+import woowacourse.shopping.model.product.Product
 
 class ProductsViewModel(
     private val productRepository: ProductRepository,

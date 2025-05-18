@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.data.Cart
-import woowacourse.shopping.data.CartImpl
-import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.model.product.Product
 
 class CartViewModel(
-    private val cart: Cart,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData(cart.products)
+    private val _products = MutableLiveData(cartRepository.products)
     val products: LiveData<MutableList<Product>> = _products
 
     private val _pageCount = MutableLiveData(1)
@@ -39,15 +39,15 @@ class CartViewModel(
     }
 
     fun removeToCart(product: Product) {
-        cart.remove(product)
-        _products.value = cart.products
+        cartRepository.remove(product)
+        _products.value = cartRepository.products
         _isOnlyOnePage.value = checkOnlyOnePage()
         loadPage(_pageCount.value ?: 1)
     }
 
     fun loadNextPage() {
         val nextPage = (_pageCount.value ?: 1) + 1
-        val maxPage = ((cart.products.size - 1) / pageSize) + 1
+        val maxPage = ((cartRepository.products.size - 1) / pageSize) + 1
         if (nextPage <= maxPage) {
             loadPage(nextPage)
         }
@@ -63,20 +63,20 @@ class CartViewModel(
     private fun checkFirstPage(): Boolean = (_pageCount.value == 1)
 
     private fun checkLastPage(): Boolean {
-        val totalPageCount = (cart.products.size + pageSize - 1) / pageSize
+        val totalPageCount = (cartRepository.products.size + pageSize - 1) / pageSize
         return _pageCount.value == totalPageCount
     }
 
-    private fun checkOnlyOnePage(): Boolean = cart.products.size <= 5
+    private fun checkOnlyOnePage(): Boolean = cartRepository.products.size <= 5
 
     private fun loadPage(page: Int) {
-        val maxPage = ((cart.products.size - 1) / pageSize) + 1
+        val maxPage = ((cartRepository.products.size - 1) / pageSize) + 1
         if (page < 1 || page > maxPage) return
 
         val start = (page - 1) * pageSize
-        val end = minOf(start + pageSize, cart.products.size)
+        val end = minOf(start + pageSize, cartRepository.products.size)
 
-        val items = cart.products.subList(start, end)
+        val items = cartRepository.products.subList(start, end)
         _loadedProducts.postValue(items)
         _pageCount.value = page
         _isOnlyOnePage.value = checkOnlyOnePage()
@@ -96,7 +96,7 @@ class CartViewModel(
                     extras.createSavedStateHandle()
 
                     return CartViewModel(
-                        CartImpl,
+                        CartRepositoryImpl,
                     ) as T
                 }
             }

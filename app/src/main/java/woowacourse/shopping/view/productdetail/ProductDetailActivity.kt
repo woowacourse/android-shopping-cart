@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.intent.getSerializableExtraData
-import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.model.product.Product
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
