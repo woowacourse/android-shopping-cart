@@ -120,4 +120,8 @@ class DummyShoppingCartRepository: ShoppingCartRepository {
         )
 
     override fun getAll(): List<Product> = shoppingCart
+
+    override fun insert(product: Product) {
+        shoppingCart.add(0, product)
+    }
 }
