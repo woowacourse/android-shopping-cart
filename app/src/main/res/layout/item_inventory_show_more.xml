@@ -3,7 +3,7 @@
     <data>
         <variable
             name="button"
-            type="woowacourse.shopping.view.model.InventoryItem.ShowMoreButton" />
+            type="woowacourse.shopping.view.model.InventoryItem.ShowMore" />
 
         <variable
             name="handler"

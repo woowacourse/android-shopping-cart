@@ -17,7 +17,7 @@ sealed interface InventoryItem {
         override val type = InventoryItemType.PRODUCT
     }
 
-    data object ShowMoreButton : InventoryItem {
-        override val type = InventoryItemType.SHOW_MORE_BUTTON
+    data object ShowMore : InventoryItem {
+        override val type = InventoryItemType.SHOW_MORE
     }
 }

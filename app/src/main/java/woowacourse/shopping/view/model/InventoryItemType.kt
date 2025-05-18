@@ -6,6 +6,6 @@ import woowacourse.shopping.R
 enum class InventoryItemType(
     @LayoutRes val id: Int,
 ) {
-    PRODUCT(R.layout.item_product),
-    SHOW_MORE_BUTTON(R.layout.button_load_more_products),
+    PRODUCT(R.layout.item_inventory_product),
+    SHOW_MORE(R.layout.item_inventory_show_more),
 }

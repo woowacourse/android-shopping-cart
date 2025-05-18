@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.model.InventoryItem
 import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.model.InventoryItem.ShowMoreButton
+import woowacourse.shopping.view.model.InventoryItem.ShowMore
 import woowacourse.shopping.view.model.InventoryItemType
 
 class ProductsAdapter(
@@ -25,7 +25,7 @@ class ProductsAdapter(
         val item = items[position]
         when (holder) {
             is ProductViewHolder -> holder.bind(item as ProductUiModel)
-            is ShowMoreViewHolder -> holder.bind(item as ShowMoreButton)
+            is ShowMoreViewHolder -> holder.bind(item as ShowMore)
         }
     }
 
@@ -35,7 +35,7 @@ class ProductsAdapter(
     ): RecyclerView.ViewHolder {
         return when (viewType) {
             InventoryItemType.PRODUCT.id -> ProductViewHolder(parent, handler)
-            InventoryItemType.SHOW_MORE_BUTTON.id -> ShowMoreViewHolder(parent, handler)
+            InventoryItemType.SHOW_MORE.id -> ShowMoreViewHolder(parent, handler)
             else -> throw IllegalStateException()
         }
     }
