@@ -1,4 +1,4 @@
-package woowacourse.shopping.model.intent
+package woowacourse.shopping.view.intent
 
 import android.content.Intent
 import android.os.Build

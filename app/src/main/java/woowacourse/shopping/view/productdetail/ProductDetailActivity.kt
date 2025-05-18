@@ -12,8 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.intent.getSerializableExtraData
 import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.view.intent.getSerializableExtraData
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
