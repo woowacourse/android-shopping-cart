@@ -35,8 +35,11 @@ class CartAdapter(
     }
 
     fun updateProductsView(items: List<Product>) {
+        val oldSize = itemsInCart.size
         itemsInCart.clear()
+        notifyItemRangeRemoved(0, oldSize)
+
         itemsInCart.addAll(items)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, items.size)
     }
 }
