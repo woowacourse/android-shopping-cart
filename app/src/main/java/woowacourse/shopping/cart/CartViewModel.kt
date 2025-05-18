@@ -39,11 +39,11 @@ class CartViewModel(
         loadCartProducts()
     }
 
-    fun onPaginationButtonClick(dir: Int) {
+    fun onPaginationButtonClick(buttonDirection: Int) {
         val currentPage = page.value ?: INITIAL_PAGE
         val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
 
-        when (dir) {
+        when (buttonDirection) {
             PREV_BUTTON ->
                 if (currentPage > 0) {
                     decreasePage()
