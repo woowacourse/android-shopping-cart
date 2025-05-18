@@ -8,21 +8,18 @@ import woowacourse.shopping.model.products.Product
 
 class CartViewHolder(
     private val binding: ItemProductInCartBinding,
-    private val onProductRemoveClickListener: OnProductRemoveClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
+    val removeProductButton = binding.removeProductBtn
+
     fun bind(item: Product) {
-        binding.onProductRemoveClickListener = onProductRemoveClickListener
         binding.product = item
     }
 
     companion object {
-        fun from(
-            parent: ViewGroup,
-            clickListener: OnProductRemoveClickListener,
-        ): CartViewHolder {
+        fun from(parent: ViewGroup): CartViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemProductInCartBinding.inflate(inflater, parent, false)
-            return CartViewHolder(binding, clickListener)
+            return CartViewHolder(binding)
         }
     }
 }

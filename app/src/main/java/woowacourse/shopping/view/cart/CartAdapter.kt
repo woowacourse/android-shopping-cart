@@ -6,12 +6,12 @@ import woowacourse.shopping.model.products.Product
 
 class CartAdapter(
     private val itemsInCart: MutableList<Product> = mutableListOf(),
-    private val onProductRemoveClickListener: OnProductRemoveClickListener,
+    private val onProductRemoveClickListener: (Product) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): CartViewHolder = CartViewHolder.from(parent, onProductRemoveClickListener)
+    ): CartViewHolder = CartViewHolder.from(parent)
 
     override fun getItemCount(): Int = itemsInCart.size
 
@@ -19,6 +19,9 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
+        holder.removeProductButton.setOnClickListener {
+            onProductRemoveClickListener(itemsInCart[position])
+        }
         holder.bind(itemsInCart[position])
     }
 
