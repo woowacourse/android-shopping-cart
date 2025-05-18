@@ -65,16 +65,12 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun navigateToProductDetail(product: Product) {
-        val intent =
-            Intent(this, ProductDetailActivity::class.java).apply {
-                putExtra(PRODUCT_DATA_KEY, product)
-            }
+        val intent = ProductDetailActivity.getIntent(this, product)
         startActivity(intent)
     }
 
     companion object {
         private const val SPAN_COUNT = 2
         private const val SPACING_DP = 12f
-        const val PRODUCT_DATA_KEY = "product"
     }
 }
