@@ -1,7 +1,8 @@
 package woowacourse.shopping.domain.model
 
-@JvmInline
-value class Price(val value: Int) {
+import java.io.Serializable
+
+data class Price(val value: Int) : Serializable {
     init {
         require(value > MINIMUM_PRICE) { ERROR_MINIMUM_PRICE }
     }

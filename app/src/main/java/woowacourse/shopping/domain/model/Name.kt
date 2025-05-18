@@ -1,7 +1,8 @@
 package woowacourse.shopping.domain.model
 
-@JvmInline
-value class Name(val value: String) {
+import java.io.Serializable
+
+data class Name(val value: String) : Serializable {
     init {
         require(value.isNotEmpty()) { ERROR_NAME_EMPTY }
     }
