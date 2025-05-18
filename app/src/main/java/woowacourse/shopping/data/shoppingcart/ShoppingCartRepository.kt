@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.shoppingcart
 
 import woowacourse.shopping.domain.ShoppingProduct
-import woowacourse.shopping.view.PagedResult
 
 interface ShoppingCartRepository {
     fun insert(productId: Long)
@@ -11,7 +10,7 @@ interface ShoppingCartRepository {
     fun getPaged(
         limit: Int,
         offset: Int,
-    ): PagedResult<ShoppingProduct>
+    ): List<ShoppingProduct>
 
     fun delete(shoppingCartId: Long)
 }

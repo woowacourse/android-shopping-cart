@@ -24,13 +24,10 @@ class SelectedProductAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(
-        newItems: List<ShoppingProduct>,
-        hasNext: Boolean,
-    ) {
+    fun updateItems(newItems: List<ShoppingProduct>) {
         shoppingProducts.clear()
         shoppingProducts.addAll(newItems)
-        this.hasNext = hasNext
+
         notifyDataSetChanged()
     }
 

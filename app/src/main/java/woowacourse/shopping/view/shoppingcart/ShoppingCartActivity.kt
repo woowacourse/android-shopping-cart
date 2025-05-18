@@ -64,9 +64,9 @@ class ShoppingCartActivity : AppCompatActivity() {
             adapter.removeItem(value)
         }
 
-        viewModel.shoppingProduct.observe(this) { value ->
-            adapter.updateItems(value.items, value.hasNext)
-            binding.btnRight.isEnabled = value.hasNext
+        viewModel.cacheShoppingCartProduct.observe(this) { value ->
+            adapter.updateItems(value)
+            binding.btnRight.isEnabled = true
         }
     }
 }

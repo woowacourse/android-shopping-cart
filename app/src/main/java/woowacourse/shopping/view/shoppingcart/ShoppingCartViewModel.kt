@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingProduct
-import woowacourse.shopping.view.PagedResult
 
 class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
@@ -15,11 +14,15 @@ class ShoppingCartViewModel(
     private val _removedProduct = MutableLiveData<ShoppingProduct>()
     val removedProduct: LiveData<ShoppingProduct> = _removedProduct
 
-    private val _shoppingProduct = MutableLiveData<PagedResult<ShoppingProduct>>()
-    val shoppingProduct: LiveData<PagedResult<ShoppingProduct>> = _shoppingProduct
+    private var shoppingProducts: List<ShoppingProduct> = listOf()
 
     private var _currentPage = MutableLiveData(FIRST_PAGE_NUMBER)
     val currentPage: LiveData<Int> = _currentPage
+
+    private var _cacheShoppingCartProduct = MutableLiveData<List<ShoppingProduct>>()
+    val cacheShoppingCartProduct: LiveData<List<ShoppingProduct>> = _cacheShoppingCartProduct
+
+    private val loadedPages = mutableSetOf<Int>()
 
     init {
         loadProducts()
@@ -28,32 +31,58 @@ class ShoppingCartViewModel(
     fun deleteProduct(shoppingProduct: ShoppingProduct) {
         repository.delete(shoppingProduct.id)
         _removedProduct.value = shoppingProduct
+        shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
     }
 
     fun loadMoreShoppingProducts() {
+        _currentPage.value = _currentPage.value?.plus(ADD_PAGE_NUMBER)
+
+        val page = _currentPage.value ?: FIRST_PAGE_NUMBER
+
+        if (loadedPages.contains(page)) {
+            cached()
+            return
+        }
+
         val result =
             repository.getPaged(
                 SHOPPING_PRODUCT_SIZE_LIMIT,
                 (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
             )
-        _shoppingProduct.value = PagedResult(result.items, result.hasNext)
-        _currentPage.value = _currentPage.value?.plus(ADD_PAGE_NUMBER)
+
+        shoppingProducts = shoppingProducts.plus(result)
+        loadedPages.add(page)
+        cached()
     }
 
     fun loadPreviousShoppingProducts() {
         _currentPage.value = _currentPage.value?.minus(ADD_PAGE_NUMBER)
-        val result =
-            repository.getPaged(
-                SHOPPING_PRODUCT_SIZE_LIMIT,
-                (_currentPage.value?.minus(ADD_PAGE_NUMBER) ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
-            )
-        _shoppingProduct.value = PagedResult(result.items, result.hasNext)
+        cached()
     }
 
     private fun loadProducts() {
+        val page = _currentPage.value ?: FIRST_PAGE_NUMBER
         val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
-        _shoppingProduct.value = PagedResult(result.items, result.hasNext)
-        _currentPage.value = _currentPage.value?.plus(ADD_PAGE_NUMBER)
+        shoppingProducts = result
+        loadedPages.add(page)
+        cached()
+    }
+
+    private fun cached() {
+        _cacheShoppingCartProduct.value =
+            shoppingProducts.getCache(
+                SHOPPING_PRODUCT_SIZE_LIMIT,
+                (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
+            )
+    }
+
+    private fun List<ShoppingProduct>.getCache(
+        limit: Int,
+        offset: Int,
+    ): List<ShoppingProduct> {
+        val total = this.size
+        val endIndex = (offset + limit).coerceAtMost(total)
+        return this.subList(offset, endIndex)
     }
 
     companion object {
