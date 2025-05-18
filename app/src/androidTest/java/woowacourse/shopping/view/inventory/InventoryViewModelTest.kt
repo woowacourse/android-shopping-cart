@@ -3,6 +3,7 @@ package woowacourse.shopping.view.inventory
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.data.DummyInventoryRepository
 import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.view.page.Page
@@ -14,7 +15,7 @@ class InventoryViewModelTest {
 
     @Test
     fun 한_페이지에_상품이_20개씩_로드된다() {
-        val viewModel = InventoryViewModel()
+        val viewModel = InventoryViewModel(DummyInventoryRepository())
         val page =
             Page.from(
                 DummyProducts.products,
@@ -27,7 +28,7 @@ class InventoryViewModelTest {
 
     @Test
     fun 상품의_총_개수를_반환한다() {
-        val viewModel = InventoryViewModel()
+        val viewModel = InventoryViewModel(DummyInventoryRepository())
         assert(viewModel.totalSize == DummyProducts.products.size)
     }
 }

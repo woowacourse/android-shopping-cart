@@ -3,24 +3,29 @@ package woowacourse.shopping.view.inventory
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.page.Page
-import kotlin.getValue
 
 class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),
     InventoryEventHandler {
-    private val viewModel: InventoryViewModel by viewModels()
+    private lateinit var viewModel: InventoryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val shoppingApplication = application as ShoppingApplication
+        val factory = InventoryViewModel.createFactory(shoppingApplication.inventoryRepository)
+        viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
+
         setSupportActionBar(binding.toolbar as Toolbar)
         binding.apply {
             viewModel = this@InventoryActivity.viewModel
