@@ -49,6 +49,7 @@ class ShoppingCartActivity : AppCompatActivity() {
     private fun initBindings() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
+        binding.handler = viewModel
     }
 
     private fun initObservers() {

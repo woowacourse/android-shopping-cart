@@ -2,6 +2,7 @@ package woowacourse.shopping.view.product.catalog.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.view.product.catalog.ProductCatalogEventHandler
 
 class ProductAdapter(
     items: List<ProductCatalogItem> = emptyList(),

@@ -8,6 +8,10 @@
         <variable
             name="viewmodel"
             type="woowacourse.shopping.view.cart.ShoppingCartViewModel" />
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.view.cart.ShoppingCartEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +44,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:enabled="@{viewmodel.hasPrevious}"
-                android:onClick="@{() -> viewmodel.loadPreviousProducts()}"
+                android:onClick="@{() -> handler.loadPreviousProducts()}"
                 android:text="@string/left_arrow"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -68,7 +72,7 @@
                 android:layout_height="42dp"
                 android:enabled="@{viewmodel.hasNext}"
                 android:background="@drawable/style_right_arrow"
-                android:onClick="@{() -> viewmodel.loadNextProducts()}"
+                android:onClick="@{() -> handler.loadNextProducts()}"
                 android:text="@string/right_arrow"
                 android:textColor="@color/white"
                 android:textSize="20sp"

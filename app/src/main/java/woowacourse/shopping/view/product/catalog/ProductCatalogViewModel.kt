@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogEventHandler
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
 
 class ProductCatalogViewModel(
