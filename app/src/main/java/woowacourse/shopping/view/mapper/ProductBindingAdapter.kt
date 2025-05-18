@@ -22,6 +22,5 @@ fun setImage(
     Glide.with(view.context)
         .load(url)
         .placeholder(R.drawable.placeholder_product)
-        .override(154, 154)
         .into(view)
 }
