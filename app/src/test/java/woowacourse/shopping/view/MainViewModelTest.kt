@@ -59,7 +59,7 @@ class MainViewModelTest {
         // when
         viewModel = MainViewModel(productRepository)
 
-        viewModel.loadProducts(20, 20)
+        viewModel.loadProducts()
 
         // then
         val expected = listOf(productFixture1, productFixture2, productFixture3, productFixture4)
