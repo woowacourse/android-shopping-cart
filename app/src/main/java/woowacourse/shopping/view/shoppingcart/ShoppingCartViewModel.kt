@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.ShoppingCartRepository
+import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.page.Page
 
 class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : ViewModel() {
     private val allProducts: Set<Product> get() = repository.getAll().toSet()

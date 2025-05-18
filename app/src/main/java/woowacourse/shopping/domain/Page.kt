@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.page
+package woowacourse.shopping.domain
 
 data class Page<T>(
     val items: List<T>,

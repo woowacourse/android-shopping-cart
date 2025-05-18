@@ -3,7 +3,7 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.page.Page
+import woowacourse.shopping.domain.Page
 import kotlin.math.min
 
 class DummyShoppingCartRepository: ShoppingCartRepository {

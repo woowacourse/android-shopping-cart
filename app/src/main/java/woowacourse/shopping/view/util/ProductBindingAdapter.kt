@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.mapper
+package woowacourse.shopping.view.util
 
 import android.widget.ImageView
 import android.widget.TextView

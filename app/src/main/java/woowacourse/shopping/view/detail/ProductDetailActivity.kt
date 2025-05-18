@@ -10,9 +10,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.view.base.BaseActivity
-import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.view.util.getParcelableCompat
 
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
