@@ -2,7 +2,6 @@ package woowacourse.shopping.view.inventory
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,8 +10,9 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.model.InventoryItem
 import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.page.Page
+import woowacourse.shopping.view.model.InventoryItemType
 
 class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),
@@ -27,10 +27,6 @@ class InventoryActivity :
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
 
         setSupportActionBar(binding.toolbar as Toolbar)
-        binding.apply {
-            viewModel = this@InventoryActivity.viewModel
-            handler = this@InventoryActivity
-        }
         initRecyclerview()
     }
 
@@ -42,18 +38,27 @@ class InventoryActivity :
     private fun initRecyclerview() {
         binding.rvProductList.apply {
             adapter = ProductsAdapter(this@InventoryActivity)
-            layoutManager = GridLayoutManager(this@InventoryActivity, 2)
-            addOnScrollListener(InventoryOnScrollListener(binding, viewModel))
-        }
-        viewModel.apply {
-            requestProductsPage(0)
-            productsLiveData.observe(this@InventoryActivity) { page -> updateRecyclerView(page) }
+            val gridLayoutManager = GridLayoutManager(this@InventoryActivity, 2)
+            gridLayoutManager.spanSizeLookup =
+                object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return when ((viewModel.items.value ?: emptyList())[position].type) {
+                            InventoryItemType.PRODUCT -> 1
+                            InventoryItemType.SHOW_MORE -> 2
+                        }
+                    }
+                }
+            layoutManager = gridLayoutManager
+            viewModel.apply {
+                requestPage()
+                items.observe(this@InventoryActivity) { items -> updateRecyclerView(items) }
+            }
         }
     }
 
-    private fun updateRecyclerView(page: Page<ProductUiModel>) {
-        binding.rvProductList.adapter.apply {
-            (this as ProductsAdapter).updateProducts(page.items)
+    private fun updateRecyclerView(items: List<InventoryItem>) {
+        (binding.rvProductList.adapter as ProductsAdapter).apply {
+            updateProducts(items)
             notifyItemInserted(itemCount)
         }
     }
@@ -62,8 +67,7 @@ class InventoryActivity :
         startActivity(ProductDetailActivity.newIntent(this, product))
     }
 
-    override fun onLoadMoreProducts(page: Int) {
-        binding.btnLoadMoreProducts.visibility = View.GONE
-        viewModel.requestProductsPage(page)
+    override fun onLoadMoreProducts() {
+        viewModel.requestPage()
     }
 }

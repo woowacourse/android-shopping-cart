@@ -10,7 +10,7 @@ import woowacourse.shopping.view.model.InventoryItemType
 class ProductsAdapter(
     private val handler: InventoryEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: List<InventoryItem> = listOf()
+    private val items: MutableList<InventoryItem> = mutableListOf()
 
     override fun getItemCount(): Int = items.size
 
@@ -40,13 +40,14 @@ class ProductsAdapter(
         }
     }
 
-    fun updateProducts(newProducts: List<ProductUiModel>) {
-        items += newProducts
+    fun updateProducts(newProducts: List<InventoryItem>) {
+        items.clear()
+        items.addAll(newProducts)
     }
 }
 
 interface InventoryEventHandler {
     fun onProductSelected(product: ProductUiModel)
 
-    fun onLoadMoreProducts(page: Int)
+    fun onLoadMoreProducts()
 }
