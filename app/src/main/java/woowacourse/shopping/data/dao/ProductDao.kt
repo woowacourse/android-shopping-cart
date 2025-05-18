@@ -16,11 +16,8 @@ interface ProductDao {
     ): List<ProductEntity>
 
     @Query("SELECT * FROM products WHERE id = :id")
-    fun getProduct(id: Int): ProductEntity
+    fun getProduct(id: Int): ProductEntity?
 
     @Query("SELECT MAX(id) FROM products")
-    fun getMaxId(): Int {
-        val maxId = getAllProducts().maxOfOrNull { it.id }
-        return maxId ?: 0
-    }
+    fun getMaxId(): Int
 }

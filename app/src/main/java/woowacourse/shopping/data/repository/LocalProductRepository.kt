@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.Products
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class ProductRepositoryImpl(
+class LocalProductRepository(
     private val dao: ProductDao,
 ) : ProductRepository {
     fun fetchProducts(
@@ -23,5 +23,5 @@ class ProductRepositoryImpl(
         return maxId > lastId
     }
 
-    fun fetchProductDetail(id: Int): Product = dao.getProduct(id).toDomain()
+    fun fetchProductDetail(id: Int): Product = dao.getProduct(id)?.toDomain() ?: throw NoSuchElementException()
 }

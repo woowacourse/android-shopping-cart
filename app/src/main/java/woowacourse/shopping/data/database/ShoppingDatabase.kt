@@ -11,19 +11,21 @@ import woowacourse.shopping.data.entity.ProductEntity
 abstract class ShoppingDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
 
+    @Suppress("ktlint:standard:property-naming")
     companion object {
         private const val DATABASE_NAME = "SHOPPING_DATABASE"
-        private var instance: ShoppingDatabase? = null
+        private var INSTANCE: ShoppingDatabase? = null
+        private val LOCK = Any()
 
         fun getInstance(context: Context): ShoppingDatabase =
-            instance ?: Room
-                .databaseBuilder(
-                    context.applicationContext,
-                    ShoppingDatabase::class.java,
-                    DATABASE_NAME,
-                ).build()
-                .also {
-                    instance = it
-                }
+            INSTANCE ?: synchronized(LOCK) {
+                INSTANCE ?: Room
+                    .databaseBuilder(
+                        context.applicationContext,
+                        ShoppingDatabase::class.java,
+                        DATABASE_NAME,
+                    ).build()
+                    .also { INSTANCE = it }
+            }
     }
 }
