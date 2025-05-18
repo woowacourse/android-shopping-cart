@@ -10,7 +10,6 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.model.InventoryItem
 import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
 import woowacourse.shopping.view.model.InventoryItemType
 
@@ -51,15 +50,10 @@ class InventoryActivity :
             layoutManager = gridLayoutManager
             viewModel.apply {
                 requestPage()
-                items.observe(this@InventoryActivity) { items -> updateRecyclerView(items) }
+                items.observe(this@InventoryActivity) { items ->
+                    (binding.rvProductList.adapter as ProductsAdapter).updateProducts(items)
+                }
             }
-        }
-    }
-
-    private fun updateRecyclerView(items: List<InventoryItem>) {
-        (binding.rvProductList.adapter as ProductsAdapter).apply {
-            updateProducts(items)
-            notifyItemInserted(itemCount)
         }
     }
 
