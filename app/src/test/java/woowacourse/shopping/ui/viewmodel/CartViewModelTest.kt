@@ -62,8 +62,8 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `updateMaxPage 호출 시 maxPage 값이 업데이트된다`() {
-        viewModel.updateMaxPage()
+    fun `loadMaxPage 호출 시 maxPage 값이 업데이트된다`() {
+        viewModel.loadMaxPage()
         val maxPage = viewModel.maxPage.getOrAwaitValue()
 
         Assertions.assertTrue(maxPage >= 1)

@@ -17,12 +17,12 @@ class ProductsViewModel(
 
     private val maxProductId: Int get() = products.value?.maxOfOrNull { it.id } ?: 0
 
-    fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
+    fun loadProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
         val newProducts = productsDummyRepository.fetchProducts(count, maxProductId)
         _products.value = products.value?.plus(newProducts)
     }
 
-    fun updateHasMoreProducts() {
+    fun loadHasMoreProducts() {
         _hasMoreProducts.value = productsDummyRepository.fetchHasMoreProducts(maxProductId)
     }
 

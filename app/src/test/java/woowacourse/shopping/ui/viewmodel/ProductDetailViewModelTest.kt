@@ -26,7 +26,7 @@ class ProductDetailViewModelTest {
         val expectedProduct = ProductDummyRepositoryImpl.fetchProductDetail(targetProductId)
 
         // when
-        viewModel.updateProductDetail(targetProductId)
+        viewModel.loadProductDetail(targetProductId)
 
         // then
         val actual = viewModel.product.getOrAwaitValue()
@@ -39,7 +39,7 @@ class ProductDetailViewModelTest {
         val productId = 2
         val product = ProductDummyRepositoryImpl.fetchProductDetail(productId)!!
 
-        viewModel.updateProductDetail(productId)
+        viewModel.loadProductDetail(productId)
 
         // when
         viewModel.addCartProduct()

@@ -15,7 +15,7 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData(EMPTY_PRODUCT)
     val product: LiveData<Product> get() = _product
 
-    fun updateProductDetail(id: Int) {
+    fun loadProductDetail(id: Int) {
         _product.value = productsDummyRepository.fetchProductDetail(id)
     }
 

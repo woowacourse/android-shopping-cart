@@ -20,7 +20,7 @@ class ProductsViewModelTest {
     @Test
     fun `새로운 상품 리스트가 products에 추가된다`() {
         // when
-        viewModel.updateProducts()
+        viewModel.loadProducts()
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
@@ -30,10 +30,10 @@ class ProductsViewModelTest {
     @Test
     fun `hasMoreProducts 값이 설정된다`() {
         // given
-        viewModel.updateProducts(Int.MAX_VALUE)
+        viewModel.loadProducts(Int.MAX_VALUE)
 
         // when
-        viewModel.updateHasMoreProducts()
+        viewModel.loadHasMoreProducts()
 
         // then
         val actual = viewModel.hasMoreProducts.getOrAwaitValue()

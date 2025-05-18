@@ -21,7 +21,7 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
 
         initViewBinding()
         initObservers()
-        viewModel.updateProducts()
+        viewModel.loadProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -41,7 +41,7 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
             }
 
             override fun onLoadMoreClick() {
-                viewModel.updateProducts()
+                viewModel.loadProducts()
             }
         }
 
@@ -78,7 +78,7 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     private fun initObservers() {
         viewModel.products.observe(this) { products ->
             productsAdapter.submitItems(products)
-            viewModel.updateHasMoreProducts()
+            viewModel.loadHasMoreProducts()
         }
         viewModel.hasMoreProducts.observe(this) { hasMore ->
             productsAdapter.updateHasMoreItem(hasMore)

@@ -37,7 +37,7 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
     }
 
     private fun updateProductDetail() {
-        viewModel.updateProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
+        viewModel.loadProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
     }
 
     private fun initViewBinding() {

@@ -19,33 +19,33 @@ class CartViewModel(
     val maxPage: LiveData<Int> get() = _maxPage
 
     init {
-        updateCartProducts()
+        loadCartProducts()
     }
 
-    fun updateCartProducts() {
+    fun loadCartProducts() {
         _products.value = cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE)
         if (products.value.isNullOrEmpty()) decreasePage()
-        updateMaxPage()
+        loadMaxPage()
     }
 
-    fun updateMaxPage() {
+    fun loadMaxPage() {
         _maxPage.value = cartDummyRepository.fetchMaxPageCount()
     }
 
     fun removeCartProduct(id: Int) {
         cartDummyRepository.removeCartProduct(id)
-        updateCartProducts()
+        loadCartProducts()
     }
 
     fun increasePage(step: Int = DEFAULT_PAGE_STEP) {
         _currentPage.value = currentPage.value?.plus(step)
-        updateCartProducts()
+        loadCartProducts()
     }
 
     fun decreasePage(step: Int = DEFAULT_PAGE_STEP) {
         if (currentPage.value == INITIAL_PAGE) return
         _currentPage.value = currentPage.value?.minus(step)
-        updateCartProducts()
+        loadCartProducts()
     }
 
     companion object {
