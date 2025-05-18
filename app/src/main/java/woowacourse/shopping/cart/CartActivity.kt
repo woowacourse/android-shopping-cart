@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -36,8 +37,8 @@ class CartActivity : AppCompatActivity() {
             CartAdapter(
                 cartItems = emptyList(),
                 onDeleteProductClick =
-                    DeleteProductClickListener {
-                        viewModel::deleteCartProduct
+                    DeleteProductClickListener { product ->
+                        viewModel.deleteCartProduct(CartItem.ProductItem(product))
                     },
                 onPaginationButtonClick = viewModel::onPaginationButtonClick,
             )
@@ -51,13 +52,13 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun updateCartItems() {
-        val products: List<CartItem> = viewModel.cartProducts.value ?: return
+        val products: List<ProductUiModel> = viewModel.cartProducts.value ?: return
         val isNext: Boolean = viewModel.isNextButtonEnabled.value == true
         val isPrev: Boolean = viewModel.isPrevButtonEnabled.value == true
         val page: Int = viewModel.page.value ?: 0
         val paginationItem = PaginationButtonItem(page + 1, isNext, isPrev)
 
-        val cartItems: List<CartItem> = products + paginationItem
+        val cartItems: List<CartItem> = products.map { CartItem.ProductItem(it) } + paginationItem
         (binding.recyclerViewCart.adapter as CartAdapter).setData(cartItems)
     }
 

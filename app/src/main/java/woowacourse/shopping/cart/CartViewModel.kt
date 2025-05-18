@@ -1,21 +1,22 @@
 package woowacourse.shopping.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.cart.CartItem.ProductItem
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.CartProductDataSource
+import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartViewModel(
     private val dataSource: CartProductDataSource = CartDatabase,
 ) : ViewModel() {
-    private val products = mutableListOf<CartItem>()
-    private val allCartProducts: List<CartItem>
-        get() = dataSource.cartProducts().map { ProductItem(it) }
+    private val allCartProductsSize get() = dataSource.getAllProductsSize()
+    private val products = mutableListOf<ProductUiModel>()
 
-    private val _cartProducts = MutableLiveData<List<CartItem>>()
-    val cartProducts: LiveData<List<CartItem>> = _cartProducts
+    private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
+    val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
 
     private val _isNextButtonEnabled = MutableLiveData<Boolean>(false)
     val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
@@ -27,21 +28,21 @@ class CartViewModel(
     val page: LiveData<Int> = _page
 
     init {
-        products += allCartProducts
         loadCartProducts()
     }
 
     fun deleteCartProduct(cartProduct: ProductItem) {
-        products.remove(cartProduct)
+        products.remove(cartProduct.productItem)
         _cartProducts.value = products
         dataSource.deleteCartProduct(cartProduct.productItem)
+        Log.d("ViewModel", "${products.size}")
 
         loadCartProducts()
     }
 
     fun onPaginationButtonClick(buttonDirection: Int) {
         val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
+        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
 
         when (buttonDirection) {
             PREV_BUTTON ->
@@ -65,7 +66,7 @@ class CartViewModel(
 
     private fun checkNextButtonEnabled() {
         val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
+        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
         _isNextButtonEnabled.value = currentPage < lastPage
     }
 
@@ -85,12 +86,12 @@ class CartViewModel(
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
         val currentPage = page.value ?: INITIAL_PAGE
         val startIndex = currentPage * pageSize
-        val endIndex = minOf(startIndex + pageSize, allCartProducts.size)
-        if (startIndex >= allCartProducts.size) {
+        val endIndex = minOf(startIndex + pageSize, allCartProductsSize)
+        if (startIndex >= allCartProductsSize) {
             _cartProducts.value = emptyList()
             return
         }
-        val pagedProducts = allCartProducts.subList(startIndex, endIndex)
+        val pagedProducts: List<ProductUiModel> = dataSource.getCartProductsInRange(startIndex, endIndex)
         _cartProducts.value = pagedProducts
         updateButtons()
     }
