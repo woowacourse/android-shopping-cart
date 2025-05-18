@@ -5,6 +5,10 @@ value class Price(
     val value: Int,
 ) {
     init {
-        require(value >= 0) { "상품 금액은 최소 0원입니다." }
+        require(value >= MINIMUM_PRICE) { "가격은 최소 0원입니다." }
+    }
+
+    companion object {
+        private const val MINIMUM_PRICE = 0
     }
 }

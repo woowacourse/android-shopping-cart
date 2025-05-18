@@ -10,7 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
+import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductDetailActivityTest {
     private lateinit var scenario: ActivityScenario<ProductDetailActivity>

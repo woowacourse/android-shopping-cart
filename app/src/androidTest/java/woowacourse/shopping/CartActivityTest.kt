@@ -10,7 +10,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.view.cart.CartActivity
 
 class CartActivityTest {
     @get:Rule
@@ -35,7 +35,7 @@ class CartActivityTest {
     fun 장바구니_목록이_표시된다() {
         onView(withId(R.id.rv_cart_product)).check(matches(isDisplayed()))
     }
-    
+
     @Test
     fun 이전_페이지로_이동하는_버튼이_표시된다() {
         onView(withId(R.id.btn_cart_previous)).check(matches(isDisplayed()))

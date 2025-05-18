@@ -8,6 +8,14 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="toExit"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="toCart"
+            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,45 +25,45 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_detail_product"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="0dp"
             android:background="@color/gray5"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextColor="@color/white">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
-                android:id="@+id/ib_exit"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="12dp"
-                android:backgroundTint="@color/gray5"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_exit" />
-
-        </androidx.appcompat.widget.Toolbar>
+        <ImageButton
+            android:id="@+id/ib_exit"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/gray5"
+            android:contentDescription="@string/detail_product_ic_exit"
+            android:onClick="@{() -> toExit.invoke()}"
+            android:src="@drawable/ic_exit"
+            app:layout_constraintBottom_toBottomOf="@id/tb_detail_product"
+            app:layout_constraintEnd_toEndOf="@id/tb_detail_product"
+            app:layout_constraintTop_toTopOf="@id/tb_detail_product" />
 
         <ImageView
             android:id="@+id/iv_product_detail"
             android:layout_width="match_parent"
-            android:layout_height="360dp"
+            android:layout_height="0dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             app:imageUrl="@{product.imageUrl}"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/tb_detail_product"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/tv_product_detail_name"
-            android:layout_width="wrap_content"
+            style="@style/ProductDetailTitleStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{product.name}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
             tools:text="맥심 모카골드 마일드" />
@@ -64,16 +72,17 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="18dp"
             app:dividerColor="@color/gray1"
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_name" />
 
         <TextView
             android:id="@+id/tv_product_detail_price_text"
+            style="@style/ProductDetailPriceStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@string/product_detail_price_text"
+            android:text="@string/detail_product_price_text"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,12 +90,11 @@
 
         <TextView
             android:id="@+id/tv_product_detail_price"
+            style="@style/ProductDetailPriceStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
-            android:text="@{@string/product_detail_price(product.price)}"
-            android:textColor="@color/black"
-            android:textSize="20sp"
+            android:text="@{@string/detail_product_price(product.price)}"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_detail_price_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_detail_price_text"
@@ -94,17 +102,12 @@
 
         <Button
             android:id="@+id/btn_product_detail_add_cart"
+            style="@style/ProductDetailCartStyle"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="48dp"
             android:background="@color/cyan"
-            android:backgroundTint="@color/cyan"
-            android:paddingVertical="8dp"
-            android:text="@string/product_detail_add_cart"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:onClick="@{() -> toCart.invoke()}"
+            android:text="@string/detail_product_add_cart"
             app:layout_constraintBottom_toBottomOf="parent" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

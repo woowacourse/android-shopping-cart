@@ -7,9 +7,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.FIXTURE
-import woowacourse.shopping.data.CartMapper.toEntity
-import woowacourse.shopping.data.db.CartDao
-import woowacourse.shopping.data.db.CartDatabase
 
 class CartDaoTest {
     private lateinit var db: CartDatabase

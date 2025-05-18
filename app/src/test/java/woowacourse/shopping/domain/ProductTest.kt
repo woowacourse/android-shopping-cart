@@ -6,25 +6,27 @@ import org.junit.jupiter.api.Test
 
 class ProductTest {
     private lateinit var product: Product
+    private val name: Name by lazy { Name("coffee") }
+    private val price: Price by lazy { Price(100) }
 
     @BeforeEach
     fun setUp() {
-        product = Product(0, "coffee", Price(100), "aa@aa.com")
+        product = Product(0, name, price, "aa@aa.com")
     }
 
     @Test
     fun `상품은 id를 가진다`() {
-        assertThat(product.productId).isEqualTo(0)
+        assertThat(product.id).isEqualTo(0)
     }
 
     @Test
     fun `상품은 이름을 가진다`() {
-        assertThat(product.name).isEqualTo("coffee")
+        assertThat(product.name).isEqualTo(name)
     }
 
     @Test
     fun `상품은 가격을 가진다`() {
-        assertThat(product.price).isEqualTo(100)
+        assertThat(product.price).isEqualTo(price)
     }
 
     @Test

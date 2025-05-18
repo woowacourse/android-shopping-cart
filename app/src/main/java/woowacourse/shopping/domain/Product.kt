@@ -3,10 +3,8 @@ package woowacourse.shopping.domain
 import java.io.Serializable
 
 data class Product(
-    val productId: Long,
+    val id: Long,
     val name: String,
-    private val _price: Price,
+    val price: Int,
     val imageUrl: String,
-) : Serializable {
-    val price get() = _price.value
-}
+) : Serializable

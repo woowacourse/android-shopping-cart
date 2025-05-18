@@ -8,26 +8,26 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="toDelete"
+            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:background="@drawable/bg_cart_item"
         android:paddingHorizontal="12dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="12dp">
+        android:paddingTop="12dp"
+        android:paddingBottom="18dp">
 
         <TextView
             android:id="@+id/tv_cart_product_name"
+            style="@style/CartTitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:text="@{product.name}"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="맥심 마일드" />
@@ -36,13 +36,14 @@
             android:id="@+id/iv_cart_product"
             android:layout_width="136dp"
             android:layout_height="72dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="14dp"
             android:contentDescription="@null"
-            android:scaleType="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
             app:imageUrl="@{product.imageUrl}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_cart_product_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name"
-            tools:src="@drawable/ic_launcher_background" />
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name" />
 
         <ImageButton
             android:id="@+id/ib_cart_product_delete"
@@ -50,6 +51,7 @@
             android:layout_height="48dp"
             android:backgroundTint="@color/white"
             android:contentDescription="@null"
+            android:onClick="@{() -> toDelete.invoke()}"
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_product_name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,12 +59,10 @@
 
         <TextView
             android:id="@+id/tv_cart_product_price"
+            style="@style/CartPriceStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="@{@string/cart_product_price(product.price)}"
-            android:textColor="@color/gray5"
-            android:textSize="18sp"
+            android:text="@{@string/cart_price(product.price)}"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
             app:layout_constraintEnd_toEndOf="@id/ib_cart_product_delete"
             tools:text="100,000원" />

@@ -14,7 +14,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.presentation.product.ProductActivity
+import woowacourse.shopping.view.product.ProductActivity
 
 class ProductActivityTest {
     @get:Rule

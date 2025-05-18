@@ -16,13 +16,13 @@
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.cart.CartActivity"
+            android:name=".view.cart.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.productdetail.ProductDetailActivity"
+            android:name=".view.productdetail.ProductDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.product.ProductActivity"
+            android:name=".view.product.ProductActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
