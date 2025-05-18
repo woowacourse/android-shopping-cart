@@ -3,7 +3,7 @@ package woowacourse.shopping.view.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.data.DummyShoppingCart
+import woowacourse.shopping.data.DummyShoppingCartRepository
 import woowacourse.shopping.product
 
 @Suppress("FunctionName")
@@ -13,8 +13,9 @@ class ProductDetailViewModelTest {
 
     @Test
     fun 상품을_추가할_수_있다() {
-        val viewModel = ProductDetailViewModel()
+        val repository = DummyShoppingCartRepository()
+        val viewModel = ProductDetailViewModel(repository)
         viewModel.addProduct(product)
-        assert(DummyShoppingCart.products.contains(product))
+        assert(repository.getAll().contains(product))
     }
 }

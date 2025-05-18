@@ -9,11 +9,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.data.DummyShoppingCart
+import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
@@ -44,11 +43,7 @@ class ProductDetailActivityTest {
     fun 장바구니_담기를_클릭하면_장바구니에_상품이_담긴다() {
         onView(withId(R.id.btn_add_to_cart)).performClick()
         onView(withId(R.id.rv_shopping_cart_list)).isDisplayed()
-        assert(DummyShoppingCart.products.contains(product))
-    }
-
-    @After
-    fun tearDown() {
-        DummyShoppingCart.products.remove(product)
+        onView(withRecyclerView(R.id.rv_shopping_cart_list).atPositionOnView(0, R.id.tv_shopping_cart_item)).matchText("[병천아우내] 모듬순대")
+        onView(withRecyclerView(R.id.rv_shopping_cart_list).atPositionOnView(0, R.id.tv_price)).matchText("11,900원")
     }
 }

@@ -5,7 +5,6 @@ package woowacourse.shopping.view.shoppingcart
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.DummyShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
@@ -17,10 +16,11 @@ class ShoppingCartViewModelTest {
 
     @Test
     fun 한_페이지에_장바구니_상품이_5개씩_로드된다() {
-        val viewModel = ShoppingCartViewModel(DummyShoppingCartRepository())
+        val repository = DummyShoppingCartRepository()
+        val viewModel = ShoppingCartViewModel(repository)
         val page =
             Page.from(
-                DummyShoppingCart.products.toList(),
+                repository.getAll(),
                 0,
                 5,
             )
@@ -30,7 +30,8 @@ class ShoppingCartViewModelTest {
 
     @Test
     fun 장바구니에서_상품을_삭제할_수_있다() {
-        val viewModel = ShoppingCartViewModel(DummyShoppingCartRepository())
+        val repository = DummyShoppingCartRepository()
+        val viewModel = ShoppingCartViewModel(repository)
         val product =
             Product(
                 "[런던베이글뮤지엄] 베이글 6개 & 크림치즈 3개 세트",
@@ -43,7 +44,8 @@ class ShoppingCartViewModelTest {
 
     @Test
     fun 장바구니에서_상품을_삭제하면_해당_상품이_있었던_페이지가_로드된다() {
-        val viewModel = ShoppingCartViewModel(DummyShoppingCartRepository())
+        val repository = DummyShoppingCartRepository()
+        val viewModel = ShoppingCartViewModel(repository)
         val product =
             Product(
                 "[태우한우] 1+ 한우 안심 스테이크 200g (냉장)",
@@ -53,7 +55,7 @@ class ShoppingCartViewModelTest {
         viewModel.removeProduct(product)
         val page =
             Page.from(
-                DummyShoppingCart.products.toList(),
+                repository.getAll(),
                 4,
                 5,
             )
