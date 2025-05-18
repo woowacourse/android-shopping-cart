@@ -42,8 +42,8 @@ class InventoryActivity :
                 object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
                         return when ((viewModel.items.value ?: emptyList())[position].type) {
-                            InventoryItemType.PRODUCT -> 1
-                            InventoryItemType.SHOW_MORE -> 2
+                            InventoryItemType.PRODUCT -> SPAN_SIZE_PRODUCT
+                            InventoryItemType.SHOW_MORE -> SPAN_SIZE_SHOW_MORE
                         }
                     }
                 }
@@ -63,5 +63,10 @@ class InventoryActivity :
 
     override fun onLoadMoreProducts() {
         viewModel.requestPage()
+    }
+
+    companion object {
+        private const val SPAN_SIZE_PRODUCT = 1
+        private const val SPAN_SIZE_SHOW_MORE = 2
     }
 }
