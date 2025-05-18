@@ -26,7 +26,11 @@
             app:layout_constraintBottom_toTopOf="@id/btn_load_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_goods"
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:spanCount="2"
+            />
 
         <Button
             android:onClick="@{() -> vm.addGoods()}"

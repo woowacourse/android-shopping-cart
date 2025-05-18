@@ -24,7 +24,8 @@
             app:layout_constraintBottom_toTopOf="@id/cl_page_info"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_selected_goods"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_page_info"
