@@ -62,10 +62,10 @@ class CartAdapter(
         position: Int,
         newItem: Product,
     ) {
-        if (position in 0 until items.size) {
+        for (position in 0 until items.size) {
             items[position] = newItem
-            notifyItemChanged(position)
         }
+        notifyItemRangeChanged(position, items.size - position)
     }
 
     private fun addItem(item: Product) {
