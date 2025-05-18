@@ -14,14 +14,14 @@ import woowacourse.shopping.model.products.Product
 class CartViewModel(
     private val cart: Cart,
 ) : ViewModel() {
-    private val _productsInCart = MutableLiveData(cart.productsInCart)
-    val productsInCart: LiveData<MutableList<Product>> = _productsInCart
+    private val _products = MutableLiveData(cart.products)
+    val products: LiveData<MutableList<Product>> = _products
 
     private val _pageCount = MutableLiveData(1)
     val pageCount: LiveData<Int> = _pageCount
 
-    private val _loadedItems = MutableLiveData<List<Product>>()
-    val loadedItems: LiveData<List<Product>> = _loadedItems
+    private val _loadedProducts = MutableLiveData<List<Product>>()
+    val loadedProducts: LiveData<List<Product>> = _loadedProducts
 
     private val _isOnlyOnePage = MutableLiveData<Boolean>()
     val isOnlyOnePage: LiveData<Boolean> = _isOnlyOnePage
@@ -40,14 +40,14 @@ class CartViewModel(
 
     fun removeToCart(product: Product) {
         cart.remove(product)
-        _productsInCart.value = cart.productsInCart
+        _products.value = cart.products
         _isOnlyOnePage.value = checkOnlyOnePage()
         loadPage(_pageCount.value ?: 1)
     }
 
     fun loadNextPage() {
         val nextPage = (_pageCount.value ?: 1) + 1
-        val maxPage = ((cart.productsInCart.size - 1) / pageSize) + 1
+        val maxPage = ((cart.products.size - 1) / pageSize) + 1
         if (nextPage <= maxPage) {
             loadPage(nextPage)
         }
@@ -63,21 +63,21 @@ class CartViewModel(
     private fun checkFirstPage(): Boolean = (_pageCount.value == 1)
 
     private fun checkLastPage(): Boolean {
-        val totalPageCount = (cart.productsInCart.size + pageSize - 1) / pageSize
+        val totalPageCount = (cart.products.size + pageSize - 1) / pageSize
         return _pageCount.value == totalPageCount
     }
 
-    private fun checkOnlyOnePage(): Boolean = cart.productsInCart.size <= 5
+    private fun checkOnlyOnePage(): Boolean = cart.products.size <= 5
 
     private fun loadPage(page: Int) {
-        val maxPage = ((cart.productsInCart.size - 1) / pageSize) + 1
+        val maxPage = ((cart.products.size - 1) / pageSize) + 1
         if (page < 1 || page > maxPage) return
 
         val start = (page - 1) * pageSize
-        val end = minOf(start + pageSize, cart.productsInCart.size)
+        val end = minOf(start + pageSize, cart.products.size)
 
-        val items = cart.productsInCart.subList(start, end)
-        _loadedItems.postValue(items)
+        val items = cart.products.subList(start, end)
+        _loadedProducts.postValue(items)
         _pageCount.value = page
         _isOnlyOnePage.value = checkOnlyOnePage()
         _isFirstPage.value = checkFirstPage()

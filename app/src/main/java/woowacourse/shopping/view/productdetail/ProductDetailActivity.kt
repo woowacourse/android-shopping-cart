@@ -14,17 +14,16 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.intent.getSerializableExtraData
 import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.view.products.ProductsActivity.Companion.PRODUCT_DATA_KEY
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
+    private val productDetailViewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        binding.viewModel = viewModel
+        binding.viewModel = productDetailViewModel
 
         val intentProductData = intent.getSerializableExtraData<Product>(PRODUCT_DATA_KEY) ?: return
         binding.product = intentProductData
@@ -39,7 +38,7 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun observeAddToCart() {
-        viewModel.addToCart.observe(this) {
+        productDetailViewModel.addToCart.observe(this) {
             showAddToCartToastMessage()
             finish()
         }

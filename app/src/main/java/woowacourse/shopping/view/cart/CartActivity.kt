@@ -13,17 +13,17 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
-    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val cartViewModel: CartViewModel by viewModels { CartViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.viewModel = cartViewModel
         initRecyclerView()
         observeLoadedItems()
-        observeProductsInCart()
+        observeProducts()
         setButtonsClickListener()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -35,8 +35,12 @@ class CartActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         adapter =
-            CartAdapter(onProductRemoveClickListener = { product -> viewModel.removeToCart(product) })
-        binding.rvProductsInCart.adapter = adapter
+            CartAdapter(onProductRemoveClickListener = { product ->
+                cartViewModel.removeToCart(
+                    product,
+                )
+            })
+        binding.rvProducts.adapter = adapter
     }
 
     private fun setButtonsClickListener() {
@@ -45,22 +49,22 @@ class CartActivity : AppCompatActivity() {
         }
 
         binding.btnPreviousPage.setOnClickListener {
-            viewModel.loadPreviousPage()
+            cartViewModel.loadPreviousPage()
         }
 
         binding.btnNextPage.setOnClickListener {
-            viewModel.loadNextPage()
+            cartViewModel.loadNextPage()
         }
     }
 
-    private fun observeProductsInCart() {
-        viewModel.productsInCart.observe(this) {
+    private fun observeProducts() {
+        cartViewModel.products.observe(this) {
             adapter.updateProductsView(it)
         }
     }
 
     private fun observeLoadedItems() {
-        viewModel.loadedItems.observe(this) {
+        cartViewModel.loadedProducts.observe(this) {
             adapter.updateProductsView(it)
         }
     }

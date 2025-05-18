@@ -3,13 +3,13 @@ package woowacourse.shopping.data
 import woowacourse.shopping.model.products.Product
 
 object CartImpl : Cart {
-    override val productsInCart = mutableListOf<Product>()
+    override val products = mutableListOf<Product>()
 
     override fun add(product: Product) {
-        productsInCart.add(product)
+        products.add(product)
     }
 
     override fun remove(product: Product) {
-        productsInCart.remove(product)
+        products.remove(product)
     }
 }

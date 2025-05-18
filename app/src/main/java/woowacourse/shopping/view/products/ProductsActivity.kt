@@ -18,12 +18,12 @@ import woowacourse.shopping.view.productdetail.ProductDetailActivity
 class ProductsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductsBinding
     private lateinit var adapter: ProductsAdapter
-    private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
+    private val productsViewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
-        binding.viewModel = viewModel
+        binding.viewModel = productsViewModel
         binding.lifecycleOwner = this
         initRecyclerView()
         observeProductsView()
@@ -40,8 +40,8 @@ class ProductsActivity : AppCompatActivity() {
     private fun setupScrollListenerForMoreButton() {
         binding.rvProducts.addOnScrollListener(
             ProductsScrollListener(binding.rvProducts.layoutManager as GridLayoutManager) { canLoadMore ->
-                val isAllFetched = viewModel.isAllProductsFetched.value ?: false
-                viewModel.updateButtonVisibility(canLoadMore && !isAllFetched)
+                val isAllFetched = productsViewModel.isAllProductsFetched.value ?: false
+                productsViewModel.updateButtonVisibility(canLoadMore && !isAllFetched)
             },
         )
     }
@@ -53,7 +53,7 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun observeProductsView() {
-        viewModel.productsInShop.observe(this) { list ->
+        productsViewModel.productsInShop.observe(this) { list ->
             adapter.updateProductsView(list)
         }
     }
