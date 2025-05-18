@@ -17,7 +17,7 @@ import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.model.toUiModel
+import woowacourse.shopping.view.inventory.item.toUiModel
 
 class ProductDetailActivityTest {
     private lateinit var scenario: ActivityScenario<ProductDetailActivity>

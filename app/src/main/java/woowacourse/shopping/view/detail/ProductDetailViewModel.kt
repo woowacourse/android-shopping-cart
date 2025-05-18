@@ -3,8 +3,8 @@ package woowacourse.shopping.view.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.ShoppingCartRepository
-import woowacourse.shopping.view.model.InventoryItem
-import woowacourse.shopping.view.model.toDomain
+import woowacourse.shopping.view.inventory.item.InventoryItem
+import woowacourse.shopping.view.inventory.item.toDomain
 
 class ProductDetailViewModel(private val shoppingCartRepository: ShoppingCartRepository) : ViewModel() {
     fun addProduct(product: InventoryItem.ProductUiModel) {

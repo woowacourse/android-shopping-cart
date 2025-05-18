@@ -5,7 +5,7 @@
 
         <variable
             name="button"
-            type="woowacourse.shopping.view.model.InventoryItem.ShowMore" />
+            type="woowacourse.shopping.view.inventory.item.InventoryItem" />
 
         <variable
             name="handler"

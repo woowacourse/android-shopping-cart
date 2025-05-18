@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.InventoryRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.model.InventoryItem
-import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.model.InventoryItem.ShowMore
-import woowacourse.shopping.view.model.toUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
+import woowacourse.shopping.view.inventory.item.toUiModel
 
 class InventoryViewModel(private val repository: InventoryRepository) : ViewModel() {
     private val products: List<ProductUiModel> = repository.getAll().map(Product::toUiModel)

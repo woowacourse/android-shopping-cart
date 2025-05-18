@@ -6,7 +6,7 @@
     <data>
         <variable
             name="product"
-            type="woowacourse.shopping.view.model.InventoryItem.ProductUiModel" />
+            type="woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel" />
         <variable
             name="handler"
             type="woowacourse.shopping.view.detail.ProductDetailEventHandler" />

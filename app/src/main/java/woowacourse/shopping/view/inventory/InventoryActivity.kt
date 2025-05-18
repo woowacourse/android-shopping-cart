@@ -10,8 +10,8 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
-import woowacourse.shopping.view.model.InventoryItemType
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItemType
 
 class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),

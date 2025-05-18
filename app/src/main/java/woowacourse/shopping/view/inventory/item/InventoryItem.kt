@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.model
+package woowacourse.shopping.view.inventory.item
 
 import android.os.Parcelable
 import kotlinx.parcelize.IgnoredOnParcel

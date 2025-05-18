@@ -5,7 +5,7 @@ import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyShoppingCartRepository
 import woowacourse.shopping.product
-import woowacourse.shopping.view.model.toUiModel
+import woowacourse.shopping.view.inventory.item.toUiModel
 
 @Suppress("FunctionName")
 class ProductDetailViewModelTest {

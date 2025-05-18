@@ -6,8 +6,8 @@ import org.junit.Test
 import woowacourse.shopping.data.DummyInventoryRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.view.model.InventoryItem
-import woowacourse.shopping.view.model.toUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem
+import woowacourse.shopping.view.inventory.item.toUiModel
 
 @Suppress("FunctionName")
 class InventoryViewModelTest {
