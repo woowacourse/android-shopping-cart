@@ -48,9 +48,12 @@ class ProductRepositoryImpl(
         }
     }
 
-    override fun insertProduct(product: Product) {
+    override fun insertProduct(
+        product: Product,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
         thread {
-            dao.insertProduct(product.toEntity())
+            onResult(runCatching { dao.insertProduct(product.toEntity()) })
         }
     }
 

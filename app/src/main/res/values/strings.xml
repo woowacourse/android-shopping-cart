@@ -8,7 +8,8 @@
     <string name="product_detail_price_text">가격</string>
     <string name="product_detail_price">%,d원</string>
     <string name="product_detail_add_cart">장바구니 담기</string>
-    <string name="product_detail_add_cart_toast">상품이 장바구니에 담겼습니다.</string>
+    <string name="product_detail_add_cart_toast_success">상품을 장바구니에 담았습니다</string>
+    <string name="product_detail_add_cart_toast_failure">상품을 장바구니에 담는 데 실패했습니다</string>
 
     <string name="cart_toolbar_text">Cart</string>
     <string name="cart_product_price">%,d원</string>

@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.getSerializableExtraCompat
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -68,7 +70,6 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initListeners(product: Product) {
         binding.btnProductDetailAddCart.setOnClickListener {
             viewModel.addToCart(product)
-            showToast(R.string.product_detail_add_cart_toast)
         }
     }
 
@@ -76,10 +77,20 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel.product.observe(this) {
             binding.product = it
         }
+
+        viewModel.resultState.observe(this) { result ->
+            when (result) {
+                ResultState.SUCCESS -> showToast(R.string.product_detail_add_cart_toast_success)
+                ResultState.FAILURE -> showToast(R.string.product_detail_add_cart_toast_failure)
+                null -> Unit
+            }
+        }
     }
 
-    private fun showToast(messageResId: Int) {
-        Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
+    private fun showToast(
+        @StringRes messageResId: Int,
+    ) {
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

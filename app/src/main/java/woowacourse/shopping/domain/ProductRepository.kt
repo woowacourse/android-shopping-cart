@@ -18,7 +18,10 @@ interface ProductRepository {
         onComplete: (List<Product>) -> Unit,
     )
 
-    fun insertProduct(product: Product)
+    fun insertProduct(
+        product: Product,
+        onResult: (Result<Unit>) -> Unit,
+    )
 
     fun deleteProduct(
         productId: Long,
