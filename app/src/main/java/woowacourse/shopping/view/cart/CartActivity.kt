@@ -20,17 +20,26 @@ class CartActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        initRecyclerView()
+        observeLoadedItems()
+        observeProductsInCart()
+        setButtonsClickListener()
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    private fun initRecyclerView() {
         adapter =
             CartAdapter(onProductRemoveClickListener = { product -> viewModel.removeToCart(product) })
-        binding.viewModel = viewModel
+        binding.rvProductsInCart.adapter = adapter
+    }
 
-        viewModel.loadedItems.observe(this) {
-            adapter.updateProductsView(it)
-        }
-        viewModel.productsInCart.observe(this) {
-            adapter.updateProductsView(it)
-        }
-
+    private fun setButtonsClickListener() {
         binding.backImageBtn.setOnClickListener {
             finish()
         }
@@ -42,12 +51,17 @@ class CartActivity : AppCompatActivity() {
         binding.btnNextPage.setOnClickListener {
             viewModel.loadNextPage()
         }
+    }
 
-        binding.rvProductsInCart.adapter = adapter
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+    private fun observeProductsInCart() {
+        viewModel.productsInCart.observe(this) {
+            adapter.updateProductsView(it)
+        }
+    }
+
+    private fun observeLoadedItems() {
+        viewModel.loadedItems.observe(this) {
+            adapter.updateProductsView(it)
         }
     }
 }
