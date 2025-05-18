@@ -3,7 +3,6 @@ package woowacourse.shopping.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.cart.CartItem
 import woowacourse.shopping.cart.CartItem.ProductItem
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.CartProductDataSource
@@ -12,7 +11,8 @@ class CartViewModel(
     private val dataSource: CartProductDataSource = CartDatabase,
 ) : ViewModel() {
     private val products = mutableListOf<CartItem>()
-    private val allCartProducts: List<CartItem> get() = dataSource.cartProducts().map { ProductItem(it) }
+    private val allCartProducts: List<CartItem>
+        get() = dataSource.cartProducts().map { ProductItem(it) }
 
     private val _cartProducts = MutableLiveData<List<CartItem>>()
     val cartProducts: LiveData<List<CartItem>> = _cartProducts
@@ -58,19 +58,20 @@ class CartViewModel(
         }
     }
 
-    fun isNextButtonEnabled(): Boolean {
-        val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
-
-        _isNextButtonEnabled.value = currentPage < lastPage
-
-        return _isNextButtonEnabled.value == true
+    fun updateButtons() {
+        checkNextButtonEnabled()
+        checkPrevButtonEnabled()
     }
 
-    fun isPrevButtonEnabled(): Boolean {
+    private fun checkNextButtonEnabled() {
+        val currentPage = page.value ?: INITIAL_PAGE
+        val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
+        _isNextButtonEnabled.value = currentPage < lastPage
+    }
+
+    private fun checkPrevButtonEnabled() {
         val currentPage = page.value ?: INITIAL_PAGE
         _isPrevButtonEnabled.value = currentPage >= 1
-        return isPrevButtonEnabled.value == true
     }
 
     private fun increasePage() {
@@ -91,6 +92,7 @@ class CartViewModel(
         }
         val pagedProducts = allCartProducts.subList(startIndex, endIndex)
         _cartProducts.value = pagedProducts
+        updateButtons()
     }
 
     companion object {

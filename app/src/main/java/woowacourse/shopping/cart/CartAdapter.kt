@@ -2,10 +2,11 @@ package woowacourse.shopping.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.cart.CartItem.PaginationButtonItem
+import woowacourse.shopping.cart.CartItem.ProductItem
 
 class CartAdapter(
     private var cartItems: List<CartItem>,
-    private val cartViewModel: CartViewModel,
     private val onDeleteProductClick: DeleteProductClickListener,
     private val onPaginationButtonClick: PaginationButtonClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -29,20 +30,15 @@ class CartAdapter(
         position: Int,
     ) {
         when (holder) {
-            is CartViewHolder -> holder.bind((cartItems[position] as CartItem.ProductItem).productItem)
-            is PaginationButtonViewHolder ->
-                holder.bind(
-                    page = cartViewModel.page.value ?: 1,
-                    isNextButtonEnabled = cartViewModel.isNextButtonEnabled(),
-                    isPrevButtonEnabled = cartViewModel.isPrevButtonEnabled(),
-                )
+            is CartViewHolder -> holder.bind((cartItems[position] as ProductItem).productItem)
+            is PaginationButtonViewHolder -> holder.bind(cartItems[position] as PaginationButtonItem)
         }
     }
 
     override fun getItemViewType(position: Int): Int =
         when (cartItems[position]) {
-            CartItem.PaginationButtonItem -> PAGINATION_BUTTON
-            is CartItem.ProductItem -> CART_PRODUCT
+            is PaginationButtonItem -> PAGINATION_BUTTON
+            is ProductItem -> CART_PRODUCT
         }
 
     override fun getItemCount(): Int = cartItems.size

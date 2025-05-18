@@ -3,19 +3,14 @@ package woowacourse.shopping.cart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.databinding.PaginationButtonItemBinding
 
 class PaginationButtonViewHolder(
     private val binding: PaginationButtonItemBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(
-        page: Int,
-        isNextButtonEnabled: Boolean,
-        isPrevButtonEnabled: Boolean,
-    ) {
-        binding.page = page + 1
-        binding.isNextButtonEnabled = isNextButtonEnabled
-        binding.isPrevButtonEnabled = isPrevButtonEnabled
+    fun bind(paginationButtonItem: PaginationButtonItem) {
+        binding.paginationButtonItem = paginationButtonItem
         binding.executePendingBindings()
     }
 

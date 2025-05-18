@@ -7,5 +7,9 @@ sealed class CartItem {
         val productItem: ProductUiModel,
     ) : CartItem()
 
-    data object PaginationButtonItem : CartItem()
+    data class PaginationButtonItem(
+        val page: Int,
+        val isNextButtonEnabled: Boolean,
+        val isPrevButtonEnabled: Boolean,
+    ) : CartItem()
 }
