@@ -1,12 +1,12 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.inventory
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
-class ProductsViewHolder(
+class InventoryViewHolder(
     private val binding: ItemProductBinding,
-    handler: ProductsEventHandler,
+    handler: InventoryEventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.handler = handler

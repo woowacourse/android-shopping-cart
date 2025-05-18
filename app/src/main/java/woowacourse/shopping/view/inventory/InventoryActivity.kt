@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.inventory
 
 import android.os.Bundle
 import android.view.Menu
@@ -14,17 +14,17 @@ import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.page.Page
 import kotlin.getValue
 
-class MainActivity :
+class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),
-    ProductsEventHandler {
-    private val viewModel: ProductsViewModel by viewModels()
+    InventoryEventHandler {
+    private val viewModel: InventoryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar as Toolbar)
         binding.apply {
-            viewModel = this@MainActivity.viewModel
-            handler = this@MainActivity
+            viewModel = this@InventoryActivity.viewModel
+            handler = this@InventoryActivity
         }
         initRecyclerview()
     }
@@ -36,13 +36,13 @@ class MainActivity :
 
     private fun initRecyclerview() {
         binding.rvProductList.apply {
-            adapter = ProductsAdapter(this@MainActivity)
-            layoutManager = GridLayoutManager(this@MainActivity, 2)
-            addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
+            adapter = ProductsAdapter(this@InventoryActivity)
+            layoutManager = GridLayoutManager(this@InventoryActivity, 2)
+            addOnScrollListener(InventoryOnScrollListener(binding, viewModel))
         }
         viewModel.apply {
             requestProductsPage(0)
-            productsLiveData.observe(this@MainActivity) { page -> updateRecyclerView(page) }
+            productsLiveData.observe(this@InventoryActivity) { page -> updateRecyclerView(page) }
         }
     }
 

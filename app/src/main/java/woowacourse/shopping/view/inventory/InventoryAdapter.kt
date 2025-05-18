@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.inventory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,14 +7,14 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 
 class ProductsAdapter(
-    private val handler: ProductsEventHandler,
-) : RecyclerView.Adapter<ProductsViewHolder>() {
+    private val handler: InventoryEventHandler,
+) : RecyclerView.Adapter<InventoryViewHolder>() {
     private var products: List<Product> = listOf()
 
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(
-        holder: ProductsViewHolder,
+        holder: InventoryViewHolder,
         position: Int,
     ) {
         val item = products[position]
@@ -24,9 +24,9 @@ class ProductsAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductsViewHolder {
+    ): InventoryViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context))
-        return ProductsViewHolder(binding, handler)
+        return InventoryViewHolder(binding, handler)
     }
 
     fun updateProducts(newProducts: List<Product>) {
@@ -34,7 +34,7 @@ class ProductsAdapter(
     }
 }
 
-interface ProductsEventHandler {
+interface InventoryEventHandler {
     fun onProductSelected(product: Product)
 
     fun onLoadMoreProducts(page: Int)

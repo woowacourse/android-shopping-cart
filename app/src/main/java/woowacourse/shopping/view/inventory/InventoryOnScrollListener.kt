@@ -1,13 +1,13 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.inventory
 
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ActivityMainBinding
 
-class ProductsOnScrollListener(
+class InventoryOnScrollListener(
     private val binding: ActivityMainBinding,
-    private val viewModel: ProductsViewModel,
+    private val viewModel: InventoryViewModel,
 ) : RecyclerView.OnScrollListener() {
     override fun onScrolled(
         recyclerView: RecyclerView,

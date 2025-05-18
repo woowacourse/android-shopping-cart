@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.inventory
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.page.Page
 
-class ProductsViewModel : ViewModel() {
+class InventoryViewModel : ViewModel() {
     private var allProducts: Set<Product> = DummyProducts.products.toSet()
     private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
 

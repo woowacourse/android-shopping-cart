@@ -2,6 +2,6 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product
 
-interface ProductsRepository {
+interface InventoryRepository {
     fun getAll(): List<Product>
 }

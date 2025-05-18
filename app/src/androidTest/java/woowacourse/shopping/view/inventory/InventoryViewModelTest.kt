@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.inventory
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
@@ -8,13 +8,13 @@ import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.view.page.Page
 
 @Suppress("FunctionName")
-class ProductsViewModelTest {
+class InventoryViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
     @Test
     fun 한_페이지에_상품이_20개씩_로드된다() {
-        val viewModel = ProductsViewModel()
+        val viewModel = InventoryViewModel()
         val page =
             Page.from(
                 DummyProducts.products,
@@ -27,7 +27,7 @@ class ProductsViewModelTest {
 
     @Test
     fun 상품의_총_개수를_반환한다() {
-        val viewModel = ProductsViewModel()
+        val viewModel = InventoryViewModel()
         assert(viewModel.totalSize == DummyProducts.products.size)
     }
 }

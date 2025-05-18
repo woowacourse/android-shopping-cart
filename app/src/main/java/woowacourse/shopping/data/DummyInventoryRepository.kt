@@ -4,7 +4,7 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product
 
-class DummyProductsRepository : ProductsRepository {
+class DummyInventoryRepository : InventoryRepository {
     private val products =
         listOf(
             Product(
