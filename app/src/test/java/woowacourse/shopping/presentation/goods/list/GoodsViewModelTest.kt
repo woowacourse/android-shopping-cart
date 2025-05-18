@@ -41,7 +41,7 @@ class GoodsViewModelTest {
         val before = goodsViewModel.goods.getOrAwaitValue().size
 
         // when
-        goodsViewModel.receiveEvent(GoodsEvent.LoadMore)
+        goodsViewModel.addGoods()
         val actual = goodsViewModel.goods.getOrAwaitValue().size
 
         // then

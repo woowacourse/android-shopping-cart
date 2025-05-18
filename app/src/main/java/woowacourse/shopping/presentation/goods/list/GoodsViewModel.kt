@@ -21,19 +21,9 @@ class GoodsViewModel : ViewModel() {
         _goods.value = GoodsDataBase.getPagedGoods(page++, ITEM_COUNT)
     }
 
-    fun receiveEvent(event: GoodsEvent) {
-        when (event) {
-            GoodsEvent.LoadMore -> handleLoadMore()
-        }
-    }
-
-    private fun handleLoadMore() {
-        addGoods()
-        _shouldShowLoadMore.value = false
-    }
-
-    private fun addGoods() {
+    fun addGoods() {
         _goods.value = _goods.value?.plus(GoodsDataBase.getPagedGoods(page++, ITEM_COUNT))
+        _shouldShowLoadMore.value = false
     }
 
     fun updateShouldShowLoadMore() {

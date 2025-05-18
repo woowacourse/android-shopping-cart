@@ -26,7 +26,6 @@ class GoodsActivity : BaseActivity() {
 
         val adapter = GoodsAdapter { goods -> navigateToDetail(goods) }
         setUpGoodsList(adapter)
-        setLoadButtonClickListener()
 
         viewModel.goods.observe(this) { goods ->
             adapter.updateItems(goods)
@@ -55,12 +54,6 @@ class GoodsActivity : BaseActivity() {
     private fun navigateToDetail(goods: Goods) {
         val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
         startActivity(intent)
-    }
-
-    private fun setLoadButtonClickListener() {
-        binding.btnLoadMore.setOnClickListener {
-            viewModel.receiveEvent(GoodsEvent.LoadMore)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
