@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
@@ -16,10 +17,15 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
     ProductDetailEventHandler {
-    val viewModel: ProductDetailViewModel by viewModels()
+    private lateinit var viewModel: ProductDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val shoppingApplication = application as ShoppingApplication
+        val factory = ProductDetailViewModel.createFactory(shoppingApplication.shoppingCartRepository)
+        viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
+
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
         val product: Product =
             intent.getParcelableCompat(KEY_PRODUCT) ?: run {
