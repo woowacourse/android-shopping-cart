@@ -1,9 +1,7 @@
 package woowacourse.shopping.view.products
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.products.Product
 
 class ProductsAdapter(
@@ -13,17 +11,7 @@ class ProductsAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val productBinding =
-            ItemProductBinding.inflate(
-                inflater,
-                parent,
-                false,
-            )
-
-        return ProductViewHolder(productBinding, productClickListener)
-    }
+    ): ProductViewHolder = ProductViewHolder.from(parent, productClickListener)
 
     override fun getItemCount(): Int = products.size
 
