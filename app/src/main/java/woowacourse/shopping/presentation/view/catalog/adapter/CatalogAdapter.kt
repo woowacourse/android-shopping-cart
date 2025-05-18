@@ -5,35 +5,22 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.ProductUiModel
 
 class CatalogAdapter(
-    products: List<ProductUiModel> = emptyList(),
+    items: List<CatalogItem> = emptyList(),
     private val eventListener: CatalogEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val products = products.toMutableList()
-    var hasMore = false
-        private set
+    private val items = mutableListOf<CatalogItem>()
 
-    override fun getItemCount(): Int = products.size + if (hasMore) 1 else 0
+    override fun getItemCount(): Int = items.size
 
-    override fun getItemViewType(position: Int): Int =
-        if (position == products.size && hasMore) {
-            CatalogItem.CatalogType.LOAD_MORE.ordinal
-        } else {
-            CatalogItem.CatalogType.PRODUCT.ordinal
-        }
+    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
-        when (viewType) {
-            CatalogItem.CatalogType.LOAD_MORE.ordinal ->
-                LoadMoreViewHolder.from(
-                    parent,
-                    eventListener,
-                )
-
-            CatalogItem.CatalogType.PRODUCT.ordinal -> ProductViewHolder.from(parent, eventListener)
-            else -> throw IllegalArgumentException("Invalid view type")
+        when (CatalogItem.CatalogType.entries[viewType]) {
+            CatalogItem.CatalogType.PRODUCT -> ProductViewHolder.from(parent, eventListener)
+            CatalogItem.CatalogType.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventListener)
         }
 
     override fun onBindViewHolder(
@@ -41,21 +28,17 @@ class CatalogAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(products[position])
+            is ProductViewHolder -> holder.bind(items[position] as CatalogItem.ProductItem)
             is LoadMoreViewHolder -> {}
         }
     }
 
-    fun updateProducts(
-        products: List<ProductUiModel>,
-        hasMore: Boolean,
-    ) {
+    fun updateProducts(items: List<CatalogItem>) {
         val previousSize = itemCount
-        this.products.clear()
-        this.products.addAll(products)
-        this.hasMore = hasMore
+        this.items.clear()
+        this.items.addAll(items)
 
-        notifyItemRangeInserted(previousSize, products.size)
+        notifyItemRangeInserted(previousSize, items.size)
     }
 
     interface CatalogEventListener {

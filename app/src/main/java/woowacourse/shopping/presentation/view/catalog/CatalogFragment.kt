@@ -13,6 +13,7 @@ import woowacourse.shopping.presentation.custom.GridSpacingItemDecoration
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
+import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
 import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class CatalogFragment :
@@ -45,12 +46,13 @@ class CatalogFragment :
             GridLayoutManager(requireContext(), DEFAULT_SPAN_COUNT).apply {
                 spanSizeLookup =
                     object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int =
-                            if (position == catalogAdapter.itemCount - 1 && catalogAdapter.hasMore) {
-                                LOAD_MORE_SPAN_COUNT
-                            } else {
-                                1
+                        override fun getSpanSize(position: Int): Int {
+                            val viewType = catalogAdapter.getItemViewType(position)
+                            return when (CatalogItem.CatalogType.entries[viewType]) {
+                                CatalogItem.CatalogType.PRODUCT -> 1
+                                CatalogItem.CatalogType.LOAD_MORE -> LOAD_MORE_SPAN_COUNT
                             }
+                        }
                     }
             }
 
@@ -64,8 +66,8 @@ class CatalogFragment :
     }
 
     private fun initObserver() {
-        viewModel.products.observe(viewLifecycleOwner) { products ->
-            catalogAdapter.updateProducts(products.first, products.second)
+        viewModel.items.observe(viewLifecycleOwner) { products ->
+            catalogAdapter.updateProducts(products)
         }
     }
 

@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toUiModel
+import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
 
 class CatalogViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<Pair<List<ProductUiModel>, Boolean>>()
-    val products: LiveData<Pair<List<ProductUiModel>, Boolean>> = _products
+    private val _items = MutableLiveData<List<CatalogItem>>()
+    val items: LiveData<List<CatalogItem>> = _items
 
     private val loadSize: Int = 20
     private var lastId: Long = DEFAULT_ID
@@ -24,16 +24,30 @@ class CatalogViewModel(
     }
 
     fun fetchProducts() {
-        productRepository.loadProducts(lastId, loadSize) { newProducts, hasMore ->
-            val newProductsUiModels = newProducts.map { it.toUiModel() }
+        productRepository.loadProducts(lastId, loadSize) { fetchedProducts, hasMore ->
+            val fetchedUiModels = fetchedProducts.map { it.toUiModel() }
+            lastId = fetchedUiModels.lastOrNull()?.id ?: DEFAULT_ID
 
-            lastId = newProductsUiModels.lastOrNull()?.id ?: DEFAULT_ID
+            val currentUiModels =
+                _items.value
+                    .orEmpty()
+                    .filterIsInstance<CatalogItem.ProductItem>()
+                    .map { it.product }
 
-            val updatedProducts = (_products.value?.first ?: emptyList()).plus(newProductsUiModels).distinct()
+            val combinedUiModels =
+                (currentUiModels + fetchedUiModels)
+                    .distinctBy { it.id }
 
-            _products.postValue(
-                updatedProducts to hasMore,
-            )
+            val updatedItems =
+                combinedUiModels
+                    .map { CatalogItem.ProductItem(it) }
+                    .toMutableList<CatalogItem>()
+
+            if (hasMore && updatedItems.none { it is CatalogItem.LoadMoreItem }) {
+                updatedItems.add(CatalogItem.LoadMoreItem)
+            }
+
+            _items.postValue(updatedItems)
         }
     }
 
