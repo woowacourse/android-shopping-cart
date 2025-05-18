@@ -21,7 +21,7 @@ class GoodsViewModelTest {
     @BeforeEach
     fun setUp() {
         mockkObject(GoodsDataBase)
-        goodsViewModel = GoodsViewModel()
+        goodsViewModel = GoodsViewModel(GoodsDataBase)
     }
 
     @AfterEach

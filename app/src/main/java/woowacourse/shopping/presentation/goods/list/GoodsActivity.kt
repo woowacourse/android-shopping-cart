@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.data.GoodsDataBase
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
@@ -15,7 +16,9 @@ import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
 class GoodsActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsBinding>(R.layout.activity_goods)
-    private val viewModel: GoodsViewModel by viewModels()
+    private val viewModel: GoodsViewModel by viewModels {
+        GoodsViewModel.provideFactory(GoodsDataBase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
