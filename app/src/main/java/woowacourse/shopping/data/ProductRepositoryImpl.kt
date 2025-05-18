@@ -22,29 +22,26 @@ class ProductRepositoryImpl(
         return DummyProducts.values.subList(fromIndex, toIndex)
     }
 
-    override fun getCartProductCount(onComplete: (Int) -> Unit) {
+    override fun getCartProductCount(onResult: (Result<Int>) -> Unit) {
         thread {
-            val totalCartCount = dao.getCartProductCount()
-            onComplete(totalCartCount)
+            onResult(kotlin.runCatching { dao.getCartProductCount() })
         }
     }
 
-    override fun getCartProducts(onComplete: (List<Product>) -> Unit) {
+    override fun getCartProducts(onResult: (Result<List<Product>>) -> Unit) {
         thread {
-            val products = dao.getAllProduct().map { productEntity -> productEntity.toDomain() }
-            onComplete(products)
+            onResult(runCatching { dao.getAllProduct().map { it.toDomain() } })
         }
     }
 
     override fun getPagedCartProducts(
         limit: Int,
         page: Int,
-        onComplete: (List<Product>) -> Unit,
+        onResult: (Result<List<Product>>) -> Unit,
     ) {
         val offset = limit * page
         thread {
-            val products = dao.getPagedProduct(limit, offset).map { it.toDomain() }
-            onComplete(products)
+            onResult(runCatching { dao.getPagedProduct(limit, offset).map { it.toDomain() } })
         }
     }
 
@@ -59,11 +56,10 @@ class ProductRepositoryImpl(
 
     override fun deleteProduct(
         productId: Long,
-        onComplete: () -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
         thread {
-            dao.deleteByProductId(productId = productId)
-            onComplete()
+            onResult(runCatching { dao.deleteByProductId(productId) })
         }
     }
 }

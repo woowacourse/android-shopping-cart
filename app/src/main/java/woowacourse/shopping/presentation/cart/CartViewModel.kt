@@ -12,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.SingleLiveData
 
 class CartViewModel(
@@ -24,6 +25,8 @@ class CartViewModel(
     val totalPages: LiveData<Int> = _totalPages
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int> = _currentPage
+    private val _resultState = SingleLiveData<ResultState>()
+    val resultState: LiveData<ResultState> = _resultState
     private val _toastMessage = SingleLiveData<Int>()
     val toastMessage: LiveData<Int> = _toastMessage
 
@@ -33,12 +36,16 @@ class CartViewModel(
 
     private fun loadItems() {
         val page = _currentPage.value ?: 0
-        productRepository.getPagedCartProducts(PAGE_SIZE, page) { pagedProducts ->
-            _products.postValue(pagedProducts)
+        productRepository.getPagedCartProducts(PAGE_SIZE, page) { result ->
+            result
+                .onSuccess { pagedProducts -> _products.postValue(pagedProducts) }
+                .onFailure { _resultState.postValue(ResultState.LOAD_FAILURE) }
         }
 
-        productRepository.getCartProductCount { count ->
-            updateTotalPage(count)
+        productRepository.getCartProductCount { result ->
+            result
+                .onSuccess { count -> updateTotalPage(count) }
+                .onFailure { _resultState.postValue(ResultState.LOAD_FAILURE) }
         }
     }
 
@@ -63,22 +70,37 @@ class CartViewModel(
     fun deleteProduct(product: Product) {
         val currentPage = _currentPage.value ?: 0
 
-        productRepository.deleteProduct(product.productId) {
-            productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { pagedProducts ->
-
-                if (pagedProducts.isEmpty()) {
-                    productRepository.getCartProductCount { count ->
-                        updateTotalPage(count)
-                        Handler(Looper.getMainLooper()).post {
-                            changePage(false)
-                        }
-                    }
-                } else {
-                    _products.postValue(pagedProducts)
-                    productRepository.getCartProductCount { count ->
-                        updateTotalPage(count)
-                    }
+        productRepository.deleteProduct(product.productId) { result ->
+            result
+                .onSuccess {
+                    reloadProducts(currentPage)
+                    _resultState.postValue(ResultState.DELETE_SUCCESS)
+                }.onFailure {
+                    _resultState.postValue(ResultState.DELETE_FAILURE)
                 }
+        }
+    }
+
+    private fun reloadProducts(currentPage: Int) {
+        productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { result ->
+            result
+                .onSuccess { pagedProducts ->
+                    if (pagedProducts.isEmpty()) {
+                        handleEmptyPage()
+                    } else {
+                        _products.postValue(pagedProducts)
+                        updateTotalPageAsync()
+                    }
+                }.onFailure {
+                    _resultState.postValue(ResultState.LOAD_FAILURE)
+                }
+        }
+    }
+
+    private fun handleEmptyPage() {
+        updateTotalPageAsync {
+            Handler(Looper.getMainLooper()).post {
+                changePage(false)
             }
         }
     }
@@ -89,6 +111,16 @@ class CartViewModel(
 
     override fun onClickNext() {
         changePage(next = true)
+    }
+
+    private fun updateTotalPageAsync(onComplete: (() -> Unit)? = null) {
+        productRepository.getCartProductCount { result ->
+            result
+                .onSuccess { count ->
+                    updateTotalPage(count)
+                    onComplete?.invoke()
+                }.onFailure { _resultState.postValue(ResultState.LOAD_FAILURE) }
+        }
     }
 
     private fun updateTotalPage(totalSize: Int) {

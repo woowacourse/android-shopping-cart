@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.presentation.ResultState
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -62,15 +64,25 @@ class CartActivity : AppCompatActivity() {
         viewModel.products.observe(this) {
             cartProductAdapter.setData(it)
         }
+
+        viewModel.resultState.observe(this) { result ->
+            when (result) {
+                ResultState.LOAD_FAILURE -> showToast(R.string.cart_toast_load_failure)
+                ResultState.DELETE_SUCCESS -> showToast(R.string.cart_toast_delete_success)
+                ResultState.DELETE_FAILURE -> showToast(R.string.cart_toast_delete_failure)
+                else -> Unit
+            }
+        }
     }
 
     private fun deleteProduct(product: Product) {
         viewModel.deleteProduct(product)
-        showToast(R.string.cart_delete_complete)
     }
 
-    private fun showToast(messageResId: Int) {
-        Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
+    private fun showToast(
+        @StringRes messageResId: Int,
+    ) {
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

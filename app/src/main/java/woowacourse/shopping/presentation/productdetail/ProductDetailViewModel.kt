@@ -27,8 +27,8 @@ class ProductDetailViewModel(
     fun addToCart(product: Product) {
         productRepository.insertProduct(product) { result ->
             result
-                .onSuccess { _resultState.postValue(ResultState.SUCCESS) }
-                .onFailure { _resultState.postValue(ResultState.SUCCESS) }
+                .onSuccess { _resultState.postValue(ResultState.INSERT_SUCCESS) }
+                .onFailure { _resultState.postValue(ResultState.INSERT_FAILURE) }
         }
     }
 
