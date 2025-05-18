@@ -1,11 +1,10 @@
 package woowacourse.shopping.view.cart
 
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
@@ -21,53 +20,22 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        binding.backImageBtn.setOnClickListener { finish() }
+        binding.lifecycleOwner = this
         adapter =
             CartAdapter(onProductRemoveClickListener = { product -> viewModel.removeToCart(product) })
+        binding.viewModel = viewModel
 
+        viewModel.backArrowButton.observe(this) {
+            finish()
+        }
         viewModel.loadedItems.observe(this) {
+            Log.d("TAG", "loadedItems: $it")
             adapter.updateProductsView(it)
         }
         viewModel.productsInCart.observe(this) {
+            Log.d("TAG", "productsInCart: $it")
+
             adapter.updateProductsView(it)
-            if (viewModel.isOnlyOnePage()) {
-                binding.layoutPageButtons.visibility = View.GONE
-            }
-        }
-
-        viewModel.pageCount.observe(this) { pageCount ->
-            binding.tvPageCount.text = pageCount.toString()
-            if (viewModel.isFirstPage(pageCount)) {
-                binding.btnPreviousPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_6,
-                    ),
-                )
-            } else {
-                binding.btnPreviousPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.aqua_green,
-                    ),
-                )
-            }
-
-            if (viewModel.isLastPage(pageCount)) {
-                binding.btnNextPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_6,
-                    ),
-                )
-            } else {
-                binding.btnNextPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.aqua_green,
-                    ),
-                )
-            }
         }
 
         binding.btnPreviousPage.setOnClickListener {
