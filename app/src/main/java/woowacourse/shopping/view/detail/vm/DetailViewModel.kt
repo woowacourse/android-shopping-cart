@@ -24,7 +24,7 @@ class DetailViewModel(
 
     fun addProduct() {
         product.value?.let {
-            cartRepository.insert(it)
+            cartRepository.insert(it.id)
             _event.value = DetailScreenEvent.MoveToCart
         }
     }
