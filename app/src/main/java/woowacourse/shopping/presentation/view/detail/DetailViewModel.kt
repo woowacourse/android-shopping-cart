@@ -29,6 +29,8 @@ class DetailViewModel(
     val saveEvent: SingleLiveData<Unit> = _saveEvent
 
     fun fetchProduct(productId: Long) {
+        if (_product.value != null) return
+
         productRepository.findProductById(productId) { result ->
             result
                 .onSuccess { _product.postValue(it.toUiModel()) }
