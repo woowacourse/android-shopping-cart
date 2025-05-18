@@ -124,4 +124,8 @@ class DummyShoppingCartRepository: ShoppingCartRepository {
     override fun insert(product: Product) {
         shoppingCart.add(0, product)
     }
+
+    override fun remove(product: Product) {
+        shoppingCart.remove(product)
+    }
 }
