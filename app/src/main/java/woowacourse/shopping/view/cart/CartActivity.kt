@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.cart
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,17 +24,15 @@ class CartActivity : AppCompatActivity() {
             CartAdapter(onProductRemoveClickListener = { product -> viewModel.removeToCart(product) })
         binding.viewModel = viewModel
 
-        viewModel.backArrowButton.observe(this) {
-            finish()
-        }
         viewModel.loadedItems.observe(this) {
-            Log.d("TAG", "loadedItems: $it")
             adapter.updateProductsView(it)
         }
         viewModel.productsInCart.observe(this) {
-            Log.d("TAG", "productsInCart: $it")
-
             adapter.updateProductsView(it)
+        }
+
+        binding.backImageBtn.setOnClickListener {
+            finish()
         }
 
         binding.btnPreviousPage.setOnClickListener {

@@ -27,7 +27,7 @@ class ProductDetailActivity : AppCompatActivity() {
         val intentProductData = intent.getSerializableExtraData<Product>(PRODUCT_DATA_KEY) ?: return
         binding.product = intentProductData
 
-        observeCloseProductDetail()
+        setCloseButtonClickListener()
         observeAddToCart()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -43,8 +43,8 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeCloseProductDetail() {
-        viewModel.closeProductDetail.observe(this) {
+    private fun setCloseButtonClickListener() {
+        binding.closeImageBtn.setOnClickListener {
             finish()
         }
     }

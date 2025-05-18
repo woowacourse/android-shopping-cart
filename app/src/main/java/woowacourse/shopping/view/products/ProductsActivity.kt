@@ -27,7 +27,7 @@ class ProductsActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initRecyclerView()
         observeProductsView()
-        observeNavigateToCart()
+        setCartButtonClickListener()
         setupScrollListenerForMoreButton()
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -58,8 +58,8 @@ class ProductsActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeNavigateToCart() {
-        viewModel.navigateToCart.observe(this) {
+    private fun setCartButtonClickListener() {
+        binding.cartImageBtn.setOnClickListener {
             startActivity(Intent(this, CartActivity::class.java))
         }
     }

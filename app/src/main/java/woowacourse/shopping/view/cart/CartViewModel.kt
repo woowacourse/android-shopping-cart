@@ -23,9 +23,6 @@ class CartViewModel(
     private val _loadedItems = MutableLiveData<List<Product>>()
     val loadedItems: LiveData<List<Product>> get() = _loadedItems
 
-    private val _backArrowButton = MutableLiveData<Unit>()
-    val backArrowButton: LiveData<Unit> get() = _backArrowButton
-
     private val _isOnlyOnePage = MutableLiveData<Boolean>()
     val isOnlyOnePage: LiveData<Boolean> = _isOnlyOnePage
 
@@ -63,15 +60,11 @@ class CartViewModel(
         }
     }
 
-    fun onBackClicked() {
-        _backArrowButton.value = Unit
-    }
+    private fun checkFirstPage(): Boolean = (_pageCount.value == 1)
 
-    private fun checkFirstPage(pageCount: Int): Boolean = (pageCount == 1)
-
-    private fun checkLastPage(pageCount: Int): Boolean {
+    private fun checkLastPage(): Boolean {
         val totalPageCount = (cart.productsInCart.size + pageSize - 1) / pageSize
-        return pageCount == totalPageCount
+        return _pageCount.value == totalPageCount
     }
 
     private fun checkOnlyOnePage(): Boolean = cart.productsInCart.size <= 5
@@ -87,8 +80,8 @@ class CartViewModel(
         _loadedItems.postValue(items)
         _pageCount.value = page
         _isOnlyOnePage.value = checkOnlyOnePage()
-        _isFirstPage.value = checkFirstPage(page)
-        _isLastPage.value = checkLastPage(page)
+        _isFirstPage.value = checkFirstPage()
+        _isLastPage.value = checkLastPage()
     }
 
     companion object {

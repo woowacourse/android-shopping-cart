@@ -17,13 +17,6 @@ class ProductDetailViewModel(
     private val _addToCart = MutableLiveData<Unit>()
     val addToCart: LiveData<Unit> = _addToCart
 
-    private val _closeProductDetail = MutableLiveData<Unit>()
-    val closeProductDetail: LiveData<Unit> = _closeProductDetail
-
-    fun onCloseClicked() {
-        _closeProductDetail.value = Unit
-    }
-
     fun onAddToCartClicked(product: Product) {
         cart.add(product)
         _addToCart.value = Unit

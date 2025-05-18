@@ -27,7 +27,6 @@
 
             <ImageButton
                 android:id="@+id/close_image_btn"
-                android:onClick="@{() -> viewModel.onCloseClicked() }"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"

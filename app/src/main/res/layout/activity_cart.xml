@@ -31,7 +31,6 @@
                 android:layout_gravity="start"
                 android:backgroundTint="@android:color/transparent"
                 android:contentDescription="@null"
-                android:onClick="@{() -> viewModel.onBackClicked()}"
                 android:src="@drawable/ic_arrow_back" />
 
             <TextView

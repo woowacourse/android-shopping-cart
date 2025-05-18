@@ -22,9 +22,6 @@ class ProductsViewModel(
     private val _isLoadMoreButtonVisible = MutableLiveData(false)
     val isLoadMoreButtonVisible: LiveData<Boolean> = _isLoadMoreButtonVisible
 
-    private val _navigateToCart = MutableLiveData<Unit>()
-    val navigateToCart: LiveData<Unit> get() = _navigateToCart
-
     private var currentPage = 0
     private val loadedItems = mutableListOf<Product>()
 
@@ -48,10 +45,6 @@ class ProductsViewModel(
 
     fun updateButtonVisibility(isVisible: Boolean) {
         _isLoadMoreButtonVisible.value = isVisible
-    }
-
-    fun onCartClicked() {
-        _navigateToCart.value = Unit
     }
 
     companion object {
