@@ -6,14 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.InventoryRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.model.toUiModel
 import woowacourse.shopping.view.page.Page
 
-class InventoryViewModel(private val repository: InventoryRepository) : ViewModel() {
-    private val allProducts: Set<Product> = repository.getAll().toSet()
-    private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
+class InventoryViewModel(repository: InventoryRepository) : ViewModel() {
+    private val allProducts: Set<ProductUiModel> = repository.getAll().map(Product::toUiModel).toSet()
+    private val _productsLiveData: MutableLiveData<Page<ProductUiModel>> = MutableLiveData()
 
     val totalSize: Int get() = allProducts.size
-    val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
+    val productsLiveData: LiveData<Page<ProductUiModel>> get() = _productsLiveData
 
     fun requestProductsPage(requestPage: Int) {
         val page =

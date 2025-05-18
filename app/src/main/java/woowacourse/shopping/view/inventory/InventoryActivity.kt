@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
 import woowacourse.shopping.view.page.Page
 
 class InventoryActivity :
@@ -51,14 +51,14 @@ class InventoryActivity :
         }
     }
 
-    private fun updateRecyclerView(page: Page<Product>) {
+    private fun updateRecyclerView(page: Page<ProductUiModel>) {
         binding.rvProductList.adapter.apply {
             (this as ProductsAdapter).updateProducts(page.items)
             notifyItemInserted(itemCount)
         }
     }
 
-    override fun onProductSelected(product: Product) {
+    override fun onProductSelected(product: ProductUiModel) {
         startActivity(ProductDetailActivity.newIntent(this, product))
     }
 
