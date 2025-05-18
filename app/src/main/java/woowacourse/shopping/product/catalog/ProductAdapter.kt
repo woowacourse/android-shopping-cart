@@ -5,9 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(
     private var products: List<ProductUiModel>,
-    private val catalogViewModel: CatalogViewModel,
-    val onProductClick: ProductClickListener,
+    private val onProductClick: ProductClickListener,
     private val onLoadButtonClick: LoadButtonClickListener,
+    private val isLoadButtonEnabled: () -> Boolean,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -42,7 +42,7 @@ class ProductAdapter(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = products.size + if (catalogViewModel.isLoadButtonEnabled()) 1 else 0
+    override fun getItemCount(): Int = products.size + if (isLoadButtonEnabled()) 1 else 0
 
     companion object {
         private const val PRODUCT = 1

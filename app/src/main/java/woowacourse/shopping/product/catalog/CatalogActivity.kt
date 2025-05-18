@@ -61,14 +61,17 @@ class CatalogActivity : AppCompatActivity() {
         val adapter =
             ProductAdapter(
                 emptyList(),
-                viewModel,
                 ProductClickListener { product ->
                     val intent = newIntent(this, product)
                     startActivity(intent)
                 },
-            ) {
-                viewModel.loadNextCatalogProducts()
-            }
+                onLoadButtonClick = {
+                    viewModel.loadNextCatalogProducts()
+                },
+                isLoadButtonEnabled = {
+                    viewModel.isLoadButtonEnabled()
+                },
+            )
 
         binding.recyclerViewProducts.adapter = adapter
         val gridLayoutManager = GridLayoutManager(this, 2)

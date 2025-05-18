@@ -7,9 +7,11 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
     private var cartProducts: List<ProductUiModel>,
-    private val cartViewModel: CartViewModel,
     private val onDeleteProductClick: DeleteProductClickListener,
     private val onPaginationButtonClick: PaginationButtonClickListener,
+    private val page: () -> Int,
+    private val isNextButtonEnabled: () -> Boolean,
+    private val isPrevButtonEnabled: () -> Boolean,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,9 +31,9 @@ class CartAdapter(
             is CartViewHolder -> holder.bind(cartProducts[position])
             is PaginationButtonViewHolder ->
                 holder.bind(
-                    page = cartViewModel.page.value ?: 1,
-                    isNextButtonEnabled = cartViewModel.isNextButtonEnabled(),
-                    isPrevButtonEnabled = cartViewModel.isPrevButtonEnabled(),
+                    page = page(),
+                    isNextButtonEnabled = isNextButtonEnabled(),
+                    isPrevButtonEnabled = isPrevButtonEnabled(),
                 )
         }
     }
@@ -50,8 +52,8 @@ class CartAdapter(
 
     override fun getItemCount(): Int =
         if (cartProducts.size > 5 ||
-            cartViewModel.isNextButtonEnabled() ||
-            cartViewModel.isPrevButtonEnabled()
+            isNextButtonEnabled() ||
+            isPrevButtonEnabled()
         ) {
             cartProducts.size + 1
         } else {

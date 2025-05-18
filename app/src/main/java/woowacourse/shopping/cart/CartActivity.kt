@@ -43,11 +43,18 @@ class CartActivity : AppCompatActivity() {
 
     private fun setCartProductAdapter() {
         binding.recyclerViewCart.adapter =
-            CartAdapter(emptyList(), viewModel, { cartProduct ->
-                viewModel.deleteCartProduct(cartProduct)
-            }) { dir ->
-                viewModel.onClick(dir)
-            }
+            CartAdapter(
+                cartProducts = emptyList(),
+                onDeleteProductClick = { cartProduct ->
+                    viewModel.deleteCartProduct(cartProduct)
+                },
+                onPaginationButtonClick = { dir ->
+                    viewModel.onClick(dir)
+                },
+                page = { viewModel.page.value ?: 0 },
+                isNextButtonEnabled = { viewModel.isNextButtonEnabled() },
+                isPrevButtonEnabled = { viewModel.isPrevButtonEnabled() },
+            )
     }
 
     private fun observeCartProducts() {
