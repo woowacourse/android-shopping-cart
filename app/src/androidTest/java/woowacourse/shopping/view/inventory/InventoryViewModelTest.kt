@@ -8,7 +8,6 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.view.model.InventoryItem
 import woowacourse.shopping.view.model.toUiModel
-import woowacourse.shopping.view.page.Page
 
 @Suppress("FunctionName")
 class InventoryViewModelTest {
@@ -19,16 +18,10 @@ class InventoryViewModelTest {
     fun 한_페이지에_상품이_20개씩_로드된다() {
         val repository = DummyInventoryRepository()
         val viewModel = InventoryViewModel(repository)
-        val page =
-            Page.from(
-                repository.getAll().map(Product::toUiModel),
-                0,
-                20,
-            )
+        val page = repository.getPage(20, 0)
         viewModel.requestPage()
         val products = viewModel.items.getOrAwaitValue().filterIsInstance<InventoryItem.ProductUiModel>()
-
-        assert(products == page.items)
+        assert(products == page.items.map(Product::toUiModel))
     }
 
     @Test

@@ -8,7 +8,6 @@ import org.junit.Test
 import woowacourse.shopping.data.DummyShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.view.page.Page
 
 class ShoppingCartViewModelTest {
     @get:Rule
@@ -18,12 +17,7 @@ class ShoppingCartViewModelTest {
     fun 한_페이지에_장바구니_상품이_5개씩_로드된다() {
         val repository = DummyShoppingCartRepository()
         val viewModel = ShoppingCartViewModel(repository)
-        val page =
-            Page.from(
-                repository.getAll(),
-                0,
-                5,
-            )
+        val page = repository.getPage(5, 0)
         viewModel.requestProductsPage(0)
         assert(viewModel.productsLiveData.getOrAwaitValue() == page)
     }
@@ -53,12 +47,7 @@ class ShoppingCartViewModelTest {
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/c1ea8fff-29d9-4e12-b2f1-667d76e2bdc9.jpeg",
             )
         viewModel.removeProduct(product)
-        val page =
-            Page.from(
-                repository.getAll(),
-                4,
-                5,
-            )
+        val page = repository.getPage(5, 4)
         assert(viewModel.productsLiveData.getOrAwaitValue() == page)
     }
 }

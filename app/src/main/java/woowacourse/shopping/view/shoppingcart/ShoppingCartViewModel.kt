@@ -8,27 +8,21 @@ import woowacourse.shopping.data.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.page.Page
 
-class ShoppingCartViewModel(private val shoppingCartRepository: ShoppingCartRepository) : ViewModel() {
-    private val allProducts: Set<Product> get() = shoppingCartRepository.getAll().toSet()
+class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : ViewModel() {
+    private val allProducts: Set<Product> get() = repository.getAll().toSet()
     private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
 
     val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
 
     fun removeProduct(product: Product) {
         val currentProductIndex = allProducts.indexOf(product)
-        shoppingCartRepository.remove(product)
+        repository.remove(product)
         val pageNumber = pageNumberAfterRemoval(currentProductIndex)
         requestProductsPage(pageNumber)
     }
 
-    fun requestProductsPage(requestPage: Int) {
-        val page =
-            Page.from(
-                allProducts.toList(),
-                requestPage,
-                PAGE_SIZE,
-            )
-        _productsLiveData.value = page
+    fun requestProductsPage(pageIndex: Int) {
+        _productsLiveData.value = repository.getPage(PAGE_SIZE, pageIndex)
     }
 
     private fun pageNumberAfterRemoval(index: Int): Int {

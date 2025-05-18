@@ -3,6 +3,8 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.page.Page
+import kotlin.math.min
 
 class DummyInventoryRepository : InventoryRepository {
     private val products =
@@ -160,4 +162,21 @@ class DummyInventoryRepository : InventoryRepository {
         )
 
     override fun getAll(): List<Product> = products
+
+    override fun getPage(
+        pageSize: Int,
+        pageIndex: Int,
+    ): Page<Product> {
+        val from = pageSize * pageIndex
+        val to = min(from + pageSize, getAll().size)
+        val items = products.subList(from, to)
+        val hasPrevious = pageIndex > 0
+        val hasNext = to < getAll().size
+        return Page(
+            items,
+            hasPrevious,
+            hasNext,
+            pageIndex,
+        )
+    }
 }

@@ -10,9 +10,8 @@ import woowacourse.shopping.view.model.InventoryItem
 import woowacourse.shopping.view.model.InventoryItem.ProductUiModel
 import woowacourse.shopping.view.model.InventoryItem.ShowMore
 import woowacourse.shopping.view.model.toUiModel
-import woowacourse.shopping.view.page.Page
 
-class InventoryViewModel(repository: InventoryRepository) : ViewModel() {
+class InventoryViewModel(private val repository: InventoryRepository) : ViewModel() {
     private val products: List<ProductUiModel> = repository.getAll().map(Product::toUiModel)
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
     val items: LiveData<List<InventoryItem>> get() = _items
@@ -20,13 +19,8 @@ class InventoryViewModel(repository: InventoryRepository) : ViewModel() {
 
     fun requestPage() {
         _items.value = _items.value?.minus(ShowMore)
-        val page =
-            Page.from(
-                products.toList(),
-                (_items.value?.size ?: 0) / PAGE_SIZE,
-                PAGE_SIZE,
-            )
-        _items.value = _items.value?.plus(page.items)
+        val page = repository.getPage(PAGE_SIZE, (_items.value?.size ?: 0) / PAGE_SIZE)
+        _items.value = _items.value?.plus(page.items.map(Product::toUiModel))
         if (page.hasNext) _items.value = _items.value?.plus(ShowMore)
     }
 
