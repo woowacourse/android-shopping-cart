@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".ShoppingApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -26,14 +27,10 @@
 
         <activity
             android:name=".view.detail.ProductDetailActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
 
         <activity
             android:name=".view.shoppingcart.ShoppingCartActivity"
-            android:exported="false"
-            >
-        </activity>
+            android:exported="false" />
     </application>
-
 </manifest>
