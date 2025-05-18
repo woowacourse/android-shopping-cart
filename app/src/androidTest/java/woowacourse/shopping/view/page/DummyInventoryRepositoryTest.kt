@@ -5,7 +5,6 @@ package woowacourse.shopping.view.page
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import woowacourse.shopping.data.DummyInventoryRepository
-import woowacourse.shopping.products
 
 class DummyInventoryRepositoryTest {
     @Test
