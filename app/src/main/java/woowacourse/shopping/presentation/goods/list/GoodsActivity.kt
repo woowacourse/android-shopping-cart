@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.goods.list
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +20,9 @@ class GoodsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
+
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
 
         val adapter = GoodsAdapter { goods -> navigateToDetail(goods) }
         setUpGoodsList(adapter)
@@ -41,8 +43,8 @@ class GoodsActivity : BaseActivity() {
                         recyclerView: RecyclerView,
                         newState: Int,
                     ) {
-                        if (!binding.rvGoodsList.canScrollVertically(SCROLL_DIRECTION) && viewModel.canLoadMore()) {
-                            binding.btnLoadMore.visibility = View.VISIBLE
+                        if (!binding.rvGoodsList.canScrollVertically(SCROLL_DIRECTION)) {
+                            viewModel.updateShouldShowLoadMore()
                         }
                     }
                 },
@@ -57,8 +59,7 @@ class GoodsActivity : BaseActivity() {
 
     private fun setLoadButtonClickListener() {
         binding.btnLoadMore.setOnClickListener {
-            binding.btnLoadMore.visibility = View.GONE
-            viewModel.addGoods()
+            viewModel.receiveEvent(GoodsEvent.LoadMore)
         }
     }
 
@@ -74,6 +75,7 @@ class GoodsActivity : BaseActivity() {
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

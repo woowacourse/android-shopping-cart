@@ -11,17 +11,36 @@ class GoodsViewModel : ViewModel() {
     val goods: LiveData<List<Goods>>
         get() = _goods
 
+    private val _shouldShowLoadMore: MutableLiveData<Boolean> = MutableLiveData(false)
+    val shouldShowLoadMore: LiveData<Boolean>
+        get() = _shouldShowLoadMore
+
     private var page: Int = DEFAULT_PAGE
 
     init {
         _goods.value = GoodsDataBase.getPagedGoods(page++, ITEM_COUNT)
     }
 
-    fun addGoods() {
+    fun receiveEvent(event: GoodsEvent) {
+        when (event) {
+            GoodsEvent.LoadMore -> handleLoadMore()
+        }
+    }
+
+    private fun handleLoadMore() {
+        addGoods()
+        _shouldShowLoadMore.value = false
+    }
+
+    private fun addGoods() {
         _goods.value = _goods.value?.plus(GoodsDataBase.getPagedGoods(page++, ITEM_COUNT))
     }
 
-    fun canLoadMore(): Boolean {
+    fun updateShouldShowLoadMore() {
+        _shouldShowLoadMore.value = canLoadMore()
+    }
+
+    private fun canLoadMore(): Boolean {
         return GoodsDataBase.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
     }
 

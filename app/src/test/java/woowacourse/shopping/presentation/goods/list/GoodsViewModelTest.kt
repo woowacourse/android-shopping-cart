@@ -41,7 +41,7 @@ class GoodsViewModelTest {
         val before = goodsViewModel.goods.getOrAwaitValue().size
 
         // when
-        goodsViewModel.addGoods()
+        goodsViewModel.receiveEvent(GoodsEvent.LoadMore)
         val actual = goodsViewModel.goods.getOrAwaitValue().size
 
         // then
@@ -53,8 +53,12 @@ class GoodsViewModelTest {
         // given
         every { GoodsDataBase.getPagedGoods(any(), any()) } returns listOf(createGoods())
 
+        // when
+        goodsViewModel.updateShouldShowLoadMore()
+        val actual = goodsViewModel.shouldShowLoadMore.value!!
+
         // then
-        goodsViewModel.canLoadMore() shouldBe true
+        actual shouldBe true
     }
 
     @Test
@@ -62,7 +66,11 @@ class GoodsViewModelTest {
         // given
         every { GoodsDataBase.getPagedGoods(any(), any()) } returns emptyList()
 
+        // when
+        goodsViewModel.updateShouldShowLoadMore()
+        val actual = goodsViewModel.shouldShowLoadMore.value!!
+
         // then
-        goodsViewModel.canLoadMore() shouldBe false
+        actual shouldBe false
     }
 }

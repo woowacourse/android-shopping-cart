@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.goods.list.GoodsViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -27,7 +36,7 @@
             android:text="@string/btn_load_more"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:visibility="gone"
+            android:visibility="@{vm.shouldShowLoadMore ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
