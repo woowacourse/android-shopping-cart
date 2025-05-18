@@ -3,11 +3,13 @@ package woowacourse.shopping.view.shoppingcart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.DummyShoppingCart
+import woowacourse.shopping.data.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.page.Page
 
-class ShoppingCartViewModel : ViewModel() {
+class ShoppingCartViewModel(shoppingCartRepository: ShoppingCartRepository) : ViewModel() {
     private val allProducts: Set<Product> get() = DummyShoppingCart.products.toSet()
     private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
 
@@ -44,5 +46,14 @@ class ShoppingCartViewModel : ViewModel() {
 
     companion object {
         private const val PAGE_SIZE = 5
+
+        @Suppress("UNCHECKED_CAST")
+        fun createFactory(shoppingCartRepository: ShoppingCartRepository): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return (ShoppingCartViewModel(shoppingCartRepository) as T)
+                }
+            }
+        }
     }
 }

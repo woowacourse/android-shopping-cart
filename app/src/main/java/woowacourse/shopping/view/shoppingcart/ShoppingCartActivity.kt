@@ -3,8 +3,9 @@ package woowacourse.shopping.view.shoppingcart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
@@ -13,10 +14,15 @@ import woowacourse.shopping.view.page.Page
 class ShoppingCartActivity :
     BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
     ShoppingCartEventHandler {
-    private val viewModel: ShoppingCartViewModel by viewModels()
+    private lateinit var viewModel: ShoppingCartViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val shoppingApplication = application as ShoppingApplication
+        val factory = ShoppingCartViewModel.createFactory(shoppingApplication.shoppingCartRepository)
+        viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
+
         setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
         viewModel.apply {
             requestProductsPage(0)
