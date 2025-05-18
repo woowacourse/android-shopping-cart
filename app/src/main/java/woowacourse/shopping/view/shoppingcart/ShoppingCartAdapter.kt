@@ -30,8 +30,10 @@ class ShoppingCartAdapter(
     }
 
     fun updateProducts(newProducts: List<Product>) {
+        val oldCount = itemCount
         products.clear()
         products.addAll(newProducts)
+        notifyItemRangeChanged(0, oldCount)
     }
 }
 

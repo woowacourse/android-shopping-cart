@@ -9,7 +9,6 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.BaseActivity
-import woowacourse.shopping.view.page.Page
 
 class ShoppingCartActivity :
     BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
@@ -26,21 +25,15 @@ class ShoppingCartActivity :
         setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
         viewModel.apply {
             requestProductsPage(0)
-            productsLiveData.observe(this@ShoppingCartActivity) { page -> updateRecyclerView(page) }
+            productsLiveData.observe(this@ShoppingCartActivity) { page ->
+                val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
+                adapter.updateProducts(page.items)
+            }
         }
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
             viewModel = this@ShoppingCartActivity.viewModel
             handler = this@ShoppingCartActivity
-        }
-    }
-
-    private fun updateRecyclerView(page: Page<Product>) {
-        binding.rvShoppingCartList.adapter.apply {
-            val adapter = this as ShoppingCartAdapter
-            val previousCount = itemCount
-            adapter.updateProducts(page.items)
-            notifyItemRangeChanged(0, previousCount)
         }
     }
 
