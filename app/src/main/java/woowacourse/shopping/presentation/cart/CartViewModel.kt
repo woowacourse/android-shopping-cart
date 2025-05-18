@@ -27,9 +27,11 @@ class CartViewModel(
     private val _toastMessage = SingleLiveData<Int>()
     val toastMessage: LiveData<Int> = _toastMessage
 
-    val toastMessage = SingleLiveData<Int>()
+    init {
+        loadItems()
+    }
 
-    fun loadItems() {
+    private fun loadItems() {
         val page = _currentPage.value ?: 0
         productRepository.getPagedCartProducts(PAGE_SIZE, page) { pagedProducts ->
             _products.postValue(pagedProducts)

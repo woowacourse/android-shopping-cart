@@ -22,6 +22,10 @@ class ProductViewModel(
     private var currentPage = 0
     private val pageSize = 10
 
+    init {
+        fetchData()
+    }
+
     fun fetchData() {
         val firstPage = productRepository.getPagedProducts(currentPage, pageSize)
         _products.value = firstPage

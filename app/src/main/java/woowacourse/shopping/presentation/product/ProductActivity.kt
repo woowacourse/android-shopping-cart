@@ -36,8 +36,6 @@ class ProductActivity : AppCompatActivity() {
         setupToolbar()
         initAdapter()
         observeViewModel()
-
-        viewModel.fetchData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -32,8 +32,6 @@ class CartActivity : AppCompatActivity() {
         initAdapter()
         setupToolbar()
         observeViewModel()
-
-        viewModel.loadItems()
     }
 
     private fun initInsets() {
