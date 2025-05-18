@@ -13,7 +13,7 @@ class GoodsDetailViewModel : ViewModel() {
         get() = _goods
 
     fun setGoods(goods: Goods) {
-        if (_goods.value == null) _goods.value = goods
+        _goods.value = goods
     }
 
     fun addToShoppingCart() {
