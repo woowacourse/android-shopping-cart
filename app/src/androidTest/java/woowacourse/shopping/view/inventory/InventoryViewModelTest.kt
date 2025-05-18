@@ -4,7 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyInventoryRepository
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.view.model.toUiModel
 import woowacourse.shopping.view.page.Page
 
 @Suppress("FunctionName")
@@ -18,7 +20,7 @@ class InventoryViewModelTest {
         val viewModel = InventoryViewModel(repository)
         val page =
             Page.from(
-                repository.getAll(),
+                repository.getAll().map(Product::toUiModel),
                 0,
                 20,
             )

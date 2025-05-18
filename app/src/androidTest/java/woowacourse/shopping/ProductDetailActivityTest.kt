@@ -17,6 +17,7 @@ import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
 import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.model.toUiModel
 
 class ProductDetailActivityTest {
     private lateinit var scenario: ActivityScenario<ProductDetailActivity>
@@ -27,7 +28,7 @@ class ProductDetailActivityTest {
     @Before
     fun setUp() {
         val fakeContext = ApplicationProvider.getApplicationContext<Context>()
-        val intent = ProductDetailActivity.newIntent(fakeContext, product)
+        val intent = ProductDetailActivity.newIntent(fakeContext, product.toUiModel())
         scenario = ActivityScenario.launch(intent)
     }
 
