@@ -11,6 +11,7 @@ import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.model.CartItemUiModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
+import woowacourse.shopping.presentation.view.cart.event.CartMessageEvent
 
 class CartFragment :
     BaseFragment<FragmentCartBinding>(R.layout.fragment_cart),
@@ -71,6 +72,13 @@ class CartFragment :
 
         viewModel.refreshEvent.observe(viewLifecycleOwner) {
             cartAdapter.refresh(it)
+        }
+
+        viewModel.toastEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                CartMessageEvent.FETCH_CART_ITEMS_FAILURE -> showToast(R.string.cart_screen_event_message_fetch_cart_items_failure)
+                CartMessageEvent.DELETE_CART_ITEM_FAILURE -> showToast(R.string.cart_screen_event_message_delete_cart_item_failure)
+            }
         }
     }
 
