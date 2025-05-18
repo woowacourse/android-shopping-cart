@@ -30,9 +30,6 @@ class CartActivity :
         binding.lifecycleOwner = this
         binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
-
-        updatePageButton()
-        updatePage()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -44,20 +41,6 @@ class CartActivity :
         val deletedIndex: Int? = viewModel.getPosition(goods)
         deletedIndex?.let { adapter.removeItem(it) }
         viewModel.delete(goods)
-    }
-
-    private fun updatePageButton() {
-        viewModel.totalItemsCount.observe(this) { value ->
-            viewModel.totalItems = value
-            viewModel.updatePageButtonVisibility()
-            viewModel.updatePageButton()
-        }
-    }
-
-    private fun updatePage() {
-        viewModel.page.observe(this) {
-            viewModel.updatePageButton()
-        }
     }
 
     companion object {

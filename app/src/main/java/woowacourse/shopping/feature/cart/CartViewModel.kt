@@ -3,75 +3,110 @@ package woowacourse.shopping.feature.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.model.Goods
+import kotlin.concurrent.thread
+import kotlin.math.max
 
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _showPageButton = MutableLiveData(false)
-    val showPageButton: LiveData<Boolean> get() = _showPageButton
+    private val _isMultiplePages = MutableLiveData(false)
+    val isMultiplePages: LiveData<Boolean> get() = _isMultiplePages
+
     private var currentPage: Int = 1
+        set(value) {
+            field = value
+            _page.postValue(value)
+        }
     private val _page = MutableLiveData(currentPage)
     val page: LiveData<Int> get() = _page
-    val cart: LiveData<List<Goods>> =
-        _page.switchMap { pageNum ->
-            getProducts(pageNum)
+
+    private val _cart = MutableLiveData<List<Goods>>()
+    val cart: LiveData<List<Goods>> get() = _cart
+
+    private var totalCartSizeData: Int = 0
+        set(value) {
+            field = value
+            _totalCartSize.postValue(value)
         }
-    val totalItemsCount: LiveData<Int> = cartRepository.getAllItemsSize()
-    var totalItems: Int = 0
+    private val _totalCartSize = MutableLiveData<Int>(totalCartSizeData)
+    val totalCartSize: LiveData<Int> get() = _totalCartSize
+
     private val _isLeftPageEnable = MutableLiveData(false)
     val isLeftPageEnable: LiveData<Boolean> get() = _isLeftPageEnable
+
     private val _isRightPageEnable = MutableLiveData(false)
     val isRightPageEnable: LiveData<Boolean> get() = _isRightPageEnable
+
+    val endPage: Int get() = max(1, (totalCartSizeData + PAGE_SIZE - 1) / PAGE_SIZE)
+
+    init {
+        updateCartData()
+        updateCartDataSize()
+    }
 
     fun getPosition(goods: Goods): Int? {
         val idx = cart.value?.indexOf(goods) ?: return null
         return if (idx >= 0) idx else null
     }
 
-    fun delete(goods: Goods) {
-        val endPage = ((totalItems - 1) / PAGE_SIZE) + 1
-        if (currentPage == endPage && (totalItems - 1) == ((currentPage - 1) * PAGE_SIZE)) {
-            currentPage--
-            _page.value = currentPage
+    fun updateCartData() {
+        thread {
+            val currentPageCartItems = cartRepository.getPage(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE)
+            _cart.postValue(currentPageCartItems)
         }
-        cartRepository.delete(goods)
+    }
+
+    fun updateCartDataSize() {
+        thread {
+            totalCartSizeData = cartRepository.getAllItemsSize()
+            _isMultiplePages.postValue(totalCartSizeData > PAGE_SIZE)
+            updatePageMoveAvailability()
+        }
+    }
+
+    fun delete(goods: Goods) {
+        cartRepository.delete(goods) {
+            thread {
+                totalCartSizeData = cartRepository.getAllItemsSize()
+                if (currentPage > endPage) {
+                    currentPage = endPage
+                }
+                _isMultiplePages.postValue(totalCartSizeData > PAGE_SIZE)
+                updatePageMoveAvailability()
+                updateCartData()
+            }
+        }
     }
 
     fun plusPage() {
         currentPage++
-        _page.value = currentPage
+        updateCartData()
+        updatePageMoveAvailability()
     }
 
     fun minusPage() {
         currentPage--
-        _page.value = currentPage
+        updateCartData()
+        updatePageMoveAvailability()
     }
 
-    fun updatePageButton() {
-        val endPage = ((totalItems - 1) / PAGE_SIZE) + 1
+    private fun updatePageMoveAvailability() {
         when {
             currentPage == 1 -> {
-                _isLeftPageEnable.value = false
-                _isRightPageEnable.value = currentPage < endPage
+                _isLeftPageEnable.postValue(false)
+                _isRightPageEnable.postValue(currentPage < endPage)
             }
             currentPage < endPage -> {
-                _isLeftPageEnable.value = currentPage > 1
-                _isRightPageEnable.value = currentPage < endPage
+                _isLeftPageEnable.postValue(currentPage > 1)
+                _isRightPageEnable.postValue(currentPage < endPage)
             }
             currentPage == endPage -> {
-                _isLeftPageEnable.value = currentPage > 1
-                _isRightPageEnable.value = false
+                _isLeftPageEnable.postValue(currentPage > 1)
+                _isRightPageEnable.postValue(false)
             }
         }
-    }
-
-    private fun getProducts(page: Int): LiveData<List<Goods>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)
-
-    fun updatePageButtonVisibility() {
-        _showPageButton.value = totalItems > PAGE_SIZE
     }
 
     companion object {

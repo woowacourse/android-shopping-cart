@@ -63,7 +63,7 @@ class CartViewModelTest {
 
     @Test
     fun 첫_페이지에서_updatePageButton_호출시_왼쪽버튼_비활성_오른쪽버튼_활성화된다() {
-        viewModel.totalItems = 10
+        viewModel.totalCartSize = 10
         viewModel.updatePageButton()
 
         assertThat(viewModel.isLeftPageEnable.getOrAwaitValue(), `is`(false))
@@ -72,7 +72,7 @@ class CartViewModelTest {
 
     @Test
     fun 마지막_페이지의_마지막_아이템_삭제시_페이지가_이전_페이지로_이동한다() {
-        viewModel.totalItems = 6
+        viewModel.totalCartSize = 6
         viewModel.plusPage()
         assertEquals(2, viewModel.page.getOrAwaitValue())
 
