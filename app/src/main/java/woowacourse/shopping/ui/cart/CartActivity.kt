@@ -16,7 +16,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.viewmodel.CartViewModel
 import woowacourse.shopping.utils.ViewModelFactory
 
@@ -29,7 +28,7 @@ class CartActivity : AppCompatActivity() {
         )
     }
 
-    private lateinit var cartAdapter: CartAdapter
+    private val cartAdapter: CartAdapter by lazy { initAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +37,7 @@ class CartActivity : AppCompatActivity() {
         applyWindowInsets()
         setOnBackPressedCallback()
 
-        initAppbar()
-        initAdapter()
+        initViews()
         initObserve()
     }
 
@@ -73,6 +71,12 @@ class CartActivity : AppCompatActivity() {
         )
     }
 
+    private fun initViews() {
+        initAppbar()
+        initRecyclerView()
+        initClickListener()
+    }
+
     private fun initAppbar() {
         setSupportActionBar(binding.toolbarCart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -80,19 +84,20 @@ class CartActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
     }
 
-    private fun initAdapter() {
-        cartAdapter =
-            CartAdapter(
-                items = mutableListOf(),
-                cartClickListener =
-                    object : CartClickListener {
-                        override fun onClick(product: Product) {
-                            viewModel.deleteProduct(product)
-                        }
-                    },
-            )
-
+    private fun initRecyclerView() {
         binding.rvCart.adapter = cartAdapter
+    }
+
+    private fun initAdapter(): CartAdapter {
+        return CartAdapter(
+            items = mutableListOf(),
+            cartClickListener = { product ->
+                viewModel.deleteProduct(product)
+            },
+        )
+    }
+
+    private fun initClickListener() {
         binding.btnPrevious.setOnClickListener { viewModel.moveToPrevious() }
         binding.btnNext.setOnClickListener { viewModel.moveToNext() }
     }
