@@ -12,11 +12,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.viewmodel.ProductListViewModel
@@ -29,7 +27,8 @@ class ProductListActivity : AppCompatActivity() {
             ProductRepositoryImpl(),
         )
     }
-    private lateinit var productListAdapter: ProductListAdapter
+    private val productListAdapter: ProductListAdapter by lazy { initAdapter() }
+    private val customGridLayoutManager: GridLayoutManager by lazy { initCustomGridLayoutManager() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,42 +89,37 @@ class ProductListActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        initAppbar()
+        initRecyclerView()
+    }
+
+    private fun initAppbar() {
         setSupportActionBar(binding.toolbarProductList)
+    }
 
-        val customLayoutManager =
-            GridLayoutManager(this, 2).apply {
-                spanSizeLookup =
-                    object : SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            val viewType =
-                                binding.productsRecyclerView.adapter?.getItemViewType(position)
-                            return when (viewType) {
-                                R.layout.product_item -> 1
-                                else -> 2
-                            }
-                        }
-                    }
-            }
-
-        productListAdapter =
-            ProductListAdapter(
-                items = emptyList(),
-                productClickListener =
-                    object : ProductClickListener {
-                        override fun onClick(product: Product) {
-                            val intent =
-                                ProductDetailActivity.newIntent(this@ProductListActivity, product)
-                            startActivity(intent)
-                        }
-                    },
-                loadMoreClickListener = {
-                    viewModel.loadProducts()
-                },
-            )
-
+    private fun initRecyclerView() {
         binding.productsRecyclerView.apply {
             adapter = productListAdapter
-            layoutManager = customLayoutManager
+            layoutManager = customGridLayoutManager
+        }
+    }
+
+    private fun initAdapter(): ProductListAdapter {
+        return ProductListAdapter(
+            items = emptyList(),
+            productClickListener = { product ->
+                val intent = ProductDetailActivity.newIntent(this@ProductListActivity, product)
+                startActivity(intent)
+            },
+            loadMoreClickListener = {
+                viewModel.loadProducts()
+            },
+        )
+    }
+
+    private fun initCustomGridLayoutManager(): GridLayoutManager {
+        return GridLayoutManager(this@ProductListActivity, 2).apply {
+            spanSizeLookup = CustomSpanSizeLookup(binding.productsRecyclerView.adapter!!)
         }
     }
 
