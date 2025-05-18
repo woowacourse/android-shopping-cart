@@ -17,6 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
         android:background="@drawable/bg_cart_item"
         android:paddingHorizontal="12dp"
         android:paddingTop="12dp"
@@ -25,8 +26,10 @@
         <TextView
             android:id="@+id/tv_cart_product_name"
             style="@style/CartTitleStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{product.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

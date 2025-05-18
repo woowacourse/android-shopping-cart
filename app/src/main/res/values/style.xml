@@ -64,4 +64,11 @@
         <item name="android:textSize">@dimen/font_size_small</item>
         <item name="android:textColor">@color/gray5</item>
     </style>
+
+    <!--  cart 페이지 페이지 글자 스타일  -->
+    <style name="CartPageStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_xlarge</item>
+        <item name="android:textColor">@color/gray5</item>
+    </style>
 </resources>
