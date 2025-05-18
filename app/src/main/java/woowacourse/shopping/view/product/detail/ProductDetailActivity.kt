@@ -22,7 +22,12 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setUpView()
         val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT) ?: return
-        initViewModel(product)
+        viewModel =
+            ViewModelProvider(
+                this,
+                ProductDetailViewModelFactory(product, applicationContext),
+            )[ProductDetailViewModel::class.java]
+        initBindings(product)
         initObservers()
     }
 
@@ -36,14 +41,9 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViewModel(product: Product) {
-        viewModel =
-            ViewModelProvider(
-                this,
-                ProductDetailViewModelFactory(product, applicationContext),
-            )[ProductDetailViewModel::class.java]
-        binding.viewmodel = viewModel
-        binding.lifecycleOwner = this
+    private fun initBindings(product: Product) {
+        binding.product = product
+        binding.handler = viewModel
     }
 
     private fun initObservers() {

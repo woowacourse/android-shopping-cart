@@ -7,13 +7,14 @@ import woowacourse.shopping.data.cart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 
 class ProductDetailViewModel(
-    val product: Product,
+    private val product: Product,
     private val repository: ShoppingCartRepository,
-) : ViewModel() {
+) : ViewModel(),
+    ProductDetailEventHandler {
     private val _navigateEvent = MutableLiveData<Unit>()
     val navigateEvent: LiveData<Unit> = _navigateEvent
 
-    fun addToShoppingCart() {
+    override fun onProductAddClick() {
         repository.insert(product.id)
         _navigateEvent.value = Unit
     }
