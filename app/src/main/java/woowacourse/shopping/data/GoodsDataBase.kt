@@ -2,9 +2,9 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.model.Goods
 
-object GoodsDataBase {
+object GoodsDataBase : GoodsRepository {
     @Suppress("ktlint:standard:max-line-length")
-    private val dummyGoods =
+    override fun getAllGoods(): List<Goods> =
         listOf(
             Goods.of(
                 "[병천아우내] 모듬순대",
@@ -158,15 +158,15 @@ object GoodsDataBase {
             ),
         )
 
-    fun getPagedGoods(
+    override fun getPagedGoods(
         page: Int,
         count: Int,
     ): List<Goods> {
         val fromIndex = page * count
-        val toIndex = minOf(fromIndex + count, dummyGoods.size)
+        val toIndex = minOf(fromIndex + count, getAllGoods().size)
 
         return if (fromIndex in 0 until toIndex) {
-            dummyGoods.subList(fromIndex, toIndex).toList()
+            getAllGoods().subList(fromIndex, toIndex).toList()
         } else {
             emptyList()
         }
