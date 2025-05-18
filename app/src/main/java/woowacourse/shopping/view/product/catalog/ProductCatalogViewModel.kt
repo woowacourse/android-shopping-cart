@@ -27,7 +27,7 @@ class ProductCatalogViewModel(
                 PRODUCT_SIZE_LIMIT,
                 currentPage * PRODUCT_SIZE_LIMIT,
             )
-        _products.value = PagedResult(result.items, result.hasNext)
+        _products.value = result
         currentPage++
     }
 
