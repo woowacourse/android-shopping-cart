@@ -4,11 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="product"
-            type="woowacourse.shopping.domain.Product" />
-
+            type="woowacourse.shopping.view.model.InventoryItem.ProductUiModel" />
         <variable
             name="handler"
             type="woowacourse.shopping.view.detail.ProductDetailEventHandler" />
@@ -91,14 +89,12 @@
             android:backgroundTint="#04C09E"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onAddToCartSelected(product)}"
+            android:onClick="@{() -> handler.onAddToCartSelected(product)}"
             android:text="@string/button_text_add_to_shopping_cart"
             android:textSize="20sp"
             android:textStyle="bold"
             app:cornerRadius="0dp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
