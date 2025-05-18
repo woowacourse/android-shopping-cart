@@ -11,8 +11,8 @@
             type="woowacourse.shopping.ui.productdetail.ProductDetailViewModel" />
 
         <variable
-            name="onAddCartProductClick"
-            type="kotlin.jvm.functions.Function0" />
+            name="onClickHandler"
+            type="woowacourse.shopping.ui.productdetail.ProductDetailActivity.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/mint_1"
-            android:onClick="@{()->onAddCartProductClick.invoke()}"
+            android:onClick="@{()->onClickHandler.onAddCartProductClick()}"
             android:paddingVertical="12dp"
             android:text="@string/product_detail_cart_add"
             android:textAlignment="center"

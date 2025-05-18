@@ -43,13 +43,17 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
     private fun initViewBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.onAddCartProductClick = ::addCartProduct
+        binding.onClickHandler = OnClickHandler { addCartProduct() }
     }
 
     private fun addCartProduct() {
         viewModel.addCartProduct()
         Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    fun interface OnClickHandler {
+        fun onAddCartProductClick()
     }
 
     companion object {
