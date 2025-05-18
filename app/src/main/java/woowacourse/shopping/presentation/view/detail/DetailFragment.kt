@@ -9,6 +9,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentDetailBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.view.cart.CartFragment
+import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
     private val viewModel: DetailViewModel by viewModels { DetailViewModel.Factory }
@@ -28,8 +29,15 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     private fun initObserver() {
         binding.vm = viewModel
 
-        viewModel.saveState.observe(viewLifecycleOwner) {
+        viewModel.saveEvent.observe(viewLifecycleOwner) {
             navigateToScreen()
+        }
+
+        viewModel.toastEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                DetailMessageEvent.FETCH_PRODUCT_FAILURE -> showToast(R.string.detail_screen_event_message_fetch_product_failure)
+                DetailMessageEvent.ADD_PRODUCT_FAILURE -> showToast(R.string.detail_screen_event_message_add_product_failure)
+            }
         }
     }
 

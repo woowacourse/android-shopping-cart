@@ -37,7 +37,7 @@ class DetailViewModelTest {
 
         viewModel.addProduct()
 
-        val result = viewModel.saveState.getValue()
+        val result = viewModel.saveEvent.getValue()
 
         assertThat(result).isNotNull
     }
