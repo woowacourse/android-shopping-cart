@@ -37,21 +37,19 @@ class ProductAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): BaseViewHolder<ViewBinding> {
-        return (
-            when (ProductRvItems.ViewType.entries[viewType]) {
-                ProductRvItems.ViewType.VIEW_TYPE_PRODUCT ->
-                    ProductViewHolder(
-                        parent,
-                        handler,
-                    )
+        return when (ProductRvItems.ViewType.entries[viewType]) {
+            ProductRvItems.ViewType.VIEW_TYPE_PRODUCT ->
+                ProductViewHolder(
+                    parent,
+                    handler,
+                )
 
-                ProductRvItems.ViewType.VIEW_TYPE_LOAD ->
-                    LoadViewHolder(
-                        parent,
-                        handler,
-                    )
-            }
-        ) as BaseViewHolder<ViewBinding>
+            ProductRvItems.ViewType.VIEW_TYPE_LOAD ->
+                LoadViewHolder(
+                    parent,
+                    handler,
+                )
+        }
     }
 
     override fun onBindViewHolder(
