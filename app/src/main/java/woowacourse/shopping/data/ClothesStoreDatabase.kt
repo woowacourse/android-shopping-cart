@@ -5,11 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import woowacourse.shopping.data.cart.CartDao
-import woowacourse.shopping.data.cart.CartEntity
+import woowacourse.shopping.data.cart.CartItemEntity
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductEntity
 
-@Database(entities = [ProductEntity::class, CartEntity::class], version = 1)
+@Database(entities = [ProductEntity::class, CartItemEntity::class], version = 1)
 abstract class ClothesStoreDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun cartDao(): CartDao
