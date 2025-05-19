@@ -8,10 +8,12 @@ import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(
-    private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage
+    private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage,
 ) : ShoppingCartRepository {
     override fun load(
-        offset: Int, limit: Int, result: (Result<List<Product>>) -> Unit
+        offset: Int,
+        limit: Int,
+        result: (Result<List<Product>>) -> Unit,
     ) {
         thread {
             runCatching {
@@ -24,7 +26,10 @@ class DefaultShoppingCartRepository(
         }
     }
 
-    override fun add(product: Product, result: (Result<Unit>) -> Unit) {
+    override fun add(
+        product: Product,
+        result: (Result<Unit>) -> Unit,
+    ) {
         thread {
             runCatching {
                 shoppingCartStorage.add(product.toEntity())
@@ -38,7 +43,7 @@ class DefaultShoppingCartRepository(
 
     override fun remove(
         product: Product,
-        result: (Result<Unit>) -> Unit
+        result: (Result<Unit>) -> Unit,
     ) {
         thread {
             runCatching {

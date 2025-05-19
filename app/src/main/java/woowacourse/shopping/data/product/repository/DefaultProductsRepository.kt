@@ -12,7 +12,7 @@ class DefaultProductsRepository(
     override fun load(
         lastProductId: Long?,
         size: Int,
-        result: (Result<List<Product>>) -> Unit
+        result: (Result<List<Product>>) -> Unit,
     ) {
         thread {
             runCatching {

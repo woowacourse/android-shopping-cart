@@ -21,7 +21,8 @@ sealed interface ShoppingCartItem {
     }
 
     enum class ItemType {
-        PRODUCT, PAGINATION, ;
+        PRODUCT,
+        PAGINATION, ;
 
         companion object {
             fun from(viewType: Int): ItemType = entries[viewType]

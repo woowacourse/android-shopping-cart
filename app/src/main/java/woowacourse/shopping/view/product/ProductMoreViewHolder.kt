@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductMoreBinding
 
 class ProductMoreViewHolder(
-    private val binding: ItemProductMoreBinding,
+    binding: ItemProductMoreBinding,
     load: () -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {

@@ -16,7 +16,6 @@ import woowacourse.shopping.view.common.showToast
 class ShoppingCartActivity :
     AppCompatActivity(),
     OnShoppingCartPaginationClickListener {
-
     private val viewModel: ShoppingCartViewModel by viewModels()
     private val binding: ActivityShoppingCartBinding by lazy {
         ActivityShoppingCartBinding.inflate(layoutInflater)

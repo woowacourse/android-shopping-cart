@@ -15,10 +15,11 @@ class ProductAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder = when (ProductsItem.ItemType.from(viewType)) {
-        ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, onSelectProduct)
-        ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, onLoad)
-    }
+    ): RecyclerView.ViewHolder =
+        when (ProductsItem.ItemType.from(viewType)) {
+            ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, onSelectProduct)
+            ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, onLoad)
+        }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,

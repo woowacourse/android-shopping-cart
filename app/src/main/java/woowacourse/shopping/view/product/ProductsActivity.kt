@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.showToast
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
-import woowacourse.shopping.view.common.showToast
 
 class ProductsActivity : AppCompatActivity() {
     private val binding: ActivityProductsBinding by lazy {
@@ -62,13 +62,14 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun setupAdapter() {
         val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int =
-                when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
-                    ProductsItem.ItemType.PRODUCT -> 1
-                    ProductsItem.ItemType.MORE -> 2
-                }
-        }
+        gridLayoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int =
+                    when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
+                        ProductsItem.ItemType.PRODUCT -> 1
+                        ProductsItem.ItemType.MORE -> 2
+                    }
+            }
 
         binding.products.layoutManager = gridLayoutManager
     }
