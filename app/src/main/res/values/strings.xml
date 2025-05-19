@@ -11,4 +11,5 @@
     <string name="text_cart_action_bar">Cart</string>
     <string name="text_prev_button"><![CDATA[<]]></string>
     <string name="text_next_button"><![CDATA[>]]></string>
+    <string name="text_unInserted_toast">장바구니에 추가되지 않았습니다.</string>
 </resources>

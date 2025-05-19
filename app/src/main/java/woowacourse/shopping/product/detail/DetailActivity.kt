@@ -11,14 +11,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.product.detail.DetailViewModel.Companion.factory
 import woowacourse.shopping.util.IntentCompat
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
+    private lateinit var viewModel: DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,10 @@ class DetailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         applyWindowInsets()
         setSupportActionBar()
+
+        setViewModel()
         setAddToCartClickListener()
+        observeCartUiState()
 
         val product: ProductUiModel? = productFromIntent()
         product?.let {
@@ -50,12 +56,29 @@ class DetailActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    private fun setViewModel() {
+        viewModel =
+            ViewModelProvider(
+                this,
+                factory(CartDatabase),
+            )[DetailViewModel::class.java]
+    }
+
     private fun setAddToCartClickListener() {
         binding.clickListener =
             AddToCartClickListener { product ->
-                showToastMessage()
-                CartDatabase.insertCartProduct(product)
+                viewModel.addToCart(product)
             }
+    }
+
+    private fun observeCartUiState() {
+        viewModel.uiState.observe(this) { value ->
+            when (value) {
+                CartUiState.SUCCESS -> showToastMessage(getString(R.string.text_add_to_cart_success))
+                CartUiState.FAIL -> showToastMessage(getString(R.string.text_unInserted_toast))
+            }
+        }
+        binding.lifecycleOwner = this
     }
 
     private fun setSupportActionBar() {
@@ -64,9 +87,9 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
     }
 
-    private fun showToastMessage() {
+    private fun showToastMessage(message: String) {
         Toast
-            .makeText(this, getString(R.string.text_add_to_cart_success), Toast.LENGTH_SHORT)
+            .makeText(this, message, Toast.LENGTH_SHORT)
             .show()
     }
 
