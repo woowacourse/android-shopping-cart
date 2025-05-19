@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.repository.CartDummyRepositoryImpl
-import woowacourse.shopping.data.repository.ProductDummyRepositoryImpl
 import woowacourse.shopping.ui.productdetail.ProductDetailViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
