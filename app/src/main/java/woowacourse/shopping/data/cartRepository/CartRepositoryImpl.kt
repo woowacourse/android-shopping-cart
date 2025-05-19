@@ -1,7 +1,5 @@
 package woowacourse.shopping.data.cartRepository
 
-import android.content.Context
-import androidx.room.Room
 import woowacourse.shopping.data.cartRepository.CartMapper.toDomain
 import woowacourse.shopping.data.cartRepository.CartMapper.toEntity
 import woowacourse.shopping.data.cartRepository.CartMapper.toUiModel
@@ -10,16 +8,8 @@ import woowacourse.shopping.uimodel.CartItem
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl private constructor(
-    context: Context,
+    database: CartDatabase,
 ) : CartRepository {
-    private val database: CartDatabase =
-        Room
-            .databaseBuilder(
-                context,
-                CartDatabase::class.java,
-                DB_NAME,
-            ).build()
-
     private val cartDao = database.cartDao()
 
     override fun getAllProductsSize(onResult: (Int) -> Unit) {
@@ -53,12 +43,8 @@ class CartRepositoryImpl private constructor(
     }
 
     companion object {
-        private const val DB_NAME = "cart"
-
         private var instance: CartRepositoryImpl? = null
 
-        fun initialize(context: Context): CartRepositoryImpl = instance ?: CartRepositoryImpl(context).also { instance = it }
-
-        fun get(): CartRepositoryImpl = instance ?: throw IllegalArgumentException("CartRepository가 초기화되지 않았습니다.")
+        fun initialize(database: CartDatabase): CartRepositoryImpl = instance ?: CartRepositoryImpl(database).also { instance = it }
     }
 }
