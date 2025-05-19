@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products
+package woowacourse.shopping.presentation.ui.products
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,10 +8,10 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.ui.base.BaseActivity
-import woowacourse.shopping.ui.cart.CartActivity
-import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.products.ProductsAdapter.OnClickHandler
+import woowacourse.shopping.presentation.ui.base.BaseActivity
+import woowacourse.shopping.presentation.ui.cart.CartActivity
+import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
 
 @SuppressLint("NotifyDataSetChanged")
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
@@ -37,7 +37,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
     }
 
     private fun createAdapterOnClickHandler() =
-        object : OnClickHandler {
+        object : ProductsAdapter.OnClickHandler {
             override fun onProductClick(id: Int) {
                 navigateToProductDetail(id)
             }
@@ -48,12 +48,12 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         }
 
     private fun navigateToProductDetail(id: Int) {
-        val intent = ProductDetailActivity.newIntent(this, id)
+        val intent = ProductDetailActivity.Companion.newIntent(this, id)
         startActivity(intent)
     }
 
     private fun navigateToCart() {
-        val intent = CartActivity.newIntent(this)
+        val intent = CartActivity.Companion.newIntent(this)
         startActivity(intent)
     }
 

@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productdetail
+package woowacourse.shopping.presentation.ui.productdetail
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.ui.base.BaseActivity
+import woowacourse.shopping.presentation.ui.base.BaseActivity
+import woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel
 
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
     val viewModel: ProductDetailViewModel by viewModels()

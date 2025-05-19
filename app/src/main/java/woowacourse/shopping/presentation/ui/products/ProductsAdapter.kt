@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products
+package woowacourse.shopping.presentation.ui.products
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup

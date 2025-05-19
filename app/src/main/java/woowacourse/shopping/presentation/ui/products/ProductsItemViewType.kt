@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products
+package woowacourse.shopping.presentation.ui.products
 
 enum class ProductsItemViewType {
     PRODUCT,

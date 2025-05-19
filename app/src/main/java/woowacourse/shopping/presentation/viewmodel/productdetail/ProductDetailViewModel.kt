@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productdetail
+package woowacourse.shopping.presentation.viewmodel.productdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,14 +8,14 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.ProductDummyRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.Product.Companion.INVALID_PRODUCT
 import woowacourse.shopping.util.SingleLiveEvent
 
 class ProductDetailViewModel(
     private val productsDummyRepository: ProductRepository = ProductDummyRepositoryImpl,
     private val cartDummyRepository: CartRepository = CartDummyRepositoryImpl,
 ) : ViewModel() {
-    private val _product: MutableLiveData<Product> = MutableLiveData(INVALID_PRODUCT)
+    private val _product: MutableLiveData<Product> =
+        MutableLiveData(Product.Companion.INVALID_PRODUCT)
     val product: LiveData<Product> get() = _product
 
     val putProductFlag: SingleLiveEvent<Unit> = SingleLiveEvent()

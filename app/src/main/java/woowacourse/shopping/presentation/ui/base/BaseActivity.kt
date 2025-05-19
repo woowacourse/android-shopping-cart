@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.base
+package woowacourse.shopping.presentation.ui.base
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes

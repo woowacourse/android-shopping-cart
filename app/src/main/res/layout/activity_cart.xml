@@ -8,14 +8,14 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.ui.cart.CartViewModel" />
+            type="woowacourse.shopping.presentation.viewmodel.cart.CartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_cart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.products.ProductsActivity">
+        tools:context=".presentation.ui.products.ProductsActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_cart"

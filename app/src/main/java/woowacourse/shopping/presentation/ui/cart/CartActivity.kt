@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.cart
+package woowacourse.shopping.presentation.ui.cart
 
 import android.content.Context
 import android.content.Intent
@@ -7,7 +7,8 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.ui.base.BaseActivity
+import woowacourse.shopping.presentation.ui.base.BaseActivity
+import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
 
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels()

@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.ui.productdetail.ProductDetailViewModel" />
+            type="woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel" />
 
     </data>
 

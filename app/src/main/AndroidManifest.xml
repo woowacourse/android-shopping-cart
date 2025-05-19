@@ -15,10 +15,10 @@
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
-            android:name=".ui.cart.CartActivity"
+            android:name=".presentation.ui.cart.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.products.ProductsActivity"
+            android:name=".presentation.ui.products.ProductsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.productdetail.ProductDetailActivity"
+            android:name=".presentation.ui.productdetail.ProductDetailActivity"
             android:exported="false" />
     </application>
 
