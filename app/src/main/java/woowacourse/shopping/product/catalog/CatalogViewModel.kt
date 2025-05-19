@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.MockProducts
-import woowacourse.shopping.data.MockProducts.mockProducts
 import woowacourse.shopping.data.ProductsDataSource
 
 class CatalogViewModel(
@@ -14,7 +13,7 @@ class CatalogViewModel(
         MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
     val catalogProducts: LiveData<List<ProductUiModel>> = _catalogProducts
 
-    val mockProducts get() = dataSource.getProducts()
+    val allProductsSize get() = dataSource.getAllProductsSize()
 
     val page = MutableLiveData<Int>(INITIAL_PAGE)
 
@@ -29,7 +28,7 @@ class CatalogViewModel(
 
     fun isLoadButtonEnabled(): Boolean {
         val totalLoaded = _catalogProducts.value?.size ?: 0
-        return totalLoaded < mockProducts.size
+        return totalLoaded < allProductsSize
     }
 
     fun increasePage() {
@@ -37,9 +36,16 @@ class CatalogViewModel(
     }
 
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
-        val fromIndex = (page.value ?: 0) * pageSize
-        val toIndex = minOf(fromIndex + pageSize, mockProducts.size)
-        val pagedProducts: List<ProductUiModel> = mockProducts.subList(fromIndex, toIndex)
+        val currentPage = page.value ?: INITIAL_PAGE
+        val startIndex = currentPage * pageSize
+        val endIndex = minOf(startIndex + pageSize, allProductsSize)
+        if (startIndex >= allProductsSize) {
+            _catalogProducts.value = emptyList()
+            return
+        }
+        val pagedProducts: List<ProductUiModel> =
+            dataSource.getProductsInRange(startIndex, endIndex)
+
         _catalogProducts.value = _catalogProducts.value?.plus(pagedProducts)
     }
 
