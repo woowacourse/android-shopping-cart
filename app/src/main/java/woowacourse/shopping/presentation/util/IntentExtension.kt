@@ -2,14 +2,15 @@ package woowacourse.shopping.presentation.util
 
 import android.content.Intent
 import android.os.Build
-import java.io.Serializable
+import android.os.Parcelable
 
-inline fun <reified T : Serializable> Intent.getSerializableCompat(key: String): T {
+inline fun <reified T : Parcelable> Intent.getParcelableCompat(key: String): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getSerializableExtra(key, T::class.java) ?: throw IllegalArgumentException(
-            ERROR_NO_EXTRA_DATA.format(key))
+        getParcelableExtra(key, T::class.java) ?: throw IllegalArgumentException(
+            ERROR_NO_EXTRA_DATA.format(key),
+        )
     } else {
-        val value = getSerializableExtra(key) as? T
+        val value = getParcelableExtra<T>(key)
         if (value is T) {
             value
         } else {
