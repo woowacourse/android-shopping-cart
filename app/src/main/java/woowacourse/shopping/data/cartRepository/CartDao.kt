@@ -15,6 +15,9 @@ interface CartDao {
     @Query("SELECT * FROM cart WHERE id = :id")
     fun getProduct(id: Long): CartEntity
 
+    @Query("SELECT COUNT(*) FROM cart")
+    fun getAllProductsSize(): Int
+
     @Insert
     fun insert(cartEntity: CartEntity)
 
