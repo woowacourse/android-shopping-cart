@@ -1,9 +1,11 @@
-package woowacourse.shopping.data.productsRepository
+package woowacourse.shopping.data.storage
 
 import woowacourse.shopping.domain.Product
 
-object DummyProducts {
-    val value =
+object DummyProducts : ProductStorage {
+    private var currentIndex = 0
+
+    private val value =
         listOf(
             Product(
                 0,
@@ -186,4 +188,12 @@ object DummyProducts {
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/c1ea8fff-29d9-4e12-b2f1-667d76e2bdc9.jpeg",
             ),
         )
+
+    override fun getProducts(): List<Product> = value
+
+    override fun getProducts(limit: Int): List<Product> {
+        val products = value.drop(currentIndex).take(limit)
+        currentIndex += limit
+        return products
+    }
 }

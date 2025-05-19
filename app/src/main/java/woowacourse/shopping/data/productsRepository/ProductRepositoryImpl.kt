@@ -1,23 +1,18 @@
 package woowacourse.shopping.data.productsRepository
 
+import woowacourse.shopping.data.storage.ProductStorage
 import woowacourse.shopping.domain.Product
 
 class ProductRepositoryImpl private constructor(
-    private val data: List<Product>,
+    private val storage: ProductStorage,
 ) : ProductRepository {
-    private var currentIndex = 0
+    override fun getProducts(): List<Product> = storage.getProducts()
 
-    override fun getProducts(): List<Product> = data
-
-    override fun getProducts(limit: Int): List<Product> {
-        val products = data.drop(currentIndex).take(limit)
-        currentIndex += limit
-        return products
-    }
+    override fun getProducts(limit: Int): List<Product> = storage.getProducts(limit)
 
     companion object {
         private var instance: ProductRepositoryImpl? = null
 
-        fun initialize(data: List<Product>): ProductRepositoryImpl = instance ?: ProductRepositoryImpl(data).also { instance = it }
+        fun initialize(storage: ProductStorage): ProductRepositoryImpl = instance ?: ProductRepositoryImpl(storage).also { instance = it }
     }
 }
