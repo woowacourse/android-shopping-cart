@@ -69,8 +69,8 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
         }
     }
 
-    override fun onClickDeleteItem(id: Long) {
-        viewModel.deleteProduct(id)
+    override fun onClickDeleteItem(cardId: Long) {
+        viewModel.deleteProduct(cardId)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

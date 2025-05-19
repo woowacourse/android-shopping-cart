@@ -40,17 +40,17 @@ class CartViewModelTest {
 
         every { cartStorage.singlePage(0, 5) } returns
             CartResult(
-                products = (1L..5L).map { Cart(productId = it) },
+                carts = (1L..5L).map { Cart(productId = it) },
                 hasNextPage = true,
             )
         every { cartStorage.singlePage(5, 10) } returns
             CartResult(
-                products = (6L..10L).map { Cart(productId = it) },
+                carts = (6L..10L).map { Cart(productId = it) },
                 hasNextPage = true,
             )
         every { cartStorage.singlePage(10, 15) } returns
             CartResult(
-                products = listOf(Cart(productId = 11L)),
+                carts = listOf(Cart(productId = 11L)),
                 hasNextPage = false,
             )
 
@@ -68,12 +68,12 @@ class CartViewModelTest {
 
         // Then
         val items = viewModel.uiState.getOrAwaitValue()
-        val products = items.products
+        val carts = items.carts
         val pageState = items.pageState
 
         assertAll(
-            { assertThat(products).hasSize(5) },
-            { assertThat(products.map { it.id }).containsExactly(1L, 2L, 3L, 4L, 5L) },
+            { assertThat(carts).hasSize(5) },
+            { assertThat(carts.map { it.product.id }).containsExactly(1L, 2L, 3L, 4L, 5L) },
             { assertThat(pageState.page).isEqualTo(1) },
             { assertThat(pageState.nextPageEnabled).isTrue() },
             { assertThat(pageState.previousPageEnabled).isFalse() },
@@ -87,13 +87,13 @@ class CartViewModelTest {
         viewModel.addPage()
 
         // Then
-        val products = viewModel.uiState.getOrAwaitValue().products
+        val products = viewModel.uiState.getOrAwaitValue().carts
         val pageState = viewModel.uiState.getOrAwaitValue().pageState
 
         assertAll(
             { assertThat(pageState.page).isEqualTo(3) },
             { assertThat(products).hasSize(1) },
-            { assertThat(products.first().id).isEqualTo(11L) },
+            { assertThat(products.first().product.id).isEqualTo(11L) },
         )
     }
 
@@ -107,13 +107,13 @@ class CartViewModelTest {
         viewModel.subPage()
 
         // Then
-        val products = viewModel.uiState.getOrAwaitValue().products
+        val carts = viewModel.uiState.getOrAwaitValue().carts
         val pageState = viewModel.uiState.getOrAwaitValue().pageState
 
         assertAll(
             { assertThat(pageState.page).isEqualTo(2) },
-            { assertThat(products).hasSize(5) },
-            { assertThat(products.map { it.id }).containsExactly(6L, 7L, 8L, 9L, 10L) },
+            { assertThat(carts).hasSize(5) },
+            { assertThat(carts.map { it.product.id }).containsExactly(6L, 7L, 8L, 9L, 10L) },
         )
     }
 
@@ -125,6 +125,6 @@ class CartViewModelTest {
 
         // Then
         val products = viewModel.uiState.getOrAwaitValue()
-        assertThat(products.products).hasSize(5)
+        assertThat(products.carts).hasSize(5)
     }
 }

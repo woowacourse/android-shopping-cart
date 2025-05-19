@@ -17,8 +17,8 @@ class CartViewModel(
     private val _uiState = MutableLiveData<CartUiState>()
     val uiState: LiveData<CartUiState> = _uiState
 
-    fun deleteProduct(productId: Long) {
-        cartRepository.delete(productId)
+    fun deleteProduct(cardId: Long) {
+        cartRepository.delete(cardId)
         loadCarts()
 
         val currentProducts = _uiState.value?.products

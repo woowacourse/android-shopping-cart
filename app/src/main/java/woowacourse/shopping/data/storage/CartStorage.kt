@@ -15,8 +15,8 @@ object CartStorage {
         cart[item.id] = item
     }
 
-    fun delete(id: Long) {
-        cart.remove(id)
+    fun delete(cardId: Long) {
+        cart.remove(cardId)
     }
 
     fun singlePage(
