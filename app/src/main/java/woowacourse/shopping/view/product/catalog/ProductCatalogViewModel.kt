@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.PagedResult
 
@@ -40,7 +40,7 @@ class ProductCatalogViewModel(
     companion object {
         private const val PRODUCT_SIZE_LIMIT = 20
 
-        fun provideFactory(repository: ProductRepository = ProductRepositoryImpl()): ViewModelProvider.Factory =
+        fun provideFactory(repository: ProductRepository = ShoppingProvider.productRepository): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {

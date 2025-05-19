@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 
 object ShoppingProvider {
@@ -7,7 +8,15 @@ object ShoppingProvider {
 
     val shoppingCartRepository: ShoppingCartRepository get() = _shoppingCartRepository ?: throw IllegalArgumentException()
 
-    fun initProductRepository(repository: ShoppingCartRepository) {
+    private var _productRepository: ProductRepository? = null
+
+    val productRepository: ProductRepository get() = _productRepository ?: throw IllegalArgumentException()
+
+    fun initShoppingCartRepository(repository: ShoppingCartRepository) {
         _shoppingCartRepository = repository
+    }
+
+    fun initProductRepository(repository: ProductRepository) {
+        _productRepository = repository
     }
 }
