@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
-import woowacourse.shopping.util.getSerializableCompat
+import woowacourse.shopping.presentation.util.getSerializableCompat
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)

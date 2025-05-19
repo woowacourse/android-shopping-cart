@@ -1,4 +1,4 @@
-package woowacourse.shopping.util
+package woowacourse.shopping.presentation.util
 
 import android.content.Intent
 import android.os.Build
@@ -6,7 +6,8 @@ import java.io.Serializable
 
 inline fun <reified T : Serializable> Intent.getSerializableCompat(key: String): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getSerializableExtra(key, T::class.java) ?: throw IllegalArgumentException(ERROR_NO_EXTRA_DATA.format(key))
+        getSerializableExtra(key, T::class.java) ?: throw IllegalArgumentException(
+            ERROR_NO_EXTRA_DATA.format(key))
     } else {
         val value = getSerializableExtra(key) as? T
         if (value is T) {

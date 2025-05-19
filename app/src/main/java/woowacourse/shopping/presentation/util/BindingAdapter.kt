@@ -1,4 +1,4 @@
-package woowacourse.shopping.util
+package woowacourse.shopping.presentation.util
 
 import android.widget.ImageView
 import android.widget.TextView
