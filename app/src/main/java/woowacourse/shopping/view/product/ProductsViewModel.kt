@@ -18,8 +18,8 @@ class ProductsViewModel(
     private val _products: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
     val products: LiveData<List<ProductsItem>> get() = _products
 
-    private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
-    val event: SingleLiveData<ProductsEvent> get() = _event
+    private val _event: MutableSingleLiveData<Event> = MutableSingleLiveData()
+    val event: SingleLiveData<Event> get() = _event
 
     private var loadable: Boolean = false
 
@@ -40,9 +40,13 @@ class ProductsViewModel(
                 )
             }.onFailure {
                 it.printStackTrace()
-                _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
+                _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
             }
         }
+    }
+
+    enum class Event {
+        UPDATE_PRODUCT_FAILURE,
     }
 
     companion object {

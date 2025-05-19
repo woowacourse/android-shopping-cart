@@ -20,8 +20,8 @@ class ProductDetailViewModel(
 
     val imageUrl: LiveData<String> = _product.map { it.imageUrl }
 
-    private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
-    val event: SingleLiveData<ProductDetailEvent> get() = _event
+    private val _event: MutableSingleLiveData<Event> = MutableSingleLiveData()
+    val event: SingleLiveData<Event> get() = _event
 
     fun updateProduct(product: Product) {
         _product.value = product
@@ -33,10 +33,15 @@ class ProductDetailViewModel(
                 val product = requireNotNull(product.value) { "product.value가 null입니다." }
                 shoppingCartRepository.add(product)
             }.onSuccess {
-                _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)
+                _event.postValue(Event.ADD_SHOPPING_CART_SUCCESS)
             }.onFailure {
-                _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
+                _event.postValue(Event.ADD_SHOPPING_CART_FAILURE)
             }
         }
+    }
+
+    enum class Event {
+        ADD_SHOPPING_CART_SUCCESS,
+        ADD_SHOPPING_CART_FAILURE,
     }
 }
