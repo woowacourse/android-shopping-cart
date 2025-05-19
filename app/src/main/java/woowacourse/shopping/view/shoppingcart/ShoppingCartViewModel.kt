@@ -96,7 +96,7 @@ class ShoppingCartViewModel(
 
     private fun validateCurrentPage() {
         cached()
-        if (_cacheShoppingCartProduct.value == emptyList<Product>()) {
+        if (_cacheShoppingCartProduct.value == emptyList<Product>() && _currentPage.value != 0) {
             loadPreviousShoppingProducts()
         }
     }
