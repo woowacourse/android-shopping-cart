@@ -8,21 +8,21 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDatabase
-import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.utils.intentSerializable
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    val cartRepository: CartRepository by lazy { CartRepositoryImpl(CartDatabase.getInstance(this)) }
+    private val viewModel: ProductDetailViewModel by viewModels {
+        ProductDetailViewModel.createFactory(getIntentProduct())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +32,7 @@ class ProductDetailActivity : AppCompatActivity() {
         setOnBackPressedCallback()
 
         initViews()
-    }
-
-    private fun initViews() {
-        initAppbar()
-        initProductDetailInfos()
+        initObserve()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,22 +70,32 @@ class ProductDetailActivity : AppCompatActivity() {
         )
     }
 
+    private fun initViews() {
+        initAppbar()
+        setupBindings()
+    }
+
     private fun initAppbar() {
         setSupportActionBar(binding.toolbarProductDetail)
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    private fun initProductDetailInfos() {
-        binding.product = getIntentProduct()
-        binding.detailClickListener =
-            DetailClickListener { product ->
-                cartRepository.add(product)
-                Toast.makeText(
-                    this@ProductDetailActivity,
-                    R.string.message_add_cart,
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
+    private fun setupBindings() {
+        binding.viewModel = viewModel
+    }
+
+    private fun initObserve() {
+        viewModel.eventAddedCartToast.observe(this) {
+            showAddedCartToast()
+        }
+    }
+
+    private fun showAddedCartToast() {
+        Toast.makeText(
+            this@ProductDetailActivity,
+            R.string.message_add_cart,
+            Toast.LENGTH_SHORT,
+        ).show()
     }
 
     private fun getIntentProduct(): Product {

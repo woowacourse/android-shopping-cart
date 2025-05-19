@@ -6,12 +6,8 @@
     <data>
 
         <variable
-            name="detailClickListener"
-            type="woowacourse.shopping.ui.productdetail.DetailClickListener" />
-
-        <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
+            name="viewModel"
+            type="woowacourse.shopping.ui.productdetail.ProductDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,10 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            app:titleTextColor="@color/white" />
 
         <ImageView
             android:id="@+id/iv_detail_image"
@@ -39,7 +34,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
-            app:setImageWithGlide="@{product.imageUrl}" />
+            app:setImageWithGlide="@{viewModel.product.imageUrl}" />
 
         <TextView
             android:id="@+id/tv_detail_product_title"
@@ -47,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{product.name}"
+            android:text="@{viewModel.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -85,7 +80,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:setFormattedPrice="@{product.price}"
+            app:setFormattedPrice="@{viewModel.product.price}"
             tools:text="99,000원" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -93,7 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button_active"
-            android:onClick="@{() -> detailClickListener.onAddToCartClick(product)}"
+            android:onClick="@{() -> viewModel.addCart()}"
             android:text="@string/add_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
