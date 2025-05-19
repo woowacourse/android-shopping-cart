@@ -2,6 +2,7 @@ package woowacourse.shopping.view.main
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
@@ -12,6 +13,7 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.page.Page
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
 
 class MainActivity :
@@ -31,7 +33,15 @@ class MainActivity :
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
-        return true
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_item_shopping_cart) {
+            val intent = ShoppingCartActivity.newIntent(this)
+            startActivity(intent)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initRecyclerview() {
