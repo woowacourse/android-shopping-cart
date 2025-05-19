@@ -7,6 +7,8 @@ interface ShoppingCartRepository {
 
     fun getAll(): List<ShoppingProduct>
 
+    fun getAllSize(): Int
+
     fun getPaged(
         limit: Int,
         offset: Int,

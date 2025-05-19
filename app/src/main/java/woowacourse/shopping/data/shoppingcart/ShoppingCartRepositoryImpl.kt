@@ -15,21 +15,22 @@ class ShoppingCartRepositoryImpl(
         return result
     }
 
+    override fun getAllSize(): Int {
+        var result = 0
+        thread {
+            result = dao.count()
+        }.join()
+        return result
+    }
+
     override fun getPaged(
         limit: Int,
         offset: Int,
     ): List<ShoppingProduct> {
-        var total = 0
-
-        thread {
-            total = dao.count()
-        }.join()
-
-        val endIndex = (offset + limit).coerceAtMost(total)
         var items = listOf<ShoppingProduct>()
 
         thread {
-            items = dao.getPaged(endIndex - offset, offset).toDomain()
+            items = dao.getPaged(limit, offset).toDomain()
         }.join()
 
         return items

@@ -31,10 +31,13 @@ class ShoppingCartViewModel(
         loadProducts()
     }
 
-    fun deleteProduct(shoppingProduct: ShoppingProduct) {
-        repository.delete(shoppingProduct.id)
-        _removedProduct.value = shoppingProduct
-        shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
+    private fun loadProducts() {
+        val page = _currentPage.value ?: FIRST_PAGE_NUMBER
+        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
+        shoppingProducts = result
+        loadedPages.add(page)
+        cached()
+        checkHasNext()
     }
 
     fun loadMoreShoppingProducts() {
@@ -60,39 +63,32 @@ class ShoppingCartViewModel(
         checkHasNext()
     }
 
-    private fun checkHasNext() {
-        val result =
-            repository.getPaged(
-                SHOPPING_PRODUCT_SIZE_LIMIT,
-                (_currentPage.value?.plus(1) ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
-            )
-
-        _hasNext.value = result != emptyList<ShoppingProduct>()
-    }
-
-    private fun checkCacheHasNext() {
-        val result =
-            shoppingProducts.getCache(
-                SHOPPING_PRODUCT_SIZE_LIMIT,
-                (_currentPage.value?.plus(1) ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
-            )
-
-        _hasNext.value = result != emptyList<ShoppingProduct>()
-    }
-
     fun loadPreviousShoppingProducts() {
         _currentPage.value = _currentPage.value?.minus(ADD_PAGE_NUMBER)
         cached()
         checkCacheHasNext()
     }
 
-    private fun loadProducts() {
-        val page = _currentPage.value ?: FIRST_PAGE_NUMBER
-        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
-        shoppingProducts = result
-        loadedPages.add(page)
-        cached()
-        checkHasNext()
+    fun deleteProduct(shoppingProduct: ShoppingProduct) {
+        repository.delete(shoppingProduct.id)
+        _removedProduct.value = shoppingProduct
+        shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
+    }
+
+    private fun checkHasNext() {
+        val resultSize = repository.getAllSize()
+
+        val remainingItems = resultSize - ((_currentPage.value?.plus(1))?.times(5) ?: FIRST_PAGE_NUMBER)
+
+        _hasNext.value = remainingItems > 0
+    }
+
+    private fun checkCacheHasNext() {
+        val resultSize = shoppingProducts.size
+
+        val remainingItems = resultSize - ((_currentPage.value?.plus(1))?.times(5) ?: FIRST_PAGE_NUMBER)
+
+        _hasNext.value = remainingItems > 0
     }
 
     private fun cached() {
