@@ -18,7 +18,7 @@ import woowacourse.shopping.view.showToast
 
 class ProductDetailActivity :
     AppCompatActivity(),
-    ProductDetailEvents {
+    ProductDetailClickListener {
     private val viewModel: ProductDetailViewModel by viewModels()
     private val binding: ActivityProductDetailBinding by lazy {
         ActivityProductDetailBinding.inflate(layoutInflater)

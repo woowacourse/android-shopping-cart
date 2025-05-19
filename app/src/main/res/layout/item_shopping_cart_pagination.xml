@@ -11,7 +11,7 @@
 
         <variable
             name="onShoppingCartPaginationListener"
-            type="woowacourse.shopping.view.shoppingCart.OnShoppingCartPaginationListener" />
+            type="woowacourse.shopping.view.shoppingCart.OnShoppingCartPaginationClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

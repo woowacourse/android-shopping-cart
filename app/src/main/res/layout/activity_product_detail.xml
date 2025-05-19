@@ -11,7 +11,7 @@
 
         <variable
             name="productDetailEventListener"
-            type="woowacourse.shopping.view.productDetail.ProductDetailEvents" />
+            type="woowacourse.shopping.view.productDetail.ProductDetailClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

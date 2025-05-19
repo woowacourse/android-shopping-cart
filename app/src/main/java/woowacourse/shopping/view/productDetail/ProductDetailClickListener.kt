@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.productDetail
 
-interface ProductDetailEvents {
+interface ProductDetailClickListener {
     fun close()
 
     fun addToShoppingCart()

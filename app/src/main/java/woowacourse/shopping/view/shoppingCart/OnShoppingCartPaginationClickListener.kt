@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.shoppingCart
 
-interface OnShoppingCartPaginationListener {
+interface OnShoppingCartPaginationClickListener {
     fun onMinusPage()
 
     fun onPlusPage()

@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.product.Product
 
 class ShoppingCartProductAdapter(
     private val onRemoveProduct: (product: Product) -> Unit,
-    private val onShoppingCartPaginationListener: OnShoppingCartPaginationListener,
+    private val onShoppingCartPaginationClickListener: OnShoppingCartPaginationClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<ShoppingCartItem> = emptyList()
 
@@ -27,7 +27,7 @@ class ShoppingCartProductAdapter(
             ShoppingCartItem.ItemType.PAGINATION ->
                 ShoppingCartPaginationViewHolder.of(
                     parent,
-                    onShoppingCartPaginationListener,
+                    onShoppingCartPaginationClickListener,
                 )
         }
     }
