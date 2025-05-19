@@ -29,7 +29,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     private fun initObserver() {
         binding.vm = viewModel
 
-        viewModel.saveEvent.observe(viewLifecycleOwner) {
+        viewModel.addToCartSuccessEvent.observe(viewLifecycleOwner) {
             navigateToScreen()
         }
 

@@ -37,7 +37,7 @@ class DetailViewModelTest {
 
         viewModel.addProduct()
 
-        val result = viewModel.saveEvent.getValue()
+        val result = viewModel.addToCartSuccessEvent.getValue()
 
         assertThat(result).isNotNull
     }

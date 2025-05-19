@@ -25,8 +25,8 @@ class DetailViewModel(
     private val _product = MutableLiveData<ProductUiModel>()
     val product: LiveData<ProductUiModel> = _product
 
-    private val _saveEvent = MutableSingleLiveData<Unit>()
-    val saveEvent: SingleLiveData<Unit> = _saveEvent
+    private val _addToCartSuccessEvent = MutableSingleLiveData<Unit>()
+    val addToCartSuccessEvent: SingleLiveData<Unit> = _addToCartSuccessEvent
 
     fun fetchProduct(productId: Long) {
         if (_product.value != null) return
@@ -43,7 +43,7 @@ class DetailViewModel(
 
         cartRepository.addCartItem(product.toProduct()) { result ->
             result
-                .onSuccess { _saveEvent.postValue(Unit) }
+                .onSuccess { _addToCartSuccessEvent.postValue(Unit) }
                 .onFailure { _toastEvent.postValue(DetailMessageEvent.ADD_PRODUCT_FAILURE) }
         }
     }
