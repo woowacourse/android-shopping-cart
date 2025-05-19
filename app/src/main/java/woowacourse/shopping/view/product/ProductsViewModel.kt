@@ -24,26 +24,36 @@ class ProductsViewModel(
         val lastProductId: Long? =
             (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
 
-        productsRepository.load(
-            lastProductId,
-            LOAD_PRODUCTS_SIZE,
-        ) { result ->
-            result
-                .onSuccess { newProducts: List<Product> ->
-                    val currentProducts = products.value?.dropLast(1) ?: emptyList()
-                    loadable = productsRepository.loadable
+        productsRepository.load(lastProductId, LOAD_PRODUCTS_SIZE + 1) { result ->
+            result.onSuccess { newProducts ->
+                loadable = newProducts.size == LOAD_PRODUCTS_SIZE + 1
+                val productsToShow: List<Product> = newProducts.take(LOAD_PRODUCTS_SIZE)
+                val updatedProducts: List<ProductsItem> =
+                    getUpdateProductsItem(productsToShow, loadable)
 
-                    val updatedList = buildList {
-                        addAll(currentProducts)
-                        addAll(newProducts.map(::ProductItem))
-                        if (loadable) add(LoadItem)
-                    }
-
-                    _products.postValue(updatedList)
-                }
+                _products.postValue(updatedProducts)
+            }
                 .onFailure {
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }
+        }
+    }
+
+    private fun getUpdateProductsItem(
+        productsToShow: List<Product>,
+        loadable: Boolean
+    ): List<ProductsItem> {
+        val currentProducts = products.value ?: emptyList()
+        val productsWithoutLoadItem = if (currentProducts.lastOrNull() is LoadItem) {
+            currentProducts.dropLast(1)
+        } else {
+            currentProducts
+        }
+
+        return buildList {
+            addAll(productsWithoutLoadItem)
+            addAll(productsToShow.map(::ProductItem))
+            if (loadable) add(LoadItem)
         }
     }
 

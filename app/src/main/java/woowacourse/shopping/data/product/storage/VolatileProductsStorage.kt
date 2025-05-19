@@ -30,14 +30,13 @@ object VolatileProductsStorage : ProductsStorage {
         ProductEntity(id = 24, name = "비앙카16", price = 36_000),
         ProductEntity(id = 25, name = "비앙카17", price = 36_000),
     )
-    override val lastProductId: Long?
-        get() = products.lastOrNull()?.id
 
     override fun load(
         lastProductId: Long?,
         size: Int,
     ): List<ProductEntity> {
         if (lastProductId == null) {
+            if (size > products.size) return products
             return products.subList(0, size)
         }
         val lastPosition: Int =
