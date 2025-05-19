@@ -5,11 +5,7 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.R
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.presentation.ResultState
@@ -129,10 +125,5 @@ class CartViewModel(
 
     companion object {
         private const val PAGE_SIZE = 5
-
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer { CartViewModel(ShoppingApplication.provideProductRepository()) }
-            }
     }
 }

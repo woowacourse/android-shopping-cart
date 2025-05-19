@@ -18,7 +18,7 @@ import woowacourse.shopping.presentation.ResultState
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val viewModel: CartViewModel by viewModels { CartViewModelFactory(applicationContext) }
     private val cartProductAdapter by lazy { CartProductAdapter(::deleteProduct) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

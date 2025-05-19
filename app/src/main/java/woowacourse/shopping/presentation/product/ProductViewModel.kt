@@ -3,10 +3,6 @@ package woowacourse.shopping.presentation.product
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
@@ -38,12 +34,5 @@ class ProductViewModel(
         _products.value = currentList + nextPage
         currentPage++
         _showLoadMore.value = (_products.value?.size ?: 0) < DummyProducts.values.size
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer { ProductViewModel(ShoppingApplication.provideProductRepository()) }
-            }
     }
 }

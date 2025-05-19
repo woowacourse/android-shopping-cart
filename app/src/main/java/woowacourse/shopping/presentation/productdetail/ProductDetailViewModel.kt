@@ -3,10 +3,6 @@ package woowacourse.shopping.presentation.productdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.presentation.ResultState
@@ -30,12 +26,5 @@ class ProductDetailViewModel(
                 .onSuccess { _resultState.postValue(ResultState.INSERT_SUCCESS) }
                 .onFailure { _resultState.postValue(ResultState.INSERT_FAILURE) }
         }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer { ProductDetailViewModel(ShoppingApplication.provideProductRepository()) }
-            }
     }
 }
