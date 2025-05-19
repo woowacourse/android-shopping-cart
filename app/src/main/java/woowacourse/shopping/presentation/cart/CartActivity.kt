@@ -62,7 +62,11 @@ class CartActivity : AppCompatActivity() {
         }
 
         viewModel.products.observe(this) {
-            cartProductAdapter.setData(it)
+            cartProductAdapter.submitList(it)
+        }
+
+        viewModel.deleteProduct.observe(this) {
+            cartProductAdapter.removeItem(it)
         }
 
         viewModel.resultState.observe(this) { result ->

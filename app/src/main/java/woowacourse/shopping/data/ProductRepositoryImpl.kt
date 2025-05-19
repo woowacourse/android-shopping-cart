@@ -56,10 +56,10 @@ class ProductRepositoryImpl(
 
     override fun deleteProduct(
         productId: Long,
-        onResult: (Result<Unit>) -> Unit,
+        onResult: (Result<Long>) -> Unit,
     ) {
         thread {
-            onResult(runCatching { dao.deleteByProductId(productId) })
+            onResult(runCatching { dao.deleteByProductId(productId).let { productId } })
         }
     }
 }

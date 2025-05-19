@@ -25,6 +25,6 @@ interface ProductRepository {
 
     fun deleteProduct(
         productId: Long,
-        onResult: (Result<Unit>) -> Unit,
+        onResult: (Result<Long>) -> Unit,
     )
 }

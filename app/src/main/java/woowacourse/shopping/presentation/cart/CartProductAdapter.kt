@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.Product
 class CartProductAdapter(
     private val onDeleteClick: (Product) -> Unit,
 ) : RecyclerView.Adapter<CartProductAdapter.CartProductViewHolder>() {
-    private var products: List<Product> = emptyList()
+    private var products: MutableList<Product> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -33,9 +33,25 @@ class CartProductAdapter(
 
     override fun getItemCount(): Int = products.size
 
-    fun setData(newList: List<Product>) {
-        products = newList
-        notifyDataSetChanged()
+    fun submitList(newProducts: List<Product>) {
+        val oldSize = products.size
+        val newSize = newProducts.size
+
+        if (oldSize > 0) {
+            products.clear()
+            notifyItemRangeRemoved(0, oldSize)
+        }
+
+        products.addAll(newProducts)
+        notifyItemRangeInserted(0, newSize)
+    }
+
+    fun removeItem(id: Long) {
+        val index = products.indexOfFirst { it.productId == id }
+        if (index != -1) {
+            products.removeAt(index)
+            notifyItemRemoved(index)
+        }
     }
 
     class CartProductViewHolder(
