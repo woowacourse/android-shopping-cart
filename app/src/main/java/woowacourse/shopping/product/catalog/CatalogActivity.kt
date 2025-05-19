@@ -14,7 +14,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityCatalogBinding
 import woowacourse.shopping.product.detail.DetailActivity
-import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding

@@ -15,7 +15,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
-import woowacourse.shopping.util.IntentCompat
+import woowacourse.shopping.util.intentParcelableExtra
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
@@ -76,8 +76,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun productFromIntent(): ProductUiModel? =
-        IntentCompat.getParcelableExtra(intent, KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
+    private fun productFromIntent(): ProductUiModel? = intent.intentParcelableExtra(KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
 
     companion object {
         private const val KEY_PRODUCT_DETAIL = "productDetail"
