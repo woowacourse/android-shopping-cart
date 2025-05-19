@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -57,5 +59,9 @@ class ShoppingCartActivity : AppCompatActivity() {
         viewModel.hasNext.observe(this) { value ->
             binding.btnRight.isEnabled = value
         }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }
