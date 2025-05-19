@@ -61,10 +61,6 @@ class ShoppingCartActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel.removedProduct.observe(this) { value ->
-            adapter.removeItem(value)
-        }
-
         viewModel.cacheShoppingCartProduct.observe(this) { value ->
             adapter.updateItems(value)
             Log.d("asdf", "value값 $value")

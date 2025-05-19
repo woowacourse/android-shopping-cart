@@ -17,11 +17,6 @@ class SelectedProductAdapter(
 
     override fun getItemCount(): Int = shoppingProducts.size
 
-    fun removeItem(shoppingProduct: ShoppingProduct) {
-        notifyItemRemoved(shoppingProducts.indexOf(shoppingProduct))
-        shoppingProducts.remove(shoppingProduct)
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     fun updateItems(newItems: List<ShoppingProduct>) {
         shoppingProducts.clear()

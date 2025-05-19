@@ -13,9 +13,6 @@ import woowacourse.shopping.domain.ShoppingProduct
 class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _removedProduct = MutableLiveData<ShoppingProduct>()
-    val removedProduct: LiveData<ShoppingProduct> = _removedProduct
-
     private var shoppingProducts: List<ShoppingProduct> = listOf()
 
     private var _currentPage = MutableLiveData(FIRST_PAGE_NUMBER)
@@ -73,7 +70,6 @@ class ShoppingCartViewModel(
 
     fun deleteProduct(shoppingProduct: ShoppingProduct) {
         repository.delete(shoppingProduct.id)
-        _removedProduct.value = shoppingProduct
         shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
         validateCurrentPage()
     }
