@@ -1,15 +1,16 @@
-package woowacourse.shopping
+package woowacourse.shopping.view
 
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.FIXTURE
+import woowacourse.shopping.R
+import woowacourse.shopping.checkIsDisplayed
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 
 class ProductDetailActivityTest {
@@ -30,26 +31,26 @@ class ProductDetailActivityTest {
 
     @Test
     fun 툴바에_닫기_버튼이_표시된다() {
-        onView(withId(R.id.ib_exit)).check(matches(isDisplayed()))
+        onView(withId(R.id.action_product_detail_close)).checkIsDisplayed()
     }
 
     @Test
     fun 상품_이미지가_표시된다() {
-        onView(withId(R.id.iv_product_detail)).check(matches(isDisplayed()))
+        onView(withId(R.id.iv_product_detail)).checkIsDisplayed()
     }
 
     @Test
     fun 상품_이름이_표시된다() {
-        onView(withId(R.id.tv_product_detail_name)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_product_detail_name)).checkIsDisplayed()
     }
 
     @Test
     fun 상품_가격이_표시된다() {
-        onView(withId(R.id.tv_product_detail_price)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_product_detail_price)).checkIsDisplayed()
     }
 
     @Test
     fun 장바구니_담기_버튼이_표시된다() {
-        onView(withId(R.id.btn_product_detail_add_cart)).check(matches(isDisplayed()))
+        onView(withId(R.id.btn_product_detail_add_cart)).checkIsDisplayed()
     }
 }
