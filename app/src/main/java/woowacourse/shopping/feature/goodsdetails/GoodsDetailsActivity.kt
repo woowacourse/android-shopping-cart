@@ -15,7 +15,6 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.feature.cart.ViewModelFactory
-import woowacourse.shopping.util.toDomain
 import kotlin.getValue
 
 class GoodsDetailsActivity : AppCompatActivity() {
@@ -29,11 +28,17 @@ class GoodsDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGoodsDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.lifecycleOwner = this
 
         goods = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
         binding.goods = goods
-        binding.insertCallback = { insertToCart(goods) }
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        viewModel.toastMessage.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { resId ->
+                Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,17 +53,6 @@ class GoodsDetailsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    fun insertToCart(goods: GoodsUiModel) {
-        viewModel.insertToCart(goods.toDomain()) {
-            Toast
-                .makeText(
-                    this,
-                    getString(R.string.goods_detail_cart_insert_complete_toast_message),
-                    Toast.LENGTH_SHORT,
-                ).show()
-        }
     }
 
     companion object {

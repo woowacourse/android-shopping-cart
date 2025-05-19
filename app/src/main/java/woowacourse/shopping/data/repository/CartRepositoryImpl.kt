@@ -1,7 +1,5 @@
 package woowacourse.shopping.data.repository
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import woowacourse.shopping.data.CartDatabase
@@ -18,16 +16,9 @@ class CartRepositoryImpl(
             entities.map { it.toDomain() }
         }
 
-    override fun insert(
-        goods: Goods,
-        onComplete: () -> Unit,
-    ) {
+    override fun insert(goods: Goods) {
         thread {
             cartDatabase.cartDao().insertAll(goods.toEntity())
-
-            Handler(Looper.getMainLooper()).post {
-                onComplete()
-            }
         }
     }
 

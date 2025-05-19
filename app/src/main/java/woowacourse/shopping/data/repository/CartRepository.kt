@@ -6,10 +6,7 @@ import woowacourse.shopping.domain.model.Goods
 interface CartRepository {
     fun getAll(): LiveData<List<Goods>>
 
-    fun insert(
-        goods: Goods,
-        onComplete: () -> Unit,
-    )
+    fun insert(goods: Goods)
 
     fun delete(goods: Goods)
 
