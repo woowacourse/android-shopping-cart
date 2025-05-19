@@ -15,12 +15,12 @@ import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchSize
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivityTemplate
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 @Suppress("FunctionName")
 class ShoppingCartActivityTest {
     @get:Rule
-    val shoppingCartActivityScenarioRule = ActivityScenarioRule(ShoppingCartActivityTemplate::class.java)
+    val shoppingCartActivityScenarioRule = ActivityScenarioRule(ShoppingCartActivity::class.java)
 
     @Test
     fun 장바구니에_담긴_상품의_목록이_표시된다() {
