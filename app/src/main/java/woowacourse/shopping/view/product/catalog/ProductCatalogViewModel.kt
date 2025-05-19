@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
 import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.domain.Product
@@ -12,8 +13,8 @@ import woowacourse.shopping.view.PagedResult
 class ProductCatalogViewModel(
     private val repository: ProductRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<PagedResult<Product>>()
-    val products: LiveData<PagedResult<Product>> = _products
+    private val products = MutableLiveData<PagedResult<Product>>()
+    val productItems: LiveData<List<ProductItem>> = products.map { it.toProductItems() }
 
     private var currentPage = 0
 
@@ -21,16 +22,18 @@ class ProductCatalogViewModel(
         loadProducts()
     }
 
-    fun loadMoreProducts() {
+    fun loadProducts() {
         val result = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
-        _products.value = result
+        products.value = result
         currentPage++
     }
 
-    private fun loadProducts() {
-        val result = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
-        _products.value = result
-        currentPage++
+    private fun PagedResult<Product>.toProductItems(): List<ProductItem> {
+        val items = this.items.map { ProductItem.CatalogProduct(it) }.toMutableList<ProductItem>()
+        if (hasNext) {
+            items.add(ProductItem.LoadMore)
+        }
+        return items
     }
 
     companion object {

@@ -62,7 +62,7 @@ class ProductCatalogActivity : AppCompatActivity() {
         productAdapter =
             ProductAdapter(
                 productsEventListener = { product -> navigateToProductDetail(product) },
-                loadEventListener = viewModel::loadMoreProducts,
+                loadEventListener = viewModel::loadProducts,
             )
 
         binding.rvProducts.adapter = productAdapter
@@ -80,8 +80,8 @@ class ProductCatalogActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel.products.observe(this) { value ->
-            productAdapter.addItems(value.items, value.hasNext)
+        viewModel.productItems.observe(this) { value ->
+            productAdapter.addItems(value)
         }
     }
 
