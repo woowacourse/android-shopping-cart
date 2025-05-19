@@ -22,18 +22,14 @@ class ProductCatalogViewModel(
     }
 
     fun loadMoreProducts() {
-        val result =
-            repository.getPaged(
-                PRODUCT_SIZE_LIMIT,
-                currentPage * PRODUCT_SIZE_LIMIT,
-            )
+        val result = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
         _products.value = result
         currentPage++
     }
 
     private fun loadProducts() {
-        val result = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage)
-        _products.value = PagedResult(result.items, result.hasNext)
+        val result = repository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
+        _products.value = result
         currentPage++
     }
 
