@@ -8,6 +8,8 @@ import kotlin.concurrent.thread
 class ShoppingCartRepositoryImpl(
     private val dao: ShoppingCartDao,
 ) : ShoppingCartRepository {
+    private var totalCount: Int? = null
+
     override fun getAll(): List<CartProduct> {
         var result = listOf<CartProduct>()
         thread {
@@ -20,11 +22,10 @@ class ShoppingCartRepositoryImpl(
         limit: Int,
         offset: Int,
     ): PagedResult<CartProduct> {
-        var total = 0
-        thread {
-            total = dao.count()
-        }.join()
-
+        if (totalCount == null) {
+            thread { totalCount = dao.count() }.join()
+        }
+        val total = checkNotNull(totalCount)
         if (offset >= total) return PagedResult(emptyList(), false)
 
         val endIndex = (offset + limit).coerceAtMost(total)
@@ -41,11 +42,13 @@ class ShoppingCartRepositoryImpl(
         thread {
             dao.insert(ShoppingCartEntity(productId = productId))
         }.join()
+        totalCount?.plus(1)
     }
 
     override fun delete(shoppingCartId: Long) {
         thread {
             dao.delete(shoppingCartId)
         }.join()
+        totalCount?.minus(1)
     }
 }
