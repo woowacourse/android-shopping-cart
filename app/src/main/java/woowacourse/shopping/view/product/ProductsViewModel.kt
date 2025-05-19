@@ -23,6 +23,7 @@ class ProductsViewModel(
     private var loadable: Boolean = false
 
     fun updateProducts() {
+        if (products.value?.isNotEmpty() == true) return
         val lastProductId: Long? =
             (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
 
