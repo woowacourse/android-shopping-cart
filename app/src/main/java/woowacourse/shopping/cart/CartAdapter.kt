@@ -6,13 +6,16 @@ import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.cart.CartItem.ProductItem
 
 class CartAdapter(
-    private var cartItems: List<CartItem>,
+    cartItems: List<CartItem>,
     private val onDeleteProductClick: DeleteProductClickListener,
     private val onPaginationButtonClick: PaginationButtonClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    fun setData(cartProducts: List<CartItem>) {
+    private val cartItems: MutableList<CartItem> = cartItems.toMutableList()
+
+    fun setCartItems(cartProducts: List<CartItem>) {
         notifyItemRangeRemoved(0, cartItems.size)
-        this.cartItems = cartProducts
+        cartItems.clear()
+        cartItems.addAll(cartProducts)
         notifyItemRangeInserted(0, cartItems.size)
     }
 
