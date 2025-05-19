@@ -10,25 +10,13 @@ import kotlin.concurrent.thread
 class DefaultShoppingCartRepository(
     private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage
 ) : ShoppingCartRepository {
-    override var hasNext: Boolean = false
-        private set
-    override var hasPrevious: Boolean = false
-        private set
-
     override fun load(
-        page: Int,
-        count: Int,
-        result: (Result<List<Product>>) -> Unit
+        offset: Int, limit: Int, result: (Result<List<Product>>) -> Unit
     ) {
         thread {
-            val start = (page - 1) * count
-            val endExclusive = page * count
             runCatching {
-                shoppingCartStorage.load(start, endExclusive).map(ProductEntity::toDomain)
+                shoppingCartStorage.load(offset, offset + limit).map(ProductEntity::toDomain)
             }.onSuccess { productList ->
-                hasNext = endExclusive < shoppingCartStorage.size
-                hasPrevious = count < shoppingCartStorage.size && page != 1
-
                 result(Result.success(productList))
             }.onFailure { exception ->
                 result(Result.failure(exception))

@@ -19,14 +19,21 @@ class ShoppingCartViewModel(
     val event: LiveData<ShoppingCartEvent> get() = _event
 
     private var page: Int = MINIMUM_PAGE
+    private var hasPreviousPage: Boolean = false
+    private var hasNextPage: Boolean = false
 
     fun updateShoppingCart() {
-        shoppingCartRepository.load(page, COUNT_PER_PAGE) { result ->
+        val offset = (page - 1) * COUNT_PER_PAGE
+        val limit = COUNT_PER_PAGE + 1
+        shoppingCartRepository.load(offset, limit) { result ->
             result
-                .onSuccess { products: List<Product> ->
-                    if (handleLastPage(products)) return@load
-                    val paginationItem: PaginationItem = createPaginationItem()
-                    _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
+                .onSuccess { products ->
+                    if (handleEmptyPage(products)) return@load
+
+                    updatePaginationState(products)
+
+                    val items = createShoppingCartItems(products)
+                    _shoppingCart.postValue(items)
                 }
                 .onFailure {
                     _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
@@ -34,28 +41,29 @@ class ShoppingCartViewModel(
         }
     }
 
-    private fun handleLastPage(products: List<Product>): Boolean {
-        if (products.isEmpty() && page != MINIMUM_PAGE) {
+    private fun handleEmptyPage(products: List<Product>): Boolean {
+        return if (products.isEmpty() && page != MINIMUM_PAGE) {
             minusPage()
-            updateShoppingCart()
-            return true
+            true
+        } else {
+            false
         }
-        return false
     }
 
-    private fun createPaginationItem(): PaginationItem {
-        val paginationItem: PaginationItem =
-            (shoppingCart.value?.last() as? PaginationItem)?.copy(
-                page = page,
-                nextEnabled = shoppingCartRepository.hasNext,
-                previousEnabled = shoppingCartRepository.hasPrevious
-            )
-                ?: PaginationItem(
-                    page,
-                    shoppingCartRepository.hasNext,
-                    false,
-                )
-        return paginationItem
+    private fun updatePaginationState(products: List<Product>) {
+        hasNextPage = products.size > COUNT_PER_PAGE
+        hasPreviousPage = page > MINIMUM_PAGE
+    }
+
+    private fun createShoppingCartItems(products: List<Product>): List<ShoppingCartItem> {
+        val visibleProducts = products.take(COUNT_PER_PAGE)
+        val paginationItem = PaginationItem(
+            page = page,
+            nextEnabled = hasNextPage,
+            previousEnabled = hasPreviousPage
+        )
+
+        return visibleProducts.map(::ProductItem) + paginationItem
     }
 
     fun removeShoppingCartProduct(product: Product) {

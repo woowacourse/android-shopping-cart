@@ -5,7 +5,7 @@ import woowacourse.shopping.data.product.entity.ProductEntity
 interface ShoppingCartStorage {
     val size: Int
 
-    fun load(start: Int, endExclusive: Int): List<ProductEntity>
+    fun load(offset: Int, limit: Int): List<ProductEntity>
 
     fun add(product: ProductEntity)
 
