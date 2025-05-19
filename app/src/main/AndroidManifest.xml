@@ -17,7 +17,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".view.main.MainActivity"
+            android:name=".view.main.MainActivityTemplate"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,12 +27,12 @@
         </activity>
 
         <activity
-            android:name=".view.detail.ProductDetailActivity"
+            android:name=".view.detail.ProductDetailActivityTemplate"
             android:exported="false">
         </activity>
 
         <activity
-            android:name=".view.shoppingcart.ShoppingCartActivity"
+            android:name=".view.shoppingcart.ShoppingCartActivityTemplate"
             android:exported="false"
             >
         </activity>

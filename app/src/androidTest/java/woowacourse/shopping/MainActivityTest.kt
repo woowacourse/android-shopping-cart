@@ -14,12 +14,12 @@ import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
 import woowacourse.shopping.matcher.scrollToPosition
 import woowacourse.shopping.matcher.sizeGreaterThan
-import woowacourse.shopping.view.main.MainActivity
+import woowacourse.shopping.view.main.MainActivityTemplate
 
 @Suppress("FunctionName")
 class MainActivityTest {
     @get:Rule
-    val mainActivityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
+    val mainActivityScenarioRule = ActivityScenarioRule(MainActivityTemplate::class.java)
 
     @Test
     fun 상품의_목록이_표시된다() {

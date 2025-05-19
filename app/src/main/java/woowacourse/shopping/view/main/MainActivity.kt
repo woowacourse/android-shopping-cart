@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.base.BaseActivity
+import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.page.Page
 import kotlin.getValue
 
 class MainActivity :
-    BaseActivity<ActivityMainBinding>(R.layout.activity_main),
+    ShoppingCartActivityTemplate<ActivityMainBinding>(R.layout.activity_main),
     ProductsEventHandler {
     private val viewModel: ProductsViewModel by viewModels()
 

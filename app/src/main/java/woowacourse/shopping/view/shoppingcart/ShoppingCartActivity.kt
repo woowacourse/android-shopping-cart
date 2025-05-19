@@ -7,11 +7,11 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.base.BaseActivity
+import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
 import woowacourse.shopping.view.page.Page
 
 class ShoppingCartActivity :
-    BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
+    ShoppingCartActivityTemplate<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
     ShoppingCartEventHandler {
     private val viewModel: ShoppingCartViewModel by viewModels()
 
@@ -52,7 +52,7 @@ class ShoppingCartActivity :
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, ShoppingCartActivity::class.java)
+            return Intent(context, ShoppingCartActivityTemplate::class.java)
         }
     }
 }

@@ -18,18 +18,18 @@ import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
-import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.detail.ProductDetailActivityTemplate
 
 class ProductDetailActivityTest {
-    private lateinit var scenario: ActivityScenario<ProductDetailActivity>
+    private lateinit var scenario: ActivityScenario<ProductDetailActivityTemplate>
 
     @get:Rule
-    val productDetailActivityScenarioRule = ActivityScenarioRule(ProductDetailActivity::class.java)
+    val productDetailActivityScenarioRule = ActivityScenarioRule(ProductDetailActivityTemplate::class.java)
 
     @Before
     fun setUp() {
         val fakeContext = ApplicationProvider.getApplicationContext<Context>()
-        val intent = ProductDetailActivity.newIntent(fakeContext, product)
+        val intent = ProductDetailActivityTemplate.newIntent(fakeContext, product)
         scenario = ActivityScenario.launch(intent)
     }
 

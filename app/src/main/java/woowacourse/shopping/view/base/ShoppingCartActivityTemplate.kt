@@ -15,7 +15,7 @@ import androidx.databinding.ViewDataBinding
 import woowacourse.shopping.R
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
-abstract class BaseActivity<T : ViewDataBinding>(
+abstract class ShoppingCartActivityTemplate<T : ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
 ) : AppCompatActivity() {
     protected lateinit var binding: T

@@ -9,12 +9,12 @@ import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.base.BaseActivity
+import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
 import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity :
-    BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
+    ShoppingCartActivityTemplate<ActivityProductDetailBinding>(R.layout.activity_product_detail),
     ProductDetailEventHandler {
     val viewModel: ProductDetailViewModel by viewModels()
 
