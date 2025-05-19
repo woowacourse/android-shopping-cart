@@ -22,3 +22,13 @@
 
 
 # step2 리뷰 반영
+- [x] DB 이름을 BuildConfig에 적용
+- [x] public 가시성 제한자 수정
+- [x] GoodsDetailsActivity의 ViewModel 분리
+- [x] GoodsAdapter에서 binding 객체 분리
+- [x] CartRepository의 안드로이드 의존성 제거
+- [x] 상품목록 더보기 버튼 표시에 ConcatAdapter 적용
+- [x] 리사이클러 어댑터 갱신 로직에 insert/remove 적용
+- [x] Cart가 스스로 Intent를 생성하도록 캡슐화
+- [x] 테스트 코드 수정 및 패키지 구조 정리
+
