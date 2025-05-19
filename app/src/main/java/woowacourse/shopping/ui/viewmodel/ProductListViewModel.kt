@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductRepository
 import woowacourse.shopping.ui.productlist.ProductListViewType
 
@@ -18,13 +19,29 @@ class ProductListViewModel(
     }
 
     fun loadProducts() {
-        val originProducts = _products.value.orEmpty().filterIsInstance<ProductListViewType.ProductItemType>()
-        val newProducts = productRepository.productsByPageNumberAndSize(pageNumber++, 20).map { ProductListViewType.ProductItemType(it) }
+        val originProducts =
+            _products.value.orEmpty().filterIsInstance<ProductListViewType.ProductItemType>()
 
-        if (productRepository.canMoreLoad(pageNumber, 20)) {
-            _products.value = originProducts + newProducts + ProductListViewType.LoadMoreType
-        } else {
-            _products.value = originProducts + newProducts
+        productRepository.fetchInRange(
+            limit = PAGE_FETCH_SIZE,
+            offset = (pageNumber++) * PAGE_SIZE
+        ) { loadProducts ->
+            val newProducts =
+                loadProducts.take(PAGE_SIZE)
+                    .map { product -> ProductListViewType.ProductItemType(product) }
+
+            if (hasNextPage(loadProducts)) {
+                _products.postValue(originProducts + newProducts + ProductListViewType.LoadMoreType)
+            } else {
+                _products.postValue(originProducts + newProducts)
+            }
         }
+    }
+
+    private fun hasNextPage(loadProducts: List<Product>) = loadProducts.size > PAGE_SIZE
+
+    companion object {
+        private const val PAGE_FETCH_SIZE = 21
+        private const val PAGE_SIZE = 20
     }
 }
