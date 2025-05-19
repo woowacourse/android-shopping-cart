@@ -1,9 +1,7 @@
 package woowacourse.shopping.feature.cart.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.Goods
 
 class CartAdapter(
@@ -22,12 +20,7 @@ class CartAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): CartViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemCartBinding.inflate(inflater, parent, false)
-        binding.cartClickListener = cartClickListener
-        return CartViewHolder(binding)
-    }
+    ): CartViewHolder = CartViewHolder(parent, cartClickListener)
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
