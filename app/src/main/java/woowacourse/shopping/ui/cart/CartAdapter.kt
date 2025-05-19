@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 class CartAdapter(
     private val onClickHandler: CartViewHolder.OnClickHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val items: MutableList<Product> = mutableListOf<Product>()
+    private val items: MutableList<Product> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -32,40 +32,35 @@ class CartAdapter(
     fun submitItems(newItems: List<Product>) {
         val oldItems = items.toList()
 
+        updateItems(newItems, oldItems)
+        removeExceedingItems(oldItems, newItems)
+    }
+
+    private fun updateItems(
+        newItems: List<Product>,
+        oldItems: List<Product>,
+    ) {
         for ((position, newItem) in newItems.withIndex()) {
             val oldItem = oldItems.getOrNull(position)
 
             when {
                 oldItem == null -> addItem(newItem)
-                !isItemTheSame(oldItem, newItem) || !isContentTheSame(oldItem, newItem) -> updateItem(position, newItem)
-            }
-        }
-
-        if (oldItems.size > newItems.size) {
-            for (position in oldItems.lastIndex downTo newItems.size) {
-                removeItem(position)
+                !isContentTheSame(oldItem, newItem) -> replaceItem(position, newItem)
             }
         }
     }
-
-    private fun isItemTheSame(
-        oldItem: Product,
-        newItem: Product,
-    ): Boolean = oldItem.id == newItem.id
 
     private fun isContentTheSame(
         oldItem: Product,
         newItem: Product,
     ): Boolean = oldItem == newItem
 
-    private fun updateItem(
+    private fun replaceItem(
         position: Int,
         newItem: Product,
     ) {
-        for (position in 0 until items.size) {
-            items[position] = newItem
-        }
-        notifyItemRangeChanged(position, items.size - position)
+        items[position] = newItem
+        notifyItemChanged(position)
     }
 
     private fun addItem(item: Product) {
@@ -73,10 +68,19 @@ class CartAdapter(
         notifyItemInserted(items.size - 1)
     }
 
-    private fun removeItem(position: Int) {
-        if (position in 0 until items.size) {
-            items.removeAt(position)
-            notifyItemRemoved(position)
+    private fun removeExceedingItems(
+        oldItems: List<Product>,
+        newItems: List<Product>,
+    ) {
+        if (oldItems.size > newItems.size) {
+            for (position in oldItems.lastIndex downTo newItems.size) {
+                removeItem(position)
+            }
         }
+    }
+
+    private fun removeItem(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

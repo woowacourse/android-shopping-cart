@@ -8,8 +8,9 @@ import woowacourse.shopping.domain.model.Product
 class ProductsAdapter(
     private val onClickHandler: OnClickHandler,
 ) : RecyclerView.Adapter<ProductsItemViewHolder<ProductsItem, ViewDataBinding>>() {
-    private val items: MutableList<ProductsItem> = mutableListOf<ProductsItem>()
+    private val items: MutableList<ProductsItem> = mutableListOf()
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -31,32 +32,31 @@ class ProductsAdapter(
 
     override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
-    fun submitItems(newItems: List<Product>) {
+    fun submitItems(
+        newItems: List<Product>,
+        hasMore: Boolean,
+    ) {
         val newProductItems = newItems.map { ProductsItem.ProductItem(it) }
         val oldProductItems = items.toList()
 
+        updateNewItems(newProductItems, oldProductItems)
+        removeExceedingItems(oldProductItems, newProductItems)
+        updateLoadMoreItem(hasMore)
+    }
+
+    private fun updateNewItems(
+        newProductItems: List<ProductsItem.ProductItem>,
+        oldProductItems: List<ProductsItem>,
+    ) {
         for ((position, newItem) in newProductItems.withIndex()) {
             val oldItem = oldProductItems.getOrNull(position)
 
             when {
                 oldItem == null -> addItem(newItem)
-                !isItemTheSame(oldItem, newItem) || !isContentTheSame(oldItem, newItem) -> updateItem(position, newItem)
+                !isContentTheSame(oldItem, newItem) -> replaceItem(position, newItem)
             }
         }
-
-        if (oldProductItems.size > newProductItems.size) {
-            for (position in oldProductItems.lastIndex downTo newProductItems.size) {
-                removeItem(position)
-            }
-        }
-
-        items.removeAll { item -> item is ProductsItem.LoadMoreItem }
     }
-
-    private fun isItemTheSame(
-        oldItem: ProductsItem,
-        newItem: ProductsItem,
-    ): Boolean = oldItem.id == newItem.id
 
     private fun isContentTheSame(
         oldItem: ProductsItem,
@@ -64,17 +64,15 @@ class ProductsAdapter(
     ): Boolean =
         when (oldItem) {
             is ProductsItem.ProductItem -> oldItem.value == (newItem as ProductsItem.ProductItem).value
-            is ProductsItem.LoadMoreItem -> true
+            is ProductsItem.LoadMoreItem -> false
         }
 
-    private fun updateItem(
+    private fun replaceItem(
         position: Int,
         newItem: ProductsItem,
     ) {
-        for (position in 0 until items.size) {
-            items[position] = newItem
-        }
-        notifyItemRangeChanged(position, items.size - position)
+        items[position] = newItem
+        notifyItemChanged(position)
     }
 
     private fun addItem(item: ProductsItem) {
@@ -82,15 +80,34 @@ class ProductsAdapter(
         notifyItemInserted(items.size - 1)
     }
 
-    private fun removeItem(position: Int) {
-        if (position in 0 until items.size) {
-            items.removeAt(position)
-            notifyItemRemoved(position)
+    private fun removeExceedingItems(
+        oldProductItems: List<ProductsItem>,
+        newProductItems: List<ProductsItem.ProductItem>,
+    ) {
+        if (oldProductItems.size > newProductItems.size) {
+            for (position in oldProductItems.lastIndex downTo newProductItems.size) {
+                removeItem(position)
+            }
         }
     }
 
-    fun updateHasMoreItem(hasMore: Boolean) {
-        if (hasMore) addItem(ProductsItem.LoadMoreItem)
+    private fun removeItem(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    private fun updateLoadMoreItem(hasMore: Boolean) {
+        val loadMoreIndex = items.indexOfFirst { it is ProductsItem.LoadMoreItem }
+
+        when {
+            hasMore && loadMoreIndex == -1 -> addItem(ProductsItem.LoadMoreItem)
+            hasMore && loadMoreIndex != -1 -> {
+                removeItem(loadMoreIndex)
+                addItem(ProductsItem.LoadMoreItem)
+            }
+
+            !hasMore && loadMoreIndex != -1 -> removeItem(loadMoreIndex)
+        }
     }
 
     interface OnClickHandler :

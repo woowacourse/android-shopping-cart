@@ -12,7 +12,7 @@ import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.ProductsAdapter.OnClickHandler
 
 class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.activity_products) {
-    private val viewModel: ProductsViewModel by viewModels()
+    private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,13 +60,9 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
         binding.productItemsContainer.itemAnimator = null
     }
 
-    fun initObservers() {
+    private fun initObservers() {
         viewModel.products.observe(this) { products ->
-            productsAdapter.submitItems(products)
-            viewModel.loadHasMoreProducts()
-        }
-        viewModel.hasMoreProducts.observe(this) { hasMore ->
-            productsAdapter.updateHasMoreItem(hasMore)
+            productsAdapter.submitItems(products.products, products.hasMore)
         }
     }
 }

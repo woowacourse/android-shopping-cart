@@ -17,7 +17,7 @@ sealed class ProductsItem(
     }
 
     data object LoadMoreItem : ProductsItem(LOAD_MORE) {
-        override val id: Int = LOAD_MORE_ITEM_ID
         private const val LOAD_MORE_ITEM_ID = -1
+        override val id: Int = LOAD_MORE_ITEM_ID
     }
 }

@@ -23,7 +23,7 @@ class CartViewModel(
     }
 
     fun loadCartProducts() {
-        _products.value = cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE)
+        _products.value = cartDummyRepository.fetchCartProducts(page = currentPage.value ?: INITIAL_PAGE)
         if (products.value.isNullOrEmpty()) decreasePage()
         loadMaxPage()
     }
