@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.feature.goodsdetails
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -7,12 +7,11 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.R
 import woowacourse.shopping.feature.GoodsUiModel
-import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 
 @Suppress("ktlint:standard:function-naming")
 class GoodsDetailsActivityTest {

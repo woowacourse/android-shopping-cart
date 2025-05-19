@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.feature.goods
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
@@ -6,7 +6,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
-import woowacourse.shopping.feature.goods.GoodsViewModel
 import woowacourse.shopping.util.getOrAwaitValue
 
 @Suppress("ktlint:standard:function-naming")
