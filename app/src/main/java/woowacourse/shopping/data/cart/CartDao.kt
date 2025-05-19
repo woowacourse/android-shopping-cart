@@ -1,34 +1,28 @@
 package woowacourse.shopping.data.cart
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import woowacourse.shopping.data.product.ProductEntity
+import androidx.room.Transaction
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM cart")
-    fun findAll(): List<ProductEntity>
-
-    @Query("SELECT * FROM cart WHERE id =:id")
-    fun findById(id: Long): ProductEntity
-
+    @Transaction
     @Query("SELECT * FROM cart LIMIT :limit OFFSET :offset")
-    fun findPagedItems(
+    fun findCartItemsInRange(
         limit: Int,
         offset: Int,
-    ): List<ProductEntity>
+    ): List<CartItemDetail>
 
+    @Transaction
+    @Query("SELECT * FROM cart WHERE id = :cartItemId")
+    fun findByCartItemId(cartItemId: Long): CartItemDetail
+
+    @Transaction
     @Insert
-    fun insert(productEntity: ProductEntity)
+    fun insert(cartItemEntity: CartItemEntity)
 
-    @Insert
-    fun insertAll(vararg productEntity: ProductEntity)
-
-    @Delete
-    fun delete(productEntity: ProductEntity)
-
-    @Query("SELECT COUNT(*) FROM cart ")
-    fun size(): Int
+    @Transaction
+    @Query("DELETE FROM cart WHERE id = :cartItemId")
+    fun delete(cartItemId: Long)
 }

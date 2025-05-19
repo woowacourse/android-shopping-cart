@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
+            name="cartProduct"
+            type="woowacourse.shopping.domain.cart.CartProduct" />
         <variable
             name="cartClickListener"
             type="woowacourse.shopping.ui.cart.CartClickListener" />
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="18dp"
-            android:text="@{product.name}"
+            android:text="@{cartProduct.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -42,7 +42,7 @@
             android:layout_marginEnd="8dp"
             android:background="@color/white"
             android:contentDescription="@string/delete_description"
-            android:onClick="@{() -> cartClickListener.onClick(product)}"
+            android:onClick="@{() -> cartClickListener.onClick(cartProduct)}"
             android:src="@drawable/close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -56,7 +56,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_cart_name"
-            app:setImageWithGlide="@{product.imageUrl}"
+            app:setImageWithGlide="@{cartProduct.imageUrl}"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_marginBottom="17dp"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
-            setFormattedPrice="@{product.price}"
+            setFormattedPrice="@{cartProduct.price}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="999,999,999,999,900원" />

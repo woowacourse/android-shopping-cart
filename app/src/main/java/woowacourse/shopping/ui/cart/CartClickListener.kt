@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.cart
 
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.cart.CartProduct
 
 fun interface CartClickListener {
-    fun onClick(product: Product)
+    fun onClick(cartProduct: CartProduct)
 }

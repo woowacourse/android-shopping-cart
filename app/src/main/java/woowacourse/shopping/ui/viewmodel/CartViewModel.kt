@@ -3,14 +3,14 @@ package woowacourse.shopping.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.domain.cart.CartProduct
 import woowacourse.shopping.domain.cart.CartRepository
-import woowacourse.shopping.domain.product.Product
 
 class CartViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<Product>>(emptyList())
-    val products: LiveData<List<Product>> get() = _products
+    private val _products = MutableLiveData<List<CartProduct>>(emptyList())
+    val products: LiveData<List<CartProduct>> get() = _products
 
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> get() = _pageNumber
@@ -19,9 +19,6 @@ class CartViewModel(
         private set
 
     init {
-        repository.fetchSize {
-            size = it
-        }
         update()
     }
 
@@ -33,7 +30,7 @@ class CartViewModel(
 
     private fun update() {
         val pageNumber = pageNumber.value ?: 1
-        repository.fetchPagedItems(5, (pageNumber - 1) * 5) { products ->
+        repository.fetchInRange(5, (pageNumber - 1) * 5) { products ->
             _products.postValue(products)
         }
     }
@@ -52,8 +49,8 @@ class CartViewModel(
         }
     }
 
-    fun deleteProduct(product: Product) {
-        repository.remove(product)
-        _products.value = _products.value?.filter { it.id != product.id }
+    fun deleteProduct(cartProduct: CartProduct) {
+        repository.delete(cartProduct.id!!)
+        _products.value = _products.value?.filter { it.id != cartProduct.id }
     }
 }
