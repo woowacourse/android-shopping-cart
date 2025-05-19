@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.ui.cart.CartViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -20,7 +27,7 @@
             app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_cart"
+            android:id="@+id/cart_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="30dp"
@@ -36,10 +43,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button_inactive"
+            android:onClick="@{()->viewModel.moveToPrevious()}"
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_page_number"
-            app:layout_constraintTop_toBottomOf="@id/rv_cart" />
+            app:layout_constraintTop_toBottomOf="@id/cart_recyclerView" />
 
         <TextView
             android:id="@+id/tv_page_number"
@@ -60,6 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button_active"
+            android:onClick="@{()->viewModel.moveToNext()}"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="@id/btn_previous"
             app:layout_constraintStart_toEndOf="@id/tv_page_number" />

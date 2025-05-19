@@ -64,8 +64,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun initViews() {
         initAppbar()
-        initRecyclerView()
-        initClickListener()
+        setupBindings()
     }
 
     private fun initAppbar() {
@@ -75,8 +74,9 @@ class CartActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
     }
 
-    private fun initRecyclerView() {
-        binding.rvCart.adapter = cartAdapter
+    private fun setupBindings() {
+        binding.cartRecyclerView.adapter = cartAdapter
+        binding.viewModel = viewModel
     }
 
     private fun initAdapter(): CartAdapter {
@@ -86,11 +86,6 @@ class CartActivity : AppCompatActivity() {
                 viewModel.deleteProduct(product)
             },
         )
-    }
-
-    private fun initClickListener() {
-        binding.btnPrevious.setOnClickListener { viewModel.moveToPrevious() }
-        binding.btnNext.setOnClickListener { viewModel.moveToNext() }
     }
 
     private fun initObserve() {
