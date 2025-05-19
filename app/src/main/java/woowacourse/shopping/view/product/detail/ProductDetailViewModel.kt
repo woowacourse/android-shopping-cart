@@ -15,9 +15,17 @@ class ProductDetailViewModel(
     private val _navigateEvent = MutableLiveData<Unit>()
     val navigateEvent: LiveData<Unit> = _navigateEvent
 
+    private val _errorEvent = MutableLiveData<Unit>()
+    val errorEvent: LiveData<Unit> = _errorEvent
+
     fun addToShoppingCart() {
-        repository.insert(product.id)
-        _navigateEvent.value = Unit
+        runCatching {
+            repository.insert(product.id)
+        }.onSuccess {
+            _navigateEvent.value = Unit
+        }.onFailure {
+            _errorEvent.value = Unit
+        }
     }
 
     companion object {
