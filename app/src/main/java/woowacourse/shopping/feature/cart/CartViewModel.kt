@@ -20,19 +20,22 @@ class CartViewModel(
             getProducts(pageNum)
         }
     val totalItemsCount: LiveData<Int> = cartRepository.getAllItemsSize()
-    var totalItems: Int = 0
     private val _isLeftPageEnable = MutableLiveData(false)
     val isLeftPageEnable: LiveData<Boolean> get() = _isLeftPageEnable
     private val _isRightPageEnable = MutableLiveData(false)
     val isRightPageEnable: LiveData<Boolean> get() = _isRightPageEnable
 
     fun delete(goods: Goods) {
-        val endPage = ((totalItems - 1) / PAGE_SIZE) + 1
-        if (currentPage == endPage && (totalItems - 1) == ((currentPage - 1) * PAGE_SIZE)) {
+        val total = totalItemsCount.value ?: 0
+        val endPage = ((total - 1) / PAGE_SIZE) + 1
+
+        if (currentPage == endPage && (total - 1) == ((currentPage - 1) * PAGE_SIZE)) {
             currentPage--
             _page.value = currentPage
         }
+
         cartRepository.delete(goods)
+        updatePageButtonStates()
     }
 
     fun plusPage() {
@@ -45,29 +48,20 @@ class CartViewModel(
         _page.value = currentPage
     }
 
-    fun updatePageButton() {
-        val endPage = ((totalItems - 1) / PAGE_SIZE) + 1
-        when {
-            currentPage == 1 -> {
-                _isLeftPageEnable.value = false
-                _isRightPageEnable.value = currentPage < endPage
-            }
-            currentPage < endPage -> {
-                _isLeftPageEnable.value = currentPage > 1
-                _isRightPageEnable.value = currentPage < endPage
-            }
-            currentPage == endPage -> {
-                _isLeftPageEnable.value = currentPage > 1
-                _isRightPageEnable.value = false
-            }
-        }
+    fun updatePageButtonStates() {
+        val total = totalItemsCount.value ?: 0
+        val endPage = ((total - 1) / PAGE_SIZE) + 1
+
+        val leftEnabled = currentPage > 1
+        val rightEnabled = currentPage < endPage
+        val showButtons = total > PAGE_SIZE
+
+        _isLeftPageEnable.value = leftEnabled
+        _isRightPageEnable.value = rightEnabled
+        _showPageButton.value = showButtons
     }
 
-    fun getProducts(page: Int): LiveData<List<Goods>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)
-
-    fun updatePageButtonVisibility() {
-        _showPageButton.value = totalItems > PAGE_SIZE
-    }
+    private fun getProducts(page: Int): LiveData<List<Goods>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)
 
     companion object {
         private const val PAGE_SIZE = 5

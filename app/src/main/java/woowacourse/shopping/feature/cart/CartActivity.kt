@@ -30,7 +30,6 @@ class CartActivity :
         binding.viewModel = viewModel
 
         updatePageButton()
-        updatePage()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -43,16 +42,11 @@ class CartActivity :
     }
 
     private fun updatePageButton() {
-        viewModel.totalItemsCount.observe(this) { value ->
-            viewModel.totalItems = value
-            viewModel.updatePageButtonVisibility()
-            viewModel.updatePageButton()
+        viewModel.totalItemsCount.observe(this) {
+            viewModel.updatePageButtonStates()
         }
-    }
-
-    private fun updatePage() {
         viewModel.page.observe(this) {
-            viewModel.updatePageButton()
+            viewModel.updatePageButtonStates()
         }
     }
 }
