@@ -8,10 +8,10 @@ import androidx.room.Transaction
 
 @Dao
 interface CartDao {
-    @Query("SELECT EXISTS(SELECT 1 FROM CartEntity WHERE createdAt < :createdAt)")
+    @Query("SELECT EXISTS(SELECT 1 FROM CartEntity WHERE createdAt > :createdAt)")
     fun existsItemCreatedBefore(createdAt: Long): Boolean
 
-    @Query("SELECT * FROM CartEntity ORDER BY createdAt DESC Limit :limit OFFSET :offset")
+    @Query("SELECT * FROM CartEntity ORDER BY createdAt ASC Limit :limit OFFSET :offset")
     fun getCartItemPaged(
         limit: Int,
         offset: Int,
