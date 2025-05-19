@@ -7,7 +7,7 @@
     <string name="products_load_more">더보기</string>
 
     <!--    상품 상세-->
-    <string name="product_detail_cart_add_success">성공적으로 장바구니에 담겼습니다!</string>
+    <string name="product_detail_cart_add_success">성공적으로 장바구니에 반영되었습니다!</string>
     <string name="product_detail_price">가격</string>
     <string name="product_detail_cart_add">장바구니 담기</string>
     <string name="product_detail_close">닫기</string>

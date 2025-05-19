@@ -9,27 +9,63 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.model.CatalogProducts.Companion.EMPTY_CATALOG_PRODUCTS
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductsViewModel(
-    private val productsDummyRepository: ProductRepository,
+    private val productsRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _catalogProducts: MutableLiveData<CatalogProducts> = MutableLiveData(EMPTY_CATALOG_PRODUCTS)
     val catalogProducts: LiveData<CatalogProducts> get() = _catalogProducts
 
-    private val maxProductId: Int get() =
-        catalogProducts.value
-            ?.products
-            ?.lastOrNull()
-            ?.product
-            ?.id ?: 0
+    private val maxProductId: Int
+        get() =
+            catalogProducts.value
+                ?.products
+                ?.lastOrNull()
+                ?.product
+                ?.id ?: 0
 
     fun loadProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        productsDummyRepository.fetchProducts(lastId = maxProductId, count = count) { newProducts ->
+        productsRepository.fetchProducts(lastId = maxProductId, count = count) { newProducts ->
             _catalogProducts.postValue(
                 CatalogProducts(
                     products = (catalogProducts.value?.products ?: emptyList()) + newProducts.products,
                     hasMore = newProducts.hasMore,
+                ),
+            )
+        }
+    }
+
+    fun increaseCartProduct(id: Int) {
+        cartRepository.increaseProductQuantity(id) { newQuantity ->
+            _catalogProducts.postValue(
+                CatalogProducts(
+                    products = updateCartProductQuantity(id, newQuantity),
+                    hasMore = catalogProducts.value?.hasMore ?: false,
+                ),
+            )
+        }
+    }
+
+    private fun updateCartProductQuantity(
+        id: Int,
+        newQuantity: Int,
+    ) = catalogProducts.value?.products?.map { product ->
+        if (product.product.id == id) {
+            product.copy(quantity = newQuantity)
+        } else {
+            product
+        }
+    } ?: emptyList()
+
+    fun decreaseCartProduct(id: Int) {
+        cartRepository.decreaseProductQuantity(id) { newQuantity ->
+            _catalogProducts.postValue(
+                CatalogProducts(
+                    products = updateCartProductQuantity(id, newQuantity),
+                    hasMore = catalogProducts.value?.hasMore ?: false,
                 ),
             )
         }
@@ -45,10 +81,11 @@ class ProductsViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return ProductsViewModel(
-                        (application as ShoppingApp).productRepository,
+                        application.productRepository,
+                        application.cartRepository,
                     ) as T
                 }
             }

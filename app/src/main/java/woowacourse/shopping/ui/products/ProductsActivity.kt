@@ -39,6 +39,14 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
                 navigateToProductDetail(id)
             }
 
+            override fun onIncreaseClick(id: Int) {
+                viewModel.increaseCartProduct(id)
+            }
+
+            override fun onDecreaseClick(id: Int) {
+                viewModel.decreaseCartProduct(id)
+            }
+
             override fun onLoadMoreClick() {
                 viewModel.loadProducts()
             }

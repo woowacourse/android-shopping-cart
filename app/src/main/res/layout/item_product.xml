@@ -64,5 +64,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/productNameText"
             tools:text="10,000원" />
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> onClickHandler.onIncreaseClick(cartProduct.product.id)}"
+            android:src="@drawable/ic_products_cart_add"
+            app:isGone="@{cartProduct.quantity != 0}"
+            app:layout_constraintBottom_toBottomOf="@id/productPreviewImage"
+            app:layout_constraintEnd_toEndOf="@id/productPreviewImage" />
+
+        <woowacourse.shopping.ui.custom.CartCountView
+            android:id="@+id/productCartProductCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginBottom="8dp"
+            app:isGone="@{cartProduct.quantity == 0}"
+            app:layout_constraintBottom_toBottomOf="@id/productPreviewImage"
+            app:layout_constraintEnd_toEndOf="@id/productPreviewImage"
+            app:layout_constraintStart_toStartOf="@id/productPreviewImage" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

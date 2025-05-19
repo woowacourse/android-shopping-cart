@@ -10,13 +10,14 @@
     </data>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:minWidth="126dp">
 
         <TextView
             android:layout_width="42dp"
             android:layout_height="42dp"
+            android:background="@drawable/bg_cart_white_radius_left_4dp"
             android:gravity="center"
             android:onClick="@{()->onClickHandler.onDecreaseClick()}"
             android:text="@string/cart_count_decrease"
@@ -27,8 +28,10 @@
 
         <TextView
             android:id="@+id/cartCountText"
-            android:layout_width="42dp"
+            android:layout_width="0dp"
             android:layout_height="42dp"
+            android:layout_weight="1"
+            android:background="@color/white"
             android:gravity="center"
             android:textAlignment="center"
             android:textColor="@color/gray_5"
@@ -39,6 +42,7 @@
         <TextView
             android:layout_width="42dp"
             android:layout_height="42dp"
+            android:background="@drawable/bg_cart_white_radius_right_4dp"
             android:gravity="center"
             android:onClick="@{()->onClickHandler.onIncreaseClick()}"
             android:text="@string/cart_count_increase"
