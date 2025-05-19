@@ -1,5 +1,8 @@
 package woowacourse.shopping.presentation
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -15,7 +18,17 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        repository = mockk()
+        repository = mockk<ProductRepository>(relaxed = true)
+
+        every { repository.getPagedCartProducts(any(), any(), any()) } just Runs
+
+        every {
+            repository.getCartProductCount(any())
+        } answers {
+            val callback = firstArg<(Result<Int>) -> Unit>()
+            callback(Result.success(10))
+        }
+
         viewModel = CartViewModel(repository)
     }
 
@@ -30,6 +43,14 @@ class CartViewModelTest {
     @Test
     fun `이전_페이지_버튼을_누르면_페이지_값이_1_감소한다`() {
         viewModel.changePage(next = true)
+        viewModel.changePage(next = false)
+
+        val currentPage = viewModel.currentPage.getOrAwaitValue()
+        assertThat(currentPage).isEqualTo(0)
+    }
+
+    @Test
+    fun `페이지가_0일_때_이전_페이지_버튼을_누르면_페이지_값이_0으로_유지된다`() {
         viewModel.changePage(next = false)
 
         val currentPage = viewModel.currentPage.getOrAwaitValue()
