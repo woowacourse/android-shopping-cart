@@ -33,7 +33,11 @@ class ProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ProductsItem>) {
+        val previousSize = this.items.size
+        val insertedCount = items.size - previousSize
+
         this.items = items
-        notifyDataSetChanged()
+
+        notifyItemRangeInserted(previousSize, insertedCount)
     }
 }
