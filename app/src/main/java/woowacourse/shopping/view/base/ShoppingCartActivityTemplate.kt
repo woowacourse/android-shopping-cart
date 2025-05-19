@@ -1,19 +1,14 @@
 package woowacourse.shopping.view.base
 
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import woowacourse.shopping.R
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 abstract class ShoppingCartActivityTemplate<T : ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
@@ -36,33 +31,8 @@ abstract class ShoppingCartActivityTemplate<T : ViewDataBinding>(
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_item_shopping_cart -> {
-                val intent = ShoppingCartActivity.newIntent(this)
-                startActivity(intent)
-            }
-            android.R.id.home, R.id.menu_item_close -> finish()
-            else -> super.onOptionsItemSelected(item)
-        }
-        return true
-    }
-
     protected fun onUnexpectedError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         finish()
-    }
-
-    protected fun setSubActivityMenuBar(
-        title: String,
-        view: View,
-    ) {
-        val toolbar = view as Toolbar
-        toolbar.menu.findItem(R.id.menu_item_shopping_cart).isVisible = false
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            this.title = title
-        }
     }
 }

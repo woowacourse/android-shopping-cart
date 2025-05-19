@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
@@ -35,6 +36,13 @@ class ProductDetailActivity :
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_item_close) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onAddToCartSelected(product: Product) {
