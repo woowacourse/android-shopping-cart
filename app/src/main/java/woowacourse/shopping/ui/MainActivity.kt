@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAdapter() {
         val adapter = ProductAdapter(
-            onClickProduct = { },
+            onClickProduct = viewModel::addCartProduct,
             onClickReadMore = viewModel::fetchProducts
         )
         binding.rvProducts.setHasFixedSize(true)
