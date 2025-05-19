@@ -7,47 +7,30 @@ import woowacourse.shopping.domain.repository.ProductRepository
 class ProductRepositoryImpl(
     private val products: List<Product>,
 ) : ProductRepository {
-    override fun findProductById(
-        id: Long,
-        onResult: (Result<Product>) -> Unit,
-    ) {
-        val result =
-            runCatching {
-                products.find { it.id == id }
-                    ?: throw NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE.format(id))
-            }
-        onResult(result)
-    }
+    override fun findProductById(id: Long): Result<Product> =
+        runCatching {
+            products.find { it.id == id }
+                ?: throw NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE.format(id))
+        }
 
-    override fun findProductsByIds(
-        ids: List<Long>,
-        onResult: (Result<List<Product>>) -> Unit,
-    ) {
-        val result = runCatching { products.filter { it.id in ids } }
-        onResult(result)
-    }
+    override fun findProductsByIds(ids: List<Long>): Result<List<Product>> = runCatching { products.filter { it.id in ids } }
 
     override fun loadProducts(
         offset: Int,
         loadSize: Int,
-        onResult: (Result<PageableItem<Product>>) -> Unit,
-    ) {
-        val result =
-            runCatching {
-                val totalSize = products.size
+    ): Result<PageableItem<Product>> =
+        runCatching {
+            val totalSize = products.size
 
-                if (offset >= totalSize) {
-                    return@runCatching PageableItem(emptyList(), false)
-                }
-
-                val sublist = products.drop(offset).take(loadSize)
-                val hasMore = offset + loadSize < totalSize
-
-                PageableItem(sublist, hasMore)
+            if (offset >= totalSize) {
+                return@runCatching PageableItem(emptyList(), false)
             }
 
-        onResult(result)
-    }
+            val sublist = products.drop(offset).take(loadSize)
+            val hasMore = offset + loadSize < totalSize
+
+            PageableItem(sublist, hasMore)
+        }
 
     companion object {
         private const val NO_SUCH_ELEMENT_MESSAGE = "%d에 해당하는 상품을 찾을 수 없습니다."

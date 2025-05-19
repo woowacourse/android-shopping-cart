@@ -34,11 +34,10 @@ class CatalogViewModel(
     fun fetchProducts() {
         val newOffset = page * limit
 
-        productRepository.loadProducts(newOffset, limit) { result ->
-            result
-                .onSuccess { pageableItem -> loadProductsSuccessHandler(pageableItem) }
-                .onFailure { _toastEvent.postValue(CatalogMessageEvent.FETCH_PRODUCTS_FAILURE) }
-        }
+        productRepository
+            .loadProducts(newOffset, limit)
+            .onSuccess { pageableItem -> loadProductsSuccessHandler(pageableItem) }
+            .onFailure { _toastEvent.postValue(CatalogMessageEvent.FETCH_PRODUCTS_FAILURE) }
     }
 
     private fun loadProductsSuccessHandler(pageableItem: PageableItem<Product>) {

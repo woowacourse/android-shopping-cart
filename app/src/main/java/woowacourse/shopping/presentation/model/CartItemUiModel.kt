@@ -10,4 +10,4 @@ data class CartItemUiModel(
     val totalPrice: Int get() = product.price * quantity
 }
 
-fun CartItem.toUiModel(product: ProductUiModel) = CartItemUiModel(id, product, quantity)
+fun CartItem.toUiModel() = CartItemUiModel(id, product.toUiModel(), quantity)

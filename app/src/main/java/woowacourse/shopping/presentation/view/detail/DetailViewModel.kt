@@ -31,11 +31,10 @@ class DetailViewModel(
     fun fetchProduct(productId: Long) {
         if (_product.value != null) return
 
-        productRepository.findProductById(productId) { result ->
-            result
-                .onSuccess { _product.postValue(it.toUiModel()) }
-                .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
-        }
+        productRepository
+            .findProductById(productId)
+            .onSuccess { _product.postValue(it.toUiModel()) }
+            .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
     }
 
     fun addProduct() {

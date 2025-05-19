@@ -14,8 +14,8 @@ class ShoppingApplication : Application() {
     }
 
     private fun initRepository() {
-        initCartRepository()
         initProductRepository()
+        initCartRepository()
     }
 
     private fun initProductRepository() {
@@ -25,7 +25,7 @@ class ShoppingApplication : Application() {
 
     private fun initCartRepository() {
         val cartDao = ShoppingDatabase.getDatabase(this).cartDao()
-        val cartRepository = CartRepositoryImpl(cartDao)
+        val cartRepository = CartRepositoryImpl(RepositoryProvider.productRepository, cartDao)
         RepositoryProvider.initCartRepository(cartRepository)
     }
 }

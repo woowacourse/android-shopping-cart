@@ -9,7 +9,7 @@ fun fakeCartRepository() =
     object : CartRepository {
         private val cart =
             mutableListOf<CartItem>().apply {
-                repeat(10) { add(CartItem(it.toLong(), it.toLong(), 1)) }
+                repeat(10) { add(CartItem(it.toLong(), dummyProductsFixture[it], 1)) }
             }
         private var nextId = cart.size.toLong() + 1
 
@@ -40,7 +40,7 @@ fun fakeCartRepository() =
             product: Product,
             onResult: (Result<Unit>) -> Unit,
         ) {
-            val cartItem = CartItem(nextId++, product.id, 1)
+            val cartItem = CartItem(nextId++, product, 1)
             cart.add(cartItem)
             onResult(Result.success(Unit))
         }

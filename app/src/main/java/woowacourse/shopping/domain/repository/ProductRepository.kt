@@ -4,19 +4,12 @@ import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 
 interface ProductRepository {
-    fun findProductById(
-        id: Long,
-        onResult: (Result<Product>) -> Unit,
-    )
+    fun findProductById(id: Long): Result<Product>
 
-    fun findProductsByIds(
-        ids: List<Long>,
-        onResult: (Result<List<Product>>) -> Unit,
-    )
+    fun findProductsByIds(ids: List<Long>): Result<List<Product>>
 
     fun loadProducts(
         offset: Int,
         loadSize: Int,
-        onResult: (Result<PageableItem<Product>>) -> Unit,
-    )
+    ): Result<PageableItem<Product>>
 }

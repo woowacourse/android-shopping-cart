@@ -62,14 +62,13 @@ class CartDaoTest {
     }
 
     @Test
-    fun `특정_시간_이전에_담겨진_상품_존재_여부_확인할_수_있다`() {
+    fun `특정_시간_이후에_담겨진_상품_존재_여부_확인할_수_있다`() {
         val now = System.currentTimeMillis()
-        val oldProduct =
-            CartEntity(cartId = 1, productId = 201, createdAt = now - 10000)
+        val oldProduct = CartEntity(cartId = 1, productId = 201, createdAt = now + 10000)
         cartDao.insert(oldProduct)
 
-        val exists = cartDao.existsItemCreatedBefore(now)
-        val notExists = cartDao.existsItemCreatedBefore(now - 20000)
+        val exists = cartDao.existsItemCreatedAfter(now)
+        val notExists = cartDao.existsItemCreatedAfter(now + 20000)
 
         assertAll(
             { assertTrue(exists) },

@@ -8,9 +8,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.CartItemUiModel
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
@@ -20,7 +18,6 @@ import kotlin.math.max
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _toastEvent = MutableSingleLiveData<CartMessageEvent>()
     val toastEvent: SingleLiveData<CartMessageEvent> = _toastEvent
@@ -79,39 +76,11 @@ class CartViewModel(
         pageableItem: PageableItem<CartItem>,
         newPage: Int,
     ) {
-        loadProductDetails(pageableItem.items)
+        val uiModels = pageableItem.items.map { it.toUiModel() }
+        _cartItems.postValue(uiModels)
         _hasMore.postValue(pageableItem.hasMore)
         _page.postValue(newPage)
     }
-
-    private fun loadProductDetails(cartItems: List<CartItem>) {
-        val productIds = cartItems.map { it.productId }
-
-        productRepository.findProductsByIds(productIds) { result ->
-            result
-                .onFailure { _toastEvent.postValue(CartMessageEvent.FETCH_CART_ITEMS_FAILURE) }
-                .onSuccess { products ->
-                    loadProductDetailsSuccessHandler(cartItems, products)
-                }
-        }
-    }
-
-    private fun loadProductDetailsSuccessHandler(
-        cartItems: List<CartItem>,
-        products: List<Product>,
-    ) {
-        val productMap = products.associateBy { it.id }
-        val uiModels = cartItems.mapUiModels(productMap)
-
-        _cartItems.postValue(uiModels)
-    }
-
-    private fun List<CartItem>.mapUiModels(productMap: Map<Long, Product>) =
-        this.mapNotNull { cartItem ->
-            productMap[cartItem.productId]?.let { product ->
-                cartItem.toUiModel(product.toUiModel())
-            }
-        }
 
     companion object {
         private const val DEFAULT_PAGE = 1
@@ -123,8 +92,7 @@ class CartViewModel(
                     extras: CreationExtras,
                 ): T {
                     val cartRepository = RepositoryProvider.cartRepository
-                    val productRepository = RepositoryProvider.productRepository
-                    return CartViewModel(cartRepository, productRepository) as T
+                    return CartViewModel(cartRepository) as T
                 }
             }
     }

@@ -24,39 +24,25 @@ class CatalogFragmentTest {
 
     private val fakeRepository =
         object : ProductRepository {
-            override fun findProductById(
-                id: Long,
-                onResult: (Result<Product>) -> Unit,
-            ) {
-            }
+            override fun findProductById(id: Long): Result<Product> = Result.success(dummyProductsFixture[0])
 
-            override fun findProductsByIds(
-                ids: List<Long>,
-                onResult: (Result<List<Product>>) -> Unit,
-            ) {
-            }
+            override fun findProductsByIds(ids: List<Long>): Result<List<Product>> = Result.success(emptyList())
 
             override fun loadProducts(
                 offset: Int,
                 loadSize: Int,
-                onResult: (Result<PageableItem<Product>>) -> Unit,
-            ) {
-                val totalSize = dummyProductsFixture.size
-
-                val result =
-                    runCatching {
-                        if (offset >= totalSize) {
-                            return@runCatching PageableItem(emptyList<Product>(), false)
-                        }
-
-                        val sublist = dummyProductsFixture.drop(offset).take(loadSize)
-                        val hasMore = offset + loadSize < totalSize
-
-                        PageableItem(sublist, hasMore)
+            ): Result<PageableItem<Product>> =
+                runCatching {
+                    val totalSize = dummyProductsFixture.size
+                    if (offset >= totalSize) {
+                        return@runCatching PageableItem(emptyList<Product>(), false)
                     }
 
-                onResult(result)
-            }
+                    val sublist = dummyProductsFixture.drop(offset).take(loadSize)
+                    val hasMore = offset + loadSize < totalSize
+
+                    PageableItem(sublist, hasMore)
+                }
         }
 
     @BeforeEach

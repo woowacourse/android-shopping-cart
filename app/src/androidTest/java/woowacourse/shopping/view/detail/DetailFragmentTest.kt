@@ -19,23 +19,14 @@ import woowacourse.shopping.presentation.view.detail.DetailFragment
 class DetailFragmentTest {
     private val fakeRepository =
         object : ProductRepository {
-            override fun findProductById(
-                id: Long,
-                onResult: (Result<Product>) -> Unit,
-            ) {
-                onResult(Result.success(dummyProductsFixture[0]))
-            }
+            override fun findProductById(id: Long): Result<Product> = Result.success(dummyProductsFixture[0])
 
-            override fun findProductsByIds(
-                ids: List<Long>,
-                onResult: (Result<List<Product>>) -> Unit,
-            ) {}
+            override fun findProductsByIds(ids: List<Long>): Result<List<Product>> = Result.success(emptyList())
 
             override fun loadProducts(
                 offset: Int,
                 loadSize: Int,
-                onResult: (Result<PageableItem<Product>>) -> Unit,
-            ) {}
+            ): Result<PageableItem<Product>> = Result.success(PageableItem(emptyList(), false))
         }
 
     @BeforeEach
@@ -50,7 +41,13 @@ class DetailFragmentTest {
 
     @Test
     fun `상품의_이름_가격_이미지를_확인할_수_있다`() {
-        onView(withId(R.id.text_view_detail_product_name)).check(matches(withText(dummyProductsFixture[0].name)))
+        onView(withId(R.id.text_view_detail_product_name)).check(
+            matches(
+                withText(
+                    dummyProductsFixture[0].name,
+                ),
+            ),
+        )
 
         val expectedPrice = "%,d원".format(dummyProductsFixture[0].price.value)
 

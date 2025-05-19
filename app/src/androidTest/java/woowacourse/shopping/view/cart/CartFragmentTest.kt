@@ -40,7 +40,7 @@ class CartFragmentTest {
                 val result =
                     runCatching {
                         val products = shoppingCart.subList(offset, offset + limit)
-                        val cartItems = products.map { CartItem(it.id, it.id, 1) }
+                        val cartItems = products.map { CartItem(it.id, it, 1) }
                         val hasMore =
                             products
                                 .lastOrNull()

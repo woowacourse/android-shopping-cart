@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.fixture.fakeCartRepository
-import woowacourse.shopping.fixture.fakeProductRepository
 import woowacourse.shopping.presentation.view.cart.CartViewModel
 import woowacourse.shopping.presentation.view.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.view.util.getOrAwaitValue
@@ -17,7 +16,7 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = CartViewModel(fakeCartRepository(), fakeProductRepository)
+        viewModel = CartViewModel(fakeCartRepository())
     }
 
     @Test
