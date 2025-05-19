@@ -8,6 +8,8 @@ import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.MutableSingleLiveData
+import woowacourse.shopping.view.SingleLiveData
 import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
@@ -18,8 +20,8 @@ class ProductDetailViewModel(
 
     val imageUrl: LiveData<String> = _product.map { it.imageUrl }
 
-    private val _event: MutableLiveData<ProductDetailEvent> = MutableLiveData()
-    val event: LiveData<ProductDetailEvent> get() = _event
+    private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ProductDetailEvent> get() = _event
 
     fun updateProduct(product: Product) {
         _product.value = product

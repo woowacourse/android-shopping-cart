@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.MutableSingleLiveData
+import woowacourse.shopping.view.SingleLiveData
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 import kotlin.concurrent.thread
@@ -16,8 +18,8 @@ class ShoppingCartViewModel(
     private val _shoppingCart: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
     val shoppingCart: LiveData<List<ShoppingCartItem>> get() = _shoppingCart
 
-    private val _event: MutableLiveData<ShoppingCartEvent> = MutableLiveData()
-    val event: LiveData<ShoppingCartEvent> get() = _event
+    private val _event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ShoppingCartEvent> get() = _event
 
     private var page: Int = 1
 
@@ -30,7 +32,7 @@ class ShoppingCartViewModel(
                     (shoppingCart.value?.last() as? PaginationItem)?.copy(
                         page = page,
                         nextEnabled = shoppingCartRepository.hasNext,
-                        previousEnabled = shoppingCartRepository.hasPrevious
+                        previousEnabled = shoppingCartRepository.hasPrevious,
                     )
                         ?: PaginationItem(
                             page,

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
 import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.MutableSingleLiveData
+import woowacourse.shopping.view.SingleLiveData
 import woowacourse.shopping.view.product.ProductsItem.LoadItem
 import woowacourse.shopping.view.product.ProductsItem.ProductItem
 import kotlin.concurrent.thread
@@ -16,8 +18,8 @@ class ProductsViewModel(
     private val _products: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
     val products: LiveData<List<ProductsItem>> get() = _products
 
-    private val _event: MutableLiveData<ProductsEvent> = MutableLiveData()
-    val event: LiveData<ProductsEvent> get() = _event
+    private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ProductsEvent> get() = _event
 
     private var loadable: Boolean = false
 
@@ -34,7 +36,7 @@ class ProductsViewModel(
                 val products: List<ProductsItem> = products.value?.dropLast(1) ?: emptyList()
                 loadable = productsRepository.loadable
                 _products.postValue(
-                    products + newProducts.map(::ProductItem) + LoadItem(loadable)
+                    products + newProducts.map(::ProductItem) + LoadItem(loadable),
                 )
             }.onFailure {
                 it.printStackTrace()
