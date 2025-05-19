@@ -75,8 +75,6 @@ class ShoppingCartViewModel(
         repository.delete(shoppingProduct.id)
         _removedProduct.value = shoppingProduct
         shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
-        _cacheShoppingCartProduct.value = _cacheShoppingCartProduct.value?.filter { it != shoppingProduct }
-
         validateCurrentPage()
     }
 
@@ -97,6 +95,7 @@ class ShoppingCartViewModel(
     }
 
     private fun validateCurrentPage() {
+        cached()
         if (_cacheShoppingCartProduct.value == emptyList<Product>()) {
             loadPreviousShoppingProducts()
         }
