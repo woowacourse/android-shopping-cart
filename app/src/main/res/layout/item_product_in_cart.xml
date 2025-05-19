@@ -19,7 +19,7 @@
         android:layout_marginBottom="24dp">
 
         <TextView
-            android:id="@+id/product_title"
+            android:id="@+id/product_in_cart_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{product.title}"
@@ -40,18 +40,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/product_image"
+            android:id="@+id/product_in_cart_image"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
             android:contentDescription="@null"
             app:imageUrl="@{product.imageUrl}"
             android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="@id/product_title"
-            app:layout_constraintTop_toBottomOf="@id/product_title" />
+            app:layout_constraintStart_toStartOf="@id/product_in_cart_title"
+            app:layout_constraintTop_toBottomOf="@id/product_in_cart_title" />
 
         <TextView
-            android:id="@+id/product_price"
+            android:id="@+id/product_in_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.format(@string/product_price_format,product.price)}"

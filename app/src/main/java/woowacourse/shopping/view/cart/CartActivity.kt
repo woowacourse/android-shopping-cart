@@ -40,7 +40,7 @@ class CartActivity : AppCompatActivity() {
                     product,
                 )
             })
-        binding.rvProducts.adapter = adapter
+        binding.rvProductsInCart.adapter = adapter
     }
 
     private fun setButtonsClickListener() {
