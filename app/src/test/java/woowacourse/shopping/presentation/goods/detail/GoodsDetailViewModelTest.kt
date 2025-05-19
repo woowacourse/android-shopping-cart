@@ -7,11 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.model.toUiModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsDetailViewModelTest {
     private lateinit var goodsDetailViewModel: GoodsDetailViewModel
-    private val goods = SUNDAE
+    private val goods = SUNDAE.toUiModel()
 
     @BeforeEach
     fun setUp() {
@@ -24,6 +25,6 @@ class GoodsDetailViewModelTest {
         goodsDetailViewModel.setGoods(goods)
 
         // then
-        goodsDetailViewModel.goods.getOrAwaitValue() shouldBe goods
+        goodsDetailViewModel.goodsUiModel.getOrAwaitValue() shouldBe goods
     }
 }

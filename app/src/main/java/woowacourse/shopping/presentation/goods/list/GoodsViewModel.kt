@@ -4,21 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.GoodsDataBase
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.toUiModel
 
 class GoodsViewModel : ViewModel() {
-    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
-    val goods: LiveData<List<Goods>>
-        get() = _goods
+    private val _goodsUiModels: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
+    val goodsUiModels: LiveData<List<GoodsUiModel>>
+        get() = _goodsUiModels
 
     private var page: Int = DEFAULT_PAGE
 
     init {
-        _goods.value = GoodsDataBase.getPagedGoods(page++, ITEM_COUNT)
+        _goodsUiModels.value =
+            GoodsDataBase.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
     }
 
     fun addGoods() {
-        _goods.value = _goods.value?.plus(GoodsDataBase.getPagedGoods(page++, ITEM_COUNT))
+        _goodsUiModels.value =
+            _goodsUiModels.value?.plus(
+                GoodsDataBase.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() },
+            )
     }
 
     fun canLoadMore(): Boolean {

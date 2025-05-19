@@ -10,8 +10,8 @@
             type="woowacourse.shopping.presentation.shoppingcart.ShoppingCartClickListener" />
 
         <variable
-            name="goods"
-            type="woowacourse.shopping.domain.model.Goods" />
+            name="goodsUiModel"
+            type="woowacourse.shopping.presentation.model.GoodsUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,7 @@
             android:id="@+id/tv_goods_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{goods.name}"
+            android:text="@{goodsUiModel.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -41,7 +41,7 @@
             android:layout_marginTop="20dp"
             android:background="@color/black"
             android:scaleType="centerCrop"
-            app:goodsImage="@{goods.imageUrl}"
+            app:goodsImage="@{goodsUiModel.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name" />
 
@@ -50,7 +50,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:onClick="@{() -> clickListener.onDeleteGoods(goods)}"
+            android:onClick="@{() -> clickListener.onDeleteGoods(goodsUiModel)}"
             android:src="@drawable/btn_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:goodsPrice="@{goods.price}"
+            app:goodsPrice="@{goodsUiModel.price}"
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />

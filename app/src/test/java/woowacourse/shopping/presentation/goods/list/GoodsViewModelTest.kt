@@ -32,17 +32,17 @@ class GoodsViewModelTest {
     @Test
     fun `상품 목록을 정해진 수량만큼 가져온다`() {
         // then
-        goodsViewModel.goods.getOrAwaitValue().size shouldBe 20
+        goodsViewModel.goodsUiModels.getOrAwaitValue().size shouldBe 20
     }
 
     @Test
     fun `상품 목록을 추가한다`() {
         // given
-        val before = goodsViewModel.goods.getOrAwaitValue().size
+        val before = goodsViewModel.goodsUiModels.getOrAwaitValue().size
 
         // when
         goodsViewModel.addGoods()
-        val actual = goodsViewModel.goods.getOrAwaitValue().size
+        val actual = goodsViewModel.goodsUiModels.getOrAwaitValue().size
 
         // then
         actual shouldBeGreaterThan before

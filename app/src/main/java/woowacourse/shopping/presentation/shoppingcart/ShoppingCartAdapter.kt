@@ -3,12 +3,12 @@ package woowacourse.shopping.presentation.shoppingcart
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
 
 class ShoppingCartAdapter(
     private val clickListener: ShoppingCartClickListener,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private var items: List<Goods> = emptyList()
+    private var items: List<GoodsUiModel> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,8 +27,8 @@ class ShoppingCartAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(goods: List<Goods>) {
-        items = goods
+    fun updateItems(goodsUiModels: List<GoodsUiModel>) {
+        items = goodsUiModels
         notifyDataSetChanged()
     }
 }

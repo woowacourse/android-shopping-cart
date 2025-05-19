@@ -4,19 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.ShoppingDataBase
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.toDomainModel
 
 class GoodsDetailViewModel : ViewModel() {
-    private val _goods: MutableLiveData<Goods> = MutableLiveData()
+    private val _goodsUiModel: MutableLiveData<GoodsUiModel> = MutableLiveData()
 
-    val goods: LiveData<Goods>
-        get() = _goods
+    val goodsUiModel: LiveData<GoodsUiModel>
+        get() = _goodsUiModel
 
-    fun setGoods(goods: Goods) {
-        if (_goods.value == null) _goods.value = goods
+    fun setGoods(goodsUiModel: GoodsUiModel) {
+        if (_goodsUiModel.value == null) _goodsUiModel.value = goodsUiModel
     }
 
     fun addToShoppingCart() {
-        _goods.value?.let { ShoppingDataBase.addItem(it) }
+        _goodsUiModel.value?.let { ShoppingDataBase.addItem(it.toDomainModel()) }
     }
 }

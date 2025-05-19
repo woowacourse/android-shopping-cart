@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
-import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
+import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
 class GoodsActivity : BaseActivity() {
@@ -22,11 +22,11 @@ class GoodsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
 
-        val adapter = GoodsAdapter { goods -> navigateToDetail(goods) }
+        val adapter = GoodsAdapter { goodsUiModel -> navigateToDetail(goodsUiModel) }
         setUpGoodsList(adapter)
         setLoadButtonClickListener()
 
-        viewModel.goods.observe(this) { goods ->
+        viewModel.goodsUiModels.observe(this) { goods ->
             adapter.updateItems(goods)
         }
     }
@@ -50,8 +50,8 @@ class GoodsActivity : BaseActivity() {
         }
     }
 
-    private fun navigateToDetail(goods: Goods) {
-        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
+    private fun navigateToDetail(goodsUiModel: GoodsUiModel) {
+        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goodsUiModel)
         startActivity(intent)
     }
 

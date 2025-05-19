@@ -5,13 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
-import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
-import woowacourse.shopping.presentation.util.getSerializableCompat
+import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.util.getParcelableCompat
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
@@ -20,12 +19,10 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
-        binding.goods = viewModel.goods.value
-
-        binding.btnShoppingCart.setOnClickListener {
-            viewModel.addToShoppingCart()
-            Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
+        viewModel.setGoods(intent.getParcelableCompat<GoodsUiModel>(EXTRA_GOODS))
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = this@GoodsDetailActivity
         }
     }
 
@@ -50,10 +47,10 @@ class GoodsDetailActivity : BaseActivity() {
 
         fun newIntent(
             context: Context,
-            goods: Goods,
+            goodsUiModel: GoodsUiModel,
         ): Intent =
             Intent(context, GoodsDetailActivity::class.java).apply {
-                putExtra(EXTRA_GOODS, goods)
+                putExtra(EXTRA_GOODS, goodsUiModel)
             }
     }
 }

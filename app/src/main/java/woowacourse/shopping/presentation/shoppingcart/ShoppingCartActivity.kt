@@ -18,17 +18,16 @@ class ShoppingCartActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setupAppBar()
-
-        binding.vm = viewModel
-        binding.lifecycleOwner = this
-
-        val adapter = ShoppingCartAdapter { goods -> viewModel.deleteGoods(goods) }
-        binding.rvSelectedGoodsList.apply {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
+        val adapter = ShoppingCartAdapter { goodsUiModel -> viewModel.deleteGoods(goodsUiModel) }
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = this@ShoppingCartActivity
+            rvSelectedGoodsList.apply {
+                this.adapter = adapter
+                layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
+            }
         }
-
-        viewModel.goods.observe(this) { goods ->
+        viewModel.goodsUiModels.observe(this) { goods ->
             adapter.updateItems(goods)
         }
     }

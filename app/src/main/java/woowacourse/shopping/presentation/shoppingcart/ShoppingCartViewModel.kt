@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.ShoppingDataBase
 import woowacourse.shopping.data.ShoppingDataBase.getPagedGoods
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.toDomainModel
+import woowacourse.shopping.presentation.model.toUiModel
 
 class ShoppingCartViewModel : ViewModel() {
-    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
-    val goods: LiveData<List<Goods>>
-        get() = _goods
+    private val _goodsUiModels: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
+    val goodsUiModels: LiveData<List<GoodsUiModel>>
+        get() = _goodsUiModels
 
     private val _page: MutableLiveData<Int> = MutableLiveData(DEFAULT_VALUE)
     val page: LiveData<Int>
@@ -28,8 +30,8 @@ class ShoppingCartViewModel : ViewModel() {
         updateState()
     }
 
-    fun deleteGoods(goods: Goods) {
-        ShoppingDataBase.removeItem(goods)
+    fun deleteGoods(goodsUiModel: GoodsUiModel) {
+        ShoppingDataBase.removeItem(goodsUiModel.toDomainModel())
         updateState()
     }
 
@@ -44,7 +46,8 @@ class ShoppingCartViewModel : ViewModel() {
     }
 
     private fun updateState() {
-        _goods.value = getPagedGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT)
+        _goodsUiModels.value =
+            getPagedGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT).map { it.toUiModel() }
         updateNextPage()
         updatePreviousPage()
     }
@@ -54,7 +57,11 @@ class ShoppingCartViewModel : ViewModel() {
     }
 
     private fun updateNextPage() {
-        _hasNextPage.value = getPagedGoods(_page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_VALUE, ITEM_COUNT).isNotEmpty()
+        _hasNextPage.value =
+            getPagedGoods(
+                _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_VALUE,
+                ITEM_COUNT,
+            ).isNotEmpty()
     }
 
     companion object {
