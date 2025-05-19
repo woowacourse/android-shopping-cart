@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="woowacourse.shopping.view.cart.CartViewModel" />
+
+        <variable
             name="toPrevious"
             type="kotlin.jvm.functions.Function0" />
 
@@ -79,8 +83,8 @@
             android:layout_height="48dp"
             android:layout_marginVertical="50dp"
             android:background="@drawable/round_btn_cart_previous"
-            android:backgroundTint="@color/gray5"
             android:contentDescription="@null"
+            android:enabled="@{viewModel.hasPrevious}"
             android:onClick="@{()-> toPrevious.invoke()}"
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -107,8 +111,8 @@
             android:layout_height="48dp"
             android:layout_marginVertical="50dp"
             android:background="@drawable/round_btn_cart_next"
-            android:backgroundTint="@color/gray5"
             android:contentDescription="@null"
+            android:enabled="@{viewModel.hasNext}"
             android:onClick="@{()-> toNext.invoke()}"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"

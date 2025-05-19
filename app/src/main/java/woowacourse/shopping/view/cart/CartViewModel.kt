@@ -23,6 +23,12 @@ class CartViewModel(
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
 
+    private val _hasPrevious: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasPrevious: LiveData<Boolean> get() = _hasPrevious
+
+    private val _hasNext: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasNext: LiveData<Boolean> get() = _hasNext
+
     private var totalPage = 0
 
     fun fetchInfo() {
