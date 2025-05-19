@@ -7,8 +7,6 @@ interface CartProductDataSource {
 
     fun deleteCartProduct(cartProduct: ProductUiModel)
 
-    fun getAllCartProducts(): List<ProductUiModel>
-
     fun getCartProductsInRange(
         startIndex: Int,
         endIndex: Int,
