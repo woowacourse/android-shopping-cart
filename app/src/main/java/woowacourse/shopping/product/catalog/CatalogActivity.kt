@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityCatalogBinding
+import woowacourse.shopping.product.detail.DetailActivity
 import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
@@ -52,7 +53,7 @@ class CatalogActivity : AppCompatActivity() {
                 totalDataSize = viewModel.mockProducts.size,
                 onProductClick =
                     ProductClickListener { product ->
-                        val intent = newIntent(this, product)
+                        val intent = DetailActivity.newIntent(this, product)
                         startActivity(intent)
                     },
                 onLoadButtonClick = viewModel::loadNextCatalogProducts,
