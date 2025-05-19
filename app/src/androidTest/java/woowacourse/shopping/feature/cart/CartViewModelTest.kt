@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.cart
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import fixtureGoods
 import fixtureRepository
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.assertEquals
@@ -20,6 +21,7 @@ class CartViewModelTest {
     @Before
     fun setup() {
         viewModel = CartViewModel(fixtureRepository)
+        Thread.sleep(500)
     }
 
     @Test
@@ -48,5 +50,11 @@ class CartViewModelTest {
         viewModel.plusPage()
         assertThat(viewModel.isLeftPageEnable.getOrAwaitValue(), `is`(true))
         assertThat(viewModel.isRightPageEnable.getOrAwaitValue(), `is`(false))
+    }
+
+    @Test
+    fun 아이템으로_장바구니_내의_인덱스를_찾아_반환한다() {
+        val indexThreeGoods = fixtureGoods[3]
+        assertEquals(viewModel.getPosition(indexThreeGoods), 3)
     }
 }
