@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.google.material)
     implementation(libs.androidx.activity)
     implementation(libs.glide)
+    implementation(libs.androidx.espresso.contrib)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
