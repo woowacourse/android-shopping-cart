@@ -1,4 +1,4 @@
-package woowacourse.shopping.util
+package woowacourse.shopping.presentation.binding
 
 import android.view.View
 import android.view.View.GONE
