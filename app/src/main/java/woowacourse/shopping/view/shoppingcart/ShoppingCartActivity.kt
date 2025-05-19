@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -48,22 +47,11 @@ class ShoppingCartActivity : AppCompatActivity() {
     private fun initBindings() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        binding.eventListener =
-            object : OnClickArrowListener {
-                override fun onClickLeftPage() {
-                    viewModel.loadPreviousShoppingProducts()
-                }
-
-                override fun onClickRightPage() {
-                    viewModel.loadMoreShoppingProducts()
-                }
-            }
     }
 
     private fun initObservers() {
         viewModel.cacheShoppingCartProduct.observe(this) { value ->
             adapter.updateItems(value)
-            Log.d("asdf", "value값 $value")
         }
 
         viewModel.hasNext.observe(this) { value ->

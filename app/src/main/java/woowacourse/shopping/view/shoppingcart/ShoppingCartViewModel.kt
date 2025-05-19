@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.shoppingcart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -101,7 +100,6 @@ class ShoppingCartViewModel(
         val offset = (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT
         val cache = shoppingProducts.getCache(SHOPPING_PRODUCT_SIZE_LIMIT, offset)
         _cacheShoppingCartProduct.value = cache
-        Log.d("asdf", "_cacheShoppingCartProduct.value : ${_cacheShoppingCartProduct.value}")
     }
 
     private fun List<ShoppingProduct>.getCache(

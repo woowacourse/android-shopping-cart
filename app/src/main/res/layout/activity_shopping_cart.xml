@@ -9,9 +9,6 @@
             name="viewmodel"
             type="woowacourse.shopping.view.shoppingcart.ShoppingCartViewModel" />
 
-        <variable
-            name="eventListener"
-            type="woowacourse.shopping.view.shoppingcart.OnClickArrowListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +41,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:enabled="@{viewmodel.currentPage > 0}"
-                android:onClick="@{() -> eventListener.onClickLeftPage()}"
+                android:onClick="@{() -> viewmodel.loadPreviousShoppingProducts()}"
                 android:text="@string/left_arrow"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -71,7 +68,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/style_right_arrow"
-                android:onClick="@{() -> eventListener.onClickRightPage()}"
+                android:onClick="@{() -> viewmodel.loadMoreShoppingProducts()}"
                 android:text="@string/right_arrow"
                 android:textColor="@color/white"
                 android:textSize="20sp"
