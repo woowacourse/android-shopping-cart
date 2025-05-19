@@ -1,6 +1,5 @@
 package woowacourse.shopping.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +25,7 @@ class CartViewModel(
 
     private val _page = MutableLiveData<Int>(INITIAL_PAGE)
     val page: LiveData<Int> = _page
+    val currentPage: Int get() = page.value ?: 1
 
     init {
         loadCartProducts()
@@ -33,9 +33,15 @@ class CartViewModel(
 
     fun deleteCartProduct(cartProduct: ProductItem) {
         products.remove(cartProduct.productItem)
-        _cartProducts.value = products
         dataSource.deleteCartProduct(cartProduct.productItem)
-        Log.d("ViewModel", "${products.size}")
+
+        val currentPage = page.value ?: INITIAL_PAGE
+        val updatedSize = dataSource.getAllProductsSize()
+
+        val startIndex = currentPage * PAGE_SIZE
+        if (startIndex >= updatedSize && currentPage > 0) {
+            decreasePage()
+        }
 
         loadCartProducts()
     }

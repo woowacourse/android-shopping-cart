@@ -60,8 +60,9 @@ class CartActivity : AppCompatActivity() {
         val page: Int = viewModel.page.value ?: 0
         val paginationItem = PaginationButtonItem(page + 1, isNext, isPrev)
 
-        val cartItems: List<CartItem> = products.map { CartItem.ProductItem(it) } + paginationItem
-        (binding.recyclerViewCart.adapter as CartAdapter).setCartItems(cartItems)
+        val cartItems: List<CartItem> = products.map { CartItem.ProductItem(it) }
+        val cartItemsWithPaginationBtn = if (cartItems.isEmpty()) cartItems else cartItems + paginationItem
+        (binding.recyclerViewCart.adapter as CartAdapter).setCartItems(cartItemsWithPaginationBtn)
     }
 
     override fun onSupportNavigateUp(): Boolean {
