@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -42,12 +41,7 @@ class ProductDetailActivity :
     private fun initViewModel() {
         val product =
             intent.getProductExtra() ?: run {
-                Toast
-                    .makeText(
-                        this,
-                        getString(R.string.product_not_provided_error_message),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                showToast(getString(R.string.product_not_provided_error_message))
                 return finish()
             }
         viewModel.updateProduct(product)
