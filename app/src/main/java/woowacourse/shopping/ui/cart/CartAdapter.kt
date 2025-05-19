@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.CartProduct
 
 class CartAdapter(
     private val onClickHandler: CartViewHolder.OnClickHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val items: MutableList<Product> = mutableListOf()
+    private val items: MutableList<CartProduct> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -23,13 +23,13 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        val item: Product = items[position]
+        val item: CartProduct = items[position]
         holder.bind(item)
     }
 
     override fun getItemCount(): Int = items.size
 
-    fun submitItems(newItems: List<Product>) {
+    fun submitItems(newItems: List<CartProduct>) {
         val oldItems = items.toList()
 
         updateItems(newItems, oldItems)
@@ -37,8 +37,8 @@ class CartAdapter(
     }
 
     private fun updateItems(
-        newItems: List<Product>,
-        oldItems: List<Product>,
+        newItems: List<CartProduct>,
+        oldItems: List<CartProduct>,
     ) {
         for ((position, newItem) in newItems.withIndex()) {
             val oldItem = oldItems.getOrNull(position)
@@ -51,26 +51,26 @@ class CartAdapter(
     }
 
     private fun isContentTheSame(
-        oldItem: Product,
-        newItem: Product,
+        oldItem: CartProduct,
+        newItem: CartProduct,
     ): Boolean = oldItem == newItem
 
     private fun replaceItem(
         position: Int,
-        newItem: Product,
+        newItem: CartProduct,
     ) {
         items[position] = newItem
         notifyItemChanged(position)
     }
 
-    private fun addItem(item: Product) {
+    private fun addItem(item: CartProduct) {
         items.add(item)
         notifyItemInserted(items.size - 1)
     }
 
     private fun removeExceedingItems(
-        oldItems: List<Product>,
-        newItems: List<Product>,
+        oldItems: List<CartProduct>,
+        newItems: List<CartProduct>,
     ) {
         if (oldItems.size > newItems.size) {
             for (position in oldItems.lastIndex downTo newItems.size) {

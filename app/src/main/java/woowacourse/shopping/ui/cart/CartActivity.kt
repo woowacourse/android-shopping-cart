@@ -10,7 +10,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.common.DataBindingActivity
 
 class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_cart) {
-    private val viewModel: CartViewModel by viewModels()
+    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
     private val cartAdapter: CartAdapter = CartAdapter(createAdapterOnClickHandler())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +39,8 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
     }
 
     private fun initObservers() {
-        viewModel.products.observe(this) { products ->
-            cartAdapter.submitItems(products)
+        viewModel.cartProducts.observe(this) { products ->
+            cartAdapter.submitItems(products.cartProducts)
         }
     }
 

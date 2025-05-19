@@ -3,14 +3,19 @@ package woowacourse.shopping.ui.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.repository.CartDummyRepositoryImpl
-import woowacourse.shopping.domain.model.Product
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.ShoppingApp
+import woowacourse.shopping.domain.model.CartProducts
+import woowacourse.shopping.domain.model.CartProducts.Companion.EMPTY_CART_PRODUCTS
+import woowacourse.shopping.domain.repository.CartRepository
 
 class CartViewModel(
-    private val cartDummyRepository: CartDummyRepositoryImpl = CartDummyRepositoryImpl,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList<Product>())
-    val products: LiveData<List<Product>> get() = _products
+    private val _cartProducts: MutableLiveData<CartProducts> = MutableLiveData(EMPTY_CART_PRODUCTS)
+    val cartProducts: LiveData<CartProducts> get() = _cartProducts
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
@@ -22,18 +27,16 @@ class CartViewModel(
         loadCartProducts()
     }
 
-    fun loadCartProducts() {
-        _products.value = cartDummyRepository.fetchCartProducts(page = currentPage.value ?: INITIAL_PAGE)
-        if (products.value.isNullOrEmpty()) decreasePage()
-        loadMaxPage()
-    }
+    private fun loadCartProducts() {
+        cartRepository.getCartProducts(page = currentPage.value ?: INITIAL_PAGE, size = 5) { cartProducts ->
+            _cartProducts.postValue(cartProducts)
+        }
 
-    fun loadMaxPage() {
-        _maxPage.value = cartDummyRepository.fetchMaxPageCount()
+        if (cartProducts.value?.cartProducts.isNullOrEmpty()) decreasePage()
     }
 
     fun removeCartProduct(id: Int) {
-        cartDummyRepository.removeCartProduct(id)
+        cartRepository.removeCartProduct(id)
         loadCartProducts()
     }
 
@@ -51,5 +54,20 @@ class CartViewModel(
     companion object {
         const val INITIAL_PAGE: Int = 1
         const val DEFAULT_PAGE_STEP: Int = 1
+
+        val Factory: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(
+                    modelClass: Class<T>,
+                    extras: CreationExtras,
+                ): T {
+                    val application = checkNotNull(extras[APPLICATION_KEY])
+
+                    return CartViewModel(
+                        (application as ShoppingApp).cartRepository,
+                    ) as T
+                }
+            }
     }
 }

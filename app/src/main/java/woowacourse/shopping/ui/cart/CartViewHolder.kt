@@ -2,7 +2,7 @@ package woowacourse.shopping.ui.cart
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.CartProduct
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
@@ -12,8 +12,8 @@ class CartViewHolder(
         binding.onClickHandler = onClickHandler
     }
 
-    fun bind(product: Product) {
-        binding.product = product
+    fun bind(cartProduct: CartProduct) {
+        binding.cartProduct = cartProduct
     }
 
     interface OnClickHandler {

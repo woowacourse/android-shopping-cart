@@ -23,18 +23,18 @@ class CartViewModelTest {
 
     @Test
     fun `초기화 시 products 값이 장바구니 목록으로 설정된다`() {
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.cartProducts.getOrAwaitValue()
         Assertions.assertTrue(products.isNotEmpty())
     }
 
     @Test
     fun `removeCartProduct 호출 시 products 값에서 해당 상품이 제거된다`() {
-        val before = viewModel.products.getOrAwaitValue()
+        val before = viewModel.cartProducts.getOrAwaitValue()
         val targetId = before.first().id
 
         viewModel.removeCartProduct(targetId)
 
-        val after = viewModel.products.getOrAwaitValue()
+        val after = viewModel.cartProducts.getOrAwaitValue()
         Assertions.assertFalse(after.any { it.id == targetId })
     }
 
@@ -46,7 +46,7 @@ class CartViewModelTest {
         val afterPage = viewModel.currentPage.getOrAwaitValue()
         Assertions.assertEquals(beforePage + 1, afterPage)
 
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.cartProducts.getOrAwaitValue()
         Assertions.assertTrue(products.isNotEmpty())
     }
 

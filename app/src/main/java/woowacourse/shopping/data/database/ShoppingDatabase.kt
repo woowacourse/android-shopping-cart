@@ -4,12 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import woowacourse.shopping.data.dao.CartDao
 import woowacourse.shopping.data.dao.ProductDao
+import woowacourse.shopping.data.entity.CartProductEntity
 import woowacourse.shopping.data.entity.ProductEntity
 
-@Database(entities = [ProductEntity::class], version = 1)
+@Database(entities = [ProductEntity::class, CartProductEntity::class], version = 10000)
 abstract class ShoppingDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+
+    abstract fun cartDao(): CartDao
 
     @Suppress("ktlint:standard:property-naming")
     companion object {
