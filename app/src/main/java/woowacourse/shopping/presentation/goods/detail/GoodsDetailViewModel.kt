@@ -8,9 +8,12 @@ import woowacourse.shopping.domain.model.Goods
 
 class GoodsDetailViewModel : ViewModel() {
     private val _goods: MutableLiveData<Goods> = MutableLiveData()
-
     val goods: LiveData<Goods>
         get() = _goods
+
+    private val _isItemAddedToCart: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isItemAddedToCart: LiveData<Boolean>
+        get() = _isItemAddedToCart
 
     fun setGoods(goods: Goods) {
         _goods.value = goods
@@ -18,5 +21,10 @@ class GoodsDetailViewModel : ViewModel() {
 
     fun addToShoppingCart() {
         _goods.value?.let { ShoppingDataBase.addItem(it) }
+        updateIsItemAddedToCart(true)
+    }
+
+    fun updateIsItemAddedToCart(added: Boolean) {
+        _isItemAddedToCart.value = added
     }
 }

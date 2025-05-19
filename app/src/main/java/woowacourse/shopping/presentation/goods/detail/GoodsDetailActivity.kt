@@ -20,12 +20,16 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
-        binding.goods = viewModel.goods.value
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
 
-        binding.btnShoppingCart.setOnClickListener {
-            viewModel.addToShoppingCart()
-            Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
+        viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
+
+        viewModel.isItemAddedToCart.observe(this) { isAdded ->
+            if (isAdded) {
+                Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
+                viewModel.updateIsItemAddedToCart(false)
+            }
         }
     }
 
