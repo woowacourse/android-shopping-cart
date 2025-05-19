@@ -1,11 +1,13 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingProduct
 
 class ShoppingCartViewModel(
@@ -73,6 +75,9 @@ class ShoppingCartViewModel(
         repository.delete(shoppingProduct.id)
         _removedProduct.value = shoppingProduct
         shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
+        _cacheShoppingCartProduct.value = _cacheShoppingCartProduct.value?.filter { it != shoppingProduct }
+
+        validateCurrentPage()
     }
 
     private fun checkHasNext() {
@@ -91,10 +96,17 @@ class ShoppingCartViewModel(
         _hasNext.value = remainingItems > 0
     }
 
+    private fun validateCurrentPage() {
+        if (_cacheShoppingCartProduct.value == emptyList<Product>()) {
+            loadPreviousShoppingProducts()
+        }
+    }
+
     private fun cached() {
         val offset = (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT
         val cache = shoppingProducts.getCache(SHOPPING_PRODUCT_SIZE_LIMIT, offset)
         _cacheShoppingCartProduct.value = cache
+        Log.d("asdf", "_cacheShoppingCartProduct.value : ${_cacheShoppingCartProduct.value}")
     }
 
     private fun List<ShoppingProduct>.getCache(
