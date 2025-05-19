@@ -1,22 +1,21 @@
 package woowacourse.shopping.view.product.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.util.SingleLiveData
 
 class ProductDetailViewModel(
     val product: Product,
     private val repository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _navigateEvent = MutableLiveData<Unit>()
-    val navigateEvent: LiveData<Unit> = _navigateEvent
+    private val _navigateEvent = SingleLiveData<Unit>()
+    val navigateEvent: SingleLiveData<Unit> = _navigateEvent
 
-    private val _errorEvent = MutableLiveData<Unit>()
-    val errorEvent: LiveData<Unit> = _errorEvent
+    private val _errorEvent = SingleLiveData<Unit>()
+    val errorEvent: SingleLiveData<Unit> = _errorEvent
 
     fun addToShoppingCart() {
         runCatching {
