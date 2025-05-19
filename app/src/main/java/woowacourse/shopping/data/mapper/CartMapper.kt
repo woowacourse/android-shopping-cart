@@ -10,8 +10,8 @@ fun CartProductDetail.toDomain(): CartProduct =
         quantity = cartProduct.quantity,
     )
 
-fun CartProduct.toData(): CartProductDetail =
-    CartProductDetail(
-        cartProduct = CartProductEntity(product.id, quantity),
-        product = product.toData(),
+fun CartProduct.toData(): CartProductEntity =
+    CartProductEntity(
+        productId = product.id,
+        quantity = quantity,
     )

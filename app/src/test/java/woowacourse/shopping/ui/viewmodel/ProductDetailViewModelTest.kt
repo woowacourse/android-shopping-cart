@@ -29,7 +29,7 @@ class ProductDetailViewModelTest {
         viewModel.loadProductDetail(targetProductId)
 
         // then
-        val actual = viewModel.product.getOrAwaitValue()
+        val actual = viewModel.cartProduct.getOrAwaitValue()
         Assertions.assertEquals(expectedProduct, actual)
     }
 

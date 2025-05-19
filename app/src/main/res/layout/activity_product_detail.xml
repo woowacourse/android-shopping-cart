@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:imageUrl="@{viewModel.product.imageUrl}"
+            app:imageUrl="@{viewModel.cartProduct.product.imageUrl}"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginVertical="16dp"
-            android:text="@{viewModel.product.name}"
+            android:text="@{viewModel.cartProduct.product.name}"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +79,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/products_price(viewModel.product.price)}"
+                android:text="@{@string/products_price(viewModel.cartProduct.product.price)}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="99,800원" />

@@ -10,11 +10,3 @@ fun ProductEntity.toDomain(): Product =
         imageUrl = imageUrl,
         price = price,
     )
-
-fun Product.toData(): ProductEntity =
-    ProductEntity(
-        id = id,
-        name = name,
-        imageUrl = imageUrl,
-        price = price,
-    )

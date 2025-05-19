@@ -2,6 +2,7 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.dao.CartDao
 import woowacourse.shopping.data.entity.CartProductEntity
+import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CartProducts
@@ -81,6 +82,12 @@ class LocalCartRepository(
     override fun removeCartProduct(productId: Int) {
         thread {
             cartDao.deleteCartProduct(productId)
+        }
+    }
+
+    override fun updateCartProduct(cartProduct: CartProduct) {
+        thread {
+            cartDao.insertCartProduct(cartProduct.toData())
         }
     }
 }

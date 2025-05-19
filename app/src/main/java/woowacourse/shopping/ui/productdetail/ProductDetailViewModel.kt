@@ -7,26 +7,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.ShoppingApp
-import woowacourse.shopping.data.repository.CartDummyRepositoryImpl
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.Product.Companion.EMPTY_PRODUCT
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.CartProduct.Companion.EMPTY_CART_PRODUCT
+import woowacourse.shopping.domain.repository.CartRepository
 
 class ProductDetailViewModel(
-    private val productsRepository: ProductRepository,
-    private val cartDummyRepository: CartDummyRepositoryImpl = CartDummyRepositoryImpl,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _product: MutableLiveData<Product> = MutableLiveData(EMPTY_PRODUCT)
-    val product: LiveData<Product> get() = _product
+    private val _cartProduct: MutableLiveData<CartProduct> = MutableLiveData(EMPTY_CART_PRODUCT)
+    val cartProduct: LiveData<CartProduct> get() = _cartProduct
 
     fun loadProductDetail(id: Int) {
-        productsRepository.fetchProductDetail(id) { product ->
-            _product.postValue(product)
+        cartRepository.getCartProduct(id) { cartProduct ->
+            _cartProduct.postValue(cartProduct)
         }
     }
 
     fun addCartProduct() {
-        cartDummyRepository.addCartProduct(product.value ?: return)
+        cartRepository.updateCartProduct(cartProduct.value ?: return)
     }
 
     companion object {
@@ -37,10 +35,10 @@ class ProductDetailViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return ProductDetailViewModel(
-                        (application as ShoppingApp).productRepository,
+                        application.cartRepository,
                     ) as T
                 }
             }
