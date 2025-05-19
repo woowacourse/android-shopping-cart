@@ -56,7 +56,7 @@ class MainActivity :
     }
 
     private fun initRecyclerview() {
-        binding.rvProductList.apply {
+        binding.productList.apply {
             adapter = ProductsAdapter(this@MainActivity.handler)
             layoutManager = GridLayoutManager(this@MainActivity, 2)
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
@@ -68,7 +68,7 @@ class MainActivity :
     }
 
     private fun updateRecyclerView(page: Page<Product>) {
-        binding.rvProductList.adapter.apply {
+        binding.productList.adapter.apply {
             (this as ProductsAdapter).updateProducts(page.items)
             notifyItemInserted(itemCount)
         }
