@@ -1,5 +1,7 @@
 package woowacourse.shopping.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -73,5 +75,9 @@ class CartActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }
