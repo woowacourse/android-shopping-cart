@@ -10,8 +10,8 @@
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.cart.DeleteProductClickListener" />
+            name="cartEventHandler"
+            type="woowacourse.shopping.cart.CartEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,7 +54,7 @@
             android:layout_height="40dp"
             android:layout_margin="8dp"
             android:background="@drawable/icon_delete"
-            android:onClick="@{() -> clickListener.onClick(cartProduct)}"
+            android:onClick="@{() -> cartEventHandler.onDeleteProduct(cartProduct)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

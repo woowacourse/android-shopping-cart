@@ -16,11 +16,11 @@ class CartViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            onDeleteProductClick: DeleteProductClickListener,
+            cartEventHandler: CartEventHandler,
         ): CartViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = CartItemBinding.inflate(inflater, parent, false)
-            binding.clickListener = onDeleteProductClick
+            binding.cartEventHandler = cartEventHandler
             return CartViewHolder(binding)
         }
     }

@@ -7,8 +7,7 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
     private var cartProducts: List<ProductUiModel>,
-    private val onDeleteProductClick: DeleteProductClickListener,
-    private val onPaginationButtonClick: PaginationButtonClickListener,
+    private val cartEventHandler: CartEventHandler,
     private val page: () -> Int,
     private val isNextButtonEnabled: () -> Boolean,
     private val isPrevButtonEnabled: () -> Boolean,
@@ -18,9 +17,9 @@ class CartAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == VIEW_TYPE_CART_PRODUCT) {
-            CartViewHolder.from(parent, onDeleteProductClick)
+            CartViewHolder.from(parent, cartEventHandler)
         } else {
-            PaginationButtonViewHolder.from(parent, onPaginationButtonClick)
+            PaginationButtonViewHolder.from(parent, cartEventHandler)
         }
 
     override fun onBindViewHolder(

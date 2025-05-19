@@ -22,11 +22,11 @@ class PaginationButtonViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            onPaginationButtonClick: PaginationButtonClickListener,
+            cartEventHandler: CartEventHandler,
         ): PaginationButtonViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = PaginationButtonItemBinding.inflate(inflater, parent, false)
-            binding.clickListener = onPaginationButtonClick
+            binding.cartEventHandler = cartEventHandler
             return PaginationButtonViewHolder(binding)
         }
     }

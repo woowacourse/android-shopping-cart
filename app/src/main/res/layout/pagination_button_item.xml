@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="direction"
-            type="woowacourse.shopping.cart.PageDirection" />
-
-        <variable
             name="isNextButtonEnabled"
             type="boolean" />
 
@@ -22,8 +18,8 @@
             type="Integer" />
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.cart.PaginationButtonClickListener" />
+            name="cartEventHandler"
+            type="woowacourse.shopping.cart.CartEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +42,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_prev_selector"
                 android:enabled="@{isPrevButtonEnabled}"
-                android:onClick="@{() -> clickListener.onClick(direction.PREV)}"
+                android:onClick="@{() -> cartEventHandler.onPrevPage()}"
                 android:text="@string/text_prev_button"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -73,7 +69,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_next_selector"
                 android:enabled="@{isNextButtonEnabled}"
-                android:onClick="@{() -> clickListener.onClick(direction.NEXT)}"
+                android:onClick="@{() -> cartEventHandler.onNextPage()}"
                 android:text="@string/text_next_button"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

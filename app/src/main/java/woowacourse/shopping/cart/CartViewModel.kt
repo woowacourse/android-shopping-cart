@@ -92,6 +92,21 @@ class CartViewModel(
         _cartProducts.value = pagedProducts
     }
 
+    fun eventHandler(): CartEventHandler =
+        object : CartEventHandler {
+            override fun onDeleteProduct(product: ProductUiModel) {
+                deleteCartProduct(product)
+            }
+
+            override fun onNextPage() {
+                onClick(PageDirection.NEXT)
+            }
+
+            override fun onPrevPage() {
+                onClick(PageDirection.PREV)
+            }
+        }
+
     companion object {
         private const val PAGE_SIZE = 5
         private const val INITIAL_PAGE = 0
