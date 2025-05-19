@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.MutableSingleLiveData
+import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
@@ -13,8 +15,9 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
-    private val _event: MutableLiveData<ProductDetailEvent> = MutableLiveData()
-    val event: LiveData<ProductDetailEvent> get() = _event
+    private val _event: MutableSingleLiveData<ProductDetailEvent> =
+        MutableSingleLiveData()
+    val event: SingleLiveData<ProductDetailEvent> get() = _event
 
     fun updateProduct(product: Product) {
         _product.value = product

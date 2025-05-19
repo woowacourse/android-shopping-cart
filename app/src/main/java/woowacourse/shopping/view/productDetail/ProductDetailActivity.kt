@@ -34,15 +34,16 @@ class ProductDetailActivity :
             insets
         }
 
-        val product: Product = intent.getProductExtra() ?: run {
-            Toast
-                .makeText(
-                    this,
-                    getString(R.string.product_not_provided_error_message),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            return finish()
-        }
+        val product: Product =
+            intent.getProductExtra() ?: run {
+                Toast
+                    .makeText(
+                        this,
+                        getString(R.string.product_not_provided_error_message),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                return finish()
+            }
         viewModel.updateProduct(product)
         bindViewModel()
         handleEvents()
