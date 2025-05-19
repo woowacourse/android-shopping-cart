@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.product
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -38,17 +39,27 @@ class ProductsActivity : AppCompatActivity() {
         bindData()
         viewModel.updateProducts()
 
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int =
-                when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
-                    ProductsItem.ItemType.PRODUCT -> 1
-                    ProductsItem.ItemType.MORE -> 2
-                }
-        }
-
-        binding.products.layoutManager = gridLayoutManager
+        binding.products.layoutManager =
+            GridLayoutManager(this, spanCount).apply {
+                spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int =
+                            when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
+                                ProductsItem.ItemType.PRODUCT -> 1
+                                ProductsItem.ItemType.MORE -> spanCount
+                            }
+                    }
+            }
     }
+
+    private val spanCount: Int
+        get() {
+            return if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                4
+            } else {
+                2
+            }
+        }
 
     private fun initDataBinding() {
         binding.adapter = productAdapter
