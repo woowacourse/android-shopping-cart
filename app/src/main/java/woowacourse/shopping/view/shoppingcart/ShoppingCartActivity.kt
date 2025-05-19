@@ -26,6 +26,9 @@ class ShoppingCartActivity :
             }
         }
     }
+    private val shoppingCartAdapter: ShoppingCartAdapter by lazy {
+        ShoppingCartAdapter(this@ShoppingCartActivity.handler)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +41,7 @@ class ShoppingCartActivity :
             }
         }
         binding.apply {
-            shoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity.handler)
+            shoppingCartList.adapter = shoppingCartAdapter
             viewModel = this@ShoppingCartActivity.viewModel
             handler = this@ShoppingCartActivity.handler
         }
@@ -60,10 +63,9 @@ class ShoppingCartActivity :
     }
 
     private fun updateRecyclerView(page: Page<Product>) {
-        binding.shoppingCartList.adapter.apply {
-            val adapter = this as ShoppingCartAdapter
+        shoppingCartAdapter.apply {
             val previousCount = itemCount
-            adapter.updateProducts(page.items)
+            updateProducts(page.items)
             notifyItemRangeChanged(0, previousCount)
         }
     }
