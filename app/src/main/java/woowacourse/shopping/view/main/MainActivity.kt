@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
@@ -75,5 +76,28 @@ class MainActivity :
             updateProducts(page.items)
             notifyItemInserted(itemCount)
         }
+    }
+}
+
+private class ProductsOnScrollListener(
+    private val binding: ActivityMainBinding,
+    private val viewModel: ProductsViewModel,
+) : RecyclerView.OnScrollListener() {
+    override fun onScrolled(
+        recyclerView: RecyclerView,
+        dx: Int,
+        dy: Int,
+    ) {
+        val layoutManager = recyclerView.layoutManager as GridLayoutManager
+        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+        binding.btnLoadMoreProducts.visibility =
+            if (
+                lastVisibleItemPosition == layoutManager.itemCount - 1 &&
+                viewModel.totalSize > (recyclerView.adapter?.itemCount ?: 0)
+            ) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
     }
 }
