@@ -23,22 +23,25 @@ class DetailViewModelTest {
 
     @Test
     fun `상품 ID에 해당하는 상품을 조회한다`() {
+        // When
         viewModel.fetchProduct(1)
-
         val result = viewModel.product.getOrAwaitValue().toProduct()
         val expected = dummyProductsFixture.find { it.id == 1L }
 
+        // Then
         assertThat(result).isEqualTo(expected)
     }
 
     @Test
     fun `상품을 장바구니에 추가하면 저장 상태가 변경된다`() {
+        // Given
         viewModel.fetchProduct(1)
 
+        // When
         viewModel.addProduct()
-
         val result = viewModel.addToCartSuccessEvent.getValue()
 
+        // Then
         assertThat(result).isNotNull
     }
 }

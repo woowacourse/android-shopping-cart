@@ -1,39 +1,47 @@
 package woowacourse.shopping.fixture
 
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
 fun fakeCartRepository() =
     object : CartRepository {
-        private val cart = MutableList(10) { CartItem(it.toLong(), it.toLong(), 1) }
-        private var nextId = 1L
+        private val cart =
+            mutableListOf<CartItem>().apply {
+                repeat(10) { add(CartItem(it.toLong(), it.toLong(), 1)) }
+            }
+        private var nextId = cart.size.toLong() + 1
 
         override fun getCartItems(
             limit: Int,
             offset: Int,
-            callback: (List<CartItem>, Boolean) -> Unit,
+            onResult: (Result<PageableItem<CartItem>>) -> Unit,
         ) {
             val endIndex = (offset + limit).coerceAtMost(cart.size)
-            val cartItems = cart.subList(offset, endIndex)
+            val items = cart.subList(offset, endIndex)
             val hasMore = endIndex < cart.size
-            callback(cartItems, hasMore)
+            onResult(Result.success(PageableItem(items, hasMore)))
         }
 
         override fun deleteCartItem(
             id: Long,
-            callback: (Long) -> Unit,
+            onResult: (Result<Long>) -> Unit,
         ) {
             val removed = cart.removeIf { it.id == id }
-            if (removed) callback(id)
+            if (removed) {
+                onResult(Result.success(id))
+            } else {
+                onResult(Result.failure(NoSuchElementException()))
+            }
         }
 
         override fun addCartItem(
             product: Product,
-            callback: () -> Unit,
+            onResult: (Result<Unit>) -> Unit,
         ) {
             val cartItem = CartItem(nextId++, product.id, 1)
             cart.add(cartItem)
-            callback()
+            onResult(Result.success(Unit))
         }
     }

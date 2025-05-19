@@ -22,8 +22,10 @@ class CartViewModelTest {
 
     @Test
     fun `초기화 시 장바구니 아이템이 로드된다`() {
+        // When
         val items = viewModel.cartItems.getOrAwaitValue()
 
+        // Then
         assertAll(
             { assertThat(items).isNotNull },
             { assertThat(items).isNotEmpty },
@@ -31,40 +33,45 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `다음 페이지 요청 시 page 증가 및 아이템 추가된다`() {
+    fun `다음 페이지 요청 시 페이지 증가 및 아이템이 추가된다`() {
+        // Given
         val before = viewModel.cartItems.getOrAwaitValue()
 
+        // When
         viewModel.fetchCartItems(isNextPage = true)
         val after = viewModel.cartItems.getOrAwaitValue()
 
-        assertThat(after.size).isGreaterThanOrEqualTo(before.size)
-        assertThat(viewModel.page.getOrAwaitValue()).isEqualTo(2)
+        // Then
+        assertAll(
+            { assertThat(after.size).isGreaterThanOrEqualTo(before.size) },
+            { assertThat(viewModel.page.getOrAwaitValue()).isEqualTo(2) },
+        )
     }
 
     @Test
-    fun `삭제 요청 시 deleteEvent가 발생한다`() {
+    fun `삭제 성공 시 현재 페이지를 다시 조회한다`() {
+        // Given
         val items = viewModel.cartItems.getOrAwaitValue()
-        val target = items.first()
+        val target = items.last()
 
+        // When
         viewModel.deleteCartItem(target)
-        val deleteEventId = viewModel.deleteEvent.getValue()
+        val newItems = viewModel.cartItems.getOrAwaitValue()
 
-        assertThat(deleteEventId).isEqualTo(target.id)
+        // Then
+        assertAll(
+            { assertThat(newItems).doesNotContain(target) },
+            { assertThat(newItems.size).isEqualTo(items.size) },
+            { assertThat(newItems.last().id).isNotEqualTo(target.id) },
+        )
     }
 
     @Test
-    fun `deleteEvent 발생 시 refreshEvent가 발생한다`() {
-        viewModel.fetchCartItems(isNextPage = false, isRefresh = true)
-
-        val refreshItems = viewModel.refreshEvent.getValue()
-
-        assertThat(refreshItems).isNotEmpty
-    }
-
-    @Test
-    fun `호출 가능한 다음 목록이 있다면 hasMore가 True로 설정된다`() {
+    fun `다음 페이지에 조회 가능한 상품 여부이 있다면 다음 페이지 조회 가능 상태가 True로 설정된다`() {
+        // When
         val hasMore = viewModel.hasMore.getOrAwaitValue()
 
+        // Then
         assertThat(hasMore).isTrue()
     }
 }
