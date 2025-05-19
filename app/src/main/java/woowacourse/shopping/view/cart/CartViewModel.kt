@@ -17,8 +17,8 @@ class CartViewModel(
     private val _products = MutableLiveData(cartRepository.products)
     val products: LiveData<MutableList<Product>> = _products
 
-    private val _pageCount = MutableLiveData(1)
-    val pageCount: LiveData<Int> = _pageCount
+    private val _currentPageNumber = MutableLiveData(1)
+    val currentPageNumber: LiveData<Int> = _currentPageNumber
 
     private val _loadedProducts = MutableLiveData<List<Product>>()
     val loadedProducts: LiveData<List<Product>> = _loadedProducts
@@ -42,11 +42,11 @@ class CartViewModel(
         cartRepository.remove(product)
         _products.value = cartRepository.products
         _isOnlyOnePage.value = checkOnlyOnePage()
-        loadPage(_pageCount.value ?: INITIAL_PAGE)
+        loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
     }
 
     fun loadNextPage() {
-        val nextPage = (_pageCount.value ?: INITIAL_PAGE) + 1
+        val nextPage = (_currentPageNumber.value ?: INITIAL_PAGE) + 1
         val maxPage = ((cartRepository.products.size - 1) / pageSize) + 1
         if (nextPage <= maxPage) {
             loadPage(nextPage)
@@ -54,17 +54,17 @@ class CartViewModel(
     }
 
     fun loadPreviousPage() {
-        val prevPage = (_pageCount.value ?: INITIAL_PAGE) - 1
+        val prevPage = (_currentPageNumber.value ?: INITIAL_PAGE) - 1
         if (prevPage >= INITIAL_PAGE) {
             loadPage(prevPage)
         }
     }
 
-    private fun checkFirstPage(): Boolean = (_pageCount.value == 1)
+    private fun checkFirstPage(): Boolean = (_currentPageNumber.value == 1)
 
     private fun checkLastPage(): Boolean {
         val totalPageCount = (cartRepository.products.size + pageSize - 1) / pageSize
-        return _pageCount.value == totalPageCount
+        return _currentPageNumber.value == totalPageCount
     }
 
     private fun checkOnlyOnePage(): Boolean = cartRepository.products.size <= 5
@@ -78,7 +78,7 @@ class CartViewModel(
 
         val items = cartRepository.products.subList(start, end)
         _loadedProducts.postValue(items)
-        _pageCount.value = page
+        _currentPageNumber.value = page
         _isOnlyOnePage.value = checkOnlyOnePage()
         _isFirstPage.value = checkFirstPage()
         _isLastPage.value = checkLastPage()
