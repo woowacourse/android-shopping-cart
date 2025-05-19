@@ -62,16 +62,7 @@ class CartFragment :
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.cartItems.observe(viewLifecycleOwner) {
-            it?.let { cartAdapter.replaceAll(it) }
-        }
-
-        viewModel.deleteEvent.observe(viewLifecycleOwner) {
-            cartAdapter.removeCartById(it)
-            viewModel.fetchCartItems(isNextPage = false, isRefresh = true)
-        }
-
-        viewModel.refreshEvent.observe(viewLifecycleOwner) {
-            cartAdapter.refresh(it)
+            it?.let { cartAdapter.updateItemsManually(it) }
         }
 
         viewModel.toastEvent.observe(viewLifecycleOwner) { event ->

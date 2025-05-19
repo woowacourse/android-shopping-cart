@@ -34,24 +34,15 @@ class CartViewModel(
     private val _hasMore = MutableLiveData<Boolean>()
     val hasMore: LiveData<Boolean> = _hasMore
 
-    private val _deleteEvent = MutableSingleLiveData<Long>()
-    val deleteEvent: SingleLiveData<Long> = _deleteEvent
-
-    private val _refreshEvent = MutableSingleLiveData<List<CartItemUiModel>>()
-    val refreshEvent: SingleLiveData<List<CartItemUiModel>> = _refreshEvent
-
     private val limit: Int = 5
 
     init {
         fetchCartItems(isNextPage = false)
     }
 
-    fun fetchCartItems(
-        isNextPage: Boolean,
-        isRefresh: Boolean = false,
-    ) {
+    fun fetchCartItems(isNextPage: Boolean) {
         val currentPage = _page.value ?: DEFAULT_PAGE
-        val newPage = if (isRefresh) currentPage else calculatePage(isNextPage, currentPage)
+        val newPage = calculatePage(isNextPage, currentPage)
         val newOffset = (newPage - DEFAULT_PAGE) * limit
 
         cartRepository.getCartItems(limit, newOffset) { result ->
@@ -60,7 +51,6 @@ class CartViewModel(
                 .onSuccess { pageableItem ->
                     fetchCartItemsSuccessHandler(
                         pageableItem,
-                        isRefresh,
                         newPage,
                     )
                 }
@@ -70,7 +60,7 @@ class CartViewModel(
     fun deleteCartItem(cartItem: CartItemUiModel) {
         cartRepository.deleteCartItem(cartItem.id) { result ->
             result
-                .onSuccess { deletedId -> _deleteEvent.postValue(deletedId) }
+                .onSuccess { fetchCartItems(isNextPage = false) }
                 .onFailure { _toastEvent.postValue(CartMessageEvent.DELETE_CART_ITEM_FAILURE) }
         }
     }
@@ -87,29 +77,21 @@ class CartViewModel(
 
     private fun fetchCartItemsSuccessHandler(
         pageableItem: PageableItem<CartItem>,
-        isRefresh: Boolean,
         newPage: Int,
     ) {
-        loadProductDetails(pageableItem.items, isRefresh)
+        loadProductDetails(pageableItem.items)
         _hasMore.postValue(pageableItem.hasMore)
         _page.postValue(newPage)
     }
 
-    private fun loadProductDetails(
-        cartItems: List<CartItem>,
-        isRefresh: Boolean,
-    ) {
+    private fun loadProductDetails(cartItems: List<CartItem>) {
         val productIds = cartItems.map { it.productId }
 
         productRepository.findProductsByIds(productIds) { result ->
             result
                 .onFailure { _toastEvent.postValue(CartMessageEvent.FETCH_CART_ITEMS_FAILURE) }
                 .onSuccess { products ->
-                    loadProductDetailsSuccessHandler(
-                        cartItems,
-                        products,
-                        isRefresh,
-                    )
+                    loadProductDetailsSuccessHandler(cartItems, products)
                 }
         }
     }
@@ -117,14 +99,11 @@ class CartViewModel(
     private fun loadProductDetailsSuccessHandler(
         cartItems: List<CartItem>,
         products: List<Product>,
-        isRefresh: Boolean,
     ) {
         val productMap = products.associateBy { it.id }
         val uiModels = cartItems.mapUiModels(productMap)
 
-        if (uiModels.isEmpty()) return fetchCartItems(isNextPage = false)
-
-        uiModels.processRefreshEvent(isRefresh)
+        _cartItems.postValue(uiModels)
     }
 
     private fun List<CartItem>.mapUiModels(productMap: Map<Long, Product>) =
@@ -133,10 +112,6 @@ class CartViewModel(
                 cartItem.toUiModel(product.toUiModel())
             }
         }
-
-    private fun List<CartItemUiModel>.processRefreshEvent(isRefresh: Boolean) {
-        if (isRefresh) _refreshEvent.postValue(this) else _cartItems.postValue(this)
-    }
 
     companion object {
         private const val DEFAULT_PAGE = 1

@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.view.cart.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.CartItemUiModel
-import kotlin.math.max
 
 class CartAdapter(
     initialProducts: List<CartItemUiModel> = emptyList(),
@@ -25,36 +24,35 @@ class CartAdapter(
         holder.bind(products[position])
     }
 
-    fun refresh(newProducts: List<CartItemUiModel>) {
-        val updatePosition = max(itemCount, newProducts.size)
-
-        products.clear()
-        products.addAll(newProducts)
-        notifyItemChanged(updatePosition)
+    fun updateItemsManually(newProducts: List<CartItemUiModel>) {
+        removeMissingItems(newProducts)
+        addNewItems(newProducts)
     }
 
-    fun replaceAll(newProducts: List<CartItemUiModel>) {
-        val previousItemCount = itemCount
-        products.clear()
-        notifyItemRangeRemoved(STARTING_POSITION, previousItemCount)
+    private fun removeMissingItems(newProducts: List<CartItemUiModel>) {
+        val iterator = products.listIterator()
 
-        products.addAll(newProducts)
-        notifyItemRangeInserted(STARTING_POSITION, itemCount)
+        while (iterator.hasNext()) {
+            val item = iterator.next()
+            if (newProducts.none { it.id == item.id }) {
+                val index = iterator.previousIndex()
+                iterator.remove()
+                notifyItemRemoved(index)
+            }
+        }
     }
 
-    fun removeCartById(id: Long) {
-        val index = products.indexOfFirst { it.id == id }
-        if (index != -1) {
-            products.removeAt(index)
-            notifyItemRemoved(index)
+    private fun addNewItems(newProducts: List<CartItemUiModel>) {
+        newProducts.forEach { newItem ->
+            val exists = products.any { it.id == newItem.id }
+            if (!exists) {
+                products.add(newItem)
+                notifyItemInserted(itemCount - 1)
+            }
         }
     }
 
     interface CartEventListener {
         fun onProductDeletion(cartItem: CartItemUiModel)
-    }
-
-    companion object {
-        private const val STARTING_POSITION = 0
     }
 }
