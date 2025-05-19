@@ -30,23 +30,30 @@ class ProductAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (position == products.size) {
-            return LOAD_BUTTON
+    override fun getItemViewType(position: Int): Int =
+        when {
+            position < products.size -> PRODUCT
+            position == products.size && isLoadButtonEnabled() -> LOAD_BUTTON
+            else -> PRODUCT
         }
-        return PRODUCT
-    }
 
-    fun setData(products: List<ProductUiModel>) {
-        this.products = products
-        notifyDataSetChanged()
+    fun setData(newProducts: List<ProductUiModel>) {
+        val oldSize = this.products.size
+        val newSize = newProducts.size
+        this.products = newProducts
+
+        if (isLoadButtonEnabled()) {
+            notifyItemRemoved(oldSize)
+            notifyItemRangeInserted(oldSize, newSize - oldSize)
+        } else {
+            notifyItemRangeInserted(oldSize + 1, newSize - oldSize)
+        }
     }
 
     override fun getItemCount(): Int = products.size + if (isLoadButtonEnabled()) 1 else 0
 
     companion object {
         private const val PRODUCT = 1
-        private const val LOAD_BUTTON = 2
-        private const val PRODUCT_SIZE_LIMIT = 20
+        const val LOAD_BUTTON = 2
     }
 }

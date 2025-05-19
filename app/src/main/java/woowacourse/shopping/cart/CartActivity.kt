@@ -26,6 +26,7 @@ class CartActivity : AppCompatActivity() {
         setSupportActionBar()
         setCartProductAdapter()
         observeCartProducts()
+        observePageChanges()
     }
 
     private fun setSupportActionBar() {
@@ -57,6 +58,15 @@ class CartActivity : AppCompatActivity() {
             (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
         }
         binding.lifecycleOwner = this
+    }
+
+    private fun observePageChanges() {
+        viewModel.page.observe(this) {
+            (binding.recyclerViewCart.adapter as? CartAdapter)?.let { adapter ->
+                val paginationPos = adapter.itemCount - 1
+                adapter.notifyItemChanged(paginationPos)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -50,7 +50,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:text="@{page.toString()}"
+                android:text="@{String.valueOf(page)}"
                 android:id="@+id/textView_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

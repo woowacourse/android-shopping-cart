@@ -32,7 +32,7 @@ class CartViewModel(
 
     fun deleteCartProduct(cartProduct: ProductUiModel) {
         products.remove(cartProduct)
-        _cartProducts.value = products
+//        _cartProducts.value = products
         dataSource.deleteCartProduct(cartProduct)
 
         loadCartProducts()
@@ -81,15 +81,23 @@ class CartViewModel(
     }
 
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
-        val currentPage = page.value ?: INITIAL_PAGE
-        val startIndex = currentPage * pageSize
-        val endIndex = minOf(startIndex + pageSize, allCartProducts.size)
-        if (startIndex >= allCartProducts.size) {
-            _cartProducts.value = emptyList()
-            return
+        var currentPage = page.value ?: INITIAL_PAGE
+        val totalSize = allCartProducts.size
+
+        while (currentPage > 0 && currentPage * pageSize >= totalSize) {
+            currentPage--
         }
-        val pagedProducts = allCartProducts.subList(startIndex, endIndex)
-        _cartProducts.value = pagedProducts
+
+        _page.value = -1
+        _page.value = currentPage
+
+        val startIndex = currentPage * pageSize
+        val endIndex = minOf(startIndex + pageSize, totalSize)
+
+        _cartProducts.value = allCartProducts.subList(startIndex, endIndex)
+
+        _isNextButtonEnabled.value = currentPage < (totalSize - 1) / pageSize
+        _isPrevButtonEnabled.value = currentPage > 0
     }
 
     fun eventHandler(): CartEventHandler =

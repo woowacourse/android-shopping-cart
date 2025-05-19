@@ -44,20 +44,21 @@ class CartAdapter(
         return VIEW_TYPE_CART_PRODUCT
     }
 
-    fun setData(cartProducts: List<ProductUiModel>) {
-        this.cartProducts = cartProducts
-        notifyDataSetChanged()
+    fun setData(newCartProducts: List<ProductUiModel>) {
+        val oldSize = cartProducts.size
+        val newSize = newCartProducts.size
+
+        cartProducts = newCartProducts
+
+        if (oldSize > 0) {
+            notifyItemRangeRemoved(0, oldSize)
+        }
+        notifyItemRangeInserted(0, newSize)
     }
 
-    override fun getItemCount(): Int =
-        if (cartProducts.size > 5 ||
-            isNextButtonEnabled() ||
-            isPrevButtonEnabled()
-        ) {
-            cartProducts.size + 1
-        } else {
-            cartProducts.size
-        }
+    private fun shouldShowPagination(): Boolean = isNextButtonEnabled() || isPrevButtonEnabled()
+
+    override fun getItemCount(): Int = cartProducts.size + if (shouldShowPagination()) 1 else 0
 
     companion object {
         private val VIEW_TYPE_CART_PRODUCT = R.layout.product_item
