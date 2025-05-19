@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 
 class ShoppingCartActivity : AppCompatActivity() {
@@ -20,8 +19,8 @@ class ShoppingCartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        setContentView(binding.rootShoppingCart)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootShoppingCart) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets

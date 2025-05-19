@@ -11,7 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+        android:id="@+id/root_product_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
