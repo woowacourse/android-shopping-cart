@@ -3,8 +3,8 @@ package woowacourse.shopping.data.cart
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.PRODUCT_1
-import woowacourse.shopping.data.PRODUCT_2
+import woowacourse.shopping.PRODUCT_1
+import woowacourse.shopping.PRODUCT_2
 
 class CartRepositoryTest {
     private lateinit var cartRepository: CartRepository

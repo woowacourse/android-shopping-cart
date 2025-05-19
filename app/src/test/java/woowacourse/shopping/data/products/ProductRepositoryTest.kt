@@ -3,7 +3,7 @@ package woowacourse.shopping.data.products
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.PRODUCTS_IN_RANGE_0_2
+import woowacourse.shopping.PRODUCTS_IN_RANGE_0_2
 
 class ProductRepositoryTest {
     private lateinit var productRepository: ProductRepository
