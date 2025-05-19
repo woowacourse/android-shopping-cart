@@ -4,7 +4,7 @@ import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.data.dummy.ProductData
 import woowacourse.shopping.domain.Product
 
-class ProductRepositoryImpl : ProductRepository {
+class LocalProductRepository : ProductRepository {
     override fun getAll(): List<Product> = ProductData.products
 
     override fun getPagedProducts(

@@ -5,7 +5,7 @@ import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.CartProduct
 import kotlin.concurrent.thread
 
-class ShoppingCartRepositoryImpl(
+class LocalShoppingCartRepository(
     private val dao: ShoppingCartDao,
 ) : ShoppingCartRepository {
     private var totalCount: Int? = null

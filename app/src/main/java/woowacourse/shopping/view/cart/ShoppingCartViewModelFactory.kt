@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.ShoppingCartDatabase
-import woowacourse.shopping.data.cart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.cart.LocalShoppingCartRepository
 
 class ShoppingCartViewModelFactory(
     private val applicationContext: Context,
@@ -13,7 +13,7 @@ class ShoppingCartViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ShoppingCartViewModel::class.java)) {
             val database = ShoppingCartDatabase.getDataBase(applicationContext)
-            val repository = ShoppingCartRepositoryImpl(database.shoppingCartDao)
+            val repository = LocalShoppingCartRepository(database.shoppingCartDao)
             return ShoppingCartViewModel(repository) as T
         }
         throw IllegalArgumentException()
