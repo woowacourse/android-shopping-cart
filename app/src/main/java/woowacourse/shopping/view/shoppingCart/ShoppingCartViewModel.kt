@@ -24,6 +24,7 @@ class ShoppingCartViewModel(
         shoppingCartRepository.load(page, COUNT_PER_PAGE) { result ->
             result
                 .onSuccess { products: List<Product> ->
+                    if (handleLastPage(products)) return@load
                     val paginationItem: PaginationItem = createPaginationItem()
                     _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
                 }
@@ -31,6 +32,15 @@ class ShoppingCartViewModel(
                     _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
                 }
         }
+    }
+
+    private fun handleLastPage(products: List<Product>): Boolean {
+        if (products.isEmpty()) {
+            minusPage()
+            updateShoppingCart()
+            return true
+        }
+        return false
     }
 
     private fun createPaginationItem(): PaginationItem {
