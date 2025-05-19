@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="product_description">상품 이미지</string>
-    <string name="price">%1$s원</string>
+    <string name="price">%,d원</string>
     <string name="price_title">가격</string>
     <string name="add_cart">장바구니 담기</string>
     <string name="message_add_cart">장바구니에 상품을 담았습니다.</string>

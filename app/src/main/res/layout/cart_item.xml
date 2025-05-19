@@ -8,6 +8,7 @@
         <variable
             name="cartProduct"
             type="woowacourse.shopping.domain.cart.CartProduct" />
+
         <variable
             name="cartClickListener"
             type="woowacourse.shopping.ui.cart.CartClickListener" />
@@ -65,9 +66,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="17dp"
+            android:text="@{@string/price(cartProduct.price)}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
-            setFormattedPrice="@{cartProduct.price}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="999,999,999,999,900원" />

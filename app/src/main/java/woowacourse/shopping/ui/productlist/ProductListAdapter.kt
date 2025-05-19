@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.productlist
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -54,9 +53,10 @@ class ProductListAdapter(
 
     override fun getItemCount() = items.size
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun update(it: List<ProductListViewType>?) {
-        items = it.orEmpty()
-        notifyDataSetChanged()
+    fun update(items: List<ProductListViewType>) {
+        val positionStart = this.items.size
+        val itemCount = items.size - itemCount
+        this.items = items
+        notifyItemRangeInserted(positionStart, itemCount)
     }
 }

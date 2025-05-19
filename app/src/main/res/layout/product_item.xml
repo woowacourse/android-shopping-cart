@@ -16,9 +16,9 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/product_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/product_item"
         android:onClick="@{() -> productClickListener.onClick(product)}"
         android:paddingVertical="10dp">
 
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            setFormattedPrice="@{product.price}"
+            android:text="@{@string/price(product.price)}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
