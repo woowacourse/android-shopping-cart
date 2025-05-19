@@ -31,8 +31,10 @@ class ProductsAdapter(
 
     override fun getItemCount(): Int = productsItems.size
 
-    override fun getItemViewType(position: Int): Int = productsItems[position].viewType.ordinal
-
+    override fun getItemViewType(position: Int): Int = when(productsItems[position]) {
+        is ProductsItem.ProductProductsItem -> 0
+        is ProductsItem.LoadMoreProductsItem -> 1
+    }
     fun updateProductItems(newItems: List<Product>) {
         productsItems.clear()
         productsItems.addAll(newItems.map { ProductsItem.ProductProductsItem(it) })

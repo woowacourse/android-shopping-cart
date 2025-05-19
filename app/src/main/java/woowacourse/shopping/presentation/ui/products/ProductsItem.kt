@@ -2,12 +2,10 @@ package woowacourse.shopping.presentation.ui.products
 
 import woowacourse.shopping.domain.model.Product
 
-sealed class ProductsItem(
-    val viewType: ProductsItemViewType,
-) {
+sealed class ProductsItem {
     data class ProductProductsItem(
         val value: Product,
-    ) : ProductsItem(ProductsItemViewType.PRODUCT)
+    ) : ProductsItem()
 
-    data object LoadMoreProductsItem : ProductsItem(ProductsItemViewType.LOAD_MORE)
+    data object LoadMoreProductsItem : ProductsItem()
 }
