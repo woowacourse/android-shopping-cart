@@ -69,11 +69,11 @@
             android:paddingEnd="8dp"
             android:paddingBottom="8dp"
             app:adapter="@{adapter}"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/productsToolbar"
-            app:spanCount="2"
-            tools:listitem="@layout/item_product" />
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/item_product"
+            tools:spanCount="2" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
