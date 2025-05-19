@@ -12,7 +12,8 @@
     <string name="goods_detail_image_description">상품 상세 이미지</string>
     <string name="goods_details_cart_button">장바구니 담기</string>
     <string name="goods_detail_price">가격</string>
-    <string name="goods_detail_cart_insert_complete_toast_message">상품이 장바구니에 담겼습니다!</string>
+    <string name="goods_detail_cart_insert_success_toast_message">상품이 장바구니에 담겼습니다!</string>
+    <string name="goods_detail_cart_insert_fail_toast_message">장바구니에 담기 실패했습니다. 다시 시도해주세요!</string>
 
     <!--    CartActivity-->
     <string name="cart_action_bar_name">Cart</string>
