@@ -36,7 +36,7 @@ class ProductsViewModelTest {
         viewModel.updateIsLoadable()
 
         // then
-        val actual = viewModel.isLoadable.getOrAwaitValue()
+        val actual = viewModel.isLoadingProducts.getOrAwaitValue()
         Assertions.assertFalse(actual)
     }
 }

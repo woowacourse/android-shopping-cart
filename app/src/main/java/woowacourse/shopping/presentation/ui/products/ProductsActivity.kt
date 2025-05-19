@@ -81,7 +81,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
             productsAdapter.updateProductItems(products)
             viewModel.updateIsLoadable()
         }
-        viewModel.isLoadable.observe(this) { isLoadable ->
+        viewModel.isLoadingProducts.observe(this) { isLoadable ->
             productsAdapter.updateLoadMoreItem(isLoadable)
             productsAdapter.notifyDataSetChanged()
         }
