@@ -37,7 +37,9 @@ class ProductsActivity : AppCompatActivity() {
         handleEventsFromViewModel()
         bindData()
         setupAdapter()
-        viewModel.updateProducts()
+        if (viewModel.products.value?.isEmpty() == true) {
+            viewModel.updateProducts()
+        }
     }
 
     private fun initDataBinding() {
