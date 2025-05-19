@@ -14,7 +14,7 @@ class ProductRepositoryImpl(
         val result =
             runCatching {
                 products.find { it.id == id }
-                    ?: throw NoSuchElementException("${id}에 해당하는 상품을 찾을 수 없습니다.")
+                    ?: throw NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE.format(id))
             }
         onResult(result)
     }
@@ -47,5 +47,9 @@ class ProductRepositoryImpl(
             }
 
         onResult(result)
+    }
+
+    companion object {
+        private const val NO_SUCH_ELEMENT_MESSAGE = "%d에 해당하는 상품을 찾을 수 없습니다."
     }
 }

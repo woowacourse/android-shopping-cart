@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
@@ -25,32 +26,36 @@ class CatalogFragmentTest {
         object : ProductRepository {
             override fun findProductById(
                 id: Long,
-                callback: (Product?) -> Unit,
+                onResult: (Result<Product>) -> Unit,
             ) {
             }
 
             override fun findProductsByIds(
                 ids: List<Long>,
-                callback: (List<Product>) -> Unit,
+                onResult: (Result<List<Product>>) -> Unit,
             ) {
             }
 
             override fun loadProducts(
                 offset: Int,
                 loadSize: Int,
-                callback: (List<Product>, Boolean) -> Unit,
+                onResult: (Result<PageableItem<Product>>) -> Unit,
             ) {
                 val totalSize = dummyProductsFixture.size
 
-                if (offset >= totalSize) {
-                    callback(emptyList(), false)
-                    return
-                }
+                val result =
+                    runCatching {
+                        if (offset >= totalSize) {
+                            return@runCatching PageableItem(emptyList<Product>(), false)
+                        }
 
-                val sublist = dummyProductsFixture.drop(offset).take(loadSize)
-                val hasMore = offset + loadSize < totalSize
+                        val sublist = dummyProductsFixture.drop(offset).take(loadSize)
+                        val hasMore = offset + loadSize < totalSize
 
-                callback(sublist, hasMore)
+                        PageableItem(sublist, hasMore)
+                    }
+
+                onResult(result)
             }
         }
 

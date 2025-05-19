@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
@@ -20,20 +21,20 @@ class DetailFragmentTest {
         object : ProductRepository {
             override fun findProductById(
                 id: Long,
-                callback: (Product?) -> Unit,
+                onResult: (Result<Product>) -> Unit,
             ) {
-                callback(dummyProductsFixture[0])
+                onResult(Result.success(dummyProductsFixture[0]))
             }
 
             override fun findProductsByIds(
                 ids: List<Long>,
-                callback: (List<Product>) -> Unit,
+                onResult: (Result<List<Product>>) -> Unit,
             ) {}
 
             override fun loadProducts(
                 offset: Int,
                 loadSize: Int,
-                callback: (List<Product>, Boolean) -> Unit,
+                onResult: (Result<PageableItem<Product>>) -> Unit,
             ) {}
         }
 

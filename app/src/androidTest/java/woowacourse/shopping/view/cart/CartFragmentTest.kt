@@ -17,6 +17,7 @@ import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.RepositoryProvider
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
@@ -34,32 +35,39 @@ class CartFragmentTest {
             override fun getCartItems(
                 limit: Int,
                 offset: Int,
-                callback: (List<CartItem>, Boolean) -> Unit,
+                onResult: (Result<PageableItem<CartItem>>) -> Unit,
             ) {
-                val products = shoppingCart.subList(offset, offset + limit)
-                val hasMore =
-                    products
-                        .lastOrNull()
-                        ?.let { shoppingCart.any { product -> it.id < product.id } } ?: false
-
-                val cartItems = products.map { CartItem(it.id, it.id, 1) }
-                callback(cartItems, hasMore)
+                val result =
+                    runCatching {
+                        val products = shoppingCart.subList(offset, offset + limit)
+                        val cartItems = products.map { CartItem(it.id, it.id, 1) }
+                        val hasMore =
+                            products
+                                .lastOrNull()
+                                ?.let { shoppingCart.any { product -> it.id < product.id } } ?: false
+                        PageableItem(cartItems, hasMore)
+                    }
+                onResult(result)
             }
 
             override fun deleteCartItem(
                 id: Long,
-                callback: (Long) -> Unit,
+                onResult: (Result<Long>) -> Unit,
             ) {
-                val index = shoppingCart.indexOfFirst { it.id == id }
-                if (index != -1) {
-                    shoppingCart.removeAt(index)
-                }
-                callback(id)
+                val result =
+                    runCatching {
+                        val foundItem = shoppingCart.find { it.id == id }
+                        if (foundItem != null) {
+                            shoppingCart.remove(foundItem)
+                        }
+                        id
+                    }
+                onResult(result)
             }
 
             override fun addCartItem(
                 product: Product,
-                callback: () -> Unit,
+                onResult: (Result<Unit>) -> Unit,
             ) {
             }
         }
