@@ -11,7 +11,7 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
 
     override fun load(
         offset: Int,
-        limit: Int
+        limit: Int,
     ): List<ProductEntity> {
         if (limit > size) return products.subList(offset, size)
         return products.subList(offset, limit)

@@ -10,29 +10,23 @@
             type="woowacourse.shopping.domain.product.Product" />
 
         <variable
-            name="imageUrl"
-            type="String" />
-
-        <variable
             name="onSelectProduct"
             type="kotlin.jvm.functions.Function1" />
-
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> onSelectProduct.invoke(product)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="12dp"
+        android:onClick="@{() -> onSelectProduct.invoke(product)}">
 
         <ImageView
             android:id="@+id/productImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@{product.name}"
-            app:imageUrl="@{imageUrl}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/product_image_example" />
