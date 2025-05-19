@@ -5,11 +5,8 @@
 
     <data>
         <variable
-            name="goods"
-            type="woowacourse.shopping.feature.GoodsUiModel" />
-        <variable
-            name="insertCallback"
-            type="kotlin.jvm.functions.Function1&lt;woowacourse.shopping.feature.GoodsUiModel, kotlin.Unit>" />
+            name="viewModel"
+            type="woowacourse.shopping.feature.goodsdetails.GoodsDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:contentDescription="@string/goods_detail_image_description"
-            app:imgUrl="@{goods.thumbnailUrl}"
+            app:imgUrl="@{viewModel.goods.thumbnailUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -35,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{goods.name}"
+            android:text="@{viewModel.goods.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -69,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
-            android:text="@{@string/goods_price(goods.price)}"
+            android:text="@{@string/goods_price(viewModel.goods.price)}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -88,7 +85,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:clickable="true"
-            android:onClick="@{() -> insertCallback.invoke(goods)}"
+            android:onClick="@{() -> viewModel.addToCart()}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

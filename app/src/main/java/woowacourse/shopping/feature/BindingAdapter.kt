@@ -15,9 +15,11 @@ import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
 @BindingAdapter("imgUrl")
 fun loadImageFromUrl(
     imageView: ImageView,
-    url: String,
+    url: String?,
 ) {
-    Glide.with(imageView.context).load(url).into(imageView)
+    url?.let {
+        Glide.with(imageView.context).load(url).into(imageView)
+    }
 }
 
 @BindingAdapter("items")

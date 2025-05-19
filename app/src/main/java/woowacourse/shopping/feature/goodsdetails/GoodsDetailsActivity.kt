@@ -13,11 +13,12 @@ import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.GoodsUiModel
-import woowacourse.shopping.util.toDomain
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
-    private lateinit var goods: GoodsUiModel
+    private val viewModel by lazy {
+        GoodsDetailsViewModel(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +26,14 @@ class GoodsDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.lifecycleOwner = this
 
-        goods = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
-        binding.goods = goods
-        binding.insertCallback = { insert(goods) }
+        val goodsUiModel = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
+
+        viewModel.setGoods(goodsUiModel)
+        binding.viewModel = viewModel
+
+        viewModel.alertEvent.observe(this) { message ->
+            showMessage(message)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -44,15 +50,13 @@ class GoodsDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun insert(goods: GoodsUiModel) {
-        CartRepositoryImpl(ShoppingDatabase.getDatabase(this)).insert(goods.toDomain()) {
-            Toast
-                .makeText(
-                    this,
-                    getString(R.string.goods_detail_cart_insert_complete_toast_message),
-                    Toast.LENGTH_SHORT,
-                ).show()
-        }
+    private fun showMessage(resourceId: Int) {
+        Toast
+            .makeText(
+                this,
+                resourceId,
+                Toast.LENGTH_SHORT,
+            ).show()
     }
 
     companion object {
