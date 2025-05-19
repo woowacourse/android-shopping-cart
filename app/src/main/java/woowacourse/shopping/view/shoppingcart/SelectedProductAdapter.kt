@@ -9,7 +9,6 @@ class SelectedProductAdapter(
     private val removeEventListener: OnRemoveProductListener,
 ) : RecyclerView.Adapter<SelectedProductViewHolder>() {
     private val shoppingProducts = mutableListOf<ShoppingProduct>()
-    private var hasNext: Boolean = false
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
