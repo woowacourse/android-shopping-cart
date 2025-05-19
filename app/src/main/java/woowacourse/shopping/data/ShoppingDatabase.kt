@@ -1,10 +1,10 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.BuildConfig
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import woowacourse.shopping.BuildConfig
 
 @Database(entities = [CartEntity::class], version = 1)
 abstract class ShoppingDatabase : RoomDatabase() {

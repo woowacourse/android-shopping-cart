@@ -26,12 +26,6 @@ class CartViewModel(
     val cart: LiveData<List<Goods>> get() = _cart
 
     private var totalCartSizeData: Int = 0
-        set(value) {
-            field = value
-            _totalCartSize.postValue(value)
-        }
-    private val _totalCartSize = MutableLiveData<Int>(totalCartSizeData)
-    val totalCartSize: LiveData<Int> get() = _totalCartSize
 
     private val _isLeftPageEnable = MutableLiveData(false)
     val isLeftPageEnable: LiveData<Boolean> get() = _isLeftPageEnable
@@ -39,7 +33,7 @@ class CartViewModel(
     private val _isRightPageEnable = MutableLiveData(false)
     val isRightPageEnable: LiveData<Boolean> get() = _isRightPageEnable
 
-    val endPage: Int get() = max(1, (totalCartSizeData + PAGE_SIZE - 1) / PAGE_SIZE)
+    private val endPage: Int get() = max(1, (totalCartSizeData + PAGE_SIZE - 1) / PAGE_SIZE)
 
     init {
         updateCartData()
@@ -51,14 +45,14 @@ class CartViewModel(
         return if (idx >= 0) idx else null
     }
 
-    fun updateCartData() {
+    private fun updateCartData() {
         thread {
             val currentPageCartItems = cartRepository.getPage(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE)
             _cart.postValue(currentPageCartItems)
         }
     }
 
-    fun updateCartDataSize() {
+    private fun updateCartDataSize() {
         thread {
             totalCartSizeData = cartRepository.getAllItemsSize()
             _isMultiplePages.postValue(totalCartSizeData > PAGE_SIZE)
