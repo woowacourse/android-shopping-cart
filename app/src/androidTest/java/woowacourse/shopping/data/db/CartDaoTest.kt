@@ -90,12 +90,12 @@ class CartDaoTest {
             }
         products.forEach { cartDao.insert(it) }
 
-        val result = cartDao.getCartItemPaged(limit = 2, offset = 1)
+        val result = cartDao.getCartItemPaged(limit = 2, offset = 0)
 
         assertAll(
             { assertThat(result.size).isEqualTo(2) },
-            { assertThat(result[0].productId).isEqualTo(4) },
-            { assertThat(result[1].productId).isEqualTo(3) },
+            { assertThat(result[0].productId).isEqualTo(1) },
+            { assertThat(result[1].productId).isEqualTo(2) },
         )
     }
 
