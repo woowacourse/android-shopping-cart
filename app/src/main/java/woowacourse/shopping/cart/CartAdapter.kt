@@ -11,8 +11,9 @@ class CartAdapter(
     private val onPaginationButtonClick: PaginationButtonClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun setData(cartProducts: List<CartItem>) {
+        notifyItemRangeRemoved(0, cartItems.size)
         this.cartItems = cartProducts
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, cartItems.size)
     }
 
     override fun onCreateViewHolder(
