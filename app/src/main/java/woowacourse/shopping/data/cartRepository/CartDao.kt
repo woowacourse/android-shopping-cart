@@ -9,7 +9,7 @@ interface CartDao {
     @Query("SELECT * FROM cart")
     fun getAllProducts(): List<CartEntity>
 
-    @Query("SELECT * FROM cart ORDER BY id ASC LIMIT :limit")
+    @Query("SELECT * FROM cart ORDER BY id DESC LIMIT :limit")
     fun getLimitProducts(limit: Int): List<CartEntity>
 
     @Query("SELECT * FROM cart WHERE id = :id")
