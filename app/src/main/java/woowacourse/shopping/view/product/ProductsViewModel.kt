@@ -8,7 +8,6 @@ import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.product.ProductsItem.LoadItem
 import woowacourse.shopping.view.product.ProductsItem.ProductItem
-import kotlin.concurrent.thread
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository = DefaultProductsRepository(),
@@ -22,24 +21,24 @@ class ProductsViewModel(
     private var loadable: Boolean = false
 
     fun updateProducts() {
-        thread {
-            runCatching {
-                val lastProductId: Long? =
-                    (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
-                productsRepository.load(
-                    lastProductId,
-                    LOAD_PRODUCTS_SIZE,
-                )
-            }.onSuccess { newProducts: List<Product> ->
-                val products: List<ProductsItem> = products.value?.dropLast(1) ?: emptyList()
-                loadable = productsRepository.loadable
-                _products.postValue(
-                    products + newProducts.map(::ProductItem) + LoadItem(loadable)
-                )
-            }.onFailure {
-                it.printStackTrace()
-                _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
-            }
+        val lastProductId: Long? =
+            (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
+        productsRepository.load(
+            lastProductId,
+            LOAD_PRODUCTS_SIZE,
+        ) { result ->
+            result
+                .onSuccess { newProducts: List<Product> ->
+                    val products: List<ProductsItem> = products.value?.dropLast(1) ?: emptyList()
+                    loadable = productsRepository.loadable
+                    _products.postValue(
+                        products + newProducts.map(::ProductItem) + LoadItem(
+                            loadable
+                        )
+                    )
+                }.onFailure {
+                    _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
+                }
         }
     }
 

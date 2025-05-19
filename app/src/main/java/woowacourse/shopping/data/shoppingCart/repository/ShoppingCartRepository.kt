@@ -7,9 +7,15 @@ interface ShoppingCartRepository {
 
     val hasPrevious: Boolean
 
-    fun load(page: Int, count: Int): List<Product>
+    fun load(page: Int, count: Int, result: (products: Result<List<Product>>) -> Unit)
 
-    fun add(product: Product)
+    fun add(
+        product: Product,
+        result: (Result<Unit>) -> Unit
+    )
 
-    fun remove(product: Product)
+    fun remove(
+        product: Product,
+        result: (Result<Unit>) -> Unit
+    )
 }

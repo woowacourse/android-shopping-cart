@@ -8,7 +8,6 @@ import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
-import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
@@ -22,37 +21,37 @@ class ShoppingCartViewModel(
     private var page: Int = 1
 
     fun updateShoppingCart() {
-        thread {
-            runCatching {
-                shoppingCartRepository.load(page, COUNT_PER_PAGE)
-            }.onSuccess { products: List<Product> ->
-                val paginationItem: PaginationItem =
-                    (shoppingCart.value?.last() as? PaginationItem)?.copy(
-                        page = page,
-                        nextEnabled = shoppingCartRepository.hasNext,
-                        previousEnabled = shoppingCartRepository.hasPrevious
-                    )
-                        ?: PaginationItem(
-                            page,
-                            shoppingCartRepository.hasNext,
-                            false,
+        shoppingCartRepository.load(page, COUNT_PER_PAGE) { result ->
+            result
+                .onSuccess { products: List<Product> ->
+                    val paginationItem: PaginationItem =
+                        (shoppingCart.value?.last() as? PaginationItem)?.copy(
+                            page = page,
+                            nextEnabled = shoppingCartRepository.hasNext,
+                            previousEnabled = shoppingCartRepository.hasPrevious
                         )
-                _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
-            }.onFailure {
-                _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
-            }
+                            ?: PaginationItem(
+                                page,
+                                shoppingCartRepository.hasNext,
+                                false,
+                            )
+                    _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
+                }
+                .onFailure {
+                    _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
+                }
         }
     }
 
     fun removeShoppingCartProduct(product: Product) {
-        thread {
-            runCatching {
-                shoppingCartRepository.remove(product)
-            }.onSuccess {
-                updateShoppingCart()
-            }.onFailure {
-                _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
-            }
+        shoppingCartRepository.remove(product) { result ->
+            result
+                .onSuccess {
+                    updateShoppingCart()
+                }
+                .onFailure {
+                    _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
+                }
         }
     }
 
