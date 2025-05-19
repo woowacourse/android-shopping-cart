@@ -3,9 +3,10 @@ package woowacourse.shopping.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductRepository
-import woowacourse.shopping.ui.productlist.ProductListViewType
+import woowacourse.shopping.providers.RepositoryProvider
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -43,5 +44,12 @@ class ProductListViewModel(
     companion object {
         private const val PAGE_FETCH_SIZE = 21
         private const val PAGE_SIZE = 20
+
+        val Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ProductListViewModel(RepositoryProvider.provideProductRepository()) as T
+            }
+        }
     }
 }

@@ -13,20 +13,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.viewmodel.ProductListViewModel
-import woowacourse.shopping.utils.ViewModelFactory
 
 class ProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
-    private val viewModel: ProductListViewModel by viewModels {
-        ViewModelFactory.createProductViewModelFactory(
-            ProductRepositoryImpl(),
-        )
-    }
+    private val viewModel: ProductListViewModel by viewModels { ProductListViewModel.Factory }
     private val productListAdapter: ProductListAdapter by lazy { initAdapter() }
     private val customGridLayoutManager: GridLayoutManager by lazy { initCustomGridLayoutManager() }
 

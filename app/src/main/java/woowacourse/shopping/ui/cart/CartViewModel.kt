@@ -1,10 +1,12 @@
-package woowacourse.shopping.ui.viewmodel
+package woowacourse.shopping.ui.cart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.cart.CartProduct
 import woowacourse.shopping.domain.cart.CartRepository
+import woowacourse.shopping.providers.RepositoryProvider
 
 class CartViewModel(
     private val repository: CartRepository,
@@ -52,5 +54,14 @@ class CartViewModel(
     fun deleteProduct(cartProduct: CartProduct) {
         repository.delete(cartProduct.id!!)
         _products.value = _products.value?.filter { it.id != cartProduct.id }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return CartViewModel(RepositoryProvider.provideCartRepository()) as T
+            }
+        }
     }
 }
