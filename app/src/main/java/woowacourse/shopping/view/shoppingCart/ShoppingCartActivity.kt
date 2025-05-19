@@ -11,7 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.view.showToast
+import woowacourse.shopping.view.common.showToast
 
 class ShoppingCartActivity :
     AppCompatActivity(),

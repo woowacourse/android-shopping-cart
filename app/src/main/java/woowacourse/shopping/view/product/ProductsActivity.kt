@@ -12,7 +12,7 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
-import woowacourse.shopping.view.showToast
+import woowacourse.shopping.view.common.showToast
 
 class ProductsActivity : AppCompatActivity() {
     private val binding: ActivityProductsBinding by lazy {

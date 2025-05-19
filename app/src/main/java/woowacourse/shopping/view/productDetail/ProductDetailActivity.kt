@@ -14,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.showToast
+import woowacourse.shopping.view.common.showToast
 
 class ProductDetailActivity :
     AppCompatActivity(),

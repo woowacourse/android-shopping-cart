@@ -1,4 +1,4 @@
-package woowacourse.shopping.view
+package woowacourse.shopping.view.common
 
 import android.content.Context
 import android.widget.Toast
