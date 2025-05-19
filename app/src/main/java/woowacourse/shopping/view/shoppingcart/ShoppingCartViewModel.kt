@@ -71,6 +71,7 @@ class ShoppingCartViewModel(
         repository.delete(shoppingProduct.id)
         shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
         validateCurrentPage()
+        checkCacheHasNext()
     }
 
     private fun checkHasNext() {
