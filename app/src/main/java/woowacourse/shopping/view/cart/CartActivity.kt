@@ -64,8 +64,8 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { value ->
-            cartAdapter.submitList(value)
+        viewModel.uiState.observe(this) { value ->
+            cartAdapter.submitList(value.products)
         }
     }
 

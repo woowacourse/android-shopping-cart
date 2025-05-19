@@ -67,8 +67,9 @@ class CartViewModelTest {
         viewModel.loadCarts()
 
         // Then
-        val products = viewModel.products.getOrAwaitValue()
-        val pageState = viewModel.pageState.getOrAwaitValue()
+        val items = viewModel.uiState.getOrAwaitValue()
+        val products = items.products
+        val pageState = items.pageState
 
         assertAll(
             { assertThat(products).hasSize(5) },
@@ -86,8 +87,8 @@ class CartViewModelTest {
         viewModel.addPage()
 
         // Then
-        val pageState = viewModel.pageState.getOrAwaitValue()
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.uiState.getOrAwaitValue().products
+        val pageState = viewModel.uiState.getOrAwaitValue().pageState
 
         assertAll(
             { assertThat(pageState.page).isEqualTo(3) },
@@ -106,8 +107,8 @@ class CartViewModelTest {
         viewModel.subPage()
 
         // Then
-        val pageState = viewModel.pageState.getOrAwaitValue()
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.uiState.getOrAwaitValue().products
+        val pageState = viewModel.uiState.getOrAwaitValue().pageState
 
         assertAll(
             { assertThat(pageState.page).isEqualTo(2) },
@@ -123,7 +124,7 @@ class CartViewModelTest {
         viewModel.deleteProduct(2)
 
         // Then
-        val products = viewModel.products.getOrAwaitValue()
-        assertThat(products).hasSize(5)
+        val products = viewModel.uiState.getOrAwaitValue()
+        assertThat(products.products).hasSize(5)
     }
 }

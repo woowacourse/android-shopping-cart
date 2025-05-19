@@ -3,7 +3,6 @@ package woowacourse.shopping.view.cart.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
@@ -15,17 +14,15 @@ class CartViewModel(
 ) : ViewModel() {
     private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
 
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> = _products
-
-    private val _pageState = MutableLiveData<PageState>()
-    val pageState: LiveData<PageState> = _pageState
+    private val _uiState = MutableLiveData<CartUiState>()
+    val uiState: LiveData<CartUiState> = _uiState
 
     fun deleteProduct(productId: Long) {
         cartRepository.delete(productId)
         loadCarts()
 
-        if (paging.resetToLastPageIfEmpty(_products.value)) {
+        val currentProducts = _uiState.value?.products
+        if (paging.resetToLastPageIfEmpty(currentProducts)) {
             loadCarts()
         }
     }
@@ -43,10 +40,9 @@ class CartViewModel(
     fun loadCarts() {
         val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
 
-        _products.value =
-            result
-                .products
-                .map { productRepository[it.productId] }
-        _pageState.value = paging.createPageState(result.hasNextPage)
+        val products = result.products.map { productRepository[it.productId] }
+        val pageState = paging.createPageState(result.hasNextPage)
+
+        _uiState.value = CartUiState(products = products, pageState = pageState)
     }
 }
