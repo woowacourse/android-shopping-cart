@@ -1,15 +1,9 @@
 package woowacourse.shopping.domain.product
 
 interface ProductRepository {
-    fun productsByPageNumberAndSize(
-        pageNumber: Int,
-        loadSize: Int,
-    ): List<Product>
+    fun fetchInRange(limit: Int, offset: Int, onResult: (List<Product>) -> Unit)
 
-    fun fetchById(id: Long): Product?
+    fun fetchById(id: Long, onResult: (Product) -> Unit)
 
-    fun canMoreLoad(
-        pageNumber: Int,
-        loadSize: Int,
-    ): Boolean
+    fun insertAll(vararg products: Product)
 }
