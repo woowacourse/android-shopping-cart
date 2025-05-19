@@ -47,3 +47,10 @@
 - [x] 상품 목록 페이지에 더보기 버튼을 누르면 20개의 아이템 (10줄)이 추가로 보인다.
 - [x] 장바구니 페이지에서 아이템이 5개 초과하면 페이지네이션이 된다.
 - [ ] 데이터 로딩 전략에 대한 테스트를 작성한다.
+
+
+## 1,2단계 피드백 반영 및 변경 사항
+- [x] test: UI 테스트 코드 추가
+- runner 충돌로 인한 1.6.2 -> 1.6.1로 변경
+- menu_cart.xml의 icon Id 중복으로 인한 변경 menu_cart -> menu_cart_back
+- ProductListActivityTest, ProductDetailAcitivityTest 추가
