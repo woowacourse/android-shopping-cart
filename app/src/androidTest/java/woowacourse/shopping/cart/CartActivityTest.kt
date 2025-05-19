@@ -14,6 +14,7 @@ import woowacourse.shopping.PRODUCT_1
 import woowacourse.shopping.PRODUCT_2
 import woowacourse.shopping.R
 import woowacourse.shopping.RecyclerViewMatcher
+import woowacourse.shopping.RecyclerViewMatcher.Companion.hasDrawable
 import woowacourse.shopping.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.fakeContext
@@ -73,10 +74,10 @@ class CartActivityTest {
     @Test
     fun `장바구니에_담은_상품사진들이_보인다`() {
         onView(withRecyclerView.atPositionOnView(0, R.id.product_in_cart_image))
-            .check(matches(withRecyclerView.hasDrawable()))
+            .check(matches(hasDrawable()))
 
         onView(withRecyclerView.atPositionOnView(1, R.id.product_in_cart_image))
-            .check(matches(withRecyclerView.hasDrawable()))
+            .check(matches(hasDrawable()))
     }
 
     @Test

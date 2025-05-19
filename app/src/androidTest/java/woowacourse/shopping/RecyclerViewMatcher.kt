@@ -53,16 +53,16 @@ class RecyclerViewMatcher(
             }
         }
 
-    fun hasDrawable(): Matcher<View> =
-        object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("사진 있음")
-            }
-
-            override fun matchesSafely(view: View): Boolean = view is ImageView && view.drawable != null
-        }
-
     companion object {
         fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher = RecyclerViewMatcher((recyclerViewId))
+
+        fun hasDrawable(): Matcher<View> =
+            object : TypeSafeMatcher<View>() {
+                override fun describeTo(description: Description) {
+                    description.appendText("사진 있음")
+                }
+
+                override fun matchesSafely(view: View): Boolean = view is ImageView && view.drawable != null
+            }
     }
 }
