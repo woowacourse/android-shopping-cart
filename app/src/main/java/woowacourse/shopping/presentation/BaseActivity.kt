@@ -9,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
     protected inline fun <reified T : ViewDataBinding> bind(
         @LayoutRes resId: Int,
     ): Lazy<T> = lazy { DataBindingUtil.setContentView(this, resId) }
