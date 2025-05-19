@@ -37,6 +37,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <ImageView
+            android:id="@+id/iv_product_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
