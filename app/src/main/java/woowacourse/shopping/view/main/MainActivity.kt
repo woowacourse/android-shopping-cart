@@ -31,6 +31,9 @@ class MainActivity :
             }
         }
     }
+    private val productsAdapter: ProductsAdapter by lazy {
+        ProductsAdapter(this@MainActivity.handler)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +60,7 @@ class MainActivity :
 
     private fun initRecyclerview() {
         binding.productList.apply {
-            adapter = ProductsAdapter(this@MainActivity.handler)
+            adapter = productsAdapter
             layoutManager = GridLayoutManager(this@MainActivity, 2)
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
         }
@@ -68,8 +71,8 @@ class MainActivity :
     }
 
     private fun updateRecyclerView(page: Page<Product>) {
-        binding.productList.adapter.apply {
-            (this as ProductsAdapter).updateProducts(page.items)
+        productsAdapter.apply {
+            updateProducts(page.items)
             notifyItemInserted(itemCount)
         }
     }
