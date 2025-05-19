@@ -7,27 +7,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.ShoppingApp
-import woowacourse.shopping.domain.model.Products
-import woowacourse.shopping.domain.model.Products.Companion.EMPTY_PRODUCTS
+import woowacourse.shopping.domain.model.CatalogProducts
+import woowacourse.shopping.domain.model.CatalogProducts.Companion.EMPTY_CATALOG_PRODUCTS
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductsViewModel(
     private val productsDummyRepository: ProductRepository,
 ) : ViewModel() {
-    private val _products: MutableLiveData<Products> = MutableLiveData(EMPTY_PRODUCTS)
-    val products: LiveData<Products> get() = _products
+    private val _catalogProducts: MutableLiveData<CatalogProducts> = MutableLiveData(EMPTY_CATALOG_PRODUCTS)
+    val catalogProducts: LiveData<CatalogProducts> get() = _catalogProducts
 
     private val maxProductId: Int get() =
-        products.value
+        catalogProducts.value
             ?.products
             ?.lastOrNull()
+            ?.product
             ?.id ?: 0
 
     fun loadProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
         productsDummyRepository.fetchProducts(lastId = maxProductId, count = count) { newProducts ->
-            _products.postValue(
-                Products(
-                    products = (products.value?.products ?: emptyList()) + newProducts.products,
+            _catalogProducts.postValue(
+                CatalogProducts(
+                    products = (catalogProducts.value?.products ?: emptyList()) + newProducts.products,
                     hasMore = newProducts.hasMore,
                 ),
             )

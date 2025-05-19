@@ -17,4 +17,6 @@
     <string name="cart_page_previous"><![CDATA[<]]></string>
     <string name="cart_page_next"><![CDATA[>]]></string>
     <string name="products_cart">장바구니</string>
+    <string name="cart_count_decrease">-</string>
+    <string name="cart_count_increase">+</string>
 </resources>

@@ -2,18 +2,39 @@ package woowacourse.shopping.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import woowacourse.shopping.data.entity.ProductEntity
+import woowacourse.shopping.data.dto.ProductDto
 
 @Dao
 interface ProductDao {
-    @Query("SELECT * FROM products WHERE id > :lastId ORDER BY id ASC LIMIT :count")
+    @Query(
+        """
+    SELECT 
+        p.id, p.name, p.imageUrl, p.price,
+        IFNULL(c.quantity, 0) AS cartQuantity
+    FROM products p
+    LEFT JOIN cart_products c ON p.id = c.productId
+    WHERE p.id > :lastId
+    ORDER BY p.id ASC
+    LIMIT :count
+""",
+    )
     fun getNextProducts(
         lastId: Int,
         count: Int,
-    ): List<ProductEntity>
+    ): List<ProductDto>
 
-    @Query("SELECT * FROM products WHERE id = :id")
-    fun getProduct(id: Int): ProductEntity?
+    @Query(
+        """
+    SELECT 
+        p.id, p.name, p.imageUrl, p.price,
+        IFNULL(c.quantity, 0) AS cartQuantity
+    FROM products p
+    LEFT JOIN cart_products c ON p.id = c.productId
+    WHERE p.id = :id
+    LIMIT 1
+""",
+    )
+    fun getProduct(id: Int): ProductDto?
 
     @Query("SELECT MAX(id) FROM products")
     fun getMaxId(): Int

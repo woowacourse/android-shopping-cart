@@ -3,7 +3,7 @@ package woowacourse.shopping.ui.products
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.CartProduct
 
 class ProductsAdapter(
     private val onClickHandler: OnClickHandler,
@@ -33,7 +33,7 @@ class ProductsAdapter(
     override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
     fun submitItems(
-        newItems: List<Product>,
+        newItems: List<CartProduct>,
         hasMore: Boolean,
     ) {
         val newProductItems = newItems.map { ProductsItem.ProductItem(it) }

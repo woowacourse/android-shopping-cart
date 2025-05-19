@@ -31,7 +31,7 @@ class LocalCartRepository(
         thread {
             callback(
                 CartProducts(
-                    cartProducts = cartDao.getCartProductDetails(page, size).map { it.toDomain() },
+                    products = cartDao.getCartProductDetails(page, size).map { it.toDomain() },
                     maxPage = cartDao.getMaxPageCount(size),
                 ),
             )

@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import woowacourse.shopping.data.dto.CartProductDetail
+import woowacourse.shopping.data.dto.CartProductDetailDto
 import woowacourse.shopping.data.entity.CartProductEntity
 
 @Dao
@@ -21,7 +21,7 @@ interface CartDao {
     fun getCartProductDetails(
         page: Int,
         size: Int,
-    ): List<CartProductDetail>
+    ): List<CartProductDetailDto>
 
     @Query("SELECT COUNT(*) FROM cart_products")
     fun getCartItemCount(): Int
@@ -34,5 +34,5 @@ interface CartDao {
 
     @Transaction
     @Query("SELECT * FROM cart_products WHERE productId = :productId")
-    fun getCartProductDetailById(productId: Int): CartProductDetail?
+    fun getCartProductDetailById(productId: Int): CartProductDetailDto?
 }

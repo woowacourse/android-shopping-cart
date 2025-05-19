@@ -61,7 +61,7 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     }
 
     private fun initObservers() {
-        viewModel.products.observe(this) { products ->
+        viewModel.catalogProducts.observe(this) { products ->
             productsAdapter.submitItems(products.products, products.hasMore)
         }
     }

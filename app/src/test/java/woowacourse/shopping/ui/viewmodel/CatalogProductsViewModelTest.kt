@@ -9,7 +9,7 @@ import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
-class ProductsViewModelTest {
+class CatalogProductsViewModelTest {
     private lateinit var viewModel: ProductsViewModel
 
     @BeforeEach
@@ -23,7 +23,7 @@ class ProductsViewModelTest {
         viewModel.loadProducts()
 
         // then
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.catalogProducts.getOrAwaitValue()
         Assertions.assertTrue(actual.isNotEmpty())
     }
 

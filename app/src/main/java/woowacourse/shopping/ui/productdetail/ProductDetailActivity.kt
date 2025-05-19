@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.common.DataBindingActivity
+import woowacourse.shopping.ui.custom.CartCountView
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity.OnClickHandler
 
 class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
@@ -21,6 +22,8 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
         removeSupportActionBarTitle()
         updateProductDetail()
         initViewBinding()
+        initObservers()
+        initCartQuantityView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,6 +54,26 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
         viewModel.addCartProduct()
         Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    private fun initObservers() {
+        viewModel.cartProduct.observe(this) { cartProduct ->
+            binding.productDetailCartProductCount.setCount(cartProduct.quantity)
+        }
+    }
+
+    private fun initCartQuantityView() {
+        binding.productDetailCartProductCount.setOnClickHandler(
+            object : CartCountView.OnClickHandler {
+                override fun onIncreaseClick() {
+                    viewModel.increaseCartProductQuantity()
+                }
+
+                override fun onDecreaseClick() {
+                    viewModel.decreaseCartProductQuantity()
+                }
+            },
+        )
     }
 
     fun interface OnClickHandler {

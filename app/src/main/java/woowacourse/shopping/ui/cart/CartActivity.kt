@@ -40,7 +40,7 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
 
     private fun initObservers() {
         viewModel.cartProducts.observe(this) { products ->
-            cartAdapter.submitItems(products.cartProducts)
+            cartAdapter.submitItems(products.products)
         }
     }
 
@@ -48,6 +48,14 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
         object : CartViewHolder.OnClickHandler {
             override fun onRemoveCartProductClick(id: Int) {
                 viewModel.removeCartProduct(id)
+            }
+
+            override fun onIncreaseClick(id: Int) {
+                viewModel.increaseCartProductQuantity(id)
+            }
+
+            override fun onDecreaseClick(id: Int) {
+                viewModel.decreaseCartProductQuantity(id)
             }
         }
 

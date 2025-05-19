@@ -32,7 +32,7 @@ class CartViewModel(
             _cartProducts.postValue(cartProducts)
         }
 
-        if (cartProducts.value?.cartProducts.isNullOrEmpty()) decreasePage()
+        if (cartProducts.value?.products.isNullOrEmpty()) decreasePage()
     }
 
     fun removeCartProduct(id: Int) {
@@ -49,6 +49,37 @@ class CartViewModel(
         if (currentPage.value == INITIAL_PAGE) return
         _currentPage.value = currentPage.value?.minus(step)
         loadCartProducts()
+    }
+
+    fun increaseCartProductQuantity(id: Int) {
+        cartRepository.increaseProductQuantity(id) { newQuantity ->
+            _cartProducts.postValue(
+                cartProducts.value?.copy(
+                    products = updateCartProductQuantity(id, newQuantity),
+                ),
+            )
+        }
+    }
+
+    private fun updateCartProductQuantity(
+        id: Int,
+        newQuantity: Int,
+    ) = _cartProducts.value?.products?.map { cartProduct ->
+        if (cartProduct.product.id == id) {
+            cartProduct.copy(quantity = newQuantity)
+        } else {
+            cartProduct
+        }
+    } ?: emptyList()
+
+    fun decreaseCartProductQuantity(id: Int) {
+        cartRepository.decreaseProductQuantity(id) { newQuantity ->
+            _cartProducts.postValue(
+                cartProducts.value?.copy(
+                    products = updateCartProductQuantity(id, newQuantity),
+                ),
+            )
+        }
     }
 
     companion object {

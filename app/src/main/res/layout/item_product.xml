@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            name="cartProduct"
+            type="woowacourse.shopping.domain.model.CartProduct" />
 
         <variable
             name="onClickHandler"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()->onClickHandler.onProductClick(product.id)}"
+        android:onClick="@{()->onClickHandler.onProductClick(cartProduct.product.id)}"
         android:padding="6dp">
 
         <ImageView
@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{cartProduct.product.imageUrl}"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
             android:layout_marginEnd="9dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{cartProduct.product.name}"
             android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="9dp"
-            android:text="@{@string/products_price(product.price)}"
+            android:text="@{@string/products_price(cartProduct.product.price)}"
             android:textColor="@color/gray_5"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

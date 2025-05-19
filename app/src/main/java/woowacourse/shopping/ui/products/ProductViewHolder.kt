@@ -16,7 +16,7 @@ class ProductViewHolder(
 
     override fun bind(item: ProductsItem.ProductItem) {
         super.bind(item)
-        binding.product = item.value
+        binding.cartProduct = item.value
     }
 
     fun interface OnClickHandler {

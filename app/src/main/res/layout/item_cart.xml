@@ -39,6 +39,7 @@
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
+            android:id="@+id/cartProductImage"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
@@ -60,12 +61,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <woowacourse.shopping.ui.custom.CartCountView
+            android:id="@+id/cartProductCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cartProductImage" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="18dp"
-            android:text="@{@string/products_price(cartProduct.product.price)}"
+            android:text="@{@string/products_price(cartProduct.totalPrice)}"
             android:textColor="@color/gray_5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

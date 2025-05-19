@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="onClickHandler"
+            type="woowacourse.shopping.ui.custom.CartCountView.OnClickHandler" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:onClick="@{()->onClickHandler.onDecreaseClick()}"
+            android:text="@string/cart_count_decrease"
+            android:textAlignment="center"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cartCountText"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:text="0" />
+
+        <TextView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:onClick="@{()->onClickHandler.onIncreaseClick()}"
+            android:text="@string/cart_count_increase"
+            android:textAlignment="center"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</layout>

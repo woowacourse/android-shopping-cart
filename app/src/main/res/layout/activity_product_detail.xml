@@ -55,35 +55,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/productDetailNameText" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+
+        <TextView
+            android:id="@+id/productDetailPrice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:paddingHorizontal="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@{@string/products_price(viewModel.cartProduct.totalPrice)}"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productDividerBetweenNameAndPrice">
+            app:layout_constraintTop_toBottomOf="@id/productDividerBetweenNameAndPrice"
+            tools:text="99,800원" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/product_detail_price"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+        <woowacourse.shopping.ui.custom.CartCountView
+            android:id="@+id/productDetailCartProductCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/productDetailPrice" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{@string/products_price(viewModel.cartProduct.product.price)}"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                tools:text="99,800원" />
-        </LinearLayout>
 
         <TextView
             android:layout_width="0dp"

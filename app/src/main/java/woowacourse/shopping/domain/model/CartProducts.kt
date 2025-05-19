@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain.model
 
 data class CartProducts(
-    val cartProducts: List<CartProduct>,
+    val products: List<CartProduct>,
     val maxPage: Int,
 ) {
     companion object {
