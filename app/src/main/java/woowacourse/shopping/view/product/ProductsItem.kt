@@ -12,9 +12,7 @@ sealed interface ProductsItem {
         override val viewType: ItemType = ItemType.PRODUCT
     }
 
-    data class LoadItem(
-        val loadable: Boolean,
-    ) : ProductsItem {
+    data object LoadItem : ProductsItem {
         override val viewType: ItemType = ItemType.MORE
     }
 

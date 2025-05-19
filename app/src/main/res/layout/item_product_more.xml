@@ -3,12 +3,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
-        <variable
-            name="loadItem"
-            type="woowacourse.shopping.view.product.ProductsItem.LoadItem" />
-
         <variable
             name="load"
             type="kotlin.jvm.functions.Function0" />
@@ -32,8 +26,7 @@
             android:padding="12dp"
             android:text="@string/products_more_button"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            android:visibility="@{loadItem.loadable ? View.VISIBLE : View.GONE}" />
+            android:textSize="16sp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

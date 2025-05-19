@@ -13,10 +13,6 @@ class ProductMoreViewHolder(
         binding.load = load
     }
 
-    fun bind(item: ProductsItem.LoadItem) {
-        binding.loadItem = item
-    }
-
     companion object {
         fun of(
             parent: ViewGroup,

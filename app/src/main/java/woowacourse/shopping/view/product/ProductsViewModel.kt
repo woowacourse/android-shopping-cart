@@ -23,20 +23,25 @@ class ProductsViewModel(
     fun updateProducts() {
         val lastProductId: Long? =
             (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
+
         productsRepository.load(
             lastProductId,
             LOAD_PRODUCTS_SIZE,
         ) { result ->
             result
                 .onSuccess { newProducts: List<Product> ->
-                    val products: List<ProductsItem> = products.value?.dropLast(1) ?: emptyList()
+                    val currentProducts = products.value?.dropLast(1) ?: emptyList()
                     loadable = productsRepository.loadable
-                    _products.postValue(
-                        products + newProducts.map(::ProductItem) + LoadItem(
-                            loadable
-                        )
-                    )
-                }.onFailure {
+
+                    val updatedList = buildList {
+                        addAll(currentProducts)
+                        addAll(newProducts.map(::ProductItem))
+                        if (loadable) add(LoadItem)
+                    }
+
+                    _products.postValue(updatedList)
+                }
+                .onFailure {
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }
         }

@@ -26,7 +26,6 @@ class ProductAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> holder.bind(items[position] as ProductsItem.ProductItem)
-            is ProductMoreViewHolder -> holder.bind(items[position] as ProductsItem.LoadItem)
         }
     }
 
