@@ -15,10 +15,11 @@ class ProductAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder = when (ProductsItem.ItemType.from(viewType)) {
-        ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, onSelectProduct)
-        ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, onLoad)
-    }
+    ): RecyclerView.ViewHolder =
+        when (ProductsItem.ItemType.from(viewType)) {
+            ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, onSelectProduct)
+            ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, onLoad)
+        }
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
@@ -33,7 +34,11 @@ class ProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ProductsItem>) {
+        val paginationItemPosition = itemCount - 1
+        notifyItemRemoved(paginationItemPosition)
+
+        val oldItemCount = itemCount - 1
         this.items = items
-        notifyDataSetChanged()
+        notifyItemRangeInserted(oldItemCount, itemCount - oldItemCount)
     }
 }
