@@ -5,6 +5,7 @@ package woowacourse.shopping
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyShoppingCart
@@ -53,7 +54,6 @@ class ShoppingCartActivityTest {
                 .atPositionOnView(0, R.id.iv_remove_item_product_icon),
         ).performClick()
 
-        val result = DummyShoppingCart.products.contains(expectedDeleteProduct)
-        assert(!result)
+        assertThat(DummyShoppingCart.products).contains(expectedDeleteProduct)
     }
 }
