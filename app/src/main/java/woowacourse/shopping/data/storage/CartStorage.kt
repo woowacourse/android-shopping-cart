@@ -8,6 +8,7 @@ interface CartStorage {
 
     fun getProducts(
         limit: Int,
+        offset: Int,
         onResult: (List<CartItem>) -> Unit,
     )
 

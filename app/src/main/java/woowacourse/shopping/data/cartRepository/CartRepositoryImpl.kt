@@ -11,8 +11,9 @@ class CartRepositoryImpl private constructor(
 
     override fun getProducts(
         limit: Int,
+        offset: Int,
         onResult: (List<CartItem>) -> Unit,
-    ) = cartStorage.getProducts(limit, onResult)
+    ) = cartStorage.getProducts(limit, offset, onResult)
 
     override fun addProduct(product: Product) = cartStorage.addProduct(product)
 

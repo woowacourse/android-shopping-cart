@@ -18,10 +18,11 @@ class CartStorageImplAsRoom private constructor(
 
     override fun getProducts(
         limit: Int,
+        offset: Int,
         onResult: (List<CartItem>) -> Unit,
     ) {
         thread {
-            val cartItem = cartDao.getLimitProducts(limit).map { it.toUiModel() }
+            val cartItem = cartDao.getLimitProducts(limit, offset).map { it.toUiModel() }
             onResult(cartItem)
         }
     }

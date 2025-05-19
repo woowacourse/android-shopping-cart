@@ -3,6 +3,7 @@ package woowacourse.shopping.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -57,8 +58,9 @@ class CartActivity : AppCompatActivity() {
             isPaginationButtonVisible(totalProductsCount)
         }
         viewModel.currentPage.observe(this) { currentPage ->
-            if (currentPage > 1) {
-                binding.btnCartPrevious.setBackgroundResource(R.color.cyan)
+            if (currentPage == 1) {
+                Log.d("test", "$currentPage 작동함")
+//                binding.btnCartPrevious.setBackgroundColor(R.color.gray5)
             }
 //            if (currentPage < viewModel.totalPage) {
 //                binding.btnCartNext.setBackgroundResource(R.color.cyan)
@@ -83,8 +85,8 @@ class CartActivity : AppCompatActivity() {
         cartItem: CartItem,
         position: Int,
     ) {
-        viewModel.deleteProduct(cartItem)
         cartProductAdapter.removeProduct(position)
+        viewModel.deleteProduct(cartItem)
         Toast
             .makeText(this, R.string.cart_product_delete, Toast.LENGTH_SHORT)
             .show()

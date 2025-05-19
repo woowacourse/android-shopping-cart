@@ -30,6 +30,8 @@ class CartViewModel(
     val hasNext: LiveData<Boolean> get() = _hasNext
 
     private var totalPage = 0
+    private var offset = 0
+    private val pageCache: MutableMap<MutableLiveData<Int>, List<CartItem>> = mutableMapOf()
 
     fun fetchInfo() {
         cartRepository.getAllProductsSize {
@@ -38,22 +40,39 @@ class CartViewModel(
         _totalProductsCount.value?.let {
             totalPage = calculateTotalPages(it)
         }
-        _currentPage.postValue(1)
     }
 
     fun fetchData() {
-        cartRepository.getProducts(limit = LIMIT_COUNT) { products ->
-            val currentList = _products.value ?: emptyList()
-            val newProducts = currentList + products
-            _products.postValue(newProducts)
+        if (pageCache[_currentPage] == null) {
+            cartRepository.getProducts(limit = LIMIT_COUNT, offset) { products ->
+                _products.postValue(products)
+                pageCache.put(_currentPage, products)
+            }
+            offset += LIMIT_COUNT
+        } else {
+            _products.postValue(pageCache[_currentPage])
         }
     }
 
     fun deleteProduct(cartItem: CartItem) {
         cartRepository.deleteProduct(cartItem.cartItemId)
-        _totalProductsCount.value?.minus(1)
-        _totalProductsCount.value?.let {
-            totalPage = calculateTotalPages(it)
+        val currentProducts =
+            _products.value
+                ?.filterNot { it == cartItem } ?: emptyList()
+
+        if (_currentPage.value != totalPage) {
+            cartRepository.getProducts(1, offset) { product ->
+                val newProduct = currentProducts + product
+                _products.postValue(newProduct)
+                pageCache[_currentPage] = newProduct
+            }
+        } else {
+            _products.value = currentProducts
+            pageCache[_currentPage] = currentProducts
+            _totalProductsCount.value?.minus(1)
+            _totalProductsCount.value?.let {
+                totalPage = calculateTotalPages(it)
+            }
         }
     }
 
