@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+            name="viewModel"
+            type="woowacourse.shopping.view.detail.ProductDetailViewModel" />
 
         <variable
             name="handler"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
-            android:image="@{product.imageUrl}"
+            android:image="@{viewModel.productLiveData.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
             android:layout_marginTop="22dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{viewModel.productLiveData.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="19dp"
             android:layout_marginEnd="19dp"
-            android:price="@{product.price}"
+            android:price="@{viewModel.productLiveData.price}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +91,7 @@
             android:backgroundTint="#04C09E"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onAddToCartSelected(product)}"
+            android:onClick="@{()->handler.onAddToCartSelected(viewModel.productLiveData)}"
             android:text="@string/button_text_add_to_shopping_cart"
             android:textSize="20sp"
             android:textStyle="bold"
