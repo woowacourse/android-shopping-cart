@@ -18,7 +18,6 @@ import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
 import woowacourse.shopping.view.main.adapter.ProductRvItems
 import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
-import woowacourse.shopping.view.main.vm.LoadState
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 import kotlin.getValue
@@ -76,19 +75,8 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { value ->
-            productsAdapter.addProductItems(value)
-        }
-
-        viewModel.loadState.observe(this) { value ->
-            value?.let { changeLoadState(it) }
-        }
-    }
-
-    private fun changeLoadState(loadState: LoadState) {
-        when (loadState) {
-            LoadState.CanLoad -> productsAdapter.addLoadItem()
-            LoadState.CannotLoad -> productsAdapter.removeLoadItem()
+        viewModel.uiState.observe(this) { value ->
+            productsAdapter.submitList(value)
         }
     }
 
@@ -116,9 +104,5 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_action_bar_menu, menu)
         return true
-    }
-
-    companion object {
-        private const val PAGE_SIZE = 20
     }
 }
