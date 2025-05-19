@@ -67,6 +67,7 @@ class ShoppingCartActivity :
             val previousCount = itemCount
             updateProducts(page.items)
             notifyItemRangeChanged(0, previousCount)
+            notifyItemRangeRemoved(previousCount - itemCount, previousCount)
         }
     }
 
