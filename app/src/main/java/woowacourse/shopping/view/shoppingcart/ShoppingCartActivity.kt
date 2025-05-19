@@ -32,7 +32,10 @@ class ShoppingCartActivity :
         setMenubar(binding.toolbar as Toolbar)
         viewModel.apply {
             requestProductsPage(0)
-            productsLiveData.observe(this@ShoppingCartActivity) { page -> updateRecyclerView(page) }
+            productsLiveData.observe(this@ShoppingCartActivity) {
+                    page ->
+                updateRecyclerView(page)
+            }
         }
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity.handler)

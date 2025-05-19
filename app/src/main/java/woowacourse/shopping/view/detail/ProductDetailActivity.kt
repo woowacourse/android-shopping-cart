@@ -34,8 +34,9 @@ class ProductDetailActivity :
                 onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
+        viewModel.setProduct(product)
         binding.apply {
-            this.product = product
+            viewModel = this@ProductDetailActivity.viewModel
             handler = this@ProductDetailActivity.handler
         }
     }
