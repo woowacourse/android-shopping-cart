@@ -24,23 +24,28 @@ class ShoppingCartViewModel(
         shoppingCartRepository.load(page, COUNT_PER_PAGE) { result ->
             result
                 .onSuccess { products: List<Product> ->
-                    val paginationItem: PaginationItem =
-                        (shoppingCart.value?.last() as? PaginationItem)?.copy(
-                            page = page,
-                            nextEnabled = shoppingCartRepository.hasNext,
-                            previousEnabled = shoppingCartRepository.hasPrevious
-                        )
-                            ?: PaginationItem(
-                                page,
-                                shoppingCartRepository.hasNext,
-                                false,
-                            )
+                    val paginationItem: PaginationItem = createPaginationItem()
                     _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
                 }
                 .onFailure {
                     _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
                 }
         }
+    }
+
+    private fun createPaginationItem(): PaginationItem {
+        val paginationItem: PaginationItem =
+            (shoppingCart.value?.last() as? PaginationItem)?.copy(
+                page = page,
+                nextEnabled = shoppingCartRepository.hasNext,
+                previousEnabled = shoppingCartRepository.hasPrevious
+            )
+                ?: PaginationItem(
+                    page,
+                    shoppingCartRepository.hasNext,
+                    false,
+                )
+        return paginationItem
     }
 
     fun removeShoppingCartProduct(product: Product) {

@@ -36,25 +36,14 @@ class ProductsActivity : AppCompatActivity() {
         initDataBinding()
         handleEventsFromViewModel()
         bindData()
+        setupAdapter()
         viewModel.updateProducts()
-
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int =
-                when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
-                    ProductsItem.ItemType.PRODUCT -> 1
-                    ProductsItem.ItemType.MORE -> 2
-                }
-        }
-
-        binding.products.layoutManager = gridLayoutManager
     }
 
     private fun initDataBinding() {
         binding.adapter = productAdapter
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
     }
 
     private fun handleEventsFromViewModel() {
@@ -69,6 +58,19 @@ class ProductsActivity : AppCompatActivity() {
         viewModel.products.observe(this) { products: List<ProductsItem> ->
             productAdapter.submitList(products)
         }
+    }
+
+    private fun setupAdapter() {
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int =
+                when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
+                    ProductsItem.ItemType.PRODUCT -> 1
+                    ProductsItem.ItemType.MORE -> 2
+                }
+        }
+
+        binding.products.layoutManager = gridLayoutManager
     }
 
     private fun navigateToShoppingCart() {
