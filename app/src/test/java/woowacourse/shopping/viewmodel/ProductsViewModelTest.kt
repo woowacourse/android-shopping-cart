@@ -22,19 +22,25 @@ class ProductsViewModelTest {
 
     @Test
     fun `상품들이 다 보여지지 않았을 경우 더보기 버튼이 보인다`() {
-        val expected = true
-        viewModel.updateButtonVisibility(true)
-        val actual = viewModel.isLoadMoreButtonVisible.value
+        // given
 
-        actual shouldBe expected
+        // when
+        viewModel.updateButtonVisibility(true)
+
+        // then
+        val actual = viewModel.isLoadMoreButtonVisible.value
+        actual shouldBe true
     }
 
     @Test
     fun `로드되지 않은 상품들이 최대 20개 단위로 이전에 로드된 상품들과 함께 누적 저장된다`() {
-        val expected = TOTAL_PRODUCTS
-        viewModel.loadPage()
-        val actual = viewModel.productsInShop.value
+        // given
 
-        actual shouldBe expected
+        // when
+        viewModel.loadPage()
+
+        // then
+        val actual = viewModel.productsInShop.value
+        actual shouldBe TOTAL_PRODUCTS
     }
 }

@@ -23,9 +23,13 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `장바구니 담기 버튼을 클릭하면 해당 상품이 누적 저장된다`() {
+        // given
+
+        // when
         viewModel.onAddToCartClicked(PRODUCT_1)
         viewModel.onAddToCartClicked(PRODUCT_2)
 
+        // then
         repository.products shouldBe listOf(PRODUCT_1, PRODUCT_2)
         viewModel.addToCart.value shouldBe Unit
     }
