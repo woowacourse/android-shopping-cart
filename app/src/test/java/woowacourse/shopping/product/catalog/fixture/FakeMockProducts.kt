@@ -10,6 +10,13 @@ class FakeMockProducts(
 ) : ProductsDataSource {
     override fun getProducts(): List<ProductUiModel> = List(size) { mockProducts.map { it.toUiModel() } }.flatten()
 
+    override fun getSubListedProducts(
+        startIndex: Int,
+        lastIndex: Int,
+    ): List<ProductUiModel> = emptyList()
+
+    override fun getProductsSize(): Int = 1
+
     val mockProducts =
         listOf(
             Product(
