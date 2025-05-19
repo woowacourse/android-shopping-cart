@@ -30,6 +30,7 @@ class ShoppingCartViewModelTest {
             { assertEquals(1, viewModel.page.value) },
             { assertEquals(true, viewModel.hasNext.value) },
             { assertEquals(false, viewModel.hasPrevious.value) },
+            { assertEquals(false, viewModel.isSinglePage.value) },
         )
     }
 
@@ -49,7 +50,7 @@ class ShoppingCartViewModelTest {
     }
 
     @Test
-    fun `마지막 페이지 로드 시 hasNext는 false이다`() {
+    fun `마지막 페이지 로드 시 다음 페이지는 없다`() {
         // when
         viewModel.loadNextProducts()
         viewModel.loadNextProducts()
@@ -80,7 +81,7 @@ class ShoppingCartViewModelTest {
     }
 
     @Test
-    fun `상품 제거 시 removedProduct에 반영되고 repository에서 제거된다`() {
+    fun `상품 제거 시 repository에서 제거된다`() {
         // given
         val productToRemove = viewModel.products.value?.first()!!
 
@@ -88,9 +89,6 @@ class ShoppingCartViewModelTest {
         viewModel.onProductRemoveClick(productToRemove)
 
         // then
-        assertAll(
-            { assertEquals(productToRemove, viewModel.removedProduct.value) },
-            { assertEquals(false, repository.getAll().contains(productToRemove)) },
-        )
+        assertEquals(false, repository.getAll().contains(productToRemove))
     }
 }

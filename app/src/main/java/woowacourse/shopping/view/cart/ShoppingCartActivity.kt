@@ -53,10 +53,6 @@ class ShoppingCartActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel.removedProduct.observe(this) { value ->
-            adapter.removeItem(value)
-        }
-
         viewModel.products.observe(this) { value ->
             adapter.updateItems(value)
         }

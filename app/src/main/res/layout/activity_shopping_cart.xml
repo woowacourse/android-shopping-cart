@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="woowacourse.shopping.view.cart.ShoppingCartViewModel" />
@@ -34,15 +36,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
+            android:visibility="@{viewmodel.isSinglePage ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:background="@drawable/style_left_arrow"
                 android:id="@+id/btn_left"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
+                android:background="@drawable/style_left_arrow"
                 android:enabled="@{viewmodel.hasPrevious}"
                 android:onClick="@{() -> handler.loadPreviousProducts()}"
                 android:text="@string/left_arrow"
@@ -70,8 +73,8 @@
                 android:id="@+id/btn_right"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:enabled="@{viewmodel.hasNext}"
                 android:background="@drawable/style_right_arrow"
+                android:enabled="@{viewmodel.hasNext}"
                 android:onClick="@{() -> handler.loadNextProducts()}"
                 android:text="@string/right_arrow"
                 android:textColor="@color/white"
