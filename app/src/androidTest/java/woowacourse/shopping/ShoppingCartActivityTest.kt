@@ -24,21 +24,21 @@ class ShoppingCartActivityTest {
 
     @Test
     fun 장바구니에_담긴_상품의_목록이_표시된다() {
-        onView(withId(R.id.rv_shopping_cart_list))
+        onView(withId(R.id.shopping_cart_list))
             .isDisplayed()
         onView(
-            withRecyclerView(R.id.rv_shopping_cart_list)
+            withRecyclerView(R.id.shopping_cart_list)
                 .atPositionOnView(0, R.id.tv_shopping_cart_item),
         ).matchText("[런던베이글뮤지엄] 베이글 6개 & 크림치즈 3개 세트")
         onView(
-            withRecyclerView(R.id.rv_shopping_cart_list)
+            withRecyclerView(R.id.shopping_cart_list)
                 .atPositionOnView(0, R.id.tv_price),
         ).matchText("42,000원")
     }
 
     @Test
     fun 장바구니_목록은_5개_단위로_페이지네이션_된다() {
-        onView(withId(R.id.rv_shopping_cart_list)).check(matchSize(5))
+        onView(withId(R.id.shopping_cart_list)).check(matchSize(5))
     }
 
     @Test
@@ -50,7 +50,7 @@ class ShoppingCartActivityTest {
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/3c68d05b-d392-4a38-8637-a25068220fa4.jpg",
             )
         onView(
-            withRecyclerView(R.id.rv_shopping_cart_list)
+            withRecyclerView(R.id.shopping_cart_list)
                 .atPositionOnView(0, R.id.iv_remove_item_product_icon),
         ).performClick()
 

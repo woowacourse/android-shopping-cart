@@ -38,7 +38,7 @@ class ShoppingCartActivity :
             }
         }
         binding.apply {
-            rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity.handler)
+            shoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity.handler)
             viewModel = this@ShoppingCartActivity.viewModel
             handler = this@ShoppingCartActivity.handler
         }
@@ -60,7 +60,7 @@ class ShoppingCartActivity :
     }
 
     private fun updateRecyclerView(page: Page<Product>) {
-        binding.rvShoppingCartList.adapter.apply {
+        binding.shoppingCartList.adapter.apply {
             val adapter = this as ShoppingCartAdapter
             val previousCount = itemCount
             adapter.updateProducts(page.items)

@@ -44,7 +44,7 @@ class ProductDetailActivityTest {
     @Test
     fun 장바구니_담기를_클릭하면_장바구니에_상품이_담긴다() {
         onView(withId(R.id.btn_add_to_cart)).performClick()
-        onView(withId(R.id.rv_shopping_cart_list)).isDisplayed()
+        onView(withId(R.id.shopping_cart_list)).isDisplayed()
         assertThat(DummyShoppingCart.products).contains(product)
     }
 

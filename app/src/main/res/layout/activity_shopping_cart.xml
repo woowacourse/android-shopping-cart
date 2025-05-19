@@ -24,7 +24,7 @@
             layout="@layout/toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_shopping_cart_list"
+            android:id="@+id/shopping_cart_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="100dp"
@@ -54,7 +54,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_pagination_number"
             app:layout_constraintHorizontal_chainStyle="packed"
 
-            app:layout_constraintTop_toBottomOf="@+id/rv_shopping_cart_list" />
+            app:layout_constraintTop_toBottomOf="@+id/shopping_cart_list" />
 
         <TextView
             android:id="@+id/tv_pagination_number"
