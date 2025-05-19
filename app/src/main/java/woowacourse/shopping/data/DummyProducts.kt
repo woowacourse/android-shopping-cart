@@ -4,12 +4,17 @@ import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.Product
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-object MockProducts : ProductsDataSource {
-    override fun getProducts(): List<ProductUiModel> = mockProducts.map { it.toUiModel() }
+object DummyProducts : ProductsDataSource {
+    override fun getAllProductsSize(): Int = dummyProducts.size
 
-    private var count = 1
+    override fun getProductsInRange(
+        startIndex: Int,
+        endIndex: Int,
+    ): List<ProductUiModel> = dummyProducts.subList(startIndex, endIndex).map { it.toUiModel() }
 
-    val mockProducts =
+    var count = 1
+
+    val dummyProducts =
         listOf(
             Product(
                 name = "${count++}아이스 카페 아메리카노",

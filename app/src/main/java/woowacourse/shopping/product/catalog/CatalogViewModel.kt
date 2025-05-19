@@ -3,11 +3,11 @@ package woowacourse.shopping.product.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.MockProducts
+import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.data.ProductsDataSource
 
 class CatalogViewModel(
-    private val dataSource: ProductsDataSource = MockProducts,
+    private val dataSource: ProductsDataSource = DummyProducts,
 ) : ViewModel() {
     private val _catalogProducts =
         MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
