@@ -18,7 +18,7 @@ class ShoppingCartViewModel(
     private val _event: MutableLiveData<ShoppingCartEvent> = MutableLiveData()
     val event: LiveData<ShoppingCartEvent> get() = _event
 
-    private var page: Int = 1
+    private var page: Int = MINIMUM_PAGE
 
     fun updateShoppingCart() {
         shoppingCartRepository.load(page, COUNT_PER_PAGE) { result ->
@@ -35,7 +35,7 @@ class ShoppingCartViewModel(
     }
 
     private fun handleLastPage(products: List<Product>): Boolean {
-        if (products.isEmpty()) {
+        if (products.isEmpty() && page != MINIMUM_PAGE) {
             minusPage()
             updateShoppingCart()
             return true
@@ -76,11 +76,12 @@ class ShoppingCartViewModel(
     }
 
     fun minusPage() {
-        page = page.minus(1).coerceAtLeast(1)
+        page = page.minus(1).coerceAtLeast(MINIMUM_PAGE)
         updateShoppingCart()
     }
 
     companion object {
+        private const val MINIMUM_PAGE = 1
         private const val COUNT_PER_PAGE: Int = 5
     }
 }
