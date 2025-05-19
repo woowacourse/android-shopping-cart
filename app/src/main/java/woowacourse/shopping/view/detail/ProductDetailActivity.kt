@@ -15,9 +15,16 @@ import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity :
-    ShoppingCartActivityTemplate<ActivityProductDetailBinding>(R.layout.activity_product_detail),
-    ProductDetailEventHandler {
-    val viewModel: ProductDetailViewModel by viewModels()
+    ShoppingCartActivityTemplate<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
+    private val viewModel: ProductDetailViewModel by viewModels()
+    private val handler: ProductDetailEventHandler by lazy {
+        object : ProductDetailEventHandler {
+            override fun onAddToCartSelected(product: Product) {
+                viewModel.addProduct(product)
+                startActivity(ShoppingCartActivity.newIntent(this@ProductDetailActivity))
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +36,7 @@ class ProductDetailActivity :
             }
         binding.apply {
             this.product = product
-            handler = this@ProductDetailActivity
+            handler = this@ProductDetailActivity.handler
         }
     }
 
@@ -43,11 +50,6 @@ class ProductDetailActivity :
             finish()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onAddToCartSelected(product: Product) {
-        viewModel.addProduct(product)
-        startActivity(ShoppingCartActivity.newIntent(this))
     }
 
     companion object {

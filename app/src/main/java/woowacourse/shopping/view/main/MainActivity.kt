@@ -17,16 +17,27 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
 
 class MainActivity :
-    ShoppingCartActivityTemplate<ActivityMainBinding>(R.layout.activity_main),
-    ProductsEventHandler {
+    ShoppingCartActivityTemplate<ActivityMainBinding>(R.layout.activity_main) {
     private val viewModel: ProductsViewModel by viewModels()
+    private val handler: ProductsEventHandler by lazy {
+        object : ProductsEventHandler {
+            override fun onProductSelected(product: Product) {
+                startActivity(ProductDetailActivity.newIntent(this@MainActivity, product))
+            }
+
+            override fun onLoadMoreProducts(page: Int) {
+                binding.btnLoadMoreProducts.visibility = View.GONE
+                viewModel.requestProductsPage(page)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar as Toolbar)
         binding.apply {
             viewModel = this@MainActivity.viewModel
-            handler = this@MainActivity
+            handler = this@MainActivity.handler
         }
         initRecyclerview()
     }
@@ -46,7 +57,7 @@ class MainActivity :
 
     private fun initRecyclerview() {
         binding.rvProductList.apply {
-            adapter = ProductsAdapter(this@MainActivity)
+            adapter = ProductsAdapter(this@MainActivity.handler)
             layoutManager = GridLayoutManager(this@MainActivity, 2)
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
         }
@@ -61,14 +72,5 @@ class MainActivity :
             (this as ProductsAdapter).updateProducts(page.items)
             notifyItemInserted(itemCount)
         }
-    }
-
-    override fun onProductSelected(product: Product) {
-        startActivity(ProductDetailActivity.newIntent(this, product))
-    }
-
-    override fun onLoadMoreProducts(page: Int) {
-        binding.btnLoadMoreProducts.visibility = View.GONE
-        viewModel.requestProductsPage(page)
     }
 }

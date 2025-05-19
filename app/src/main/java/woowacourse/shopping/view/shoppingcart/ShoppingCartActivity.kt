@@ -13,9 +13,19 @@ import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
 import woowacourse.shopping.view.page.Page
 
 class ShoppingCartActivity :
-    ShoppingCartActivityTemplate<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
-    ShoppingCartEventHandler {
+    ShoppingCartActivityTemplate<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart) {
     private val viewModel: ShoppingCartViewModel by viewModels()
+    private val handler: ShoppingCartEventHandler by lazy {
+        object : ShoppingCartEventHandler {
+            override fun onProductRemove(product: Product) {
+                viewModel.removeProduct(product)
+            }
+
+            override fun onPagination(page: Int) {
+                viewModel.requestProductsPage(page)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +35,9 @@ class ShoppingCartActivity :
             productsLiveData.observe(this@ShoppingCartActivity) { page -> updateRecyclerView(page) }
         }
         binding.apply {
-            rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
+            rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity.handler)
             viewModel = this@ShoppingCartActivity.viewModel
-            handler = this@ShoppingCartActivity
+            handler = this@ShoppingCartActivity.handler
         }
     }
 
@@ -53,18 +63,6 @@ class ShoppingCartActivity :
             adapter.updateProducts(page.items)
             notifyItemRangeChanged(0, previousCount)
         }
-    }
-
-    override fun onProductRemove(product: Product) {
-        viewModel.removeProduct(product)
-    }
-
-    override fun onPaginationPrevious() {
-        viewModel.requestProductsPage((viewModel.productsLiveData.value?.currentPage ?: 0) - 1)
-    }
-
-    override fun onPaginationNext() {
-        viewModel.requestProductsPage((viewModel.productsLiveData.value?.currentPage ?: 0) + 1)
     }
 
     companion object {
