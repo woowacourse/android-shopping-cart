@@ -17,12 +17,10 @@ class ProductsViewModel(
     private val _productsInShop = MutableLiveData<List<Product>>()
     val productsInShop: LiveData<List<Product>> = _productsInShop
 
-    private val _isAllProductsFetched = MutableLiveData(false)
-    val isAllProductsFetched: LiveData<Boolean> = _isAllProductsFetched
-
     private val _isLoadMoreButtonVisible = MutableLiveData(false)
     val isLoadMoreButtonVisible: LiveData<Boolean> = _isLoadMoreButtonVisible
 
+    private var isAllProductsFetched = false
     private var currentPage = INITIAL_PAGE
     private val loadedItems = mutableListOf<Product>()
 
@@ -40,12 +38,12 @@ class ProductsViewModel(
             loadedItems.addAll(nextItems)
             _productsInShop.value = loadedItems.toList()
             currentPage++
-            if (nextEnd == productRepository.dummyProducts.size) _isAllProductsFetched.value = true
+            if (nextEnd == productRepository.dummyProducts.size) isAllProductsFetched = true
         }
     }
 
-    fun updateButtonVisibility(isVisible: Boolean) {
-        _isLoadMoreButtonVisible.value = isVisible
+    fun updateButtonVisibility(canLoadMore: Boolean) {
+        _isLoadMoreButtonVisible.value = canLoadMore && !isAllProductsFetched
     }
 
     companion object {

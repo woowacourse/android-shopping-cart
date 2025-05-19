@@ -40,8 +40,7 @@ class ProductsActivity : AppCompatActivity() {
     private fun setupScrollListenerForMoreButton() {
         binding.rvProducts.addOnScrollListener(
             ProductsScrollListener(binding.rvProducts.layoutManager as GridLayoutManager) { canLoadMore ->
-                val isAllFetched = productsViewModel.isAllProductsFetched.value ?: false
-                productsViewModel.updateButtonVisibility(canLoadMore && !isAllFetched)
+                productsViewModel.updateButtonVisibility(canLoadMore)
             },
         )
     }
