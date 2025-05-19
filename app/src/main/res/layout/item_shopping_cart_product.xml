@@ -12,7 +12,9 @@
             type="woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:shoppingCart="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -46,7 +48,7 @@
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
-            android:image="@{product.imageUrl}"
+            shoppingCart:image="@{product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
