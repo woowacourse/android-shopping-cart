@@ -21,8 +21,8 @@ class CartViewModel(
         cartRepository.delete(cardId)
         loadCarts()
 
-        val currentProducts = _uiState.value?.products
-        if (paging.resetToLastPageIfEmpty(currentProducts)) {
+        val currentCarts = _uiState.value?.carts
+        if (paging.resetToLastPageIfEmpty(currentCarts)) {
             loadCarts()
         }
     }
@@ -40,9 +40,15 @@ class CartViewModel(
     fun loadCarts() {
         val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
 
-        val products = result.products.map { productRepository[it.productId] }
+        val carts =
+            result
+                .carts
+                .map {
+                    val product = productRepository[it.productId]
+                    CartState(it.id, product)
+                }
         val pageState = paging.createPageState(result.hasNextPage)
 
-        _uiState.value = CartUiState(products = products, pageState = pageState)
+        _uiState.value = CartUiState(carts = carts, pageState = pageState)
     }
 }

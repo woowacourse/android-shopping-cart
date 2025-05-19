@@ -21,7 +21,7 @@ class CartRepositoryImplTest {
         // given
         val expectedResult =
             CartResult(
-                products = listOf(cartFixture1, cartFixture2, cartFixture3),
+                carts = listOf(cartFixture1, cartFixture2, cartFixture3),
                 hasNextPage = true,
             )
 
@@ -41,7 +41,7 @@ class CartRepositoryImplTest {
         val cartItem = Cart(productId = 11L)
         val expectedResult =
             CartResult(
-                products = listOf(cartItem),
+                carts = listOf(cartItem),
                 hasNextPage = false,
             )
 
@@ -52,8 +52,8 @@ class CartRepositoryImplTest {
 
         // then
         assertEquals(false, result.hasNextPage)
-        assertEquals(1, result.products.size)
-        assertEquals(expectedResult.products, result.products)
+        assertEquals(1, result.carts.size)
+        assertEquals(expectedResult.carts, result.carts)
 
         verify(exactly = 1) { mockStorage.singlePage(10, 15) }
     }
