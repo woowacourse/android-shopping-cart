@@ -12,6 +12,8 @@ class GoodsViewModel : ViewModel() {
     val goods: LiveData<List<Goods>> get() = _goods
     private val _showMoreButton = MutableLiveData(false)
     val showMoreButton: LiveData<Boolean> get() = _showMoreButton
+    private val _isFullLoaded = MutableLiveData<Boolean>()
+    val isFullLoaded: LiveData<Boolean> get() = _isFullLoaded
     private var page: Int = 0
 
     init {
@@ -22,14 +24,13 @@ class GoodsViewModel : ViewModel() {
         val currentList = _goods.value ?: emptyList()
         val newList = getProducts(page)
         _goods.value = currentList + newList
+        _isFullLoaded.value = (page + 1) * PAGE_SIZE >= dummyGoods.size
     }
 
     fun addPage() {
         page++
         loadGoods()
     }
-
-    fun isFullLoaded(): Boolean = (page + 1) * PAGE_SIZE >= dummyGoods.size
 
     fun updateMoreButtonVisibility(shouldShow: Boolean) {
         _showMoreButton.value = shouldShow

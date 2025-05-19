@@ -51,12 +51,15 @@ class GoodsActivity :
     }
 
     private fun updateMoreButton() {
-        binding.rvGoods.addOnScrollListener(
-            ScrollListener(
-                shouldShowButton = { !viewModel.isFullLoaded() },
-                onVisibilityChange = viewModel::updateMoreButtonVisibility,
-            ),
-        )
+        viewModel.isFullLoaded.observe(this) { isFullLoaded ->
+            binding.rvGoods.clearOnScrollListeners()
+            binding.rvGoods.addOnScrollListener(
+                ScrollListener(
+                    shouldShowButton = { !isFullLoaded },
+                    onVisibilityChange = viewModel::updateMoreButtonVisibility,
+                ),
+            )
+        }
     }
 
     private fun navigate(goods: Goods) {
