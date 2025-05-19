@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.presentation.Extra
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.getSerializableExtraCompat
 
@@ -36,7 +37,7 @@ class ProductDetailActivity : AppCompatActivity() {
         initInsets()
         setupToolbar()
 
-        val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT_DETAIL)
+        val product = intent.getSerializableExtraCompat<Product>(Extra.KEY_PRODUCT_DETAIL)
 
         initListeners(product)
         observeViewModel()
@@ -98,13 +99,11 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val KEY_PRODUCT_DETAIL = "product_data"
-
         fun newIntent(
             context: Context,
             product: Product,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java)
-                .apply { putExtra(KEY_PRODUCT_DETAIL, product) }
+                .apply { putExtra(Extra.KEY_PRODUCT_DETAIL, product) }
     }
 }
