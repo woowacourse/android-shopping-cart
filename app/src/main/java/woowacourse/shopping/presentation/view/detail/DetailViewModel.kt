@@ -5,19 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.RepositoryProvider
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
-import woowacourse.shopping.presentation.model.toProduct
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailViewModel(
-    private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
+    private val repository: ShoppingRepository,
 ) : ViewModel() {
     private val _toastEvent = MutableSingleLiveData<DetailMessageEvent>()
     val toastEvent: SingleLiveData<DetailMessageEvent> = _toastEvent
@@ -31,8 +28,8 @@ class DetailViewModel(
     fun fetchProduct(productId: Long) {
         if (_product.value != null) return
 
-        productRepository
-            .findProductById(productId)
+        repository
+            .findProductInfoById(productId)
             .onSuccess { _product.postValue(it.toUiModel()) }
             .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
     }
@@ -40,7 +37,7 @@ class DetailViewModel(
     fun addProduct() {
         val product = _product.value ?: return
 
-        cartRepository.addCartItem(product.toProduct()) { result ->
+        repository.addCartItem(product.id) { result ->
             result
                 .onSuccess { _addToCartSuccessEvent.postValue(Unit) }
                 .onFailure { _toastEvent.postValue(DetailMessageEvent.ADD_PRODUCT_FAILURE) }
@@ -54,9 +51,8 @@ class DetailViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val cartRepository = RepositoryProvider.cartRepository
-                    val productRepository = RepositoryProvider.productRepository
-                    return DetailViewModel(cartRepository, productRepository) as T
+                    val repository = RepositoryProvider.shoppingRepository
+                    return DetailViewModel(repository) as T
                 }
             }
     }

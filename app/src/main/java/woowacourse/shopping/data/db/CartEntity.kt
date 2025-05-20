@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["productId"], unique = true)],
 )
 data class CartEntity(
-    @PrimaryKey(autoGenerate = true) val cartId: Long = 0,
-    val productId: Long,
+    @PrimaryKey val productId: Long,
     val quantity: Int = 1,
     val createdAt: Long = System.currentTimeMillis(),
 )

@@ -34,7 +34,7 @@ class CartAdapter(
 
         while (iterator.hasNext()) {
             val item = iterator.next()
-            if (newProducts.none { it.id == item.id }) {
+            if (newProducts.none { it.product.id == item.product.id }) {
                 val index = iterator.previousIndex()
                 iterator.remove()
                 notifyItemRemoved(index)
@@ -44,7 +44,7 @@ class CartAdapter(
 
     private fun addNewItems(newProducts: List<CartItemUiModel>) {
         newProducts.forEach { newItem ->
-            val exists = products.any { it.id == newItem.id }
+            val exists = products.any { it.product.id == newItem.product.id }
             if (!exists) {
                 products.add(newItem)
                 notifyItemInserted(itemCount - 1)
