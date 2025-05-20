@@ -20,7 +20,7 @@
 - [x] 데이터베이스 객체로 상품 정보 추출
 - [x] Activity에서 Handler 추출
 - [ ] viewmodel에 value를 직접 조회하지 않고 observe를 통해 조회
-- [ ] notifyDataSetChanged -> notifyItemChanged로 변경
+- [x] notifyDataSetChanged -> notifyItemChanged로 변경
 - [x] pageNo -> pageNumber로 변경
 - [ ] Paging 객체 데이터 및 저장소 의존성 분리(밖에서 할 로직을 따로 떼어 분리하기만 느낌) 역할을 명확히하고 네이밍 수정
 - [ ] onScrollListener를 재사용 가능하게 커스텀

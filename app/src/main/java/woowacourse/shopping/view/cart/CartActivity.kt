@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adatper.CartAdapter
-import woowacourse.shopping.view.cart.adatper.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.event.CartScreenEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
@@ -22,18 +21,10 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels { CartViewModelFactory() }
     private val cartAdapter by lazy {
-        CartAdapter(
-            items = viewModel.products.value ?: emptyList(),
-            handler = cartAdapterEvent,
-        )
-    }
-
-    private val cartAdapterEvent =
-        object : CartAdapterEventHandler {
-            override fun onClickDeleteItem(id: Long) {
-                viewModel.deleteProduct(id)
-            }
+        CartAdapter { id ->
+            viewModel.deleteProduct(id)
         }
+    }
 
     private val cartScreenEvent =
         object : CartScreenEventHandler {

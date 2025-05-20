@@ -1,14 +1,12 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 
 @Suppress("ktlint:standard:max-line-length")
 class ProductStorageImpl : ProductStorage {
     private val productDatabase = ProductDatabase
 
-    override fun get(id: Long): Product =
-        productDatabase.products[id] ?: throw IllegalArgumentException()
+    override fun get(id: Long): Product = productDatabase.products[id] ?: throw IllegalArgumentException()
 
     override fun getProducts(
         page: Int,

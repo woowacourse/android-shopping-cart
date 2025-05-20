@@ -25,10 +25,11 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         binding.lifecycleOwner = this@DetailActivity
-        binding.eventHandler = DetailScreenEventHandler {
-            viewModel.addProduct()
-            startActivity(CartActivity.newIntent(this@DetailActivity))
-        }
+        binding.eventHandler =
+            DetailScreenEventHandler {
+                viewModel.addProduct()
+                startActivity(CartActivity.newIntent(this@DetailActivity))
+            }
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)

@@ -17,7 +17,6 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
-import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 import kotlin.getValue
