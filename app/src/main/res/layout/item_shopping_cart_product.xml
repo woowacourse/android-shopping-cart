@@ -10,8 +10,8 @@
             type="woowacourse.shopping.domain.Product" />
 
         <variable
-            name="handler"
-            type="woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler" />
+            name="onProductRemove"
+            type="kotlin.jvm.functions.Function2&lt;woowacourse.shopping.domain.Product, java.lang.Integer,kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

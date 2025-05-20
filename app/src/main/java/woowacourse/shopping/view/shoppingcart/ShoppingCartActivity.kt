@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 
@@ -19,22 +18,10 @@ class ShoppingCartActivity :
         R.layout.activity_shopping_cart,
     ) {
     private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.Factory }
-    private val handler: ShoppingCartEventHandler by lazy {
-        object : ShoppingCartEventHandler {
-            override fun onProductRemove(
-                product: Product,
-                currentPage: Int,
-            ) {
-                viewModel.removeProduct(product, currentPage)
-            }
-
-            override fun onPagination(page: Int) {
-                viewModel.requestProductsPage(page)
-            }
-        }
-    }
     private val shoppingCartAdapter: ShoppingCartAdapter by lazy {
-        ShoppingCartAdapter(this@ShoppingCartActivity.handler)
+        ShoppingCartAdapter { product, page ->
+            viewModel.removeProduct(product, page)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +38,9 @@ class ShoppingCartActivity :
         binding.apply {
             shoppingCartList.adapter = shoppingCartAdapter
             viewModel = this@ShoppingCartActivity.viewModel
-            handler = this@ShoppingCartActivity.handler
+            handler = { page ->
+                viewModel.requestProductsPage(page)
+            }
         }
     }
 
@@ -60,6 +49,10 @@ class ShoppingCartActivity :
             finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun onPagination(page: Int) {
+        viewModel.requestProductsPage(page)
     }
 
     private fun setMenubar(toolbar: Toolbar) {
