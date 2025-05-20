@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="product_description">상품 이미지</string>
+    <string name="price">%,d원</string>
+    <string name="price_title">가격</string>
+    <string name="add_cart">장바구니 담기</string>
+    <string name="message_add_cart">장바구니에 상품을 담았습니다.</string>
+    <string name="delete_description">삭제</string>
+    <string name="menu_cart">cart</string>
+    <string name="close">닫기</string>
+    <string name="back">뒤로가기</string>
+    <string name="load_more">더 보기</string>
+    <string name="dialog_exit_title">프로그램 종료</string>
+    <string name="dialog_exit_message">프로그램을 종료하시겠습니까?</string>
+    <string name="dialog_exit_positive">종료</string>
+    <string name="dialog_exit_negative">닫기</string>
+
 </resources>
