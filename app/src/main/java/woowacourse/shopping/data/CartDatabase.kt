@@ -22,4 +22,6 @@ object CartDatabase : CartProductDataSource {
     }
 
     override fun cartProducts(): List<ProductUiModel> = cartProducts.toList()
+
+    override fun getCartProductsSize(): Int = cartProducts.size
 }

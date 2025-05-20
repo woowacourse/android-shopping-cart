@@ -9,4 +9,6 @@ interface CartProductDataSource {
     fun deleteCartProduct(cartProduct: ProductUiModel)
 
     fun cartProducts(): List<ProductUiModel>
+
+    fun getCartProductsSize(): Int
 }

@@ -10,8 +10,8 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 class CartViewModel(
     private val dataSource: CartProductDataSource,
 ) : ViewModel() {
-    private val products = mutableListOf<ProductUiModel>()
     private val allCartProducts get() = dataSource.cartProducts()
+    private val allCartProductsSize get() = dataSource.getCartProductsSize()
 
     private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
     val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
@@ -26,13 +26,10 @@ class CartViewModel(
     val page: LiveData<Int> = _page
 
     init {
-        products += allCartProducts
         loadCartProducts()
     }
 
     fun deleteCartProduct(cartProduct: ProductUiModel) {
-        products.remove(cartProduct)
-//        _cartProducts.value = products
         dataSource.deleteCartProduct(cartProduct)
 
         loadCartProducts()
@@ -40,7 +37,7 @@ class CartViewModel(
 
     fun onClick(dir: PageDirection) {
         val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
+        val lastPage = (dataSource.getCartProductsSize() - 1) / PAGE_SIZE
 
         when (dir) {
             PageDirection.PREV ->
@@ -59,17 +56,13 @@ class CartViewModel(
 
     fun isNextButtonEnabled(): Boolean {
         val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (allCartProducts.size - 1) / PAGE_SIZE
-
-        _isNextButtonEnabled.value = currentPage < lastPage
-
-        return _isNextButtonEnabled.value == true
+        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
+        return currentPage < lastPage
     }
 
     fun isPrevButtonEnabled(): Boolean {
         val currentPage = page.value ?: INITIAL_PAGE
-        _isPrevButtonEnabled.value = currentPage >= 1
-        return isPrevButtonEnabled.value == true
+        return currentPage > 0
     }
 
     private fun increasePage() {
@@ -82,7 +75,7 @@ class CartViewModel(
 
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
         var currentPage = page.value ?: INITIAL_PAGE
-        val totalSize = allCartProducts.size
+        val totalSize = allCartProductsSize
 
         while (currentPage > 0 && currentPage * pageSize >= totalSize) {
             currentPage--
