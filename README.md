@@ -17,7 +17,7 @@
 ### 1차 코드 리뷰 반영
 
 - [x] test용 applicationContext으로 수정
-- [ ] cart에 데이터 정보 Storage에서 추출
+- [x] 데이터베이스 객체로 상품 정보 추출
 - [ ] Activity에서 Handler 추출
 - [ ] viewmodel에 value를 직접 조회하지 않고 observe를 통해 조회
 - [ ] notifyDataSetChanged -> notifyItemChanged로 변경
