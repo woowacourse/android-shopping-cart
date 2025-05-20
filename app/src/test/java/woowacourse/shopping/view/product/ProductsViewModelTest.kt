@@ -14,10 +14,9 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.fixture.PRODUCTS_COUNT_20
-import woowacourse.shopping.fixture.PRODUCTS_COUNT_21
 import woowacourse.shopping.fixture.PRODUCT_ITEMS_20
 import woowacourse.shopping.fixture.PRODUCT_ITEMS_20_MORE
+import woowacourse.shopping.fixture.getProducts
 import woowacourse.shopping.view.common.InstantTaskExecutorExtension
 import woowacourse.shopping.view.common.getOrAwaitValue
 import woowacourse.shopping.view.product.ProductsItem.LoadItem
@@ -43,7 +42,7 @@ class ProductsViewModelTest {
         every {
             productsRepository.load(any(), any(), captureLambda())
         } answers {
-            lambda<(Result<List<Product>>) -> Unit>().invoke(Result.success(PRODUCTS_COUNT_21))
+            lambda<(Result<List<Product>>) -> Unit>().invoke(Result.success(getProducts(21)))
         }
 
         // when:
@@ -64,7 +63,7 @@ class ProductsViewModelTest {
         every {
             productsRepository.load(any(), any(), captureLambda())
         } answers {
-            lambda<(Result<List<Product>>) -> Unit>().invoke(Result.success(PRODUCTS_COUNT_20))
+            lambda<(Result<List<Product>>) -> Unit>().invoke(Result.success(getProducts(20)))
         }
 
         // when:
