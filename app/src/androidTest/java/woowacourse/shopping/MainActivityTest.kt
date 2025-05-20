@@ -8,7 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.ext.isDisplayed
 import woowacourse.shopping.ext.performClick
-import woowacourse.shopping.fixture.fakeContext
+import woowacourse.shopping.fixture.testContext
 import woowacourse.shopping.mathcer.ProductRecyclerViewMatchers
 import woowacourse.shopping.view.main.MainActivity
 
@@ -17,7 +17,7 @@ class MainActivityTest {
 
     @Before
     fun setUp() {
-        val intent = Intent(fakeContext, MainActivity::class.java)
+        val intent = Intent(testContext, MainActivity::class.java)
         scenario = ActivityScenario.launch(intent)
     }
 
