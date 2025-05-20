@@ -1,5 +1,6 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartSinglePage
 
@@ -8,7 +9,10 @@ interface CartRepository {
 
     fun insert(productId: Long)
 
-    fun delete(id: Long)
+    fun modifyQuantity(
+        productId: Long,
+        quantity: Quantity,
+    )
 
     fun loadSinglePage(
         page: Int,
