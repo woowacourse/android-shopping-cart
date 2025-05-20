@@ -19,7 +19,7 @@ data class ProductState(
         return if (item.canIncrease(cartQuantity.value + 1)) {
             IncreaseState.CanIncrease(copy(cartQuantity = cartQuantity + 1))
         } else {
-            IncreaseState.CannotIncrease
+            IncreaseState.CannotIncrease(item.quantityValue)
         }
     }
 

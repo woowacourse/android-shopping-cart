@@ -1,5 +1,5 @@
 package woowacourse.shopping.view.main.vm.event
 
 sealed interface MainUiEvent {
-    object ShowCannotIncrease : MainUiEvent
+    data class ShowCannotIncrease(val quantity: Int) : MainUiEvent
 }
