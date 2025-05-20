@@ -22,14 +22,6 @@ class ProductDetailActivity :
         R.layout.activity_product_detail,
     ) {
     private val viewModel: ProductDetailViewModel by viewModels()
-    private val handler: ProductDetailEventHandler by lazy {
-        object : ProductDetailEventHandler {
-            override fun onAddToCartSelected(product: Product) {
-                viewModel.addProduct(product)
-                startActivity(ShoppingCartActivity.newIntent(this@ProductDetailActivity))
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +35,7 @@ class ProductDetailActivity :
         viewModel.setProduct(product)
         binding.apply {
             viewModel = this@ProductDetailActivity.viewModel
-            handler = this@ProductDetailActivity.handler
+            handler = ::onAddToCartSelected
         }
     }
 
@@ -57,6 +49,11 @@ class ProductDetailActivity :
             finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun onAddToCartSelected(product: Product) {
+        viewModel.addProduct(product)
+        startActivity(ShoppingCartActivity.newIntent(this))
     }
 
     companion object {

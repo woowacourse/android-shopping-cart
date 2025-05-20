@@ -13,7 +13,7 @@
 
         <variable
             name="handler"
-            type="woowacourse.shopping.view.detail.ProductDetailEventHandler" />
+            type="kotlin.jvm.functions.Function1&lt;woowacourse.shopping.domain.Product, kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -93,7 +93,7 @@
             android:backgroundTint="#04C09E"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onAddToCartSelected(viewModel.productLiveData)}"
+            android:onClick="@{()->handler.invoke(viewModel.productLiveData)}"
             android:text="@string/button_text_add_to_shopping_cart"
             android:textSize="20sp"
             android:textStyle="bold"
