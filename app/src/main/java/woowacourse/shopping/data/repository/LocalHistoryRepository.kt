@@ -10,7 +10,13 @@ import kotlin.concurrent.thread
 class LocalHistoryRepository(
     private val historyDao: HistoryDao,
 ) : HistoryRepository {
-    override fun fetchAllSearchHistory(): List<HistoryProduct> = historyDao.getHistoryProducts().map { it.toDomain() }
+    override fun fetchAllSearchHistory(callback: (List<HistoryProduct>) -> Unit) {
+        thread {
+            callback(
+                historyDao.getHistoryProducts().map { it.toDomain() },
+            )
+        }
+    }
 
     override fun saveSearchHistory(productId: Int) {
         thread {
@@ -21,7 +27,11 @@ class LocalHistoryRepository(
         }
     }
 
-    override fun fetchRecentSearchHistory(): HistoryProduct = historyDao.fetchRecentHistoryProduct().toDomain()
+    override fun fetchRecentSearchHistory(callback: (HistoryProduct) -> Unit) {
+        callback(
+            historyDao.fetchRecentHistoryProduct().toDomain(),
+        )
+    }
 
     companion object {
         private const val MAX_HISTORY_COUNT = 10

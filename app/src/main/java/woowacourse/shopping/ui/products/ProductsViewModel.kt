@@ -9,15 +9,21 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.model.CatalogProducts.Companion.EMPTY_CATALOG_PRODUCTS
+import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductsViewModel(
     private val productsRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val historyRepository: HistoryRepository,
 ) : ViewModel() {
     private val _catalogProducts: MutableLiveData<CatalogProducts> = MutableLiveData(EMPTY_CATALOG_PRODUCTS)
     val catalogProducts: LiveData<CatalogProducts> get() = _catalogProducts
+
+    private val _historyProducts: MutableLiveData<List<HistoryProduct>> = MutableLiveData(emptyList())
+    val historyProducts: LiveData<List<HistoryProduct>> get() = _historyProducts
 
     private val maxProductId: Int
         get() =
@@ -35,6 +41,12 @@ class ProductsViewModel(
                     hasMore = newProducts.hasMore,
                 ),
             )
+        }
+    }
+
+    fun loadHistoryProducts() {
+        historyRepository.fetchAllSearchHistory { historyProducts ->
+            _historyProducts.postValue(historyProducts)
         }
     }
 
@@ -86,6 +98,7 @@ class ProductsViewModel(
                     return ProductsViewModel(
                         application.productRepository,
                         application.cartRepository,
+                        application.historyRepository,
                     ) as T
                 }
             }

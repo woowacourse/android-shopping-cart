@@ -9,6 +9,7 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.common.DataBindingActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.products.adapter.history.HistoryProductAdapter
 import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter
 import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter.OnClickHandler
 import woowacourse.shopping.ui.products.adapter.product.ProductsLayoutManager
@@ -16,6 +17,7 @@ import woowacourse.shopping.ui.products.adapter.product.ProductsLayoutManager
 class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
+    private val historyProductAdapter: HistoryProductAdapter = HistoryProductAdapter { id -> navigateToProductDetail(id) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +25,11 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
         initViewBinding()
         initObservers()
         viewModel.loadProducts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadHistoryProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,14 +72,28 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     }
 
     private fun initViewBinding() {
+        initProductsView()
+        initHistoryProductsView()
+    }
+
+    private fun initProductsView() {
         binding.productItemsContainer.adapter = productsAdapter
         binding.productItemsContainer.layoutManager = ProductsLayoutManager(this, productsAdapter)
         binding.productItemsContainer.itemAnimator = null
     }
 
+    private fun initHistoryProductsView() {
+        binding.productsHistoryItemsContainer.adapter = historyProductAdapter
+        binding.productsHistoryItemsContainer.itemAnimator = null
+    }
+
     private fun initObservers() {
         viewModel.catalogProducts.observe(this) { products ->
             productsAdapter.submitItems(products.products, products.hasMore)
+        }
+
+        viewModel.historyProducts.observe(this) { products ->
+            historyProductAdapter.submitItems(products)
         }
     }
 }
