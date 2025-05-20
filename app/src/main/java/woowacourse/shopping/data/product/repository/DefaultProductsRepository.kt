@@ -8,23 +8,16 @@ import woowacourse.shopping.domain.product.Product
 class DefaultProductsRepository(
     private val productsStorage: ProductsStorage = VolatileProductsStorage,
 ) : ProductsRepository {
-    override var loadable: Boolean = false
-        private set
-
-    override fun load(
-        lastProductId: Long?,
-        size: Int,
-    ): List<Product> {
-        val products: List<Product> =
-            productsStorage.load(lastProductId, size).map(ProductEntity::toDomain)
-
-        loadable =
-            if (products.lastOrNull() == null) {
-                true
-            } else {
-                products.last().id != productsStorage.lastProductId
-            }
-
-        return products
+    override fun load(): List<Product> {
+        return productsStorage.load().map(ProductEntity::toDomain)
+//
+//        loadable =
+//            if (products.lastOrNull() == null) {
+//                true
+//            } else {
+//                products.last().id != productsStorage.lastProductId
+//            }
+//
+//        return products
     }
 }

@@ -37,7 +37,6 @@ class ProductsActivity : AppCompatActivity() {
         initDataBinding()
         handleEventsFromViewModel()
         bindData()
-        viewModel.updateProducts()
 
         binding.products.layoutManager =
             GridLayoutManager(this, spanCount).apply {
@@ -78,10 +77,13 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun bindData() {
-        viewModel.products.observe(this) { products: List<ProductsItem> ->
-            productAdapter.submitList(products)
+        viewModel.products.observe(this) { products: List<Product> ->
+            productAdapter.submitList(products.toProductItems)
         }
     }
+
+    private val List<Product>.toProductItems: List<ProductsItem>
+        get() = map(ProductsItem::ProductItem) + ProductsItem.LoadItem(viewModel.loadable)
 
     private fun navigateToShoppingCart() {
         startActivity(ShoppingCartActivity.newIntent(this))

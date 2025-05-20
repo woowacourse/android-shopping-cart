@@ -8,40 +8,35 @@ import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
-import woowacourse.shopping.view.product.ProductsItem.LoadItem
-import woowacourse.shopping.view.product.ProductsItem.ProductItem
-import kotlin.concurrent.thread
 
 class ProductsViewModel(
-    private val productsRepository: ProductsRepository = DefaultProductsRepository(),
+    productsRepository: ProductsRepository = DefaultProductsRepository(),
 ) : ViewModel() {
-    private val _products: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
-    val products: LiveData<List<ProductsItem>> get() = _products
+    private var allProducts: List<Product> = productsRepository.load()
+
+    private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
+    val products: LiveData<List<Product>> get() = _products
 
     private val _event: MutableSingleLiveData<Event> = MutableSingleLiveData()
     val event: SingleLiveData<Event> get() = _event
 
-    private var loadable: Boolean = false
+    private val lastProduct: Product? get() = products.value?.lastOrNull()
+    val loadable: Boolean get() = allProducts.size > (products.value?.size ?: 0)
+
+    init {
+        updateProducts()
+    }
 
     fun updateProducts() {
-        thread {
-            runCatching {
-                val lastProductId: Long? =
-                    (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
-                productsRepository.load(
-                    lastProductId,
-                    LOAD_PRODUCTS_SIZE,
-                )
-            }.onSuccess { newProducts: List<Product> ->
-                val products: List<ProductsItem> = products.value?.dropLast(1) ?: emptyList()
-                loadable = productsRepository.loadable
-                _products.postValue(
-                    products + newProducts.map(::ProductItem) + LoadItem(loadable),
-                )
-            }.onFailure {
-                it.printStackTrace()
-                _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
-            }
+        runCatching {
+            val startExclusive: Int = allProducts.indexOf(lastProduct)
+            val lastExclusive: Int =
+                (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allProducts.size)
+            allProducts.subList(startExclusive + 1, lastExclusive)
+        }.onSuccess { newProducts: List<Product> ->
+            _products.value = products.value?.plus(newProducts) ?: newProducts
+        }.onFailure {
+            _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
         }
     }
 
