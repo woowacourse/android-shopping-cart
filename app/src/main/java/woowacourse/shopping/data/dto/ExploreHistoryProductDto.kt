@@ -11,5 +11,5 @@ data class ExploreHistoryProductDto(
         parentColumn = "productId",
         entityColumn = "id",
     )
-    val product: ProductEntity,
+    val product: ProductEntity?,
 )

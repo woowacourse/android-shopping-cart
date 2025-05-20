@@ -51,9 +51,6 @@ data class CatalogProducts(
 
     companion object {
         val EMPTY_CATALOG_PRODUCTS =
-            CatalogProducts(
-                products = emptyList(),
-                hasMore = false,
-            )
+            CatalogProducts(emptyList(), false)
     }
 }
