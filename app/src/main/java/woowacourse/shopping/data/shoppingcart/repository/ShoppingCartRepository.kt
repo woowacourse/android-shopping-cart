@@ -7,5 +7,8 @@ interface ShoppingCartRepository {
 
     fun removeGoods(goods: Goods)
 
-    fun getGoods(page: Int, count: Int): List<Goods>
+    fun getGoods(
+        page: Int,
+        count: Int,
+    ): List<Goods>
 }

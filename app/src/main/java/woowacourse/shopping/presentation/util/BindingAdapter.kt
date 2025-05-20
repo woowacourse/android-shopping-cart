@@ -22,16 +22,11 @@ fun ImageView.setImage(imageUrl: String) {
 }
 
 @BindingAdapter("goodsList")
-fun RecyclerView.bindGoods(
-    items: List<GoodsUiModel>?,
-) {
+fun RecyclerView.bindGoods(items: List<GoodsUiModel>?) {
     (adapter as? GoodsAdapter)?.appendItems(items.orEmpty())
 }
 
 @BindingAdapter("selectedGoodsList")
-fun RecyclerView.bindSelectedGoods(
-    items: List<GoodsUiModel>?,
-) {
+fun RecyclerView.bindSelectedGoods(items: List<GoodsUiModel>?) {
     (adapter as? ShoppingCartAdapter)?.updateItems(items.orEmpty())
 }
-
