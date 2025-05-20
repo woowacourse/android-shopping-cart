@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepositoryImpl
@@ -26,12 +27,19 @@ class GoodsDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
+        setUpGoodsSaveToast()
     }
 
     private fun setUpBinding() {
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@GoodsDetailActivity
+        }
+    }
+
+    private fun setUpGoodsSaveToast() {
+        viewModel.onGoodsAdded.observe(this) {
+            Toast.makeText(this, getString(R.string.text_save_goods), Toast.LENGTH_SHORT).show()
         }
     }
 
