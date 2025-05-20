@@ -10,10 +10,10 @@ import kotlin.concurrent.thread
 class CartViewModel: ViewModel() {
     private val repository = CartRepository.get()
     private val _products = MutableLiveData<List<Product>>(emptyList())
-    val products: LiveData<List<Product>> get() = _products
+    val products: LiveData<List<Product>> = _products
 
     private val _pageNumber = MutableLiveData(1)
-    val pageNumber: LiveData<Int> get() = _pageNumber
+    val pageNumber: LiveData<Int> = _pageNumber
 
     private var size: Int = 0
 

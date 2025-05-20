@@ -10,7 +10,7 @@ class ProductListViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _products = MutableLiveData<List<ProductListViewType>>(emptyList())
-    val products: LiveData<List<ProductListViewType>> get() = _products
+    val products: LiveData<List<ProductListViewType>> = _products
     private var pageNumber = 0
 
     init {
