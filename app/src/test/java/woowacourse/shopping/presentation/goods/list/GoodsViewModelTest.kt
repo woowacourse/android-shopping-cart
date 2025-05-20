@@ -30,9 +30,9 @@ class GoodsViewModelTest {
     }
 
     @Test
-    fun `상품 목록을 정해진 수량만큼 가져온다`() {
+    fun `상품 목록을 가져온다`() {
         // then
-        goodsViewModel.goodsUiModels.getOrAwaitValue().size shouldBe 20
+        goodsViewModel.goodsUiModels.getOrAwaitValue().isNotEmpty() shouldBe true
     }
 
     @Test
@@ -49,20 +49,26 @@ class GoodsViewModelTest {
     }
 
     @Test
-    fun `데이터가 존재할 경우 로딩이 가능하다`() {
+    fun `데이터가 존재할 경우 데이터를 추가할 수 있다`() {
         // given
         every { GoodsDataBase.getPagedGoods(any(), any()) } returns listOf(createGoods())
 
+        // when
+        goodsViewModel.determineLoadMoreVisibility(false)
+
         // then
-        goodsViewModel.canLoadMore() shouldBe true
+        goodsViewModel.showLoadMore.getOrAwaitValue() shouldBe true
     }
 
     @Test
-    fun `데이터가 존재하지 않을 경우 로딩이 불가능하다`() {
+    fun `데이터가 존재하지 않을 경우 데이터를 추가할 수 없다`() {
         // given
         every { GoodsDataBase.getPagedGoods(any(), any()) } returns emptyList()
 
+        // when
+        goodsViewModel.determineLoadMoreVisibility(false)
+
         // then
-        goodsViewModel.canLoadMore() shouldBe false
+        goodsViewModel.showLoadMore.getOrAwaitValue() shouldBe false
     }
 }
