@@ -3,5 +3,5 @@ package woowacourse.shopping.data.product.repository
 import woowacourse.shopping.domain.product.Product
 
 interface ProductsRepository {
-    fun load(): List<Product>
+    fun load(onLoad: (Result<List<Product>>) -> Unit)
 }

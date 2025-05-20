@@ -50,23 +50,27 @@ class ShoppingCartViewModel(
     }
 
     fun updateShoppingCart() {
-        runCatching {
-            allShoppingCartItems = shoppingCartRepository.load()
-            allShoppingCartItems.subList(startInclusive, endExclusive)
-        }.onSuccess { products: List<Product> ->
-            _shoppingCartItems.value = products
-        }.onFailure {
-            _event.setValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
+        shoppingCartRepository.load { result: Result<List<Product>> ->
+            result
+                .onSuccess { products: List<Product> ->
+                    allShoppingCartItems = products
+                    _shoppingCartItems.postValue(
+                        allShoppingCartItems.subList(startInclusive, endExclusive),
+                    )
+                }.onFailure {
+                    _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
+                }
         }
     }
 
     fun removeShoppingCartProduct(product: Product) {
-        runCatching {
-            shoppingCartRepository.remove(product)
-        }.onSuccess {
-            updateShoppingCart()
-        }.onFailure {
-            _event.setValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
+        shoppingCartRepository.remove(product) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    updateShoppingCart()
+                }.onFailure {
+                    _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
+                }
         }
     }
 

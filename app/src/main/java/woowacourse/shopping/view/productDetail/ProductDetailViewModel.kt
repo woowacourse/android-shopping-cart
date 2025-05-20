@@ -10,7 +10,6 @@ import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
-import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
@@ -28,15 +27,19 @@ class ProductDetailViewModel(
     }
 
     fun addToShoppingCart() {
-        thread {
-            runCatching {
-                val product = requireNotNull(product.value) { "product.value가 null입니다." }
-                shoppingCartRepository.add(product)
-            }.onSuccess {
-                _event.postValue(Event.ADD_SHOPPING_CART_SUCCESS)
-            }.onFailure {
-                _event.postValue(Event.ADD_SHOPPING_CART_FAILURE)
+        val product: Product =
+            product.value ?: run {
+                _event.setValue(Event.ADD_SHOPPING_CART_FAILURE)
+                return
             }
+
+        shoppingCartRepository.add(product) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    _event.postValue(Event.ADD_SHOPPING_CART_SUCCESS)
+                }.onFailure {
+                    _event.postValue(Event.ADD_SHOPPING_CART_FAILURE)
+                }
         }
     }
 

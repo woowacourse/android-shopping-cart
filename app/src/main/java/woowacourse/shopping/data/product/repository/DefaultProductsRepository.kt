@@ -4,20 +4,15 @@ import woowacourse.shopping.data.product.entity.ProductEntity
 import woowacourse.shopping.data.product.storage.ProductsStorage
 import woowacourse.shopping.data.product.storage.VolatileProductsStorage
 import woowacourse.shopping.domain.product.Product
+import kotlin.concurrent.thread
 
 class DefaultProductsRepository(
     private val productsStorage: ProductsStorage = VolatileProductsStorage,
 ) : ProductsRepository {
-    override fun load(): List<Product> {
-        return productsStorage.load().map(ProductEntity::toDomain)
-//
-//        loadable =
-//            if (products.lastOrNull() == null) {
-//                true
-//            } else {
-//                products.last().id != productsStorage.lastProductId
-//            }
-//
-//        return products
+    override fun load(onLoad: (Result<List<Product>>) -> Unit) {
+        thread {
+            val result = runCatching { productsStorage.load().map(ProductEntity::toDomain) }
+            onLoad(result)
+        }
     }
 }

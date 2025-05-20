@@ -13,7 +13,18 @@ import woowacourse.shopping.view.SingleLiveData
 class ProductsViewModel(
     productsRepository: ProductsRepository = DefaultProductsRepository(),
 ) : ViewModel() {
-    private val allProducts: List<Product> = productsRepository.load()
+    private var allProducts: List<Product> = emptyList()
+
+    init {
+        productsRepository.load { result: Result<List<Product>> ->
+            result
+                .onSuccess { products: List<Product> ->
+                    allProducts = products
+                }.onFailure {
+                    _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
+                }
+        }
+    }
 
     private val products: MutableLiveData<List<Product>> = MutableLiveData()
     val productItems: LiveData<List<ProductsItem>> = products.map { it.toProductItems }
@@ -40,7 +51,7 @@ class ProductsViewModel(
         }.onSuccess { newProducts: List<Product> ->
             products.value = products.value?.plus(newProducts) ?: newProducts
         }.onFailure {
-            _event.setValue(Event.UPDATE_PRODUCT_FAILURE)
+            _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
         }
     }
 
