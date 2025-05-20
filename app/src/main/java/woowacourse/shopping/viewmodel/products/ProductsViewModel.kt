@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.model.products.Products
 
 class ProductsViewModel(
-    private val products: Products,
+    private val products: DummyProducts,
 ) : ViewModel() {
     private val _productsInShop = MutableLiveData<List<Product>>()
     val productsInShop: LiveData<List<Product>> get() = _productsInShop
@@ -27,15 +27,15 @@ class ProductsViewModel(
 
     fun loadNextPage() {
         val nextStart = currentPage * pageSize
-        val nextEnd = minOf(nextStart + pageSize, products.value.size)
+        val nextEnd = minOf(nextStart + pageSize, products.dummyProducts.size)
 
-        if (nextStart < products.value.size) {
-            val nextItems = products.value.subList(nextStart, nextEnd)
+        if (nextStart < products.dummyProducts.size) {
+            val nextItems = products.dummyProducts.subList(nextStart, nextEnd)
             loadedItems.addAll(nextItems)
             _productsInShop.value = loadedItems.toList()
             currentPage++
 
-            if (nextEnd == products.value.size) _isAllProductsFetched.value = true
+            if (nextEnd == products.dummyProducts.size) _isAllProductsFetched.value = true
         }
     }
 
@@ -51,7 +51,7 @@ class ProductsViewModel(
                     extras.createSavedStateHandle()
 
                     return ProductsViewModel(
-                        Products(),
+                        DummyProducts,
                     ) as T
                 }
             }
