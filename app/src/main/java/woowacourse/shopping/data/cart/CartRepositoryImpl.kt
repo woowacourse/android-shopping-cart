@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.cart
 
-import kotlin.concurrent.thread
 import woowacourse.shopping.domain.cart.CartProduct
 import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Money
 import woowacourse.shopping.domain.product.Product
+import kotlin.concurrent.thread
 
 class CartRepositoryImpl(private val dao: CartDao) : CartRepository {
     override fun insert(product: Product) {
@@ -37,9 +37,14 @@ class CartRepositoryImpl(private val dao: CartDao) : CartRepository {
         }
     }
 
-    override fun delete(cartItemId: Long) {
+    override fun delete(
+        cartItemId: Long,
+        onResult: (Unit) -> Unit,
+    ) {
         thread {
-            dao.delete(cartItemId)
+            runCatching {
+                dao.delete(cartItemId)
+            }.onSuccess { onResult(Unit) }
         }
     }
 }

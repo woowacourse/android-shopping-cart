@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View.GONE
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -90,22 +91,30 @@ class CartActivity : AppCompatActivity() {
 
     private fun initObserve() {
         viewModel.products.observe(this) {
-            cartAdapter.updateItem(it)
+            cartAdapter.updateItems(it)
+            setPaginationVisibility()
+            setPaginationButtonTint()
         }
 
-        viewModel.pageNumber.observe(this) {
-            binding.tvPageNumber.text = it.toString()
-            updateButtonTint(it)
+        viewModel.pageNumber.observe(this) { pageNumber ->
+            binding.tvPageNumber.text = pageNumber.toString()
+            viewModel.update()
         }
     }
 
-    private fun updateButtonTint(it: Int?) {
-        val page = it ?: 1
-        binding.btnPrevious.backgroundTintList =
-            ColorStateList.valueOf(getColor(if (page == 1) R.color.button_inactive else R.color.button_active))
+    private fun setPaginationVisibility() {
+        if (!viewModel.isVisiblePagination()) {
+            binding.btnNext.visibility = GONE
+            binding.btnPrevious.visibility = GONE
+            binding.tvPageNumber.visibility = GONE
+        }
+    }
 
+    private fun setPaginationButtonTint() {
+        binding.btnPrevious.backgroundTintList =
+            ColorStateList.valueOf(getColor(if (viewModel.isFirstPage) R.color.button_inactive else R.color.button_active))
         binding.btnNext.backgroundTintList =
-            ColorStateList.valueOf(getColor(if (page != 1 && viewModel.isLastPage()) R.color.button_inactive else R.color.button_active))
+            ColorStateList.valueOf(getColor(if (viewModel.isLastPage) R.color.button_inactive else R.color.button_active))
     }
 
     companion object {

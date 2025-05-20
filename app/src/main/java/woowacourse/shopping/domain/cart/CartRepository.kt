@@ -16,5 +16,8 @@ interface CartRepository {
 
     fun insert(product: Product)
 
-    fun delete(cartItemId: Long)
+    fun delete(
+        cartItemId: Long,
+        onResult: (Unit) -> Unit,
+    )
 }

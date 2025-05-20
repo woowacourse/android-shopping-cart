@@ -17,51 +17,66 @@ class CartViewModel(
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> get() = _pageNumber
 
-    private var size: Int = 0
+    val isFirstPage: Boolean
+        get() = pageNumber.value == 1
+
+    var isLastPage: Boolean = false
         private set
 
     init {
         update()
     }
 
-    fun isLastPage(): Boolean {
+    fun update() {
         val pageNumber = pageNumber.value ?: 1
-        val size = pageNumber * 5
-        return this.size <= size
-    }
+        repository.fetchInRange(PAGE_FETCH_SIZE, (pageNumber - 1) * PAGE_SIZE) { products ->
+            isLastPage = products.size != PAGE_FETCH_SIZE
 
-    private fun update() {
-        val pageNumber = pageNumber.value ?: 1
-        repository.fetchInRange(5, (pageNumber - 1) * 5) { products ->
-            _products.postValue(products)
+            val visibleProductsSize = PAGE_SIZE.coerceAtMost(products.size)
+
+            if (visibleProductsSize == 0) {
+                if (isFirstPage) {
+                    _products.postValue(emptyList())
+                } else {
+                    moveToPrevious()
+                }
+            } else {
+                _products.postValue(products.take(visibleProductsSize))
+            }
         }
     }
 
+    fun isVisiblePagination(): Boolean {
+        return !(isLastPage && pageNumber.value == 1)
+    }
+
     fun moveToPrevious() {
-        if ((_pageNumber.value ?: 1) > 1) {
-            _pageNumber.value = _pageNumber.value?.minus(1)
-            update()
+        if (pageNumber.value != 1) {
+            _pageNumber.postValue(_pageNumber.value?.minus(1))
         }
     }
 
     fun moveToNext() {
-        if (!isLastPage()) {
+        if (!isLastPage) {
             _pageNumber.value = _pageNumber.value?.plus(1)
-            update()
         }
     }
 
     fun deleteProduct(cartProduct: CartProduct) {
-        repository.delete(cartProduct.id!!)
-        _products.value = _products.value?.filter { it.id != cartProduct.id }
+        repository.delete(cartProduct.id!!) {
+            update()
+        }
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return CartViewModel(RepositoryProvider.provideCartRepository()) as T
+        val Factory: ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return CartViewModel(RepositoryProvider.provideCartRepository()) as T
+                }
             }
-        }
+        private const val PAGE_FETCH_SIZE = 6
+        private const val PAGE_SIZE = 5
     }
 }
