@@ -31,8 +31,14 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxEms="15"
+            android:singleLine="true"
+            app:layout_constraintEnd_toStartOf="@+id/btn_close"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constrainedWidth="true"
             tools:text="[이든] 동원 스위트콘" />
 
         <ImageButton
@@ -41,7 +47,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@color/white"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete_description"
             android:onClick="@{() -> cartClickListener.onClick(cartProduct)}"
             android:src="@drawable/close"

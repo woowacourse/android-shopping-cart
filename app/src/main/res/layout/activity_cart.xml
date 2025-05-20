@@ -23,7 +23,7 @@
             android:background="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="Cart"
+            app:title="@string/cart_title"
             app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
