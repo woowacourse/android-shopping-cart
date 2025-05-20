@@ -23,15 +23,17 @@ class ProductRepositoryImpl(
     }
 
     override fun getCartProductCount(onResult: (Result<Int>) -> Unit) {
-        thread {
-            onResult(kotlin.runCatching { dao.getCartProductCount() })
-        }
+        runThread(
+            block = { dao.getCartProductCount() },
+            onResult = onResult,
+        )
     }
 
     override fun getCartProducts(onResult: (Result<List<Product>>) -> Unit) {
-        thread {
-            onResult(runCatching { dao.getAllProduct().map { it.toDomain() } })
-        }
+        runThread(
+            block = { dao.getAllProduct().map { it.toDomain() } },
+            onResult = onResult,
+        )
     }
 
     override fun getPagedCartProducts(
@@ -40,26 +42,41 @@ class ProductRepositoryImpl(
         onResult: (Result<List<Product>>) -> Unit,
     ) {
         val offset = limit * page
-        thread {
-            onResult(runCatching { dao.getPagedProduct(limit, offset).map { it.toDomain() } })
-        }
+        runThread(
+            block = { dao.getPagedProduct(limit, offset).map { it.toDomain() } },
+            onResult = onResult,
+        )
     }
 
     override fun insertProduct(
         product: Product,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        thread {
-            onResult(runCatching { dao.insertProduct(product.toEntity()) })
-        }
+        runThread(
+            block = { dao.insertProduct(product.toEntity()) },
+            onResult = onResult,
+        )
     }
 
     override fun deleteProduct(
         productId: Long,
         onResult: (Result<Long>) -> Unit,
     ) {
+        runThread(
+            block = {
+                dao.deleteByProductId(productId)
+                productId
+            },
+            onResult = onResult,
+        )
+    }
+
+    private inline fun <T> runThread(
+        crossinline block: () -> T,
+        crossinline onResult: (Result<T>) -> Unit,
+    ) {
         thread {
-            onResult(runCatching { dao.deleteByProductId(productId).let { productId } })
+            onResult(runCatching { block() })
         }
     }
 }
