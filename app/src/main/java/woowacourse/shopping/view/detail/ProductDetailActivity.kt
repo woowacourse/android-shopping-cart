@@ -23,7 +23,8 @@ class ProductDetailActivity :
         super.onCreate(savedInstanceState)
 
         val shoppingApplication = application as ShoppingApplication
-        val factory = ProductDetailViewModel.createFactory(shoppingApplication.shoppingCartRepository)
+        val factory =
+            ProductDetailViewModel.createFactory(shoppingApplication.shoppingCartRepository)
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
 
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
@@ -55,9 +56,7 @@ class ProductDetailActivity :
             context: Context,
             product: ProductUiModel,
         ): Intent {
-            return Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(KEY_PRODUCT, product)
-            }
+            return Intent(context, ProductDetailActivity::class.java).putExtra(KEY_PRODUCT, product)
         }
     }
 }

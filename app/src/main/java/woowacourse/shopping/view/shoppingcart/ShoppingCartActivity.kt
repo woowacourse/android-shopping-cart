@@ -17,19 +17,20 @@ class ShoppingCartActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
 
         val shoppingApplication = application as ShoppingApplication
         val factory = ShoppingCartViewModel.createFactory(shoppingApplication.shoppingCartRepository)
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
 
-        setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
-        viewModel.apply {
+        with(viewModel) {
             requestProductsPage(0)
             productsLiveData.observe(this@ShoppingCartActivity) { page ->
                 val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
                 adapter.updateProducts(page.items)
             }
         }
+
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
             viewModel = this@ShoppingCartActivity.viewModel

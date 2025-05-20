@@ -35,25 +35,27 @@ class InventoryActivity :
     }
 
     private fun initRecyclerview() {
-        binding.rvProductList.apply {
-            adapter = InventoryAdapter(this@InventoryActivity)
-            val gridLayoutManager = GridLayoutManager(this@InventoryActivity, 2)
-            gridLayoutManager.spanSizeLookup =
-                object : GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return when (adapter?.getItemViewType(position)) {
-                            InventoryItemType.PRODUCT.id -> SPAN_SIZE_PRODUCT
-                            InventoryItemType.SHOW_MORE.id -> SPAN_SIZE_SHOW_MORE
-                            else -> throw IllegalStateException()
-                        }
+        val gridLayoutManager = GridLayoutManager(this@InventoryActivity, 2)
+        gridLayoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (binding.rvProductList.adapter?.getItemViewType(position)) {
+                        InventoryItemType.PRODUCT.id -> SPAN_SIZE_PRODUCT
+                        InventoryItemType.SHOW_MORE.id -> SPAN_SIZE_SHOW_MORE
+                        else -> throw IllegalStateException()
                     }
                 }
+            }
+
+        binding.rvProductList.apply {
+            adapter = InventoryAdapter(this@InventoryActivity)
             layoutManager = gridLayoutManager
-            viewModel.apply {
-                requestPage()
-                items.observe(this@InventoryActivity) { items ->
-                    (binding.rvProductList.adapter as InventoryAdapter).updateProducts(items)
-                }
+        }
+
+        with(viewModel) {
+            requestPage()
+            items.observe(this@InventoryActivity) { items ->
+                (binding.rvProductList.adapter as InventoryAdapter).updateProducts(items)
             }
         }
     }
