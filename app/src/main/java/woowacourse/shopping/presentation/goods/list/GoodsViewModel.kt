@@ -3,11 +3,11 @@ package woowacourse.shopping.presentation.goods.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.GoodsDataBase
+import woowacourse.shopping.data.goods.repository.GoodsRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.model.toUiModel
 
-class GoodsViewModel : ViewModel() {
+class GoodsViewModel(private val repository: GoodsRepository) : ViewModel() {
     private val _goodsUiModels: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
     val goodsUiModels: LiveData<List<GoodsUiModel>>
         get() = _goodsUiModels
@@ -19,8 +19,7 @@ class GoodsViewModel : ViewModel() {
     private var page: Int = DEFAULT_PAGE
 
     init {
-        _goodsUiModels.value =
-            GoodsDataBase.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        _goodsUiModels.value = repository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
     }
 
     fun addGoods() {
@@ -29,12 +28,12 @@ class GoodsViewModel : ViewModel() {
     }
 
     fun determineLoadMoreVisibility(canScroll: Boolean) {
-        val moreDataAvailable = GoodsDataBase.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
+        val moreDataAvailable = repository.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
         _showLoadMore.value = !canScroll && moreDataAvailable
     }
 
     private fun loadNextPage() {
-        val newGoods = GoodsDataBase.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        val newGoods = repository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
         _goodsUiModels.value = _goodsUiModels.value.orEmpty() + newGoods
     }
 
