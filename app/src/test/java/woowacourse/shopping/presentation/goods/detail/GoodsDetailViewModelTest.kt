@@ -8,6 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.ShoppingDataBase
 import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.model.toUiModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsDetailViewModelTest {
@@ -22,9 +23,9 @@ class GoodsDetailViewModelTest {
     @Test
     fun `장바구니에 항목을 추가할 수 있다`() {
         // when
-        goodsDetailViewModel.setGoods(goods)
+        goodsDetailViewModel.setGoods(goods.toUiModel())
 
         // then
-        goodsDetailViewModel.goods.getOrAwaitValue() shouldBe goods
+        goodsDetailViewModel.goods.getOrAwaitValue() shouldBe goods.toUiModel()
     }
 }

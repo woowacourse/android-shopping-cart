@@ -15,6 +15,7 @@ import woowacourse.shopping.fixture.ICE_CREAM
 import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.fixture.createGoods
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.model.toUiModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
@@ -42,10 +43,10 @@ class ShoppingCartViewModelTest {
         goods.forEach { ShoppingDataBase.addItem(it) }
 
         // when
-        shoppingCartViewModel.deleteGoods(SUNDAE)
+        shoppingCartViewModel.deleteGoods(SUNDAE.toUiModel())
 
         // then
-        shoppingCartViewModel.goods.getOrAwaitValue().shouldNotContain(SUNDAE)
+        shoppingCartViewModel.goods.getOrAwaitValue().shouldNotContain(SUNDAE.toUiModel())
     }
 
     @Test

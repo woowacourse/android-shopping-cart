@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.GoodsDataBase
+import woowacourse.shopping.data.ShoppingDataBase
 import woowacourse.shopping.fixture.createGoods
 import woowacourse.shopping.getOrAwaitValue
 
@@ -21,7 +22,7 @@ class GoodsViewModelTest {
     @BeforeEach
     fun setUp() {
         mockkObject(GoodsDataBase)
-        goodsViewModel = GoodsViewModel(GoodsDataBase)
+        goodsViewModel = GoodsViewModel(GoodsDataBase, ShoppingDataBase)
     }
 
     @AfterEach

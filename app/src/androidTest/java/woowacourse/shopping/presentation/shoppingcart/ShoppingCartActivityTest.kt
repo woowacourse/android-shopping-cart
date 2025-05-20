@@ -17,6 +17,7 @@ import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingDataBase
 import woowacourse.shopping.fixture.createGoods
+import woowacourse.shopping.presentation.model.toDomain
 
 class ShoppingCartActivityTest {
     private lateinit var scenario: ActivityScenario<ShoppingCartActivity>
@@ -129,13 +130,13 @@ class ShoppingCartActivityTest {
 
     private fun addItems(count: Int) {
         repeat(count) {
-            ShoppingDataBase.addItem(createGoods("$it"))
+            ShoppingDataBase.addItem(createGoods("$it").toDomain())
         }
     }
 
     private fun removeItems(count: Int) {
         repeat(count) {
-            ShoppingDataBase.removeItem(createGoods("$it"))
+            ShoppingDataBase.removeItem(createGoods("$it").toDomain())
         }
     }
 
