@@ -1,22 +1,29 @@
 package woowacourse.shopping.data.storage
 
+import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartSinglePage
 
 @Suppress("ktlint:standard:max-line-length")
 object CartStorage {
-    private val cart = LinkedHashMap<Long, Cart>()
+    private val carts = LinkedHashMap<Long, Cart>()
 
-    private val cartValues get() = cart.values.toList()
+    private val cartValues get() = carts.values.toList()
 
-    operator fun get(id: Long) = cart[id]
+    operator fun get(id: Long) = carts[id]
 
     fun insert(item: Cart) {
-        cart[item.id] = item
+        carts[item.productId] = item
     }
 
-    fun delete(cardId: Long) {
-        cart.remove(cardId)
+    fun modifyQuantity(
+        cardId: Long,
+        quantity: Quantity,
+    ) {
+        if (removeIfQuantityIsZero(cardId, quantity)) return
+        val target = carts[cardId] ?: throw IllegalArgumentException()
+        val result = target.copy(quantity = quantity)
+        carts[cardId] = result
     }
 
     fun singlePage(
@@ -26,8 +33,19 @@ object CartStorage {
         val endIndex = minOf(toIndex, carts.size)
 
         val result = cartValues.subList(fromIndex, endIndex)
-        val hasNextPage = endIndex < cart.size
+        val hasNextPage = endIndex < carts.size
 
-        return CartResult(result, hasNextPage)
+        return CartSinglePage(result, hasNextPage)
+    }
+
+    private fun removeIfQuantityIsZero(
+        cartId: Long,
+        quantity: Quantity,
+    ): Boolean {
+        if (quantity.value == 0) {
+            carts.remove(cartId)
+            return true
+        }
+        return false
     }
 }
