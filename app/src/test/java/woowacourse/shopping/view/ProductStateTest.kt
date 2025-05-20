@@ -33,11 +33,21 @@ class ProductStateTest {
         val product = productFixture2 // quantity : 10
         val state = ProductState(product, Quantity(2))
 
-        val result = state.increase()
+        val result = state.increaseCartQuantity()
 
         assertTrue(result is IncreaseState.CanIncrease)
         result as IncreaseState.CanIncrease
         assertEquals(result.value.cartQuantity.value, 3)
+    }
+
+    @Test
+    fun `상품의 수량이 감소한다`() {
+        val product = productFixture2 // quantity : 10
+        val state = ProductState(product, Quantity(2))
+
+        val result = state.decreaseCartQuantity()
+
+        assertEquals(result.cartQuantity.value, 1)
     }
 
     @Test
