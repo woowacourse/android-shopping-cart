@@ -10,7 +10,7 @@
             type="woowacourse.shopping.view.shoppingcart.ShoppingCartViewModel" />
 
         <variable
-            name="handler"
+            name="onPagination"
             type="kotlin.jvm.functions.Function1&lt;java.lang.Integer, kotlin.Unit&gt;" />
     </data>
 
@@ -46,7 +46,7 @@
             android:enabled="@{viewModel.productsLiveData.hasPrevious}"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.invoke(viewModel.productsLiveData.currentPage - 1)}"
+            android:onClick="@{()->onPagination.invoke(viewModel.productsLiveData.currentPage - 1)}"
 
             android:text="@string/pagination_left"
             android:textColor="@color/white"
@@ -78,7 +78,7 @@
             android:enabled="@{viewModel.productsLiveData.hasNext}"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.invoke(viewModel.productsLiveData.currentPage + 1)}"
+            android:onClick="@{()->onPagination.invoke(viewModel.productsLiveData.currentPage + 1)}"
             android:text="@string/pagination_right"
             android:textColor="@color/white"
             android:textSize="22sp"

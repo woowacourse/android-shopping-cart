@@ -6,10 +6,10 @@ import woowacourse.shopping.domain.Product
 
 class ProductsViewHolder(
     private val binding: ItemProductBinding,
-    handler: (Product) -> Unit,
+    onProductSelected: (Product) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.handler = handler
+        binding.onProductSelected = onProductSelected
     }
 
     fun bind(item: Product) {

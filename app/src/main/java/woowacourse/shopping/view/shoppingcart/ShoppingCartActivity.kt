@@ -38,9 +38,7 @@ class ShoppingCartActivity :
         binding.apply {
             shoppingCartList.adapter = shoppingCartAdapter
             viewModel = this@ShoppingCartActivity.viewModel
-            handler = { page ->
-                viewModel.requestProductsPage(page)
-            }
+            onPagination = ::onPagination
         }
     }
 

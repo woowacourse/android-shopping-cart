@@ -35,7 +35,7 @@ class ProductDetailActivity :
         viewModel.setProduct(product)
         binding.apply {
             viewModel = this@ProductDetailActivity.viewModel
-            handler = ::onAddToCartSelected
+            onAddToCartSelected = ::onAddToCartSelected
         }
     }
 

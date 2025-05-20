@@ -62,7 +62,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginEnd="12dp"
-            android:onClick="@{() -> handler.onProductRemove(product, page)}"
+            android:onClick="@{() -> onProductRemove.invoke(product, page)}"
             android:src="@drawable/icon_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_shopping_cart_item"

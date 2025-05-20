@@ -35,7 +35,7 @@ class MainActivity :
         setSupportActionBar(binding.toolbar as Toolbar)
         binding.apply {
             viewModel = this@MainActivity.viewModel
-            handler = ::onLoadMoreProducts
+            onLoadMoreProducts = ::onLoadMoreProducts
         }
         initRecyclerview()
     }
