@@ -7,6 +7,8 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.ui.cart.adapter.CartAdapter
+import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 import woowacourse.shopping.ui.common.DataBindingActivity
 
 class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_cart) {
