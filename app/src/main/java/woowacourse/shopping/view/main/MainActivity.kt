@@ -5,19 +5,24 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
+import woowacourse.shopping.view.base.ActivityBoilerPlateCode
+import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
 
 class MainActivity :
-    ShoppingCartActivityTemplate<ActivityMainBinding>(R.layout.activity_main) {
+    AppCompatActivity(),
+    ActivityBoilerPlateCode<ActivityMainBinding> by ActivityBoilerPlateCodeImpl(
+        R.layout.activity_main,
+    ) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val handler: ProductsEventHandler by lazy {
         object : ProductsEventHandler {
@@ -37,6 +42,7 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initialize()
         setSupportActionBar(binding.toolbar as Toolbar)
         binding.apply {
             viewModel = this@MainActivity.viewModel

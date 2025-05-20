@@ -6,16 +6,21 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
+import woowacourse.shopping.view.base.ActivityBoilerPlateCode
+import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity :
-    ShoppingCartActivityTemplate<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
+    AppCompatActivity(),
+    ActivityBoilerPlateCode<ActivityProductDetailBinding> by ActivityBoilerPlateCodeImpl(
+        R.layout.activity_product_detail,
+    ) {
     private val viewModel: ProductDetailViewModel by viewModels()
     private val handler: ProductDetailEventHandler by lazy {
         object : ProductDetailEventHandler {
@@ -28,6 +33,7 @@ class ProductDetailActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initialize()
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
         val product: Product =
             intent.getParcelableCompat(KEY_PRODUCT) ?: run {
