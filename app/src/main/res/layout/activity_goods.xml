@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="20dp"
+            android:paddingBottom="80dp"
             app:goodsList="@{vm.goodsUiModels}"
             app:layout_constraintBottom_toTopOf="@id/btn_load_more"
             app:layout_constraintEnd_toEndOf="parent"
@@ -30,12 +31,12 @@
 
         <Button
             android:id="@+id/btn_load_more"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
             android:onClick="@{() -> vm.addGoods()}"
             android:text="@string/btn_load_more"
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="@{vm.showLoadMore ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
