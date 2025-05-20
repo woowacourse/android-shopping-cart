@@ -10,16 +10,17 @@ data class Page<T>(
 ) {
     companion object {
         fun <T> from(
-            allItems: List<T>,
+            items: List<T>,
+            totalCounts: Int,
             requestPage: Int,
             pageSize: Int,
         ): Page<T> {
             val from = requestPage * pageSize
-            val until = min(from + pageSize, allItems.size)
+            val until = min(from + pageSize, totalCounts)
             return Page(
-                items = allItems.subList(from, until),
+                items = items,
                 hasPrevious = requestPage > 0,
-                hasNext = until < allItems.size,
+                hasNext = until < totalCounts,
                 requestPage,
             )
         }
