@@ -11,7 +11,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
@@ -19,6 +18,7 @@ import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
+import woowacourse.shopping.view.util.scroll.ScrollEndEvent
 import kotlin.getValue
 
 class MainActivity : AppCompatActivity() {
@@ -50,11 +50,18 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val scrollEndEvent =
+            ScrollEndEvent(
+                { viewModel.loadable.value },
+                { binding.buttonLoad.visibility = View.VISIBLE },
+                { binding.buttonLoad.visibility = View.GONE },
+            )
+
         binding.recyclerViewProduct.apply {
             adapter = productsAdapter
             setHasFixedSize(true)
             setItemAnimator(null)
-        }.addOnScrollListener(onScrollListener())
+        }.addOnScrollListener(scrollEndEvent)
 
         binding.buttonLoad.setOnClickListener {
             binding.buttonLoad.visibility = View.GONE
@@ -70,22 +77,6 @@ class MainActivity : AppCompatActivity() {
             productsAdapter.submitList(value)
         }
     }
-
-    private fun onScrollListener() =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int,
-                dy: Int,
-            ) {
-                val loadable = viewModel.loadable.value ?: return
-                if (!loadable && !recyclerView.canScrollVertically(RECYCLER_VIEW_END_POSITION)) {
-                    binding.buttonLoad.visibility = View.VISIBLE
-                } else if (dy < RECYCLER_VIEW_END_POSITION) {
-                    binding.buttonLoad.visibility = View.GONE
-                }
-            }
-        }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -106,6 +97,5 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val PAGE_SIZE = 20
-        private const val RECYCLER_VIEW_END_POSITION = 1
     }
 }
