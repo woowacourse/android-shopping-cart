@@ -61,6 +61,15 @@
             app:layout_constraintTop_toBottomOf="@id/cart_item_name"
             tools:src="@drawable/ic_launcher_background" />
 
+        <include
+            layout="@layout/item_select_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toTopOf="@id/text_view_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_product" />
+
         <TextView
             android:id="@+id/text_view_price"
             android:layout_width="0dp"
