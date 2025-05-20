@@ -31,7 +31,7 @@ class CartViewModelTest {
 
         // Then
         val products = viewModel.products.getOrAwaitValue()
-        val page = viewModel.pageNo.getOrAwaitValue()
+        val page = viewModel.pageNumber.getOrAwaitValue()
         val state = viewModel.pageState.getOrAwaitValue()
 
         assertThat(products).hasSize(5)
@@ -47,7 +47,7 @@ class CartViewModelTest {
         viewModel.addPage()
 
         // Then
-        val page = viewModel.pageNo.getOrAwaitValue()
+        val page = viewModel.pageNumber.getOrAwaitValue()
         val products = viewModel.products.getOrAwaitValue()
 
         assertThat(page).isEqualTo(3)
@@ -63,7 +63,7 @@ class CartViewModelTest {
         viewModel.subPage()
 
         // Then
-        val page = viewModel.pageNo.getOrAwaitValue()
+        val page = viewModel.pageNumber.getOrAwaitValue()
         val products = viewModel.products.getOrAwaitValue()
 
         assertThat(page).isEqualTo(2)

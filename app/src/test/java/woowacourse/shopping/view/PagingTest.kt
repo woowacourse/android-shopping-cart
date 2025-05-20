@@ -33,20 +33,20 @@ class PagingTest {
     @Test
     fun `다음 페이지 이동 후 페이지 번호는 증가해야 한다`() {
         paging.moveToNextPage()
-        assertEquals(2, paging.getPageNo())
+        assertEquals(2, paging.getPageNumber())
     }
 
     @Test
     fun `이전 페이지 이동은 초기 페이지보다 작아질 수 없다`() {
         paging.moveToPreviousPage()
-        assertEquals(1, paging.getPageNo())
+        assertEquals(1, paging.getPageNumber())
     }
 
     @Test
     fun `이전 페이지 이동은 2페이지 이상일 때만 감소해야 한다`() {
         paging.moveToNextPage()
         paging.moveToPreviousPage()
-        assertEquals(1, paging.getPageNo())
+        assertEquals(1, paging.getPageNumber())
     }
 
     @Test
@@ -54,7 +54,7 @@ class PagingTest {
         paging.moveToNextPage()
         val result = paging.resetToLastPageIfEmpty(emptyList())
         assertTrue(result)
-        assertEquals(1, paging.getPageNo())
+        assertEquals(1, paging.getPageNumber())
     }
 
     @Test
@@ -64,7 +64,7 @@ class PagingTest {
                 listOf(Product(999L, "dummy", Price(1234), "")),
             )
         assertFalse(result)
-        assertEquals(1, paging.getPageNo())
+        assertEquals(1, paging.getPageNumber())
     }
 
     @Test

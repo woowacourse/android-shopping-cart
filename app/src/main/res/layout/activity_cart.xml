@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="11dp"
-                android:text="@{vm.pageNo.toString()}"
+                android:text="@{vm.pageNumber.toString()}"
                 android:textColor="@color/gray"
                 android:textSize="22sp" />
 

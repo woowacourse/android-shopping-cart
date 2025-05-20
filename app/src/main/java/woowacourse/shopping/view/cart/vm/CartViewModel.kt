@@ -16,11 +16,11 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     private val _pageState = MutableLiveData<PageState>()
     val pageState: LiveData<PageState> = _pageState
 
-    private val _pageNo = MutableLiveData<Int>()
-    val pageNo: LiveData<Int> = _pageNo
+    private val _pageNumber = MutableLiveData<Int>()
+    val pageNumber: LiveData<Int> = _pageNumber
 
     private fun updatePageNoText() {
-        _pageNo.value = paging.getPageNo()
+        _pageNumber.value = paging.getPageNumber()
     }
 
     fun deleteProduct(productId: Long) {
@@ -43,7 +43,7 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     }
 
     fun loadCarts() {
-        val products = cartStorage.getProducts(paging.getPageNo() - 1, PAGE_SIZE)
+        val products = cartStorage.getProducts(paging.getPageNumber() - 1, PAGE_SIZE)
         _products.value = products
         _pageState.value = paging.createPageState(cartStorage)
         updatePageNoText()

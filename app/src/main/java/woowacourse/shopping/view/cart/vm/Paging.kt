@@ -10,7 +10,7 @@ class Paging(
     private var currentPage: Int = initialPage
     private var hasEverShownNextPage: Boolean = false
 
-    fun getPageNo(): Int = currentPage
+    fun getPageNumber(): Int = currentPage
 
     fun moveToNextPage() {
         currentPage++
