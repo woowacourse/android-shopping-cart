@@ -14,7 +14,12 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private lateinit var viewModel: CartViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            factory(CartDatabase),
+        )[CartViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +27,6 @@ class CartActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         applyWindowInsets()
 
-        setViewModel()
         setSupportActionBar()
         setCartProductAdapter()
         observeCartProducts()
@@ -32,14 +36,6 @@ class CartActivity : AppCompatActivity() {
     private fun setSupportActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.text_cart_action_bar)
-    }
-
-    private fun setViewModel() {
-        viewModel =
-            ViewModelProvider(
-                this,
-                factory(CartDatabase),
-            )[CartViewModel::class.java]
     }
 
     private fun setCartProductAdapter() {

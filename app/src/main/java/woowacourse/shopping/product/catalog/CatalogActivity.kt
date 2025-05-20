@@ -20,7 +20,12 @@ import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
-    private lateinit var viewModel: CatalogViewModel
+    private val viewModel: CatalogViewModel by lazy {
+        ViewModelProvider(
+            this,
+            factory(MockProducts),
+        )[CatalogViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +34,6 @@ class CatalogActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
-        setViewModel()
         setProductAdapter()
         observeCatalogProducts()
     }
@@ -48,14 +52,6 @@ class CatalogActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
-
-    private fun setViewModel() {
-        viewModel =
-            ViewModelProvider(
-                this,
-                factory(MockProducts),
-            )[CatalogViewModel::class.java]
-    }
 
     private fun setProductAdapter() {
         val adapter =

@@ -21,7 +21,13 @@ import woowacourse.shopping.util.IntentCompat
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
-    private lateinit var viewModel: DetailViewModel
+
+    private val viewModel by lazy {
+        ViewModelProvider(
+            this,
+            factory(CartDatabase),
+        )[DetailViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +37,6 @@ class DetailActivity : AppCompatActivity() {
         applyWindowInsets()
         setSupportActionBar()
 
-        setViewModel()
         setAddToCartClickListener()
         observeCartUiState()
 
@@ -55,14 +60,6 @@ class DetailActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
-
-    private fun setViewModel() {
-        viewModel =
-            ViewModelProvider(
-                this,
-                factory(CartDatabase),
-            )[DetailViewModel::class.java]
-    }
 
     private fun setAddToCartClickListener() {
         binding.clickListener =
