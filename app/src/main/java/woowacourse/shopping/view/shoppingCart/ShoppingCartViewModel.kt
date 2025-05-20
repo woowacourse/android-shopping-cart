@@ -21,24 +21,20 @@ class ShoppingCartViewModel(
     private val _event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ShoppingCartEvent> get() = _event
 
-    private var page: Int = 1
+    private var page: Int = FIRST_PAGE
 
     fun updateShoppingCart() {
         thread {
             runCatching {
                 shoppingCartRepository.load(page, COUNT_PER_PAGE)
             }.onSuccess { products: List<Product> ->
-                val paginationItem: PaginationItem =
-                    (shoppingCart.value?.last() as? PaginationItem)?.copy(
-                        page = page,
-                        nextEnabled = shoppingCartRepository.hasNext,
-                        previousEnabled = shoppingCartRepository.hasPrevious,
+                val paginationItem =
+                    PaginationItem(
+                        page,
+                        shoppingCartRepository.hasNext,
+                        shoppingCartRepository.hasPrevious,
                     )
-                        ?: PaginationItem(
-                            page,
-                            shoppingCartRepository.hasNext,
-                            false,
-                        )
+
                 _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
             }.onFailure {
                 _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
@@ -64,11 +60,17 @@ class ShoppingCartViewModel(
     }
 
     fun minusPage() {
-        page = page.minus(1).coerceAtLeast(1)
+        if (page == FIRST_PAGE) {
+            _shoppingCart.value = emptyList()
+            return
+        }
+
+        page--
         updateShoppingCart()
     }
 
     companion object {
+        private const val FIRST_PAGE = 1
         private const val COUNT_PER_PAGE: Int = 5
     }
 }
