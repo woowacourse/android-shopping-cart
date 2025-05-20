@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.cart
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -33,9 +32,18 @@ class CartAdapter(
         holder.bind(item)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateItems(cartProducts: List<CartProduct>) {
+        val deletedItem = this.items.firstOrNull { product -> !cartProducts.contains(product) }
+        val startPosition = deletedItem?.let { this.items.indexOf(deletedItem) } ?: 0
+        val itemCount = this.items.size - startPosition
+
+        if (isLastItem(startPosition, itemCount)) notifyItemChanged(0)
+        else notifyItemRangeChanged(startPosition, itemCount)
+        
         items = cartProducts
-        notifyDataSetChanged()
+    }
+
+    private fun isLastItem(startPosition: Int, itemCount: Int): Boolean {
+        return startPosition == 0 && itemCount == 1
     }
 }
