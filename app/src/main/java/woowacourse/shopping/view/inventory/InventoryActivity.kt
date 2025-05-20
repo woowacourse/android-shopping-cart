@@ -35,13 +35,13 @@ class InventoryActivity :
     }
 
     private fun initRecyclerview() {
-        val gridLayoutManager = GridLayoutManager(this@InventoryActivity, 2)
+        val gridLayoutManager = GridLayoutManager(this@InventoryActivity, MAX_SPAN_SIZE)
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (binding.rvProductList.adapter?.getItemViewType(position)) {
-                        InventoryItemType.PRODUCT.id -> SPAN_SIZE_PRODUCT
-                        InventoryItemType.SHOW_MORE.id -> SPAN_SIZE_SHOW_MORE
+                        InventoryItemType.PRODUCT.id -> PRODUCT_SPAN_SIZE
+                        InventoryItemType.SHOW_MORE.id -> MAX_SPAN_SIZE
                         else -> throw IllegalStateException()
                     }
                 }
@@ -69,7 +69,7 @@ class InventoryActivity :
     }
 
     companion object {
-        private const val SPAN_SIZE_PRODUCT = 1
-        private const val SPAN_SIZE_SHOW_MORE = 2
+        private const val MAX_SPAN_SIZE = 2
+        private const val PRODUCT_SPAN_SIZE = 1
     }
 }
