@@ -3,12 +3,12 @@ package woowacourse.shopping.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.cart.CartRepository
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
+import kotlin.concurrent.thread
 
-class CartViewModel(
-    private val repository: CartRepository,
-) : ViewModel() {
+class CartViewModel: ViewModel() {
+    private val repository = CartRepository.get()
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
@@ -16,11 +16,10 @@ class CartViewModel(
     val pageNumber: LiveData<Int> get() = _pageNumber
 
     private var size: Int = 0
-        private set
 
     init {
-        repository.fetchSize {
-            size = it
+        thread {
+            size = repository.size()
         }
         update()
     }
@@ -33,8 +32,9 @@ class CartViewModel(
 
     private fun update() {
         val pageNumber = pageNumber.value ?: 1
-        repository.fetchPagedItems(5, (pageNumber - 1) * 5) { products ->
-            _products.postValue(products)
+        thread {
+            val items = repository.getPagedItems(5, (pageNumber - 1) * 5)
+            _products.postValue(items)
         }
     }
 
@@ -53,7 +53,9 @@ class CartViewModel(
     }
 
     fun deleteProduct(product: Product) {
-        repository.remove(product)
+        thread {
+            repository.delete(product)
+        }
         _products.value = _products.value?.filter { it.id != product.id }
     }
 }

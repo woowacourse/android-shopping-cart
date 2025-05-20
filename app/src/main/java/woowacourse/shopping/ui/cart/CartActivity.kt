@@ -12,22 +12,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDatabase
-import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.productlist.ProductListActivity
 import woowacourse.shopping.ui.viewmodel.CartViewModel
-import woowacourse.shopping.utils.ViewModelFactory
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
 
-    private val viewModel: CartViewModel by viewModels {
-        ViewModelFactory.createCartViewModelFactory(
-            CartRepositoryImpl(CartDatabase.getInstance(this)),
-        )
-    }
+    private val viewModel: CartViewModel by viewModels()
 
     private lateinit var cartAdapter: CartAdapter
 
@@ -52,7 +45,7 @@ class CartActivity : AppCompatActivity() {
     private fun initAdapter() {
         cartAdapter =
             CartAdapter(
-                items = mutableListOf(),
+                items = emptyList(),
                 cartClickListener =
                     object : CartClickListener {
                         override fun onClick(product: Product) {

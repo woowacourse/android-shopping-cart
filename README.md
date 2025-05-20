@@ -54,3 +54,5 @@
 - runner 충돌로 인한 1.6.2 -> 1.6.1로 변경
 - menu_cart.xml의 icon Id 중복으로 인한 변경 menu_cart -> menu_cart_back
 - ProductListActivityTest, ProductDetailAcitivityTest 추가
+
+- [x] refactor: Database 초기화 위치 변경

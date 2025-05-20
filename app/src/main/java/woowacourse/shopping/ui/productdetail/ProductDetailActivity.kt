@@ -12,17 +12,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDatabase
-import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.productlist.ProductListActivity
 import woowacourse.shopping.utils.intentSerializable
+import kotlin.concurrent.thread
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    val cartRepository: CartRepository by lazy { CartRepositoryImpl(CartDatabase.getInstance(this)) }
+    val cartRepository = CartRepository.get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +35,9 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.detailClickListener =
             object : DetailClickListener {
                 override fun onAddToCartClick(product: Product) {
-                    cartRepository.add(product)
+                    thread {
+                        cartRepository.insert(product)
+                    }
                     Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
                 }
             }
