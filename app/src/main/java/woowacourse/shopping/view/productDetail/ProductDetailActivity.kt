@@ -17,7 +17,7 @@ import woowacourse.shopping.view.showToast
 
 class ProductDetailActivity :
     AppCompatActivity(),
-    ProductDetailEvents {
+    ProductDetailActionsListener {
     private val viewModel: ProductDetailViewModel by viewModels()
     private val binding: ActivityProductDetailBinding by lazy {
         ActivityProductDetailBinding.inflate(layoutInflater)
@@ -57,7 +57,7 @@ class ProductDetailActivity :
     private fun bindViewModel() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        binding.productDetailEventListener = this
+        binding.productDetailActionsListener = this
     }
 
     private fun handleEvents() {
@@ -76,11 +76,11 @@ class ProductDetailActivity :
         }
     }
 
-    override fun close() {
+    override fun onClose() {
         finish()
     }
 
-    override fun addToShoppingCart() {
+    override fun onAddToShoppingCart() {
         viewModel.addToShoppingCart()
     }
 

@@ -10,8 +10,8 @@
             type="woowacourse.shopping.view.productDetail.ProductDetailViewModel" />
 
         <variable
-            name="productDetailEventListener"
-            type="woowacourse.shopping.view.productDetail.ProductDetailEvents" />
+            name="productDetailActionsListener"
+            type="woowacourse.shopping.view.productDetail.ProductDetailActionsListener" />
     </data>
 
     <ScrollView
@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:onClick="@{() -> productDetailEventListener.close()}"
+                    android:onClick="@{() -> productDetailActionsListener.onClose()}"
                     android:padding="16dp"
                     android:src="@drawable/ic_close"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -112,7 +112,7 @@
                 android:layout_marginTop="144dp"
                 android:background="@color/mint"
                 android:gravity="center"
-                android:onClick="@{() -> productDetailEventListener.addToShoppingCart()}"
+                android:onClick="@{() -> productDetailActionsListener.onAddToShoppingCart()}"
                 android:paddingVertical="12dp"
                 android:text="@string/product_detail_add_to_shopping_cart"
                 android:textColor="@color/white"
