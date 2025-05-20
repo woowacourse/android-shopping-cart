@@ -25,7 +25,14 @@ class ProductsAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ProductsViewHolder {
-        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context))
+        val binding =
+            ItemProductBinding.inflate(
+                LayoutInflater.from(
+                    parent.context,
+                ),
+                parent,
+                false,
+            )
         return ProductsViewHolder(binding, onProductSelected)
     }
 
