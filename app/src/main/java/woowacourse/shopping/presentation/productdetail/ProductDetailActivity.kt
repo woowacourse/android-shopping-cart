@@ -83,10 +83,10 @@ class ProductDetailActivity : AppCompatActivity() {
             binding.product = it
         }
 
-        viewModel.resultState.observe(this) { result ->
+        viewModel.insertProductResult.observe(this) { result ->
             when (result) {
-                ResultState.INSERT_SUCCESS -> showToast(R.string.product_detail_add_cart_toast_insert_success)
-                ResultState.INSERT_FAILURE -> showToast(R.string.product_detail_add_cart_toast_insert_failure)
+                is ResultState.Success -> showToast(R.string.product_detail_add_cart_toast_insert_success)
+                is ResultState.Failure -> showToast(R.string.product_detail_add_cart_toast_insert_failure)
                 else -> Unit
             }
         }

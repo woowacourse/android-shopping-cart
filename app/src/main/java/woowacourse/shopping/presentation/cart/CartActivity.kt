@@ -61,20 +61,28 @@ class CartActivity : AppCompatActivity() {
             showToast(resId)
         }
 
-        viewModel.products.observe(this) {
-            cartProductAdapter.submitList(it)
-        }
-
-        viewModel.deleteProduct.observe(this) {
-            cartProductAdapter.removeItem(it)
-        }
-
-        viewModel.resultState.observe(this) { result ->
+        viewModel.products.observe(this) { result ->
             when (result) {
-                ResultState.LOAD_FAILURE -> showToast(R.string.cart_toast_load_failure)
-                ResultState.DELETE_SUCCESS -> showToast(R.string.cart_toast_delete_success)
-                ResultState.DELETE_FAILURE -> showToast(R.string.cart_toast_delete_failure)
-                else -> Unit
+                is ResultState.Success -> {
+                    cartProductAdapter.submitList(result.data)
+                }
+
+                is ResultState.Failure -> {
+                    showToast(R.string.cart_toast_load_failure)
+                }
+            }
+        }
+
+        viewModel.deleteProduct.observe(this) { result ->
+            when (result) {
+                is ResultState.Success -> {
+                    cartProductAdapter.removeItem(result.data)
+                    showToast(R.string.cart_toast_delete_success)
+                }
+
+                is ResultState.Failure -> {
+                    showToast(R.string.cart_toast_delete_failure)
+                }
             }
         }
     }

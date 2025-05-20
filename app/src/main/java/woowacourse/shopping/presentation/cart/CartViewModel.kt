@@ -13,16 +13,14 @@ class CartViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel(),
     CartClickHandler {
-    private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
-    val products: LiveData<List<Product>> = _products
-    private val _deleteProduct: MutableLiveData<Long> = MutableLiveData()
-    val deleteProduct: LiveData<Long> = _deleteProduct
+    private val _products: MutableLiveData<ResultState<List<Product>>> = MutableLiveData()
+    val products: LiveData<ResultState<List<Product>>> = _products
+    private val _deleteProduct: MutableLiveData<ResultState<Long>> = MutableLiveData()
+    val deleteProduct: LiveData<ResultState<Long>> = _deleteProduct
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
     val totalPages: LiveData<Int> = _totalPages
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int> = _currentPage
-    private val _resultState: MutableLiveData<ResultState> = MutableLiveData<ResultState>()
-    val resultState: LiveData<ResultState> = _resultState
     private val _toastMessage = SingleLiveData<Int>()
     val toastMessage: LiveData<Int> = _toastMessage
 
@@ -34,14 +32,14 @@ class CartViewModel(
         val page = _currentPage.value ?: 0
         productRepository.getPagedCartProducts(PAGE_SIZE, page) { result ->
             result
-                .onSuccess { pagedProducts -> _products.postValue(pagedProducts) }
-                .onFailure { _resultState.postValue(ResultState.LOAD_FAILURE) }
+                .onSuccess { pagedProducts -> _products.postValue(ResultState.Success(pagedProducts)) }
+                .onFailure { _products.postValue(ResultState.Failure()) }
         }
 
         productRepository.getCartProductCount { result ->
             result
                 .onSuccess { count -> updateTotalPage(count) }
-                .onFailure { _resultState.postValue(ResultState.LOAD_FAILURE) }
+                .onFailure { _products.postValue(ResultState.Failure()) }
         }
     }
 
@@ -70,9 +68,9 @@ class CartViewModel(
             result
                 .onSuccess { productId ->
                     reloadProductsByPage(currentPage)
-                    _deleteProduct.postValue(productId)
+                    _deleteProduct.postValue(ResultState.Success(productId))
                 }.onFailure {
-                    _resultState.postValue(ResultState.DELETE_FAILURE)
+                    _deleteProduct.postValue(ResultState.Failure())
                 }
         }
     }
@@ -84,12 +82,10 @@ class CartViewModel(
                     if (pagedProducts.isEmpty()) {
                         handleEmptyPage()
                     } else {
-                        _products.postValue(pagedProducts)
+                        _products.postValue(ResultState.Success(pagedProducts))
                         updateTotalPageAsync()
                     }
-                }.onFailure {
-                    _resultState.postValue(ResultState.LOAD_FAILURE)
-                }
+                }.onFailure { _products.postValue(ResultState.Failure()) }
         }
     }
 
@@ -99,7 +95,7 @@ class CartViewModel(
             _currentPage.postValue(currentPage - 1)
             reloadProductsByPage(currentPage - 1)
         } else {
-            _products.postValue(emptyList())
+            _products.postValue(ResultState.Success(emptyList()))
         }
     }
 
@@ -117,7 +113,7 @@ class CartViewModel(
                 .onSuccess { count ->
                     updateTotalPage(count)
                     onComplete?.invoke()
-                }.onFailure { _resultState.postValue(ResultState.LOAD_FAILURE) }
+                }.onFailure { _products.postValue(ResultState.Failure()) }
         }
     }
 
