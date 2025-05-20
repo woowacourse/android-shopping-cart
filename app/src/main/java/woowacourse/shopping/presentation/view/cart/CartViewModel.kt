@@ -46,7 +46,7 @@ class CartViewModel(
             result
                 .onFailure { _toastEvent.postValue(CartMessageEvent.FETCH_CART_ITEMS_FAILURE) }
                 .onSuccess { pageableItem ->
-                    fetchCartItemsSuccessHandler(
+                    fetchCartItemsHandleSuccess(
                         pageableItem,
                         newPage,
                     )
@@ -72,7 +72,7 @@ class CartViewModel(
             max(DEFAULT_PAGE, currentPage - DEFAULT_PAGE)
         }
 
-    private fun fetchCartItemsSuccessHandler(
+    private fun fetchCartItemsHandleSuccess(
         pageableItem: PageableItem<CartItem>,
         newPage: Int,
     ) {

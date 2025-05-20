@@ -36,11 +36,11 @@ class CatalogViewModel(
 
         productRepository
             .loadProducts(newOffset, limit)
-            .onSuccess { pageableItem -> loadProductsSuccessHandler(pageableItem) }
+            .onSuccess { pageableItem -> loadProductsHandleSuccess(pageableItem) }
             .onFailure { _toastEvent.postValue(CatalogMessageEvent.FETCH_PRODUCTS_FAILURE) }
     }
 
-    private fun loadProductsSuccessHandler(pageableItem: PageableItem<Product>) {
+    private fun loadProductsHandleSuccess(pageableItem: PageableItem<Product>) {
         page++
 
         val existingItems = extractExistingProductItems()
