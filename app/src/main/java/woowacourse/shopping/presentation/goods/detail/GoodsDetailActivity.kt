@@ -25,11 +25,8 @@ class GoodsDetailActivity : BaseActivity() {
 
         viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
 
-        viewModel.isItemAddedToCart.observe(this) { isAdded ->
-            if (isAdded) {
-                Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
-                viewModel.updateIsItemAddedToCart(false)
-            }
+        viewModel.isItemAddedToCart.observe(this) {
+            Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
         }
     }
 
