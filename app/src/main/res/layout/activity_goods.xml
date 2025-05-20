@@ -4,14 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.goods.list.GoodsViewModel" />
-
-        <variable
-            name="view"
-            type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +37,7 @@
             android:text="@string/btn_load_more"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:visibility="@{vm.showLoadMore ? view.VISIBLE : view.GONE}"
+            android:visibility="@{vm.showLoadMore ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
