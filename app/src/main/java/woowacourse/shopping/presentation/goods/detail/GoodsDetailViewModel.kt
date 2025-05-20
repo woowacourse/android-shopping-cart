@@ -7,27 +7,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.data.ShoppingRepository
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.toDomain
 import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.event.SingleLiveData
 
 class GoodsDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val _goods: MutableLiveData<Goods> = MutableLiveData()
-    val goods: LiveData<Goods>
+    private val _goods: MutableLiveData<GoodsUiModel> = MutableLiveData()
+    val goods: LiveData<GoodsUiModel>
         get() = _goods
 
     private val _isItemAddedToCart: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val isItemAddedToCart: SingleLiveData<Unit>
         get() = _isItemAddedToCart
 
-    fun setGoods(goods: Goods) {
+    fun setGoods(goods: GoodsUiModel) {
         _goods.value = goods
     }
 
     fun addToShoppingCart() {
-        _goods.value?.let { shoppingRepository.addItem(it) }
+        _goods.value?.let { shoppingRepository.addItem(it.toDomain()) }
         _isItemAddedToCart.setValue(Unit)
     }
 

@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsBinding
-import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
+import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
 class GoodsActivity : BaseActivity() {
@@ -54,7 +54,7 @@ class GoodsActivity : BaseActivity() {
         }
     }
 
-    private fun navigateToDetail(goods: Goods) {
+    private fun navigateToDetail(goods: GoodsUiModel) {
         val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
         startActivity(intent)
     }

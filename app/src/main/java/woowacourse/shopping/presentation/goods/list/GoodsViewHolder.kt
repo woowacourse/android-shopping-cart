@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemGoodsBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
 
 class GoodsViewHolder(
     parent: ViewGroup,
@@ -17,7 +17,7 @@ class GoodsViewHolder(
         binding.goodsClickListener = goodsClickListener
     }
 
-    fun bind(goods: Goods) {
+    fun bind(goods: GoodsUiModel) {
         binding.goods = goods
     }
 }

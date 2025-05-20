@@ -7,13 +7,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.data.ShoppingRepository
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.toDomain
+import woowacourse.shopping.presentation.model.toUiModel
 
 class ShoppingCartViewModel(
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
-    val goods: LiveData<List<Goods>>
+    private val _goods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
+    val goods: LiveData<List<GoodsUiModel>>
         get() = _goods
 
     private val _page: MutableLiveData<Int> = MutableLiveData(DEFAULT_VALUE)
@@ -32,8 +34,8 @@ class ShoppingCartViewModel(
         updateState()
     }
 
-    fun deleteGoods(goods: Goods) {
-        shoppingRepository.removeItem(goods)
+    fun deleteGoods(goods: GoodsUiModel) {
+        shoppingRepository.removeItem(goods.toDomain())
         updateState()
     }
 
@@ -48,7 +50,7 @@ class ShoppingCartViewModel(
     }
 
     private fun updateState() {
-        _goods.value = shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT)
+        _goods.value = shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT).map { it.toUiModel() }
         updateNextPage()
         updatePreviousPage()
     }

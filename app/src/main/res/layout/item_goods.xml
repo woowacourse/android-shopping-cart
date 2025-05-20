@@ -7,7 +7,7 @@
 
         <variable
             name="goods"
-            type="woowacourse.shopping.domain.model.Goods" />
+            type="woowacourse.shopping.presentation.model.GoodsUiModel" />
 
         <variable
             name="goodsClickListener"
@@ -58,7 +58,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{goods.name.value}"
+            android:text="@{goods.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:goodsPrice="@{goods.price.value}"
+            app:goodsPrice="@{goods.price}"
             app:layout_constraintStart_toStartOf="@id/tv_goods_name"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name"
             tools:text="10,000원" />

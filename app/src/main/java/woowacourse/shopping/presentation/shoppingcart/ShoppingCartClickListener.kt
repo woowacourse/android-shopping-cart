@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.shoppingcart
 
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
 
 fun interface ShoppingCartClickListener {
-    fun onDeleteGoods(goods: Goods)
+    fun onDeleteGoods(goods: GoodsUiModel)
 }

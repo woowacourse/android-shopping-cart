@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{vm.goods.name.value}"
+            android:text="@{vm.goods.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -73,7 +73,7 @@
             android:layout_marginEnd="18dp"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:goodsPrice="@{vm.goods.price.value}"
+            app:goodsPrice="@{vm.goods.price}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="99,800원" />

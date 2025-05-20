@@ -10,8 +10,8 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
-import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.util.getSerializableCompat
 
 class GoodsDetailActivity : BaseActivity() {
@@ -26,7 +26,7 @@ class GoodsDetailActivity : BaseActivity() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
+        viewModel.setGoods(intent.getSerializableCompat<GoodsUiModel>(EXTRA_GOODS))
 
         viewModel.isItemAddedToCart.observe(this) {
             Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
@@ -54,7 +54,7 @@ class GoodsDetailActivity : BaseActivity() {
 
         fun newIntent(
             context: Context,
-            goods: Goods,
+            goods: GoodsUiModel,
         ): Intent =
             Intent(context, GoodsDetailActivity::class.java).apply {
                 putExtra(EXTRA_GOODS, goods)
