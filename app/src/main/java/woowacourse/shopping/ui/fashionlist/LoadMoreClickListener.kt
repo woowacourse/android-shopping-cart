@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productlist
+package woowacourse.shopping.ui.fashionlist
 
 fun interface LoadMoreClickListener {
     fun onClick()

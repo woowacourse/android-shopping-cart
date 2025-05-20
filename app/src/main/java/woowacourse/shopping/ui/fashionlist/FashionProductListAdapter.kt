@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productlist
+package woowacourse.shopping.ui.fashionlist
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,14 +9,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.LoadMoreItemBinding
 import woowacourse.shopping.databinding.ProductItemBinding
 
-class ProductListAdapter(
+class FashionProductListAdapter(
     private var items: List<ProductListViewType>,
     private val productClickListener: ProductClickListener,
     private val loadMoreClickListener: LoadMoreClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is ProductListViewType.ProductItemType -> R.layout.product_item
+            is ProductListViewType.FashionProductItemType -> R.layout.product_item
             is ProductListViewType.LoadMoreType -> R.layout.load_more_item
         }
     }
@@ -30,7 +30,7 @@ class ProductListAdapter(
             R.layout.product_item -> {
                 val binding: ProductItemBinding =
                     DataBindingUtil.inflate(inflater, R.layout.product_item, parent, false)
-                ProductItemViewHolder(binding, productClickListener)
+                FashionProductItemViewHolder(binding, productClickListener)
             }
 
             R.layout.load_more_item -> {
@@ -48,7 +48,7 @@ class ProductListAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductItemViewHolder -> holder.bind(items[position] as ProductListViewType.ProductItemType)
+            is FashionProductItemViewHolder -> holder.bind(items[position] as ProductListViewType.FashionProductItemType)
         }
     }
 

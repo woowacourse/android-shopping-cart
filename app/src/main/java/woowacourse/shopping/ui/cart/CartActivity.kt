@@ -14,7 +14,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.ui.productlist.ProductListActivity
+import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
 import woowacourse.shopping.ui.viewmodel.CartViewModel
 
 class CartActivity : AppCompatActivity() {
@@ -82,7 +82,7 @@ class CartActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                startActivity(ProductListActivity.newIntent(this))
+                startActivity(FashionProductListActivity.newIntent(this))
                 finish()
                 return true
             }

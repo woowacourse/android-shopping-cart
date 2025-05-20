@@ -10,14 +10,14 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.ui.productlist.ProductListActivity
+import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
 
-class ProductListActivityTest {
+class FashionProductListActivityTest {
     private var viewHolder: RecyclerView.ViewHolder? = null
 
     @BeforeEach
     fun setUp() {
-        val scenario = ActivityScenario.launch(ProductListActivity::class.java)
+        val scenario = ActivityScenario.launch(FashionProductListActivity::class.java)
 
         scenario.onActivity { activity ->
             val recyclerView = activity.findViewById<RecyclerView>(R.id.products_recyclerView)

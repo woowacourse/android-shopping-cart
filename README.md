@@ -58,3 +58,5 @@
 - [x] refactor: Database 초기화 위치 변경
 
 - [x] refactor: 커스텀 게터 제거
+
+- [x] refactor: ProductList -> FashionProductList 네이밍 변경

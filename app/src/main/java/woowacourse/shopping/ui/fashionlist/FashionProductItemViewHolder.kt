@@ -1,9 +1,9 @@
-package woowacourse.shopping.ui.productlist
+package woowacourse.shopping.ui.fashionlist
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ProductItemBinding
 
-class ProductItemViewHolder(
+class FashionProductItemViewHolder(
     private val binding: ProductItemBinding,
     productClickListener: ProductClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -11,7 +11,7 @@ class ProductItemViewHolder(
         binding.productClickListener = productClickListener
     }
 
-    fun bind(item: ProductListViewType.ProductItemType) {
+    fun bind(item: ProductListViewType.FashionProductItemType) {
         binding.product = item.product
     }
 }

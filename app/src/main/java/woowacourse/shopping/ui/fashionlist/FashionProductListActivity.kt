@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productlist
+package woowacourse.shopping.ui.fashionlist
 
 import android.content.Context
 import android.content.Intent
@@ -22,14 +22,14 @@ import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.viewmodel.ProductListViewModel
 import woowacourse.shopping.utils.ViewModelFactory
 
-class ProductListActivity : AppCompatActivity() {
+class FashionProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
     private val viewModel: ProductListViewModel by viewModels {
         ViewModelFactory.createProductViewModelFactory(
             ProductRepositoryImpl(),
         )
     }
-    private lateinit var productListAdapter: ProductListAdapter
+    private lateinit var fashionProductListAdapter: FashionProductListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,14 +66,14 @@ class ProductListActivity : AppCompatActivity() {
                     }
             }
 
-        productListAdapter =
-            ProductListAdapter(
+        fashionProductListAdapter =
+            FashionProductListAdapter(
                 items = emptyList(),
                 productClickListener =
                     object : ProductClickListener {
                         override fun onClick(product: Product) {
                             val intent =
-                                ProductDetailActivity.newIntent(this@ProductListActivity, product)
+                                ProductDetailActivity.newIntent(this@FashionProductListActivity, product)
                             startActivity(intent)
                         }
                     },
@@ -83,14 +83,14 @@ class ProductListActivity : AppCompatActivity() {
             )
 
         binding.productsRecyclerView.apply {
-            adapter = productListAdapter
+            adapter = fashionProductListAdapter
             layoutManager = customLayoutManager
         }
     }
 
     private fun initObserver() {
         viewModel.products.observe(this) {
-            productListAdapter.update(it)
+            fashionProductListAdapter.update(it)
         }
     }
 
@@ -110,7 +110,7 @@ class ProductListActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, ProductListActivity::class.java)
+            return Intent(context, FashionProductListActivity::class.java)
         }
     }
 }

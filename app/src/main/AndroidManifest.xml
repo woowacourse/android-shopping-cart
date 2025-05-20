@@ -22,7 +22,7 @@
             android:name=".ui.productdetail.ProductDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.productlist.ProductListActivity"
+            android:name=".ui.fashionlist.ProductListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

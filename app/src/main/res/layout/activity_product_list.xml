@@ -7,7 +7,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.productlist.ProductListActivity">
+        tools:context=".ui.fashionlist.FashionProductListActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_product_list"

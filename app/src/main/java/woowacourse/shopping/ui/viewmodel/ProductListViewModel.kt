@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.product.ProductRepository
-import woowacourse.shopping.ui.productlist.ProductListViewType
+import woowacourse.shopping.ui.fashionlist.ProductListViewType
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -18,8 +18,8 @@ class ProductListViewModel(
     }
 
     fun loadProducts() {
-        val originProducts = _products.value.orEmpty().filterIsInstance<ProductListViewType.ProductItemType>()
-        val newProducts = productRepository.productsByPageNumberAndSize(pageNumber++, 20).map { ProductListViewType.ProductItemType(it) }
+        val originProducts = _products.value.orEmpty().filterIsInstance<ProductListViewType.FashionProductItemType>()
+        val newProducts = productRepository.productsByPageNumberAndSize(pageNumber++, 20).map { ProductListViewType.FashionProductItemType(it) }
 
         if (productRepository.canMoreLoad(pageNumber, 20)) {
             _products.value = originProducts + newProducts + ProductListViewType.LoadMoreType

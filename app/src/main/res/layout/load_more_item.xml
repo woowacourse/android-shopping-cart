@@ -5,7 +5,7 @@
     <data>
         <variable
             name="loadMoreClickListener"
-            type="woowacourse.shopping.ui.productlist.LoadMoreClickListener" />
+            type="woowacourse.shopping.ui.fashionlist.LoadMoreClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -15,7 +15,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.ui.productlist.ProductListActivity
+import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
 import woowacourse.shopping.utils.intentSerializable
 import kotlin.concurrent.thread
 
@@ -51,7 +51,7 @@ class ProductDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_close -> {
-                startActivity(ProductListActivity.newIntent(this))
+                startActivity(FashionProductListActivity.newIntent(this))
             }
         }
 
