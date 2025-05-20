@@ -21,19 +21,21 @@ class GoodsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-
-        val adapter = GoodsAdapter { goodsUiModel -> navigateToDetail(goodsUiModel) }
-        setUpGoodsList(adapter)
+        setUpBinding()
+        setUpGoodsList()
         setLoadButtonClickListener()
+    }
 
-        viewModel.goodsUiModels.observe(this) { goods ->
-            adapter.updateItems(goods)
+    private fun setUpBinding() {
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = this@GoodsActivity
         }
     }
 
-    private fun setUpGoodsList(adapter: GoodsAdapter) {
+    private fun setUpGoodsList() {
         binding.rvGoodsList.apply {
-            this.adapter = adapter
+            this.adapter = GoodsAdapter { goodsUiModel -> navigateToDetail(goodsUiModel) }
             layoutManager = GridLayoutManager(this@GoodsActivity, SPAN_COUNT)
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
