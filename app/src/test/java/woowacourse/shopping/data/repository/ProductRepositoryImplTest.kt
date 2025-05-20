@@ -86,7 +86,7 @@ class ProductRepositoryImplTest {
     fun `modifyQuantity()는 productStorage의 modifyQuantity()를 호출해야 한다`() {
         // given
         val id = 1L
-        val quantity = 5
+        val quantity = Quantity(5)
 
         every { storage.modifyQuantity(id, Quantity(5)) } just Runs
 
@@ -94,6 +94,6 @@ class ProductRepositoryImplTest {
         productRepository.modifyQuantity(id, quantity)
 
         // then
-        verify(exactly = 1) { storage.modifyQuantity(id, Quantity(quantity)) }
+        verify(exactly = 1) { storage.modifyQuantity(id, quantity) }
     }
 }

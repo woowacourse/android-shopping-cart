@@ -12,10 +12,10 @@ class ProductRepositoryImpl(
     override fun get(id: Long): Product = productStorage[id]
 
     override fun modifyQuantity(
-        id: Long,
-        quantity: Int,
+        productId: Long,
+        quantity: Quantity,
     ) {
-        productStorage.modifyQuantity(id, Quantity(quantity))
+        productStorage.modifyQuantity(productId, quantity)
     }
 
     override fun loadSinglePage(
