@@ -60,6 +60,7 @@ class MainViewModel(
             CartSavingState.SAVED -> {
                 whenProductSavedInCart(productId, currentUiState)
             }
+
             CartSavingState.NOT_SAVED -> {
                 whenProductNotSavedInCart(productId, currentUiState)
             }
@@ -96,7 +97,8 @@ class MainViewModel(
                 productRepository.modifyQuantity(productId, newState.cartQuantity - 1)
                 onCartUpdate(newState.cartQuantity)
             }
-            IncreaseState.CannotIncrease -> sendEvent(MainUiEvent.ShowCannotIncrease)
+
+            is IncreaseState.CannotIncrease -> sendEvent(MainUiEvent.ShowCannotIncrease(result.quantity))
         }
     }
 

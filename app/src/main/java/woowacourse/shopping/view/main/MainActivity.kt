@@ -14,12 +14,14 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.core.ext.showToast
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
 import woowacourse.shopping.view.main.adapter.ProductRvItems
 import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
+import woowacourse.shopping.view.main.vm.event.MainUiEvent
 import kotlin.getValue
 
 class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
@@ -81,6 +83,16 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     private fun observeViewModel() {
         viewModel.uiState.observe(this) { value ->
             productsAdapter.submitList(value)
+        }
+
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is MainUiEvent.ShowCannotIncrease -> {
+                    showToast(
+                        getString(R.string.text_over_quantity).format(event.quantity),
+                    )
+                }
+            }
         }
     }
 
