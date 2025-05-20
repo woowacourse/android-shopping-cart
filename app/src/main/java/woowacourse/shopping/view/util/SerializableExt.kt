@@ -1,4 +1,4 @@
-package woowacourse.shopping.utils
+package woowacourse.shopping.view.util
 
 import android.content.Intent
 import android.os.Build

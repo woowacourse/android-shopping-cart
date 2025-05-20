@@ -11,7 +11,7 @@ class ShoppingCartTest {
     @BeforeEach
     fun setUp() {
         product1 = Product(0, "", "아메리카노", 2500)
-        product2 = Product(0, "", "롱블랙", 2300)
+        product2 = Product(1, "", "롱블랙", 2300)
     }
 
     @Test

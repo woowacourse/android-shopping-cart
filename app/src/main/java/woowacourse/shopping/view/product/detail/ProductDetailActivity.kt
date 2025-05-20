@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.view.cart.ShoppingCartActivity
+import woowacourse.shopping.view.util.getSerializableExtraCompat
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
