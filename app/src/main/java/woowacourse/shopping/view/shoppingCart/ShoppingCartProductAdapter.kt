@@ -45,13 +45,11 @@ class ShoppingCartProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ShoppingCartItem>) {
-        val oldProductItemsCount = (itemCount - 1).coerceAtLeast(0)
-        notifyItemRangeRemoved(0, oldProductItemsCount)
+        val oldItems = this.items.size
+        notifyItemRangeRemoved(0, oldItems - 1)
 
         this.items = items
-
-        val newProductItemsCount = (itemCount - 1).coerceAtLeast(0)
-        notifyItemRangeInserted(0, newProductItemsCount)
+        notifyItemRangeInserted(0, items.size - 1)
 
         val paginationItemPosition = itemCount - 1
         notifyItemChanged(paginationItemPosition)
