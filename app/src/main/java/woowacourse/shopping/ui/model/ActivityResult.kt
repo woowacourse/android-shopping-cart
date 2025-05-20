@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.model
 
-enum class ResultCode(
+enum class ActivityResult(
     val code: Int,
     val key: String? = null,
 ) {

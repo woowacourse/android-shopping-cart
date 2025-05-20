@@ -13,7 +13,7 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.databinding.LayoutProductsCartQuantityBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.common.DataBindingActivity
-import woowacourse.shopping.ui.model.ResultCode
+import woowacourse.shopping.ui.model.ActivityResult
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.history.HistoryProductAdapter
 import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter
@@ -126,20 +126,20 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
                 ActivityResultContracts.StartActivityForResult(),
             ) { result ->
                 when (result.resultCode) {
-                    ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.code ->
+                    ActivityResult.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.code ->
                         navigateToProductDetail(
-                            result.data?.getIntExtra(ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.key, 0) ?: 0,
+                            result.data?.getIntExtra(ActivityResult.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.key, 0) ?: 0,
                             false,
                         )
 
-                    ResultCode.PRODUCT_DETAIL_CART_UPDATED.code ->
+                    ActivityResult.PRODUCT_DETAIL_CART_UPDATED.code ->
                         viewModel.loadCartProduct(
-                            result.data?.getIntExtra(ResultCode.PRODUCT_DETAIL_CART_UPDATED.key, 0) ?: 0,
+                            result.data?.getIntExtra(ActivityResult.PRODUCT_DETAIL_CART_UPDATED.key, 0) ?: 0,
                         )
 
-                    ResultCode.CART_PRODUCT_EDITED.code ->
+                    ActivityResult.CART_PRODUCT_EDITED.code ->
                         viewModel.loadCartProducts(
-                            result.data?.getIntegerArrayListExtra(ResultCode.CART_PRODUCT_EDITED.key)?.toList() ?: emptyList(),
+                            result.data?.getIntegerArrayListExtra(ActivityResult.CART_PRODUCT_EDITED.key)?.toList() ?: emptyList(),
                         )
                 }
             }

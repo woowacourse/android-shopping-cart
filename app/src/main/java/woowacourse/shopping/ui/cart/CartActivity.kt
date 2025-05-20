@@ -10,7 +10,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartAdapter
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 import woowacourse.shopping.ui.common.DataBindingActivity
-import woowacourse.shopping.ui.model.ResultCode
+import woowacourse.shopping.ui.model.ActivityResult
 
 class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
@@ -47,9 +47,9 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
         }
         viewModel.editedProductIds.observe(this) { editedProductIds ->
             setResult(
-                ResultCode.CART_PRODUCT_EDITED.code,
+                ActivityResult.CART_PRODUCT_EDITED.code,
                 Intent().apply {
-                    putIntegerArrayListExtra(ResultCode.CART_PRODUCT_EDITED.key, ArrayList(editedProductIds))
+                    putIntegerArrayListExtra(ActivityResult.CART_PRODUCT_EDITED.key, ArrayList(editedProductIds))
                 },
             )
         }
