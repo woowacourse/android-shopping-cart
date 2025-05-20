@@ -20,7 +20,7 @@ class CatalogProductsViewModelTest {
     @Test
     fun `새로운 상품 리스트가 products에 추가된다`() {
         // when
-        viewModel.loadProducts()
+        viewModel.loadCartProducts()
 
         // then
         val actual = viewModel.catalogProducts.getOrAwaitValue()
@@ -30,7 +30,7 @@ class CatalogProductsViewModelTest {
     @Test
     fun `hasMoreProducts 값이 설정된다`() {
         // given
-        viewModel.loadProducts(Int.MAX_VALUE)
+        viewModel.loadCartProducts(Int.MAX_VALUE)
 
         // when
         viewModel.loadHasMoreProducts()

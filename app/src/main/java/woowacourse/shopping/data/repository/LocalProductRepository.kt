@@ -2,6 +2,7 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.dao.ProductDao
 import woowacourse.shopping.data.mapper.toDomain
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.concurrent.thread
@@ -22,6 +23,24 @@ class LocalProductRepository(
                     CatalogProducts(products = cartProducts, hasMore = hasMore),
                 )
             }
+        }
+    }
+
+    override fun fetchProduct(
+        productId: Int,
+        callback: (CartProduct?) -> Unit,
+    ) {
+        thread {
+            callback(dao.getProduct(productId)?.toDomain())
+        }
+    }
+
+    override fun fetchProducts(
+        productIds: List<Int>,
+        callback: (List<CartProduct>) -> Unit,
+    ) {
+        thread {
+            callback(dao.getProducts(productIds).map { it.toDomain() })
         }
     }
 

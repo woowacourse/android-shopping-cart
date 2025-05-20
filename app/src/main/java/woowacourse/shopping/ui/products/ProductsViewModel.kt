@@ -15,7 +15,7 @@ import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductsViewModel(
-    private val productsRepository: ProductRepository,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
 ) : ViewModel() {
@@ -33,8 +33,8 @@ class ProductsViewModel(
                 ?.product
                 ?.id ?: 0
 
-    fun loadProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        productsRepository.fetchProducts(lastId = lastProductId, count = count) { newProducts ->
+    fun loadCartProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
+        productRepository.fetchProducts(lastId = lastProductId, count = count) { newProducts ->
             _catalogProducts.postValue(catalogProducts.value?.plus(newProducts))
         }
     }
@@ -57,14 +57,16 @@ class ProductsViewModel(
         }
     }
 
-    fun updateCartProduct(id: Int) {
-        cartRepository.fetchCartProduct(id) { cartProduct ->
-            _catalogProducts.postValue(catalogProducts.value?.updateCartProduct(cartProduct ?: return@fetchCartProduct))
+    fun loadCartProduct(id: Int) {
+        productRepository.fetchProduct(id) { cartProduct ->
+            _catalogProducts.postValue(catalogProducts.value?.updateCartProduct(cartProduct ?: return@fetchProduct))
         }
     }
 
-    fun updateCartProducts(ids: List<Int>) {
-        ids.forEach { id -> updateCartProduct(id) }
+    fun loadCartProducts(ids: List<Int>) {
+        productRepository.fetchProducts(ids) { cartProducts ->
+            _catalogProducts.postValue(catalogProducts.value?.updateCartProducts(cartProducts))
+        }
     }
 
     companion object {

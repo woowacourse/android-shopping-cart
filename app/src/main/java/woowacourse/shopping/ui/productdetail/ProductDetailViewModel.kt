@@ -12,10 +12,12 @@ import woowacourse.shopping.domain.model.CartProduct.Companion.EMPTY_CART_PRODUC
 import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 
 class ProductDetailViewModel(
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
 ) : ViewModel() {
@@ -29,7 +31,7 @@ class ProductDetailViewModel(
     val onCartProductAddSuccess: SingleLiveData<Boolean?> get() = _onCartProductAddSuccess
 
     fun loadProductDetail(id: Int) {
-        cartRepository.fetchCartProduct(id) { cartProduct ->
+        productRepository.fetchProduct(id) { cartProduct ->
             _cartProduct.postValue(cartProduct)
         }
     }
@@ -71,6 +73,7 @@ class ProductDetailViewModel(
                     val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return ProductDetailViewModel(
+                        application.productRepository,
                         application.cartRepository,
                         application.historyRepository,
                     ) as T

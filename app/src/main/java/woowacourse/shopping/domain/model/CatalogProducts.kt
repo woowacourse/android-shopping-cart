@@ -4,6 +4,8 @@ data class CatalogProducts(
     val products: List<CartProduct>,
     val hasMore: Boolean,
 ) {
+    val cartProductsQuantity: Int get() = products.sumOf { it.quantity }
+
     operator fun plus(other: CatalogProducts): CatalogProducts {
         val mergedProducts = products + other.products
         return CatalogProducts(
@@ -35,6 +37,14 @@ data class CatalogProducts(
                 } else {
                     product
                 }
+            }
+        return copy(products = updatedProducts)
+    }
+
+    fun updateCartProducts(newProducts: List<CartProduct>): CatalogProducts {
+        val updatedProducts =
+            products.map { product ->
+                newProducts.find { it.product.id == product.product.id } ?: product
             }
         return copy(products = updatedProducts)
     }

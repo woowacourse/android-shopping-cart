@@ -23,8 +23,8 @@ class CartViewModel(
     private val _maxPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
     val maxPage: LiveData<Int> get() = _maxPage
 
-    private val _editedProductIds: MutableLiveData<List<Int>> = MutableLiveData(emptyList())
-    val editedProductIds: LiveData<List<Int>> get() = _editedProductIds
+    private val _editedProductIds: MutableLiveData<Set<Int>> = MutableLiveData(emptySet())
+    val editedProductIds: LiveData<Set<Int>> get() = _editedProductIds
 
     init {
         loadCartProducts()
@@ -44,6 +44,7 @@ class CartViewModel(
     fun removeCartProduct(id: Int) {
         cartRepository.removeCartProduct(id)
         loadCartProducts()
+        _editedProductIds.value = editedProductIds.value?.plus(id)
     }
 
     fun increasePage(step: Int = DEFAULT_PAGE_STEP) {
@@ -87,10 +88,10 @@ class CartViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return CartViewModel(
-                        (application as ShoppingApp).cartRepository,
+                        application.cartRepository,
                     ) as T
                 }
             }
