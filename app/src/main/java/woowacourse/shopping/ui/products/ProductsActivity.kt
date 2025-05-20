@@ -9,7 +9,9 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.common.DataBindingActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.products.ProductsAdapter.OnClickHandler
+import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter
+import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter.OnClickHandler
+import woowacourse.shopping.ui.products.adapter.product.ProductsLayoutManager
 
 class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }

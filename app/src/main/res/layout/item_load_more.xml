@@ -6,7 +6,7 @@
 
         <variable
             name="onClickHandler"
-            type="woowacourse.shopping.ui.products.LoadMoreViewHolder.OnClickHandler" />
+            type="woowacourse.shopping.ui.products.adapter.product.LoadMoreViewHolder.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

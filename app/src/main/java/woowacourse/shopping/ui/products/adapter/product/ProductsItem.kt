@@ -1,8 +1,8 @@
-package woowacourse.shopping.ui.products
+package woowacourse.shopping.ui.products.adapter.product
 
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.ui.products.ProductsItemViewType.LOAD_MORE
-import woowacourse.shopping.ui.products.ProductsItemViewType.PRODUCT
+import woowacourse.shopping.ui.products.adapter.product.ProductsItemViewType.LOAD_MORE
+import woowacourse.shopping.ui.products.adapter.product.ProductsItemViewType.PRODUCT
 
 sealed class ProductsItem(
     val viewType: ProductsItemViewType,
