@@ -112,7 +112,7 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun initCustomGridLayoutManager(): GridLayoutManager {
         return GridLayoutManager(this@ProductListActivity, 2).apply {
-            spanSizeLookup = CustomSpanSizeLookup(binding.productsRecyclerView.adapter!!)
+            spanSizeLookup = CustomSpanSizeLookup(productListAdapter)
         }
     }
 
