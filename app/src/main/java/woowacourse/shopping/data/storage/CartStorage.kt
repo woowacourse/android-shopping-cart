@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.storage
 
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartResult
+import woowacourse.shopping.domain.cart.CartSinglePage
 
 @Suppress("ktlint:standard:max-line-length")
 object CartStorage {
@@ -22,8 +22,8 @@ object CartStorage {
     fun singlePage(
         fromIndex: Int,
         toIndex: Int,
-    ): CartResult {
-        val endIndex = minOf(toIndex, cart.size)
+    ): CartSinglePage {
+        val endIndex = minOf(toIndex, carts.size)
 
         val result = cartValues.subList(fromIndex, endIndex)
         val hasNextPage = endIndex < cart.size

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.product.ProductResult
+import woowacourse.shopping.domain.product.ProductSinglePage
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
@@ -46,7 +46,7 @@ class MainViewModelTest {
             )
 
         every { productRepository.loadSinglePage(0, 20) } returns
-            ProductResult(
+            ProductSinglePage(
                 products = products,
                 hasNextPage = true,
             )
@@ -75,7 +75,7 @@ class MainViewModelTest {
         viewModel.increaseQuantity(original.item.id)
 
         val updated = viewModel.uiState.getOrAwaitValue().items.first()
-        assertThat(updated.quantity.value).isEqualTo(original.quantity.value + 1)
+        assertThat(updated.cartQuantity.value).isEqualTo(original.cartQuantity.value + 1)
     }
 
     @Test
@@ -84,6 +84,6 @@ class MainViewModelTest {
         viewModel.decreaseQuantity(original.item.id)
 
         val updated = viewModel.uiState.getOrAwaitValue().items.first()
-        assertThat(updated.quantity.value).isEqualTo(original.quantity.value - 1)
+        assertThat(updated.cartQuantity.value).isEqualTo(original.cartQuantity.value - 1)
     }
 }

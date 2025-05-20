@@ -3,7 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.storage.CartStorage
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartResult
+import woowacourse.shopping.domain.cart.CartSinglePage
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(private val storage: CartStorage) : CartRepository {
@@ -18,7 +18,7 @@ class CartRepositoryImpl(private val storage: CartStorage) : CartRepository {
     override fun loadSinglePage(
         page: Int,
         pageSize: Int,
-    ): CartResult {
+    ): CartSinglePage {
         val fromIndex = page * pageSize
         val toIndex = fromIndex + pageSize
         val result = storage.singlePage(fromIndex, toIndex)

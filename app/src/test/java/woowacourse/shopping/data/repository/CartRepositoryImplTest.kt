@@ -6,7 +6,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.storage.CartStorage
-import woowacourse.shopping.domain.cart.CartResult
+import woowacourse.shopping.domain.cart.CartSinglePage
 import woowacourse.shopping.fixture.cartFixture1
 import woowacourse.shopping.fixture.cartFixture2
 import woowacourse.shopping.fixture.cartFixture3
@@ -19,7 +19,7 @@ class CartRepositoryImplTest {
     fun `첫_번째_페이지의_장바구니_상품을_반환한다`() {
         // given
         val expectedResult =
-            CartResult(
+            CartSinglePage(
                 carts = listOf(cartFixture1, cartFixture2, cartFixture3),
                 hasNextPage = true,
             )
@@ -39,7 +39,7 @@ class CartRepositoryImplTest {
         // given
         val cart = cartFixture1
         val expectedResult =
-            CartResult(
+            CartSinglePage(
                 carts = listOf(cart),
                 hasNextPage = false,
             )
