@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
+import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.model.GoodsUiModel
@@ -14,13 +15,17 @@ import woowacourse.shopping.presentation.util.getParcelableCompat
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
-    private val viewModel: GoodsDetailViewModel by viewModels()
+    private val viewModel: GoodsDetailViewModel by viewModels {
+        GoodsDetailViewModelFactory(
+            intent.getParcelableCompat<GoodsUiModel>(EXTRA_GOODS),
+            ShoppingCartRepositoryImpl(),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
-        viewModel.setGoods(intent.getParcelableCompat<GoodsUiModel>(EXTRA_GOODS))
     }
 
     private fun setUpBinding() {
