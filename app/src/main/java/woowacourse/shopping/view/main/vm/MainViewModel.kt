@@ -3,10 +3,12 @@ package woowacourse.shopping.view.main.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class MainViewModel(
     private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(ProductUiState())
     val uiState: LiveData<ProductUiState> = _uiState
