@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="price">가격</string>
+    <string name="add_shopping_cart">장바구니 담기</string>
+    <string name="product_price">%,d원</string>
+    <string name="shopping">Shopping</string>
+    <string name="left_arrow"><![CDATA[<]]></string>
+    <string name="right_arrow"><![CDATA[>]]></string>
+    <string name="load_more">더보기</string>
+    <string name="error">오류</string>
+    <string name="server_error_message">일시적 서버 오류가 발생하였습니다.</string>
+    <string name="confirm">확인</string>
 </resources>
