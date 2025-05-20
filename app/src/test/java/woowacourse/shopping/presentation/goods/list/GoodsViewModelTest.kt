@@ -2,37 +2,28 @@ package woowacourse.shopping.presentation.goods.list
 
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockkObject
-import io.mockk.unmockkObject
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.GoodsDataBase
-import woowacourse.shopping.fixture.createGoods
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.goods.FakeGoodsRepository
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsViewModelTest {
     private lateinit var goodsViewModel: GoodsViewModel
+    private lateinit var repository: FakeGoodsRepository
 
     @BeforeEach
     fun setUp() {
-        mockkObject(GoodsDataBase)
-        goodsViewModel = GoodsViewModel()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkObject(GoodsDataBase)
+        repository = FakeGoodsRepository()
+        goodsViewModel = GoodsViewModel(repository)
     }
 
     @Test
-    fun `상품 목록을 가져온다`() {
+    fun `상품 목록을 20개씩 가져온다`() {
         // then
-        goodsViewModel.goodsUiModels.getOrAwaitValue().isNotEmpty() shouldBe true
+        goodsViewModel.goodsUiModels.getOrAwaitValue().size shouldBe 20
     }
 
     @Test
@@ -50,9 +41,6 @@ class GoodsViewModelTest {
 
     @Test
     fun `데이터가 존재할 경우 데이터를 추가할 수 있다`() {
-        // given
-        every { GoodsDataBase.getPagedGoods(any(), any()) } returns listOf(createGoods())
-
         // when
         goodsViewModel.determineLoadMoreVisibility(false)
 
@@ -63,12 +51,13 @@ class GoodsViewModelTest {
     @Test
     fun `데이터가 존재하지 않을 경우 데이터를 추가할 수 없다`() {
         // given
-        every { GoodsDataBase.getPagedGoods(any(), any()) } returns emptyList()
+        val emptyRepository = FakeGoodsRepository(emptyList())
+        val emptyViewModel = GoodsViewModel(emptyRepository)
 
         // when
-        goodsViewModel.determineLoadMoreVisibility(false)
+        emptyViewModel.determineLoadMoreVisibility(false)
 
         // then
-        goodsViewModel.showLoadMore.getOrAwaitValue() shouldBe false
+        emptyViewModel.showLoadMore.getOrAwaitValue() shouldBe false
     }
 }
