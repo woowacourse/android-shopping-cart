@@ -1,0 +1,22 @@
+package woowacourse.shopping.presentation.util
+
+import android.content.Intent
+import android.os.Build
+import android.os.Parcelable
+
+inline fun <reified T : Parcelable> Intent.getParcelableCompat(key: String): T {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getParcelableExtra(key, T::class.java) ?: throw IllegalArgumentException(
+            ERROR_NO_EXTRA_DATA.format(key),
+        )
+    } else {
+        val value = getParcelableExtra<T>(key)
+        if (value is T) {
+            value
+        } else {
+            throw IllegalArgumentException(ERROR_NO_EXTRA_DATA.format(key))
+        }
+    }
+}
+
+const val ERROR_NO_EXTRA_DATA = "[Key : %s] 부가 데이터를 찾을 수 없습니다"
