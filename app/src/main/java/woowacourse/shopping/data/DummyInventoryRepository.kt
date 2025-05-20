@@ -168,7 +168,7 @@ class DummyInventoryRepository : InventoryRepository {
         pageIndex: Int,
     ): Page<Product> {
         val from = pageSize * pageIndex
-        val to = min(from + pageSize, getAll().size)
+        val to = (from + pageSize).coerceAtMost(getAll().size)
         val items = products.subList(from, to)
         val hasPrevious = pageIndex > 0
         val hasNext = to < getAll().size
