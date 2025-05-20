@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.viewmodel
+package woowacourse.shopping.ui.productlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,7 +25,7 @@ class ProductListViewModel(
 
         productRepository.fetchInRange(
             limit = PAGE_FETCH_SIZE,
-            offset = (pageNumber++) * PAGE_SIZE
+            offset = (pageNumber++) * PAGE_SIZE,
         ) { loadProducts ->
             val newProducts =
                 loadProducts.take(PAGE_SIZE)
@@ -45,11 +45,12 @@ class ProductListViewModel(
         private const val PAGE_FETCH_SIZE = 21
         private const val PAGE_SIZE = 20
 
-        val Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ProductListViewModel(RepositoryProvider.provideProductRepository()) as T
+        val Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ProductListViewModel(RepositoryProvider.provideProductRepository()) as T
+                }
             }
-        }
     }
 }

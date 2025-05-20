@@ -6,10 +6,9 @@ import woowacourse.shopping.data.product.ProductEntity
 
 class CartItemDetail(
     @Embedded val cartItem: CartItemEntity,
-
     @Relation(
         parentColumn = "product_id",
-        entityColumn = "id"
+        entityColumn = "id",
     )
-    val productEntity: ProductEntity
+    val productEntity: ProductEntity,
 )

@@ -10,7 +10,7 @@ import woowacourse.shopping.providers.RepositoryProvider
 
 class ProductDetailViewModel(
     val product: Product,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _eventAddedCartToast = MutableLiveData<Unit>()
     val eventAddedCartToast: LiveData<Unit> = _eventAddedCartToast
@@ -27,7 +27,7 @@ class ProductDetailViewModel(
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ProductDetailViewModel(
                         product,
-                        RepositoryProvider.provideCartRepository()
+                        RepositoryProvider.provideCartRepository(),
                     ) as T
                 }
             }

@@ -6,16 +6,15 @@ import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.domain.product.ProductRepository
 
 object RepositoryProvider {
-
     fun provideCartRepository(): CartRepository {
         return CartRepositoryImpl(
-            ClothesStoreDatabaseProvider.provideCartDao()
+            ClothesStoreDatabaseProvider.provideCartDao(),
         )
     }
 
     fun provideProductRepository(): ProductRepository {
         return ProductRepositoryImpl(
-            ClothesStoreDatabaseProvider.provideProductDao()
+            ClothesStoreDatabaseProvider.provideProductDao(),
         )
     }
 }

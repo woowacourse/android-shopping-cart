@@ -12,6 +12,7 @@ import woowacourse.shopping.data.product.ProductEntity
 @Database(entities = [ProductEntity::class, CartItemEntity::class], version = 1)
 abstract class ClothesStoreDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+
     abstract fun cartDao(): CartDao
 
     companion object {
