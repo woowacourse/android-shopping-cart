@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.detail.ProductDetailActivity
@@ -24,20 +23,10 @@ class MainActivity :
         R.layout.activity_main,
     ) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
-    private val handler: ProductsEventHandler by lazy {
-        object : ProductsEventHandler {
-            override fun onProductSelected(product: Product) {
-                startActivity(ProductDetailActivity.newIntent(this@MainActivity, product))
-            }
-
-            override fun onLoadMoreProducts(page: Int) {
-                binding.btnLoadMoreProducts.visibility = View.GONE
-                viewModel.requestProductsPage(page)
-            }
-        }
-    }
     private val productsAdapter: ProductsAdapter by lazy {
-        ProductsAdapter(this@MainActivity.handler)
+        ProductsAdapter { product ->
+            startActivity(ProductDetailActivity.newIntent(this, product))
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +35,7 @@ class MainActivity :
         setSupportActionBar(binding.toolbar as Toolbar)
         binding.apply {
             viewModel = this@MainActivity.viewModel
-            handler = this@MainActivity.handler
+            handler = ::onLoadMoreProducts
         }
         initRecyclerview()
     }
@@ -62,6 +51,11 @@ class MainActivity :
             startActivity(intent)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun onLoadMoreProducts(page: Int) {
+        binding.btnLoadMoreProducts.visibility = View.GONE
+        viewModel.requestProductsPage(page)
     }
 
     private fun initRecyclerview() {

@@ -9,7 +9,7 @@
 
         <variable
             name="handler"
-            type="woowacourse.shopping.view.main.ProductsEventHandler" />
+            type="kotlin.jvm.functions.Function1&lt;woowacourse.shopping.domain.Product, kotlin.Unit&gt;" />
 
     </data>
 
@@ -19,7 +19,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="154dp"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> handler.onProductSelected(product)}"
+        android:onClick="@{() -> handler.invoke(product)}"
         android:padding="10dp">
 
         <ImageView

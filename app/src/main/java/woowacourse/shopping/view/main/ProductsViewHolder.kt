@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.Product
 
 class ProductsViewHolder(
     private val binding: ItemProductBinding,
-    handler: ProductsEventHandler,
+    handler: (Product) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.handler = handler

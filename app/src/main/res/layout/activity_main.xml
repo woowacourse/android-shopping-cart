@@ -8,7 +8,7 @@
             type="woowacourse.shopping.view.main.ProductsViewModel" />
         <variable
             name="handler"
-            type="woowacourse.shopping.view.main.ProductsEventHandler" />
+            type="kotlin.jvm.functions.Function1&lt;java.lang.Integer, kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -40,7 +40,7 @@
             android:backgroundTint="@color/pagination_enabled"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onLoadMoreProducts(viewModel.productsLiveData.currentPage + 1)}"
+            android:onClick="@{()->handler.invoke(viewModel.productsLiveData.currentPage + 1)}"
             android:text="@string/button_text_load_more"
             android:textSize="20sp"
             android:textStyle="bold"
