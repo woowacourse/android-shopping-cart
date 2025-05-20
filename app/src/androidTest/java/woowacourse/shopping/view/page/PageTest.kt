@@ -12,7 +12,7 @@ class PageTest {
     @Test
     fun 페이지의_크기만큼_항목이_들어있다() {
         val page =
-            Page.from(
+            Page(
                 TestProducts.products.subList(0,5),
                 TestProducts.products.size,
                 0,
@@ -25,7 +25,7 @@ class PageTest {
     @Test
     fun 첫_페이지는_이전_페이지가_없고_다음_페이지가_있다() {
         val page =
-            Page.from(
+            Page(
                 TestProducts.products.subList(0,5),
                 TestProducts.products.size,
                 0,
@@ -38,7 +38,7 @@ class PageTest {
     @Test
     fun 첫_페이지의_인덱스는_0이다() {
         val page =
-            Page.from(
+            Page(
                 TestProducts.products.subList(0,5),
                 TestProducts.products.size,
                 0,
@@ -50,7 +50,7 @@ class PageTest {
     @Test
     fun 중간에_있는_페이지는_이전_페이지와_다음_페이지가_있다() {
         val page =
-            Page.from(
+            Page(
                 TestProducts.products.subList(0,5),
                 TestProducts.products.size,
                 1,
@@ -63,7 +63,7 @@ class PageTest {
     @Test
     fun 마지막_페이지는_이전_페이지가_없고_다음_페이지가_있다() {
         val page =
-            Page.from(
+            Page(
                 TestProducts.products.subList(0,5),
                 TestProducts.products.size,
                 5,
