@@ -14,7 +14,7 @@ import woowacourse.shopping.view.page.Page
 
 class ShoppingCartActivity :
     ShoppingCartActivityTemplate<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart) {
-    private val viewModel: ShoppingCartViewModel by viewModels()
+    private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.Factory }
     private val handler: ShoppingCartEventHandler by lazy {
         object : ShoppingCartEventHandler {
             override fun onProductRemove(product: Product) {

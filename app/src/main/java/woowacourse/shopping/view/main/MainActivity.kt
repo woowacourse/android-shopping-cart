@@ -19,7 +19,7 @@ import kotlin.getValue
 
 class MainActivity :
     ShoppingCartActivityTemplate<ActivityMainBinding>(R.layout.activity_main) {
-    private val viewModel: ProductsViewModel by viewModels()
+    private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val handler: ProductsEventHandler by lazy {
         object : ProductsEventHandler {
             override fun onProductSelected(product: Product) {

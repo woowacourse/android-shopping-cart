@@ -14,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shopping"
         android:usesCleartextTraffic="true"
+        android:name=".ShoppingCartApplication"
         tools:targetApi="31">
         <activity
             android:name=".view.main.MainActivity"
