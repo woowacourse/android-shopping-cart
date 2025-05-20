@@ -12,7 +12,11 @@ class ShoppingCartViewHolder(
         binding.handler = handler
     }
 
-    fun bind(item: Product) {
+    fun bind(
+        item: Product,
+        currentPage: Int,
+    ) {
         binding.product = item
+        binding.page = currentPage
     }
 }

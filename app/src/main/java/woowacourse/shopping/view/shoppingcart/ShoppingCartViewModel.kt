@@ -15,36 +15,37 @@ import woowacourse.shopping.view.page.Page
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val allProducts: List<Product> get() = shoppingCartRepository.findAll()
     private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
+    private val productsCount: Int get() = shoppingCartRepository.totalSize()
 
     val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
 
-    fun removeProduct(product: Product) {
-        val currentProductIndex = allProducts.indexOf(product)
+    fun removeProduct(
+        product: Product,
+        currentPage: Int,
+    ) {
         shoppingCartRepository.remove(product)
-        val requestPage = pageNumberAfterRemoval(currentProductIndex)
-        requestProductsPage(requestPage)
+        requestProductsPage(pageNumberAfterRemoval(currentPage))
     }
 
     fun requestProductsPage(requestPage: Int) {
-        val page =
+        val item = shoppingCartRepository.findAll(requestPage * PAGE_SIZE, PAGE_SIZE)
+        val total = shoppingCartRepository.totalSize()
+        _productsLiveData.value =
             Page.from(
-                allProducts.toList(),
+                item,
+                total,
                 requestPage,
                 PAGE_SIZE,
             )
-        _productsLiveData.value = page
     }
 
-    private fun pageNumberAfterRemoval(index: Int): Int {
-        val productsCount = allProducts.size
-        val currentPageNumber = index / PAGE_SIZE
+    private fun pageNumberAfterRemoval(currentPage: Int): Int {
         val newPageNumber =
-            if (productsCount % PAGE_SIZE == 0 && index == productsCount) {
-                currentPageNumber - 1
+            if (productsCount % PAGE_SIZE == 0 && currentPage * PAGE_SIZE == productsCount) {
+                currentPage - 1
             } else {
-                currentPageNumber
+                currentPage
             }
         return newPageNumber.coerceAtLeast(0)
     }

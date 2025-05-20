@@ -17,8 +17,11 @@ class ShoppingCartActivity :
     private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.Factory }
     private val handler: ShoppingCartEventHandler by lazy {
         object : ShoppingCartEventHandler {
-            override fun onProductRemove(product: Product) {
-                viewModel.removeProduct(product)
+            override fun onProductRemove(
+                product: Product,
+                currentPage: Int,
+            ) {
+                viewModel.removeProduct(product, currentPage)
             }
 
             override fun onPagination(page: Int) {
@@ -65,7 +68,7 @@ class ShoppingCartActivity :
     private fun updateRecyclerView(page: Page<Product>) {
         shoppingCartAdapter.apply {
             val previousCount = itemCount
-            updateProducts(page.items)
+            updateProducts(page)
             notifyItemRangeChanged(0, previousCount)
             notifyItemRangeRemoved(previousCount - itemCount, previousCount)
         }

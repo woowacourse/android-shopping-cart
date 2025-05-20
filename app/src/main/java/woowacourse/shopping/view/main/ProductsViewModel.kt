@@ -15,20 +15,20 @@ import woowacourse.shopping.view.page.Page
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
 ) : ViewModel() {
-    private val allProducts: List<Product> = productsRepository.findAll()
     private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
-
-    val totalSize: Int get() = allProducts.size
     val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
+    val totalSize: Int get() = productsRepository.totalSize()
 
     fun requestProductsPage(requestPage: Int) {
-        val page =
+        val items = productsRepository.findAll(requestPage * PAGE_SIZE, PAGE_SIZE)
+
+        _productsLiveData.value =
             Page.from(
-                allProducts.toList(),
+                items,
+                totalSize,
                 requestPage,
                 PAGE_SIZE,
             )
-        _productsLiveData.value = page
     }
 
     companion object {
@@ -36,7 +36,8 @@ class ProductsViewModel(
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val productsRepository = (this[APPLICATION_KEY] as ShoppingCartApplication).productsRepository
+                    val productsRepository =
+                        (this[APPLICATION_KEY] as ShoppingCartApplication).productsRepository
                     ProductsViewModel(
                         productsRepository,
                     )
