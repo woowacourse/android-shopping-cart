@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductResult
 
 @Suppress("ktlint:standard:max-line-length")
-class ProductStorage {
+object ProductStorage {
     private val products = mutableMapOf<Long, Product>()
     private val productsValues get() = products.values.toList()
 

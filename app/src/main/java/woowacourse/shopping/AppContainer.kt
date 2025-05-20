@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.getValue
 
 class AppContainer {
-    private val productStorage = ProductStorage()
+    private val productStorage = ProductStorage
     private val cartStorage = CartStorage
 
     val productRepository: ProductRepository by lazy { ProductRepositoryImpl(productStorage) }
