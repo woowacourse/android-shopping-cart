@@ -27,4 +27,17 @@ class QuantityTest {
         // then
         assertEquals(expected.value, 2)
     }
+
+    @Test
+    fun `새로운 수량이 현재 수량을 초과하면 true를 반환한다`() {
+        // when
+        val value = 3
+        val quantity = Quantity(2)
+
+        // given
+        val expected = quantity.isExceeded(3)
+
+        // then
+        assertEquals(expected, true)
+    }
 }

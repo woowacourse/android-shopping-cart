@@ -2,6 +2,8 @@ package woowacourse.shopping.domain
 
 @JvmInline
 value class Quantity(val value: Int) {
+    fun isExceeded(other: Int): Boolean = other > value
+
     fun hasQuantity() = value > 0
 
     operator fun plus(other: Int): Quantity {
