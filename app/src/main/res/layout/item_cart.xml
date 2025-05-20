@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="onClickHandler"
+            type="woowacourse.shopping.presentation.ui.cart.CartViewHolder.OnClickHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        android:layout_marginHorizontal="18dp"
+        android:layout_marginVertical="12dp"
+        android:background="@drawable/bg_cart_white_radius_4dp_stroke_gray_4">
+
+        <TextView
+            android:id="@+id/tv_cart_product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="18dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/gray_5"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/iv_cart_product_remove"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="[든든] 동원 스위트콘" />
+
+        <ImageView
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{product.imageUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name"
+            tools:src="@color/black" />
+
+        <ImageView
+            android:id="@+id/iv_cart_product_remove"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="8dp"
+            android:onClick="@{() -> onClickHandler.onRemoveCartProductClick(product.id)}"
+            android:padding="12dp"
+            android:src="@drawable/ic_cart_remove"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="18dp"
+            android:text="@{@string/products_price(product.price)}"
+            android:textColor="@color/gray_5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="99,800원" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
