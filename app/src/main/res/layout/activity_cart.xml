@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.feature.cart.CartViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".feature.cart.CartActivity"
+        android:fitsSystemWindows="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_goods"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingHorizontal="18dp"
+            app:items="@{viewModel.cart}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/paging"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_cart" />
+
+        <LinearLayout
+            android:id="@+id/paging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/rv_goods"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:visible="@{viewModel.showPageButton}"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_left_page"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/left_page_button_background"
+                android:enabled="@{viewModel.leftPageEnable}"
+                android:onClick="@{() -> viewModel.minusPage()}"
+                android:text="@string/cart_left_page_button"
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
+            <TextView
+                android:id="@+id/page_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:gravity="center"
+                android:text="@{String.valueOf(viewModel.page)}"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                tools:text="0" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_right_page"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/right_page_button_background"
+                android:enabled="@{viewModel.rightPageEnable}"
+                android:onClick="@{() -> viewModel.plusPage()}"
+                android:text="@string/cart_right_page_button"
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="goods"
+            type="woowacourse.shopping.domain.model.Goods" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="6dp"
+        android:paddingBottom="12dp">
+
+
+        <ImageView
+            android:id="@+id/iv_item_goods_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:contentDescription="@string/goods_image_description"
+            app:imgUrl="@{goods.thumbnailUrl}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/tv_item_goods_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{goods.name}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/iv_item_goods_thumbnail"
+            app:layout_constraintTop_toBottomOf="@+id/iv_item_goods_thumbnail"
+            tools:text="PET보틀-정사각형-매우긴이름매우긴이름매우긴이름" />
+
+        <TextView
+            android:id="@+id/tv_item_goods_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/goods_price(goods.price)}"
+            android:textColor="@color/gray_800"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_goods_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_goods_name"
+            tools:text="10,000원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
