@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="paginationButtonItem"
+            type="woowacourse.shopping.cart.CartItem.PaginationButtonItem" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.cart.PaginationButtonClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_pagination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_prev"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/pagination_prev_selector"
+                android:enabled="@{paginationButtonItem.isPrevButtonEnabled}"
+                android:onClick="@{() -> clickListener.onClick(1)}"
+                android:text="@string/text_prev_button"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:text="@{String.valueOf(paginationButtonItem.page)}"
+                android:id="@+id/textView_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/gray_5"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/button_next"
+                app:layout_constraintStart_toEndOf="@id/button_prev"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_next"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/pagination_next_selector"
+                android:enabled="@{paginationButtonItem.isNextButtonEnabled}"
+                android:onClick="@{() -> clickListener.onClick(2)}"
+                android:text="@string/text_next_button"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
