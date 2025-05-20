@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.goods.detail.GoodsDetailViewModel" />
@@ -59,30 +61,29 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@string/label_price"
             android:textColor="@color/black"
             android:textSize="20sp"
+            app:goodsPrice="@{vm.goods.price}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="99,800원" />
 
-        <TextView
-            android:id="@+id/tv_goods_price"
+
+        <include
+            android:id="@+id/cl_goods_count"
+            layout="@layout/view_quantity_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:goodsPrice="@{vm.goods.price}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            tools:text="99,800원" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <Button
-            android:onClick="@{() -> vm.addToShoppingCart()}"
             android:id="@+id/btn_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:onClick="@{() -> vm.addToShoppingCart()}"
             android:text="@string/btn_shopping_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
