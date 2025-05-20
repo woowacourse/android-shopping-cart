@@ -4,21 +4,21 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.cart.ShoppingCartRepository
+import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.fixture.FakeShoppingCartRepository
+import woowacourse.shopping.fixture.FakeCartProductRepository
 import woowacourse.shopping.view.product.detail.ProductDetailViewModel
 import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
-    private lateinit var repository: ShoppingCartRepository
+    private lateinit var repository: CartProductRepository
     private lateinit var product: Product
 
     @BeforeEach
     fun setup() {
-        repository = FakeShoppingCartRepository()
+        repository = FakeCartProductRepository()
         product = Product(id = 0L, imageUrl = "", name = "Product 0", price = 1000)
         viewModel = ProductDetailViewModel(product, repository)
     }

@@ -3,11 +3,11 @@ package woowacourse.shopping.view.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.cart.ShoppingCartRepository
+import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.domain.CartProduct
 
 class ShoppingCartViewModel(
-    private val repository: ShoppingCartRepository,
+    private val repository: CartProductRepository,
 ) : ViewModel(),
     ShoppingCartEventHandler {
     private val cachedProducts = mutableListOf<CartProduct>()

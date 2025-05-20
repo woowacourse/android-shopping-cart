@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.cart.ShoppingCartEntity
+import woowacourse.shopping.data.cart.CartProductEntity
 import woowacourse.shopping.domain.CartProduct
 
-fun List<ShoppingCartEntity>.toDomain() =
+fun List<CartProductEntity>.toDomain() =
     this.map { entity ->
         CartProduct(
             id = entity.id,
@@ -12,7 +12,7 @@ fun List<ShoppingCartEntity>.toDomain() =
     }
 
 fun CartProduct.toEntity() =
-    ShoppingCartEntity(
+    CartProductEntity(
         id = this.id,
         productId = this.product.toId(),
     )

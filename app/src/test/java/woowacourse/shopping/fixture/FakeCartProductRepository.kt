@@ -1,11 +1,11 @@
 package woowacourse.shopping.fixture
 
 import woowacourse.shopping.data.PagedResult
-import woowacourse.shopping.data.cart.ShoppingCartRepository
+import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 
-class FakeShoppingCartRepository : ShoppingCartRepository {
+class FakeCartProductRepository : CartProductRepository {
     private val items = mutableListOf<CartProduct>()
     private var nextId = 1L
 

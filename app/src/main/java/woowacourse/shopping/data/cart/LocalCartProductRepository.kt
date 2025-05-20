@@ -5,9 +5,9 @@ import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.CartProduct
 import kotlin.concurrent.thread
 
-class LocalShoppingCartRepository(
-    private val dao: ShoppingCartDao,
-) : ShoppingCartRepository {
+class LocalCartProductRepository(
+    private val dao: CartProductDao,
+) : CartProductRepository {
     private var totalCount: Int? = null
 
     override fun getAll(): List<CartProduct> {
@@ -40,7 +40,7 @@ class LocalShoppingCartRepository(
 
     override fun insert(productId: Long) {
         thread {
-            dao.insert(ShoppingCartEntity(productId = productId))
+            dao.insert(CartProductEntity(productId = productId))
         }.join()
         totalCount?.plus(1)
     }

@@ -5,19 +5,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.cart.ShoppingCartRepository
-import woowacourse.shopping.fixture.FakeShoppingCartRepository
+import woowacourse.shopping.data.cart.CartProductRepository
+import woowacourse.shopping.fixture.FakeCartProductRepository
 import woowacourse.shopping.view.cart.ShoppingCartViewModel
 import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var viewModel: ShoppingCartViewModel
-    private lateinit var repository: ShoppingCartRepository
+    private lateinit var repository: CartProductRepository
 
     @BeforeEach
     fun setup() {
-        repository = FakeShoppingCartRepository()
+        repository = FakeCartProductRepository()
         repeat(12) { id -> repository.insert(id.toLong()) }
         viewModel = ShoppingCartViewModel(repository)
     }

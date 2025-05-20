@@ -4,22 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.cart.ShoppingCartDao
-import woowacourse.shopping.data.cart.ShoppingCartEntity
+import woowacourse.shopping.data.cart.CartProductDao
+import woowacourse.shopping.data.cart.CartProductEntity
 import woowacourse.shopping.data.product.ProductEntity
 
-@Database(entities = [ProductEntity::class, ShoppingCartEntity::class], version = 1)
+@Database(entities = [ProductEntity::class, CartProductEntity::class], version = 1)
 abstract class ShoppingCartDatabase : RoomDatabase() {
-    abstract val shoppingCartDao: ShoppingCartDao
+    abstract val cartProductDao: CartProductDao
 
     companion object {
-        private const val DATABASE_NAME = "shopping_database"
+        private const val DATABASE_NAME = "shopping-cart-db"
 
         @Volatile
-        private var instance: ShoppingCartDatabase? = null
+        private var shoppingCartDatabase: ShoppingCartDatabase? = null
 
         fun getDataBase(context: Context): ShoppingCartDatabase =
-            instance ?: synchronized(this) {
+            shoppingCartDatabase ?: synchronized(this) {
                 val instance =
                     Room
                         .databaseBuilder(
@@ -27,7 +27,7 @@ abstract class ShoppingCartDatabase : RoomDatabase() {
                             ShoppingCartDatabase::class.java,
                             DATABASE_NAME,
                         ).build()
-                Companion.instance = instance
+                shoppingCartDatabase = instance
                 instance
             }
     }
