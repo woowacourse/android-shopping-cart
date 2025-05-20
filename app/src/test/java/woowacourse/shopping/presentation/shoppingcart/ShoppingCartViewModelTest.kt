@@ -3,15 +3,12 @@ package woowacourse.shopping.presentation.shoppingcart
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import io.mockk.every
-import io.mockk.mockkObject
-import io.mockk.unmockkObject
-import org.junit.jupiter.api.AfterEach
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.shoppingcart.ShoppingDataBase
-import woowacourse.shopping.fixture.ICE_CREAM
+import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepository
 import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.fixture.createGoods
 import woowacourse.shopping.getOrAwaitValue
@@ -20,27 +17,18 @@ import woowacourse.shopping.presentation.model.toUiModel
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var shoppingCartViewModel: ShoppingCartViewModel
-    private val goods =
-        listOf(
-            SUNDAE,
-            ICE_CREAM,
-        )
+    private lateinit var repository: ShoppingCartRepository
 
     @BeforeEach
     fun setUp() {
-        mockkObject(ShoppingDataBase)
-        shoppingCartViewModel = ShoppingCartViewModel()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkObject(ShoppingDataBase)
+        repository = mockk(relaxed = true)
+        shoppingCartViewModel = ShoppingCartViewModel(repository)
     }
 
     @Test
     fun `장바구니의 물품을 삭제한다`() {
         // given
-        goods.forEach { ShoppingDataBase.addItem(it) }
+        repository.addGoods(SUNDAE)
 
         // when
         shoppingCartViewModel.deleteGoods(SUNDAE.toUiModel())
@@ -77,20 +65,21 @@ class ShoppingCartViewModelTest {
     }
 
     @Test
-    fun `다음 페이지가 존재할 경우 true다`() {
+    fun `다음 페이지의 데이터가 존재할 경우 true를 반환한다`() {
         // given
-        every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf(createGoods())
-        shoppingCartViewModel = ShoppingCartViewModel()
+        every { repository.getGoods(any(), any()) } returns listOf(createGoods())
+
+        // when
+        shoppingCartViewModel.increasePage()
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe true
     }
 
     @Test
-    fun `다음 페이지가 존재하지 않을 경우 false다`() {
+    fun `다음 페이지의 데이터가 존재하지 않을 경우 false를 반환한다`() {
         // given
-        every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf()
-        shoppingCartViewModel = ShoppingCartViewModel()
+        every { repository.getGoods(any(), any()) } returns emptyList()
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe false
