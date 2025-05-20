@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.cart
+package woowacourse.shopping.view.cart.event
 
 interface CartScreenEventHandler {
     fun onClickNextPage()

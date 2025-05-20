@@ -22,10 +22,13 @@ import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 import kotlin.getValue
 
-class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
+class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels { MainViewModelFactory() }
     private val productsAdapter: ProductAdapter by lazy {
-        ProductAdapter(viewModel.products.value ?: emptyList(), this)
+        ProductAdapter { productId ->
+            val intent = DetailActivity.newIntent(this, productId)
+            startActivity(intent)
+        }
     }
     private lateinit var binding: ActivityMainBinding
 
@@ -88,11 +91,6 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
                 }
             }
         }
-
-    override fun onSelectProduct(productId: Long) {
-        val intent = DetailActivity.newIntent(this, productId)
-        startActivity(intent)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

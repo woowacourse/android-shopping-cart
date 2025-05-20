@@ -18,7 +18,7 @@
 
         <variable
             name="eventHandler"
-            type="woowacourse.shopping.view.cart.CartScreenEventHandler" />
+            type="woowacourse.shopping.view.cart.event.CartScreenEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
