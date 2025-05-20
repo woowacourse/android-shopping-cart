@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         val scrollEndEvent =
             ScrollEndEvent(
-                { viewModel.loadable.value },
+                viewModel.loadable.value,
                 { binding.buttonLoad.visibility = View.VISIBLE },
                 { binding.buttonLoad.visibility = View.GONE },
             )

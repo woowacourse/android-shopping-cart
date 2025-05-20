@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 
 class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
-    private val page = Page(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
+    private val page = Page(initialPage = INITIAL_PAGE_NUMBER, pageSize = PAGE_SIZE)
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> = _products
 
@@ -62,7 +62,7 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     }
 
     companion object {
-        const val INITIAL_PAGE_NO = 1
-        const val PAGE_SIZE = 5
+        private const val INITIAL_PAGE_NUMBER = 1
+        private const val PAGE_SIZE = 5
     }
 }

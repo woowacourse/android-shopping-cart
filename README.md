@@ -20,7 +20,7 @@
 - [x] 데이터베이스 객체로 상품 정보 추출
 - [x] Activity에서 Handler 추출
 - [x] ui 상태 처리는 databinding을 활용해서 처리
-- [ ] viewmodel에 value를 직접 조회하지 않고 observe를 통해 조회
+- [x] viewmodel에 value를 직접 조회하지 않고 observe를 통해 조회
 - [x] notifyDataSetChanged -> notifyItemChanged로 변경
 - [x] pageNo -> pageNumber로 변경
 - [x] Paging 객체 데이터 및 저장소 의존성 분리
