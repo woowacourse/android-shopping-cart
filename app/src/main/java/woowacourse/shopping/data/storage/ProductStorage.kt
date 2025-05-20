@@ -3,7 +3,7 @@ package woowacourse.shopping.data.storage
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.product.Price
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductResult
+import woowacourse.shopping.domain.product.ProductSinglePage
 
 @Suppress("ktlint:standard:max-line-length")
 object ProductStorage {
@@ -292,16 +292,16 @@ object ProductStorage {
     fun singlePage(
         fromIndex: Int,
         toIndex: Int,
-    ): ProductResult {
+    ): ProductSinglePage {
         val endIndex = minOf(toIndex, products.size)
 
         if (fromIndex >= products.size || fromIndex < 0) {
-            return ProductResult(emptyList(), false)
+            return ProductSinglePage(emptyList(), false)
         }
 
         val result = productsValues.subList(fromIndex, endIndex)
         val hasNextPage = endIndex < products.size
 
-        return ProductResult(result, hasNextPage)
+        return ProductSinglePage(result, hasNextPage)
     }
 }
