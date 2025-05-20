@@ -94,15 +94,14 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     }
 
     override fun showQuantity(productId: Long) {
-        viewModel.increaseQuantity(productId)
+        viewModel.increaseCartQuantity(productId)
     }
 
     override fun onClickIncrease(productId: Long) {
-        viewModel.increaseQuantity(productId)
+        viewModel.increaseCartQuantity(productId)
     }
 
     override fun onClickDecrease(productId: Long) {
-        viewModel.decreaseQuantity(productId)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.view.core.base.BaseViewHolder
-import woowacourse.shopping.view.main.vm.LoadState
-import woowacourse.shopping.view.main.vm.ProductUiState
+import woowacourse.shopping.view.main.vm.state.LoadState
+import woowacourse.shopping.view.main.vm.state.ProductUiState
 
 class ProductAdapter(
     items: List<ProductRvItems>,

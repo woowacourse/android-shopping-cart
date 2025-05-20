@@ -3,7 +3,7 @@ package woowacourse.shopping.view
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,8 +20,8 @@ import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3
 import woowacourse.shopping.fixture.productFixture4
-import woowacourse.shopping.view.main.vm.LoadState
 import woowacourse.shopping.view.main.vm.MainViewModel
+import woowacourse.shopping.view.main.vm.state.LoadState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MainViewModelTest {
@@ -46,13 +46,10 @@ class MainViewModelTest {
             )
 
         every { productRepository.loadSinglePage(0, 20) } returns
-            ProductSinglePage(
-                products = products,
-                hasNextPage = true,
-            )
+            ProductSinglePage(products = products, hasNextPage = true)
 
         products.forEach {
-            every { cartRepository[it.id] } returns Cart(it.id, Quantity(1), it.id)
+            every { cartRepository[it.id] } returns Cart(Quantity(1), it.id)
         }
 
         viewModel = MainViewModel(productRepository, cartRepository)
@@ -63,27 +60,36 @@ class MainViewModelTest {
         val result = viewModel.uiState.getOrAwaitValue()
 
         assertAll(
-            { assertThat(result.items).hasSize(4) },
-            { assertThat(result.load).isInstanceOf(LoadState.CanLoad::class.java) },
-            { assertThat(result.items.map { it.item.id }).containsExactly(1L, 2L, 3L, 4L) },
+            { Assertions.assertThat(result.items).hasSize(4) },
+            { Assertions.assertThat(result.load).isInstanceOf(LoadState.CanLoad::class.java) },
+            {
+                Assertions.assertThat(result.items.map { it.item.id })
+                    .containsExactly(1L, 2L, 3L, 4L)
+            },
         )
     }
 
     @Test
-    fun `상품 하나의 수량이 증가한다`() {
-        val original = viewModel.uiState.getOrAwaitValue().items.first()
-        viewModel.increaseQuantity(original.item.id)
+    fun `상품 목록을 불러오면 UI 상태에 반영된다`() {
+        val result = viewModel.uiState.getOrAwaitValue()
 
-        val updated = viewModel.uiState.getOrAwaitValue().items.first()
-        assertThat(updated.cartQuantity.value).isEqualTo(original.cartQuantity.value + 1)
+        assertAll(
+            { Assertions.assertThat(result.items).hasSize(4) },
+            { Assertions.assertThat(result.load).isInstanceOf(LoadState.CanLoad::class.java) },
+            {
+                Assertions.assertThat(result.items.map { it.item.id })
+                    .containsExactly(1L, 2L, 3L, 4L)
+            },
+        )
     }
 
     @Test
-    fun `상품 하나의 수량이 감소한다`() {
-        val original = viewModel.uiState.getOrAwaitValue().items.first()
-        viewModel.decreaseQuantity(original.item.id)
+    fun `장바구니에 담긴 상품의 수량이 증가하면 UI 상태도 증가한다`() {
+        val product = viewModel.uiState.getOrAwaitValue().items.first()
+
+        viewModel.increaseCartQuantity(product.item.id)
 
         val updated = viewModel.uiState.getOrAwaitValue().items.first()
-        assertThat(updated.cartQuantity.value).isEqualTo(original.cartQuantity.value - 1)
+        Assertions.assertThat(updated.cartQuantity.value).isEqualTo(product.cartQuantity.value + 1)
     }
 }
