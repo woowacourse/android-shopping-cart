@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.main.event.ProductsAdapterEventHandler
 
 class ProductAdapter(
     private val items: MutableList<Product> = mutableListOf(),

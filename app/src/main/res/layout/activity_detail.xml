@@ -6,7 +6,7 @@
     <data>
         <variable
             name="eventHandler"
-            type="woowacourse.shopping.view.detail.DetailScreenEventHandler" />
+            type="woowacourse.shopping.view.detail.event.DetailScreenEventHandler" />
 
         <variable
             name="model"

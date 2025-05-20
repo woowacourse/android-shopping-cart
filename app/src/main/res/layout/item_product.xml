@@ -10,7 +10,7 @@
             type="woowacourse.shopping.domain.Product" />
         <variable
             name="eventHandler"
-            type="woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler" />
+            type="woowacourse.shopping.view.main.event.ProductsAdapterEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

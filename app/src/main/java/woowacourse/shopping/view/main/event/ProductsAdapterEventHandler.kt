@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main.adapter
+package woowacourse.shopping.view.main.event
 
 fun interface ProductsAdapterEventHandler {
     fun onSelectProduct(productId: Long)
