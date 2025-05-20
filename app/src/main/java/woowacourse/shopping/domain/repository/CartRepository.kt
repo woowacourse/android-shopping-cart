@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartResult
 
 interface CartRepository {
-    operator fun get(id: Long): Cart
+    operator fun get(id: Long): Cart?
 
     fun insert(productId: Long)
 

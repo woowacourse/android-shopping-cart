@@ -9,7 +9,7 @@ object CartStorage {
 
     private val cartValues get() = cart.values.toList()
 
-    operator fun get(id: Long) = cart[id] ?: throw IllegalArgumentException()
+    operator fun get(id: Long) = cart[id]
 
     fun insert(item: Cart) {
         cart[item.id] = item

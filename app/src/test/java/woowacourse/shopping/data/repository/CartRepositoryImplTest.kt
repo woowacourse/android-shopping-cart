@@ -6,7 +6,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.storage.CartStorage
-import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartResult
 import woowacourse.shopping.fixture.cartFixture1
 import woowacourse.shopping.fixture.cartFixture2
@@ -38,10 +37,10 @@ class CartRepositoryImplTest {
     @Test
     fun `다음_페이지의_상품이_없으면_hasNextPage는_false를_반환한다`() {
         // given
-        val cartItem = Cart(productId = 11L)
+        val cart = cartFixture1
         val expectedResult =
             CartResult(
-                carts = listOf(cartItem),
+                carts = listOf(cart),
                 hasNextPage = false,
             )
 
