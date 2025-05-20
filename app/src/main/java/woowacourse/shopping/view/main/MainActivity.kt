@@ -69,10 +69,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.products.observe(this) { value ->
             productsAdapter.submitList(value)
         }
-
-        viewModel.loadable.observe(this) { value ->
-            if (!value) binding.buttonLoad.visibility = View.GONE
-        }
     }
 
     private fun onScrollListener() =

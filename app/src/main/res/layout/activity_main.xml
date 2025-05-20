@@ -4,9 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="adapter"
             type="woowacourse.shopping.view.main.adapter.ProductAdapter" />
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.view.main.vm.MainViewModel" />
 
     </data>
 
@@ -33,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="더보기"
-            android:visibility="gone"
+            android:visibility="@{vm.loadable ? View.VISIBLE :View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
