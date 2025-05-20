@@ -1,15 +1,37 @@
 package woowacourse.shopping.view.main.vm
 
-import woowacourse.shopping.domain.product.Product
-
 data class ProductUiState(
-    val items: List<Product> = emptyList(),
+    val items: List<ProductState> = emptyList(),
     val load: LoadState = LoadState.CannotLoad,
 ) {
+    fun increaseQuantity(productId: Long): ProductUiState {
+        return copy(
+            items.map {
+                if (it.item.id == productId) {
+                    it.increase()
+                } else {
+                    it
+                }
+            },
+        )
+    }
+
+    fun decreaseQuantity(productId: Long): ProductUiState {
+        return copy(
+            items.map {
+                if (it.item.id == productId) {
+                    it.decrease()
+                } else {
+                    it
+                }
+            },
+        )
+    }
+
     fun itemCount() = items.size
 
     fun addItems(
-        newItems: List<Product>,
+        newItems: List<ProductState>,
         hasNextPage: Boolean,
     ): ProductUiState {
         return copy(
