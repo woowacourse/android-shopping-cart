@@ -22,8 +22,8 @@
 
         <ImageView
             android:id="@+id/iv_goods"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="154dp"
+            android:layout_height="154dp"
             android:background="@color/black"
             android:scaleType="centerCrop"
             app:goodsImage="@{goods.imageUrl}"
@@ -31,6 +31,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_select_goods"
+            android:gravity="center"
+            android:text="@string/btn_plus"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintEnd_toEndOf="@id/iv_goods" />
+
+        <include
+            android:id="@+id/cl_goods_count"
+            android:visibility="invisible"
+            layout="@layout/view_quantity_selector"/>
 
         <TextView
             android:id="@+id/tv_goods_name"
