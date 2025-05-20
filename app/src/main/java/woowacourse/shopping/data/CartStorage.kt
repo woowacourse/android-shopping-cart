@@ -7,15 +7,9 @@ interface CartStorage {
 
     fun getAll(): List<Product>
 
+    fun totalSize(): Int
+
     fun deleteProduct(id: Long)
 
-    fun getProducts(
-        page: Int,
-        pageSize: Int,
-    ): List<Product>
-
-    fun notHasNextPage(
-        page: Int,
-        pageSize: Int,
-    ): Boolean
+    fun slice(range: IntRange): List<Product>
 }

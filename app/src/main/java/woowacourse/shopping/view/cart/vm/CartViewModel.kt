@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.CartStorage
+import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
-import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 
 class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
-    private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
+    private val page = Page(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> = _products
 
@@ -20,32 +19,50 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     val pageNumber: LiveData<Int> = _pageNumber
 
     private fun updatePageNoText() {
-        _pageNumber.value = paging.getPageNumber()
+        _pageNumber.value = page.getPageNumber()
     }
 
     fun deleteProduct(productId: Long) {
         cartStorage.deleteProduct(productId)
         loadCarts()
 
-        if (paging.resetToLastPageIfEmpty(_products.value)) {
+        if (page.resetToLastPageIfEmpty(products.value?.size ?: 0)) {
             loadCarts()
         }
     }
 
     fun addPage() {
-        paging.moveToNextPage()
+        page.moveToNextPage()
         loadCarts()
     }
 
     fun subPage() {
-        paging.moveToPreviousPage()
+        page.moveToPreviousPage()
         loadCarts()
     }
 
     fun loadCarts() {
-        val products = cartStorage.getProducts(paging.getPageNumber() - 1, PAGE_SIZE)
+        val productsRange = page.targetRange(cartStorage.totalSize())
+        val products = cartStorage.slice(productsRange)
         _products.value = products
-        _pageState.value = paging.createPageState(cartStorage)
+        setPageState()
         updatePageNoText()
+    }
+
+    private fun setPageState() {
+        val totalSize = cartStorage.totalSize()
+        val hasNext = page.hasNextPage(totalSize)
+        val isLastPage = page.isLastPage(totalSize)
+        _pageState.value =
+            PageState(
+                previousPageEnabled = page.hasPreviousPage(),
+                nextPageEnabled = hasNext,
+                pageVisibility = hasNext || isLastPage,
+            )
+    }
+
+    companion object {
+        const val INITIAL_PAGE_NO = 1
+        const val PAGE_SIZE = 5
     }
 }

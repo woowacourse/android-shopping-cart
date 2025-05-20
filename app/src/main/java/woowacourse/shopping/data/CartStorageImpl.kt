@@ -11,25 +11,13 @@ object CartStorageImpl : CartStorage {
 
     override fun getAll(): List<Product> = cartDatabase.cart.map { it.copy() }
 
+    override fun totalSize(): Int = cartDatabase.cart.size
+
     override fun deleteProduct(id: Long) {
         cartDatabase.cart.removeIf { it.id == id }
     }
 
-    override fun getProducts(
-        page: Int,
-        pageSize: Int,
-    ): List<Product> {
-        val fromIndex = page * pageSize
-        val toIndex = minOf(fromIndex + pageSize, cartDatabase.cart.size)
-        if (fromIndex < 0) return emptyList()
-        return cartDatabase.cart.toList().subList(fromIndex, toIndex)
-    }
-
-    override fun notHasNextPage(
-        page: Int,
-        pageSize: Int,
-    ): Boolean {
-        val fromIndex = page * pageSize
-        return fromIndex >= cartDatabase.cart.size
+    override fun slice(range: IntRange): List<Product> {
+        return cartDatabase.cart.toList().slice(range)
     }
 }

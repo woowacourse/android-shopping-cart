@@ -15,7 +15,7 @@ class FakeCartStorage(
         products.removeIf { it.id == id }
     }
 
-    override fun getProducts(
+    override fun subList(
         page: Int,
         pageSize: Int,
     ): List<Product> {
