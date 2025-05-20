@@ -3,26 +3,26 @@ package woowacourse.shopping.view.cart.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
+    private val _products = MutableLiveData<List<Product>>()
+    val products: LiveData<List<Product>> = _products
 
-    private val _uiState = MutableLiveData<CartUiState>()
-    val uiState: LiveData<CartUiState> = _uiState
+    private val _pageState = MutableLiveData<PageState>()
+    val pageState: LiveData<PageState> = _pageState
 
-    fun deleteProduct(cardId: Long) {
-        cartRepository.delete(cardId)
+    fun deleteProduct(productId: Long) {
+        cartRepository.delete(productId)
         loadCarts()
 
-        val currentCarts = _uiState.value?.carts
-        if (paging.resetToLastPageIfEmpty(currentCarts)) {
+        if (paging.resetToLastPageIfEmpty(_products.value)) {
             loadCarts()
         }
     }
@@ -40,15 +40,7 @@ class CartViewModel(
     fun loadCarts() {
         val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
 
-        val carts =
-            result
-                .carts
-                .map {
-                    val product = productRepository[it.productId]
-                    CartState(it.id, product)
-                }
-        val pageState = paging.createPageState(result.hasNextPage)
-
-        _uiState.value = CartUiState(carts = carts, pageState = pageState)
+        _products.value = result.products
+        _pageState.value = paging.createPageState(result.hasNextPage)
     }
 }

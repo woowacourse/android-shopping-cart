@@ -17,6 +17,8 @@ import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3
 import woowacourse.shopping.fixture.productFixture4
+import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
+import woowacourse.shopping.view.main.vm.LoadState
 import woowacourse.shopping.view.main.vm.MainViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -35,13 +37,14 @@ class MainViewModelTest {
     fun `초기화시_첫_페이지를_로드한다`() {
         // given
         val expected = ProductResult(listOf(productFixture1, productFixture2), false)
-        every { productRepository.loadSinglePage(0, 20) } returns expected
+        every { productRepository.loadSinglePage(0, PAGE_SIZE) } returns expected
 
         // when
         viewModel = MainViewModel(productRepository)
 
         // then
-        assertEquals(expected.products, viewModel.uiState.getOrAwaitValue().items)
+        assertEquals(expected.products, viewModel.products.getOrAwaitValue())
+        assertEquals(LoadState.CannotLoad, viewModel.loadState.getOrAwaitValue())
     }
 
     @Test
@@ -56,11 +59,12 @@ class MainViewModelTest {
         // when
         viewModel = MainViewModel(productRepository)
 
-        viewModel.loadProducts()
+        viewModel.loadProducts(20, 20)
 
         // then
         val expected = listOf(productFixture1, productFixture2, productFixture3, productFixture4)
-        assertEquals(expected, viewModel.uiState.getOrAwaitValue().items)
+        assertEquals(expected, viewModel.products.getOrAwaitValue())
+        assertEquals(LoadState.of(true), viewModel.loadState.getOrAwaitValue())
 
         verifySequence {
             productRepository.loadSinglePage(0, 20)

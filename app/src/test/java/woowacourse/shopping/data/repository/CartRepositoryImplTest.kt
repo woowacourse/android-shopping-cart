@@ -6,11 +6,12 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.storage.CartStorage
-import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartResult
-import woowacourse.shopping.fixture.cartFixture1
-import woowacourse.shopping.fixture.cartFixture2
-import woowacourse.shopping.fixture.cartFixture3
+import woowacourse.shopping.domain.CartResult
+import woowacourse.shopping.domain.product.Price
+import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.fixture.productFixture1
+import woowacourse.shopping.fixture.productFixture2
+import woowacourse.shopping.fixture.productFixture3
 
 class CartRepositoryImplTest {
     private val mockStorage: CartStorage = mockk()
@@ -19,18 +20,19 @@ class CartRepositoryImplTest {
     @Test
     fun `첫_번째_페이지의_장바구니_상품을_반환한다`() {
         // given
-        val expectedResult =
-            CartResult(
-                carts = listOf(cartFixture1, cartFixture2, cartFixture3),
-                hasNextPage = true,
+        val products =
+            listOf(
+                productFixture1,
+                productFixture2,
+                productFixture3,
             )
+
+        val expectedResult = CartResult(products, hasNextPage = true)
 
         every { mockStorage.singlePage(0, 3) } returns expectedResult
 
         // when
         val result = repository.loadSinglePage(page = 0, pageSize = 3)
-
-        // then
         assertEquals(expectedResult, result)
         verify(exactly = 1) { mockStorage.singlePage(0, 3) }
     }
@@ -38,10 +40,13 @@ class CartRepositoryImplTest {
     @Test
     fun `다음_페이지의_상품이_없으면_hasNextPage는_false를_반환한다`() {
         // given
-        val cartItem = Cart(productId = 11L)
+        val lastPageProducts =
+            listOf(
+                Product(id = 11, name = "짱맛있는 붕어빵", price = Price(11000), ""),
+            )
         val expectedResult =
             CartResult(
-                carts = listOf(cartItem),
+                products = lastPageProducts,
                 hasNextPage = false,
             )
 
@@ -52,8 +57,8 @@ class CartRepositoryImplTest {
 
         // then
         assertEquals(false, result.hasNextPage)
-        assertEquals(1, result.carts.size)
-        assertEquals(expectedResult.carts, result.carts)
+        assertEquals(1, result.products.size)
+        assertEquals(lastPageProducts, result.products)
 
         verify(exactly = 1) { mockStorage.singlePage(10, 15) }
     }

@@ -3,11 +3,11 @@ package woowacourse.shopping
 import android.app.Application
 
 class App : Application() {
-    val container: AppContainer by lazy {
-        AppContainer()
-    }
+    lateinit var container: AppContainer
+        private set
 
     override fun onCreate() {
         super.onCreate()
+        container = AppContainer()
     }
 }

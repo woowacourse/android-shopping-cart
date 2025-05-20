@@ -36,7 +36,7 @@ class DetailViewModelTest {
     @BeforeEach
     fun setup() {
         every { productStorage[1L] } returns productFixture1
-        every { cartStorage.insert(any()) } just Runs
+        every { cartStorage.insertProduct(any()) } just Runs
 
         cartRepository = CartRepositoryImpl(cartStorage)
         productRepository = ProductRepositoryImpl(productStorage)
@@ -62,10 +62,6 @@ class DetailViewModelTest {
         viewModel.addProduct()
 
         // then
-        verify {
-            cartStorage.insert(
-                match { it.productId == 1L },
-            )
-        }
+        verify { cartStorage.insertProduct(productFixture1) }
     }
 }

@@ -30,9 +30,6 @@
             android:adapter="@{adapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_product"
-            tools:spanCount="2"
-            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
             android:gravity="center"
-            android:visibility="@{vm.uiState.pageState.pageVisibility ? View.VISIBLE : View.GONE}"
+            android:visibility="@{vm.pageState.pageVisibility ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -52,7 +52,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/previous_button_shape"
-                android:enabled="@{vm.uiState.pageState.previousPageEnabled}"
+                android:enabled="@{vm.pageState.previousPageEnabled}"
                 android:inset="0dp"
                 android:onClick="@{() -> vm.subPage()}"
                 android:src="@drawable/ic_previous" />
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="11dp"
-                android:text="@{String.valueOf(vm.uiState.pageState.page)}"
+                android:text="@{String.valueOf(vm.pageState.page)}"
                 android:textColor="@color/gray"
                 android:textSize="22sp" />
 
@@ -71,7 +71,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/forward_button_shape"
-                android:enabled="@{vm.uiState.pageState.nextPageEnabled}"
+                android:enabled="@{vm.pageState.nextPageEnabled}"
                 android:inset="0dp"
                 android:onClick="@{() -> vm.addPage()}"
                 android:src="@drawable/ic_forward" />

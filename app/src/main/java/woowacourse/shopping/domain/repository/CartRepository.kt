@@ -1,12 +1,10 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartResult
+import woowacourse.shopping.domain.CartResult
+import woowacourse.shopping.domain.product.Product
 
 interface CartRepository {
-    operator fun get(id: Long): Cart
-
-    fun insert(productId: Long)
+    fun insert(item: Product)
 
     fun delete(id: Long)
 

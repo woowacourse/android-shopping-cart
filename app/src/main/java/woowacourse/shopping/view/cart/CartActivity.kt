@@ -21,14 +21,15 @@ import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
-        val container = (application as App).container
         CartViewModelFactory(
-            container.cartRepository,
-            container.productRepository,
+            (application as App).container.cartRepository,
         )
     }
     private val cartAdapter by lazy {
-        CartAdapter(items = emptyList(), handler = this)
+        CartAdapter(
+            items = viewModel.products.value ?: emptyList(),
+            handler = this,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +40,9 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
             adapter = cartAdapter
             vm = viewModel
         }
+
         viewModel.loadCarts()
+
         setUpSystemBars()
         initView()
         observeViewModel()
@@ -64,13 +67,13 @@ class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
     }
 
     private fun observeViewModel() {
-        viewModel.uiState.observe(this) { value ->
-            cartAdapter.submitList(value.carts)
+        viewModel.products.observe(this) { value ->
+            cartAdapter.submitList(value)
         }
     }
 
-    override fun onClickDeleteItem(cardId: Long) {
-        viewModel.deleteProduct(cardId)
+    override fun onClickDeleteItem(id: Long) {
+        viewModel.deleteProduct(id)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

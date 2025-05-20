@@ -8,7 +8,7 @@
 
         <variable
             name="model"
-            type="woowacourse.shopping.view.cart.vm.CartState" />
+            type="woowacourse.shopping.domain.product.Product" />
 
         <variable
             name="eventHandler"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="18dp"
-            android:text="@{model.product.name}"
+            android:text="@{model.name}"
             android:textColor="@color/gray"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -43,14 +43,14 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:padding="12dp"
-            android:onClick="@{() -> eventHandler.onClickDeleteItem(model.cartId)}"
+            android:onClick="@{() -> eventHandler.onClickDeleteItem(model.id)}"
             android:src="@drawable/ic_close_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/image_view_product"
-            setImage="@{model.product.imgUrl}"
+            setImage="@{model.imgUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="18dp"
-            android:text="@{@string/format_thousand_won(model.product.priceValue)}"
+            android:text="@{@string/format_thousand_won(model.priceValue)}"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
