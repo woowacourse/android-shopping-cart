@@ -97,7 +97,7 @@
             style="@style/CartPageStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/cart_page(currentPage)}"
+            android:text="@{@string/cart_page(viewModel.currentPage)}"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
             app:layout_constraintEnd_toStartOf="@id/btn_cart_next"
             app:layout_constraintHorizontal_chainStyle="packed"

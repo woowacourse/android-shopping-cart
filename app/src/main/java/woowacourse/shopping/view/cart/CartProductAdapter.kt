@@ -38,7 +38,16 @@ class CartProductAdapter(
     }
 
     fun setData(products: List<CartItem>) {
+        val oldSize = this.products.size
+        val newSize = products.size
+
         this.products = products
-        notifyDataSetChanged()
+
+        if (oldSize == newSize) {
+            notifyItemRangeChanged(0, this.products.size)
+        } else {
+            notifyItemRangeRemoved(0, oldSize)
+            notifyItemRangeInserted(0, newSize)
+        }
     }
 }

@@ -3,8 +3,6 @@ package woowacourse.shopping.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -32,8 +30,9 @@ class CartActivity : AppCompatActivity() {
 
     private fun initDataBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         binding.toBack = ::finish
-        binding.currentPage = viewModel.currentPage.value ?: 1
         binding.toPrevious = ::navigateToPrevious
         binding.toNext = ::navigateToNext
     }
@@ -54,31 +53,11 @@ class CartActivity : AppCompatActivity() {
     private fun bindData() {
         viewModel.fetchInfo()
         viewModel.fetchData()
-        viewModel.totalProductsCount.observe(this) { totalProductsCount ->
-            isPaginationButtonVisible(totalProductsCount)
-        }
-        viewModel.currentPage.observe(this) { currentPage ->
-            if (currentPage == 1) {
-                Log.d("test", "$currentPage 작동함")
-//                binding.btnCartPrevious.setBackgroundColor(R.color.gray5)
-            }
-//            if (currentPage < viewModel.totalPage) {
-//                binding.btnCartNext.setBackgroundResource(R.color.cyan)
-//            }
+        viewModel.currentPage.observe(this) {
+            viewModel.hasNext()
+            viewModel.hasPrevious()
         }
         viewModel.products.observe(this) { cartProductAdapter.setData(it) }
-    }
-
-    private fun isPaginationButtonVisible(totalProductsCount: Int) {
-        if (totalProductsCount <= A_PAGE_ITEM_COUNT) {
-            binding.btnCartPrevious.visibility = View.GONE
-            binding.btnCartNext.visibility = View.GONE
-            binding.tvCartPage.visibility = View.GONE
-        } else {
-            binding.btnCartPrevious.visibility = View.VISIBLE
-            binding.btnCartNext.visibility = View.VISIBLE
-            binding.tvCartPage.visibility = View.VISIBLE
-        }
     }
 
     private fun deleteProduct(
@@ -94,26 +73,15 @@ class CartActivity : AppCompatActivity() {
 
     private fun navigateToPrevious() {
         viewModel.minusPage()
-        val currentPage = viewModel.currentPage.value ?: 1
-        cartProductAdapter.notifyItemRangeChanged(
-            (currentPage - 1) * A_PAGE_ITEM_COUNT,
-            A_PAGE_ITEM_COUNT,
-        )
+        viewModel.fetchData()
     }
 
     private fun navigateToNext() {
         viewModel.plusPage()
         viewModel.fetchData()
-        val currentPage = viewModel.currentPage.value ?: 1
-        cartProductAdapter.notifyItemRangeChanged(
-            (currentPage - 1) * A_PAGE_ITEM_COUNT,
-            A_PAGE_ITEM_COUNT,
-        )
     }
 
     companion object {
-        private const val A_PAGE_ITEM_COUNT = 5
-
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

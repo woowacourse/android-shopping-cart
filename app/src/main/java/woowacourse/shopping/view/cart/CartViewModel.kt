@@ -14,9 +14,6 @@ import woowacourse.shopping.uimodel.CartItem
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _totalProductsCount: MutableLiveData<Int> = MutableLiveData(0)
-    val totalProductsCount: LiveData<Int> get() = _totalProductsCount
-
     private val _products: MutableLiveData<List<CartItem>> = MutableLiveData(emptyList())
     val products: LiveData<List<CartItem>> get() = _products
 
@@ -29,28 +26,29 @@ class CartViewModel(
     private val _hasNext: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasNext: LiveData<Boolean> get() = _hasNext
 
+    private var totalProductsCount = 0
     private var totalPage = 0
     private var offset = 0
-    private val pageCache: MutableMap<MutableLiveData<Int>, List<CartItem>> = mutableMapOf()
+    private val pageCache: MutableMap<Int, List<CartItem>> = mutableMapOf()
 
     fun fetchInfo() {
         cartRepository.getAllProductsSize {
-            _totalProductsCount.postValue(it)
-        }
-        _totalProductsCount.value?.let {
-            totalPage = calculateTotalPages(it)
+            totalProductsCount = it
+            totalPage = calculateTotalPages(totalProductsCount)
+            hasPrevious()
+            hasNext()
         }
     }
 
     fun fetchData() {
-        if (pageCache[_currentPage] == null) {
+        if (pageCache[_currentPage.value] == null) {
             cartRepository.getProducts(limit = LIMIT_COUNT, offset) { products ->
                 _products.postValue(products)
-                pageCache.put(_currentPage, products)
+                pageCache.put(_currentPage.value ?: 1, products)
             }
             offset += LIMIT_COUNT
         } else {
-            _products.postValue(pageCache[_currentPage])
+            _products.postValue(pageCache[_currentPage.value])
         }
     }
 
@@ -61,27 +59,60 @@ class CartViewModel(
                 ?.filterNot { it == cartItem } ?: emptyList()
 
         if (_currentPage.value != totalPage) {
+            val currentPage = _currentPage.value ?: 1
+            offset = currentPage * LIMIT_COUNT
             cartRepository.getProducts(1, offset) { product ->
                 val newProduct = currentProducts + product
                 _products.postValue(newProduct)
-                pageCache[_currentPage] = newProduct
+                pageCache[_currentPage.value ?: 1] = newProduct
             }
+            for (page in currentPage + 1..totalPage) {
+                pageCache.remove(page)
+            }
+            totalProductsCount -= 1
+            totalPage = calculateTotalPages(totalProductsCount)
+            if (totalPage == _currentPage.value) {
+                _currentPage.postValue(totalPage)
+            }
+        } else if (_currentPage.value == totalPage && pageCache[totalPage]?.size == 1) {
+            totalProductsCount -= 1
+            totalPage = calculateTotalPages(totalProductsCount)
+            minusPage()
+            fetchData()
         } else {
             _products.value = currentProducts
-            pageCache[_currentPage] = currentProducts
-            _totalProductsCount.value?.minus(1)
-            _totalProductsCount.value?.let {
-                totalPage = calculateTotalPages(it)
-            }
+            pageCache[_currentPage.value ?: 1] = currentProducts
+            totalProductsCount -= 1
+            totalPage = calculateTotalPages(totalProductsCount)
+        }
+    }
+
+    fun hasNext() {
+        if (_currentPage.value?.let { it < totalPage } == true) {
+            _hasNext.postValue(true)
+        } else {
+            _hasNext.postValue(false)
+        }
+    }
+
+    fun hasPrevious() {
+        if (_currentPage.value?.let { it > 1 } == true) {
+            _hasPrevious.postValue(true)
+        } else {
+            _hasPrevious.postValue(false)
         }
     }
 
     fun minusPage() {
-        _currentPage.value?.minus(1)
+        _currentPage.value?.let {
+            if (it > 1) {
+                _currentPage.value = (_currentPage.value ?: 1) - 1
+            }
+        }
     }
 
     fun plusPage() {
-        _currentPage.value?.plus(1)
+        _currentPage.value = (_currentPage.value ?: 1) + 1
     }
 
     private fun calculateTotalPages(totalCount: Int): Int = if (totalCount == 0) 0 else (totalCount - 1) / LIMIT_COUNT + 1
