@@ -15,12 +15,14 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import org.awaitility.kotlin.await
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
+import java.util.concurrent.TimeUnit
 
 class GoodsActivityTest {
     private lateinit var scenario: ActivityScenario<GoodsActivity>
@@ -69,10 +71,15 @@ class GoodsActivityTest {
         onView(withId(R.id.rv_goods_list))
             .perform(swipeUp())
 
-        Thread.sleep(1000)
-
-        onView(withId(R.id.btn_load_more))
-            .check(matches(isDisplayed()))
+        await.atMost(1, TimeUnit.SECONDS).until {
+            try {
+                onView(withId(R.id.btn_load_more))
+                    .check(matches(isDisplayed()))
+                true
+            } catch (e: Throwable) {
+                false
+            }
+        }
     }
 
     @Test
@@ -80,12 +87,17 @@ class GoodsActivityTest {
         onView(withId(R.id.rv_goods_list))
             .perform(swipeUp())
 
-        Thread.sleep(1000)
+        await.atMost(1, TimeUnit.SECONDS).until {
+            try {
+                onView(withId(R.id.btn_load_more))
+                    .perform(click())
 
-        onView(withId(R.id.btn_load_more))
-            .perform(click())
-
-        onView(withId(R.id.btn_load_more))
-            .check(matches(not(isDisplayed())))
+                onView(withId(R.id.btn_load_more))
+                    .check(matches(not(isDisplayed())))
+                true
+            } catch (e: Throwable) {
+                false
+            }
+        }
     }
 }

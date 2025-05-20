@@ -9,6 +9,7 @@ androidx-espresso-core = "3.6.1"
 androidx-test-ext-junit = "1.2.1"
 androidx-test-runner = "1.6.2"
 assertj-core = "3.27.3"
+awaitility-kotlin = "4.2.0"
 glide = "4.16.0"
 google-material = "1.12.0"
 junit-jupiter = "5.12.0"
@@ -29,6 +30,7 @@ androidx-espresso-intents = { group = "androidx.test.espresso", name = "espresso
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj-core" }
+awaitility-kotlin = { module = "org.awaitility:awaitility-kotlin", version.ref = "awaitility-kotlin" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
