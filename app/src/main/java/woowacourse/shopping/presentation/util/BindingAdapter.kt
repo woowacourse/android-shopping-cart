@@ -24,5 +24,5 @@ fun ImageView.setImage(imageUrl: String) {
 fun RecyclerView.bindGoods(
     items: List<GoodsUiModel>?,
 ) {
-    (adapter as? GoodsAdapter)?.updateItems(items.orEmpty())
+    (adapter as? GoodsAdapter)?.appendItems(items.orEmpty())
 }
