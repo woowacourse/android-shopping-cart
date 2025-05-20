@@ -15,12 +15,16 @@ data class ProductState(
         }
     }
 
-    fun increase(): IncreaseState {
+    fun increaseCartQuantity(): IncreaseState {
         return if (item.canIncrease(cartQuantity.value + 1)) {
             IncreaseState.CanIncrease(copy(cartQuantity = cartQuantity + 1))
         } else {
             IncreaseState.CannotIncrease
         }
+    }
+
+    fun decreaseCartQuantity(): ProductState {
+        return copy(cartQuantity = cartQuantity - 1)
     }
 
     val quantityVisible: Boolean

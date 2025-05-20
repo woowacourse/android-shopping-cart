@@ -46,6 +46,13 @@ class MainViewModel(
         _uiState.value = _uiState.value?.addItems(result, productsResult.hasNextPage)
     }
 
+    fun decreaseCartQuantity(productId: Long) {
+        val currentUiState = _uiState.value ?: return
+        val newState = currentUiState.decreaseCartQuantity(productId)
+        _uiState.value = currentUiState.modifyUiState(newState)
+        productRepository.modifyQuantity(productId, newState.cartQuantity + 1)
+    }
+
     fun increaseCartQuantity(productId: Long) {
         val currentUiState = _uiState.value ?: return
 
