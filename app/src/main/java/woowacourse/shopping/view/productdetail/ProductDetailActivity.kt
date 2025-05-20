@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.intent.getSerializableExtraData
+import woowacourse.shopping.model.intent.getSerializableExtraCompat
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.viewmodel.productdetail.ProductDetailViewModel
 
@@ -22,7 +22,7 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        val intentProductData = intent.getSerializableExtraData<Product>("product") ?: return
+        val intentProductData = intent.getSerializableExtraCompat<Product>("product") ?: return
         binding.product = intentProductData
 
         binding.closeImageBtn.setOnClickListener {
