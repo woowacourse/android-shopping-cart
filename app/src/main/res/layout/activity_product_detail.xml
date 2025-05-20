@@ -40,14 +40,18 @@
             android:id="@+id/tv_detail_product_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:text="@{viewModel.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_detail_image"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constrainedWidth="true"
             tools:text="[이든] 동원 스위트콘" />
 
 
@@ -75,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginEnd="15dp"
             android:text="@{@string/price(viewModel.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
