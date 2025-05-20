@@ -54,6 +54,6 @@ class ProductAdapter(
 
     companion object {
         private const val PRODUCT = 1
-        const val LOAD_BUTTON = 2
+        private const val LOAD_BUTTON = 2
     }
 }
