@@ -7,19 +7,26 @@ import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.Goods
 
 class CartViewHolder(
-    parent: ViewGroup,
+    private val binding: ItemCartBinding,
     private val cartClickListener: CartClickListener,
-) : RecyclerView.ViewHolder(
-        ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false).root,
-    ) {
-    private val binding = ItemCartBinding.bind(itemView)
-
+) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.cartClickListener = cartClickListener
     }
 
     fun bind(goods: Goods) {
         binding.goods = goods
+    }
+
+    companion object {
+        fun from(
+            parent: ViewGroup,
+            cartClickListener: CartClickListener,
+        ): CartViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val binding = ItemCartBinding.inflate(layoutInflater, parent, false)
+            return CartViewHolder(binding, cartClickListener)
+        }
     }
 
     interface CartClickListener {

@@ -20,7 +20,7 @@ class CartAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): CartViewHolder = CartViewHolder(parent, cartClickListener)
+    ): CartViewHolder = CartViewHolder.from(parent, cartClickListener)
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
