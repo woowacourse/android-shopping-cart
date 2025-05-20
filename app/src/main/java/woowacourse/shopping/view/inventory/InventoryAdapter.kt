@@ -9,7 +9,7 @@ import woowacourse.shopping.view.inventory.item.InventoryItemType
 import woowacourse.shopping.view.inventory.viewholder.ProductViewHolder
 import woowacourse.shopping.view.inventory.viewholder.ShowMoreViewHolder
 
-class ProductsAdapter(
+class InventoryAdapter(
     private val handler: InventoryEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val items: MutableList<InventoryItem> = mutableListOf()
