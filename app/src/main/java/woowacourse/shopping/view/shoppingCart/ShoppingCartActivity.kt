@@ -16,7 +16,6 @@ import woowacourse.shopping.view.showToast
 class ShoppingCartActivity :
     AppCompatActivity(),
     OnShoppingCartPaginationListener {
-
     private val viewModel: ShoppingCartViewModel by viewModels()
     private val binding: ActivityShoppingCartBinding by lazy {
         ActivityShoppingCartBinding.inflate(layoutInflater)
@@ -38,8 +37,6 @@ class ShoppingCartActivity :
         initDataBinding()
         bindData()
         handleEvents()
-
-        viewModel.updateShoppingCart()
     }
 
     private fun initDataBinding() {
@@ -48,7 +45,7 @@ class ShoppingCartActivity :
     }
 
     private fun bindData() {
-        viewModel.shoppingCart.observe(this) { shoppingCart: List<ShoppingCartItem> ->
+        viewModel.shoppingCartItems.observe(this) { shoppingCart: List<ShoppingCartItem> ->
             shoppingCartProductAdapter.submitList(shoppingCart)
         }
     }

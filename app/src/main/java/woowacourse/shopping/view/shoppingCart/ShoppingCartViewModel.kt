@@ -3,6 +3,7 @@ package woowacourse.shopping.view.shoppingCart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
@@ -10,47 +11,62 @@ import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
-import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
-    private val _shoppingCart: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
-    val shoppingCart: LiveData<List<ShoppingCartItem>> get() = _shoppingCart
+    private var allShoppingCartItems: List<Product> = emptyList()
+    private var page: Int = FIRST_PAGE
+
+    private val _shoppingCartItems: MutableLiveData<List<Product>> = MutableLiveData()
+    val shoppingCartItems: LiveData<List<ShoppingCartItem>> =
+        _shoppingCartItems.map { it.toShoppingCartItems }
+
+    private val startInclusive: Int
+        get() =
+            (page.minus(1) * COUNT_PER_PAGE).coerceAtMost(
+                allShoppingCartItems.size,
+            )
+    private val endExclusive: Int
+        get() =
+            (page * COUNT_PER_PAGE).coerceAtMost(
+                allShoppingCartItems.size,
+            )
+
+    private val List<Product>.toShoppingCartItems: List<ShoppingCartItem>
+        get() {
+            val hasNext = endExclusive < allShoppingCartItems.size
+            val hasPrevious = page > FIRST_PAGE
+            val paginationItem = PaginationItem(page, hasNext, hasPrevious)
+
+            return map(::ProductItem) + paginationItem
+        }
 
     private val _event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ShoppingCartEvent> get() = _event
 
-    private var page: Int = FIRST_PAGE
+    init {
+        updateShoppingCart()
+    }
 
     fun updateShoppingCart() {
-        thread {
-            runCatching {
-                shoppingCartRepository.load(page, COUNT_PER_PAGE)
-            }.onSuccess { products: List<Product> ->
-                val paginationItem =
-                    PaginationItem(
-                        page,
-                        shoppingCartRepository.hasNext,
-                        shoppingCartRepository.hasPrevious,
-                    )
-
-                _shoppingCart.postValue(products.map(::ProductItem) + paginationItem)
-            }.onFailure {
-                _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
-            }
+        runCatching {
+            allShoppingCartItems = shoppingCartRepository.load()
+            allShoppingCartItems.subList(startInclusive, endExclusive)
+        }.onSuccess { products: List<Product> ->
+            _shoppingCartItems.value = products
+        }.onFailure {
+            _event.setValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
         }
     }
 
     fun removeShoppingCartProduct(product: Product) {
-        thread {
-            runCatching {
-                shoppingCartRepository.remove(product)
-            }.onSuccess {
-                updateShoppingCart()
-            }.onFailure {
-                _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
-            }
+        runCatching {
+            shoppingCartRepository.remove(product)
+        }.onSuccess {
+            updateShoppingCart()
+        }.onFailure {
+            _event.setValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
         }
     }
 
@@ -61,7 +77,7 @@ class ShoppingCartViewModel(
 
     fun minusPage() {
         if (page == FIRST_PAGE) {
-            _shoppingCart.value = emptyList()
+            _shoppingCartItems.value = emptyList()
             return
         }
 
@@ -71,6 +87,6 @@ class ShoppingCartViewModel(
 
     companion object {
         private const val FIRST_PAGE = 1
-        private const val COUNT_PER_PAGE: Int = 5
+        private const val COUNT_PER_PAGE = 5
     }
 }
