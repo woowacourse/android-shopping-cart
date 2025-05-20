@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.data.ShoppingDataBase
 import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.getOrAwaitValue
 
@@ -15,7 +16,7 @@ class GoodsDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        goodsDetailViewModel = GoodsDetailViewModel()
+        goodsDetailViewModel = GoodsDetailViewModel(ShoppingDataBase)
     }
 
     @Test
