@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.shoppingcart.ShoppingCartClickListener" />
+
+        <variable
+            name="goods"
+            type="woowacourse.shopping.domain.model.Goods" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="18dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/border_line_selected_item"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_goods_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{goods.name.value}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="[든든] 동원 스위트콘" />
+
+        <ImageView
+            android:id="@+id/iv_goods"
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/black"
+            android:scaleType="centerCrop"
+            app:goodsImage="@{goods.imageUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_goods_name" />
+
+        <ImageButton
+            android:id="@+id/btn_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:onClick="@{() -> clickListener.onDeleteGoods(goods)}"
+            android:src="@drawable/btn_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_goods_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:goodsPrice="@{goods.price.value}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="99,800원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
