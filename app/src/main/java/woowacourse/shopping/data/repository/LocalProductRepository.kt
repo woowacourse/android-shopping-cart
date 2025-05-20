@@ -19,9 +19,7 @@ class LocalProductRepository(
             val cartProducts = dao.getNextProducts(lastId, count).map { it.toDomain() }
 
             fetchHasMoreProducts(cartProducts.lastOrNull()?.product?.id ?: lastId) { hasMore ->
-                callback(
-                    CatalogProducts(products = cartProducts, hasMore = hasMore),
-                )
+                callback(CatalogProducts(cartProducts, hasMore))
             }
         }
     }
@@ -49,9 +47,7 @@ class LocalProductRepository(
         callback: (Boolean) -> Unit,
     ) {
         thread {
-            callback(
-                dao.getMaxId() > lastId,
-            )
+            callback(dao.getMaxId() > lastId)
         }
     }
 }
