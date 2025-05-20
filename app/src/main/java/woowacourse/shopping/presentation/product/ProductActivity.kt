@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.product
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
+import woowacourse.shopping.databinding.ViewCartActionBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
@@ -44,6 +46,23 @@ class ProductActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product, menu)
+
+        val menuItem = menu?.findItem(R.id.action_cart)
+        val binding = ViewCartActionBinding.inflate(layoutInflater)
+        menuItem?.actionView = binding.root
+
+        binding.ivCart.setOnClickListener {
+            navigateToCart()
+        }
+
+        val itemCount = 3
+        if (itemCount > 0) {
+            binding.tvCartCount.text = itemCount.toString()
+            binding.tvCartCount.visibility = View.VISIBLE
+        } else {
+            binding.tvCartCount.visibility = View.GONE
+        }
+
         return true
     }
 
