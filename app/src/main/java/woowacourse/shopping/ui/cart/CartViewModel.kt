@@ -33,16 +33,7 @@ class CartViewModel(
             isLastPage = products.size != PAGE_FETCH_SIZE
 
             val visibleProductsSize = PAGE_SIZE.coerceAtMost(products.size)
-
-            if (visibleProductsSize == 0) {
-                if (isFirstPage) {
-                    _products.postValue(emptyList())
-                } else {
-                    moveToPrevious()
-                }
-            } else {
-                _products.postValue(products.take(visibleProductsSize))
-            }
+            handleUpdateItems(visibleProductsSize, products)
         }
     }
 
@@ -66,6 +57,19 @@ class CartViewModel(
         repository.delete(cartProduct.id!!) {
             update()
         }
+    }
+
+    private fun handleUpdateItems(
+        visibleProductsSize: Int,
+        products: List<CartProduct>
+    ) {
+        if (visibleProductsSize == 0 && !isFirstPage) {
+            moveToPrevious()
+            return
+        }
+        
+        val updateItems = products.take(visibleProductsSize)
+        _products.postValue(updateItems)
     }
 
     companion object {
