@@ -12,6 +12,10 @@ class GoodsViewModel : ViewModel() {
     val goodsUiModels: LiveData<List<GoodsUiModel>>
         get() = _goodsUiModels
 
+    private val _showLoadMore: MutableLiveData<Boolean> = MutableLiveData(false)
+    val showLoadMore: LiveData<Boolean>
+        get() = _showLoadMore
+
     private var page: Int = DEFAULT_PAGE
 
     init {
@@ -20,14 +24,18 @@ class GoodsViewModel : ViewModel() {
     }
 
     fun addGoods() {
-        _goodsUiModels.value =
-            _goodsUiModels.value?.plus(
-                GoodsDataBase.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() },
-            )
+        _showLoadMore.value = false
+        loadNextPage()
     }
 
-    fun canLoadMore(): Boolean {
-        return GoodsDataBase.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
+    fun determineLoadMoreVisibility(canScroll: Boolean) {
+        val moreDataAvailable = GoodsDataBase.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
+        _showLoadMore.value = !canScroll && moreDataAvailable
+    }
+
+    private fun loadNextPage() {
+        val newGoods = GoodsDataBase.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        _goodsUiModels.value = _goodsUiModels.value.orEmpty() + newGoods
     }
 
     companion object {

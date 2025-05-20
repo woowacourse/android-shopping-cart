@@ -8,6 +8,10 @@
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.goods.list.GoodsViewModel" />
+
+        <variable
+            name="view"
+            type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,10 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginHorizontal="30dp"
+            android:onClick="@{() -> vm.addGoods()}"
             android:text="@string/btn_load_more"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:visibility="gone"
+            android:visibility="@{vm.showLoadMore ? view.VISIBLE : view.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
