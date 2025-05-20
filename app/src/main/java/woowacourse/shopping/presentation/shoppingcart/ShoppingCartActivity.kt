@@ -7,12 +7,15 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.BaseActivity
 
 class ShoppingCartActivity : BaseActivity() {
     private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
-    private val viewModel: ShoppingCartViewModel by viewModels()
+    private val viewModel: ShoppingCartViewModel by viewModels {
+        ShoppingCartViewModelFactory(ShoppingCartRepositoryImpl())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +44,6 @@ class ShoppingCartActivity : BaseActivity() {
         binding.rvSelectedGoodsList.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
-        }
-        viewModel.goodsUiModels.observe(this) { goodsUiModels ->
-            adapter.updateItems(goodsUiModels)
         }
     }
 
