@@ -7,7 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
@@ -81,7 +81,7 @@ private class ProductsOnScrollListener(
         dx: Int,
         dy: Int,
     ) {
-        val layoutManager = recyclerView.layoutManager as GridLayoutManager
+        val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
         val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
         binding.btnLoadMoreProducts.visibility =
             if (
