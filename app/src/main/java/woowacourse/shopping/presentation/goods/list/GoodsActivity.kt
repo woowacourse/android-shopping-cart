@@ -17,7 +17,10 @@ import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 class GoodsActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsBinding>(R.layout.activity_goods)
     private val viewModel: GoodsViewModel by viewModels {
-        GoodsViewModel.provideFactory((application as ShoppingApplication).goodsRepository)
+        GoodsViewModel.provideFactory(
+            (application as ShoppingApplication).goodsRepository,
+            (application as ShoppingApplication).shoppingRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +30,26 @@ class GoodsActivity : BaseActivity() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-        val adapter = GoodsAdapter { goods -> navigateToDetail(goods) }
+        val adapter =
+            GoodsAdapter(
+                object : GoodsClickListener {
+                    override fun onGoodsClick(goods: GoodsUiModel) {
+                        navigateToDetail(goods)
+                    }
+
+                    override fun onPlusClick(position: Int) {
+                        viewModel.selectGoods(position)
+                    }
+                },
+            )
         setUpGoodsList(adapter)
 
         viewModel.goods.observe(this) { goods ->
-            adapter.updateItems(goods)
+            adapter.loadMoreItems(goods)
+        }
+
+        viewModel.isQuantityChanged.observe(this) {
+            adapter.changeQuantity(it)
         }
     }
 

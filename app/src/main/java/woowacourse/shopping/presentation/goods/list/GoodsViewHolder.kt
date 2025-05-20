@@ -19,5 +19,6 @@ class GoodsViewHolder(
 
     fun bind(goods: GoodsUiModel) {
         binding.goods = goods
+        binding.position = adapterPosition
     }
 }

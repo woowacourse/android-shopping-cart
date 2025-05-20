@@ -7,11 +7,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.data.GoodsRepository
+import woowacourse.shopping.data.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.toDomain
 import woowacourse.shopping.presentation.model.toUiModel
+import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
+import woowacourse.shopping.presentation.util.event.SingleLiveData
 
 class GoodsViewModel(
     private val goodsRepository: GoodsRepository,
+    private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
     private val _goods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
     val goods: LiveData<List<GoodsUiModel>>
@@ -21,14 +26,32 @@ class GoodsViewModel(
     val shouldShowLoadMore: LiveData<Boolean>
         get() = _shouldShowLoadMore
 
+    private val _isQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
+    val isQuantityChanged: SingleLiveData<Int>
+        get() = _isQuantityChanged
+
     private var page: Int = DEFAULT_PAGE
 
     init {
         _goods.value = goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
     }
 
+    fun selectGoods(position: Int) {
+        val currentList = goods.value.orEmpty()
+        val updatedList =
+            currentList.toMutableList().apply {
+                this[position] = this[position].copy(isSelected = true)
+            }
+        _goods.value = updatedList
+        _isQuantityChanged.setValue(position)
+        shoppingRepository.addItem(goods.value?.get(position)?.toDomain() ?: return)
+    }
+
     fun addGoods() {
-        _goods.value = _goods.value?.plus(goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() })
+        _goods.value =
+            _goods.value?.plus(
+                goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() },
+            )
         _shouldShowLoadMore.value = false
     }
 
@@ -44,10 +67,13 @@ class GoodsViewModel(
         private const val DEFAULT_PAGE: Int = 0
         private const val ITEM_COUNT: Int = 20
 
-        fun provideFactory(goodsRepository: GoodsRepository): ViewModelProvider.Factory =
+        fun provideFactory(
+            goodsRepository: GoodsRepository,
+            shoppingRepository: ShoppingRepository,
+        ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    GoodsViewModel(goodsRepository)
+                    GoodsViewModel(goodsRepository, shoppingRepository)
                 }
             }
     }
