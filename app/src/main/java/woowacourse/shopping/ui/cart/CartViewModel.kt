@@ -23,12 +23,15 @@ class CartViewModel(
     private val _maxPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
     val maxPage: LiveData<Int> get() = _maxPage
 
+    private val _editedProductIds: MutableLiveData<List<Int>> = MutableLiveData(emptyList())
+    val editedProductIds: LiveData<List<Int>> get() = _editedProductIds
+
     init {
         loadCartProducts()
     }
 
     private fun loadCartProducts() {
-        cartRepository.getCartProducts(
+        cartRepository.fetchCartProducts(
             page = currentPage.value ?: INITIAL_PAGE,
             size = DEFAULT_PAGE_SIZE,
         ) { cartProducts ->
@@ -60,6 +63,7 @@ class CartViewModel(
                 cartProducts.value?.updateCartProductQuantity(id, newQuantity),
             )
         }
+        _editedProductIds.value = editedProductIds.value?.plus(id)
     }
 
     fun decreaseCartProductQuantity(id: Int) {
@@ -68,6 +72,7 @@ class CartViewModel(
                 cartProducts.value?.updateCartProductQuantity(id, newQuantity),
             )
         }
+        _editedProductIds.value = editedProductIds.value?.plus(id)
     }
 
     companion object {

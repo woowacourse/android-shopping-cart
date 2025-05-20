@@ -10,20 +10,20 @@ import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
 
 class LocalCartRepository(
-    private val cartDao: CartDao,
+    private val dao: CartDao,
 ) : CartRepository {
-    override fun getCartProduct(
+    override fun fetchCartProduct(
         productId: Int,
         callback: (CartProduct?) -> Unit,
     ) {
         thread {
             callback(
-                cartDao.getCartProductDetailById(productId)?.toDomain(),
+                dao.getCartProductDetailById(productId)?.toDomain(),
             )
         }
     }
 
-    override fun getCartProducts(
+    override fun fetchCartProducts(
         page: Int,
         size: Int,
         callback: (CartProducts) -> Unit,
@@ -31,8 +31,8 @@ class LocalCartRepository(
         thread {
             callback(
                 CartProducts(
-                    products = cartDao.getCartProductDetails(page, size).map { it.toDomain() },
-                    maxPage = cartDao.getMaxPageCount(size),
+                    products = dao.getCartProductDetails(page, size).map { it.toDomain() },
+                    maxPage = dao.getMaxPageCount(size),
                 ),
             )
         }
@@ -44,13 +44,13 @@ class LocalCartRepository(
         callback: (Int) -> Unit,
     ) {
         thread {
-            val existing = cartDao.getCartProductById(productId)
+            val existing = dao.getCartProductById(productId)
             if (existing != null) {
-                cartDao.insertCartProduct(
+                dao.insertCartProduct(
                     existing.copy(quantity = existing.quantity + quantity),
                 )
             } else {
-                cartDao.insertCartProduct(
+                dao.insertCartProduct(
                     CartProductEntity(productId, quantity),
                 )
             }
@@ -64,13 +64,13 @@ class LocalCartRepository(
         callback: (Int) -> Unit,
     ) {
         thread {
-            val existing = cartDao.getCartProductById(productId)
+            val existing = dao.getCartProductById(productId)
             if (existing != null) {
                 val newQuantity = existing.quantity - quantity
                 if (newQuantity <= 0) {
-                    cartDao.deleteCartProduct(productId)
+                    dao.deleteCartProduct(productId)
                 } else {
-                    cartDao.insertCartProduct(
+                    dao.insertCartProduct(
                         existing.copy(quantity = newQuantity),
                     )
                 }
@@ -81,13 +81,13 @@ class LocalCartRepository(
 
     override fun removeCartProduct(productId: Int) {
         thread {
-            cartDao.deleteCartProduct(productId)
+            dao.deleteCartProduct(productId)
         }
     }
 
-    override fun updateCartProduct(cartProduct: CartProduct) {
+    override fun saveCartProduct(cartProduct: CartProduct) {
         thread {
-            cartDao.insertCartProduct(cartProduct.toData())
+            dao.insertCartProduct(cartProduct.toData())
         }
     }
 }

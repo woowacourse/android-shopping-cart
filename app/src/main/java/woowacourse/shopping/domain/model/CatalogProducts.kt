@@ -27,6 +27,18 @@ data class CatalogProducts(
         return copy(products = updatedProducts)
     }
 
+    fun updateCartProduct(newProduct: CartProduct): CatalogProducts {
+        val updatedProducts =
+            products.map { product ->
+                if (product.product.id == newProduct.product.id) {
+                    newProduct
+                } else {
+                    product
+                }
+            }
+        return copy(products = updatedProducts)
+    }
+
     companion object {
         val EMPTY_CATALOG_PRODUCTS =
             CatalogProducts(

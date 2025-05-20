@@ -119,6 +119,16 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
                             result.data?.getIntExtra(ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.key, 0) ?: 0,
                             false,
                         )
+
+                    ResultCode.PRODUCT_DETAIL_CART_UPDATED.code ->
+                        viewModel.updateCartProduct(
+                            result.data?.getIntExtra(ResultCode.PRODUCT_DETAIL_CART_UPDATED.key, 0) ?: 0,
+                        )
+
+                    ResultCode.CART_PRODUCT_EDITED.code ->
+                        viewModel.updateCartProducts(
+                            result.data?.getIntegerArrayListExtra(ResultCode.CART_PRODUCT_EDITED.key)?.toList() ?: emptyList(),
+                        )
                 }
             }
     }

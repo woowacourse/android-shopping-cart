@@ -8,19 +8,19 @@ import woowacourse.shopping.domain.repository.HistoryRepository
 import kotlin.concurrent.thread
 
 class LocalHistoryRepository(
-    private val historyDao: HistoryDao,
+    private val dao: HistoryDao,
 ) : HistoryRepository {
     override fun fetchAllSearchHistory(callback: (List<HistoryProduct>) -> Unit) {
         thread {
             callback(
-                historyDao.getHistoryProducts().map { it.toDomain() },
+                dao.getHistoryProducts().map { it.toDomain() },
             )
         }
     }
 
     override fun saveSearchHistory(productId: Int) {
         thread {
-            historyDao.insertHistoryWithLimit(
+            dao.insertHistoryWithLimit(
                 history = ExploreHistoryProductEntity(productId),
                 limit = MAX_HISTORY_COUNT,
             )
@@ -30,7 +30,7 @@ class LocalHistoryRepository(
     override fun fetchRecentSearchHistory(callback: (HistoryProduct?) -> Unit) {
         thread {
             callback(
-                historyDao.fetchRecentHistoryProduct()?.toDomain(),
+                dao.fetchRecentHistoryProduct()?.toDomain(),
             )
         }
     }

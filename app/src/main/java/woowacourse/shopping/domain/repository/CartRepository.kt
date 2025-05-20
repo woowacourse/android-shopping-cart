@@ -4,12 +4,12 @@ import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CartProducts
 
 interface CartRepository {
-    fun getCartProduct(
+    fun fetchCartProduct(
         productId: Int,
         callback: (CartProduct?) -> Unit,
     )
 
-    fun getCartProducts(
+    fun fetchCartProducts(
         page: Int,
         size: Int,
         callback: (CartProducts) -> Unit,
@@ -29,5 +29,5 @@ interface CartRepository {
 
     fun removeCartProduct(productId: Int)
 
-    fun updateCartProduct(cartProduct: CartProduct)
+    fun saveCartProduct(cartProduct: CartProduct)
 }

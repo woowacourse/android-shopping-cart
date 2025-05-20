@@ -57,6 +57,16 @@ class ProductsViewModel(
         }
     }
 
+    fun updateCartProduct(id: Int) {
+        cartRepository.fetchCartProduct(id) { cartProduct ->
+            _catalogProducts.postValue(catalogProducts.value?.updateCartProduct(cartProduct ?: return@fetchCartProduct))
+        }
+    }
+
+    fun updateCartProducts(ids: List<Int>) {
+        ids.forEach { id -> updateCartProduct(id) }
+    }
+
     companion object {
         private const val SHOWN_PRODUCTS_COUNT: Int = 20
 

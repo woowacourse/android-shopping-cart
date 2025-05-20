@@ -23,19 +23,6 @@ interface ProductDao {
         count: Int,
     ): List<ProductDto>
 
-    @Query(
-        """
-    SELECT 
-        p.id, p.name, p.imageUrl, p.price,
-        IFNULL(c.quantity, 0) AS cartQuantity
-    FROM products p
-    LEFT JOIN cart_products c ON p.id = c.productId
-    WHERE p.id = :id
-    LIMIT 1
-""",
-    )
-    fun getProduct(id: Int): ProductDto?
-
     @Query("SELECT MAX(id) FROM products")
     fun getMaxId(): Int
 }

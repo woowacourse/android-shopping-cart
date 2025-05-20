@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.common.DataBindingActivity
 import woowacourse.shopping.ui.custom.CartCountView
-import woowacourse.shopping.ui.model.ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED
+import woowacourse.shopping.ui.model.ResultCode
 
 class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
     private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
@@ -54,9 +54,9 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
 
                 override fun onLastHistoryProductClick(id: Int) {
                     setResult(
-                        PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.code,
+                        ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.code,
                         Intent().apply {
-                            putExtra(PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.key, id)
+                            putExtra(ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.key, id)
                         },
                     )
                     finish()
@@ -75,6 +75,12 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
 
     private fun handleCartProductAddResult(isSuccess: Boolean) {
         if (isSuccess) {
+            setResult(
+                ResultCode.PRODUCT_DETAIL_CART_UPDATED.code,
+                Intent().apply {
+                    putExtra(ResultCode.PRODUCT_DETAIL_CART_UPDATED.key, productId)
+                },
+            )
             Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
             finish()
         }
