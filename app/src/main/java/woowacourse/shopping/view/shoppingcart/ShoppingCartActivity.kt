@@ -33,6 +33,7 @@ class ShoppingCartActivity :
 
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
+            rvShoppingCartList.itemAnimator = null
             viewModel = this@ShoppingCartActivity.viewModel
             handler = this@ShoppingCartActivity
         }
