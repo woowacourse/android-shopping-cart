@@ -1,6 +1,6 @@
 @file:Suppress("ktlint")
 
-package woowacourse.shopping
+package woowacourse.shopping.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,10 +14,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.R
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
+import woowacourse.shopping.product
 import woowacourse.shopping.view.detail.ProductDetailActivity
 
 class ProductDetailActivityTest {

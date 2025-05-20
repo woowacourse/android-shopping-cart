@@ -13,7 +13,6 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.page.Page
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
 
@@ -67,14 +66,9 @@ class MainActivity :
         }
         viewModel.apply {
             requestProductsPage(0)
-            productsLiveData.observe(this@MainActivity) { page -> updateRecyclerView(page) }
-        }
-    }
-
-    private fun updateRecyclerView(page: Page<Product>) {
-        productsAdapter.apply {
-            updateProducts(page.items)
-            notifyItemInserted(itemCount)
+            productsLiveData.observe(this@MainActivity) { page ->
+                productsAdapter.updateProducts(page.items)
+            }
         }
     }
 }

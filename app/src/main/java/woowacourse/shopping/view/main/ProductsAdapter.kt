@@ -31,6 +31,7 @@ class ProductsAdapter(
 
     fun updateProducts(newProducts: List<Product>) {
         products += newProducts
+        notifyItemInserted(itemCount)
     }
 }
 

@@ -32,8 +32,11 @@ class ShoppingCartAdapter(
     }
 
     fun updateProducts(page: Page<Product>) {
+        val previousCount = itemCount
         products = page.items
         currentPage = page.currentPage
+        notifyItemRangeChanged(0, previousCount)
+        notifyItemRangeRemoved(previousCount - itemCount, previousCount - itemCount)
     }
 }
 

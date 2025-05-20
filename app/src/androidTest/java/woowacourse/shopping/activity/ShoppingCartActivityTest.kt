@@ -1,6 +1,6 @@
 @file:Suppress("ktlint")
 
-package woowacourse.shopping
+package woowacourse.shopping.activity
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -8,6 +8,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.R
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
@@ -54,6 +55,6 @@ class ShoppingCartActivityTest {
                 .atPositionOnView(0, R.id.iv_remove_item_product_icon),
         ).performClick()
 
-        assertThat(DummyShoppingCart.products).contains(expectedDeleteProduct)
+        assertThat(DummyShoppingCart.products).doesNotContain(expectedDeleteProduct)
     }
 }

@@ -21,7 +21,6 @@ class ProductsViewModel(
 
     fun requestProductsPage(requestPage: Int) {
         val items = productsRepository.findAll(requestPage * PAGE_SIZE, PAGE_SIZE)
-
         _productsLiveData.value =
             Page.from(
                 items,

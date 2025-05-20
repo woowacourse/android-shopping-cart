@@ -2,6 +2,7 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.domain.Product
+import kotlin.math.min
 
 class ProductsRepositoryImpl : ProductsRepository {
     override fun findAll(
@@ -10,7 +11,7 @@ class ProductsRepositoryImpl : ProductsRepository {
     ): List<Product> {
         return DummyProducts.products
             .distinct()
-            .subList(offset, offset + limit)
+            .subList(offset, min(offset + limit, DummyProducts.products.size))
     }
 
     override fun totalSize(): Int = DummyProducts.products.size

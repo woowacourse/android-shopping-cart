@@ -1,11 +1,11 @@
-
-package woowacourse.shopping
+package woowacourse.shopping.activity
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.R
 import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.isEllipsized
