@@ -17,7 +17,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ShoppingDataBase
+import woowacourse.shopping.data.shoppingcart.ShoppingDataBase
 import woowacourse.shopping.fixture.createGoods
 
 class ShoppingCartActivityTest {

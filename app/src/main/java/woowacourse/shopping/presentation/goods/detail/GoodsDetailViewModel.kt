@@ -3,7 +3,7 @@ package woowacourse.shopping.presentation.goods.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.ShoppingDataBase
+import woowacourse.shopping.data.shoppingcart.ShoppingDataBase
 import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.model.toDomainModel
 
