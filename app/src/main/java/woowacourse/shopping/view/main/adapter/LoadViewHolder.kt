@@ -7,7 +7,7 @@ import woowacourse.shopping.view.core.base.BaseViewHolder
 
 class LoadViewHolder(
     parent: ViewGroup,
-    private val handler: ProductsAdapterEventHandler,
+    private val handler: Handler,
 ) : BaseViewHolder<ItemLoadBinding>(
         binding =
             ItemLoadBinding.inflate(
@@ -18,5 +18,9 @@ class LoadViewHolder(
     ) {
     fun bind(item: ProductRvItems.LoadItem) {
         binding.eventHandler = handler
+    }
+
+    interface Handler {
+        fun onLoadMoreItems()
     }
 }
