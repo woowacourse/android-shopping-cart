@@ -6,17 +6,20 @@ import androidx.room.Query
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM cart")
-    fun getAllProduct(): List<CartEntity>
+    @Query("SELECT product_id FROM cart")
+    fun getAllProductIds(): List<Long>
 
-    @Query("SELECT COUNT(*) FROM cart")
-    fun getCartProductCount(): Int
+    @Query("SELECT COUNT(product_id) FROM cart")
+    fun getAllProductCount(): Int
 
-    @Query("SELECT * FROM cart LIMIT :pageSize OFFSET :offset ")
-    fun getPagedProduct(
+    @Query("SELECT SUM(quantity) FROM cart")
+    fun getTotalQuantity(): Int?
+
+    @Query("SELECT product_id FROM cart LIMIT :pageSize OFFSET :offset")
+    fun getPagedProductIds(
         pageSize: Int,
         offset: Int,
-    ): List<CartEntity>
+    ): List<Long>
 
     @Insert
     fun insertProduct(cartEntity: CartEntity)
