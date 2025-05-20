@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     }
 
     override fun onClickDecrease(productId: Long) {
+        viewModel.decreaseCartQuantity(productId)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
