@@ -19,32 +19,32 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="126dp"
+        android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_quantity_selector"
-        app:layout_constraintBottom_toBottomOf="@id/iv_goods"
-        app:layout_constraintEnd_toEndOf="@id/iv_goods"
-        app:layout_constraintStart_toStartOf="@id/iv_goods">
+        android:background="@drawable/bg_quantity_selector">
 
         <TextView
-            android:onClick="@{() -> clickListener.onDecreaseQuantity(position)}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
+            android:onClick="@{() -> clickListener.onDecreaseQuantity(position)}"
             android:text="@string/btn_minus"
+            android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_count"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_count"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:textSize="22sp"
             android:text="@{String.valueOf(count)}"
+            android:textColor="@color/black"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,15 +53,17 @@
             tools:text="2" />
 
         <TextView
-            android:onClick="@{() -> clickListener.onIncreaseQuantity(position)}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
+            android:onClick="@{() -> clickListener.onIncreaseQuantity(position)}"
             android:text="@string/btn_plus"
+            android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_count"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

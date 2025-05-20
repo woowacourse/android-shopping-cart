@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="position"
@@ -39,7 +39,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:onClick="@{() -> goodsClickListener.onPlusClick(position)}"
             android:id="@+id/btn_plus"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -47,17 +46,24 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/btn_select_goods"
             android:gravity="center"
-            android:visibility="@{goods.isSelected ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> goodsClickListener.onPlusClick(position)}"
             android:text="@string/btn_plus"
             android:textColor="@color/black"
             android:textSize="30sp"
+            android:visibility="@{goods.isSelected ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
             app:layout_constraintEnd_toEndOf="@id/iv_goods" />
 
         <include
             android:id="@+id/cl_goods_count"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:visibility="@{goods.isSelected ? View.VISIBLE : View.GONE}"
-            layout="@layout/view_quantity_selector"/>
+            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintEnd_toEndOf="@id/iv_goods"
+            app:layout_constraintStart_toStartOf="@id/iv_goods" />
 
         <TextView
             android:id="@+id/tv_goods_name"
