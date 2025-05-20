@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.MockProducts.mockProducts
 import woowacourse.shopping.data.ProductsDataSource
 
 class CatalogViewModel(
@@ -14,7 +13,8 @@ class CatalogViewModel(
         MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
     val catalogProducts: LiveData<List<ProductUiModel>> = _catalogProducts
 
-    val page = MutableLiveData<Int>(INITIAL_PAGE)
+    private val _page = MutableLiveData<Int>(INITIAL_PAGE)
+    val page: LiveData<Int> = _page
 
     init {
         loadCatalogProducts(PAGE_SIZE)
@@ -27,11 +27,11 @@ class CatalogViewModel(
 
     fun isLoadButtonEnabled(): Boolean {
         val totalLoaded = _catalogProducts.value?.size ?: 0
-        return totalLoaded < mockProducts.size
+        return totalLoaded < dataSource.getProductsSize()
     }
 
     fun increasePage() {
-        page.value = page.value?.plus(1)
+        _page.value = _page.value?.plus(1)
     }
 
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
