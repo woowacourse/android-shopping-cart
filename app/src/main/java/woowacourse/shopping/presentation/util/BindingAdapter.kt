@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.goods.list.GoodsAdapter
 import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.shoppingcart.ShoppingCartAdapter
 import java.text.DecimalFormat
 
 @BindingAdapter("goodsPrice")
@@ -26,3 +27,11 @@ fun RecyclerView.bindGoods(
 ) {
     (adapter as? GoodsAdapter)?.appendItems(items.orEmpty())
 }
+
+@BindingAdapter("selectedGoodsList")
+fun RecyclerView.bindSelectedGoods(
+    items: List<GoodsUiModel>?,
+) {
+    (adapter as? ShoppingCartAdapter)?.updateItems(items.orEmpty())
+}
+
