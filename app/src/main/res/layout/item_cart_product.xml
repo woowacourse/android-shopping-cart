@@ -55,6 +55,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_cart_product_name" />
 
+        <include
+            android:id="@+id/layout_cart_quantity_box"
+            layout="@layout/layout_cart_quantity_box"
+            android:layout_width="140dp"
+            android:layout_height="44dp"
+            app:layout_constraintEnd_toEndOf="@id/tv_cart_product_price"
+            app:layout_constraintTop_toTopOf="@id/iv_cart_product" />
+
         <TextView
             android:id="@+id/tv_cart_product_price"
             android:layout_width="wrap_content"
