@@ -28,7 +28,10 @@ class CartViewModel(
     }
 
     private fun loadCartProducts() {
-        cartRepository.getCartProducts(page = currentPage.value ?: INITIAL_PAGE, size = 5) { cartProducts ->
+        cartRepository.getCartProducts(
+            page = currentPage.value ?: INITIAL_PAGE,
+            size = DEFAULT_PAGE_SIZE,
+        ) { cartProducts ->
             _cartProducts.postValue(cartProducts)
         }
 
@@ -54,30 +57,15 @@ class CartViewModel(
     fun increaseCartProductQuantity(id: Int) {
         cartRepository.increaseProductQuantity(id) { newQuantity ->
             _cartProducts.postValue(
-                cartProducts.value?.copy(
-                    products = updateCartProductQuantity(id, newQuantity),
-                ),
+                cartProducts.value?.updateCartProductQuantity(id, newQuantity),
             )
         }
     }
 
-    private fun updateCartProductQuantity(
-        id: Int,
-        newQuantity: Int,
-    ) = _cartProducts.value?.products?.map { cartProduct ->
-        if (cartProduct.product.id == id) {
-            cartProduct.copy(quantity = newQuantity)
-        } else {
-            cartProduct
-        }
-    } ?: emptyList()
-
     fun decreaseCartProductQuantity(id: Int) {
         cartRepository.decreaseProductQuantity(id) { newQuantity ->
             _cartProducts.postValue(
-                cartProducts.value?.copy(
-                    products = updateCartProductQuantity(id, newQuantity),
-                ),
+                cartProducts.value?.updateCartProductQuantity(id, newQuantity),
             )
         }
     }
@@ -85,6 +73,7 @@ class CartViewModel(
     companion object {
         const val INITIAL_PAGE: Int = 1
         const val DEFAULT_PAGE_STEP: Int = 1
+        const val DEFAULT_PAGE_SIZE: Int = 5
 
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {

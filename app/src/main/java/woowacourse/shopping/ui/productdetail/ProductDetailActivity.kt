@@ -45,18 +45,22 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
     private fun initViewBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.onClickHandler = OnClickHandler { addCartProduct() }
-    }
-
-    private fun addCartProduct() {
-        viewModel.addCartProduct()
-        Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
-        finish()
+        binding.onClickHandler = OnClickHandler { viewModel.addCartProduct() }
     }
 
     private fun initObservers() {
         viewModel.cartProduct.observe(this) { cartProduct ->
             binding.productDetailCartProductCount.setCount(cartProduct.quantity)
+        }
+        viewModel.onCartProductAddSuccess.observe(this) { isSuccess ->
+            isSuccess?.let { handleCartProductAddResult(it) }
+        }
+    }
+
+    private fun handleCartProductAddResult(isSuccess: Boolean) {
+        if (isSuccess) {
+            Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 

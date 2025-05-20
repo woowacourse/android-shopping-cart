@@ -25,7 +25,7 @@ class ProductsViewModel(
     private val _historyProducts: MutableLiveData<List<HistoryProduct>> = MutableLiveData(emptyList())
     val historyProducts: LiveData<List<HistoryProduct>> get() = _historyProducts
 
-    private val maxProductId: Int
+    private val lastProductId: Int
         get() =
             catalogProducts.value
                 ?.products
@@ -34,13 +34,8 @@ class ProductsViewModel(
                 ?.id ?: 0
 
     fun loadProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        productsRepository.fetchProducts(lastId = maxProductId, count = count) { newProducts ->
-            _catalogProducts.postValue(
-                CatalogProducts(
-                    products = (catalogProducts.value?.products ?: emptyList()) + newProducts.products,
-                    hasMore = newProducts.hasMore,
-                ),
-            )
+        productsRepository.fetchProducts(lastId = lastProductId, count = count) { newProducts ->
+            _catalogProducts.postValue(catalogProducts.value?.plus(newProducts))
         }
     }
 
@@ -52,34 +47,13 @@ class ProductsViewModel(
 
     fun increaseCartProduct(id: Int) {
         cartRepository.increaseProductQuantity(id) { newQuantity ->
-            _catalogProducts.postValue(
-                CatalogProducts(
-                    products = updateCartProductQuantity(id, newQuantity),
-                    hasMore = catalogProducts.value?.hasMore ?: false,
-                ),
-            )
+            _catalogProducts.postValue(catalogProducts.value?.updateCartProductQuantity(id, newQuantity))
         }
     }
 
-    private fun updateCartProductQuantity(
-        id: Int,
-        newQuantity: Int,
-    ) = catalogProducts.value?.products?.map { product ->
-        if (product.product.id == id) {
-            product.copy(quantity = newQuantity)
-        } else {
-            product
-        }
-    } ?: emptyList()
-
     fun decreaseCartProduct(id: Int) {
         cartRepository.decreaseProductQuantity(id) { newQuantity ->
-            _catalogProducts.postValue(
-                CatalogProducts(
-                    products = updateCartProductQuantity(id, newQuantity),
-                    hasMore = catalogProducts.value?.hasMore ?: false,
-                ),
-            )
+            _catalogProducts.postValue(catalogProducts.value?.updateCartProductQuantity(id, newQuantity))
         }
     }
 

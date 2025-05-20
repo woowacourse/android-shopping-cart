@@ -12,6 +12,8 @@ import woowacourse.shopping.domain.model.CartProduct.Companion.EMPTY_CART_PRODUC
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -20,6 +22,9 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _cartProduct: MutableLiveData<CartProduct> = MutableLiveData(EMPTY_CART_PRODUCT)
     val cartProduct: LiveData<CartProduct> get() = _cartProduct
+
+    private val _onCartProductAddSuccess: MutableSingleLiveData<Boolean?> = MutableSingleLiveData(null)
+    val onCartProductAddSuccess: SingleLiveData<Boolean?> get() = _onCartProductAddSuccess
 
     fun loadProductDetail(id: Int) {
         productRepository.fetchProductDetail(id) { cartProduct ->
@@ -32,21 +37,19 @@ class ProductDetailViewModel(
     }
 
     fun decreaseCartProductQuantity() {
-        _cartProduct.value =
-            cartProduct.value?.copy(
-                quantity = cartProduct.value?.quantity?.minus(1) ?: return,
-            )
+        _cartProduct.value = cartProduct.value?.decreaseQuantity()
     }
 
     fun increaseCartProductQuantity() {
-        _cartProduct.value =
-            cartProduct.value?.copy(
-                quantity = cartProduct.value?.quantity?.plus(1) ?: return,
-            )
+        _cartProduct.value = cartProduct.value?.increaseQuantity()
     }
 
     fun addCartProduct() {
-        cartRepository.updateCartProduct(cartProduct.value ?: return)
+        runCatching {
+            cartRepository.updateCartProduct(cartProduct.value ?: return)
+        }.onSuccess {
+            _onCartProductAddSuccess.postValue(true)
+        }
     }
 
     companion object {
