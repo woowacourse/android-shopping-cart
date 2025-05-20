@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.common.DataBindingActivity
 import woowacourse.shopping.ui.custom.CartCountView
-import woowacourse.shopping.ui.productdetail.ProductDetailActivity.OnClickHandler
+import woowacourse.shopping.ui.model.ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED
 
 class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
     private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
@@ -24,6 +24,7 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
         initViewBinding()
         initObservers()
         initCartQuantityView()
+        handleFromProducts()
         viewModel.loadProductDetail(productId)
         viewModel.addHistoryProduct(productId)
     }
@@ -45,7 +46,22 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
     private fun initViewBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.onClickHandler = OnClickHandler { viewModel.addCartProduct() }
+        binding.onClickHandler =
+            object : OnClickHandler {
+                override fun onAddCartProductClick() {
+                    viewModel.updateCartProduct()
+                }
+
+                override fun onLastHistoryProductClick(id: Int) {
+                    setResult(
+                        PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.code,
+                        Intent().apply {
+                            putExtra(PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.key, id)
+                        },
+                    )
+                    finish()
+                }
+            }
     }
 
     private fun initObservers() {
@@ -78,19 +94,30 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
         )
     }
 
-    fun interface OnClickHandler {
+    private fun handleFromProducts() {
+        intent.getBooleanExtra(KEY_IS_FROM_HOME, false).let { isRecentProductShown ->
+            if (isRecentProductShown) viewModel.loadLastHistoryProduct()
+        }
+    }
+
+    interface OnClickHandler {
         fun onAddCartProductClick()
+
+        fun onLastHistoryProductClick(id: Int)
     }
 
     companion object {
         private const val KEY_PRODUCT_ID = "PRODUCT_ID"
+        private const val KEY_IS_FROM_HOME = "IS_FROM_PRODUCTS"
 
         fun newIntent(
             context: Context,
             id: Int,
+            isRecentHistoryProductShown: Boolean = true,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT_ID, id)
+                putExtra(KEY_IS_FROM_HOME, isRecentHistoryProductShown)
             }
     }
 }

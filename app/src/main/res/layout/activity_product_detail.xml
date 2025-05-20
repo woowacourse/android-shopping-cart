@@ -38,6 +38,7 @@
             android:layout_marginHorizontal="18dp"
             android:layout_marginVertical="16dp"
             android:text="@{viewModel.cartProduct.product.name}"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +77,43 @@
             android:layout_marginEnd="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/productDetailPrice" />
+
+        <LinearLayout
+            android:id="@+id/productDetailLastHistoryProduct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_products_gray_4_radius_right_4dp"
+            android:onClick="@{()->onClickHandler.onLastHistoryProductClick(viewModel.lastHistoryProduct.productId)}"
+            android:orientation="vertical"
+            android:paddingHorizontal="18dp"
+            app:isGone="@{viewModel.lastHistoryProduct == null}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/productDetailPrice">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/product_detail_last_history_title"
+                android:textColor="@color/mint_1"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{viewModel.lastHistoryProduct.name}"
+                android:textColor="@color/gray_5"
+                android:textSize="18sp"
+                tools:text="마지막으로 본 상품 대충 나올 수 있지" />
+        </LinearLayout>
 
 
         <TextView

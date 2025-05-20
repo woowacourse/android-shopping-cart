@@ -7,5 +7,5 @@ interface HistoryRepository {
 
     fun saveSearchHistory(productId: Int)
 
-    fun fetchRecentSearchHistory(callback: (HistoryProduct) -> Unit)
+    fun fetchRecentSearchHistory(callback: (HistoryProduct?) -> Unit)
 }

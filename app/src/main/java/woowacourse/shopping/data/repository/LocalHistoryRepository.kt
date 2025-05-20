@@ -27,10 +27,12 @@ class LocalHistoryRepository(
         }
     }
 
-    override fun fetchRecentSearchHistory(callback: (HistoryProduct) -> Unit) {
-        callback(
-            historyDao.fetchRecentHistoryProduct().toDomain(),
-        )
+    override fun fetchRecentSearchHistory(callback: (HistoryProduct?) -> Unit) {
+        thread {
+            callback(
+                historyDao.fetchRecentHistoryProduct()?.toDomain(),
+            )
+        }
     }
 
     companion object {

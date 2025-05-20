@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CartProduct.Companion.EMPTY_CART_PRODUCT
+import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -23,12 +24,21 @@ class ProductDetailViewModel(
     private val _cartProduct: MutableLiveData<CartProduct> = MutableLiveData(EMPTY_CART_PRODUCT)
     val cartProduct: LiveData<CartProduct> get() = _cartProduct
 
+    private val _lastHistoryProduct: MutableLiveData<HistoryProduct?> = MutableLiveData(null)
+    val lastHistoryProduct: LiveData<HistoryProduct?> get() = _lastHistoryProduct
+
     private val _onCartProductAddSuccess: MutableSingleLiveData<Boolean?> = MutableSingleLiveData(null)
     val onCartProductAddSuccess: SingleLiveData<Boolean?> get() = _onCartProductAddSuccess
 
     fun loadProductDetail(id: Int) {
         productRepository.fetchProductDetail(id) { cartProduct ->
             _cartProduct.postValue(cartProduct)
+        }
+    }
+
+    fun loadLastHistoryProduct() {
+        historyRepository.fetchRecentSearchHistory { historyProduct ->
+            _lastHistoryProduct.postValue(historyProduct)
         }
     }
 
@@ -44,7 +54,7 @@ class ProductDetailViewModel(
         _cartProduct.value = cartProduct.value?.increaseQuantity()
     }
 
-    fun addCartProduct() {
+    fun updateCartProduct() {
         runCatching {
             cartRepository.updateCartProduct(cartProduct.value ?: return)
         }.onSuccess {

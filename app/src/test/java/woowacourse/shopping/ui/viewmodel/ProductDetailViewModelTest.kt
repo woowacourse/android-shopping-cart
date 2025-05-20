@@ -40,7 +40,7 @@ class ProductDetailViewModelTest {
         viewModel.loadProductDetail(productId)
 
         // when
-        viewModel.addCartProduct()
+        viewModel.updateCartProduct()
 
         // then
         val updatedCart = CartDummyRepositoryImpl.fetchCartProducts(page = 1)

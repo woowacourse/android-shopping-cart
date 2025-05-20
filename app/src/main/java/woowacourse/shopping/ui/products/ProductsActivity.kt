@@ -1,13 +1,17 @@
 package woowacourse.shopping.ui.products
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.common.DataBindingActivity
+import woowacourse.shopping.ui.model.ResultCode
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.history.HistoryProductAdapter
 import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter
@@ -18,12 +22,14 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
     private val historyProductAdapter: HistoryProductAdapter = HistoryProductAdapter { id -> navigateToProductDetail(id) }
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initViewBinding()
         initObservers()
+        initActivityResultLauncher()
         viewModel.loadProducts()
     }
 
@@ -63,12 +69,15 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
 
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
-        startActivity(intent)
+        activityResultLauncher.launch(intent)
     }
 
-    private fun navigateToProductDetail(id: Int) {
-        val intent = ProductDetailActivity.newIntent(this, id)
-        startActivity(intent)
+    private fun navigateToProductDetail(
+        id: Int,
+        isRecentHistoryProductShown: Boolean = true,
+    ) {
+        val intent = ProductDetailActivity.newIntent(this, id, isRecentHistoryProductShown)
+        activityResultLauncher.launch(intent)
     }
 
     private fun initViewBinding() {
@@ -97,5 +106,20 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
         viewModel.historyProducts.observe(this) { products ->
             historyProductAdapter.submitItems(products)
         }
+    }
+
+    private fun initActivityResultLauncher() {
+        activityResultLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult(),
+            ) { result ->
+                when (result.resultCode) {
+                    ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.code ->
+                        navigateToProductDetail(
+                            result.data?.getIntExtra(ResultCode.PRODUCT_DETAIL_HISTORY_PRODUCT_CLICKED.key, 0) ?: 0,
+                            false,
+                        )
+                }
+            }
     }
 }
