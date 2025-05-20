@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.main.adapter
 
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.main.vm.ProductState
+import woowacourse.shopping.view.main.vm.state.ProductState
 
 sealed class ProductRvItems(val viewType: ViewType) {
     data class ProductItem(
@@ -21,7 +21,7 @@ sealed class ProductRvItems(val viewType: ViewType) {
 fun ProductState.toProductRvItems(): ProductRvItems.ProductItem {
     return ProductRvItems.ProductItem(
         item = item,
-        quantity = quantity.value,
+        quantity = cartQuantity.value,
         quantityVisible = quantityVisible,
     )
 }
