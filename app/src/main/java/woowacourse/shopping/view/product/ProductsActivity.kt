@@ -77,13 +77,10 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun bindData() {
-        viewModel.products.observe(this) { products: List<Product> ->
-            productAdapter.submitList(products.toProductItems)
+        viewModel.productItems.observe(this) { productsItems: List<ProductsItem> ->
+            productAdapter.submitList(productsItems)
         }
     }
-
-    private val List<Product>.toProductItems: List<ProductsItem>
-        get() = map(ProductsItem::ProductItem) + ProductsItem.LoadItem(viewModel.loadable)
 
     private fun navigateToShoppingCart() {
         startActivity(ShoppingCartActivity.newIntent(this))
