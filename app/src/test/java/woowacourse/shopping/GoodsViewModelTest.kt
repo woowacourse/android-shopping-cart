@@ -1,22 +1,20 @@
 package woowacourse.shopping
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.feature.goods.GoodsViewModel
+import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 
+@ExtendWith(InstantTaskExecutorExtension::class)
 @Suppress("ktlint:standard:function-naming")
 class GoodsViewModelTest {
     private lateinit var viewModel: GoodsViewModel
 
-    @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
-
-    @Before
+    @BeforeEach
     fun setup() {
         viewModel = GoodsViewModel()
     }
@@ -35,6 +33,6 @@ class GoodsViewModelTest {
         val beforeCount = viewModel.goods.getOrAwaitValue().size
         viewModel.addPage()
         val afterCount = viewModel.goods.getOrAwaitValue().size
-        Assertions.assertTrue(afterCount > beforeCount)
+        assertTrue(afterCount > beforeCount)
     }
 }
