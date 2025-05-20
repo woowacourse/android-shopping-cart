@@ -45,8 +45,16 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
     }
 
     private fun updateState() {
-        _goodsUiModels.value =
-            repository.getGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT).map { it.toUiModel() }
+        val currentPage = _page.value ?: DEFAULT_VALUE
+        val items = repository.getGoods(currentPage, ITEM_COUNT)
+
+        if (items.isEmpty() && currentPage > DEFAULT_VALUE) {
+            _page.value = currentPage - PAGE_CHANGE_AMOUNT
+            updateState()
+            return
+        }
+
+        _goodsUiModels.value = items.map { it.toUiModel() }
         updateNextPage()
         updatePreviousPage()
     }
