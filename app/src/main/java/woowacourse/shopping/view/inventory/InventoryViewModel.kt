@@ -18,10 +18,14 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
     val totalSize: Int get() = products.size
 
     fun requestPage() {
-        _items.value = _items.value?.minus(ShowMore)
-        val page = repository.getPage(PAGE_SIZE, (_items.value?.size ?: 0) / PAGE_SIZE)
-        _items.value = _items.value?.plus(page.items.map(Product::toUiModel))
-        if (page.hasNext) _items.value = _items.value?.plus(ShowMore)
+        val newPage =
+            repository.getPage(
+                PAGE_SIZE,
+                (_items.value?.size ?: 0) / PAGE_SIZE,
+            )
+        var newItems: List<InventoryItem> = newPage.items.map(Product::toUiModel)
+        if (newPage.hasNext) newItems = newItems.plus(ShowMore)
+        _items.value = newItems
     }
 
     companion object {

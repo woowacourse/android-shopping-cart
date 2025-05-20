@@ -43,7 +43,7 @@ class InventoryAdapter(
     }
 
     fun updateProducts(newProducts: List<InventoryItem>) {
-        items.clear()
+        items.remove(ShowMore)
         items.addAll(newProducts)
         notifyItemInserted(itemCount)
     }

@@ -36,14 +36,15 @@ class InventoryActivity :
 
     private fun initRecyclerview() {
         binding.rvProductList.apply {
-            adapter = ProductsAdapter(this@InventoryActivity)
+            adapter = InventoryAdapter(this@InventoryActivity)
             val gridLayoutManager = GridLayoutManager(this@InventoryActivity, 2)
             gridLayoutManager.spanSizeLookup =
                 object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
-                        return when ((viewModel.items.value ?: emptyList())[position].type) {
-                            InventoryItemType.PRODUCT -> SPAN_SIZE_PRODUCT
-                            InventoryItemType.SHOW_MORE -> SPAN_SIZE_SHOW_MORE
+                        return when (adapter?.getItemViewType(position)) {
+                            InventoryItemType.PRODUCT.id -> SPAN_SIZE_PRODUCT
+                            InventoryItemType.SHOW_MORE.id -> SPAN_SIZE_SHOW_MORE
+                            else -> throw IllegalStateException()
                         }
                     }
                 }
@@ -51,7 +52,7 @@ class InventoryActivity :
             viewModel.apply {
                 requestPage()
                 items.observe(this@InventoryActivity) { items ->
-                    (binding.rvProductList.adapter as ProductsAdapter).updateProducts(items)
+                    (binding.rvProductList.adapter as InventoryAdapter).updateProducts(items)
                 }
             }
         }
