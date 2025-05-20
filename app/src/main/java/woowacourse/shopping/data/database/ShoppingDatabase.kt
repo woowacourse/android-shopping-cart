@@ -5,15 +5,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import woowacourse.shopping.data.dao.CartDao
+import woowacourse.shopping.data.dao.HistoryDao
 import woowacourse.shopping.data.dao.ProductDao
 import woowacourse.shopping.data.entity.CartProductEntity
+import woowacourse.shopping.data.entity.ExploreHistoryProductEntity
 import woowacourse.shopping.data.entity.ProductEntity
 
-@Database(entities = [ProductEntity::class, CartProductEntity::class], version = 10000)
+@Database(
+    entities = [ProductEntity::class, CartProductEntity::class, ExploreHistoryProductEntity::class],
+    version = 10001,
+)
 abstract class ShoppingDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
 
     abstract fun cartDao(): CartDao
+
+    abstract fun historyDao(): HistoryDao
 
     @Suppress("ktlint:standard:property-naming")
     companion object {

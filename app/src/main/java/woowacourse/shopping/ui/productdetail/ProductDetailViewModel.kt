@@ -10,11 +10,13 @@ import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CartProduct.Companion.EMPTY_CART_PRODUCT
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val historyRepository: HistoryRepository,
 ) : ViewModel() {
     private val _cartProduct: MutableLiveData<CartProduct> = MutableLiveData(EMPTY_CART_PRODUCT)
     val cartProduct: LiveData<CartProduct> get() = _cartProduct
@@ -23,6 +25,10 @@ class ProductDetailViewModel(
         productRepository.fetchProductDetail(id) { cartProduct ->
             _cartProduct.postValue(cartProduct)
         }
+    }
+
+    fun addHistoryProduct(id: Int) {
+        historyRepository.saveSearchHistory(id)
     }
 
     fun decreaseCartProductQuantity() {
@@ -56,6 +62,7 @@ class ProductDetailViewModel(
                     return ProductDetailViewModel(
                         application.productRepository,
                         application.cartRepository,
+                        application.historyRepository,
                     ) as T
                 }
             }

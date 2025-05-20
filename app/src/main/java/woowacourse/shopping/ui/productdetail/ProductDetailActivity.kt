@@ -15,15 +15,17 @@ import woowacourse.shopping.ui.productdetail.ProductDetailActivity.OnClickHandle
 
 class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
     private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
+    private val productId: Int by lazy { intent.getIntExtra(KEY_PRODUCT_ID, 0) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         removeSupportActionBarTitle()
-        updateProductDetail()
         initViewBinding()
         initObservers()
         initCartQuantityView()
+        viewModel.loadProductDetail(productId)
+        viewModel.addHistoryProduct(productId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -38,10 +40,6 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
 
     private fun removeSupportActionBarTitle() {
         supportActionBar?.title = null
-    }
-
-    private fun updateProductDetail() {
-        viewModel.loadProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
     }
 
     private fun initViewBinding() {
