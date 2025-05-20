@@ -44,7 +44,7 @@ class CartViewModel(
     fun removeCartProduct(id: Int) {
         cartRepository.removeCartProduct(id)
         loadCartProducts()
-        _editedProductIds.value = editedProductIds.value?.plus(id)
+        _editedProductIds.postValue(editedProductIds.value?.plus(id))
     }
 
     fun increasePage(step: Int = DEFAULT_PAGE_STEP) {
@@ -69,9 +69,13 @@ class CartViewModel(
 
     fun decreaseCartProductQuantity(id: Int) {
         cartRepository.decreaseProductQuantity(id) { newQuantity ->
-            _cartProducts.postValue(
-                cartProducts.value?.updateCartProductQuantity(id, newQuantity),
-            )
+            if (newQuantity <= 0) {
+                loadCartProducts()
+            } else {
+                _cartProducts.postValue(
+                    cartProducts.value?.updateCartProductQuantity(id, newQuantity),
+                )
+            }
         }
         _editedProductIds.value = editedProductIds.value?.plus(id)
     }

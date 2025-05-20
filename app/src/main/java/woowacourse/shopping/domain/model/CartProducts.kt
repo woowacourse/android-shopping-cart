@@ -19,6 +19,11 @@ data class CartProducts(
         return copy(products = updatedProducts)
     }
 
+    fun removeCartProduct(productId: Int): CartProducts {
+        val updatedProducts = products.filter { it.product.id != productId }
+        return copy(products = updatedProducts)
+    }
+
     companion object {
         val EMPTY_CART_PRODUCTS = CartProducts(emptyList(), 0)
     }
