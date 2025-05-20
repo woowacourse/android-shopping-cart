@@ -4,21 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="isNextButtonEnabled"
-            type="boolean" />
-
-        <variable
-            name="isPrevButtonEnabled"
-            type="boolean" />
-
         <variable
             name="page"
             type="Integer" />
 
         <variable
-            name="cartEventHandler"
+            name="isNextButtonEnabled"
+            type="Boolean" />
+
+        <variable
+            name="isPrevButtonEnabled"
+            type="Boolean" />
+
+        <variable
+            name="handler"
             type="woowacourse.shopping.cart.CartEventHandler" />
     </data>
 
@@ -42,7 +41,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_prev_selector"
                 android:enabled="@{isPrevButtonEnabled}"
-                android:onClick="@{() -> cartEventHandler.onPrevPage()}"
+                android:onClick="@{() -> handler.onPrevPage()}"
                 android:text="@string/text_prev_button"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -69,7 +68,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_next_selector"
                 android:enabled="@{isNextButtonEnabled}"
-                android:onClick="@{() -> cartEventHandler.onNextPage()}"
+                android:onClick="@{() -> handler.onNextPage()}"
                 android:text="@string/text_next_button"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

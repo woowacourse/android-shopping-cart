@@ -9,7 +9,8 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartViewModel(
     private val dataSource: CartProductDataSource,
-) : ViewModel() {
+) : ViewModel(),
+    CartEventHandler {
     private val allCartProducts get() = dataSource.cartProducts()
     private val allCartProductsSize get() = dataSource.getCartProductsSize()
 
@@ -29,41 +30,41 @@ class CartViewModel(
         loadCartProducts()
     }
 
-    fun deleteCartProduct(cartProduct: ProductUiModel) {
+    override fun onDeleteProduct(cartProduct: ProductUiModel) {
         dataSource.deleteCartProduct(cartProduct)
 
         loadCartProducts()
     }
 
-    fun onClick(dir: PageDirection) {
-        val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (dataSource.getCartProductsSize() - 1) / PAGE_SIZE
-
-        when (dir) {
-            PageDirection.PREV ->
-                if (currentPage > 0) {
-                    decreasePage()
-                    loadCartProducts()
-                }
-
-            PageDirection.NEXT ->
-                if (currentPage < lastPage) {
-                    increasePage()
-                    loadCartProducts()
-                }
+    override fun onNextPage() {
+        val currentPage = page.value ?: 0
+        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
+        if (currentPage < lastPage) {
+            increasePage()
+            loadCartProducts()
         }
     }
 
-    fun isNextButtonEnabled(): Boolean {
+    override fun onPrevPage() {
+        val currentPage = page.value ?: 0
+        if (currentPage > 0) {
+            decreasePage()
+            loadCartProducts()
+        }
+    }
+
+    override fun isNextButtonEnabled(): Boolean {
         val currentPage = page.value ?: INITIAL_PAGE
         val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
         return currentPage < lastPage
     }
 
-    fun isPrevButtonEnabled(): Boolean {
+    override fun isPrevButtonEnabled(): Boolean {
         val currentPage = page.value ?: INITIAL_PAGE
         return currentPage > 0
     }
+
+    override fun getPage(): Int = page.value ?: 0
 
     private fun increasePage() {
         _page.value = page.value?.plus(1)
@@ -92,21 +93,6 @@ class CartViewModel(
         _isNextButtonEnabled.value = currentPage < (totalSize - 1) / pageSize
         _isPrevButtonEnabled.value = currentPage > 0
     }
-
-    fun eventHandler(): CartEventHandler =
-        object : CartEventHandler {
-            override fun onDeleteProduct(product: ProductUiModel) {
-                deleteCartProduct(product)
-            }
-
-            override fun onNextPage() {
-                onClick(PageDirection.NEXT)
-            }
-
-            override fun onPrevPage() {
-                onClick(PageDirection.PREV)
-            }
-        }
 
     companion object {
         private const val PAGE_SIZE = 5

@@ -7,19 +7,16 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
     private var cartProducts: List<ProductUiModel>,
-    private val cartEventHandler: CartEventHandler,
-    private val page: () -> Int,
-    private val isNextButtonEnabled: () -> Boolean,
-    private val isPrevButtonEnabled: () -> Boolean,
+    private val handler: CartEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == VIEW_TYPE_CART_PRODUCT) {
-            CartViewHolder.from(parent, cartEventHandler)
+            CartViewHolder.from(parent, handler)
         } else {
-            PaginationButtonViewHolder.from(parent, cartEventHandler)
+            PaginationButtonViewHolder.from(parent, handler)
         }
 
     override fun onBindViewHolder(
@@ -30,9 +27,9 @@ class CartAdapter(
             is CartViewHolder -> holder.bind(cartProducts[position])
             is PaginationButtonViewHolder ->
                 holder.bind(
-                    page = page(),
-                    isNextButtonEnabled = isNextButtonEnabled(),
-                    isPrevButtonEnabled = isPrevButtonEnabled(),
+                    page = handler.getPage(),
+                    isNextButtonEnabled = handler.isNextButtonEnabled(),
+                    isPrevButtonEnabled = handler.isPrevButtonEnabled(),
                 )
         }
     }
@@ -56,7 +53,7 @@ class CartAdapter(
         notifyItemRangeInserted(0, newSize)
     }
 
-    private fun shouldShowPagination(): Boolean = isNextButtonEnabled() || isPrevButtonEnabled()
+    private fun shouldShowPagination(): Boolean = handler.isNextButtonEnabled() || handler.isPrevButtonEnabled()
 
     override fun getItemCount(): Int = cartProducts.size + if (shouldShowPagination()) 1 else 0
 

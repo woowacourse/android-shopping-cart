@@ -10,7 +10,7 @@
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
-            name="cartEventHandler"
+            name="handler"
             type="woowacourse.shopping.cart.CartEventHandler" />
     </data>
 
@@ -54,7 +54,7 @@
             android:layout_height="40dp"
             android:layout_margin="8dp"
             android:background="@drawable/icon_delete"
-            android:onClick="@{() -> cartEventHandler.onDeleteProduct(cartProduct)}"
+            android:onClick="@{() -> handler.onDeleteProduct(cartProduct)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -39,13 +39,11 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setCartProductAdapter() {
+        val handler = CartEventHandlerImpl(viewModel)
         binding.recyclerViewCart.adapter =
             CartAdapter(
                 cartProducts = emptyList(),
-                cartEventHandler = viewModel.eventHandler(),
-                page = { viewModel.page.value ?: 0 },
-                isNextButtonEnabled = { viewModel.isNextButtonEnabled() },
-                isPrevButtonEnabled = { viewModel.isPrevButtonEnabled() },
+                handler = handler,
             )
     }
 
