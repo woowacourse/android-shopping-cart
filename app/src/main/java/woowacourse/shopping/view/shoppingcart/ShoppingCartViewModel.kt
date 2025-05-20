@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingCartApplication
+import woowacourse.shopping.data.page.Page
+import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.page.Page
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -29,15 +30,13 @@ class ShoppingCartViewModel(
     }
 
     fun requestProductsPage(requestPage: Int) {
-        val item = shoppingCartRepository.findAll(requestPage * PAGE_SIZE, PAGE_SIZE)
-        val total = shoppingCartRepository.totalSize()
-        _productsLiveData.value =
-            Page.from(
-                item,
-                total,
-                requestPage,
-                PAGE_SIZE,
+        val pageRequest =
+            PageRequest(
+                pageSize = PAGE_SIZE,
+                requestPage = requestPage,
             )
+        val item = shoppingCartRepository.findAll(pageRequest)
+        _productsLiveData.value = item
     }
 
     private fun pageNumberAfterRemoval(currentPage: Int): Int {

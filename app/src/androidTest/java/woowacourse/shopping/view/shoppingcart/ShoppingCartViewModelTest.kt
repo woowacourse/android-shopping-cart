@@ -4,13 +4,11 @@ package woowacourse.shopping.view.shoppingcart
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.assertj.core.api.Java6Assertions.assertThat
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.view.page.Page
+import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.fixture.TestShoppingCart
 import kotlin.math.min

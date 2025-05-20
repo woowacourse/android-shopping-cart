@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingCartApplication
+import woowacourse.shopping.data.page.Page
+import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.page.Page
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
@@ -20,14 +21,13 @@ class ProductsViewModel(
     val totalSize: Int get() = productsRepository.totalSize()
 
     fun requestProductsPage(requestPage: Int) {
-        val items = productsRepository.findAll(requestPage * PAGE_SIZE, PAGE_SIZE)
-        _productsLiveData.value =
-            Page.from(
-                items,
-                totalSize,
-                requestPage,
-                PAGE_SIZE,
+        val pageRequest =
+            PageRequest(
+                pageSize = PAGE_SIZE,
+                requestPage = requestPage,
             )
+        val items = productsRepository.findAll(pageRequest)
+        _productsLiveData.value = items
     }
 
     companion object {

@@ -3,9 +3,9 @@ package woowacourse.shopping.view.shoppingcart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.page.Page
 
 class ShoppingCartAdapter(
     private val handler: ShoppingCartEventHandler,

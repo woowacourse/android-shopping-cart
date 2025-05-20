@@ -4,11 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyProducts
+import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.fixture.TestProducts
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.view.page.Page
 
 @Suppress("FunctionName")
 class ProductsViewModelTest {

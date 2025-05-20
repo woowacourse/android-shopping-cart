@@ -1,12 +1,11 @@
 package woowacourse.shopping.data.repository
 
+import woowacourse.shopping.data.page.Page
+import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.domain.Product
 
 interface ShoppingCartRepository {
-    fun findAll(
-        offset: Int,
-        limit: Int,
-    ): List<Product>
+    fun findAll(pageRequest: PageRequest): Page<Product>
 
     fun totalSize(): Int
 
