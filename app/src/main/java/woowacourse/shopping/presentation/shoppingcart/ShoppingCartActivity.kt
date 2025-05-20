@@ -17,25 +17,33 @@ class ShoppingCartActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        setupAppBar()
-        val adapter = ShoppingCartAdapter { goodsUiModel -> viewModel.deleteGoods(goodsUiModel) }
-        binding.apply {
-            vm = viewModel
-            lifecycleOwner = this@ShoppingCartActivity
-            rvSelectedGoodsList.apply {
-                this.adapter = adapter
-                layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
-            }
-        }
-        viewModel.goodsUiModels.observe(this) { goods ->
-            adapter.updateItems(goods)
-        }
+        setUpAppBar()
+        setUpBinding()
+        setUpAdapter()
     }
 
-    private fun setupAppBar() {
+    private fun setUpAppBar() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = getString(R.string.label_shopping_cart_title)
+        }
+    }
+
+    private fun setUpBinding() {
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = this@ShoppingCartActivity
+        }
+    }
+
+    private fun setUpAdapter() {
+        val adapter = ShoppingCartAdapter { goodsUiModel -> viewModel.deleteGoods(goodsUiModel) }
+        binding.rvSelectedGoodsList.apply {
+            this.adapter = adapter
+            layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
+        }
+        viewModel.goodsUiModels.observe(this) { goodsUiModels ->
+            adapter.updateItems(goodsUiModels)
         }
     }
 

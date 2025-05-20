@@ -19,7 +19,11 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
+        setUpBinding()
         viewModel.setGoods(intent.getParcelableCompat<GoodsUiModel>(EXTRA_GOODS))
+    }
+
+    private fun setUpBinding() {
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@GoodsDetailActivity
