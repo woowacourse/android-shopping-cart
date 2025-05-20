@@ -61,7 +61,6 @@ class MainActivity :
     private fun initRecyclerview() {
         binding.productList.apply {
             adapter = productsAdapter
-            layoutManager = GridLayoutManager(this@MainActivity, 2)
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
         }
         viewModel.apply {
