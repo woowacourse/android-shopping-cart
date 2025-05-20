@@ -1,4 +1,4 @@
-package woowacourse.shopping.util.bindingadapter
+package woowacourse.shopping.presentation.util.bindingadapter
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
