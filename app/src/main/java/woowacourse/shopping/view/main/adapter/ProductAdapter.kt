@@ -9,7 +9,7 @@ import woowacourse.shopping.view.main.vm.state.ProductUiState
 
 class ProductAdapter(
     items: List<ProductRvItems>,
-    private val handler: ProductsAdapterEventHandler,
+    private val handler: ProductAdapterEventHandler,
 ) : RecyclerView.Adapter<BaseViewHolder<ViewBinding>>() {
     private val items: MutableList<ProductRvItems> = items.toMutableList()
 
@@ -21,6 +21,7 @@ class ProductAdapter(
             ProductRvItems.ViewType.VIEW_TYPE_PRODUCT ->
                 ProductViewHolder(
                     parent,
+                    handler,
                     handler,
                 )
 
@@ -105,4 +106,6 @@ class ProductAdapter(
             notifyItemRemoved(index)
         }
     }
+
+    interface Handler : LoadViewHolder.Handler, ProductViewHolder.Handler
 }

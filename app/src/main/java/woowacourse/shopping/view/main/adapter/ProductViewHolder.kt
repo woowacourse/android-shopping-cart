@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.view.core.base.BaseViewHolder
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
 
 class ProductViewHolder(
     parent: ViewGroup,
-    private val handler: ProductsAdapterEventHandler,
+    private val handler: Handler,
+    private val quantityHandler: CartQuantityHandler,
 ) : BaseViewHolder<ItemProductBinding>(
         binding =
             ItemProductBinding.inflate(
@@ -19,7 +21,15 @@ class ProductViewHolder(
     fun bind(item: ProductRvItems.ProductItem) {
         with(binding) {
             model = item
-            eventHandler = handler
+            adapterEventHandler = handler
+            cartQuantityEventHandler = quantityHandler
+            executePendingBindings()
         }
+    }
+
+    interface Handler {
+        fun onSelectProduct(productId: Long)
+
+        fun showQuantity(productId: Long)
     }
 }
