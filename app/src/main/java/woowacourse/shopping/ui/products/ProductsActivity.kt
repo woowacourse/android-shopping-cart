@@ -2,14 +2,15 @@ package woowacourse.shopping.ui.products
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
-import android.view.View
-import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
+import woowacourse.shopping.databinding.LayoutProductsCartQuantityBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.common.DataBindingActivity
 import woowacourse.shopping.ui.model.ResultCode
@@ -23,7 +24,6 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
     private val historyProductAdapter: HistoryProductAdapter = HistoryProductAdapter { id -> navigateToProductDetail(id) }
-    private var cartBadgeTextView: TextView? = null
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,9 +42,21 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_products, menu)
-        val actionView = menu?.findItem(R.id.itemCart)?.actionView
-        actionView?.setOnClickListener { navigateToCart() }
-        cartBadgeTextView = actionView?.findViewById(R.id.productsCartQuantityText)
+
+        val binding =
+            DataBindingUtil.inflate<LayoutProductsCartQuantityBinding>(
+                LayoutInflater.from(this),
+                R.layout.layout_products_cart_quantity,
+                null,
+                false,
+            )
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        menu?.findItem(R.id.itemCart)?.actionView = binding.root
+        binding.root.setOnClickListener { navigateToCart() }
+
         return true
     }
 
@@ -101,17 +113,11 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     private fun initObservers() {
         viewModel.catalogProducts.observe(this) { products ->
             productsAdapter.submitItems(products.products, products.hasMore)
-            updateCartBadge(products.cartProductsQuantity)
         }
 
         viewModel.historyProducts.observe(this) { products ->
             historyProductAdapter.submitItems(products)
         }
-    }
-
-    private fun updateCartBadge(quantity: Int) {
-        cartBadgeTextView?.text = quantity.toString()
-        cartBadgeTextView?.visibility = if (quantity > 0) View.VISIBLE else View.GONE
     }
 
     private fun initActivityResultLauncher() {
