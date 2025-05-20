@@ -5,6 +5,17 @@
 
     <data>
 
+        <variable
+            name="position"
+            type="int" />
+
+        <variable
+            name="count"
+            type="int" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.util.QuantitySelectorListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +28,7 @@
         app:layout_constraintStart_toStartOf="@id/iv_goods">
 
         <TextView
+            android:onClick="@{() -> clickListener.onDecreaseQuantity(position)}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
@@ -32,6 +44,7 @@
             android:layout_height="42dp"
             android:gravity="center"
             android:textSize="22sp"
+            android:text="@{String.valueOf(count)}"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,6 +53,7 @@
             tools:text="2" />
 
         <TextView
+            android:onClick="@{() -> clickListener.onIncreaseQuantity(position)}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"

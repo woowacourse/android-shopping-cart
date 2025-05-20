@@ -36,18 +36,41 @@ class GoodsViewModel(
         _goods.value = goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
     }
 
-    fun selectGoods(position: Int) {
-        val currentList = goods.value.orEmpty()
-        val updatedList =
-            currentList.toMutableList().apply {
-                this[position] = this[position].copy(isSelected = true)
+    fun increaseGoodsCount(position: Int) {
+        val updatedItem =
+            updateGoods(position) {
+                it.copy(isSelected = true, quantity = it.quantity + 1)
             }
-        _goods.value = updatedList
-        _isQuantityChanged.setValue(position)
-        shoppingRepository.addItem(goods.value?.get(position)?.toDomain() ?: return)
+        shoppingRepository.addItem(updatedItem.toDomain())
     }
 
-    fun addGoods() {
+    fun decreaseGoodsCount(position: Int) {
+        val updatedItem =
+            updateGoods(position) {
+                val isSelected = it.quantity - 1 != 0
+                it.copy(isSelected = isSelected, quantity = it.quantity - 1)
+            }
+        shoppingRepository.removeItem(updatedItem.toDomain())
+    }
+
+    private fun updateGoods(
+        position: Int,
+        transform: (GoodsUiModel) -> GoodsUiModel,
+    ): GoodsUiModel {
+        val currentList = goods.value.orEmpty()
+
+        val updatedItem = transform(currentList[position])
+        val updatedList =
+            currentList.toMutableList().apply {
+                this[position] = updatedItem
+            }
+
+        _goods.value = updatedList
+        _isQuantityChanged.setValue(position)
+        return updatedItem
+    }
+
+    fun loadMoreGoods() {
         _goods.value =
             _goods.value?.plus(
                 goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() },

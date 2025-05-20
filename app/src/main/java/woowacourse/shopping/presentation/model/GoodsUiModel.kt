@@ -10,6 +10,7 @@ data class GoodsUiModel(
     val price: Int,
     val imageUrl: String,
     val isSelected: Boolean,
+    val quantity: Int,
 ) : Serializable
 
 fun GoodsUiModel.toDomain(): Goods =
@@ -25,4 +26,5 @@ fun Goods.toUiModel(): GoodsUiModel =
         price = price.value,
         imageUrl = imageUrl,
         isSelected = false,
+        quantity = 0,
     )

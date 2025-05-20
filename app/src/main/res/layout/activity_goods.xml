@@ -33,7 +33,7 @@
             />
 
         <Button
-            android:onClick="@{() -> vm.addGoods()}"
+            android:onClick="@{() -> vm.loadMoreGoods()}"
             android:id="@+id/btn_load_more"
             android:layout_width="match_parent"
             android:layout_height="80dp"

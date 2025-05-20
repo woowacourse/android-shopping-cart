@@ -38,7 +38,15 @@ class GoodsActivity : BaseActivity() {
                     }
 
                     override fun onPlusClick(position: Int) {
-                        viewModel.selectGoods(position)
+                        viewModel.increaseGoodsCount(position)
+                    }
+
+                    override fun onIncreaseQuantity(position: Int) {
+                        viewModel.increaseGoodsCount(position)
+                    }
+
+                    override fun onDecreaseQuantity(position: Int) {
+                        viewModel.decreaseGoodsCount(position)
                     }
                 },
             )
