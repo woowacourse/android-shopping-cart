@@ -31,14 +31,27 @@ class MainActivityTest {
 
     @Test
     fun `상품을_클릭하면_상품_상세_정보가_출력된다`() {
-        onView(
-            ProductRecyclerViewMatchers.atPositionOnView(
-                0,
-                R.id.root,
-            ),
-        ).performClick()
+        onView(ProductRecyclerViewMatchers.atPositionOnView(0, R.id.root)).performClick()
 
         onView(withText("마리오 그린올리브 300g")).isDisplayed()
         onView(withText("3,980원")).isDisplayed()
+    }
+
+    @Test
+    fun `상품_수량_버튼을_클릭하면_상품_수량_증감_버튼이_출력된다`() {
+        onView(ProductRecyclerViewMatchers.atPositionOnView(0, R.id.button_quantity)).performClick()
+
+        onView(withText("1")).isDisplayed()
+    }
+
+    @Test
+    fun `상품_수량_증가_버튼을_클릭하면_상품_수량이_증가하고_감소버튼을_누르면_수량이_감소_된다`() {
+        onView(ProductRecyclerViewMatchers.atPositionOnView(0, R.id.button_quantity)).performClick()
+
+        onView(ProductRecyclerViewMatchers.atPositionOnView(0, R.id.image_view_plus)).performClick()
+        onView(withText("2")).isDisplayed()
+
+        onView(ProductRecyclerViewMatchers.atPositionOnView(0, R.id.image_view_minus)).performClick()
+        onView(withText("1")).isDisplayed()
     }
 }

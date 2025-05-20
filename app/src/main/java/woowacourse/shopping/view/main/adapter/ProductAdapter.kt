@@ -3,7 +3,6 @@ package woowacourse.shopping.view.main.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.core.base.BaseViewHolder
 import woowacourse.shopping.view.main.vm.LoadState
 import woowacourse.shopping.view.main.vm.ProductUiState
@@ -13,13 +12,6 @@ class ProductAdapter(
     private val handler: ProductsAdapterEventHandler,
 ) : RecyclerView.Adapter<BaseViewHolder<ViewBinding>>() {
     private val items: MutableList<ProductRvItems> = items.toMutableList()
-    private val productCount get() = items.count { it is ProductRvItems.ProductItem }
-
-    fun submitList(newItems: ProductUiState) {
-        removeLoadItem()
-        addProductItems(newItems.items)
-        generateLoad(newItems.load)
-    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -54,17 +46,47 @@ class ProductAdapter(
 
     override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
-    private fun addProductItems(newItems: List<Product>) {
-        val subsList = subtractItems(newItems)
+    fun submitList(newUiState: ProductUiState) {
+        removeLoadItem()
 
-        items.addAll(subsList)
-        notifyItemRangeInserted(items.size - subsList.size, subsList.size)
+        newUiState
+            .items
+            .forEachIndexed { index, newState ->
+                val existingItem = items.getOrNull(index) as? ProductRvItems.ProductItem
+                val newItem = newState.toProductRvItems()
+                applyItemChange(existingItem, newItem, index)
+            }
+
+        generateLoad(newUiState.load)
     }
 
-    private fun subtractItems(items: List<Product>): List<ProductRvItems.ProductItem> {
-        return items
-            .drop(productCount)
-            .map(ProductRvItems::ProductItem)
+    fun applyItemChange(
+        existingItem: ProductRvItems.ProductItem?,
+        newItem: ProductRvItems.ProductItem,
+        index: Int,
+    ) {
+        when {
+            existingItem == null -> {
+                items.add(newItem)
+                notifyItemInserted(index)
+            }
+
+            !areContentsTheSame(existingItem, newItem) -> {
+                items[index] = newItem
+                notifyItemChanged(index)
+            }
+
+            else -> return
+        }
+    }
+
+    private fun areContentsTheSame(
+        oldItem: ProductRvItems.ProductItem,
+        newItem: ProductRvItems.ProductItem,
+    ): Boolean {
+        return oldItem.item == newItem.item &&
+            oldItem.quantity == newItem.quantity &&
+            oldItem.quantityVisible == newItem.quantityVisible
     }
 
     private fun generateLoad(load: LoadState) {

@@ -24,7 +24,11 @@ import kotlin.getValue
 
 class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory((application as App).container.productRepository)
+        val container = (application as App).container
+        MainViewModelFactory(
+            container.productRepository,
+            container.cartRepository,
+        )
     }
     private val productsAdapter: ProductAdapter by lazy {
         ProductAdapter(emptyList(), this)
@@ -87,6 +91,18 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
 
     override fun onLoadMoreItems() {
         viewModel.loadProducts()
+    }
+
+    override fun showQuantity(productId: Long) {
+        viewModel.increaseQuantity(productId)
+    }
+
+    override fun onClickIncrease(productId: Long) {
+        viewModel.increaseQuantity(productId)
+    }
+
+    override fun onClickDecrease(productId: Long) {
+        viewModel.decreaseQuantity(productId)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
