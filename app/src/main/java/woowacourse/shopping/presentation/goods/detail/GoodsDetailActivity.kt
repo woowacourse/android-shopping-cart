@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
@@ -15,7 +16,9 @@ import woowacourse.shopping.presentation.util.getSerializableCompat
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
-    private val viewModel: GoodsDetailViewModel by viewModels()
+    private val viewModel: GoodsDetailViewModel by viewModels {
+        GoodsDetailViewModel.provideFactory((application as ShoppingApplication).shoppingRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
