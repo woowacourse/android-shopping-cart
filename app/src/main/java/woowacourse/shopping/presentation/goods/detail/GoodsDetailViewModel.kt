@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import woowacourse.shopping.data.ShoppingDataBase
 import woowacourse.shopping.data.ShoppingRepository
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
@@ -28,7 +27,7 @@ class GoodsDetailViewModel(
     }
 
     fun addToShoppingCart() {
-        _goods.value?.let { ShoppingDataBase.addItem(it) }
+        _goods.value?.let { shoppingRepository.addItem(it) }
         _isItemAddedToCart.setValue(Unit)
     }
 
