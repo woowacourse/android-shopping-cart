@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.ui.products.ProductsViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/productsScreenContainer"
         android:layout_width="match_parent"
@@ -13,6 +20,7 @@
             android:id="@+id/productsHistoryContainer"
             android:layout_width="0dp"
             android:layout_height="228dp"
+            app:isGone="@{viewModel.historyProducts.empty}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

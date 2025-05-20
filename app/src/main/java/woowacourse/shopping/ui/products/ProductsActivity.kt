@@ -72,6 +72,8 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     }
 
     private fun initViewBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         initProductsView()
         initHistoryProductsView()
     }
