@@ -14,6 +14,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.GoodsRepositoryImpl
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.createGoods
+import woowacourse.shopping.fixture.createShoppingGoods
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -75,5 +76,41 @@ class GoodsViewModelTest {
 
         // then
         actual shouldBe false
+    }
+
+    @Test
+    fun `구매할 상품 수량을 증가할 수 있다`() {
+        // when
+        goodsViewModel.increaseGoodsCount(1)
+        val actual = goodsViewModel.goods.getOrAwaitValue()[1].quantity
+
+        // then
+        actual shouldBe 1
+    }
+
+    @Test
+    fun `구매할 상품 수량을 감소할 수 있다`() {
+        // given
+        goodsViewModel.increaseGoodsCount(1)
+
+        // when
+        goodsViewModel.decreaseGoodsCount(1)
+        val actual = goodsViewModel.goods.getOrAwaitValue()[1].quantity
+
+        // then
+        actual shouldBe 0
+    }
+
+    @Test
+    fun `장바구니에 담긴 상품 개수를 복원한다`() {
+        // given
+        every { shoppingRepository.getAllGoods() } returns setOf(createShoppingGoods(1, 2))
+
+        // when
+        goodsViewModel.restoreGoods()
+        val actual = goodsViewModel.goods.getOrAwaitValue()[0].quantity
+
+        // then
+        actual shouldBe 2
     }
 }
