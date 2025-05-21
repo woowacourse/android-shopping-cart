@@ -50,6 +50,8 @@ android {
 
 dependencies {
     implementation(libs.glide)
+    implementation(libs.androidx.room.runtime)
+    kapt("androidx.room:room-compiler:2.7.1")
 
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)

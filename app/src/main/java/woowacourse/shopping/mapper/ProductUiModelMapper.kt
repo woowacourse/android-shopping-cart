@@ -1,13 +1,12 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.product.catalog.Product
+import woowacourse.shopping.data.CartItem
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-fun Product.toUiModel() =
-    ProductUiModel(
-        id = this.id,
+fun ProductUiModel.toCartItem() =
+    CartItem(
         imageUrl = this.imageUrl,
         name = this.name,
         price = this.price,
-        quantity = 0,
+        quantity = this.quantity,
     )
