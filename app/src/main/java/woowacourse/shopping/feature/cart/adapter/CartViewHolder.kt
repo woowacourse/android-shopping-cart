@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
@@ -14,8 +14,8 @@ class CartViewHolder(
         binding.cartClickListener = cartClickListener
     }
 
-    fun bind(goods: Goods) {
-        binding.goods = goods
+    fun bind(cart: Cart) {
+        binding.cart = cart
     }
 
     companion object {
@@ -30,6 +30,6 @@ class CartViewHolder(
     }
 
     interface CartClickListener {
-        fun onClickDeleteButton(goods: Goods)
+        fun onClickDeleteButton(cart: Cart)
     }
 }

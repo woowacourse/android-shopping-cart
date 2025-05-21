@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.adapter.CartViewHolder
 
@@ -37,8 +37,8 @@ class CartActivity :
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClickDeleteButton(goods: Goods) {
-        viewModel.delete(goods)
+    override fun onClickDeleteButton(cart: Cart) {
+        viewModel.delete(cart)
     }
 
     private fun updatePageButton() {

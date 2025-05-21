@@ -5,7 +5,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 
@@ -15,7 +15,7 @@ fun ImageView.loadImageFromUrl(url: String) {
 }
 
 @BindingAdapter("items")
-fun RecyclerView.bindItems(items: List<Goods>?) {
+fun RecyclerView.bindItems(items: List<Cart>?) {
     if (adapter is GoodsAdapter && items != null) {
         (adapter as GoodsAdapter).setItems(items)
     } else if (adapter is CartAdapter && items != null) {
@@ -25,5 +25,10 @@ fun RecyclerView.bindItems(items: List<Goods>?) {
 
 @BindingAdapter("visible")
 fun View.setVisible(visible: Boolean) {
-    this.visibility = if (visible) View.VISIBLE else View.GONE
+    visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("count")
+fun CustomCartQuantity.setQuantity(count: Int) {
+    setCount(count)
 }

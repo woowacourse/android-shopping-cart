@@ -5,46 +5,50 @@ import androidx.lifecycle.map
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDatabase: CartDatabase,
 ) : CartRepository {
-    override fun getAll(): LiveData<List<Goods>> =
+    override fun getAll(): LiveData<List<Cart>> =
         cartDatabase.cartDao().getAll().map { entities ->
-            entities.map { it.toDomain() }
+            entities.map { entity ->
+                entity.toDomain()
+            }
         }
 
-    override fun insert(goods: Goods) {
+    override fun insert(cart: Cart) {
         thread {
             val dao = cartDatabase.cartDao()
-            val existing = dao.findById(goods.id)
+            val existing = dao.findById(cart.goods.id)
             if (existing != null) {
                 val updated =
                     existing.copy(
                         quantity = existing.quantity + 1,
-                        price = existing.price + goods.price,
+                        price = existing.price + cart.goods.price,
                     )
                 dao.update(updated)
             } else {
-                dao.insertAndUpdateQuantity(goods.toEntity())
+                dao.insertAndUpdateQuantity(cart.toEntity())
             }
         }
     }
 
-    override fun delete(goods: Goods) {
+    override fun delete(cart: Cart) {
         thread {
-            cartDatabase.cartDao().delete(goods.toEntity())
+            cartDatabase.cartDao().delete(cart.toEntity())
         }
     }
 
     override fun getPage(
         limit: Int,
         offset: Int,
-    ): LiveData<List<Goods>> =
+    ): LiveData<List<Cart>> =
         cartDatabase.cartDao().getPage(limit, offset).map { entities ->
-            entities.map { it.toDomain() }
+            entities.map { entity ->
+                entity.toDomain()
+            }
         }
 
     override fun getAllItemsSize(): LiveData<Int> = cartDatabase.cartDao().getAllItemsSize()

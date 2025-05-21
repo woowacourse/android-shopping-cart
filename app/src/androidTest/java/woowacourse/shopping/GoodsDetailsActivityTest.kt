@@ -10,8 +10,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
+import woowacourse.shopping.feature.model.GoodsUiModel
 
 @Suppress("ktlint:standard:function-naming")
 class GoodsDetailsActivityTest {

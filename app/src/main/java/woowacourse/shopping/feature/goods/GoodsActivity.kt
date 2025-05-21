@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.feature.ScrollListener
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.cart.ViewModelFactory
@@ -74,16 +74,16 @@ class GoodsActivity :
         }
     }
 
-    private fun navigate(goods: Goods) {
-        val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
+    private fun navigate(cart: Cart) {
+        val intent = GoodsDetailsActivity.newIntent(this, cart.toUi())
         startActivity(intent)
     }
 
-    override fun onClickGoods(goods: Goods) {
-        navigate(goods)
+    override fun onClickGoods(cart: Cart) {
+        navigate(cart)
     }
 
-    override fun insertToCart(goods: Goods) {
-        viewModel.insertToCart(goods)
+    override fun insertToCart(cart: Cart) {
+        viewModel.insertToCart(cart)
     }
 }

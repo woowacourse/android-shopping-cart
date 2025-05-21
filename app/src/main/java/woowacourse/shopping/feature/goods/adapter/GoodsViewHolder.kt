@@ -2,20 +2,20 @@ package woowacourse.shopping.feature.goods.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemGoodsBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 
 class GoodsViewHolder(
     private val binding: ItemGoodsBinding,
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(goods: Goods) {
-        binding.goods = goods
+    fun bind(cart: Cart) {
+        binding.cart = cart
         binding.goodsClickListener = goodsClickListener
     }
 
     interface GoodsClickListener {
-        fun onClickGoods(goods: Goods)
+        fun onClickGoods(cart: Cart)
 
-        fun insertToCart(goods: Goods)
+        fun insertToCart(cart: Cart)
     }
 }

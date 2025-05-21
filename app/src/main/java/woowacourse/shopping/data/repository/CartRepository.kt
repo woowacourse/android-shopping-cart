@@ -1,19 +1,19 @@
 package woowacourse.shopping.data.repository
 
 import androidx.lifecycle.LiveData
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 
 interface CartRepository {
-    fun getAll(): LiveData<List<Goods>>
+    fun getAll(): LiveData<List<Cart>>
 
-    fun insert(goods: Goods)
+    fun insert(cart: Cart)
 
-    fun delete(goods: Goods)
+    fun delete(cart: Cart)
 
     fun getPage(
         limit: Int,
         offset: Int,
-    ): LiveData<List<Goods>>
+    ): LiveData<List<Cart>>
 
     fun getAllItemsSize(): LiveData<Int>
 }

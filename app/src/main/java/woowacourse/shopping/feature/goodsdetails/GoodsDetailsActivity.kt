@@ -13,13 +13,15 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
-import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.feature.cart.ViewModelFactory
+import woowacourse.shopping.feature.model.CartUiModel
 import kotlin.getValue
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
-    private lateinit var goods: GoodsUiModel
+
+//    private lateinit var goods: GoodsUiModel
+    private lateinit var cart: CartUiModel
     private val viewModel: GoodsDetailsViewModel by viewModels {
         ViewModelFactory { GoodsDetailsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
     }
@@ -29,8 +31,8 @@ class GoodsDetailsActivity : AppCompatActivity() {
         binding = ActivityGoodsDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        goods = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
-        binding.goods = goods
+        cart = IntentCompat.getParcelableExtra(intent, GOODS_KEY, CartUiModel::class.java) ?: return
+        binding.cart = cart
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -61,10 +63,10 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
         fun newIntent(
             context: Context,
-            goods: GoodsUiModel,
+            cart: CartUiModel,
         ): Intent =
             Intent(context, GoodsDetailsActivity::class.java).apply {
-                putExtra(GOODS_KEY, goods)
+                putExtra(GOODS_KEY, cart)
             }
     }
 }

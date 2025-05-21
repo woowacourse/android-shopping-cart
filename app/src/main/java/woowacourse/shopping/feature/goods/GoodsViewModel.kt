@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
 import woowacourse.shopping.util.MutableSingleLiveData
@@ -13,8 +14,8 @@ import kotlin.math.min
 class GoodsViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _goods = MutableLiveData<List<Goods>>()
-    val goods: LiveData<List<Goods>> get() = _goods
+    private val _cart = MutableLiveData<List<Cart>>()
+    val cart: LiveData<List<Cart>> get() = _cart
     private val _showMoreButton = MutableLiveData(false)
     val showMoreButton: LiveData<Boolean> get() = _showMoreButton
     private val _isFullLoaded = MutableLiveData<Boolean>()
@@ -30,9 +31,11 @@ class GoodsViewModel(
     }
 
     fun loadGoods() {
-        val currentList = _goods.value ?: emptyList()
-        val newList = getProducts(page)
-        _goods.value = currentList + newList
+        val currentList = _cart.value ?: emptyList()
+        val newGoods = getProducts(page)
+        val newCarts = newGoods.map { goods -> Cart(goods = goods, quantity = 0) }
+
+        _cart.value = currentList + newCarts
         _isFullLoaded.value = (page + 1) * PAGE_SIZE >= dummyGoods.size
     }
 
@@ -45,9 +48,9 @@ class GoodsViewModel(
         _showMoreButton.value = shouldShow
     }
 
-    fun insertToCart(goods: Goods) {
+    fun insertToCart(cart: Cart) {
         try {
-            repository.insert(goods)
+            repository.insert(cart)
             _isSuccess.setValue(Unit)
         } catch (e: Exception) {
             _isFail.setValue(Unit)

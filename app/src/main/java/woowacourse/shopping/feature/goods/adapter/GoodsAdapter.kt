@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemGoodsBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.Cart
 
 class GoodsAdapter(
     private val goodsClickListener: GoodsViewHolder.GoodsClickListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
-    private val items: MutableList<Goods> = mutableListOf()
+    private val items: MutableList<Cart> = mutableListOf()
 
-    fun setItems(newItems: List<Goods>) {
+    fun setItems(newItems: List<Cart>) {
         val positionStart = items.size
         val newItemCount = newItems.size
 
@@ -33,7 +33,7 @@ class GoodsAdapter(
         holder: GoodsViewHolder,
         position: Int,
     ) {
-        val item: Goods = items[position]
+        val item: Cart = items[position]
         holder.bind(item)
     }
 

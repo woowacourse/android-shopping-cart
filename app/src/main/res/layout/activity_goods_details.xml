@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="goods"
-            type="woowacourse.shopping.feature.GoodsUiModel" />
+            name="cart"
+            type="woowacourse.shopping.feature.model.CartUiModel" />
         <variable
             name="viewModel"
             type="woowacourse.shopping.feature.goodsdetails.GoodsDetailsViewModel" />
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:contentDescription="@string/goods_detail_image_description"
-            app:imgUrl="@{goods.thumbnailUrl}"
+            app:imgUrl="@{cart.thumbnailUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{goods.name}"
+            android:text="@{cart.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
-            android:text="@{@string/goods_price(goods.price)}"
+            android:text="@{@string/goods_price(cart.price)}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -84,7 +84,7 @@
             android:background="@color/baemin_mint"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="@{() -> viewModel.insertToCart(goods)}"
+            android:onClick="@{() -> viewModel.insertToCart(cart)}"
             android:text="@string/goods_details_cart_button"
             android:textColor="@color/white"
             android:textSize="24sp"

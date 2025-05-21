@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="goods"
-            type="woowacourse.shopping.domain.model.Goods" />
+            name="cart"
+            type="woowacourse.shopping.domain.model.Cart" />
         <variable
             name="cartClickListener"
             type="woowacourse.shopping.feature.cart.adapter.CartViewHolder.CartClickListener" />
@@ -28,7 +28,7 @@
             android:layout_marginEnd="60dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{goods.name}"
+            android:text="@{cart.goods.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -43,7 +43,7 @@
             android:layout_marginTop="20dp"
             android:contentDescription="@string/cart_item_image_description"
             android:scaleType="centerCrop"
-            app:imgUrl="@{goods.thumbnailUrl}"
+            app:imgUrl="@{cart.goods.thumbnailUrl}"
             app:layout_constraintStart_toStartOf="@+id/tv_cart_item_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_cart_item_name"
             app:srcCompat="@drawable/ic_launcher_background" />
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginTop="108dp"
-            android:text="@{@string/goods_price(goods.price)}"
+            android:text="@{@string/goods_price(cart.goods.price)}"
             android:textSize="16sp"
             android:textColor="@color/gray_700"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +68,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:contentDescription="@string/cart_item_delete_button_description"
-            android:onClick="@{() -> cartClickListener.onClickDeleteButton(goods)}"
+            android:onClick="@{() -> cartClickListener.onClickDeleteButton(cart)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_close_gray" />
