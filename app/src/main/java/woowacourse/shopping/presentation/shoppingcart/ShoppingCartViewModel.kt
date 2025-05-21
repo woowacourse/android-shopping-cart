@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.data.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.model.toDomain
 import woowacourse.shopping.presentation.model.toUiModel
 
 class ShoppingCartViewModel(
@@ -35,7 +34,7 @@ class ShoppingCartViewModel(
     }
 
     fun deleteGoods(goods: GoodsUiModel) {
-        shoppingRepository.removeItem(goods.toDomain())
+        shoppingRepository.removeItem(goods.id)
         updateState()
     }
 

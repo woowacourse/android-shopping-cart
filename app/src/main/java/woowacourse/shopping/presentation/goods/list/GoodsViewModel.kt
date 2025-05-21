@@ -41,7 +41,7 @@ class GoodsViewModel(
             updateGoods(position) {
                 it.copy(isSelected = true, quantity = it.quantity + 1)
             }
-        shoppingRepository.addItem(updatedItem.toDomain())
+        shoppingRepository.increaseItemCount(updatedItem.toDomain())
     }
 
     fun decreaseGoodsCount(position: Int) {
@@ -50,7 +50,7 @@ class GoodsViewModel(
                 val isSelected = it.quantity - 1 != 0
                 it.copy(isSelected = isSelected, quantity = it.quantity - 1)
             }
-        shoppingRepository.removeItem(updatedItem.toDomain())
+        shoppingRepository.decreaseItemCount(updatedItem.id)
     }
 
     private fun updateGoods(
