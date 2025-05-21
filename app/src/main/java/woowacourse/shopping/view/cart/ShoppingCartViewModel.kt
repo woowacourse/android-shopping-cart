@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCart
 
 class ShoppingCartViewModel(
     private val repository: CartProductRepository,
 ) : ViewModel(),
     ShoppingCartEventHandler {
-    private val cachedProducts = mutableListOf<CartProduct>()
+    private var shoppingCart = ShoppingCart()
 
     private val _products = MutableLiveData<List<CartProduct>>()
     val products: LiveData<List<CartProduct>> = _products
@@ -33,94 +34,78 @@ class ShoppingCartViewModel(
     }
 
     override fun loadNextProducts() {
-        val currentPage = page.value ?: FIRST_PAGE_NUMBER
-        if (hasNext.value != true) return
-        val nextPage = currentPage + 1
-        loadPage(nextPage)
+        val nextPage = page.value?.plus(1) ?: FIRST_PAGE_NUMBER
+        if (hasNext.value == true) loadPage(nextPage)
     }
 
     override fun loadPreviousProducts() {
-        val currentPage = page.value ?: FIRST_PAGE_NUMBER
-        if (hasPrevious.value != true) return
-        val previousPage = currentPage - 1
-        loadPage(previousPage)
+        val prevPage = page.value?.minus(1) ?: FIRST_PAGE_NUMBER
+        if (_hasPrevious.value == true) loadPage(prevPage)
     }
 
     override fun onProductRemoveClick(item: CartProduct) {
-        deleteProduct(item)
+        repository.deleteByProductId(item.product.id)
+        shoppingCart -= item.product
+        reloadCurrentPage()
     }
 
     override fun onQuantityIncreaseClick(item: Product) {
-        val currentQuantity = cachedProducts.find { it.product.id == item.id }?.quantity ?: 0
-        val newQuantity = currentQuantity + 1
-        repository.updateQuantity(item.id, newQuantity)
-        updateProductQuantity(item, newQuantity)
+        shoppingCart += item
+        repository.updateQuantity(item.id, shoppingCart.getQuantity(item))
+        reloadCurrentPage()
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
-        val currentQuantity = cachedProducts.find { it.product.id == item.id }?.quantity ?: 0
-        val newQuantity = currentQuantity - 1
+        val currentQuantity = shoppingCart.getQuantity(item)
         if (currentQuantity == 1) {
             repository.deleteByProductId(item.id)
         } else {
-            repository.updateQuantity(item.id, newQuantity)
+            repository.updateQuantity(item.id, currentQuantity - 1)
         }
-        updateProductQuantity(item, newQuantity)
+        shoppingCart -= item
+        reloadCurrentPage()
     }
 
     private fun loadPage(page: Int) {
         val offset = (page - 1) * PAGE_SIZE
         val end = offset + PAGE_SIZE
 
-        if (cachedProducts.size < end) {
-            val result = repository.getPagedProducts(end - cachedProducts.size, cachedProducts.size)
-            cachedProducts.addAll(result.items)
+        if (shoppingCart.cartProducts.size < end) {
+            val result =
+                repository.getPagedProducts(
+                    end - shoppingCart.cartProducts.size,
+                    shoppingCart.cartProducts.size,
+                )
+            shoppingCart += result.items
             _hasNext.value = result.hasNext
         } else {
-            _hasNext.value = cachedProducts.size > end || checkHasNext(end)
+            _hasNext.value = shoppingCart.cartProducts.size > end || checkHasNext(end)
         }
 
-        _products.value = cachedProducts.subList(offset, cachedProducts.size.coerceAtMost(end))
+        _products.value =
+            shoppingCart.cartProducts
+                .toList()
+                .sortedBy { it.id }
+                .subList(offset, shoppingCart.cartProducts.size.coerceAtMost(end))
+
         _hasPrevious.value = page > FIRST_PAGE_NUMBER
         _page.value = page
         _isSinglePage.value =
             page == FIRST_PAGE_NUMBER &&
             hasNext.value == false &&
-            cachedProducts.size <= PAGE_SIZE
+            shoppingCart.cartProducts.size <= PAGE_SIZE
     }
 
-    private fun deleteProduct(product: CartProduct) {
-        repository.deleteByProductId(product.product.id)
-        cachedProducts.remove(product)
-
+    private fun reloadCurrentPage() {
         val currentPage = page.value ?: FIRST_PAGE_NUMBER
         loadPage(currentPage)
 
         if (products.value.isNullOrEmpty() && currentPage > FIRST_PAGE_NUMBER) {
-            val previousPage = currentPage - 1
-            loadPage(previousPage)
-            _page.value = previousPage
+            loadPage(currentPage - 1)
         }
     }
 
-    private fun checkHasNext(offset: Int): Boolean {
-        val result = repository.getPagedProducts(1, offset)
-        return result.items.isNotEmpty()
-    }
-
-    private fun updateProductQuantity(
-        product: Product,
-        quantity: Int,
-    ) {
-        val index = cachedProducts.indexOfFirst { it.product.id == product.id }
-        val oldProduct = cachedProducts[index]
-        if (quantity == 0) {
-            cachedProducts.removeAt(index)
-        } else {
-            cachedProducts[index] = oldProduct.copy(quantity = quantity)
-        }
-        loadPage(page.value ?: FIRST_PAGE_NUMBER)
-    }
+    private fun checkHasNext(offset: Int): Boolean = repository.getPagedProducts(1, offset).items.isNotEmpty()
 
     companion object {
         private const val FIRST_PAGE_NUMBER = 1

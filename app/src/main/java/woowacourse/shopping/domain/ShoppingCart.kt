@@ -19,6 +19,8 @@ class ShoppingCart(
         return ShoppingCart(updated)
     }
 
+    operator fun plus(cartProduct: List<CartProduct>): ShoppingCart = ShoppingCart(cartProducts + cartProduct)
+
     operator fun minus(product: Product): ShoppingCart {
         val existing =
             cartProducts.find { it.product == product }
@@ -31,6 +33,8 @@ class ShoppingCart(
             }
         return ShoppingCart(updated)
     }
+
+    fun getQuantity(product: Product): Int = cartProducts.find { it.product.id == product.id }?.quantity ?: 0
 
     companion object {
         private const val ERROR_PRODUCT_NOT_EXIST = "[ERROR] 장바구니에 해당 상품이 존재하지 않습니다."
