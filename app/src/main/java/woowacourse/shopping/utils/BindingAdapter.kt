@@ -8,7 +8,7 @@ object BindingAdapter {
     @JvmStatic
     @BindingAdapter("setImageWithGlide")
     fun ImageView.setImageWithGlide(imageUrl: String) {
-        Glide.with(this.context)
+        Glide.with(this)
             .load(imageUrl)
             .into(this)
     }
