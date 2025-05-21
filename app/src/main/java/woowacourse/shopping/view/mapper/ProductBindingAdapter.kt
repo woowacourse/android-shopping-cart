@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.view.main.ProductEventHandler
+import woowacourse.shopping.view.main.adapter.ProductEventHandler
 
 @BindingAdapter("android:price")
 fun setPrice(

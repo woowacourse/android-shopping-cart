@@ -4,7 +4,7 @@
     <data>
         <variable
             name="handler"
-            type="woowacourse.shopping.view.main.ProductEventHandler" />
+            type="woowacourse.shopping.view.main.adapter.ProductEventHandler" />
         <variable
             name="quantity"
             type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />

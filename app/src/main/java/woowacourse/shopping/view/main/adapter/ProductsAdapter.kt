@@ -1,10 +1,8 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.main.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
@@ -27,16 +25,7 @@ class ProductsAdapter : RecyclerView.Adapter<ProductsViewHolder>() {
         parent: ViewGroup,
         viewType: Int,
     ): ProductsViewHolder {
-        val binding =
-            ItemProductBinding.inflate(
-                LayoutInflater.from(
-                    parent.context,
-                ),
-                parent,
-                false,
-            )
-        val handler = ProductEventHandlerImpl(parent.context, binding)
-        return ProductsViewHolder(binding, handler)
+        return ProductsViewHolder(parent)
     }
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {

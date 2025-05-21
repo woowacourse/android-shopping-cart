@@ -13,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
+import woowacourse.shopping.view.main.adapter.ProductsAdapter
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
 

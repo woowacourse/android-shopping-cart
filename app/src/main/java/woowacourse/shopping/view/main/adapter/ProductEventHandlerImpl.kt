@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main
+package woowacourse.shopping.view.main.adapter
 
 import android.content.Context
 import android.view.View
