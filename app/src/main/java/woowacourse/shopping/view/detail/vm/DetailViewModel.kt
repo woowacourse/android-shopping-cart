@@ -24,7 +24,7 @@ class DetailViewModel(
 
     fun load(productId: Long) {
         val product = productRepository[productId]
-        val quantity = cartRepository[productId].quantity + 1
+        val quantity = cartRepository[productId]?.quantity ?: Quantity(1)
         _uiState.value = ProductState(product, quantity)
     }
 
