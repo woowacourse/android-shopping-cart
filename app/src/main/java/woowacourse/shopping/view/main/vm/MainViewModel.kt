@@ -38,7 +38,7 @@ class MainViewModel(
                 .products
                 .map { product ->
                     val cart = cartRepository[product.id]
-                    val quantity = cart?.quantity ?: Quantity(0)
+                    val quantity = cart.quantity
 
                     ProductState(product, quantity)
                 }
