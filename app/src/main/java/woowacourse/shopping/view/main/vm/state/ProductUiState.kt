@@ -7,10 +7,10 @@ data class ProductUiState(
     val sumOfCartQuantity
         get() = items.sumOf { it.cartQuantity.value }
 
-    fun modifyUiState(item: ProductState): ProductUiState {
-        val targetIndex = targetIndex(item.item.id)
+    fun modifyUiState(newState: ProductState): ProductUiState {
+        val targetIndex = targetIndex(newState.item.id)
         val mutableItems = items.toMutableList()
-        mutableItems[targetIndex] = item
+        mutableItems[targetIndex] = newState
         return copy(items = mutableItems)
     }
 
