@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -63,7 +64,9 @@
             android:visibility="@{goods.isSelected ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
             app:layout_constraintEnd_toEndOf="@id/iv_goods"
-            app:layout_constraintStart_toStartOf="@id/iv_goods" />
+            app:layout_constraintStart_toStartOf="@id/iv_goods"
+            bind:count="@{goods.quantity}"
+            bind:position="@{position}" />
 
         <TextView
             android:id="@+id/tv_goods_name"

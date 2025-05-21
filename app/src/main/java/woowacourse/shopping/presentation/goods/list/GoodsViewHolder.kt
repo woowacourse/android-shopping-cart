@@ -21,7 +21,5 @@ class GoodsViewHolder(
     fun bind(goods: GoodsUiModel) {
         binding.goods = goods
         binding.position = adapterPosition
-        binding.clGoodsCount.count = goods.quantity
-        binding.clGoodsCount.position = adapterPosition
     }
 }
