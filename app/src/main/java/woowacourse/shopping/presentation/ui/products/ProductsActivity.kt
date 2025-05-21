@@ -3,11 +3,12 @@ package woowacourse.shopping.presentation.ui.products
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
+import woowacourse.shopping.databinding.MenuCartCombinedBinding
 import woowacourse.shopping.presentation.ui.base.BaseActivity
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
@@ -26,20 +27,15 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         viewModel.updateProducts()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.reloadCart()
-        productsAdapter.notifyDataSetChanged()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_products, menu)
+        val view = menu.findItem(R.id.item_cart_combined)
+        val actionView = view.actionView
+        MenuCartCombinedBinding.bind(actionView!!).apply {
+            viewModel = this@ProductsActivity.viewModel
+            lifecycleOwner = this@ProductsActivity
+        }
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.item_cart) navigateToCart()
-        return super.onOptionsItemSelected(item)
     }
 
     private fun createAdapterOnClickHandler() =
@@ -73,7 +69,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         startActivity(intent)
     }
 
-    private fun navigateToCart() {
+    fun navigateToCart(view: View) {
         val intent = CartActivity.Companion.newIntent(this)
         startActivity(intent)
     }
