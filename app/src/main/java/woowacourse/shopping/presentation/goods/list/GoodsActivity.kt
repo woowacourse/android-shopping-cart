@@ -56,9 +56,15 @@ class GoodsActivity : BaseActivity() {
             adapter.loadMoreItems(goods)
         }
 
-        viewModel.isQuantityChanged.observe(this) {
-            adapter.notifyItemChanged(it)
+        viewModel.onQuantityChanged.observe(this) { goods ->
+            goods.forEach { adapter.notifyItemChanged(it) }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.restoreGoods()
     }
 
     private fun setUpGoodsList(adapter: GoodsAdapter) {

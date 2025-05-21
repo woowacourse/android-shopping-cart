@@ -4,6 +4,8 @@ import woowacourse.shopping.domain.model.CartGoods
 import woowacourse.shopping.domain.model.Goods
 
 interface ShoppingRepository {
+    fun getAllGoods(): Set<CartGoods>
+
     fun addItemsWithCount(
         goods: Goods,
         count: Int,

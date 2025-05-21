@@ -8,6 +8,8 @@ object ShoppingDataBase : ShoppingRepository {
     private const val MINIMUM_INDEX: Int = 0
     private val selectedGoods: MutableList<CartGoods> = mutableListOf()
 
+    override fun getAllGoods(): Set<CartGoods> = selectedGoods.toSet()
+
     override fun addItemsWithCount(
         goods: Goods,
         count: Int,

@@ -26,14 +26,42 @@ class GoodsViewModel(
     val shouldShowLoadMore: LiveData<Boolean>
         get() = _shouldShowLoadMore
 
-    private val _isQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
-    val isQuantityChanged: SingleLiveData<Int>
-        get() = _isQuantityChanged
+    private val _onQuantityChanged: MutableSingleLiveData<List<Int>> = MutableSingleLiveData()
+    val onQuantityChanged: SingleLiveData<List<Int>>
+        get() = _onQuantityChanged
 
     private var page: Int = DEFAULT_PAGE
 
     init {
         _goods.value = goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+    }
+
+    fun restoreGoods() {
+        val currentGoods = goods.value.orEmpty()
+        val selectedItems = shoppingRepository.getAllGoods()
+
+        val changedPositions = mutableListOf<Int>()
+
+        val updatedGoods =
+            currentGoods.mapIndexed { index, goods ->
+                val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
+
+                val updated =
+                    when {
+                        selected != null -> goods.copy(isSelected = true, quantity = selected.goodsCount)
+                        goods.isSelected || goods.quantity != 0 -> goods.copy(isSelected = false, quantity = 0)
+                        else -> goods
+                    }
+
+                if (updated != goods) {
+                    changedPositions.add(index)
+                }
+
+                updated
+            }
+
+        _goods.value = updatedGoods
+        _onQuantityChanged.setValue(changedPositions)
     }
 
     fun increaseGoodsCount(position: Int) {
@@ -57,16 +85,16 @@ class GoodsViewModel(
         position: Int,
         transform: (GoodsUiModel) -> GoodsUiModel,
     ): GoodsUiModel {
-        val currentList = goods.value.orEmpty()
+        val currentGoods = goods.value.orEmpty()
 
-        val updatedItem = transform(currentList[position])
+        val updatedItem = transform(currentGoods[position])
         val updatedList =
-            currentList.toMutableList().apply {
+            currentGoods.toMutableList().apply {
                 this[position] = updatedItem
             }
 
         _goods.value = updatedList
-        _isQuantityChanged.setValue(position)
+        _onQuantityChanged.setValue(listOf(position))
         return updatedItem
     }
 
