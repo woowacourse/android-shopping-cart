@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="quantity"
+            type="int" />
+
+        <variable
+            name="productId"
+            type="long" />
+
+        <variable
+            name="adapterPosition"
+            type="int" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.presentation.ui.layout.QuantitySelectorListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_quantity_selector_bg">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_quantity_minus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:onClick="@{() -> listener.decreaseQuantity(productId, adapterPosition)}"
+            android:text="@string/minus"
+            android:textColor="@color/gray_55"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textview_quantity"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textview_quantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp"
+            android:textAlignment="center"
+            android:textColor="@color/gray_55"
+            android:textSize="22sp"
+            android:text="@{String.valueOf(quantity)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_quantity_plus"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/btn_quantity_minus"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_quantity_plus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:onClick="@{() -> listener.increaseQuantity(productId, adapterPosition)}"
+            android:text="@string/plus"
+            android:textColor="@color/gray_55"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/textview_quantity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/textview_quantity"
+            app:layout_constraintTop_toTopOf="@id/textview_quantity" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

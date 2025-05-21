@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCatalogBinding
 import woowacourse.shopping.presentation.base.BaseFragment
-import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.ui.decorations.GridSpacingItemDecoration
+import woowacourse.shopping.presentation.ui.layout.QuantitySelectorListener
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
@@ -19,7 +19,8 @@ import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class CatalogFragment :
     BaseFragment<FragmentCatalogBinding>(R.layout.fragment_catalog),
-    CatalogAdapter.CatalogEventListener {
+    CatalogAdapter.CatalogEventListener,
+    QuantitySelectorListener {
     private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this) }
     private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
 
@@ -33,12 +34,30 @@ class CatalogFragment :
         initRecyclerView()
     }
 
-    override fun onProductClicked(product: ProductUiModel) {
-        navigateTo(DetailFragment::class.java, DetailFragment.newBundle(product.id))
+    override fun onProductClicked(productId: Long) {
+        navigateTo(DetailFragment::class.java, DetailFragment.newBundle(productId))
     }
 
     override fun onLoadMoreClicked() {
         viewModel.fetchProducts()
+    }
+
+    override fun onToggleQuantitySelector(position: Int) {
+        catalogAdapter.openQuantitySelectorAt(position)
+    }
+
+    override fun increaseQuantity(
+        productId: Long,
+        position: Int,
+    ) {
+        viewModel.increaseProductToCart(position, productId)
+    }
+
+    override fun decreaseQuantity(
+        productId: Long,
+        position: Int,
+    ) {
+        viewModel.decreaseProductFromCart(position, productId)
     }
 
     private fun initObservers() {
@@ -46,9 +65,14 @@ class CatalogFragment :
             catalogAdapter.appendProducts(items)
         }
 
+        viewModel.quantityUpdateEvent.observe(viewLifecycleOwner) { (position, quantity) ->
+            catalogAdapter.updateQuantityAt(position, quantity)
+        }
+
         viewModel.toastEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 CatalogMessageEvent.FETCH_PRODUCTS_FAILURE -> showToast(R.string.catalog_screen_event_message_fetch_product_failure)
+                else -> {}
             }
         }
     }

@@ -11,10 +11,16 @@ class ProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.eventListener = eventListener
+        binding.viewQuantitySelector.listener = eventListener
     }
 
     fun bind(product: CatalogItem.ProductItem) {
         binding.product = product.product
+        binding.adapterPosition = adapterPosition
+
+        binding.viewQuantitySelector.productId = product.product.productId
+        binding.viewQuantitySelector.quantity = product.product.quantity
+        binding.viewQuantitySelector.adapterPosition = adapterPosition
     }
 
     companion object {

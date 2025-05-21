@@ -4,10 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="product"
-            type="woowacourse.shopping.presentation.model.ProductUiModel" />
+            type="woowacourse.shopping.presentation.model.CatalogItemUiModel" />
+
+        <variable
+            name="adapterPosition"
+            type="int" />
 
         <variable
             name="eventListener"
@@ -18,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:onClick="@{() -> eventListener.onProductClicked(product)}">
+        android:onClick="@{() -> eventListener.onProductClicked(product.productId)}">
 
         <ImageView
             android:id="@+id/image_view_product"
@@ -30,6 +35,31 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <include
+            android:id="@+id/view_quantity_selector"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:visibility="@{product.isOpenQuantitySelector ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_open_quantity_selector"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="12dp"
+            android:background="@drawable/shape_circle_bg"
+            android:backgroundTint="@color/white"
+            android:visibility="@{product.isOpenQuantitySelector ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> eventListener.onToggleQuantitySelector(adapterPosition)}"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_product"
+            app:layout_constraintEnd_toEndOf="@id/image_view_product"
+            android:src="@drawable/ic_add"
+            android:tint="@color/gray_55"/>
+
         <TextView
             android:id="@+id/text_view_product_name"
             android:layout_width="match_parent"
@@ -38,7 +68,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="@{product.name}"
+            android:text="@{product.productName}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -55,7 +85,6 @@
             app:layout_constraintStart_toStartOf="@id/text_view_product_name"
             app:layout_constraintTop_toBottomOf="@id/text_view_product_name"
             tools:text="10,000원" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

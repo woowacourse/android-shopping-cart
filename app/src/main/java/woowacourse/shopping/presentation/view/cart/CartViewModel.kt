@@ -11,7 +11,7 @@ import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.model.CartItemUiModel
 import woowacourse.shopping.presentation.model.FetchPageDirection
-import woowacourse.shopping.presentation.model.toProductUiModel
+import woowacourse.shopping.presentation.model.toCartItemUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.cart.event.CartMessageEvent
@@ -71,7 +71,7 @@ class CartViewModel(
         pageableItem: PageableItem<CartItem>,
         newPage: Int,
     ) {
-        val uiModels = pageableItem.items.map { it.toProductUiModel() }
+        val uiModels = pageableItem.items.map { it.toCartItemUiModel() }
         _cartItems.postValue(uiModels)
         _hasMore.postValue(pageableItem.hasMore)
         _page.postValue(newPage)

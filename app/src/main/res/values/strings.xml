@@ -22,4 +22,8 @@
     <string name="toolbar_catalog_title">Shopping</string>
     <string name="load_more_text">더보기</string>
     <string name="catalog_screen_event_message_fetch_product_failure">상품 목록을 불러오는데 실패했습니다</string>
+
+    <!-- Quantity Selector -->
+    <string name="minus">−</string>
+    <string name="plus">+</string>
 </resources>
