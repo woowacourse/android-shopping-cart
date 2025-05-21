@@ -10,10 +10,15 @@ import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.util.toDomain
 
 class GoodsDetailsViewModel(
+    goodsUiModel: GoodsUiModel,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _goods = MutableLiveData<Goods>()
     val goods: LiveData<Goods> get() = _goods
+
+    init {
+        _goods.postValue(goodsUiModel.toDomain())
+    }
 
     private val _alertEvent = MutableLiveData<Int>()
     val alertEvent: LiveData<Int> get() = _alertEvent
@@ -24,9 +29,5 @@ class GoodsDetailsViewModel(
                 _alertEvent.postValue(R.string.goods_detail_cart_insert_complete_toast_message)
             }
         }
-    }
-
-    fun setGoods(goodsUiModel: GoodsUiModel) {
-        _goods.postValue(goodsUiModel.toDomain())
     }
 }

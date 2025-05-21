@@ -16,9 +16,7 @@ import woowacourse.shopping.feature.GoodsUiModel
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
-    private val viewModel by lazy {
-        GoodsDetailsViewModel(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
-    }
+    private lateinit var viewModel: GoodsDetailsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +25,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         val goodsUiModel = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
-
-        viewModel.setGoods(goodsUiModel)
+        viewModel = GoodsDetailsViewModel(goodsUiModel, CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
         binding.viewModel = viewModel
 
         viewModel.alertEvent.observe(this) { message ->
