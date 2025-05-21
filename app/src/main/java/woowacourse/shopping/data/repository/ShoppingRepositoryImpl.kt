@@ -41,7 +41,7 @@ class ShoppingRepositoryImpl(
         productId: Long,
         onResult: (Result<Int>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        cartDataSource.findQuantityByProductId(productId).getOrDefault(0)
+        cartDataSource.findQuantityByProductId(productId).getOrThrow()
     }
 
     override fun addCartItem(
@@ -68,7 +68,7 @@ class ShoppingRepositoryImpl(
 
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map {
-            val quantity = cartDataSource.findQuantityByProductId(it.id).getOrDefault(0)
+            val quantity = cartDataSource.findQuantityByProductId(it.id).getOrThrow()
             CartItem(it, quantity)
         }
 

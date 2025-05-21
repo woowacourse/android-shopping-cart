@@ -5,7 +5,7 @@
     <string name="product_price_format">%,d원</string>
 
     <!-- Cart Item -->
-    <string name="cart_item_price_format">%,d원 (%d개)</string>
+    <string name="cart_item_price_format">%,d원</string>
 
     <!-- Detail Screen -->
     <string name="detail_add_cart_button_text">장바구니 담기</string>
@@ -17,6 +17,9 @@
     <string name="toolbar_cart_title">Cart</string>
     <string name="cart_screen_event_message_fetch_cart_items_failure">장바구니 내역을 불러오는데 실패했습니다</string>
     <string name="cart_screen_event_message_delete_cart_item_failure">해당 상품을 제거하는데 실패했습니다</string>
+    <string name="cart_screen_event_message_increase_cart_item_count_failure">장바구니에 담기 실패</string>
+    <string name="cart_screen_event_message_decrease_cart_item_count_failure">장바구니에서 담은 수량 감소 실패</string>
+    <string name="cart_screen_event_message_find_quantity_failure">장바구니 담은 수량 조회 실패</string>
 
     <!-- Catalog Screen -->
     <string name="toolbar_catalog_title">Shopping</string>

@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.view.cart.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.CartItemUiModel
+import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 
 class CartAdapter(
     initialProducts: List<CartItemUiModel> = emptyList(),
@@ -22,6 +23,18 @@ class CartAdapter(
         position: Int,
     ) {
         holder.bind(products[position])
+    }
+
+    fun updateQuantityAt(
+        productId: Long,
+        quantity: Int,
+    ) {
+        val oldItem = products.find { it.product.id == productId } ?: return
+        val newItem = oldItem.copy(quantity = quantity)
+        val position = products.indexOf(oldItem)
+        products[position] = newItem
+
+        notifyItemChanged(position)
     }
 
     fun updateItemsManually(newProducts: List<CartItemUiModel>) {
@@ -52,7 +65,7 @@ class CartAdapter(
         }
     }
 
-    interface CartEventListener {
+    interface CartEventListener : QuantityChangeListener {
         fun onProductDeletion(cartItem: CartItemUiModel)
     }
 }

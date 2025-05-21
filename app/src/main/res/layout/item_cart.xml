@@ -61,11 +61,21 @@
             app:layout_constraintTop_toBottomOf="@id/cart_item_name"
             tools:src="@drawable/ic_launcher_background" />
 
+        <include
+            android:id="@+id/view_quantity_selector"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/text_view_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_product" />
+
         <TextView
             android:id="@+id/text_view_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{String.format(@string/cart_item_price_format, cartItem.totalPrice, cartItem.quantity)}"
+            android:layout_marginHorizontal="12dp"
+            android:text="@{String.format(@string/cart_item_price_format, cartItem.totalPrice)}"
             android:textAlignment="textEnd"
             android:textColor="@color/gray_55"
             android:textSize="20sp"
