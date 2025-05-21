@@ -85,15 +85,16 @@
             tools:text="10,000원" />
 
         <include
-            android:id="@+id/item_counter"
+            android:id="@+id/detail_item_counter"
             layout="@layout/item_select_amount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="120dp"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_detail_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
             app:layout_constraintTop_toTopOf="@id/text_view_detail_price"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_detail_price"/>
+            app:productId="@{product.id}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"

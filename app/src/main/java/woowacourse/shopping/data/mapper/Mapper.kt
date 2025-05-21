@@ -7,4 +7,6 @@ import woowacourse.shopping.domain.model.Product
 
 fun CartEntity.toProduct() = Product(id, name, imageUrl, Price(price))
 
+fun CartEntity.toCartItem() = CartItem(toProduct(), amount)
+
 fun CartItem.toCartEntity() = CartEntity(product.id, product.name, product.imageUrl, product.price.value, amount)

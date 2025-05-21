@@ -6,16 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.presentation.model.ProductUiModel
-import woowacourse.shopping.presentation.model.toUiModel
 import kotlin.math.max
 
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<ProductUiModel>>()
-    val products: LiveData<List<ProductUiModel>> = _products
+    private val _products = MutableLiveData<List<CartItem>>()
+    val products: LiveData<List<CartItem>> = _products
 
     private val _deleteState = MutableLiveData<Long>()
     val deleteState: LiveData<Long> = _deleteState
@@ -25,6 +24,9 @@ class CartViewModel(
 
     private val _hasMore = MutableLiveData<Boolean>()
     val hasMore: LiveData<Boolean> = _hasMore
+
+    private val _itemUpdateEvent = MutableLiveData<CartItem>()
+    val itemUpdateEvent: LiveData<CartItem> = _itemUpdateEvent
 
     private val limit: Int = 5
 
@@ -43,15 +45,27 @@ class CartViewModel(
         val newOffset = (newPage - DEFAULT_PAGE) * limit
 
         cartRepository.getCartItems(limit = limit, offset = newOffset) { products, hasMore ->
-            _products.postValue(products.map { it.toUiModel() })
+            _products.postValue(products.map { it })
             _page.postValue(newPage)
             _hasMore.postValue(hasMore)
         }
     }
 
-    fun deleteProduct(product: ProductUiModel) {
-        cartRepository.deleteCartItem(product.id) {
+    fun deleteProduct(cartItem: CartItem) {
+        cartRepository.deleteCartItem(cartItem.product.id) {
             _deleteState.postValue(it)
+        }
+    }
+
+    fun increaseAmount(productId: Long) {
+        cartRepository.increaseCartItem(productId) { updatedItem ->
+            updatedItem?.let { _itemUpdateEvent.postValue(it) }
+        }
+    }
+
+    fun decreaseAmount(productId: Long) {
+        cartRepository.decreaseCartItem(productId) { updatedItem ->
+            updatedItem?.let { _itemUpdateEvent.postValue(it) }
         }
     }
 

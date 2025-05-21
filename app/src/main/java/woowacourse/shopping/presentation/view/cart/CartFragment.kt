@@ -7,14 +7,21 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.base.BaseFragment
-import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.view.ItemCounterListener
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
 
 class CartFragment :
     BaseFragment<FragmentCartBinding>(R.layout.fragment_cart),
-    CartAdapter.CartEventListener {
-    private val cartAdapter: CartAdapter by lazy { CartAdapter(eventListener = this) }
+    CartAdapter.CartEventListener,
+    ItemCounterListener {
+    private val cartAdapter: CartAdapter by lazy {
+        CartAdapter(
+            eventListener = this,
+            itemCounterListener = this,
+        )
+    }
 
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
     private val backCallback =
@@ -42,8 +49,8 @@ class CartFragment :
         backCallback.remove()
     }
 
-    override fun onProductDeletion(product: ProductUiModel) {
-        viewModel.deleteProduct(product)
+    override fun onProductDeletion(cartItem: CartItem) {
+        viewModel.deleteProduct(cartItem)
     }
 
     private fun setCartAdapter() {
@@ -59,7 +66,7 @@ class CartFragment :
         }
 
         viewModel.products.observe(viewLifecycleOwner) {
-            cartAdapter.updateProducts(it)
+            cartAdapter.updateCartItems(it)
         }
 
         viewModel.deleteState.observe(viewLifecycleOwner) {
@@ -67,6 +74,10 @@ class CartFragment :
                 cartAdapter.removeProduct(it)
                 viewModel.fetchShoppingCart(isNextPage = false, isRefresh = true)
             }
+        }
+
+        viewModel.itemUpdateEvent.observe(viewLifecycleOwner) {
+            cartAdapter.updateItem(it)
         }
     }
 
@@ -81,5 +92,13 @@ class CartFragment :
         parentFragmentManager.commit {
             remove(this@CartFragment)
         }
+    }
+
+    override fun increase(productId: Long) {
+        viewModel.increaseAmount(productId)
+    }
+
+    override fun decrease(productId: Long) {
+        viewModel.decreaseAmount(productId)
     }
 }

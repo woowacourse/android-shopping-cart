@@ -4,9 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="listener"
             type="woowacourse.shopping.presentation.view.ItemCounterListener" />
+
+        <variable
+            name="productId"
+            type="Long" />
+        
+        <variable
+            name="amount"
+            type="Integer" />
 
     </data>
 
@@ -24,7 +33,7 @@
             android:textStyle="bold"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{() -> listener.decrease()}"
+            android:onClick="@{() -> listener.decrease(productId)}"
             app:layout_constraintBottom_toBottomOf="@id/text_view_detail_amount"
             app:layout_constraintEnd_toStartOf="@id/text_view_detail_amount"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -38,6 +47,7 @@
             android:gravity="center"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:text="@{String.valueOf(amount)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_detail_count_up"
             app:layout_constraintStart_toEndOf="@id/btn_detail_count_down"
@@ -54,7 +64,7 @@
             android:textStyle="bold"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{() -> listener.increase()}"
+            android:onClick="@{() -> listener.increase(productId)}"
             app:layout_constraintBottom_toBottomOf="@id/text_view_detail_amount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_amount"

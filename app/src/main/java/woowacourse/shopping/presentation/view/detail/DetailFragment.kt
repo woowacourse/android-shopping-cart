@@ -27,13 +27,13 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         val product = arguments.getParcelableCompat<ProductUiModel>(EXTRA_PRODUCT)
         binding.product = product
         binding.vm = viewModel
-        binding.itemCounter.listener =
+        binding.detailItemCounter.listener =
             object : ItemCounterListener {
-                override fun increase() {
+                override fun increase(productId: Long) {
                     viewModel.increaseAmount()
                 }
 
-                override fun decrease() {
+                override fun decrease(productId: Long) {
                     viewModel.decreaseAmount()
                 }
             }
@@ -45,7 +45,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         }
 
         viewModel.amount.observe(viewLifecycleOwner) {
-            binding.itemCounter.textViewDetailAmount.text = it.toString()
+            binding.detailItemCounter.textViewDetailAmount.text = it.toString()
         }
     }
 

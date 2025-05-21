@@ -42,4 +42,10 @@ interface CartDao {
             update(updatedProduct)
         }
     }
+
+    @Query("UPDATE CartEntity SET amount = amount + 1 WHERE id = :id")
+    fun increaseAmount(id: Long)
+
+    @Query("UPDATE CartEntity SET amount = amount - 1 WHERE id = :id")
+    fun decreaseAmount(id: Long)
 }

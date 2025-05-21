@@ -2,9 +2,8 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.mapper.toCartEntity
-import woowacourse.shopping.data.mapper.toProduct
+import woowacourse.shopping.data.mapper.toCartItem
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
 
@@ -14,17 +13,18 @@ class CartRepositoryImpl(
     override fun getCartItems(
         limit: Int,
         offset: Int,
-        callback: (List<Product>, Boolean) -> Unit,
+        callback: (List<CartItem>, Boolean) -> Unit,
     ) {
         thread {
-            val products =
+            val cartItems =
                 cartDao
                     .getCartItemPaged(
                         limit = limit,
                         offset = offset,
-                    ).map { it.toProduct() }
-            val hasMore = products.lastOrNull()?.let { cartDao.existsItemAfterId(it.id) } ?: false
-            callback(products, hasMore)
+                    ).map { it.toCartItem() }
+            val hasMore =
+                cartItems.lastOrNull()?.let { cartDao.existsItemAfterId(it.product.id) } ?: false
+            callback(cartItems, hasMore)
         }
     }
 
@@ -43,6 +43,32 @@ class CartRepositoryImpl(
     ) {
         thread {
             cartDao.upsert(cartItem.toCartEntity()).let { callback() }
+        }
+    }
+
+    override fun increaseCartItem(
+        productId: Long,
+        callback: (CartItem?) -> Unit,
+    ) {
+        thread {
+            cartDao.increaseAmount(productId)
+            val item = cartDao.getByProductId(productId)
+            if (item != null) {
+                callback(item.toCartItem())
+            }
+        }
+    }
+
+    override fun decreaseCartItem(
+        productId: Long,
+        callback: (CartItem?) -> Unit,
+    ) {
+        thread {
+            cartDao.decreaseAmount(productId)
+            val item = cartDao.getByProductId(productId)
+            if (item != null) {
+                callback(item.toCartItem())
+            }
         }
     }
 }
