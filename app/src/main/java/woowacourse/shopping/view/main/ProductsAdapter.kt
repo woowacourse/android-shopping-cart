@@ -21,7 +21,7 @@ class ProductsAdapter(
         position: Int,
     ) {
         val item = products[position]
-        val quantityLiveData = quantity[item]
+        val quantityLiveData = quantity[item] ?: return
         holder.bind(item, quantityLiveData)
     }
 

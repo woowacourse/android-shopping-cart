@@ -20,7 +20,6 @@ class ProductsViewModel(
 ) : ViewModel() {
     private val _productsLiveData: MutableLiveData<MainRecyclerViewProduct> = MutableLiveData()
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
-    val quantityLiveData: MutableLiveData<MutableMap<Product, MutableLiveData<Int>>> = MutableLiveData()
     val totalSize: Int get() = productsRepository.totalSize()
 
     fun requestProductsPage(requestPage: Int) {
@@ -40,8 +39,6 @@ class ProductsViewModel(
                 }?.quantity ?: DEFAULT_QUANTITY
             tempMap[it] = MutableLiveData(quantity)
         }
-        quantityLiveData.value = tempMap
-
         _productsLiveData.value =
             MainRecyclerViewProduct(
                 page = page,

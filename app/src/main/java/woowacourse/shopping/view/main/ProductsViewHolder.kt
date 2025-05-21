@@ -24,7 +24,7 @@ class ProductsViewHolder(
 
     fun bind(
         item: Product,
-        quantityLiveData: MutableLiveData<Int>?,
+        quantityLiveData: MutableLiveData<Int>,
     ) {
         binding.product = item
         binding.quantity = quantityLiveData
