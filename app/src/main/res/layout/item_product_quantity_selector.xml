@@ -8,16 +8,18 @@
 
     <ImageButton
         android:id="@+id/quantity_decrease_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:contentDescription="@null"
         android:src="@drawable/ic_minus"
+        app:layout_constraintEnd_toStartOf="@id/tv_product_quantity"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tv_product_quantity"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
         android:textAlignment="center"
@@ -25,17 +27,20 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/quantity_increase_btn"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/quantity_decrease_btn"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="2" />
 
     <ImageButton
         android:id="@+id/quantity_increase_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:contentDescription="@null"
         android:src="@drawable/ic_plus"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/tv_product_quantity" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
