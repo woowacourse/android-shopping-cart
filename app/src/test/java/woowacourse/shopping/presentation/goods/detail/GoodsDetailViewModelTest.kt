@@ -1,11 +1,12 @@
 package woowacourse.shopping.presentation.goods.detail
 
 import io.kotest.matchers.shouldBe
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.ShoppingDataBase
+import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.model.toUiModel
@@ -13,11 +14,12 @@ import woowacourse.shopping.presentation.model.toUiModel
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsDetailViewModelTest {
     private lateinit var goodsDetailViewModel: GoodsDetailViewModel
+    private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
     private val goods = SUNDAE
 
     @BeforeEach
     fun setUp() {
-        goodsDetailViewModel = GoodsDetailViewModel(ShoppingDataBase)
+        goodsDetailViewModel = GoodsDetailViewModel(shoppingRepository)
     }
 
     @Test
