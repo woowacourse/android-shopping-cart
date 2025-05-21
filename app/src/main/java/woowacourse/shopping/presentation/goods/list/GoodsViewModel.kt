@@ -19,7 +19,7 @@ class GoodsViewModel(private val repository: GoodsRepository) : ViewModel() {
     private var page: Int = DEFAULT_PAGE
 
     init {
-        loadGoods()
+        _goodsUiModels.value = loadGoods()
     }
 
     fun addGoods() {
