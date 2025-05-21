@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Product
 
 class ShoppingCartViewModel(
     private val repository: CartProductRepository,
@@ -49,6 +50,24 @@ class ShoppingCartViewModel(
         deleteProduct(item)
     }
 
+    override fun onQuantityIncreaseClick(item: Product) {
+        val currentQuantity = cachedProducts.find { it.product.id == item.id }?.quantity ?: 0
+        val newQuantity = currentQuantity + 1
+        repository.updateQuantity(item.id, newQuantity)
+        updateProductQuantity(item, newQuantity)
+    }
+
+    override fun onQuantityDecreaseClick(item: Product) {
+        val currentQuantity = cachedProducts.find { it.product.id == item.id }?.quantity ?: 0
+        val newQuantity = currentQuantity - 1
+        if (currentQuantity == 1) {
+            repository.deleteByProductId(item.id)
+        } else {
+            repository.updateQuantity(item.id, newQuantity)
+        }
+        updateProductQuantity(item, newQuantity)
+    }
+
     private fun loadPage(page: Int) {
         val offset = (page - 1) * PAGE_SIZE
         val end = offset + PAGE_SIZE
@@ -87,6 +106,20 @@ class ShoppingCartViewModel(
     private fun checkHasNext(offset: Int): Boolean {
         val result = repository.getPagedProducts(1, offset)
         return result.items.isNotEmpty()
+    }
+
+    private fun updateProductQuantity(
+        product: Product,
+        quantity: Int,
+    ) {
+        val index = cachedProducts.indexOfFirst { it.product.id == product.id }
+        val oldProduct = cachedProducts[index]
+        if (quantity == 0) {
+            cachedProducts.removeAt(index)
+        } else {
+            cachedProducts[index] = oldProduct.copy(quantity = quantity)
+        }
+        loadPage(page.value ?: FIRST_PAGE_NUMBER)
     }
 
     companion object {
