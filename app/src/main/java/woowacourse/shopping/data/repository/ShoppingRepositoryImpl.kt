@@ -13,6 +13,16 @@ class ShoppingRepositoryImpl(
     private val productDataSource: ProductDataSource,
     private val cartDataSource: CartDataSource,
 ) : ShoppingRepository {
+    override fun getAll(onResult: (Result<List<CartItem>>) -> Unit) =
+        runCatchingInThread(onResult) {
+            cartDataSource.getAll().map { it.toCartItem() }
+        }
+
+    override fun getCartItemCount(onResult: (Result<Int>) -> Unit) =
+        runCatchingInThread(onResult) {
+            cartDataSource.getCartItemCount()
+        }
+
     override fun loadProducts(
         offset: Int,
         limit: Int,
@@ -31,7 +41,7 @@ class ShoppingRepositoryImpl(
         limit: Int,
         onResult: (Result<PageableItem<CartItem>>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        val entities = cartDataSource.loadCartItems(offset, limit).getOrThrow()
+        val entities = cartDataSource.loadCartItems(offset, limit)
         val hasMore = entities.isHasMore()
         val cartItems = entities.map { it.toCartItem() }
         PageableItem(cartItems, hasMore)
@@ -41,42 +51,39 @@ class ShoppingRepositoryImpl(
         productId: Long,
         onResult: (Result<Int>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        cartDataSource.findQuantityByProductId(productId).getOrThrow()
+        cartDataSource.findQuantityByProductId(productId)
     }
 
     override fun addCartItem(
         productId: Long,
         increaseQuantity: Int,
         onResult: (Result<Unit>) -> Unit,
-    ) = runCatchingInThread(onResult) { cartDataSource.addCartItem(productId, increaseQuantity).getOrThrow() }
+    ) = runCatchingInThread(onResult) { cartDataSource.addCartItem(productId, increaseQuantity) }
 
     override fun decreaseCartItemQuantity(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        cartDataSource.decreaseCartItemQuantity(productId).getOrThrow()
+        cartDataSource.decreaseCartItemQuantity(productId)
     }
 
     override fun deleteCartItem(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        cartDataSource.deleteCartItem(productId).getOrThrow()
+        cartDataSource.deleteCartItem(productId)
     }
 
     private fun CartEntity.toCartItem() = CartItem(findProductInfoById(productId).getOrThrow(), quantity)
 
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map {
-            val quantity = cartDataSource.findQuantityByProductId(it.id).getOrThrow()
+            val quantity = cartDataSource.findQuantityByProductId(it.id)
             CartItem(it, quantity)
         }
 
     private fun List<CartEntity>.isHasMore(): Boolean {
         val lastCreatedAt = this.lastOrNull()?.createdAt
-        return lastCreatedAt != null &&
-            cartDataSource
-                .existsItemCreatedAfter(lastCreatedAt)
-                .getOrDefault(false)
+        return lastCreatedAt != null && cartDataSource.existsItemCreatedAfter(lastCreatedAt)
     }
 }

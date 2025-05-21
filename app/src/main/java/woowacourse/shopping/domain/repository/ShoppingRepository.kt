@@ -5,6 +5,10 @@ import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 
 interface ShoppingRepository {
+    fun getAll(onResult: (Result<List<CartItem>>) -> Unit)
+
+    fun getCartItemCount(onResult: (Result<Int>) -> Unit)
+
     fun findProductInfoById(id: Long): Result<Product>
 
     fun loadProducts(

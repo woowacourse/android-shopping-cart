@@ -6,40 +6,32 @@ import woowacourse.shopping.data.db.CartEntity
 class CartDataSourceImpl(
     private val cartDao: CartDao,
 ) : CartDataSource {
+    override fun getAll(): List<CartEntity> = cartDao.getAll()
+
+    override fun getCartItemCount(): Int = cartDao.getCartItemCount()
+
     override fun addCartItem(
         productId: Long,
         increaseQuantity: Int,
-    ): Result<Unit> =
-        runCatching {
-            val entity = CartEntity(productId, increaseQuantity)
-            cartDao.insertOrUpdate(entity, increaseQuantity)
-        }
+    ) {
+        val entity = CartEntity(productId, increaseQuantity)
+        cartDao.insertOrUpdate(entity, increaseQuantity)
+    }
 
-    override fun decreaseCartItemQuantity(productId: Long): Result<Unit> =
-        runCatching {
-            cartDao.decreaseOrDelete(productId)
-        }
+    override fun decreaseCartItemQuantity(productId: Long) {
+        cartDao.decreaseOrDelete(productId)
+    }
 
-    override fun deleteCartItem(productId: Long): Result<Unit> =
-        runCatching {
-            cartDao.delete(productId)
-        }
+    override fun deleteCartItem(productId: Long) {
+        cartDao.delete(productId)
+    }
 
     override fun loadCartItems(
         offset: Int,
         limit: Int,
-    ): Result<List<CartEntity>> =
-        runCatching {
-            cartDao.getCartItemPaged(limit, offset)
-        }
+    ): List<CartEntity> = cartDao.getCartItemPaged(limit, offset)
 
-    override fun findQuantityByProductId(productId: Long): Result<Int> =
-        runCatching {
-            cartDao.findQuantityByProductId(productId)
-        }
+    override fun findQuantityByProductId(productId: Long): Int = cartDao.findQuantityByProductId(productId)
 
-    override fun existsItemCreatedAfter(createdAt: Long): Result<Boolean> =
-        runCatching {
-            cartDao.existsItemCreatedAfter(createdAt)
-        }
+    override fun existsItemCreatedAfter(createdAt: Long): Boolean = cartDao.existsItemCreatedAfter(createdAt)
 }
