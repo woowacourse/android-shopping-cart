@@ -56,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="@id/iv_goods" />
 
         <include
-            android:id="@+id/cl_goods_count"
+            android:id="@+id/cl_goods_quantity"
             layout="@layout/view_quantity_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
             app:layout_constraintEnd_toEndOf="@id/iv_goods"
             app:layout_constraintStart_toStartOf="@id/iv_goods"
-            bind:count="@{goods.quantity}"
+            bind:quantity="@{goods.quantity}"
             bind:position="@{position}" />
 
         <TextView

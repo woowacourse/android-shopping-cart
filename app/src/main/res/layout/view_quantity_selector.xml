@@ -10,7 +10,7 @@
             type="int" />
 
         <variable
-            name="count"
+            name="quantity"
             type="int" />
 
         <variable
@@ -42,7 +42,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:text="@{String.valueOf(count)}"
+            android:text="@{String.valueOf(quantity)}"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
