@@ -35,7 +35,10 @@ class FakeCartProductRepository : CartProductRepository {
         items.removeIf { it.product.id == productId }
     }
 
-    override fun insert(productId: Long) {
+    override fun insert(
+        productId: Long,
+        quantity: Int,
+    ) {
         val product =
             Product(
                 id = productId,
@@ -47,6 +50,7 @@ class FakeCartProductRepository : CartProductRepository {
             CartProduct(
                 id = nextId++,
                 product = product,
+                quantity = quantity,
             ),
         )
     }

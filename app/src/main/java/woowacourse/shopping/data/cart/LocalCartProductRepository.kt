@@ -53,9 +53,12 @@ class LocalCartProductRepository(
         }.join()
     }
 
-    override fun insert(productId: Long) {
+    override fun insert(
+        productId: Long,
+        quantity: Int,
+    ) {
         thread {
-            dao.insert(CartProductEntity(productId = productId, quantity = 1))
+            dao.insert(CartProductEntity(productId = productId, quantity = quantity))
         }.join()
         totalCount++
     }

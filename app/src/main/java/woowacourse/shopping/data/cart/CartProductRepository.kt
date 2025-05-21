@@ -4,7 +4,10 @@ import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.domain.CartProduct
 
 interface CartProductRepository {
-    fun insert(productId: Long)
+    fun insert(
+        productId: Long,
+        quantity: Int = 1,
+    )
 
     fun getAll(): List<CartProduct>
 

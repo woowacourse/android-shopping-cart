@@ -11,6 +11,8 @@ class ProductDetailViewModel(
     private val repository: CartProductRepository,
 ) : ViewModel(),
     ProductDetailEventHandler {
+    private var shoppingCartQuantity = 0
+
     private val _navigateEvent = MutableLiveData<Unit>()
     val navigateEvent: LiveData<Unit> = _navigateEvent
 
@@ -22,7 +24,12 @@ class ProductDetailViewModel(
     }
 
     override fun onProductAddClick() {
-        repository.insert(product.id)
+        val currentQuantity = quantity.value ?: 1
+        if (shoppingCartQuantity == 0) {
+            repository.insert(product.id, currentQuantity)
+        } else {
+            repository.updateQuantity(product.id, currentQuantity)
+        }
         _navigateEvent.value = Unit
     }
 
@@ -31,11 +38,12 @@ class ProductDetailViewModel(
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
-        if ((quantity.value ?: 0) == 0) return
+        if ((quantity.value ?: 0) <= 1) return
         _quantity.value = quantity.value?.minus(1)
     }
 
     private fun loadQuantity() {
-        _quantity.value = repository.getQuantityByProductId(product.id) ?: 0
+        shoppingCartQuantity = repository.getQuantityByProductId(product.id) ?: 0
+        _quantity.value = shoppingCartQuantity.coerceAtLeast(1)
     }
 }
