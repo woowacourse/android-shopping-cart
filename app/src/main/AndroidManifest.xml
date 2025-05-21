@@ -23,6 +23,7 @@
             android:exported="false" />
         <activity
             android:name=".view.main.MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

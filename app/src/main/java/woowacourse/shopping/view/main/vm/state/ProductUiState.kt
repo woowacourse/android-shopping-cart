@@ -4,6 +4,9 @@ data class ProductUiState(
     val items: List<ProductState> = emptyList(),
     val load: LoadState = LoadState.CannotLoad,
 ) {
+    val sumOfCartQuantity
+        get() = items.sumOf { it.cartQuantity.value }
+
     fun modifyUiState(item: ProductState): ProductUiState {
         val targetIndex = targetIndex(item.item.id)
         val mutableItems = items.toMutableList()
