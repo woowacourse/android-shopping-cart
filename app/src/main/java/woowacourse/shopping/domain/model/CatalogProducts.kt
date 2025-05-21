@@ -10,7 +10,7 @@ data class CatalogProducts(
         val mergedProducts = products + other.products
         return CatalogProducts(
             products = mergedProducts,
-            hasMore = hasMore || other.hasMore,
+            hasMore = other.hasMore,
         )
     }
 
