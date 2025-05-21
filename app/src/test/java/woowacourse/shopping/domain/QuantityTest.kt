@@ -35,7 +35,7 @@ class QuantityTest {
         val quantity = Quantity(2)
 
         // given
-        val expected = quantity.isExceeded(3)
+        val expected = quantity.isExceeded(Quantity(3))
 
         // then
         assertEquals(expected, true)
