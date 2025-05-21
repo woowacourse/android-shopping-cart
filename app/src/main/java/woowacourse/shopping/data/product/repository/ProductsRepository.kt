@@ -6,6 +6,6 @@ interface ProductsRepository {
     fun load(
         lastProductId: Long?,
         size: Int,
-        result: (Result<List<Product>>) -> Unit,
+        onResult: (Result<List<Product>>) -> Unit,
     )
 }

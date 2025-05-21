@@ -6,16 +6,16 @@ interface ShoppingCartRepository {
     fun load(
         offset: Int,
         limit: Int,
-        result: (Result<List<Product>>) -> Unit,
+        onResult: (Result<List<Product>>) -> Unit,
     )
 
     fun add(
         product: Product,
-        result: (Result<Unit>) -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     )
 
     fun remove(
         product: Product,
-        result: (Result<Unit>) -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     )
 }

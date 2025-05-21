@@ -13,45 +13,45 @@ class DefaultShoppingCartRepository(
     override fun load(
         offset: Int,
         limit: Int,
-        result: (Result<List<Product>>) -> Unit,
+        onResult: (Result<List<Product>>) -> Unit,
     ) {
         thread {
             runCatching {
                 shoppingCartStorage.load(offset, offset + limit).map(ProductEntity::toDomain)
             }.onSuccess { productList ->
-                result(Result.success(productList))
+                onResult(Result.success(productList))
             }.onFailure { exception ->
-                result(Result.failure(exception))
+                onResult(Result.failure(exception))
             }
         }
     }
 
     override fun add(
         product: Product,
-        result: (Result<Unit>) -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
         thread {
             runCatching {
                 shoppingCartStorage.add(product.toEntity())
             }.onSuccess {
-                result(Result.success(Unit))
+                onResult(Result.success(Unit))
             }.onFailure { exception ->
-                result(Result.failure(exception))
+                onResult(Result.failure(exception))
             }
         }
     }
 
     override fun remove(
         product: Product,
-        result: (Result<Unit>) -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
         thread {
             runCatching {
                 shoppingCartStorage.remove(product.toEntity())
             }.onSuccess {
-                result(Result.success(Unit))
+                onResult(Result.success(Unit))
             }.onFailure { exception ->
-                result(Result.failure(exception))
+                onResult(Result.failure(exception))
             }
         }
     }

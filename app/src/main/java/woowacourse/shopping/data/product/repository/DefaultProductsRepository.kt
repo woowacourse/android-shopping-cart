@@ -12,15 +12,15 @@ class DefaultProductsRepository(
     override fun load(
         lastProductId: Long?,
         size: Int,
-        result: (Result<List<Product>>) -> Unit,
+        onResult: (Result<List<Product>>) -> Unit,
     ) {
         thread {
             runCatching {
                 productsStorage.load(lastProductId, size).map(ProductEntity::toDomain)
             }.onSuccess { products ->
-                result(Result.success(products))
+                onResult(Result.success(products))
             }.onFailure { exception ->
-                result(Result.failure(exception))
+                onResult(Result.failure(exception))
             }
         }
     }
