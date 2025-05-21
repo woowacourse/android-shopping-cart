@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -43,5 +45,15 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun showAddToCartToastMessage() {
         Toast.makeText(this, getString(R.string.add_to_cart_message), Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        fun newIntent(
+            context: Context,
+            product: Product,
+        ): Intent =
+            Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra("product", product)
+            }
     }
 }
