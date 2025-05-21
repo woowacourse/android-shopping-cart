@@ -87,20 +87,8 @@ class CartViewModel(
     }
 
     private fun updatePageMoveAvailability() {
-        when {
-            currentPage == 1 -> {
-                _isLeftPageEnable.postValue(false)
-                _isRightPageEnable.postValue(currentPage < endPage)
-            }
-            currentPage < endPage -> {
-                _isLeftPageEnable.postValue(currentPage > 1)
-                _isRightPageEnable.postValue(currentPage < endPage)
-            }
-            currentPage == endPage -> {
-                _isLeftPageEnable.postValue(currentPage > 1)
-                _isRightPageEnable.postValue(false)
-            }
-        }
+        _isLeftPageEnable.postValue(currentPage > 1)
+        _isRightPageEnable.postValue(currentPage < endPage)
     }
 
     companion object {
