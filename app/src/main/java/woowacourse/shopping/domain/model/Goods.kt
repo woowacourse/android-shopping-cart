@@ -46,6 +46,9 @@ data class Goods(
                 ),
             )
 
-        val dummyGoods = List(6) { _dummyGoods }.flatten()
+        val dummyGoods =
+            List(6) { _dummyGoods }.flatten().mapIndexed { index, goods ->
+                goods.copy(name = "${index + 1}) ${goods.name}", id = (index + 1).toLong())
+            }
     }
 }
