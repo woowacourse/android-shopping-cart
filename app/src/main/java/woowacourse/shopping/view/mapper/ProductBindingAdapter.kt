@@ -37,12 +37,17 @@ fun setMutableVisibility(
 ) {
     view.findViewTreeLifecycleOwner()?.let {
         quantity.removeObservers(it)
-        quantity.observe(it) {
+        quantity.observe(it) { currentQuantity ->
             val button = view.findViewById<Button>(R.id.btn_item_product_add_to_cart)
             val quantitySelector = view.findViewById<ViewGroup>(R.id.layout_product_quantity_selector)
 
-            button.visibility = if (quantity.value!! < 1) View.VISIBLE else View.GONE
-            quantitySelector.visibility = if (quantity.value!! < 1) View.GONE else View.VISIBLE
+            if (currentQuantity < 1) {
+                button.visibility = View.VISIBLE
+                quantitySelector.visibility = View.GONE
+            } else {
+                button.visibility = View.GONE
+                quantitySelector.visibility = View.VISIBLE
+            }
         }
     }
 }

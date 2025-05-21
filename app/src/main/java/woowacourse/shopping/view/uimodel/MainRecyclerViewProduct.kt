@@ -1,10 +1,10 @@
 package woowacourse.shopping.view.uimodel
 
-import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 
 data class MainRecyclerViewProduct(
     val page: Page<Product>,
-    val quantityMap: MutableMap<Product, MutableLiveData<Int>>,
+    val shoppingCartItems: Page<ShoppingCartItem>,
 )

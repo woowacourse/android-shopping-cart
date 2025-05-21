@@ -12,7 +12,7 @@ class ProductsAdapter(
     private val onProductSelected: (Product) -> Unit,
 ) : RecyclerView.Adapter<ProductsViewHolder>() {
     private var products: List<Product> = listOf()
-    private var quantity: MutableMap<Product, MutableLiveData<Int>> = mutableMapOf()
+    private var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
 
     override fun getItemCount(): Int = products.size
 
@@ -41,8 +41,22 @@ class ProductsAdapter(
     }
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {
+        val shoppingCartItems = mainRecyclerViewProduct.shoppingCartItems
+        val page = mainRecyclerViewProduct.page
+
+        val quantityMap =
+            page.items.associateWith { product ->
+                MutableLiveData(
+                    shoppingCartItems.items.find { it.product == product }?.quantity ?: DEFAULT_QUANTITY,
+                )
+            }
+
         products += mainRecyclerViewProduct.page.items
-        quantity += mainRecyclerViewProduct.quantityMap
+        quantity += quantityMap
         notifyItemInserted(itemCount)
+    }
+
+    companion object {
+        private const val DEFAULT_QUANTITY = 0
     }
 }

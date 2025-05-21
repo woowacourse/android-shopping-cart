@@ -11,7 +11,6 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
 class ProductsViewModel(
@@ -31,18 +30,10 @@ class ProductsViewModel(
         val page = productsRepository.findAll(pageRequest)
         val shoppingCartItems = shoppingCartRepository.findAll(pageRequest)
 
-        val tempMap: MutableMap<Product, MutableLiveData<Int>> = mutableMapOf()
-        page.items.forEach {
-            val quantity =
-                shoppingCartItems.items.find { shoppingCartItem ->
-                    shoppingCartItem.product == it
-                }?.quantity ?: DEFAULT_QUANTITY
-            tempMap[it] = MutableLiveData(quantity)
-        }
         _productsLiveData.value =
             MainRecyclerViewProduct(
                 page = page,
-                quantityMap = tempMap,
+                shoppingCartItems = shoppingCartItems,
             )
     }
 
