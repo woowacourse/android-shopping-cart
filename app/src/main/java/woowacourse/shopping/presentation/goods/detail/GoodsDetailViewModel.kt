@@ -32,7 +32,7 @@ class GoodsDetailViewModel(
     }
 
     fun addToShoppingCart() {
-        _goods.value?.let { shoppingRepository.addItemsWithCount(it.toDomain(), it.quantity + _count.value!!) }
+        _goods.value?.let { shoppingRepository.addItemsWithCount(it.toDomain(), _count.value!!) }
         _isItemAddedToCart.setValue(Unit)
     }
 
