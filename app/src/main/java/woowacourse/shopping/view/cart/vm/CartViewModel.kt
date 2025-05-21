@@ -3,7 +3,7 @@ package woowacourse.shopping.view.cart.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.CartStorage
+import woowacourse.shopping.data.storage.CartStorage
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 
@@ -19,14 +19,11 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     val pageNumber: LiveData<Int> = _pageNumber
 
     private fun updatePageNoText() {
-        _pageNumber.value = page.getPageNumber()
+        _pageNumber.postValue(page.getPageNumber())
     }
 
     fun deleteProduct(productId: Long) {
-        cartStorage.deleteProduct(productId)
-        loadCarts()
-
-        if (page.resetToLastPageIfEmpty(products.value?.size ?: 0)) {
+        cartStorage.deleteProduct(productId) {
             loadCarts()
         }
     }
@@ -42,23 +39,29 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     }
 
     fun loadCarts() {
-        val productsRange = page.targetRange(cartStorage.totalSize())
-        val products = cartStorage.slice(productsRange)
-        _products.value = products
-        setPageState()
-        updatePageNoText()
+        val (offset, limit) = page.targetRange()
+        cartStorage.getPaged(offset, limit) { products: List<Product> ->
+            _products.postValue(products)
+            setPageState()
+        }
     }
 
     private fun setPageState() {
-        val totalSize = cartStorage.totalSize()
-        val hasNext = page.hasNextPage(totalSize)
-        val isLastPage = page.isLastPage(totalSize)
-        _pageState.value =
-            PageState(
-                previousPageEnabled = page.hasPreviousPage(),
-                nextPageEnabled = hasNext,
-                pageVisibility = hasNext || isLastPage,
+        cartStorage.totalSize { totalSize ->
+            val hasNext = page.hasNextPage(totalSize)
+            val hasOnePage = page.hasOnePage(totalSize)
+            _pageState.postValue(
+                PageState(
+                    previousPageEnabled = page.hasPreviousPage(),
+                    nextPageEnabled = hasNext,
+                    pageVisibility = hasOnePage,
+                ),
             )
+            updatePageNoText()
+            page.resetToLastPageIfEmpty(products.value?.size ?: 0) {
+                loadCarts()
+            }
+        }
     }
 
     companion object {

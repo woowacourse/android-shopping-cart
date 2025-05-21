@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.view.ShoppingApp
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.event.DetailScreenEventHandler
 import woowacourse.shopping.view.detail.vm.DetailViewModel
@@ -20,7 +21,10 @@ import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
-    private val viewModel: DetailViewModel by viewModels { DetailViewModelFactory() }
+    private val viewModel: DetailViewModel by viewModels {
+        val app = application as ShoppingApp
+        DetailViewModelFactory(app.shoppingDatabase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

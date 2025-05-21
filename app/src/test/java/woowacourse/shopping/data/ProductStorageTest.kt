@@ -3,6 +3,8 @@ package woowacourse.shopping.data
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.data.storage.ProductStorage
+import woowacourse.shopping.data.storage.ProductStorageImpl
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 

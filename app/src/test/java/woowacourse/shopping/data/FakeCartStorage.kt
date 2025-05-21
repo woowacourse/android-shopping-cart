@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.data.storage.CartStorage
 import woowacourse.shopping.domain.Product
 
 class FakeCartStorage(
