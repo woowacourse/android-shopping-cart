@@ -1,16 +1,16 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.data.CartMapper.toDomain
-import woowacourse.shopping.data.CartMapper.toEntity
-import woowacourse.shopping.data.db.CartDao
+import woowacourse.shopping.data.datasource.CartDataSource
+import woowacourse.shopping.data.datasource.ProductDataSource
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import kotlin.concurrent.thread
 
 class ProductRepositoryImpl(
-    private val dao: CartDao,
+    private val cartDataSource: CartDataSource,
+    private val productDataSource: ProductDataSource,
 ) : ProductRepository {
-    override fun getProducts(): List<Product> = DummyProducts.values
+    override fun getProducts(): List<Product> = productDataSource.getProducts()
 
     override fun getPagedProducts(
         page: Int,
@@ -52,31 +52,27 @@ class ProductRepositoryImpl(
         product: Product,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        runThread(
-            block = { dao.insertProduct(product.toEntity()) },
-            onResult = onResult,
-        )
+        cartDataSource.insertProduct(product) { result ->
+            result
+                .onSuccess {
+                    onResult(Result.success(Unit))
+                }.onFailure { e ->
+                    onResult(Result.failure(e))
+                }
+        }
     }
 
     override fun deleteProduct(
         productId: Long,
         onResult: (Result<Long>) -> Unit,
     ) {
-        runThread(
-            block = {
-                dao.deleteByProductId(productId)
-                productId
-            },
-            onResult = onResult,
-        )
-    }
-
-    private inline fun <T> runThread(
-        crossinline block: () -> T,
-        crossinline onResult: (Result<T>) -> Unit,
-    ) {
-        thread {
-            onResult(runCatching { block() })
+        cartDataSource.deleteProduct(productId) { result ->
+            result
+                .onSuccess { id ->
+                    onResult(Result.success(id))
+                }.onFailure { e ->
+                    onResult(Result.failure(e))
+                }
         }
     }
 }
