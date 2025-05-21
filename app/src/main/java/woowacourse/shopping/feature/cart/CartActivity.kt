@@ -28,7 +28,7 @@ class CartActivity :
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-        binding.rvGoods.adapter = adapter
+        binding.rvCartItems.adapter = adapter
         binding.viewModel = viewModel
     }
 

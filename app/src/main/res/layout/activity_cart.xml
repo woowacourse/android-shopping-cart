@@ -17,7 +17,7 @@
         android:fitsSystemWindows="true">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_goods"
+            android:id="@+id/rv_cart_items"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:paddingHorizontal="18dp"
@@ -34,7 +34,7 @@
             android:id="@+id/paging"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/rv_goods"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart_items"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

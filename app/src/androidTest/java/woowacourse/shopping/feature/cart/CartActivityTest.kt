@@ -13,6 +13,6 @@ class CartActivityTest {
     @Test
     fun 장바구니_화면_레이아웃_테스트() {
         ActivityScenario.launch(CartActivity::class.java)
-        onView(withId(R.id.rv_goods)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_cart_items)).check(matches(isDisplayed()))
     }
 }

@@ -34,10 +34,10 @@ class GoodsActivity :
         setContentView(binding.root)
         binding.lifecycleOwner = this
 
-        binding.rvGoods.adapter = concatAdapter
+        binding.rvCartItems.adapter = concatAdapter
         binding.viewModel = viewModel
 
-        binding.rvGoods.layoutManager = getLayoutManager()
+        binding.rvCartItems.layoutManager = getLayoutManager()
     }
 
     private fun getLayoutManager(): GridLayoutManager {

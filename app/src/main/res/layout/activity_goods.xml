@@ -16,7 +16,7 @@
         android:fitsSystemWindows="true">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_goods"
+            android:id="@+id/rv_cart_items"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="14dp"
