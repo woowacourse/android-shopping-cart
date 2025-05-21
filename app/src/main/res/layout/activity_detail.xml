@@ -61,38 +61,34 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{@string/format_thousand_won(vm.uiState.item.priceValue)}"
+            android:text="@{@string/format_thousand_won(vm.uiState.item.priceValue * vm.uiState.cartQuantityValue)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="99,800원" />
 
-        <LinearLayout
+        <include
+            layout="@layout/item_quantity_changer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toEndOf="@id/text_view_product_price"
-            app:layout_constraintTop_toBottomOf="@id/divider">
-
-            <include
-                layout="@layout/item_quantity_changer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                bind:eventHandler="@{cartQuantityEventHandler}"
-                bind:model="@{vm.uiState}" />
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            bind:eventHandler="@{cartQuantityEventHandler}"
+            bind:model="@{vm.uiState}" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:backgroundTint="#04C09E"
             android:insetBottom="0dp"
+            android:onClick="@{() -> vm.saveCart()}"
             android:text="@string/text_add_to_cart"
             android:textSize="20sp"
             app:cornerRadius="0dp"
-            android:onClick="@{() -> vm.saveCart()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
