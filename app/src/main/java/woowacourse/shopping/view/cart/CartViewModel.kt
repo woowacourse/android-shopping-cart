@@ -43,7 +43,7 @@ class CartViewModel(
 
     fun loadNextPage() {
         val nextPage = (_currentPageNumber.value ?: INITIAL_PAGE) + 1
-        val maxPage = ((cartRepository.products.size - 1) / pageSize) + 1
+        val maxPage = ((cartRepository.getAll().size - 1) / pageSize) + 1
         if (nextPage <= maxPage) {
             loadPage(nextPage)
         }
@@ -59,20 +59,20 @@ class CartViewModel(
     private fun checkFirstPage(): Boolean = (_currentPageNumber.value == 1)
 
     private fun checkLastPage(): Boolean {
-        val totalPageCount = (cartRepository.products.size + pageSize - 1) / pageSize
+        val totalPageCount = (cartRepository.getAll().size + pageSize - 1) / pageSize
         return _currentPageNumber.value == totalPageCount
     }
 
-    private fun checkOnlyOnePage(): Boolean = cartRepository.products.size <= 5
+    private fun checkOnlyOnePage(): Boolean = cartRepository.getAll().size <= 5
 
     private fun loadPage(page: Int) {
-        val maxPage = ((cartRepository.products.size - 1) / pageSize) + 1
+        val maxPage = ((cartRepository.getAll().size - 1) / pageSize) + 1
         if (page < 1 || page > maxPage) return
 
         val start = (page - 1) * pageSize
-        val end = minOf(start + pageSize, cartRepository.products.size)
+        val end = minOf(start + pageSize, cartRepository.getAll().size)
 
-        val items = cartRepository.products.subList(start, end)
+        val items = cartRepository.getAll().subList(start, end)
         _loadedProducts.postValue(items)
         _currentPageNumber.value = page
         _isOnlyOnePage.value = checkOnlyOnePage()

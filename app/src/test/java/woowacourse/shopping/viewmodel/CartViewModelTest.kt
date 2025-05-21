@@ -19,7 +19,7 @@ class CartViewModelTest {
     @BeforeEach
     fun setUp() {
         repository = CartRepositoryImpl
-        repository.products.clear()
+        repository.clear()
 
         SIX_QUANTITY_PRODUCTS.forEach {
             repository.add(it)

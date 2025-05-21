@@ -18,6 +18,7 @@ class ProductDetailViewModelTest {
     @BeforeEach
     fun setUp() {
         repository = CartRepositoryImpl
+        repository.clear()
         viewModel = ProductDetailViewModel(repository)
     }
 
@@ -30,7 +31,7 @@ class ProductDetailViewModelTest {
         viewModel.onAddToCartClicked(PRODUCT_2)
 
         // then
-        repository.products shouldBe listOf(PRODUCT_1, PRODUCT_2)
+        repository.getAll() shouldBe listOf(PRODUCT_1, PRODUCT_2)
         viewModel.addToCart.value shouldBe Unit
     }
 }
