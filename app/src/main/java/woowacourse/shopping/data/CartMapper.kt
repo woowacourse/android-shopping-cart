@@ -12,9 +12,9 @@ object CartMapper {
 //            _price = Price(this.price),
 //        )
 
-    fun Product.toEntity(): CartEntity =
+    fun Product.toEntity(quantity: Int): CartEntity =
         CartEntity(
             productId = this.productId,
-            quantity = 1,
+            quantity = quantity,
         )
 }

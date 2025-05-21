@@ -42,6 +42,14 @@ class CartActivity :
         observeViewModel()
     }
 
+    override fun onClickMinus(id: Long) {
+        viewModel.decreaseQuantity(id)
+    }
+
+    override fun onClickPlus(id: Long) {
+        viewModel.increaseQuantity(id)
+    }
+
     private fun initInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.clCart) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -92,13 +100,5 @@ class CartActivity :
 
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
-    }
-
-    override fun onClickMinus(id: Long) {
-        viewModel.decreaseQuantity(id)
-    }
-
-    override fun onClickPlus(id: Long) {
-        viewModel.increaseQuantity(id)
     }
 }

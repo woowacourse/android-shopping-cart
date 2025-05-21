@@ -28,10 +28,11 @@ class ProductDetailViewModel(
     }
 
     fun addToCart(product: Product) {
-        cartRepository.insertOrIncrease(product) { result ->
+        val quantity: Int = _productCount.value ?: return
+        cartRepository.insertOrIncrease(product, quantity) { result ->
             result
-                .onSuccess { _insertProductResult.postValue(ResultState.Success(it)) }
-                .onFailure { _insertProductResult.postValue(ResultState.Failure()) }
+                .onSuccess { _insertProductResult.postValue(ResultState.Success(Unit)) }
+                .onFailure { e -> _insertProductResult.postValue(ResultState.Failure(e)) }
         }
     }
 

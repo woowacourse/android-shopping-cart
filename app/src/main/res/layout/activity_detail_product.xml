@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/textview_margin"
-            android:text="@{@string/product_detail_price(vm.product.price)}"
+            android:text="@{@string/product_detail_price(vm.product.price * vm.productCount)}"
             android:textColor="@color/black"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"

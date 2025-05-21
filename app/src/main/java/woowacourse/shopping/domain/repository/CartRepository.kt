@@ -25,11 +25,13 @@ interface CartRepository {
 
     fun insertOrIncrease(
         product: Product,
+        quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     )
 
     fun increaseQuantity(
         productId: Long,
+        quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     )
 

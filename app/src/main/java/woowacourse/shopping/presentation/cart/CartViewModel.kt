@@ -107,7 +107,7 @@ class CartViewModel(
 //    }
 
     fun increaseQuantity(productId: Long) {
-        cartRepository.increaseQuantity(productId) { result ->
+        cartRepository.increaseQuantity(productId, 1) { result ->
             result
                 .onSuccess {
                     updateQuantity(productId, 1)

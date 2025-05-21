@@ -45,17 +45,18 @@ class CartRepositoryImpl(
 
     override fun insertOrIncrease(
         product: Product,
+        quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
         cartDataSource.existsByProductId(product.productId) { existsResult ->
             existsResult
                 .onSuccess { exists ->
                     if (exists) {
-                        cartDataSource.increaseQuantity(product.productId) { result ->
+                        cartDataSource.increaseQuantity(product.productId, quantity) { result ->
                             onResult(result)
                         }
                     } else {
-                        cartDataSource.insertProduct(product.toEntity()) { result ->
+                        cartDataSource.insertProduct(product.toEntity(quantity)) { result ->
                             onResult(result)
                         }
                     }
@@ -67,10 +68,11 @@ class CartRepositoryImpl(
 
     override fun increaseQuantity(
         productId: Long,
+        quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
         runCatching {
-            cartDataSource.increaseQuantity(productId) { result ->
+            cartDataSource.increaseQuantity(productId, quantity) { result ->
                 onResult(result)
             }
         }.onFailure { e ->
@@ -83,7 +85,7 @@ class CartRepositoryImpl(
         onResult: (Result<Unit>) -> Unit,
     ) {
         runCatching {
-            cartDataSource.increaseQuantity(productId) { result ->
+            cartDataSource.decreaseQuantity(productId) { result ->
                 onResult(result)
             }
         }.onFailure { e ->

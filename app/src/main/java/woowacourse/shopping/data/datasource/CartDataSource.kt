@@ -15,6 +15,7 @@ interface CartDataSource {
 
     fun increaseQuantity(
         productId: Long,
+        quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     )
 

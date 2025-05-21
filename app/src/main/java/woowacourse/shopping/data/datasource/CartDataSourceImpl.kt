@@ -35,10 +35,11 @@ class CartDataSourceImpl(
 
     override fun increaseQuantity(
         productId: Long,
+        quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
         runThread(
-            block = { dao.increaseQuantity(productId) },
+            block = { dao.increaseQuantity(productId, quantity) },
             onResult = onResult,
         )
     }
@@ -48,7 +49,7 @@ class CartDataSourceImpl(
         onResult: (Result<Unit>) -> Unit,
     ) {
         runThread(
-            block = { dao.increaseQuantity(productId) },
+            block = { dao.decreaseQuantity(productId) },
             onResult = onResult,
         )
     }
