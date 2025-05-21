@@ -60,7 +60,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
-            android:text="@{@string/products_price(viewModel.product.price)}"
+            android:text="@{@string/products_price(viewModel.product.price*viewModel.count)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"

@@ -18,7 +18,7 @@ class ProductDetailViewModel(
         MutableLiveData(Product.Companion.INVALID_PRODUCT)
     val product: LiveData<Product> get() = _product
 
-    private val _count: MutableLiveData<Int> = MutableLiveData(0)
+    private val _count: MutableLiveData<Int> = MutableLiveData(1)
     val count: LiveData<Int> get() = _count
 
     val putProductFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
@@ -40,6 +40,6 @@ class ProductDetailViewModel(
 
     fun downCount() {
         _count.value = (_count.value ?: 0) - 1
-        if ((_count.value ?: 0) <= 0) _count.value = 0
+        if ((_count.value ?: 0) <= 1) _count.value = 1
     }
 }
