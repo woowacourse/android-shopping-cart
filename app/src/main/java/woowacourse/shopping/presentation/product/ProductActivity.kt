@@ -55,7 +55,7 @@ class ProductActivity : AppCompatActivity() {
             navigateToCart()
         }
 
-        val itemCount = 3
+        val itemCount = 99
         if (itemCount > 0) {
             binding.tvCartCount.text = itemCount.toString()
             binding.tvCartCount.visibility = View.VISIBLE

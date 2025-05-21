@@ -21,8 +21,10 @@
     <string name="cart_toast_load_failure">장바구니 DB 조회를 실패하였습니다</string>
     <string name="cart_toast_delete_success">장바구니에서 아이템을 삭제했습니다</string>
     <string name="cart_toast_delete_failure">장바구니에서 아이템 삭제에 실패하였습니다</string>
-
-
+    
     <string name="menu_cart_title">장바구니</string>
     <string name="menu_cart_detail_title">닫기</string>
+
+    <string name="layout_cart_box_minus">−</string>
+    <string name="layout_cart_box_plus">+</string>
 </resources>
