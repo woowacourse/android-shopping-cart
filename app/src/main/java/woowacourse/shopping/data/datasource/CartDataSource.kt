@@ -9,6 +9,11 @@ interface CartDataSource {
 
     fun getCartProducts(onResult: (Result<List<CartEntity>>) -> Unit)
 
+    fun getCartItemById(
+        productId: Long,
+        onResult: (Result<CartEntity?>) -> Unit,
+    )
+
     fun getPagedCartProducts(
         limit: Int,
         page: Int,

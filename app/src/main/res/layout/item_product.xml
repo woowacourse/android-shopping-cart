@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.cart.CartCounterClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +26,7 @@
             android:layout_height="180dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{cartItem.product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_loading" />
@@ -35,7 +39,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{cartItem.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -64,15 +68,18 @@
             android:layout_marginHorizontal="8dp"
             android:layout_marginBottom="8dp"
             android:visibility="gone"
+            app:clickListener="@{clickListener}"
+            app:id="@{cartItem.product.productId}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="@id/iv_product"
-            app:layout_constraintStart_toStartOf="@id/iv_product" />
+            app:layout_constraintStart_toStartOf="@id/iv_product"
+            app:quantity="@{cartItem.quantity}" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/product_price(product.price)}"
+            android:text="@{@string/product_price(cartItem.product.price)}"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv_product_name"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"

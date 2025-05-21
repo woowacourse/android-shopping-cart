@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import android.util.Log
 import woowacourse.shopping.data.CartMapper.toEntity
 import woowacourse.shopping.data.datasource.CartDataSource
+import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
@@ -34,19 +35,18 @@ class CartRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-//    override fun getPagedCartProductIds(
-//        limit: Int,
-//        page: Int,
-//        onResult: (Result<List<Long>>) -> Unit,
-//    ) {
-//        runCatching {
-//            cartDataSource.getPagedCartProductIds(limit, page) { result ->
-//                onResult(result)
-//            }
-//        }.onFailure { e ->
-//            onResult(Result.failure(e))
-//        }
-//    }
+    override fun getCartItemById(
+        productId: Long,
+        onResult: (Result<CartEntity?>) -> Unit,
+    ) {
+        runCatching {
+            cartDataSource.getCartItemById(productId) { result ->
+                onResult(result)
+            }
+        }.onFailure { e ->
+            onResult(Result.failure(e))
+        }
+    }
 
     override fun addToCart(item: CartItem) {
         TODO("Not yet implemented")

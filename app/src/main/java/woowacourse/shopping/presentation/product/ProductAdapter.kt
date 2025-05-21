@@ -7,17 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.CartItem
 
 class ProductAdapter(
-    private val onClick: (Product) -> Unit,
+    private val onClick: (CartItem) -> Unit,
     private val onClickLoadMore: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: List<Product> = emptyList()
+    private var items: List<CartItem> = emptyList()
     private var showLoadMore: Boolean = false
 
     fun setData(
-        newList: List<Product>,
+        newList: List<CartItem>,
         showLoadMore: Boolean,
     ) {
         val oldSize = items.size
@@ -68,11 +68,19 @@ class ProductAdapter(
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        private val onClick: (Product) -> Unit,
+        private val onClick: (CartItem) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Product) {
-            binding.product = item
+        fun bind(item: CartItem) {
+            binding.cartItem = item
             binding.clProductItem.setOnClickListener { onClick(item) }
+
+            if (item.quantity > 0) {
+                binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.VISIBLE
+                binding.ivAddCart.visibility = View.GONE
+            } else {
+                binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.GONE
+                binding.ivAddCart.visibility = View.VISIBLE
+            }
 
             binding.ivAddCart.setOnClickListener {
                 binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.VISIBLE

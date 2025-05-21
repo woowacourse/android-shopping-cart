@@ -12,6 +12,9 @@ interface CartDao {
     @Query("SELECT COUNT(product_id) FROM cart")
     fun getAllProductCount(): Int
 
+    @Query("SELECT * FROM cart WHERE product_id = :productId")
+    fun getCartItemById(productId: Long): CartEntity?
+
     @Query("SELECT SUM(quantity) FROM cart")
     fun getTotalQuantity(): Int?
 

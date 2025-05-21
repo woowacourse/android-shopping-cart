@@ -4,6 +4,7 @@
     <string name="product_toolbar_text">Shopping</string>
     <string name="product_price">%,d원</string>
     <string name="product_btn_load_more">상품 더보기</string>
+    <string name="product_toast_load_fail">수량은 1 이상이어야 합니다</string>
 
     <string name="product_detail_price_text">가격</string>
     <string name="product_detail_price">%,d원</string>
@@ -21,7 +22,7 @@
     <string name="cart_toast_load_failure">장바구니 DB 조회를 실패하였습니다</string>
     <string name="cart_toast_delete_success">장바구니에서 아이템을 삭제했습니다</string>
     <string name="cart_toast_delete_failure">장바구니에서 아이템 삭제에 실패하였습니다</string>
-    
+
     <string name="menu_cart_title">장바구니</string>
     <string name="menu_cart_detail_title">닫기</string>
 

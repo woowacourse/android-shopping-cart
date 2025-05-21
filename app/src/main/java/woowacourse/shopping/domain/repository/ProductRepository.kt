@@ -9,7 +9,8 @@ interface ProductRepository {
     fun getPagedProducts(
         page: Int,
         pageSize: Int,
-    ): List<Product>
+        onResult: (Result<List<CartItem>>) -> Unit,
+    )
 
     fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit)
 

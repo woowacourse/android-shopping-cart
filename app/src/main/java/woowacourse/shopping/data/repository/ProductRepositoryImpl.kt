@@ -16,11 +16,38 @@ class ProductRepositoryImpl(
     override fun getPagedProducts(
         page: Int,
         pageSize: Int,
-    ): List<Product> {
+        onResult: (Result<List<CartItem>>) -> Unit,
+    ) {
         val fromIndex = page * pageSize
-        val toIndex = minOf(fromIndex + pageSize, DummyProducts.values.size)
-        if (fromIndex >= DummyProducts.values.size) return emptyList()
-        return DummyProducts.values.subList(fromIndex, toIndex)
+//        val toIndex = minOf(fromIndex + pageSize, DummyProducts.values.size)
+        if (fromIndex >= DummyProducts.values.size) return onResult(Result.success(emptyList()))
+
+        val productPage = productDataSource.getPagedProducts(page, pageSize)
+        val resultList = mutableListOf<CartItem>()
+        var completedCount = 0
+
+        productPage.forEach { product ->
+            cartDataSource.getCartItemById(product.productId) { result ->
+                result
+                    .onSuccess {
+                        val quantity = result.getOrNull()?.quantity ?: 0
+
+                        resultList.add(
+                            CartItem(
+                                product = product,
+                                quantity = quantity,
+                            ),
+                        )
+
+                        completedCount++
+                        if (completedCount == productPage.size) {
+                            onResult(Result.success(resultList))
+                        }
+                    }.onFailure { e ->
+                        onResult(Result.failure(e))
+                    }
+            }
+        }
     }
 
     override fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit) {

@@ -28,6 +28,16 @@ class CartDataSourceImpl(
         )
     }
 
+    override fun getCartItemById(
+        productId: Long,
+        onResult: (Result<CartEntity?>) -> Unit,
+    ) {
+        runThread(
+            block = { dao.getCartItemById(productId) },
+            onResult = onResult,
+        )
+    }
+
     override fun getPagedCartProducts(
         limit: Int,
         page: Int,

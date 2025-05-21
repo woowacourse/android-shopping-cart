@@ -23,9 +23,7 @@ import woowacourse.shopping.presentation.getSerializableExtraCompat
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailProductBinding
     private val viewModel: ProductDetailViewModel by viewModels {
-        ProductDetailViewModelFactory(
-            applicationContext,
-        )
+        ProductDetailViewModelFactory(applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

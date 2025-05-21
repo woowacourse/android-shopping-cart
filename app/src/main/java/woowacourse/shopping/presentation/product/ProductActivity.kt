@@ -21,13 +21,11 @@ import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
     private val viewModel: ProductViewModel by viewModels {
-        ProductViewModelFactory(
-            applicationContext,
-        )
+        ProductViewModelFactory(applicationContext)
     }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
-            onClick = { product -> navigateToProductDetail(product) },
+            onClick = { cartItem -> navigateToProductDetail(cartItem.product) },
             onClickLoadMore = { viewModel.loadMore() },
         )
     }
