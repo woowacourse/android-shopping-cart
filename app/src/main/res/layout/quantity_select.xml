@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:clickable="true"
-    android:paddingHorizontal="15dp"
-    android:paddingVertical="10dp">
+    android:paddingHorizontal="10dp">
 
     <TextView
         android:id="@+id/tv_decrease"
@@ -15,8 +14,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="10dp"
         android:text="@string/decrease"
         android:textColor="@color/deep_gray"
         android:textSize="22sp"
@@ -32,7 +29,7 @@
         android:id="@+id/tv_quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
+        android:layout_marginHorizontal="25dp"
         android:clickable="false"
         android:textColor="@color/deep_gray"
         android:textSize="22sp"
@@ -41,7 +38,6 @@
         app:layout_constraintEnd_toStartOf="@id/tv_increase"
         app:layout_constraintStart_toEndOf="@id/tv_decrease"
         app:layout_constraintTop_toTopOf="parent"
-
         tools:text="2000000" />
 
     <TextView
@@ -50,8 +46,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:paddingHorizontal="15dp"
-        android:paddingVertical="10dp"
         android:text="@string/increase"
         android:textColor="@color/deep_gray"
         android:textSize="22sp"
