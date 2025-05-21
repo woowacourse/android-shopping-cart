@@ -6,6 +6,7 @@ import woowacourse.shopping.domain.model.Price
 import java.io.Serializable
 
 data class GoodsUiModel(
+    val id: Int,
     val name: String,
     val price: Int,
     val imageUrl: String,
@@ -15,6 +16,7 @@ data class GoodsUiModel(
 
 fun GoodsUiModel.toDomain(): Goods =
     Goods(
+        id = id,
         name = Name(name),
         price = Price(price),
         imageUrl = imageUrl,
@@ -22,6 +24,7 @@ fun GoodsUiModel.toDomain(): Goods =
 
 fun Goods.toUiModel(): GoodsUiModel =
     GoodsUiModel(
+        id = id,
         name = name.value,
         price = price.value,
         imageUrl = imageUrl,
