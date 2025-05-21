@@ -67,27 +67,31 @@
 
                 <TextView
                     android:id="@+id/textView_price_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/text_price"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="@id/textView_product_detail_name"
-                    app:layout_constraintTop_toBottomOf="@id/view_divider" />
-
-                <TextView
+                    app:layout_constraintTop_toBottomOf="@id/view_divider"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="18dp"
                     android:text="@{@string/format_price(product.price)}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="@id/textView_price_info"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/textView_price_info"
+                    app:layout_constraintStart_toStartOf="parent"
                     tools:text="99,800원" />
 
+                <LinearLayout
+                    android:layout_marginEnd="14dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/textView_price_info"
+                    app:layout_constraintBottom_toBottomOf="@id/textView_price_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <include
+                        android:id="@+id/product_count_layout"
+                        layout="@layout/product_count_item" />
+
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 

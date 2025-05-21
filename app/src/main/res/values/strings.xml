@@ -14,4 +14,7 @@
     <string name="text_unInserted_toast">장바구니에 추가되지 않았습니다.</string>
     <string name="cart_product_image_description">cart_product_image</string>
     <string name="cart_product_delete_button_description">cart_product_delete_button</string>
+    <string name="text_product_minus">-</string>
+    <string name="text_product_plus">+</string>
+    <string name="text_product_count_open_button">product_count_open_button</string>
 </resources>
