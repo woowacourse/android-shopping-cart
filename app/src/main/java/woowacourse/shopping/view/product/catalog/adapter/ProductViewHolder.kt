@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.common.QuantityControlEventHandler
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
@@ -19,14 +20,10 @@ class ProductViewHolder(
         binding.quantity = productItem.quantity
     }
 
-    interface EventHandler {
+    interface EventHandler : QuantityControlEventHandler {
         fun onProductClick(item: Product)
 
         fun onAddClick(item: Product)
-
-        fun onQuantityIncreaseClick(item: Product)
-
-        fun onQuantityDecreaseClick(item: Product)
     }
 
     companion object {

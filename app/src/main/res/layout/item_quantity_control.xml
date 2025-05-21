@@ -15,7 +15,7 @@
 
         <variable
             name="handler"
-            type="woowacourse.shopping.view.product.catalog.adapter.ProductViewHolder.EventHandler" />
+            type="woowacourse.shopping.view.common.QuantityControlEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,10 +42,10 @@
             android:layout_height="42dp"
             android:background="@color/white"
             android:gravity="center"
+            android:text="@{String.valueOf(quantity)}"
             android:textColor="@color/dark_gray"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:text="@{String.valueOf(quantity)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_increase"
             app:layout_constraintStart_toEndOf="@id/tv_decrease"

@@ -42,6 +42,8 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initBindings(product: Product) {
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
         binding.product = product
         binding.handler = viewModel
     }
