@@ -14,8 +14,8 @@ class ProductViewHolder private constructor(
     constructor(
         parent: ViewGroup,
         handler: InventoryEventHandler,
-    ) : this (
-        ItemInventoryProductBinding.inflate(LayoutInflater.from(parent.context)),
+    ) : this(
+        ItemInventoryProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         handler,
     )
 
