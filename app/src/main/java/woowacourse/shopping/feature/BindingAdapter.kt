@@ -3,10 +3,12 @@ package woowacourse.shopping.feature
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
@@ -18,7 +20,13 @@ fun loadImageFromUrl(
     url: String?,
 ) {
     url?.let {
-        Glide.with(imageView.context).load(url).into(imageView)
+        val placeholderDrawable = ContextCompat.getDrawable(imageView.context, R.drawable.image_placeholder)
+        Glide
+            .with(imageView.context)
+            .load(url)
+            .placeholder(placeholderDrawable)
+            .error(placeholderDrawable)
+            .into(imageView)
     }
 }
 
