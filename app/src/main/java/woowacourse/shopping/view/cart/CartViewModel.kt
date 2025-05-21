@@ -37,38 +37,48 @@ class CartViewModel(
 
     fun removeFromCart(product: Product) {
         cartRepository.remove(product)
-        _isOnlyOnePage.value = checkOnlyOnePage()
+        _loadedProducts.value = cartRepository.getAll()
+        if (!existPage()) _currentPageNumber.value = minusPageNumber()
+
         loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
     }
 
     fun loadNextPage() {
-        val nextPage = (_currentPageNumber.value ?: INITIAL_PAGE) + 1
-        val maxPage = ((cartRepository.getAll().size - 1) / pageSize) + 1
+        val nextPage = plusPageNumber()
+        val maxPage = getMaxPageNumber()
         if (nextPage <= maxPage) {
             loadPage(nextPage)
         }
     }
 
     fun loadPreviousPage() {
-        val prevPage = (_currentPageNumber.value ?: INITIAL_PAGE) - 1
+        val prevPage = minusPageNumber()
         if (prevPage >= INITIAL_PAGE) {
             loadPage(prevPage)
         }
     }
 
+    private fun getMaxPageNumber(): Int = ((cartRepository.getAll().size - 1) / pageSize) + 1
+
+    private fun minusPageNumber(): Int = (_currentPageNumber.value ?: INITIAL_PAGE) - 1
+
+    private fun plusPageNumber(): Int = (_currentPageNumber.value ?: INITIAL_PAGE) + 1
+
     private fun checkFirstPage(): Boolean = (_currentPageNumber.value == 1)
 
     private fun checkLastPage(): Boolean {
-        val totalPageCount = (cartRepository.getAll().size + pageSize - 1) / pageSize
-        return _currentPageNumber.value == totalPageCount
+        val totalPageNumber = getMaxPageNumber()
+        return _currentPageNumber.value == totalPageNumber
     }
 
     private fun checkOnlyOnePage(): Boolean = cartRepository.getAll().size <= 5
 
-    private fun loadPage(page: Int) {
-        val maxPage = ((cartRepository.getAll().size - 1) / pageSize) + 1
-        if (page < 1 || page > maxPage) return
+    private fun existPage(): Boolean {
+        val maxPageNumber = getMaxPageNumber()
+        return (_currentPageNumber.value ?: INITIAL_PAGE) <= maxPageNumber
+    }
 
+    private fun loadPage(page: Int) {
         val start = (page - 1) * pageSize
         val end = minOf(start + pageSize, cartRepository.getAll().size)
 
