@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.view.productDetail.ProductDetailViewModel" />
+
+        <variable
+            name="productDetailActionsListener"
+            type="woowacourse.shopping.view.productDetail.ProductDetailActionsListener" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/productDetailRoot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".view.productDetail.ProductDetailActivity">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/productDetailToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_5"
+                android:gravity="center_vertical"
+                android:minHeight="?attr/actionBarSize"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:onClick="@{() -> productDetailActionsListener.onClose()}"
+                    android:padding="16dp"
+                    android:src="@drawable/ic_close"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/productDetailImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                app:imageUrl="@{viewModel.imageUrl}"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintTop_toBottomOf="@id/productDetailToolbar" />
+
+            <TextView
+                android:id="@+id/productDetailName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="18dp"
+                android:layout_marginTop="16dp"
+                android:text="@{viewModel.product.name}"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/productDetailImage"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <View
+                android:id="@+id/productDetailDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/gray_a"
+                app:layout_constraintTop_toBottomOf="@id/productDetailName" />
+
+            <TextView
+                android:id="@+id/productDetailPriceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/product_detail_price_title"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/productDetailDivider" />
+
+            <TextView
+                android:id="@+id/productDetailPriceContent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="18dp"
+                android:gravity="end"
+                android:text="@{@string/product_price_format(viewModel.product.price)}"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/productDetailAdd"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/productDetailPriceTitle"
+                app:layout_constraintTop_toTopOf="@id/productDetailPriceTitle"
+                app:layout_constraintVertical_chainStyle="spread_inside"
+                tools:text="99,800원" />
+
+            <TextView
+                android:id="@+id/productDetailAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="144dp"
+                android:background="@color/mint"
+                android:gravity="center"
+                android:onClick="@{() -> productDetailActionsListener.onAddToShoppingCart()}"
+                android:paddingVertical="12dp"
+                android:text="@string/product_detail_add_to_shopping_cart"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/productDetailPriceContent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</layout>

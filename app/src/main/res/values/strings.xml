@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <!-- 상품 목록 페이지 -->
+    <string name="product_price_format">%,d원</string>
+    <string name="products_update_products_error_message">상품 목록을 불러오는 데 실패했습니다.</string>
+    <string name="products_more_button">더보기</string>
+
+    <!-- 장바구니 페이지 -->
+    <string name="shopping_cart_title">Cart</string>
+    <string name="shopping_cart_update_shopping_cart_error_message">장바구니를 불러오는 데 실패했습니다.</string>
+    <string name="shopping_cart_remove_shopping_cart_product_error_message">장바구니에 담긴 상품을 제거하는 데 실패했습니다.</string>
+    <string name="shopping_cart_pagination_minus_button"><![CDATA[<]]></string>
+    <string name="shopping_cart_pagination_plus_button"><![CDATA[>]]></string>
+
+    <!-- 상품 상세 페이지 -->
+    <string name="product_detail_add_to_shopping_cart">장바구니 담기</string>
+    <string name="product_detail_price_title">가격</string>
+    <string name="product_not_provided_error_message">상품 정보를 불러오지 못했습니다.</string>
+    <string name="product_detail_add_shopping_cart_success_message">장바구니에 해당 상품이 추가되었습니다.</string>
+    <string name="product_detail_add_shopping_cart_error_message">장바구니에 해당 상품을 추가하는 데 실패했습니다.</string>
 </resources>
