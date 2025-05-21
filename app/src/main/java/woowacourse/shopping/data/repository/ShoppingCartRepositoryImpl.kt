@@ -23,6 +23,6 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
     }
 
     override fun save(item: ShoppingCartItem) {
-        DummyShoppingCart.items.add(item)
+        DummyShoppingCart.items.add(0, item)
     }
 }
