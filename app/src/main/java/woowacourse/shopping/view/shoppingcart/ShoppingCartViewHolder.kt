@@ -7,10 +7,10 @@ import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartViewHolder(
     private val binding: ItemShoppingCartProductBinding,
-    onProductRemove: (ShoppingCartItem, Int) -> Unit,
+    private val handler: ShoppingCartEventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onProductRemove = onProductRemove
+        binding.handler = handler
     }
 
     fun bind(
@@ -18,6 +18,7 @@ class ShoppingCartViewHolder(
         currentPage: Int,
         quantity: MutableLiveData<Int>,
     ) {
+        binding.quantity = quantity
         binding.product = item
         binding.page = currentPage
     }

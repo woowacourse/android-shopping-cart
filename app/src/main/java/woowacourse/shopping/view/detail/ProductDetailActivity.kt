@@ -23,7 +23,7 @@ class ProductDetailActivity :
     ActivityBoilerPlateCode<ActivityProductDetailBinding> by ActivityBoilerPlateCodeImpl(
         R.layout.activity_product_detail,
     ) {
-    private val viewModel: ProductDetailViewModel by viewModels()
+    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,10 +7,13 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
+import woowacourse.shopping.view.base.QuantitySelectorEventHandler
 
 class ShoppingCartActivity :
     AppCompatActivity(),
@@ -19,9 +22,7 @@ class ShoppingCartActivity :
     ) {
     private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.Factory }
     private val shoppingCartAdapter: ShoppingCartAdapter by lazy {
-        ShoppingCartAdapter { product, page ->
-            viewModel.removeProduct(product, page)
-        }
+        ShoppingCartAdapter(ShoppingCartEventHandlerImpl())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,7 @@ class ShoppingCartActivity :
         binding.apply {
             shoppingCartList.adapter = shoppingCartAdapter
             viewModel = this@ShoppingCartActivity.viewModel
-            onPagination = ::onPagination
+            handler = ShoppingCartEventHandlerImpl()
         }
     }
 
@@ -47,10 +48,6 @@ class ShoppingCartActivity :
             finish()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun onPagination(page: Int) {
-        viewModel.requestProductsPage(page)
     }
 
     private fun setMenubar(toolbar: Toolbar) {
@@ -68,4 +65,34 @@ class ShoppingCartActivity :
             return Intent(context, ShoppingCartActivity::class.java)
         }
     }
+
+    private inner class ShoppingCartEventHandlerImpl : ShoppingCartEventHandler {
+        override fun onPagination(page: Int) {
+            viewModel.requestProductsPage(page)
+        }
+
+        override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
+            quantity.value = quantity.value?.minus(1)
+        }
+
+        override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
+            quantity.value = quantity.value?.plus(1)
+        }
+
+        override fun onProductRemove(
+            product: ShoppingCartItem,
+            page: Int,
+        ) {
+            viewModel.removeProduct(product, page)
+        }
+    }
+}
+
+interface ShoppingCartEventHandler : QuantitySelectorEventHandler {
+    fun onPagination(page: Int)
+
+    fun onProductRemove(
+        product: ShoppingCartItem,
+        page: Int,
+    )
 }

@@ -9,7 +9,7 @@ import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartAdapter(
-    private val onProductRemove: (ShoppingCartItem, Int) -> Unit,
+    private val handler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var products: List<ShoppingCartItem> = listOf()
     private var currentPage: Int = 0
@@ -29,7 +29,7 @@ class ShoppingCartAdapter(
         viewType: Int,
     ): ShoppingCartViewHolder {
         val binding = ItemShoppingCartProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingCartViewHolder(binding, onProductRemove)
+        return ShoppingCartViewHolder(binding, handler)
     }
 
     fun updateProducts(page: Page<ShoppingCartItem>) {
