@@ -16,7 +16,7 @@ fun CartItem.toCatalogItem(isOpenQuantitySelector: Boolean) =
         productId = product.id,
         productName = product.name,
         imageUrl = product.imageUrl,
-        price = totalPrice,
+        price = product.price.value,
         quantity = quantity,
         isOpenQuantitySelector = isOpenQuantitySelector,
     )

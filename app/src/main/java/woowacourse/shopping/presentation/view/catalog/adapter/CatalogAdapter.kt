@@ -34,24 +34,47 @@ class CatalogAdapter(
         }
     }
 
-    fun appendProducts(products: List<CatalogItem>) {
-        val previousSize = itemCount
-        this.products.clear()
-        this.products.addAll(products)
+    fun updateProducts(newItems: List<CatalogItem>) {
+        val newProductItems = newItems.filterIsInstance<CatalogItem.ProductItem>()
+        val hasLoadMoreItem = newItems.lastOrNull() is CatalogItem.LoadMoreItem
 
-        notifyItemRangeInserted(previousSize, products.size)
+        updateProductItems(newProductItems)
+        updateLoadMoreItem(hasLoadMoreItem)
     }
 
-    fun updateQuantityAt(
-        productId: Long,
-        quantity: Int,
-    ) {
-        val foundItem = products.find { (it as? CatalogItem.ProductItem)?.product?.productId == productId } ?: return
-        val oldItem = (foundItem as? CatalogItem.ProductItem)?.product ?: return
-        val newItem = CatalogItem.ProductItem(oldItem.copy(quantity = quantity))
-        val position = products.indexOf(foundItem)
-        products[position] = newItem
-        notifyItemChanged(position)
+    private fun updateProductItems(newItems: List<CatalogItem.ProductItem>) {
+        newItems.forEach { newItem ->
+            val index = products.indexOfFirst { it is CatalogItem.ProductItem && it.product.productId == newItem.product.productId }
+
+            if (index != -1) {
+                val oldItem = products[index] as CatalogItem.ProductItem
+                if (oldItem != newItem) {
+                    products[index] = newItem
+                    notifyItemChanged(index)
+                }
+            } else {
+                val insertPosition = products.indexOfLast { it is CatalogItem.ProductItem } + 1
+                products.add(insertPosition, newItem)
+                notifyItemInserted(insertPosition)
+            }
+        }
+    }
+
+    private fun updateLoadMoreItem(shouldShow: Boolean) {
+        val lastIndex = products.lastIndex
+        val lastItem = products.lastOrNull()
+
+        if (shouldShow) {
+            if (lastItem !is CatalogItem.LoadMoreItem) {
+                products.add(CatalogItem.LoadMoreItem)
+                notifyItemInserted(products.lastIndex)
+            }
+        } else {
+            if (lastItem is CatalogItem.LoadMoreItem) {
+                products.removeAt(lastIndex)
+                notifyItemRemoved(lastIndex)
+            }
+        }
     }
 
     interface CatalogEventListener : QuantityChangeListener {

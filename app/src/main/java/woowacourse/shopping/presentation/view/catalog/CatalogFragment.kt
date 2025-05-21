@@ -35,7 +35,7 @@ class CatalogFragment :
 
     override fun onStart() {
         super.onStart()
-        viewModel.refreshProductQuantities()
+        viewModel.fetchCartInfoChanged()
     }
 
     override fun onProductClicked(productId: Long) {
@@ -86,11 +86,7 @@ class CatalogFragment :
 
     private fun initObserver() {
         viewModel.products.observe(viewLifecycleOwner) {
-            catalogAdapter.appendProducts(it)
-        }
-
-        viewModel.quantityUpdateEvent.observe(viewLifecycleOwner) { (productId, quantity) ->
-            catalogAdapter.updateQuantityAt(productId, quantity)
+            catalogAdapter.updateProducts(it)
         }
 
         viewModel.toastEvent.observe(viewLifecycleOwner) {

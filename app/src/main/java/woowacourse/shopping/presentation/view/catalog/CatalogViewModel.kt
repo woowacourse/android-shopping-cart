@@ -24,48 +24,38 @@ class CatalogViewModel(
     private val _products = MutableLiveData<List<CatalogItem>>()
     val products: LiveData<List<CatalogItem>> = _products
 
-    private val _quantityUpdateEvent = MutableSingleLiveData<Pair<Long, Int>>()
-    val quantityUpdateEvent: SingleLiveData<Pair<Long, Int>> = _quantityUpdateEvent
-
-    private val limit: Int = 20
-    private var page: Int = 0
+    private val limit = 20
+    private var page = 0
 
     init {
         loadProducts()
     }
 
     fun loadProducts() {
-        val newOffset = page * limit
+        val offset = page * limit
 
-        shoppingRepository.loadProducts(newOffset, limit) { result ->
+        shoppingRepository.loadProducts(offset, limit) { result ->
             result.fold(
-                onSuccess = { pageableItem -> onProductsLoaded(pageableItem) },
+                onSuccess = ::handleProductPageLoaded,
                 onFailure = { postFailureEvent(CatalogMessageEvent.FETCH_PRODUCTS_FAILURE) },
             )
         }
     }
 
-    fun refreshProductQuantities() {
-        val oldItems = _products.value.orEmpty()
-        oldItems.forEach { item ->
-            if (item !is CatalogItem.ProductItem) return@forEach
-
-            fetchQuantityAndThen(
-                productId = item.product.productId,
-                onSuccess = { foundQuantity ->
-                    if (foundQuantity != item.product.quantity) {
-                        updateProductQuantityInList(item.product.productId, foundQuantity)
-                    }
-                },
+    fun fetchCartInfoChanged() {
+        shoppingRepository.getAll { result ->
+            result.fold(
+                onSuccess = ::updateQuantitiesWithCart,
+                onFailure = { postFailureEvent(CatalogMessageEvent.FETCH_PRODUCTS_FAILURE) },
             )
         }
     }
 
     fun addProductToCart(productId: Long) {
-        shoppingRepository.addCartItem(productId, QUANTITY_STEP) { result ->
-            result.fold(
+        shoppingRepository.addCartItem(productId, QUANTITY_STEP) {
+            it.fold(
+                onSuccess = { refreshQuantity(productId) },
                 onFailure = { postFailureEvent(CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE) },
-                onSuccess = { updateQuantityAndNotify(productId) },
             )
         }
     }
@@ -73,84 +63,88 @@ class CatalogViewModel(
     fun removeProductFromCart(productId: Long) {
         shoppingRepository.decreaseCartItemQuantity(productId) { result ->
             result.fold(
+                onSuccess = { refreshQuantity(productId) },
                 onFailure = { postFailureEvent(CatalogMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE) },
-                onSuccess = { updateQuantityAndNotify(productId) },
             )
         }
     }
 
-    private fun postFailureEvent(event: CatalogMessageEvent) {
-        _toastEvent.postValue(event)
-    }
-
-    private fun onProductsLoaded(pageableItem: PageableItem<CartItem>) {
+    private fun handleProductPageLoaded(pageable: PageableItem<CartItem>) {
         page++
-
-        val existingItems = getCurrentProductItems()
-        val newItems = mapToProductItems(pageableItem.items)
-        val mergedItems = mergeUniqueProductItems(existingItems, newItems)
-        val finalItems = buildCatalogItemList(mergedItems, pageableItem.hasMore)
-
-        _products.postValue(finalItems)
+        val currentItems = getCurrentProductItems()
+        val newItems = mapToProductItems(pageable.items)
+        val merged = mergeProducts(currentItems, newItems)
+        _products.postValue(buildCatalogItems(merged, pageable.hasMore))
     }
 
     private fun getCurrentProductItems(): List<CatalogItem.ProductItem> =
-        _products.value?.mapNotNull { it as? CatalogItem.ProductItem }.orEmpty()
+        _products.value.orEmpty().filterIsInstance<CatalogItem.ProductItem>()
 
-    private fun mapToProductItems(products: List<CartItem>): List<CatalogItem.ProductItem> =
-        products.map {
-            val isOpenQuantitySelector = isOpenQuantitySelector(it.quantity)
-            val catalogItem = it.toCatalogItem(isOpenQuantitySelector)
-            CatalogItem.ProductItem(catalogItem)
-        }
+    private fun mapToProductItems(items: List<CartItem>): List<CatalogItem.ProductItem> =
+        items.map { CatalogItem.ProductItem(it.toCatalogItem(isOpenQuantitySelector(it.quantity))) }
 
-    private fun mergeUniqueProductItems(
+    private fun mergeProducts(
         oldItems: List<CatalogItem.ProductItem>,
         newItems: List<CatalogItem.ProductItem>,
     ): List<CatalogItem.ProductItem> = (oldItems + newItems).distinctBy { it.product.productId }
 
-    private fun buildCatalogItemList(
-        productItems: List<CatalogItem.ProductItem>,
+    private fun buildCatalogItems(
+        products: List<CatalogItem.ProductItem>,
         hasMore: Boolean,
     ): List<CatalogItem> =
         buildList {
-            addAll(productItems)
+            addAll(products)
             if (hasMore) add(CatalogItem.LoadMoreItem)
         }
 
-    private fun updateQuantityAndNotify(productId: Long) {
-        fetchQuantityAndThen(
-            productId = productId,
-            onSuccess = { updatedQuantity ->
-                _quantityUpdateEvent.postValue(productId to updatedQuantity)
-                updateProductQuantityInList(productId, updatedQuantity)
-            },
+    private fun updateQuantitiesWithCart(cartItems: List<CartItem>) {
+        val updated =
+            _products.value.orEmpty().map { item ->
+                if (item is CatalogItem.ProductItem) updateQuantityFromCart(item, cartItems) else item
+            }
+        _products.postValue(updated)
+    }
+
+    private fun updateQuantityFromCart(
+        item: CatalogItem.ProductItem,
+        cartItems: List<CartItem>,
+    ): CatalogItem.ProductItem {
+        val quantity = cartItems.find { it.product.id == item.product.productId }?.quantity ?: 0
+        return item.copy(
+            product =
+                item.product.copy(
+                    quantity = quantity,
+                    isOpenQuantitySelector = isOpenQuantitySelector(quantity),
+                ),
         )
     }
 
-    private fun updateProductQuantityInList(
-        productId: Long,
-        updatedQuantity: Int,
-    ) {
-        val oldItems = _products.value.orEmpty()
-        val updatedItems =
-            oldItems.map { item ->
-                if (item !is CatalogItem.ProductItem || item.product.productId != productId) return@map item
-
-                val newItem =
-                    item.product.copy(
-                        quantity = updatedQuantity,
-                        isOpenQuantitySelector = isOpenQuantitySelector(updatedQuantity),
-                    )
-                CatalogItem.ProductItem(newItem)
-            }
-
-        _products.postValue(updatedItems)
+    private fun refreshQuantity(productId: Long) {
+        fetchQuantityById(
+            productId = productId,
+            onSuccess = { updateQuantityInList(productId, it) },
+        )
     }
 
-    private fun isOpenQuantitySelector(quantity: Int): Boolean = quantity > OPEN_QUANTITY_SELECTOR_BASE_VALUE
+    private fun updateQuantityInList(
+        productId: Long,
+        quantity: Int,
+    ) {
+        val currentItems = _products.value.orEmpty()
+        val updated =
+            currentItems.map { item ->
+                if (item !is CatalogItem.ProductItem || item.product.productId != productId) return@map item
+                val newProduct =
+                    item.product.copy(
+                        quantity = quantity,
+                        isOpenQuantitySelector = isOpenQuantitySelector(quantity),
+                    )
+                item.copy(newProduct)
+            }
+        _products.postValue(updated)
+    }
 
-    private fun fetchQuantityAndThen(
+    private fun fetchQuantityById(
         productId: Long,
         onSuccess: (Int) -> Unit,
         onFailureEvent: CatalogMessageEvent = CatalogMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE,
@@ -163,19 +157,22 @@ class CatalogViewModel(
         }
     }
 
+    private fun isOpenQuantitySelector(quantity: Int): Boolean = quantity > OPEN_QUANTITY_SELECTOR_BASE_VALUE
+
+    private fun postFailureEvent(event: CatalogMessageEvent) {
+        _toastEvent.postValue(event)
+    }
+
     companion object {
         private const val OPEN_QUANTITY_SELECTOR_BASE_VALUE = 0
         private const val QUANTITY_STEP = 1
 
-        val Factory: ViewModelProvider.Factory =
+        val Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    val repository = RepositoryProvider.shoppingRepository
-                    return CatalogViewModel(repository) as T
-                }
+                ): T = CatalogViewModel(RepositoryProvider.shoppingRepository) as T
             }
     }
 }
