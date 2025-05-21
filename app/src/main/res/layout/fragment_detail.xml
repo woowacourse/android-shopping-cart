@@ -85,6 +85,7 @@
             tools:text="10,000원" />
 
         <include
+            android:id="@+id/item_counter"
             layout="@layout/item_select_amount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

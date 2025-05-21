@@ -1,5 +1,6 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
@@ -15,7 +16,7 @@ interface CartRepository {
     )
 
     fun addCartItem(
-        product: Product,
+        cartItem: CartItem,
         callback: () -> (Unit),
     )
 }

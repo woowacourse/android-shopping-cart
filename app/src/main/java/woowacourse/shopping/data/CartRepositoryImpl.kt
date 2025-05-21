@@ -1,8 +1,9 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.data.db.CartDao
+import woowacourse.shopping.data.mapper.toCartEntity
 import woowacourse.shopping.data.mapper.toProduct
-import woowacourse.shopping.data.mapper.toProductEntity
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
@@ -37,11 +38,11 @@ class CartRepositoryImpl(
     }
 
     override fun addCartItem(
-        product: Product,
+        cartItem: CartItem,
         callback: () -> Unit,
     ) {
         thread {
-            cartDao.insert(product.toProductEntity()).let { callback() }
+            cartDao.upsert(cartItem.toCartEntity()).let { callback() }
         }
     }
 }

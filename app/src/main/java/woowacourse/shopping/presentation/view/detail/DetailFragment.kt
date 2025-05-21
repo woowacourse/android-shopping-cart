@@ -10,6 +10,7 @@ import woowacourse.shopping.databinding.FragmentDetailBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.extension.getParcelableCompat
 import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.view.ItemCounterListener
 import woowacourse.shopping.presentation.view.cart.CartFragment
 
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
@@ -26,11 +27,25 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         val product = arguments.getParcelableCompat<ProductUiModel>(EXTRA_PRODUCT)
         binding.product = product
         binding.vm = viewModel
+        binding.itemCounter.listener =
+            object : ItemCounterListener {
+                override fun increase() {
+                    viewModel.increaseAmount()
+                }
+
+                override fun decrease() {
+                    viewModel.decreaseAmount()
+                }
+            }
     }
 
     private fun initObserver() {
         viewModel.saveState.observe(viewLifecycleOwner) {
             it?.let { navigateToScreen() }
+        }
+
+        viewModel.amount.observe(viewLifecycleOwner) {
+            binding.itemCounter.textViewDetailAmount.text = it.toString()
         }
     }
 

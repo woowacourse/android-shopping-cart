@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="listener"
+            type="woowacourse.shopping.presentation.view.ItemCounterListener" />
 
     </data>
 
@@ -19,6 +22,9 @@
             android:text="@string/product_count_down_text"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{() -> listener.decrease()}"
             app:layout_constraintBottom_toBottomOf="@id/text_view_detail_amount"
             app:layout_constraintEnd_toStartOf="@id/text_view_detail_amount"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -46,6 +52,9 @@
             android:text="@string/product_count_up_text"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{() -> listener.increase()}"
             app:layout_constraintBottom_toBottomOf="@id/text_view_detail_amount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_amount"

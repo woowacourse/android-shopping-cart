@@ -3,21 +3,43 @@ package woowacourse.shopping.data.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 interface CartDao {
-    @Query("SELECT EXISTS(SELECT 1 FROM ProductEntity WHERE id > :id)")
+    @Query("SELECT EXISTS(SELECT 1 FROM CartEntity WHERE id > :id)")
     fun existsItemAfterId(id: Long): Boolean
 
-    @Query("SELECT * FROM ProductEntity ORDER BY id ASC Limit :limit OFFSET :offset")
+    @Query("SELECT * FROM CartEntity ORDER BY id ASC Limit :limit OFFSET :offset")
     fun getCartItemPaged(
         limit: Int,
         offset: Int,
-    ): List<ProductEntity>
+    ): List<CartEntity>
 
-    @Query("DELETE FROM ProductEntity WHERE id = :id")
+    @Query("DELETE FROM CartEntity WHERE id = :id")
     fun delete(id: Long)
 
     @Insert
-    fun insert(product: ProductEntity)
+    fun insert(product: CartEntity)
+
+    @Update
+    fun update(product: CartEntity)
+
+    @Query("SELECT * FROM CartEntity WHERE id = :id LIMIT 1")
+    fun getByProductId(id: Long): CartEntity?
+
+    @Transaction
+    fun upsert(product: CartEntity) {
+        val existing = getByProductId(product.id)
+        if (existing == null) {
+            insert(product)
+        } else {
+            val updatedProduct =
+                existing.copy(
+                    amount = existing.amount + product.amount,
+                )
+            update(updatedProduct)
+        }
+    }
 }
