@@ -19,7 +19,7 @@ class ProductViewHolder(
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ProductItemBinding.inflate(inflater, parent, false)
-            binding.clickListener = onProductClick
+            binding.productClickListener = onProductClick
             return ProductViewHolder(binding)
         }
     }
