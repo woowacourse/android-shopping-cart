@@ -57,7 +57,7 @@ class GoodsActivity : BaseActivity() {
         }
 
         viewModel.isQuantityChanged.observe(this) {
-            adapter.changeQuantity(it)
+            adapter.notifyItemChanged(it)
         }
     }
 

@@ -30,8 +30,4 @@ class GoodsAdapter(
         items = goods
         notifyItemRangeChanged(fromIndex, items.size)
     }
-
-    fun changeQuantity(position: Int) {
-        notifyItemChanged(position)
-    }
 }
