@@ -19,17 +19,6 @@
             app:title="@string/app_name"
             app:titleTextColor="@color/white" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_product_list"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:title="@string/app_name"
-            app:titleTextColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products_recyclerView"
             android:layout_width="match_parent"
