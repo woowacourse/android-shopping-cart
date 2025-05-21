@@ -1,10 +1,11 @@
 package woowacourse.shopping.data
 
+import android.util.Log
 import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.Product
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-object DummyProducts : ProductsDataSource {
+object ProductDatabase : ProductsDataSource {
     override fun getAllProductsSize(): Int = dummyProducts.size
 
     override fun getProductsInRange(
@@ -12,10 +13,19 @@ object DummyProducts : ProductsDataSource {
         endIndex: Int,
     ): List<ProductUiModel> = dummyProducts.subList(startIndex, endIndex).map { it.toUiModel() }
 
+    override fun updateProduct(product: ProductUiModel): ProductUiModel {
+        val index = dummyProducts.indexOfFirst { it.name == product.name }
+        val updatedProduct: Product = dummyProducts[index].copy(quantity = dummyProducts[index].quantity + 1)
+        Log.d("DummyProduct", "${updatedProduct.quantity}")
+        dummyProducts[index] = updatedProduct
+        Log.d("DummyProduct", "${dummyProducts[index]}")
+        return updatedProduct.toUiModel()
+    }
+
     var count = 1
 
     val dummyProducts =
-        listOf(
+        mutableListOf(
             Product(
                 name = "${count++}아이스 카페 아메리카노",
                 imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg",
