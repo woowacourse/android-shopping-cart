@@ -17,7 +17,7 @@ class GoodsDetailsViewModel(
     val goods: LiveData<Goods> get() = _goods
 
     init {
-        _goods.postValue(goodsUiModel.toDomain())
+        _goods.value = goodsUiModel.toDomain()
     }
 
     private val _alertEvent = MutableLiveData<Int>()
