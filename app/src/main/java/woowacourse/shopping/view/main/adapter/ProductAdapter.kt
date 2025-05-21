@@ -10,7 +10,7 @@ import woowacourse.shopping.view.main.event.ProductsAdapterEventHandler
 class ProductAdapter(
     private val items: MutableList<Product> = mutableListOf(),
     private val handler: ProductsAdapterEventHandler,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<ProductViewHolder>() {
     fun submitList(newItems: List<Product>) {
         val lastPosition = items.size
         val subList = newItems.subList(lastPosition, newItems.size)
@@ -21,7 +21,7 @@ class ProductAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
+    ): ProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val bind = ItemProductBinding.inflate(inflater)
 
@@ -29,10 +29,10 @@ class ProductAdapter(
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: ProductViewHolder,
         position: Int,
     ) {
-        (holder as ProductViewHolder).bind(items[position])
+        holder.bind(items[position])
     }
 
     override fun getItemCount(): Int = items.size
