@@ -34,5 +34,5 @@ interface CartDao {
     fun insertProduct(cartEntity: CartEntity)
 
     @Query("DELETE FROM cart WHERE product_id = :productId")
-    fun deleteByProductId(productId: Long)
+    fun deleteProductById(productId: Long)
 }

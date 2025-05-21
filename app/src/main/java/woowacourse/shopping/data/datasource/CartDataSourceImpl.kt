@@ -75,14 +75,12 @@ class CartDataSourceImpl(
 
     override fun deleteProduct(
         productId: Long,
-        onResult: (Result<Long>) -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
-//        runThread(
-//            block = {
-//                dao.deleteByProductId(productId)
-//                productId
-//            },
-//        )
+        runThread(
+            block = { dao.deleteProductById(productId) },
+            onResult = onResult,
+        )
     }
 
     private inline fun <T> runThread(

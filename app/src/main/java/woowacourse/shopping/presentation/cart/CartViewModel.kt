@@ -18,8 +18,6 @@ class CartViewModel(
     CartPageClickListener {
     private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
     val products: LiveData<ResultState<List<CartItem>>> = _products
-    private val _deleteProduct: MutableLiveData<ResultState<Long>> = MutableLiveData()
-    val deleteProduct: LiveData<ResultState<Long>> = _deleteProduct
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
     val totalPages: LiveData<Int> = _totalPages
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
@@ -69,23 +67,23 @@ class CartViewModel(
         _currentPage.value = if (next) currentPage + 1 else currentPage - 1
         loadItems()
     }
-//
-//    fun deleteProduct(product: Product) {
-//        val currentPage = _currentPage.value ?: 0
-//
-//        productRepository.deleteProduct(product.productId) { result ->
-//            result
-//                .onSuccess { productId ->
+
+    fun deleteProduct(cartItem: CartItem) {
+        val currentPage = _currentPage.value ?: 0
+
+        cartRepository.deleteProduct(cartItem.product.productId) { result ->
+            result
+                .onSuccess {
 //                    reloadProductsByPage(currentPage)
-//                    _deleteProduct.postValue(ResultState.Success(productId))
-//                }.onFailure {
-//                    _deleteProduct.postValue(ResultState.Failure())
-//                }
-//        }
-//    }
-//
-//    private fun reloadProductsByPage(currentPage: Int) {
-//        productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { result ->
+                    loadItems()
+                }.onFailure {
+                    Log.d("aaa", "delete fail")
+                }
+        }
+    }
+
+    private fun reloadProductsByPage(currentPage: Int) {
+//        cartRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { result ->
 //            result
 //                .onSuccess { pagedProducts ->
 //                    if (pagedProducts.isEmpty()) {
@@ -96,7 +94,7 @@ class CartViewModel(
 //                    }
 //                }.onFailure { _products.postValue(ResultState.Failure()) }
 //        }
-//    }
+    }
 //
 //    private fun handleEmptyPage() {
 //        val currentPage = _currentPage.value ?: 0

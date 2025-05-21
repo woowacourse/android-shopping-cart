@@ -34,7 +34,6 @@ class CartActivity :
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.vm = viewModel
-//        binding.clickListener = this
         binding.lifecycleOwner = this
 
         initInsets()
@@ -79,23 +78,10 @@ class CartActivity :
                 }
             }
         }
-
-        viewModel.deleteProduct.observe(this) { result ->
-            when (result) {
-                is ResultState.Success -> {
-                    cartAdapter.removeItem(result.data)
-                    showToast(R.string.cart_toast_delete_success)
-                }
-
-                is ResultState.Failure -> {
-                    showToast(R.string.cart_toast_delete_failure)
-                }
-            }
-        }
     }
 
     private fun deleteProduct(cartItem: CartItem) {
-//        viewModel.deleteProduct(product)
+        viewModel.deleteProduct(cartItem)
     }
 
     private fun showToast(

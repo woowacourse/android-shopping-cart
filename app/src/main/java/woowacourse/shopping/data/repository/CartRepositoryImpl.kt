@@ -93,7 +93,7 @@ class CartRepositoryImpl(
 
     override fun deleteProduct(
         productId: Long,
-        onResult: (Result<Long>) -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
         runCatching {
             cartDataSource.deleteProduct(productId) { result ->
