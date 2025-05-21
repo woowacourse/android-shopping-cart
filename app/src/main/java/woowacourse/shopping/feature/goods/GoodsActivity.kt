@@ -14,17 +14,14 @@ import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
 import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.util.toUi
 
-class GoodsActivity :
-    AppCompatActivity(),
-    GoodsClickListener {
+class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
     private val viewModel: GoodsViewModel by viewModels()
-    private val goodsAdapter by lazy { GoodsAdapter(this) }
+    private val goodsAdapter by lazy { GoodsAdapter { goods -> navigateGoodsDetails(goods) } }
     private val moreButtonAdapter by lazy { MoreButtonAdapter { viewModel.addPage() } }
     private val concatAdapter by lazy { ConcatAdapter(goodsAdapter, moreButtonAdapter) }
 
@@ -70,12 +67,8 @@ class GoodsActivity :
         return super.onOptionsItemSelected(item)
     }
 
-    private fun navigate(goods: Goods) {
+    private fun navigateGoodsDetails(goods: Goods) {
         val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
         startActivity(intent)
-    }
-
-    override fun onClickGoods(goods: Goods) {
-        navigate(goods)
     }
 }
