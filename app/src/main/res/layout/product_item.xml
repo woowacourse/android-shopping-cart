@@ -84,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:visibility="gone"
+            android:background="@drawable/quantity_selector_background"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image"
             app:layout_constraintStart_toStartOf="@id/iv_product_image" />
