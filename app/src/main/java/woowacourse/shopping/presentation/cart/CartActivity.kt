@@ -13,13 +13,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.presentation.ResultState
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels { CartViewModelFactory(applicationContext) }
-    private val cartProductAdapter by lazy { CartProductAdapter(::deleteProduct) }
+    private val cartAdapter by lazy { CartAdapter(::deleteProduct) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +45,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        binding.rvCartProduct.adapter = cartProductAdapter
+        binding.rvCartProduct.adapter = cartAdapter
     }
 
     private fun setupToolbar() {
@@ -64,7 +64,7 @@ class CartActivity : AppCompatActivity() {
         viewModel.products.observe(this) { result ->
             when (result) {
                 is ResultState.Success -> {
-                    cartProductAdapter.submitList(result.data)
+                    cartAdapter.submitList(result.data)
                 }
 
                 is ResultState.Failure -> {
@@ -76,7 +76,7 @@ class CartActivity : AppCompatActivity() {
         viewModel.deleteProduct.observe(this) { result ->
             when (result) {
                 is ResultState.Success -> {
-                    cartProductAdapter.removeItem(result.data)
+                    cartAdapter.removeItem(result.data)
                     showToast(R.string.cart_toast_delete_success)
                 }
 
@@ -87,8 +87,8 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteProduct(product: Product) {
-        viewModel.deleteProduct(product)
+    private fun deleteProduct(cartItem: CartItem) {
+//        viewModel.deleteProduct(product)
     }
 
     private fun showToast(

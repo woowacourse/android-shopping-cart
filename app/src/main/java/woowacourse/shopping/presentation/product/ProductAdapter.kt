@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.product
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
@@ -72,6 +73,12 @@ class ProductAdapter(
         fun bind(item: Product) {
             binding.product = item
             binding.clProductItem.setOnClickListener { onClick(item) }
+
+            binding.ivAddCart.setOnClickListener {
+                binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.VISIBLE
+                binding.ivAddCart.visibility = View.GONE
+            }
+
             binding.executePendingBindings()
         }
     }

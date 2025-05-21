@@ -3,6 +3,8 @@ package woowacourse.shopping.presentation.productdetail
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.data.datasource.CartDataSourceImpl
+import woowacourse.shopping.di.DatabaseModule
 import woowacourse.shopping.di.RepositoryModule
 
 class ProductDetailViewModelFactory(
@@ -10,6 +12,12 @@ class ProductDetailViewModelFactory(
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val repository = RepositoryModule.provideProductRepository(context)
-        return ProductDetailViewModel(repository) as T
+        return ProductDetailViewModel(
+            CartDataSourceImpl(
+                DatabaseModule.provideCartDao(
+                    DatabaseModule.provideDatabase(context.applicationContext),
+                ),
+            ),
+        ) as T
     }
 }

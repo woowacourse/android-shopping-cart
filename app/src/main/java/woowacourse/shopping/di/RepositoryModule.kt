@@ -2,6 +2,8 @@ package woowacourse.shopping.di
 
 import android.content.Context
 import woowacourse.shopping.data.ProductRepositoryImpl
+import woowacourse.shopping.data.datasource.CartDataSourceImpl
+import woowacourse.shopping.data.datasource.ProductDataSourceImpl
 import woowacourse.shopping.domain.ProductRepository
 
 object RepositoryModule {
@@ -11,7 +13,9 @@ object RepositoryModule {
         productRepository ?: run {
             val db = DatabaseModule.provideDatabase(context)
             val cartDao = DatabaseModule.provideCartDao(db)
-            ProductRepositoryImpl(cartDao).also {
+            val cartDataSource = CartDataSourceImpl(cartDao)
+            val productDataSource = ProductDataSourceImpl()
+            ProductRepositoryImpl(cartDataSource, productDataSource).also {
                 productRepository = it
             }
         }

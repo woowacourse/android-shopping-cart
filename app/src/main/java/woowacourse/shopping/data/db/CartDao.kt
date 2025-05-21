@@ -6,8 +6,8 @@ import androidx.room.Query
 
 @Dao
 interface CartDao {
-    @Query("SELECT product_id FROM cart")
-    fun getAllProductIds(): List<Long>
+    @Query("SELECT * FROM cart")
+    fun getAllProducts(): List<CartEntity>
 
     @Query("SELECT COUNT(product_id) FROM cart")
     fun getAllProductCount(): Int

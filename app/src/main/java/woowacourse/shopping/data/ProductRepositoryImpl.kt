@@ -22,30 +22,20 @@ class ProductRepositoryImpl(
         return DummyProducts.values.subList(fromIndex, toIndex)
     }
 
-    override fun getCartProductCount(onResult: (Result<Int>) -> Unit) {
-        runThread(
-            block = { dao.getCartProductCount() },
-            onResult = onResult,
-        )
-    }
-
-    override fun getCartProducts(onResult: (Result<List<Product>>) -> Unit) {
-        runThread(
-            block = { dao.getAllProduct().map { it.toDomain() } },
-            onResult = onResult,
-        )
-    }
-
-    override fun getPagedCartProducts(
-        limit: Int,
-        page: Int,
-        onResult: (Result<List<Product>>) -> Unit,
-    ) {
-        val offset = limit * page
-        runThread(
-            block = { dao.getPagedProduct(limit, offset).map { it.toDomain() } },
-            onResult = onResult,
-        )
+    override fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit) {
+        cartDataSource.getCartProducts { result ->
+            result
+                .onSuccess { cartEntities ->
+                    val cartItems =
+                        cartEntities.mapNotNull { entity ->
+                            val product = productDataSource.getProductById(entity.productId)
+                            product?.let { CartItem(it, entity.quantity) }
+                        }
+                    onResult(Result.success(cartItems))
+                }.onFailure { e ->
+                    onResult(Result.failure(e))
+                }
+        }
     }
 
     override fun insertProduct(

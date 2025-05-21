@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+            name="cartItem"
+            type="woowacourse.shopping.domain.CartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="@{product.name}"
+            android:text="@{cartItem.product.name}"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -39,7 +39,7 @@
             android:layout_marginTop="20dp"
             android:contentDescription="@null"
             android:scaleType="center"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{cartItem.product.imageUrl}"
             app:layout_constraintStart_toStartOf="@id/tv_cart_product_name"
             app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name"
             tools:src="@drawable/ic_launcher_background" />
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:text="@{@string/cart_product_price(product.price)}"
+            android:text="@{@string/cart_product_price(cartItem.product.price)}"
             android:textColor="@color/gray5"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
