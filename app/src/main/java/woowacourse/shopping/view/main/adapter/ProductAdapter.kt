@@ -8,13 +8,13 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.main.event.ProductsAdapterEventHandler
 
 class ProductAdapter(
-    private val items: MutableList<Product> = mutableListOf(),
+    private var items: List<Product> = listOf(),
     private val handler: ProductsAdapterEventHandler,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     fun submitList(newItems: List<Product>) {
         val lastPosition = items.size
         val subList = newItems.subList(lastPosition, newItems.size)
-        items.addAll(subList)
+        items = subList
         notifyItemRangeInserted(lastPosition, newItems.size)
     }
 
