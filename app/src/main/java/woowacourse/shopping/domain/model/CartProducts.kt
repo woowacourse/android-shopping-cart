@@ -2,7 +2,7 @@ package woowacourse.shopping.domain.model
 
 data class CartProducts(
     val products: List<CartProduct>,
-    val maxPage: Int,
+    val totalPage: Int,
 ) {
     fun updateCartProductQuantity(
         productId: Int,
@@ -16,11 +16,6 @@ data class CartProducts(
                     product
                 }
             }
-        return copy(products = updatedProducts)
-    }
-
-    fun removeCartProduct(productId: Int): CartProducts {
-        val updatedProducts = products.filter { it.product.id != productId }
         return copy(products = updatedProducts)
     }
 

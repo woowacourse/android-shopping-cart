@@ -10,6 +10,8 @@ import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CartProducts
 import woowacourse.shopping.domain.model.CartProducts.Companion.EMPTY_CART_PRODUCTS
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.ui.model.PageState
+import woowacourse.shopping.ui.model.PageState.Companion.INITIAL_PAGE
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -17,11 +19,8 @@ class CartViewModel(
     private val _cartProducts: MutableLiveData<CartProducts> = MutableLiveData(EMPTY_CART_PRODUCTS)
     val cartProducts: LiveData<CartProducts> get() = _cartProducts
 
-    private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
-    val currentPage: LiveData<Int> get() = _currentPage
-
-    private val _maxPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
-    val maxPage: LiveData<Int> get() = _maxPage
+    private val _pageState: MutableLiveData<PageState> = MutableLiveData<PageState>(PageState())
+    val pageState: LiveData<PageState> get() = _pageState
 
     private val _editedProductIds: MutableLiveData<Set<Int>> = MutableLiveData(emptySet())
     val editedProductIds: LiveData<Set<Int>> get() = _editedProductIds
@@ -32,7 +31,7 @@ class CartViewModel(
 
     private fun loadCartProducts() {
         cartRepository.fetchCartProducts(
-            page = currentPage.value ?: INITIAL_PAGE,
+            page = pageState.value?.current ?: INITIAL_PAGE,
             size = DEFAULT_PAGE_SIZE,
         ) { cartProducts ->
             _cartProducts.postValue(cartProducts)
@@ -43,26 +42,24 @@ class CartViewModel(
 
     fun removeCartProduct(id: Int) {
         cartRepository.removeCartProduct(id)
-        loadCartProducts()
         _editedProductIds.postValue(editedProductIds.value?.plus(id))
+        loadCartProducts()
     }
 
     fun increasePage(step: Int = DEFAULT_PAGE_STEP) {
-        _currentPage.value = currentPage.value?.plus(step)
+        _pageState.value = pageState.value?.plus(step)
         loadCartProducts()
     }
 
     fun decreasePage(step: Int = DEFAULT_PAGE_STEP) {
-        if (currentPage.value == INITIAL_PAGE) return
-        _currentPage.value = currentPage.value?.minus(step)
+        if (pageState.value?.isFirstPage ?: true) return
+        _pageState.value = pageState.value?.minus(step)
         loadCartProducts()
     }
 
     fun increaseCartProductQuantity(id: Int) {
         cartRepository.increaseProductQuantity(id) { newQuantity ->
-            _cartProducts.postValue(
-                cartProducts.value?.updateCartProductQuantity(id, newQuantity),
-            )
+            _cartProducts.postValue(cartProducts.value?.updateCartProductQuantity(id, newQuantity))
         }
         _editedProductIds.value = editedProductIds.value?.plus(id)
     }
@@ -72,16 +69,17 @@ class CartViewModel(
             if (newQuantity <= 0) {
                 loadCartProducts()
             } else {
-                _cartProducts.postValue(
-                    cartProducts.value?.updateCartProductQuantity(id, newQuantity),
-                )
+                _cartProducts.postValue(cartProducts.value?.updateCartProductQuantity(id, newQuantity))
             }
         }
         _editedProductIds.value = editedProductIds.value?.plus(id)
     }
 
+    fun updateTotalPage(total: Int) {
+        _pageState.value = pageState.value?.copy(total = total)
+    }
+
     companion object {
-        const val INITIAL_PAGE: Int = 1
         const val DEFAULT_PAGE_STEP: Int = 1
         const val DEFAULT_PAGE_SIZE: Int = 5
 

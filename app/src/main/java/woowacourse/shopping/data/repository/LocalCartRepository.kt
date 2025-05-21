@@ -32,7 +32,7 @@ class LocalCartRepository(
             callback(
                 CartProducts(
                     products = dao.getCartProductDetails(page, size).map { it.toDomain() },
-                    maxPage = dao.getMaxPageCount(size),
+                    totalPage = dao.getTotalPageCount(size),
                 ),
             )
         }

@@ -39,10 +39,10 @@ class CartViewModelTest {
 
     @Test
     fun `increasePage 호출 시 currentPage 값이 증가하고 products가 갱신된다`() {
-        val beforePage = viewModel.currentPage.getOrAwaitValue()
+        val beforePage = viewModel.pageState.getOrAwaitValue()
         viewModel.increasePage()
 
-        val afterPage = viewModel.currentPage.getOrAwaitValue()
+        val afterPage = viewModel.pageState.getOrAwaitValue()
         Assertions.assertEquals(beforePage + 1, afterPage)
 
         val products = viewModel.cartProducts.getOrAwaitValue()
@@ -52,10 +52,10 @@ class CartViewModelTest {
     @Test
     fun `decreasePage 호출 시 currentPage 값이 감소하고 products가 갱신된다`() {
         viewModel.increasePage()
-        val increasedPage = viewModel.currentPage.getOrAwaitValue()
+        val increasedPage = viewModel.pageState.getOrAwaitValue()
 
         viewModel.decreasePage()
-        val decreasedPage = viewModel.currentPage.getOrAwaitValue()
+        val decreasedPage = viewModel.pageState.getOrAwaitValue()
 
         Assertions.assertEquals(increasedPage - 1, decreasedPage)
     }

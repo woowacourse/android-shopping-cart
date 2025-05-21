@@ -44,6 +44,7 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
     private fun initObservers() {
         viewModel.cartProducts.observe(this) { products ->
             cartAdapter.submitItems(products.products)
+            viewModel.updateTotalPage(products.totalPage)
         }
         viewModel.editedProductIds.observe(this) { editedProductIds ->
             setResult(

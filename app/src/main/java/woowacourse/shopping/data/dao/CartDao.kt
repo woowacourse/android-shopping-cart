@@ -27,7 +27,7 @@ interface CartDao {
     fun getCartItemCount(): Int
 
     @Query("SELECT (COUNT(*) + :size - 1) / :size FROM cart_products")
-    fun getMaxPageCount(size: Int): Int
+    fun getTotalPageCount(size: Int): Int
 
     @Query("SELECT * FROM cart_products WHERE productId = :productId")
     fun getCartProductById(productId: Int): CartProductEntity?
