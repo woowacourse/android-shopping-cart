@@ -68,6 +68,8 @@ dependencies {
     androidTestImplementation(libs.mannodermaus.junit5.core)
     androidTestImplementation(libs.awaitility.kotlin)
     testImplementation(libs.mockk)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     implementation(libs.glide)
 }
