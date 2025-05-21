@@ -37,6 +37,33 @@
 
         </ImageView>
 
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            >
+            <include
+                layout="@layout/button_quantity_selector" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_item_product_add_to_cart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="#00ff0000"
+            android:foreground="@drawable/btn_item_product_add_to_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            >
+
+        </Button>
+
         <TextView
             android:id="@+id/tv_product_name"
             android:layout_width="wrap_content"
