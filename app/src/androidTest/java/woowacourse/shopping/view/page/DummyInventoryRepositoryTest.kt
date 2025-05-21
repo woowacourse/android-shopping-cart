@@ -3,15 +3,21 @@
 package woowacourse.shopping.view.page
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.data.DummyInventoryRepository
+import woowacourse.shopping.data.InventoryRepository
 
 class DummyInventoryRepositoryTest {
+    private lateinit var repository: InventoryRepository
+
+    @Before
+    fun setUp() {
+        repository = DummyInventoryRepository()
+    }
+
     @Test
     fun 페이지의_크기만큼_항목이_들어있다() {
-        // given
-        val repository = DummyInventoryRepository()
-
         // when
         val page = repository.getPage(5, 0)
 
@@ -23,9 +29,6 @@ class DummyInventoryRepositoryTest {
 
     @Test
     fun 첫_페이지는_이전_페이지가_없고_다음_페이지가_있다() {
-        // given
-        val repository = DummyInventoryRepository()
-
         // when
         val page = repository.getPage(5, 0)
 
@@ -36,9 +39,6 @@ class DummyInventoryRepositoryTest {
 
     @Test
     fun 첫_페이지의_인덱스는_0이다() {
-        // given
-        val repository = DummyInventoryRepository()
-
         // when
         val page = repository.getPage(5, 0)
 
@@ -50,9 +50,6 @@ class DummyInventoryRepositoryTest {
 
     @Test
     fun 중간에_있는_페이지는_이전_페이지와_다음_페이지가_있다() {
-        // given
-        val repository = DummyInventoryRepository()
-
         // when
         val page = repository.getPage(5, 1)
 
@@ -63,9 +60,6 @@ class DummyInventoryRepositoryTest {
 
     @Test
     fun 마지막_페이지는_이전_페이지가_없고_다음_페이지가_있다() {
-        // given
-        val repository = DummyInventoryRepository()
-
         // when
         val page = repository.getPage(5, 5)
 
