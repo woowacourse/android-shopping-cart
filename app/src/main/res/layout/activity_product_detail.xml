@@ -6,14 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="handler"
+            type="woowacourse.shopping.view.detail.ProductDetailEventHandler" />
 
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.detail.ProductDetailViewModel" />
 
-        <variable
-            name="onAddToCartSelected"
-            type="kotlin.jvm.functions.Function1&lt;woowacourse.shopping.domain.Product, kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,7 +88,7 @@
             android:visibility="visible"
             >
             <include
-                app:quantity="@{quantity}"
+                app:quantity="@{viewModel.quantityLiveData}"
                 app:handler="@{handler}"
                 layout="@layout/button_quantity_selector" />
 
@@ -101,7 +101,7 @@
             android:backgroundTint="#04C09E"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->onAddToCartSelected.invoke(viewModel.productLiveData)}"
+            android:onClick="@{()->handler.onAddToCartSelected(viewModel.productLiveData)}"
             android:text="@string/button_text_add_to_shopping_cart"
             android:textSize="20sp"
             android:textStyle="bold"

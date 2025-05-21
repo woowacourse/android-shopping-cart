@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.main.adapter
 
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
@@ -32,10 +31,6 @@ class ProductsAdapter(
         return ProductsViewHolder(parent, totalShoppingCartSize)
     }
 
-    fun getTotalQuantity(): Int {
-        return quantity.values.sumOf { it.value ?: DEFAULT_QUANTITY }
-    }
-
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {
         val newProducts = mainRecyclerViewProduct.page.items
         val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItems.items
@@ -51,17 +46,6 @@ class ProductsAdapter(
         products += newProducts
         quantity += quantityMap
         notifyItemInserted(itemCount)
-    }
-
-    fun observeAll(
-        lifecycleOwner: LifecycleOwner,
-        action: (Int) -> Unit,
-    ) {
-        quantity.values.forEach { liveData ->
-            liveData.observe(lifecycleOwner) {
-                action(it)
-            }
-        }
     }
 
     companion object {

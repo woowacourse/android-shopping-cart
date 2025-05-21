@@ -9,6 +9,7 @@ import woowacourse.shopping.domain.Product
 class ProductDetailViewModel : ViewModel() {
     private val _productLiveData: MutableLiveData<Product> = MutableLiveData()
     val productLiveData: LiveData<Product> get() = _productLiveData
+    val quantityLiveData: MutableLiveData<Int> = MutableLiveData(1)
 
     fun addProduct(product: Product) {
         DummyShoppingCart.products.add(0, product)

@@ -3,6 +3,13 @@
 
     <data>
         <variable
+        name="quantity"
+        type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.view.base.QuantitySelectorEventHandler" />
+        <variable
             name="page"
             type="int" />
         <variable
@@ -78,8 +85,8 @@
             android:visibility="visible"
             >
             <include
-                app:quantity="@{product.quantity}"
-                app:handler="@{onProductRemove}"
+                app:quantity="@{quantity}"
+                app:handler="@{handler}"
                 layout="@layout/button_quantity_selector" />
 
         </LinearLayout>

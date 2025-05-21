@@ -2,6 +2,7 @@ package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
@@ -20,7 +21,7 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = products[position]
-        holder.bind(item, currentPage)
+        holder.bind(item, currentPage, MutableLiveData(item.quantity))
     }
 
     override fun onCreateViewHolder(

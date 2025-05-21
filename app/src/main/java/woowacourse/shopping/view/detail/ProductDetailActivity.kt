@@ -8,11 +8,13 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
+import woowacourse.shopping.view.base.QuantitySelectorEventHandler
 import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
@@ -34,8 +36,8 @@ class ProductDetailActivity :
             }
         viewModel.setProduct(product)
         binding.apply {
+            handler = ProductDetailEventHandlerImpl()
             viewModel = this@ProductDetailActivity.viewModel
-            onAddToCartSelected = ::onAddToCartSelected
         }
     }
 
@@ -51,11 +53,6 @@ class ProductDetailActivity :
         return super.onOptionsItemSelected(item)
     }
 
-    private fun onAddToCartSelected(product: Product) {
-        viewModel.addProduct(product)
-        startActivity(ShoppingCartActivity.newIntent(this))
-    }
-
     companion object {
         private const val KEY_PRODUCT = "product"
 
@@ -68,8 +65,23 @@ class ProductDetailActivity :
             }
         }
     }
+
+    private inner class ProductDetailEventHandlerImpl : ProductDetailEventHandler {
+        override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
+            quantity.value = quantity.value?.minus(1)
+        }
+
+        override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
+            quantity.value = quantity.value?.plus(1)
+        }
+
+        override fun onAddToCartSelected(product: Product) {
+            viewModel.addProduct(product)
+            startActivity(ShoppingCartActivity.newIntent(this@ProductDetailActivity))
+        }
+    }
 }
 
-interface ProductDetailEventHandler {
+interface ProductDetailEventHandler : QuantitySelectorEventHandler {
     fun onAddToCartSelected(product: Product)
 }

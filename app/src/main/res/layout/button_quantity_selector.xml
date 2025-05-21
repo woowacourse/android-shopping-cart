@@ -4,9 +4,10 @@
         <variable
             name="quantity"
             type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />
+
         <variable
             name="handler"
-            type="woowacourse.shopping.view.main.adapter.ProductEventHandler" />
+            type="woowacourse.shopping.view.base.QuantitySelectorEventHandler" />
 
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
