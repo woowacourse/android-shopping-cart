@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import woowacourse.shopping.data.ShoppingRepository
+import woowacourse.shopping.data.shopping.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.model.toDomain
 import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.event.SingleLiveData
 
@@ -32,7 +31,7 @@ class GoodsDetailViewModel(
     }
 
     fun addToShoppingCart() {
-        _goods.value?.let { shoppingRepository.addItemsWithCount(it.toDomain(), _count.value!!) }
+        _goods.value?.let { shoppingRepository.addItemsWithCount(it.id, _count.value!!) }
         _isItemAddedToCart.setValue(Unit)
     }
 

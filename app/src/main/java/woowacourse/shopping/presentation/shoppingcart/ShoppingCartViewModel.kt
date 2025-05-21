@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.data.GoodsRepository
-import woowacourse.shopping.data.ShoppingRepository
+import woowacourse.shopping.data.shopping.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.model.toDomain
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.event.SingleLiveData
@@ -52,7 +51,7 @@ class ShoppingCartViewModel(
             updateGoods(position) {
                 it.copy(quantity = it.quantity + 1)
             }
-        shoppingRepository.increaseItemCount(updatedItem.toDomain())
+        shoppingRepository.increaseItemCount(updatedItem.id)
     }
 
     fun decreaseGoodsCount(position: Int) {
@@ -98,7 +97,7 @@ class ShoppingCartViewModel(
     private fun updateState() {
         _goods.value =
             shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
-                .map { goodsRepository.getById(it.goodsId).toUiModel().copy(quantity = it.goodsCount) }
+                .map { goodsRepository.getById(it.goodsId).toUiModel().copy(quantity = it.goodsQuantity) }
         updateNextPage()
         updatePreviousPage()
     }
@@ -117,7 +116,7 @@ class ShoppingCartViewModel(
 
     companion object {
         private const val ITEM_COUNT: Int = 5
-        private const val DEFAULT_PAGE_VALUE: Int = 1
+        private const val DEFAULT_PAGE_VALUE: Int = 0
         private const val PAGE_CHANGE_AMOUNT: Int = 1
 
         fun provideFactory(

@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.data.GoodsRepository
-import woowacourse.shopping.data.ShoppingRepository
+import woowacourse.shopping.data.shopping.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.model.toDomain
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.event.SingleLiveData
@@ -48,8 +47,10 @@ class GoodsViewModel(
 
                 val updated =
                     when {
-                        selected != null -> goods.copy(isSelected = true, quantity = selected.goodsCount)
+                        selected != null -> goods.copy(isSelected = true, quantity = selected.goodsQuantity)
+
                         goods.isSelected || goods.quantity != 0 -> goods.copy(isSelected = false, quantity = 0)
+
                         else -> goods
                     }
 
@@ -69,7 +70,7 @@ class GoodsViewModel(
             updateGoods(position) {
                 it.copy(isSelected = true, quantity = it.quantity + 1)
             }
-        shoppingRepository.increaseItemCount(updatedItem.toDomain())
+        shoppingRepository.increaseItemCount(updatedItem.id)
     }
 
     fun decreaseGoodsCount(position: Int) {
