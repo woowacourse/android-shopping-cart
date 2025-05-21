@@ -27,8 +27,9 @@ class ProductsViewModel(
     }
 
     fun updateProducts() {
+        val currentProducts: List<ProductsItem> = products.value ?: emptyList()
         val lastProductId: Long? =
-            (products.value?.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
+            (currentProducts.lastOrNull { it is ProductItem } as? ProductItem)?.product?.id
 
         productsRepository.load(lastProductId, LOAD_PRODUCTS_SIZE + 1) { result ->
             result
@@ -36,7 +37,7 @@ class ProductsViewModel(
                     loadable = newProducts.size == LOAD_PRODUCTS_SIZE + 1
                     val productsToShow: List<Product> = newProducts.take(LOAD_PRODUCTS_SIZE)
                     val updatedProducts: List<ProductsItem> =
-                        getUpdateProductsItem(productsToShow, loadable)
+                        getUpdateProductsItem(productsToShow, currentProducts, loadable)
 
                     _products.postValue(updatedProducts)
                 }.onFailure {
@@ -47,9 +48,9 @@ class ProductsViewModel(
 
     private fun getUpdateProductsItem(
         productsToShow: List<Product>,
+        currentProducts: List<ProductsItem>,
         loadable: Boolean,
     ): List<ProductsItem> {
-        val currentProducts = products.value ?: emptyList()
         val productsWithoutLoadItem =
             if (currentProducts.lastOrNull() is LoadItem) {
                 currentProducts.dropLast(1)
