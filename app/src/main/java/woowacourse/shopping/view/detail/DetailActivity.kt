@@ -36,8 +36,17 @@ class DetailActivity : AppCompatActivity() {
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
 
+        setUpBinding()
         setUpSystemBars()
         observeViewModel()
+    }
+
+    private fun setUpBinding() {
+        with(binding) {
+            lifecycleOwner = this@DetailActivity
+            vm = viewModel
+            cartQuantityEventHandler = this@DetailActivity
+        }
     }
 
     private fun setUpSystemBars() {
