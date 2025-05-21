@@ -28,19 +28,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                app:tint="@color/white"
                 android:background="@color/transparent"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_close" />
+                android:src="@drawable/ic_close"
+                app:tint="@color/white" />
         </Toolbar>
 
         <ImageView
             android:id="@+id/image_view_detail_product"
-            app:imageUrl="@{vm.product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
+            app:imageUrl="@{vm.product.imageUrl}"
             app:layout_constraintDimensionRatio="1:0.8"
             app:layout_constraintTop_toBottomOf="@id/toolbar_detail" />
 
@@ -62,35 +62,33 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toTopOf="@id/text_view_price_title"
+            app:layout_constraintBottom_toTopOf="@id/text_view_detail_price"
             app:layout_constraintTop_toBottomOf="@id/text_view_detail_product_name" />
-
-        <TextView
-            android:id="@+id/text_view_price_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/detail_price_text"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/text_view_detail_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:text="@{String.format(@string/product_price_format, vm.product.price)}"
-            android:textAlignment="textEnd"
+            android:layout_margin="20dp"
+            android:text="@{String.format(@string/product_price_format, (vm.product.price * vm.quantity))}"
+            android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_price_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/text_view_price_title"
-            app:layout_constraintTop_toTopOf="@id/text_view_price_title"
+            app:layout_constraintEnd_toStartOf="@id/view_quantity_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="10,000원" />
+
+        <include
+            android:id="@+id/view_quantity_selector"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_detail_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
+            app:layout_constraintTop_toTopOf="@id/text_view_detail_price" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"

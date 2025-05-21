@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentDetailBinding
 import woowacourse.shopping.presentation.base.BaseFragment
+import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
@@ -25,7 +26,18 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
     }
 
     private fun initObserver() {
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
+        binding.viewQuantitySelector?.listener =
+            object : QuantityChangeListener {
+                override fun increaseQuantity(productId: Long) {
+                    viewModel.increaseQuantity()
+                }
+
+                override fun decreaseQuantity(productId: Long) {
+                    viewModel.decreaseQuantity()
+                }
+            }
 
         viewModel.addToCartSuccessEvent.observe(viewLifecycleOwner) {
             parentFragmentManager.popBackStack()
@@ -36,6 +48,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
                 DetailMessageEvent.FETCH_PRODUCT_FAILURE -> showToast(R.string.detail_screen_event_message_fetch_product_failure)
                 DetailMessageEvent.ADD_PRODUCT_FAILURE -> showToast(R.string.detail_screen_event_message_add_product_failure)
             }
+        }
+
+        viewModel.quantity.observe(viewLifecycleOwner) {
+            binding.viewQuantitySelector?.quantity = it
         }
     }
 

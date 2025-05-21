@@ -22,6 +22,9 @@ class DetailViewModel(
     private val _product = MutableLiveData<ProductUiModel>()
     val product: LiveData<ProductUiModel> = _product
 
+    private val _quantity = MutableLiveData(DEFAULT_QUANTITY)
+    val quantity: LiveData<Int> = _quantity
+
     private val _addToCartSuccessEvent = MutableSingleLiveData<Unit>()
     val addToCartSuccessEvent: SingleLiveData<Unit> = _addToCartSuccessEvent
 
@@ -34,10 +37,23 @@ class DetailViewModel(
             .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
     }
 
+    fun increaseQuantity() {
+        val currentQuantity = _quantity.value ?: DEFAULT_QUANTITY
+        _quantity.value = currentQuantity + QUANTITY_STEP
+    }
+
+    fun decreaseQuantity() {
+        val currentQuantity = _quantity.value ?: DEFAULT_QUANTITY
+        if (currentQuantity > DEFAULT_QUANTITY) {
+            _quantity.value = currentQuantity - QUANTITY_STEP
+        }
+    }
+
     fun addProduct() {
         val product = _product.value ?: return
+        val quantity = _quantity.value ?: DEFAULT_QUANTITY
 
-        repository.addCartItem(product.id) { result ->
+        repository.addCartItem(product.id, quantity) { result ->
             result
                 .onSuccess { _addToCartSuccessEvent.postValue(Unit) }
                 .onFailure { _toastEvent.postValue(DetailMessageEvent.ADD_PRODUCT_FAILURE) }
@@ -45,6 +61,9 @@ class DetailViewModel(
     }
 
     companion object {
+        private const val DEFAULT_QUANTITY = 1
+        private const val QUANTITY_STEP = 1
+
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(
