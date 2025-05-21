@@ -1,12 +1,16 @@
 package woowacourse.shopping.view.main.adapter
 
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.main.ProductsViewModel
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
-class ProductsAdapter : RecyclerView.Adapter<ProductsViewHolder>() {
+class ProductsAdapter(
+    private val viewModel: ProductsViewModel,
+) : RecyclerView.Adapter<ProductsViewHolder>() {
     private var products: List<Product> = listOf()
     private var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
 
@@ -25,23 +29,39 @@ class ProductsAdapter : RecyclerView.Adapter<ProductsViewHolder>() {
         parent: ViewGroup,
         viewType: Int,
     ): ProductsViewHolder {
-        return ProductsViewHolder(parent)
+        return ProductsViewHolder(parent, viewModel)
+    }
+
+    fun getTotalQuantity(): Int {
+        return quantity.values.sumOf { it.value ?: DEFAULT_QUANTITY }
     }
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {
-        val shoppingCartItems = mainRecyclerViewProduct.shoppingCartItems
-        val page = mainRecyclerViewProduct.page
+        val newProducts = mainRecyclerViewProduct.page.items
+        val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItems.items
 
         val quantityMap =
-            page.items.associateWith { product ->
+            newProducts.associateWith { product ->
                 MutableLiveData(
-                    shoppingCartItems.items.find { it.product == product }?.quantity ?: DEFAULT_QUANTITY,
+                    newShoppingCartItems.find { it.product == product }
+                        ?.quantity ?: DEFAULT_QUANTITY,
                 )
             }
 
-        products += mainRecyclerViewProduct.page.items
+        products += newProducts
         quantity += quantityMap
         notifyItemInserted(itemCount)
+    }
+
+    fun observeAll(
+        lifecycleOwner: LifecycleOwner,
+        action: (Int) -> Unit,
+    ) {
+        quantity.values.forEach { liveData ->
+            liveData.observe(lifecycleOwner) {
+                action(it)
+            }
+        }
     }
 
     companion object {

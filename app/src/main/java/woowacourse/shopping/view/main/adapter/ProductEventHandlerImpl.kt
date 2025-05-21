@@ -6,21 +6,26 @@ import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.main.ProductsViewModel
 
 class ProductEventHandlerImpl(
     val context: Context,
     val binding: ItemProductBinding,
+    val viewModel: ProductsViewModel,
 ) : ProductEventHandler {
     override fun onBtnItemProductAddToCartSelected(quantity: MutableLiveData<Int>) {
         quantity.value = quantity.value?.inc()
+        viewModel.totalShoppingCartSize.value = viewModel.totalShoppingCartSize.value?.inc()
     }
 
     override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
         quantity.value = quantity.value?.dec()
+        viewModel.totalShoppingCartSize.value = viewModel.totalShoppingCartSize.value?.dec()
     }
 
     override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
         quantity.value = quantity.value?.inc()
+        viewModel.totalShoppingCartSize.value = viewModel.totalShoppingCartSize.value?.inc()
     }
 
     override fun onProductSelected(product: Product) {

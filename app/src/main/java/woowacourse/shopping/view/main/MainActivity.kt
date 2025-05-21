@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -23,7 +24,9 @@ class MainActivity :
         R.layout.activity_main,
     ) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
-    private val productsAdapter: ProductsAdapter = ProductsAdapter()
+    private val productsAdapter: ProductsAdapter by lazy {
+        ProductsAdapter(viewModel)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +41,14 @@ class MainActivity :
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
+        (binding.toolbar as Toolbar).menu.findItem(R.id.menu_item_shopping_cart).actionView?.let {
+            val badge = it.findViewById<TextView>(R.id.shopping_cart_alarm_badge)
+            viewModel.totalShoppingCartSize.observe(this) { it ->
+                badge.text = it.toString()
+                badge.visibility =
+                    if (badge.text.toString().toInt() > 0) View.VISIBLE else View.GONE
+            }
+        }
         return super.onCreateOptionsMenu(menu)
     }
 

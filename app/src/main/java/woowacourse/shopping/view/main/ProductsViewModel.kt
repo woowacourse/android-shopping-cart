@@ -20,6 +20,7 @@ class ProductsViewModel(
     private val _productsLiveData: MutableLiveData<MainRecyclerViewProduct> = MutableLiveData()
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
     val totalSize: Int get() = productsRepository.totalSize()
+    val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalSize())
 
     fun requestProductsPage(requestPage: Int) {
         val pageRequest =
@@ -34,12 +35,12 @@ class ProductsViewModel(
             MainRecyclerViewProduct(
                 page = page,
                 shoppingCartItems = shoppingCartItems,
+                totalShoppingCartSize = shoppingCartRepository.totalSize(),
             )
     }
 
     companion object {
         private const val PAGE_SIZE = 20
-        private const val DEFAULT_QUANTITY = 0
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
