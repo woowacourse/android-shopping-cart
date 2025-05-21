@@ -9,16 +9,19 @@ import woowacourse.shopping.data.ProductsDataSource
 class CatalogViewModel(
     private val dataSource: ProductsDataSource = ProductDatabase,
 ) : ViewModel() {
-    private val _catalogProducts =
-        MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
-    val catalogProducts: LiveData<List<ProductUiModel>> = _catalogProducts
-
     val allProductsSize get() = dataSource.getAllProductsSize()
 
-    val page = MutableLiveData<Int>(INITIAL_PAGE)
+    private val _catalogItems =
+        MutableLiveData<List<CatalogItem>>(emptyList<CatalogItem>())
+    val catalogItems: LiveData<List<CatalogItem>> = _catalogItems
+
+    private val page = MutableLiveData<Int>(INITIAL_PAGE)
 
     private val _updatedItem = MutableLiveData<ProductUiModel>()
     val updatedItem: LiveData<ProductUiModel> = _updatedItem
+
+    private val _cartItemSize = MutableLiveData<Int>(0)
+    val cartItemSize: LiveData<Int> = _cartItemSize
 
     init {
         loadCatalogProducts(PAGE_SIZE)
@@ -40,7 +43,7 @@ class CatalogViewModel(
     }
 
     fun isLoadButtonEnabled(): Boolean {
-        val totalLoaded = _catalogProducts.value?.size ?: 0
+        val totalLoaded = _catalogItems.value?.size ?: 0
         return totalLoaded < allProductsSize
     }
 
@@ -53,13 +56,19 @@ class CatalogViewModel(
         val startIndex = currentPage * pageSize
         val endIndex = minOf(startIndex + pageSize, allProductsSize)
         if (startIndex >= allProductsSize) {
-            _catalogProducts.value = emptyList()
+            _catalogItems.value = emptyList()
             return
         }
-        val pagedProducts: List<ProductUiModel> =
-            dataSource.getProductsInRange(startIndex, endIndex)
+        val pagedProducts: List<CatalogItem> =
+            dataSource.getProductsInRange(startIndex, endIndex).map { CatalogItem.ProductItem(it) }
+        val items: List<CatalogItem> =
+            if (pagedProducts.size == PAGE_SIZE) {
+                pagedProducts + CatalogItem.LoadMoreButtonItem
+            } else {
+                pagedProducts
+            }
 
-        _catalogProducts.value = _catalogProducts.value?.plus(pagedProducts)
+        _catalogItems.value = items
     }
 
     companion object {

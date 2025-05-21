@@ -5,13 +5,13 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(
     products: List<ProductUiModel>,
-    private val totalDataSize: Int,
     val onProductClick: ProductClickListener,
     private val onLoadButtonClick: LoadButtonClickListener,
     private val onQuantityAddClickListener: QuantityAddClickListener,
     private val onQuantityControlClickListener: QuantityControlClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val products: MutableList<ProductUiModel> = products.toMutableList()
+    private val products: MutableList<CatalogItem> =
+        products.map { CatalogItem.ProductItem(it) }.toMutableList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -22,7 +22,7 @@ class ProductAdapter(
                 parent,
                 onProductClick,
                 onQuantityAddClickListener,
-                onQuantityControlClickListener
+                onQuantityControlClickListener,
             )
         } else {
             LoadButtonViewHolder.from(parent, onLoadButtonClick)
@@ -34,40 +34,39 @@ class ProductAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> {
-                holder.bind(products[position])
+                holder.bind((products[position] as CatalogItem.ProductItem).productItem)
             }
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (position == products.size) {
-            return VIEW_TYPE_LOAD_MORE
+    override fun getItemViewType(position: Int): Int =
+        when (products[position]) {
+            CatalogItem.LoadMoreButtonItem -> VIEW_TYPE_LOAD_MORE
+            is CatalogItem.ProductItem -> VIEW_TYPE_PRODUCT
         }
-        return VIEW_TYPE_PRODUCT
-    }
 
-    fun setData(products: List<ProductUiModel>) {
+    fun addItems(items: List<CatalogItem>) {
         val positionStart = this.products.size
-        val itemCount = products.size - positionStart
-        this.products.clear()
-        this.products.addAll(products)
-
-        notifyItemRangeInserted(positionStart + 1, itemCount)
+        val itemCount = items.size
+        if (this.products.lastOrNull() is CatalogItem.LoadMoreButtonItem) {
+            this.products.removeAt(this.products.lastIndex)
+            notifyItemRemoved(positionStart)
+        }
+        this.products.addAll(items)
+        notifyItemRangeInserted(positionStart, itemCount)
     }
 
-    fun updateProduct(product: ProductUiModel) {
-        val index: Int = products.indexOfFirst { it.name == product.name }
-        products[index] = product
+    fun updateItem(product: ProductUiModel) {
+        val index: Int =
+            products.indexOfFirst { (it as CatalogItem.ProductItem).productItem.name == product.name }
+        products[index] = CatalogItem.ProductItem(product)
         notifyItemChanged(index)
     }
 
-    override fun getItemCount(): Int = products.size + if (isLoadable()) 1 else 0
-
-    private fun isLoadable(): Boolean = products.size < totalDataSize
+    override fun getItemCount(): Int = products.size
 
     companion object {
         private const val VIEW_TYPE_PRODUCT = 1
         private const val VIEW_TYPE_LOAD_MORE = 2
-        private const val PRODUCT_SIZE_LIMIT = 20
     }
 }

@@ -49,7 +49,6 @@ class CatalogActivity : AppCompatActivity() {
         val adapter =
             ProductAdapter(
                 products = emptyList(),
-                totalDataSize = viewModel.allProductsSize,
                 onProductClick =
                     ProductClickListener { product ->
                         val intent = DetailActivity.newIntent(this, product)
@@ -80,11 +79,14 @@ class CatalogActivity : AppCompatActivity() {
     }
 
     private fun observeCatalogProducts() {
-        viewModel.catalogProducts.observe(this) { value ->
-            (binding.recyclerViewProducts.adapter as ProductAdapter).setData(value)
+        viewModel.catalogItems.observe(this) { value ->
+            (binding.recyclerViewProducts.adapter as ProductAdapter).addItems(value)
         }
         viewModel.updatedItem.observe(this) { product ->
-            (binding.recyclerViewProducts.adapter as ProductAdapter).updateProduct(product)
+            (binding.recyclerViewProducts.adapter as ProductAdapter).updateItem(product)
+        }
+        viewModel.cartItemSize.observe(this) { size ->
+            // TODO ActionBar에 메뉴 아이템 추가
         }
         binding.lifecycleOwner = this
     }
