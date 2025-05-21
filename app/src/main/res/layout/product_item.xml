@@ -22,16 +22,50 @@
         android:layout_margin="10dp"
         android:onClick="@{() -> productClickListener.onClick(product)}">
 
-        <ImageView
-            android:id="@+id/iv_product_image"
+        <FrameLayout
+            android:id="@+id/fl_product_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background"/>
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_product_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/product_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="1"
+                app:setImageWithGlide="@{product.imageUrl}"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <ImageView
+                android:id="@+id/iv_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:contentDescription="@string/plus_description"
+                android:src="@drawable/plus"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/include_quantity_select"
+                layout="@layout/quantity_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tv_product_title"
@@ -46,8 +80,8 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/iv_product_image"
-            app:layout_constraintTop_toBottomOf="@id/iv_product_image"
+            app:layout_constraintStart_toStartOf="@id/fl_product_image"
+            app:layout_constraintTop_toBottomOf="@id/fl_product_image"
             tools:text="바지" />
 
         <TextView
@@ -60,7 +94,5 @@
             app:layout_constraintStart_toStartOf="@id/tv_product_title"
             app:layout_constraintTop_toBottomOf="@id/tv_product_title"
             tools:text="10,000원" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
