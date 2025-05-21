@@ -8,4 +8,5 @@ data class GoodsUiModel(
     val name: String = "",
     val price: Int = 0,
     val thumbnailUrl: String = "",
+    val id: Long = 0,
 ) : Parcelable

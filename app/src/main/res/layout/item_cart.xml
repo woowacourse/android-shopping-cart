@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name="goods"
-            type="woowacourse.shopping.domain.model.Goods" />
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
+
         <variable
             name="cartClickListener"
             type="woowacourse.shopping.feature.cart.adapter.CartViewHolder.CartClickListener" />
@@ -28,7 +30,7 @@
             android:layout_marginEnd="60dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{goods.name}"
+            android:text="@{cartItem.goods.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -43,7 +45,7 @@
             android:layout_marginTop="20dp"
             android:contentDescription="@string/cart_item_image_description"
             android:scaleType="centerCrop"
-            app:imgUrl="@{goods.thumbnailUrl}"
+            app:imgUrl="@{cartItem.goods.thumbnailUrl}"
             app:layout_constraintStart_toStartOf="@+id/tv_cart_item_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_cart_item_name"
             app:srcCompat="@drawable/ic_launcher_background" />
@@ -52,11 +54,11 @@
             android:id="@+id/tv_cart_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
             android:layout_marginTop="108dp"
-            android:text="@{@string/goods_price(goods.price)}"
-            android:textSize="16sp"
+            android:layout_marginEnd="12dp"
+            android:text="@{@string/goods_price(cartItem.totalPrice)}"
             android:textColor="@color/gray_700"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="84,400원" />
@@ -68,7 +70,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:contentDescription="@string/cart_item_delete_button_description"
-            android:onClick="@{() -> cartClickListener.onClickDeleteButton(goods)}"
+            android:onClick="@{() -> cartClickListener.onClickDeleteButton(cartItem)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_close_gray" />

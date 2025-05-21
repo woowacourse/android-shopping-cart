@@ -3,7 +3,10 @@ package woowacourse.shopping.data
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 interface CartDao {
@@ -24,4 +27,27 @@ interface CartDao {
 
     @Query("SELECT COUNT(*) FROM cart")
     fun getAllItemsSize(): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(cartEntity: CartEntity): Long
+
+    @Update
+    fun update(cartEntity: CartEntity)
+
+    @Query("SELECT * FROM cart WHERE id = :id")
+    fun findByGoodsId(id: Long): CartEntity?
+
+    @Transaction
+    fun insertOrAddQuantity(cartEntity: CartEntity) {
+        val existingItem = findByGoodsId(cartEntity.id)
+        if (existingItem == null) {
+            insert(cartEntity)
+        } else {
+            val quantityUpdatedItem =
+                existingItem.copy(
+                    quantity = existingItem.quantity + cartEntity.quantity,
+                )
+            update(quantityUpdatedItem)
+        }
+    }
 }

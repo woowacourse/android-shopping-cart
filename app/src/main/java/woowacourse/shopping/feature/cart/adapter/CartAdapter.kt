@@ -4,32 +4,32 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.CartItem
 
 class CartAdapter(
     private val cartClickListener: CartViewHolder.CartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val items: MutableList<Goods> = mutableListOf()
+    private val cartItems: MutableList<CartItem> = mutableListOf()
 
     fun removeItem(position: Int) {
         notifyItemRemoved(position)
     }
 
-    fun setItems(newItems: List<Goods>) {
-        val oldItems = items.toList()
-        items.clear()
-        items.addAll(newItems)
+    fun setItems(newCartItems: List<CartItem>) {
+        val oldItems = cartItems.toList()
+        cartItems.clear()
+        cartItems.addAll(newCartItems)
 
-        if (newItems.size < oldItems.size) {
-            notifyItemRangeRemoved(newItems.size, oldItems.size - newItems.size)
+        if (newCartItems.size < oldItems.size) {
+            notifyItemRangeRemoved(newCartItems.size, oldItems.size - newCartItems.size)
         }
-        newItems.forEachIndexed { index, newGoods ->
+        newCartItems.forEachIndexed { index, newGoods ->
             if (index < oldItems.size && newGoods != oldItems[index]) {
                 notifyItemChanged(index)
             }
         }
-        if (newItems.size > oldItems.size) {
-            notifyItemRangeInserted(oldItems.size, newItems.size - oldItems.size)
+        if (newCartItems.size > oldItems.size) {
+            notifyItemRangeInserted(oldItems.size, newCartItems.size - oldItems.size)
         }
     }
 
@@ -47,9 +47,9 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        val item: Goods = items[position]
+        val item: CartItem = cartItems[position]
         holder.bind(item)
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = cartItems.size
 }

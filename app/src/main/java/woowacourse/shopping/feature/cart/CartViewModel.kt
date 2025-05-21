@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.CartItem
 import kotlin.concurrent.thread
 import kotlin.math.max
 
@@ -22,8 +22,8 @@ class CartViewModel(
     private val _page = MutableLiveData(currentPage)
     val page: LiveData<Int> get() = _page
 
-    private val _cart = MutableLiveData<List<Goods>>()
-    val cart: LiveData<List<Goods>> get() = _cart
+    private val _cart = MutableLiveData<List<CartItem>>()
+    val cart: LiveData<List<CartItem>> get() = _cart
 
     private var totalCartSizeData: Int = 0
 
@@ -40,14 +40,15 @@ class CartViewModel(
         updateCartDataSize()
     }
 
-    fun getPosition(goods: Goods): Int? {
-        val idx = cart.value?.indexOf(goods) ?: return null
+    fun getPosition(cartItem: CartItem): Int? {
+        val idx = cart.value?.indexOf(cartItem) ?: return null
         return if (idx >= 0) idx else null
     }
 
     private fun updateCartData() {
         thread {
-            val currentPageCartItems = cartRepository.getPage(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE)
+            val currentPageCartItems =
+                cartRepository.getPage(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE)
             _cart.postValue(currentPageCartItems)
         }
     }
@@ -60,8 +61,8 @@ class CartViewModel(
         }
     }
 
-    fun delete(goods: Goods) {
-        cartRepository.delete(goods) {
+    fun delete(cartItem: CartItem) {
+        cartRepository.delete(cartItem.goods) {
             thread {
                 totalCartSizeData = cartRepository.getAllItemsSize()
                 if (currentPage > endPage) {

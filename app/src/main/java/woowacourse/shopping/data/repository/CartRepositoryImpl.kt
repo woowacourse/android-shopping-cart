@@ -5,6 +5,7 @@ import android.os.Looper
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 import kotlin.concurrent.thread
 
@@ -29,6 +30,22 @@ class CartRepositoryImpl(
         }
     }
 
+    override fun insertOrAddQuantity(
+        goods: Goods,
+        addQuantity: Int,
+        onComplete: () -> Unit,
+    ) {
+        thread {
+            shoppingDatabase
+                .cartDao()
+                .insertOrAddQuantity(goods.toEntity(addQuantity))
+
+            Handler(Looper.getMainLooper()).post {
+                onComplete()
+            }
+        }
+    }
+
     override fun delete(
         goods: Goods,
         onComplete: () -> Unit,
@@ -45,9 +62,9 @@ class CartRepositoryImpl(
     override fun getPage(
         limit: Int,
         offset: Int,
-    ): List<Goods> =
+    ): List<CartItem> =
         shoppingDatabase.cartDao().getPage(limit, offset).map { entities ->
-            entities.toDomain()
+            CartItem(entities.toDomain(), entities.quantity)
         }
 
     override fun getAllItemsSize(): Int = shoppingDatabase.cartDao().getAllItemsSize()

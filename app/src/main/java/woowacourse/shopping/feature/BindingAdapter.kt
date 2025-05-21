@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
@@ -20,7 +21,8 @@ fun loadImageFromUrl(
     url: String?,
 ) {
     url?.let {
-        val placeholderDrawable = ContextCompat.getDrawable(imageView.context, R.drawable.image_placeholder)
+        val placeholderDrawable =
+            ContextCompat.getDrawable(imageView.context, R.drawable.image_placeholder)
         Glide
             .with(imageView.context)
             .load(url)
@@ -30,22 +32,35 @@ fun loadImageFromUrl(
     }
 }
 
-@BindingAdapter("items")
-fun RecyclerView.bindItems(items: List<Goods>?) {
+@BindingAdapter("goodsItems")
+fun RecyclerView.bindGoodsItems(goodsItems: List<Goods>?) {
     when (val adapter = this.adapter) {
         is GoodsAdapter -> {
-            if (items != null) adapter.setItems(items)
+            if (goodsItems != null) adapter.setItems(goodsItems)
         }
-        is CartAdapter -> {
-            if (items != null) adapter.setItems(items)
-        }
+
         is ConcatAdapter -> {
             adapter.adapters.forEach { childAdapter ->
-                if (childAdapter is GoodsAdapter && items != null) {
-                    childAdapter.setItems(items)
+                if (childAdapter is GoodsAdapter && goodsItems != null) {
+                    childAdapter.setItems(goodsItems)
                 }
-                if (childAdapter is CartAdapter && items != null) {
-                    childAdapter.setItems(items)
+            }
+        }
+    }
+}
+
+@BindingAdapter("cartItems")
+fun RecyclerView.bindCartItems(cartItems: List<CartItem>?) {
+    when (val adapter = this.adapter) {
+        is CartAdapter -> {
+            if (cartItems != null) adapter.setItems(cartItems)
+        }
+
+        is ConcatAdapter -> {
+            adapter.adapters.forEach { childAdapter ->
+
+                if (childAdapter is CartAdapter && cartItems != null) {
+                    childAdapter.setItems(cartItems)
                 }
             }
         }
