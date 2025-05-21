@@ -22,17 +22,18 @@ class GoodsDetailViewModel(
     val count: LiveData<Int>
         get() = _count
 
-    private val _isItemAddedToCart: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val isItemAddedToCart: SingleLiveData<Unit>
-        get() = _isItemAddedToCart
+    private val _onItemAddedToCart: MutableSingleLiveData<Int> = MutableSingleLiveData()
+    val onItemAddedToCart: SingleLiveData<Int>
+        get() = _onItemAddedToCart
 
     fun setGoods(goods: GoodsUiModel) {
         _goods.value = goods
     }
 
     fun addToShoppingCart() {
-        _goods.value?.let { shoppingRepository.increaseItemQuantity(it.id, _count.value!!) }
-        _isItemAddedToCart.setValue(Unit)
+        val count = _count.value ?: MIN_PURCHASE_QUANTITY
+        _goods.value?.let { goods -> shoppingRepository.increaseItemQuantity(goods.id, count) }
+        _onItemAddedToCart.setValue(count)
     }
 
     fun increaseCount() {

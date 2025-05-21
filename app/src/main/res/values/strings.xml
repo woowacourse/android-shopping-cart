@@ -2,7 +2,7 @@
     <string name="app_name">Shopping</string>
 
     <string name="text_price">%s원</string>
-    <string name="text_save_goods">장바구니에 상품이 담겼습니다</string>
+    <string name="text_save_goods">%d개의 상품이 장바구니에 담겼습니다</string>
 
     <string name="label_shopping_cart_title">Cart</string>
 

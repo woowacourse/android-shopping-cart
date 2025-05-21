@@ -26,14 +26,7 @@ class GoodsDetailActivity : BaseActivity() {
         setUpScreen(binding.root)
         binding.vm = viewModel
         binding.lifecycleOwner = this
-
-        viewModel.setGoods(intent.getSerializableCompat<GoodsUiModel>(EXTRA_GOODS))
-
-        viewModel.isItemAddedToCart.observe(this) {
-            Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
-        }
-
-        binding.clGoodsCount.clickListener =
+        binding.selectorClickListener =
             object : QuantitySelectorListener {
                 override fun onIncreaseQuantity(position: Int) {
                     viewModel.increaseCount()
@@ -44,8 +37,10 @@ class GoodsDetailActivity : BaseActivity() {
                 }
             }
 
-        viewModel.count.observe(this) {
-            binding.clGoodsCount.count = it
+        viewModel.setGoods(intent.getSerializableCompat<GoodsUiModel>(EXTRA_GOODS))
+
+        viewModel.onItemAddedToCart.observe(this) { count ->
+            Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT).show()
         }
     }
 

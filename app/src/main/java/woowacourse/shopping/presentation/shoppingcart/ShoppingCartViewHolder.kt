@@ -20,7 +20,7 @@ class ShoppingCartViewHolder(
 
     fun bind(goods: GoodsUiModel) {
         binding.goods = goods
-        binding.clGoodsCount.count = goods.quantity
+        binding.clGoodsCount.quantity = goods.quantity
         binding.clGoodsCount.position = adapterPosition
     }
 }
