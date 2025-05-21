@@ -31,14 +31,14 @@ class ProductsViewModel(
     fun loadPage() {
         val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
-        val nextEnd = minOf(nextStart + pageSize, productRepository.dummyProducts.size)
+        val nextEnd = minOf(nextStart + pageSize, productRepository.getAll().size)
 
-        if (nextStart < productRepository.dummyProducts.size) {
+        if (nextStart < productRepository.getAll().size) {
             val nextItems = productRepository.fetchProducts(nextStart, nextEnd)
             loadedItems.addAll(nextItems)
             _productsInShop.value = loadedItems.toList()
             currentPage++
-            if (nextEnd == productRepository.dummyProducts.size) isAllProductsFetched = true
+            if (nextEnd == productRepository.getAll().size) isAllProductsFetched = true
         }
     }
 
