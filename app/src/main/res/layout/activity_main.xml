@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="adapter"
@@ -19,9 +20,63 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="20dp"
-        android:paddingTop="20dp"
         tools:context=".view.main.MainActivity">
+
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:text="Shopping"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <FrameLayout
+                android:id="@+id/cart_container"
+                android:layout_width="50dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/image_view_cart"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/cart_icon"
+                    android:translationX="5dp"
+                    android:translationY="20dp" />
+
+                <TextView
+                    android:id="@+id/text_view_cart"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    tools:text="1"
+                    android:textSize="14sp"
+                    android:translationX="14dp"
+                    android:translationY="8dp"
+                    android:text="@{String.valueOf(vm.uiState.sumOfCartQuantity)}"
+                    android:visibility="@{vm.uiState.sumOfCartQuantity  > 0 ? View.VISIBLE : View.GONE}" />
+
+            </FrameLayout>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_product"
@@ -29,11 +84,10 @@
             android:layout_height="0dp"
             android:adapter="@{adapter}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_product"
-            tools:spanCount="2"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            />
+            tools:listitem="@layout/item_product"
+            tools:spanCount="2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

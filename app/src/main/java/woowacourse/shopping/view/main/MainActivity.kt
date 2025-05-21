@@ -1,8 +1,6 @@
 package woowacourse.shopping.view.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,18 +11,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
-import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.core.ext.showToast
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
+import woowacourse.shopping.view.main.adapter.ProductAdapterEventHandler
 import woowacourse.shopping.view.main.adapter.ProductRvItems
-import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 import woowacourse.shopping.view.main.vm.event.MainUiEvent
-import kotlin.getValue
 
-class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
+class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     private val viewModel: MainViewModel by viewModels {
         val container = (application as App).container
         MainViewModelFactory(
@@ -43,6 +39,7 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         with(binding) {
             lifecycleOwner = this@MainActivity
             adapter = productsAdapter
+            vm = viewModel
         }
         setUpSystemBar()
         setupRecyclerView()
@@ -115,22 +112,5 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
 
     override fun onClickDecrease(productId: Long) {
         viewModel.decreaseCartQuantity(productId)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_bar_cart -> {
-                val intent = CartActivity.newIntent(this)
-                startActivity(intent)
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_action_bar_menu, menu)
-        return true
     }
 }
