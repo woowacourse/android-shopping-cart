@@ -12,26 +12,35 @@ import woowacourse.shopping.data.dao.ProductDao
 import woowacourse.shopping.data.interceptor.MockProductInterceptor
 
 object NetworkModule {
-    fun provideGson(): Gson = GsonBuilder().create()
+    private lateinit var productDao: ProductDao
 
-    fun provideMockInterceptor(productDao: ProductDao): Interceptor = MockProductInterceptor(productDao)
+    private val gson: Gson by lazy { GsonBuilder().create() }
 
-    fun provideOkHttpClient(mockInterceptor: Interceptor): OkHttpClient =
+    private val mockInterceptor: Interceptor by lazy {
+        MockProductInterceptor(productDao)
+    }
+
+    private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient
             .Builder()
             .addInterceptor(mockInterceptor)
             .build()
+    }
 
-    fun provideRetrofit(
-        client: OkHttpClient,
-        gson: Gson,
-    ): Retrofit =
+    private val retrofit: Retrofit by lazy {
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.MOCK_URL)
-            .client(client)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
+    }
 
-    fun provideProductService(retrofit: Retrofit): ProductApi = retrofit.create(ProductApi::class.java)
+    val productService: ProductApi by lazy {
+        retrofit.create(ProductApi::class.java)
+    }
+
+    fun init(productDao: ProductDao) {
+        this.productDao = productDao
+    }
 }
