@@ -24,6 +24,16 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
+        setUpBinding()
+
+        viewModel.setGoods(intent.getSerializableCompat<GoodsUiModel>(EXTRA_GOODS))
+
+        viewModel.onItemAddedToCart.observe(this) { count ->
+            Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setUpBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
         binding.selectorClickListener =
@@ -36,12 +46,6 @@ class GoodsDetailActivity : BaseActivity() {
                     viewModel.decreaseCount()
                 }
             }
-
-        viewModel.setGoods(intent.getSerializableCompat<GoodsUiModel>(EXTRA_GOODS))
-
-        viewModel.onItemAddedToCart.observe(this) { count ->
-            Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
