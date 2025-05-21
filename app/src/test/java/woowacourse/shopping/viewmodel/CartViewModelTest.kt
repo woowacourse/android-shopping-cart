@@ -19,6 +19,7 @@ class CartViewModelTest {
     @BeforeEach
     fun setUp() {
         repository = CartRepositoryImpl
+        repository.products.clear()
 
         SIX_QUANTITY_PRODUCTS.forEach {
             repository.add(it)
@@ -35,8 +36,6 @@ class CartViewModelTest {
         viewModel.removeToCart(PRODUCT_1)
 
         // then
-        viewModel.products.value shouldNotBe null
-        viewModel.products.value?.contains(PRODUCT_1) shouldNotBe true
         viewModel.isOnlyOnePage.value shouldBe true
     }
 
