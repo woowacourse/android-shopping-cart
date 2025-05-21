@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
         <variable
             name="product"
@@ -10,9 +13,7 @@
             type="woowacourse.shopping.view.inventory.InventoryEventHandler" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="154dp"
         android:layout_height="wrap_content"
         android:onClick="@{() -> handler.onProductSelected(product)}"
@@ -29,8 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/sample_product_image">
-        </ImageView>
+            tools:src="@drawable/sample_product_image" />
 
         <TextView
             android:id="@+id/tv_product_name"
@@ -53,11 +53,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:price="@{product.price}"
-            android:textColor="#555555"
+            android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
-            tools:text="10,000원">
-        </TextView>
+            tools:text="10,000원" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
