@@ -71,8 +71,17 @@ class CatalogFragment :
 
         viewModel.toastEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
-                CatalogMessageEvent.FETCH_PRODUCTS_FAILURE -> showToast(R.string.catalog_screen_event_message_fetch_product_failure)
-                else -> {}
+                CatalogMessageEvent.FETCH_PRODUCTS_FAILURE ->
+                    showToast(R.string.catalog_screen_event_message_fetch_product_failure)
+
+                CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE ->
+                    showToast(R.string.catalog_screen_event_message_increase_cart_item_count_failure)
+
+                CatalogMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE ->
+                    showToast(R.string.catalog_screen_event_message_decrease_cart_item_count_failure)
+
+                CatalogMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE ->
+                    showToast(R.string.catalog_screen_event_message_find_quantity_failure)
             }
         }
     }
