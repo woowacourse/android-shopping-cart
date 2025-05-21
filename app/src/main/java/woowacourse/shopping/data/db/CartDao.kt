@@ -38,6 +38,12 @@ interface CartDao {
         if (existingProduct == null) insert(product) else updateQuantity(product.productId)
     }
 
+    @Transaction
+    fun decreaseOrDelete(productId: Long) {
+        val foundProduct = findByProductId(productId)
+        if (foundProduct != null && foundProduct.quantity <= 1) delete(productId) else decreaseQuantity(productId)
+    }
+
     @Query("DELETE FROM CartEntity WHERE productId = :id")
     fun delete(id: Long)
 }

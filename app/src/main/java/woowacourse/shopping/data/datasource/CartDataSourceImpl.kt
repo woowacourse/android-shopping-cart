@@ -14,7 +14,7 @@ class CartDataSourceImpl(
 
     override fun decreaseCartItemQuantity(productId: Long): Result<Unit> =
         runCatching {
-            cartDao.decreaseQuantity(productId)
+            cartDao.decreaseOrDelete(productId)
         }
 
     override fun deleteCartItem(productId: Long): Result<Unit> =
