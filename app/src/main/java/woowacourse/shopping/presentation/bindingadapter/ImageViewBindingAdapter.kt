@@ -1,11 +1,9 @@
 package woowacourse.shopping.presentation.bindingadapter
 
-import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.presentation.cart.CartPageClickListener
 
 @BindingAdapter("imageUrl")
 fun setLoadImage(

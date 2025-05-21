@@ -32,22 +32,16 @@ class CartViewModel(
     private fun loadItems() {
         val page = _currentPage.value ?: 0
 
-        productRepository.getCartItems { result ->
+        productRepository.getPagedCartItems(PAGE_SIZE, page) { result ->
             result
                 .onSuccess { pagedProducts -> _products.postValue(ResultState.Success(pagedProducts)) }
                 .onFailure { _products.postValue(ResultState.Failure()) }
         }
-//        productRepository.getPagedCartProducts(PAGE_SIZE, page) { result ->
-//            result
-//                .onSuccess { pagedProducts -> _products.postValue(ResultState.Success(pagedProducts)) }
-//                .onFailure { _products.postValue(ResultState.Failure()) }
-//        }
-//
-//        productRepository.getCartProductCount { result ->
-//            result
-//                .onSuccess { count -> updateTotalPage(count) }
-//                .onFailure { _products.postValue(ResultState.Failure()) }
-//        }
+        cartRepository.getCartItemCount { result ->
+            result
+                .onSuccess { count -> updateTotalPage(count) }
+                .onFailure { _products.postValue(ResultState.Failure()) }
+        }
     }
 
     fun changePage(next: Boolean) {
@@ -74,8 +68,7 @@ class CartViewModel(
         cartRepository.deleteProduct(cartItem.product.productId) { result ->
             result
                 .onSuccess {
-//                    reloadProductsByPage(currentPage)
-                    loadItems()
+                    reloadProductsByPage(currentPage)
                 }.onFailure {
                     Log.d("aaa", "delete fail")
                 }
@@ -83,28 +76,28 @@ class CartViewModel(
     }
 
     private fun reloadProductsByPage(currentPage: Int) {
-//        cartRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { result ->
-//            result
-//                .onSuccess { pagedProducts ->
-//                    if (pagedProducts.isEmpty()) {
-//                        handleEmptyPage()
-//                    } else {
-//                        _products.postValue(ResultState.Success(pagedProducts))
-//                        updateTotalPageAsync()
-//                    }
-//                }.onFailure { _products.postValue(ResultState.Failure()) }
-//        }
+        productRepository.getPagedCartItems(PAGE_SIZE, currentPage) { result ->
+            result
+                .onSuccess { pagedProducts ->
+                    if (pagedProducts.isEmpty()) {
+                        handleEmptyPage()
+                    } else {
+                        _products.postValue(ResultState.Success(pagedProducts))
+                        updateTotalPageAsync()
+                    }
+                }.onFailure { _products.postValue(ResultState.Failure()) }
+        }
     }
-//
-//    private fun handleEmptyPage() {
-//        val currentPage = _currentPage.value ?: 0
-//        if (currentPage > 0) {
-//            _currentPage.postValue(currentPage - 1)
-//            reloadProductsByPage(currentPage - 1)
-//        } else {
-//            _products.postValue(ResultState.Success(emptyList()))
-//        }
-//    }
+
+    private fun handleEmptyPage() {
+        val currentPage = _currentPage.value ?: 0
+        if (currentPage > 0) {
+            _currentPage.postValue(currentPage - 1)
+            reloadProductsByPage(currentPage - 1)
+        } else {
+            _products.postValue(ResultState.Success(emptyList()))
+        }
+    }
 
     fun increaseQuantity(productId: Long) {
         cartRepository.increaseQuantity(productId, 1) { result ->
@@ -155,20 +148,21 @@ class CartViewModel(
     override fun onClickNext() {
         changePage(next = true)
     }
-//
-//    private fun updateTotalPageAsync(onComplete: (() -> Unit)? = null) {
-//        productRepository.getCartProductCount { result ->
-//            result
-//                .onSuccess { count ->
-//                    updateTotalPage(count)
-//                    onComplete?.invoke()
-//                }.onFailure { _products.postValue(ResultState.Failure()) }
-//        }
-//    }
-//
-//    private fun updateTotalPage(totalSize: Int) {
-//        _totalPages.postValue((totalSize + PAGE_SIZE - 1) / PAGE_SIZE)
-//    }
+
+    private fun updateTotalPageAsync(onComplete: (() -> Unit)? = null) {
+        cartRepository.getCartItemCount { result ->
+            result
+                .onSuccess { count ->
+                    updateTotalPage(count)
+                    onComplete?.invoke()
+                }.onFailure { _products.postValue(ResultState.Failure()) }
+        }
+    }
+
+    private fun updateTotalPage(totalSize: Int?) {
+        if (totalSize == null) return
+        _totalPages.postValue((totalSize + PAGE_SIZE - 1) / PAGE_SIZE)
+    }
 
     companion object {
         private const val PAGE_SIZE = 5

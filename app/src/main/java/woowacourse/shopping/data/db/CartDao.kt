@@ -15,11 +15,11 @@ interface CartDao {
     @Query("SELECT SUM(quantity) FROM cart")
     fun getTotalQuantity(): Int?
 
-    @Query("SELECT product_id FROM cart LIMIT :pageSize OFFSET :offset")
-    fun getPagedProductIds(
+    @Query("SELECT * FROM cart LIMIT :pageSize OFFSET :offset")
+    fun getPagedProducts(
         pageSize: Int,
         offset: Int,
-    ): List<Long>
+    ): List<CartEntity>
 
     @Query("UPDATE cart SET quantity = quantity + :quantity WHERE product_id = :productId")
     fun increaseQuantity(

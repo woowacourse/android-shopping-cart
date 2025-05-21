@@ -12,4 +12,10 @@ interface ProductRepository {
     ): List<Product>
 
     fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit)
+
+    fun getPagedCartItems(
+        page: Int,
+        pageSize: Int,
+        onResult: (Result<List<CartItem>>) -> Unit,
+    )
 }

@@ -10,9 +10,43 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
+    override fun getCartItemCount(onResult: (Result<Int?>) -> Unit) {
+        runCatching {
+            cartDataSource.getCartProductCount { result ->
+                onResult(result)
+            }
+        }.onFailure { e ->
+            onResult(Result.failure(e))
+        }
+    }
+
+    override fun getTotalQuantity(onResult: (Result<Int?>) -> Unit) {
+        runCatching {
+            cartDataSource.getTotalQuantity { result ->
+                onResult(result)
+            }
+        }.onFailure { e ->
+            onResult(Result.failure(e))
+        }
+    }
+
     override fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit) {
         TODO("Not yet implemented")
     }
+
+//    override fun getPagedCartProductIds(
+//        limit: Int,
+//        page: Int,
+//        onResult: (Result<List<Long>>) -> Unit,
+//    ) {
+//        runCatching {
+//            cartDataSource.getPagedCartProductIds(limit, page) { result ->
+//                onResult(result)
+//            }
+//        }.onFailure { e ->
+//            onResult(Result.failure(e))
+//        }
+//    }
 
     override fun addToCart(item: CartItem) {
         TODO("Not yet implemented")
@@ -33,6 +67,8 @@ class CartRepositoryImpl(
             cartDataSource.existsByProductId(productId) { result ->
                 onResult(result)
             }
+        }.onFailure { e ->
+            onResult(Result.failure(e))
         }
     }
 
@@ -77,6 +113,7 @@ class CartRepositoryImpl(
             }
         }.onFailure { e ->
             Log.e("CartRepository", "increaseQuantity failed", e)
+            onResult(Result.failure(e))
         }
     }
 

@@ -4,7 +4,17 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
+    fun getCartItemCount(onResult: (Result<Int?>) -> Unit)
+
+    fun getTotalQuantity(onResult: (Result<Int?>) -> Unit)
+
     fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit)
+
+//    fun getPagedCartProductIds(
+//        limit: Int,
+//        page: Int,
+//        onResult: (Result<List<Long>>) -> Unit,
+//    )
 
     fun addToCart(item: CartItem)
 

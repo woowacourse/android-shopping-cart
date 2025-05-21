@@ -9,6 +9,13 @@ class CartDataSourceImpl(
 ) : CartDataSource {
     override fun getCartProductCount(onResult: (Result<Int?>) -> Unit) {
         runThread(
+            block = { dao.getAllProductCount() },
+            onResult = onResult,
+        )
+    }
+
+    override fun getTotalQuantity(onResult: (Result<Int?>) -> Unit) {
+        runThread(
             block = { dao.getTotalQuantity() },
             onResult = onResult,
         )
@@ -21,14 +28,14 @@ class CartDataSourceImpl(
         )
     }
 
-    override fun getPagedCartProductIds(
+    override fun getPagedCartProducts(
         limit: Int,
         page: Int,
-        onResult: (Result<List<Long>>) -> Unit,
+        onResult: (Result<List<CartEntity>>) -> Unit,
     ) {
         val offset = limit * page
         runThread(
-            block = { dao.getPagedProductIds(limit, offset) },
+            block = { dao.getPagedProducts(limit, offset) },
             onResult = onResult,
         )
     }

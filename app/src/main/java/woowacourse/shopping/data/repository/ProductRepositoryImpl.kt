@@ -38,4 +38,24 @@ class ProductRepositoryImpl(
                 }
         }
     }
+
+    override fun getPagedCartItems(
+        page: Int,
+        pageSize: Int,
+        onResult: (Result<List<CartItem>>) -> Unit,
+    ) {
+        cartDataSource.getPagedCartProducts(page, pageSize) { result ->
+            result
+                .onSuccess { cartEntities ->
+                    val cartItems =
+                        cartEntities.mapNotNull { entity ->
+                            val product = productDataSource.getProductById(entity.productId)
+                            product?.let { CartItem(it, entity.quantity) }
+                        }
+                    onResult(Result.success(cartItems))
+                }.onFailure { e ->
+                    onResult(Result.failure(e))
+                }
+        }
+    }
 }

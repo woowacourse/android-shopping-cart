@@ -5,12 +5,14 @@ import woowacourse.shopping.data.db.CartEntity
 interface CartDataSource {
     fun getCartProductCount(onResult: (Result<Int?>) -> Unit)
 
+    fun getTotalQuantity(onResult: (Result<Int?>) -> Unit)
+
     fun getCartProducts(onResult: (Result<List<CartEntity>>) -> Unit)
 
-    fun getPagedCartProductIds(
+    fun getPagedCartProducts(
         limit: Int,
         page: Int,
-        onResult: (Result<List<Long>>) -> Unit,
+        onResult: (Result<List<CartEntity>>) -> Unit,
     )
 
     fun increaseQuantity(
