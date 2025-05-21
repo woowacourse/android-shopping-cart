@@ -6,15 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.main.ProductsViewModel
 
 class ProductsViewHolder(
     private val parent: ViewGroup,
-    private val viewModel: ProductsViewModel,
+    private val shoppingCartSize: MutableLiveData<Int>,
     private val binding: ItemProductBinding = inflate(parent),
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.handler = ProductEventHandlerImpl(parent.context, binding, viewModel)
+        binding.handler = ProductEventHandlerImpl(parent.context, binding, shoppingCartSize)
     }
 
     fun bind(

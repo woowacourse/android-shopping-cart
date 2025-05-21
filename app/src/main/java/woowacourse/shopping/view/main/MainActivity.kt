@@ -25,7 +25,7 @@ class MainActivity :
     ) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter by lazy {
-        ProductsAdapter(viewModel)
+        ProductsAdapter(viewModel.totalShoppingCartSize)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

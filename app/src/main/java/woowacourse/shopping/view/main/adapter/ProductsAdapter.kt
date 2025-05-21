@@ -5,11 +5,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.main.ProductsViewModel
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
 class ProductsAdapter(
-    private val viewModel: ProductsViewModel,
+    private val totalShoppingCartSize: MutableLiveData<Int>,
 ) : RecyclerView.Adapter<ProductsViewHolder>() {
     private var products: List<Product> = listOf()
     private var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
@@ -29,7 +28,7 @@ class ProductsAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ProductsViewHolder {
-        return ProductsViewHolder(parent, viewModel)
+        return ProductsViewHolder(parent, totalShoppingCartSize)
     }
 
     fun getTotalQuantity(): Int {

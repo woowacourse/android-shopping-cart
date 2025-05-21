@@ -15,7 +15,7 @@ class ProductDetailViewModelTest {
     @Test
     fun 상품을_추가할_수_있다() {
         val viewModel = ProductDetailViewModel()
-        viewModel.addProduct(product)
+        addProduct(product)
         assertThat(DummyShoppingCart.products).contains(product)
     }
 }
