@@ -32,6 +32,6 @@
 - [ ] DataBindingUtil과 xxxBinding 차이점 공부 후 수정
 - [ ] adapter에 mutablelist 수정
 - [ ] observe한 값들도 databinding을 활용해서 수정
-- [ ] addOnScrollListener를 apply 스코프 안에서 사용
+- [x] addOnScrollListener를 apply 스코프 안에서 사용
 - [x] ProductAdapter에 바인딩 파라미터 수정
 - [x] Adapter의 ViewHolder 제너릭 타입을 생성한 ViewHolder로 명시
