@@ -55,7 +55,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun observePageChanges() {
-        viewModel.page.observe(this) {
+        viewModel.pageEvent.observe(this) {
             (binding.recyclerViewCart.adapter as? CartAdapter)?.let { adapter ->
                 val paginationPos = adapter.itemCount - 1
                 adapter.notifyItemChanged(paginationPos)

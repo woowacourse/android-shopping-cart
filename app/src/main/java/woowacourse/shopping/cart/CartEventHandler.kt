@@ -13,5 +13,7 @@ interface CartEventHandler {
 
     fun isPrevButtonEnabled(): Boolean
 
+    fun isPaginationEnabled(): Boolean
+
     fun getPage(): Int
 }

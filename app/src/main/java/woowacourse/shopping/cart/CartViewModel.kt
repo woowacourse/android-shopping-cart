@@ -23,8 +23,10 @@ class CartViewModel(
     private val _isPrevButtonEnabled = MutableLiveData<Boolean>(false)
     val isPrevButtonEnabled: LiveData<Boolean> = _isPrevButtonEnabled
 
-    private val _page = MutableLiveData<Int>(INITIAL_PAGE)
-    val page: LiveData<Int> = _page
+    private var currentPage: Int = INITIAL_PAGE
+
+    private val _pageEvent = SingleLiveEvent<Int>()
+    val pageEvent: LiveData<Int> = _pageEvent
 
     init {
         loadCartProducts()
@@ -32,12 +34,10 @@ class CartViewModel(
 
     override fun onDeleteProduct(cartProduct: ProductUiModel) {
         dataSource.deleteCartProduct(cartProduct)
-
         loadCartProducts()
     }
 
     override fun onNextPage() {
-        val currentPage = page.value ?: 0
         val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
         if (currentPage < lastPage) {
             increasePage()
@@ -46,7 +46,6 @@ class CartViewModel(
     }
 
     override fun onPrevPage() {
-        val currentPage = page.value ?: 0
         if (currentPage > 0) {
             decreasePage()
             loadCartProducts()
@@ -54,44 +53,43 @@ class CartViewModel(
     }
 
     override fun isNextButtonEnabled(): Boolean {
-        val currentPage = page.value ?: INITIAL_PAGE
         val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
         return currentPage < lastPage
     }
 
-    override fun isPrevButtonEnabled(): Boolean {
-        val currentPage = page.value ?: INITIAL_PAGE
-        return currentPage > 0
-    }
+    override fun isPrevButtonEnabled(): Boolean = currentPage > 0
 
-    override fun getPage(): Int = page.value ?: 0
+    override fun isPaginationEnabled(): Boolean = isNextButtonEnabled() || isPrevButtonEnabled()
+
+    override fun getPage(): Int = currentPage
 
     private fun increasePage() {
-        _page.value = page.value?.plus(1)
+        currentPage += 1
+        _pageEvent.value = currentPage
     }
 
     private fun decreasePage() {
-        _page.value = page.value?.minus(1)
+        currentPage -= 1
+        _pageEvent.value = currentPage
     }
 
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
-        var currentPage = page.value ?: INITIAL_PAGE
+        var current = currentPage
         val totalSize = allCartProductsSize
 
-        while (currentPage > 0 && currentPage * pageSize >= totalSize) {
-            currentPage--
+        while (current > 0 && current * pageSize >= totalSize) {
+            current--
         }
 
-        _page.value = -1
-        _page.value = currentPage
+        currentPage = current
+        _pageEvent.value = current
 
-        val startIndex = currentPage * pageSize
+        val startIndex = current * pageSize
         val endIndex = minOf(startIndex + pageSize, totalSize)
 
         _cartProducts.value = allCartProducts.subList(startIndex, endIndex)
-
-        _isNextButtonEnabled.value = currentPage < (totalSize - 1) / pageSize
-        _isPrevButtonEnabled.value = currentPage > 0
+        _isNextButtonEnabled.value = current < (totalSize - 1) / pageSize
+        _isPrevButtonEnabled.value = current > 0
     }
 
     companion object {
