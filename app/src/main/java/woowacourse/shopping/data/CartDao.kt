@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 
 @Dao
@@ -14,6 +15,12 @@ interface CartDao {
 
     @Insert
     fun insertAll(vararg cartEntities: CartEntity)
+
+    @Transaction
+    fun insertAndUpdateQuantity(cartEntity: CartEntity) {
+        insertAll(cartEntity)
+        update(cartEntity.copy(quantity = 1))
+    }
 
     @Delete
     fun delete(cartEntity: CartEntity)

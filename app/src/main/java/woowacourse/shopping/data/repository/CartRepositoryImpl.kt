@@ -28,7 +28,7 @@ class CartRepositoryImpl(
                     )
                 dao.update(updated)
             } else {
-                dao.insertAll(goods.toEntity())
+                dao.insertAndUpdateQuantity(goods.toEntity())
             }
         }
     }

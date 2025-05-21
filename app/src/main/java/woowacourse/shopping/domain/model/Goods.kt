@@ -5,7 +5,7 @@ data class Goods(
     val name: String,
     val price: Int,
     val thumbnailUrl: String,
-    val quantity: Int = 1,
+    val quantity: Int = 0,
 ) {
     companion object {
         val dummyGoods =
