@@ -15,7 +15,8 @@ class CatalogViewModel(
         MutableLiveData<List<CatalogItem>>(emptyList<CatalogItem>())
     val catalogItems: LiveData<List<CatalogItem>> = _catalogItems
 
-    private val page = MutableLiveData<Int>(INITIAL_PAGE)
+    private val _page = MutableLiveData<Int>(INITIAL_PAGE)
+    val page: LiveData<Int> = _page
 
     private val _updatedItem = MutableLiveData<ProductUiModel>()
     val updatedItem: LiveData<ProductUiModel> = _updatedItem
@@ -42,13 +43,8 @@ class CatalogViewModel(
         loadCatalogProducts(pageSize)
     }
 
-    fun isLoadButtonEnabled(): Boolean {
-        val totalLoaded = _catalogItems.value?.size ?: 0
-        return totalLoaded < allProductsSize
-    }
-
     fun increasePage() {
-        page.value = page.value?.plus(1)
+        _page.value = _page.value?.plus(1)
     }
 
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
@@ -62,7 +58,7 @@ class CatalogViewModel(
         val pagedProducts: List<CatalogItem> =
             dataSource.getProductsInRange(startIndex, endIndex).map { CatalogItem.ProductItem(it) }
         val items: List<CatalogItem> =
-            if (pagedProducts.size == PAGE_SIZE) {
+            if (pagedProducts.size == PAGE_SIZE && (PAGE_SIZE * currentPage) + pagedProducts.size < allProductsSize) {
                 pagedProducts + CatalogItem.LoadMoreButtonItem
             } else {
                 pagedProducts

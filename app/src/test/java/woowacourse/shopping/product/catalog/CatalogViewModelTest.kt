@@ -21,7 +21,7 @@ class CatalogViewModelTest {
 
         assertThat(0).isEqualTo(viewModel.page.value)
 
-        val catalogProducts: List<ProductUiModel> = viewModel.catalogProducts.value ?: emptyList()
+        val catalogProducts: List<CatalogItem> = viewModel.catalogItems.value ?: emptyList()
 
         assertThat(catalogProducts.size).isEqualTo(20)
     }
@@ -30,7 +30,7 @@ class CatalogViewModelTest {
     fun `더보기 버튼을 눌렀을 때 페이지가 증가되고 상품이 로드된다`() {
         // given
         viewModel = CatalogViewModel(FakeProductsDataSource(size = 25))
-        val catalogProducts: List<ProductUiModel> = (viewModel.catalogProducts.value ?: emptyList())
+        val catalogProducts: List<CatalogItem> = (viewModel.catalogItems.value ?: emptyList())
         assertThat(viewModel.page.value).isEqualTo(0)
 
         // when
@@ -38,13 +38,14 @@ class CatalogViewModelTest {
 
         // then
         assertThat(viewModel.page.value).isEqualTo(1)
-        assertThat(viewModel.catalogProducts.value?.size).isEqualTo(25)
+        assertThat(viewModel.catalogItems.value?.size).isEqualTo(5)
     }
 
     @Test
     fun `상품 목록이 20개 이상이면 더보기 버튼이 활성화된다`() {
-        viewModel = CatalogViewModel(FakeProductsDataSource(size = 21))
+        viewModel = CatalogViewModel(FakeProductsDataSource(size = 25))
 
-        assertThat(viewModel.isLoadButtonEnabled()).isEqualTo(true)
+        // 0 페이지 항목 20개 + 더보기 버튼 1개 = 21개
+        assertThat(viewModel.catalogItems.value?.size).isEqualTo(21)
     }
 }
