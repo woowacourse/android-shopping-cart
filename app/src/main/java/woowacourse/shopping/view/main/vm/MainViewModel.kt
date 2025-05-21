@@ -95,7 +95,7 @@ class MainViewModel(
             is IncreaseState.CanIncrease -> {
                 val newState = result.value
                 _uiState.value = currentUiState.modifyUiState(newState)
-                productRepository.modifyQuantity(productId, result.changedProductQuantity)
+                productRepository.modifyQuantity(productId, result.productStock)
                 onCartUpdate(newState.cartQuantity)
             }
 

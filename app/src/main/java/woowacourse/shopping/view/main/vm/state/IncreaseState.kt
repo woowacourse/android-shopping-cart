@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.Quantity
 sealed interface IncreaseState {
     data class CanIncrease(
         val value: ProductState,
-        val changedProductQuantity: Quantity,
+        val productStock: Quantity,
     ) : IncreaseState
 
     data class CannotIncrease(val quantity: Int) : IncreaseState
