@@ -38,9 +38,15 @@ class LocalCartProductRepository(
         return PagedResult(items, hasNext)
     }
 
+    override fun getQuantityByProductId(productId: Long): Int? {
+        var result: Int? = null
+        thread { result = dao.getQuantityByProductId(productId) }.join()
+        return result
+    }
+
     override fun insert(productId: Long) {
         thread {
-            dao.insert(CartProductEntity(productId = productId))
+            dao.insert(CartProductEntity(productId = productId, quantity = 1))
         }.join()
         totalCount++
     }

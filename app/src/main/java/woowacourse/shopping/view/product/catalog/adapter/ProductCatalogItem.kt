@@ -7,6 +7,7 @@ sealed class ProductCatalogItem(
 ) {
     data class ProductItem(
         val product: Product,
+        val quantity: Int,
     ) : ProductCatalogItem(ViewType.PRODUCT)
 
     data object LoadMoreItem : ProductCatalogItem(ViewType.LOAD_MORE)

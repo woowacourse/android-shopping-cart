@@ -18,6 +18,9 @@ interface CartProductDao {
         offset: Int,
     ): List<CartProductEntity>
 
+    @Query("SELECT quantity FROM cart_product WHERE product_id = :productId LIMIT 1")
+    fun getQuantityByProductId(productId: Long): Int?
+
     @Insert
     fun insert(product: CartProductEntity)
 

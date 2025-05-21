@@ -8,10 +8,12 @@ fun List<CartProductEntity>.toDomain() =
         CartProduct(
             id = entity.id,
             product = entity.productId.toProduct(),
+            quantity = entity.quantity,
         )
     }
 
 fun CartProduct.toEntity() =
     CartProductEntity(
         productId = this.product.toId(),
+        quantity = this.quantity,
     )

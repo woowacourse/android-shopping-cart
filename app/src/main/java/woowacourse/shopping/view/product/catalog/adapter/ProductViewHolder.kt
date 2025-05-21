@@ -14,12 +14,17 @@ class ProductViewHolder(
         binding.handler = eventHandler
     }
 
-    fun bind(product: Product) {
-        binding.product = product
+    fun bind(productItem: ProductCatalogItem.ProductItem) {
+        binding.product = productItem.product
+        binding.quantity = productItem.quantity
     }
 
     interface EventHandler {
         fun onProductClick(item: Product)
+
+        fun onQuantityIncreaseClick(item: Product)
+
+        fun onQuantityDecreaseClick(item: Product)
     }
 
     companion object {

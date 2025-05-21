@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.fixture.FakeCartProductRepository
 import woowacourse.shopping.fixture.FakeProductRepository
 import woowacourse.shopping.view.product.catalog.ProductCatalogViewModel
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
@@ -13,12 +15,14 @@ import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductCatalogViewModelTest {
     private lateinit var viewModel: ProductCatalogViewModel
-    private lateinit var repository: ProductRepository
+    private lateinit var productRepository: ProductRepository
+    private lateinit var cartProductRepository: CartProductRepository
 
     @BeforeEach
     fun setup() {
-        repository = FakeProductRepository()
-        viewModel = ProductCatalogViewModel(repository)
+        productRepository = FakeProductRepository()
+        cartProductRepository = FakeCartProductRepository()
+        viewModel = ProductCatalogViewModel(productRepository, cartProductRepository)
     }
 
     @Test
@@ -71,7 +75,7 @@ class ProductCatalogViewModelTest {
     @Test
     fun `상품 클릭 시 선택된 상품이 selectedProduct에 반영된다`() {
         // given
-        val product = repository.getAll().first()
+        val product = productRepository.getAll().first()
 
         // when
         viewModel.onProductClick(product)

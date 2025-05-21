@@ -26,7 +26,7 @@ class ProductAdapter(
         position: Int,
     ) {
         when (val item = items[position]) {
-            is ProductCatalogItem.ProductItem -> (holder as ProductViewHolder).bind(item.product)
+            is ProductCatalogItem.ProductItem -> (holder as ProductViewHolder).bind(item)
             ProductCatalogItem.LoadMoreItem -> Unit
         }
     }

@@ -20,6 +20,8 @@ class FakeCartProductRepository : CartProductRepository {
         return PagedResult(pagedItems, hasNext)
     }
 
+    override fun getQuantityByProductId(productId: Long): Int? = items.find { it.product.id == productId }?.quantity
+
     override fun insert(productId: Long) {
         val product =
             Product(

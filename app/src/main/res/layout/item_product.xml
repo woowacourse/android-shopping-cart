@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="quantity"
+            type="java.lang.Integer" />
 
         <variable
             name="handler"
@@ -62,17 +68,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="8dp"
+            android:visibility="@{quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:handler="@{handler}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:product="@{product}"
+            app:quantity="@{quantity}" />
 
         <ImageView
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_margin="8dp"
             android:background="@drawable/style_round_button"
+            android:padding="4dp"
             android:src="@drawable/ic_add"
             android:text="@string/plus"
+            android:visibility="@{quantity == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="parent" />
 
