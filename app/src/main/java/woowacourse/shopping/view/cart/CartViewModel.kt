@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.view.Event
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -28,6 +29,9 @@ class CartViewModel(
 
     private val _isLastPage = MutableLiveData<Boolean>()
     val isLastPage: LiveData<Boolean> = _isLastPage
+
+    private val _finishCart = MutableLiveData<Event<Unit>>()
+    val finishCart: LiveData<Event<Unit>> = _finishCart
 
     init {
         loadPage(INITIAL_PAGE)
@@ -54,6 +58,10 @@ class CartViewModel(
         if (prevPage >= INITIAL_PAGE) {
             loadPage(prevPage)
         }
+    }
+
+    fun finishCart() {
+        _finishCart.value = Event(Unit)
     }
 
     private fun getMaxPageNumber(): Int = ((cartRepository.getAll().size - ONE_PAGE_COUNT) / PAGE_SIZE) + ONE_PAGE_COUNT

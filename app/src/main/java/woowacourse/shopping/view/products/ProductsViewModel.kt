@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.data.products.ProductRepository
 import woowacourse.shopping.data.products.ProductRepositoryImpl
 import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.view.Event
 
 class ProductsViewModel(
     private val productRepository: ProductRepository,
@@ -19,6 +20,9 @@ class ProductsViewModel(
 
     private val _isLoadMoreButtonVisible = MutableLiveData(false)
     val isLoadMoreButtonVisible: LiveData<Boolean> = _isLoadMoreButtonVisible
+
+    private val _navigateToCart = MutableLiveData<Event<Unit>>()
+    val navigateToCart: LiveData<Event<Unit>> = _navigateToCart
 
     private var isAllProductsFetched = false
     private var currentPage = INITIAL_PAGE
@@ -44,6 +48,10 @@ class ProductsViewModel(
 
     fun updateButtonVisibility(canLoadMore: Boolean) {
         _isLoadMoreButtonVisible.value = canLoadMore && !isAllProductsFetched
+    }
+
+    fun onNavigateToCartClicked() {
+        _navigateToCart.value = Event(Unit)
     }
 
     companion object {

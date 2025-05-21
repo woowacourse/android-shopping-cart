@@ -23,7 +23,7 @@ class CartActivity : AppCompatActivity() {
         binding.viewModel = cartViewModel
         initRecyclerView()
         observeLoadedProducts()
-        setButtonsClickListener()
+        observeFinishCartButton()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -42,17 +42,9 @@ class CartActivity : AppCompatActivity() {
         binding.rvProductsInCart.adapter = adapter
     }
 
-    private fun setButtonsClickListener() {
-        binding.backImageBtn.setOnClickListener {
+    private fun observeFinishCartButton() {
+        cartViewModel.finishCart.observe(this) {
             finish()
-        }
-
-        binding.btnPreviousPage.setOnClickListener {
-            cartViewModel.loadPreviousPage()
-        }
-
-        binding.btnNextPage.setOnClickListener {
-            cartViewModel.loadNextPage()
         }
     }
 

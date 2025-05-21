@@ -31,6 +31,7 @@
                 android:layout_gravity="start"
                 android:backgroundTint="@android:color/transparent"
                 android:contentDescription="@null"
+                android:onClick="@{() -> viewModel.finishCart()}"
                 android:src="@drawable/ic_arrow_back" />
 
             <TextView
@@ -80,6 +81,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@null"
+                android:onClick="@{() -> viewModel.loadPreviousPage()}"
                 android:src="@drawable/ic_arrow_back_white"
                 app:buttonColor="@{!viewModel.isFirstPage}" />
 
@@ -101,6 +103,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@null"
+                android:onClick="@{() -> viewModel.loadNextPage()}"
                 android:src="@drawable/ic_arrow_forward_white"
                 app:buttonColor="@{!viewModel.isLastPage}" />
 

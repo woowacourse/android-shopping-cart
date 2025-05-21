@@ -34,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:backgroundTint="@android:color/transparent"
+                android:onClick="@{() -> viewModel.onNavigateToCartClicked()}"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_cart" />
 
