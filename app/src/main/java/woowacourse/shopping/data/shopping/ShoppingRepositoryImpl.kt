@@ -3,6 +3,7 @@ package woowacourse.shopping.data.shopping
 import woowacourse.shopping.data.mapper.toShoppingEntity
 import woowacourse.shopping.data.mapper.toShoppingGoods
 import woowacourse.shopping.domain.model.ShoppingGoods
+import woowacourse.shopping.domain.repository.ShoppingRepository
 import kotlin.concurrent.thread
 
 class ShoppingRepositoryImpl(

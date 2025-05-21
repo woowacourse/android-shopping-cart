@@ -1,8 +1,9 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.repository.GoodsRepository
 
-object GoodsDataBase : GoodsRepository {
+object GoodsRepositoryImpl : GoodsRepository {
     @Suppress("ktlint:standard:max-line-length")
     override fun getAllGoods(): List<Goods> =
         listOf(
