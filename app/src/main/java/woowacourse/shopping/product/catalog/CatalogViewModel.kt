@@ -9,18 +9,14 @@ import woowacourse.shopping.data.ProductsDataSource
 class CatalogViewModel(
     private val dataSource: ProductsDataSource,
 ) : ViewModel() {
-    private val _catalogProducts =
-        MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
-    val catalogProducts: LiveData<List<ProductUiModel>> = _catalogProducts
-
-    private val _page = MutableLiveData<Int>(INITIAL_PAGE)
-    val page: LiveData<Int> = _page
-
     private val _pagingData = MutableLiveData<PagingData>()
     val pagingData: LiveData<PagingData> = _pagingData
 
     private var currentPage = INITIAL_PAGE
     private var loadedProducts = emptyList<ProductUiModel>()
+
+    val page: Int get() = currentPage
+    val products: List<ProductUiModel> get() = loadedProducts
 
     init {
         loadCatalogProducts()

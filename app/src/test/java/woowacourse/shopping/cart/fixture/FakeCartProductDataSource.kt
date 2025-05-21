@@ -11,6 +11,8 @@ class FakeCartProductDataSource(
 
     override fun cartProducts(): List<ProductUiModel> = products.toList()
 
+    override fun getCartProductsSize(): Int = products.size
+
     override fun insertCartProduct(cartProduct: ProductUiModel): CartUiState {
         products.add(cartProduct)
         return CartUiState.SUCCESS

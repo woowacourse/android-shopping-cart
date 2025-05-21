@@ -28,18 +28,18 @@ class CartViewModelTest {
     fun `초기에는 첫 페이지 상품만 보여준다`() {
         val products = viewModel.cartProducts.value ?: emptyList()
         assertThat(products.size).isEqualTo(5)
-        assertThat(viewModel.page.value).isEqualTo(0)
+        assertThat(viewModel.getPage()).isEqualTo(0)
     }
 
     @Test
     fun `상품 삭제 후 현재 페이지가 유효하지 않으면 이전 페이지로 이동한다`() {
-        repeat(2) { viewModel.onClick(PageDirection.NEXT) }
-        assertThat(viewModel.page.value).isEqualTo(2)
+        repeat(2) { viewModel.onNextPage() }
+        assertThat(viewModel.getPage()).isEqualTo(2)
 
         val lastItem = viewModel.cartProducts.value!!.last()
-        viewModel.deleteCartProduct(lastItem)
+        viewModel.onDeleteProduct(lastItem)
 
-        assertThat(viewModel.page.value).isEqualTo(1)
+        assertThat(viewModel.getPage()).isEqualTo(1)
         assertThat(viewModel.cartProducts.value!!.size).isEqualTo(5)
     }
 
@@ -47,7 +47,7 @@ class CartViewModelTest {
     fun `다음 페이지 버튼은 다음 페이지가 있을 때만 활성화된다`() {
         assertThat(viewModel.isNextButtonEnabled()).isTrue
 
-        repeat(2) { viewModel.onClick(PageDirection.NEXT) }
+        repeat(2) { viewModel.onNextPage() }
 
         assertThat(viewModel.isNextButtonEnabled()).isFalse
     }
@@ -56,7 +56,7 @@ class CartViewModelTest {
     fun `이전 페이지 버튼은 첫 페이지가 아닐 때만 활성화된다`() {
         assertThat(viewModel.isPrevButtonEnabled()).isFalse
 
-        viewModel.onClick(PageDirection.NEXT)
+        viewModel.onNextPage()
         assertThat(viewModel.isPrevButtonEnabled()).isTrue
     }
 

@@ -17,39 +17,40 @@ class CatalogViewModelTest {
 
     @Test
     fun `초기 상태 테스트`() {
-        viewModel = CatalogViewModel(FakeMockProducts(size = 1))
+        viewModel = CatalogViewModel(FakeMockProducts(size = 10))
 
-        assertThat(0).isEqualTo(viewModel.page.value)
+        val paging = viewModel.pagingData.value!!
 
-        val catalogProducts: List<ProductUiModel> = viewModel.catalogProducts.value ?: emptyList()
-
-        assertThat(MOCK_DATA_SIZE).isEqualTo(catalogProducts.size)
+        assertThat(viewModel.page).isEqualTo(0)
+        assertThat(paging.hasNext).isFalse
+        assertThat(paging.products).hasSize(10)
     }
 
     @Test
     fun `더보기 버튼을 눌렀을 때 페이지가 증가되고 상품이 로드된다`() {
         // given
-        viewModel = CatalogViewModel(FakeMockProducts(size = 5))
-        val catalogProducts: List<ProductUiModel> = (viewModel.catalogProducts.value ?: emptyList())
-        assertThat(viewModel.page.value).isEqualTo(0)
+        viewModel = CatalogViewModel(FakeMockProducts(size = 30))
+        val catalogProducts: List<ProductUiModel> = (viewModel.products)
+        assertThat(viewModel.page).isEqualTo(0)
 
         // when
         viewModel.loadNextCatalogProducts(PAGE_SIZE)
 
         // then
-        assertThat(viewModel.page.value).isEqualTo(1)
-        assertThat(catalogProducts.size).isEqualTo(25)
+        assertThat(viewModel.page).isEqualTo(1)
+        assertThat(catalogProducts.size).isEqualTo(20)
     }
 
     @Test
     fun `상품 목록이 20개 이상이면 더보기 버튼이 활성화된다`() {
-        viewModel = CatalogViewModel(FakeMockProducts(size = 5))
+        viewModel = CatalogViewModel(FakeMockProducts(size = 30))
 
-        assertThat(viewModel.isLoadButtonEnabled()).isEqualTo(true)
+        val hasNext = viewModel.pagingData.value?.hasNext
+
+        assertThat(hasNext).isEqualTo(true)
     }
 
     companion object {
-        private const val MOCK_DATA_SIZE = 5
         private const val PAGE_SIZE = 20
     }
 }

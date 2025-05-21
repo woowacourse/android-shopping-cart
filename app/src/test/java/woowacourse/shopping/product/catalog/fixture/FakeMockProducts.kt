@@ -1,48 +1,28 @@
 package woowacourse.shopping.product.catalog.fixture
 
 import woowacourse.shopping.data.ProductsDataSource
-import woowacourse.shopping.mapper.toUiModel
-import woowacourse.shopping.product.catalog.Product
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class FakeMockProducts(
     private val size: Int,
 ) : ProductsDataSource {
-    override fun getProducts(): List<ProductUiModel> = List(size) { mockProducts.map { it.toUiModel() } }.flatten()
+    private val mockProducts: List<ProductUiModel> = generateMockProducts(size)
+
+    override fun getProducts(): List<ProductUiModel> = mockProducts
 
     override fun getSubListedProducts(
         startIndex: Int,
         lastIndex: Int,
-    ): List<ProductUiModel> = emptyList()
+    ): List<ProductUiModel> = mockProducts.subList(startIndex, lastIndex.coerceAtMost(mockProducts.size))
 
-    override fun getProductsSize(): Int = 1
+    override fun getProductsSize(): Int = mockProducts.size
 
-    val mockProducts =
-        listOf(
-            Product(
-                name = "아이스 카페 아메리카노",
-                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg",
-                price = 10000,
-            ),
-            Product(
-                name = "아이스 카라멜 마키아또",
-                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110582]_20210415142706229.jpg",
-                price = 10000,
-            ),
-            Product(
-                name = "아이스 카푸치노",
-                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110601]_20210415143400922.jpg",
-                price = 10000,
-            ),
-            Product(
-                name = "딸기 콜드폼 딸기 라떼",
-                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000003659]_20210428134252286.jpg",
-                price = 10000,
-            ),
-            Product(
-                name = "바닐라 크림 콜드 브루",
-                imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000000487]_20210430112319174.jpg",
-                price = 10000,
-            ),
-        )
+    private fun generateMockProducts(count: Int): List<ProductUiModel> =
+        (1..count).map {
+            ProductUiModel(
+                name = "상품$it",
+                imageUrl = "https://example.com/image$it.jpg",
+                price = it * 1000,
+            )
+        }
 }
