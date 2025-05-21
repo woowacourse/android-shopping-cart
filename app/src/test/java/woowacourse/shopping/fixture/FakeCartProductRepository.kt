@@ -22,6 +22,19 @@ class FakeCartProductRepository : CartProductRepository {
 
     override fun getQuantityByProductId(productId: Long): Int? = items.find { it.product.id == productId }?.quantity
 
+    override fun updateQuantity(
+        productId: Long,
+        quantity: Int,
+    ) {
+        items.replaceAll {
+            if (it.product.id == productId) it.copy(quantity = quantity) else it
+        }
+    }
+
+    override fun deleteByProductId(productId: Long) {
+        items.removeIf { it.product.id == productId }
+    }
+
     override fun insert(productId: Long) {
         val product =
             Product(
@@ -36,9 +49,5 @@ class FakeCartProductRepository : CartProductRepository {
                 product = product,
             ),
         )
-    }
-
-    override fun delete(shoppingCartId: Long?) {
-        items.removeIf { it.id == shoppingCartId }
     }
 }

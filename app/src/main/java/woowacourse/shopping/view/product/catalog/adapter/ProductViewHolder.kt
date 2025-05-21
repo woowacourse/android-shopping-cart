@@ -22,6 +22,8 @@ class ProductViewHolder(
     interface EventHandler {
         fun onProductClick(item: Product)
 
+        fun onAddClick(item: Product)
+
         fun onQuantityIncreaseClick(item: Product)
 
         fun onQuantityDecreaseClick(item: Product)

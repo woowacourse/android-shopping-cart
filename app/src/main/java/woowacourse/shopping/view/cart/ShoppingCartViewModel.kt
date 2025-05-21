@@ -71,7 +71,7 @@ class ShoppingCartViewModel(
     }
 
     private fun deleteProduct(product: CartProduct) {
-        repository.delete(product.id)
+        repository.deleteByProductId(product.product.id)
         cachedProducts.remove(product)
 
         val currentPage = page.value ?: FIRST_PAGE_NUMBER

@@ -18,12 +18,18 @@ interface CartProductDao {
         offset: Int,
     ): List<CartProductEntity>
 
-    @Query("SELECT quantity FROM cart_product WHERE product_id = :productId LIMIT 1")
+    @Query("SELECT quantity FROM cart_product WHERE product_id = :productId")
     fun getQuantityByProductId(productId: Long): Int?
+
+    @Query("UPDATE cart_product SET quantity = :quantity WHERE product_id = :productId")
+    fun updateQuantity(
+        productId: Long,
+        quantity: Int,
+    )
 
     @Insert
     fun insert(product: CartProductEntity)
 
-    @Query("DELETE from cart_product WHERE id == :cartProductId")
-    fun delete(cartProductId: Long)
+    @Query("DELETE from cart_product WHERE product_id == :productId")
+    fun deleteByProductId(productId: Long)
 }

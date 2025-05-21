@@ -44,6 +44,15 @@ class LocalCartProductRepository(
         return result
     }
 
+    override fun updateQuantity(
+        productId: Long,
+        quantity: Int,
+    ) {
+        thread {
+            dao.updateQuantity(productId, quantity)
+        }.join()
+    }
+
     override fun insert(productId: Long) {
         thread {
             dao.insert(CartProductEntity(productId = productId, quantity = 1))
@@ -51,11 +60,9 @@ class LocalCartProductRepository(
         totalCount++
     }
 
-    override fun delete(shoppingCartId: Long?) {
+    override fun deleteByProductId(productId: Long) {
         thread {
-            if (shoppingCartId != null) {
-                dao.delete(shoppingCartId)
-            }
+            dao.deleteByProductId(productId)
         }.join()
         totalCount--
     }

@@ -13,15 +13,14 @@ class ProductCatalogViewModel(
     private val cartProductRepository: CartProductRepository,
 ) : ViewModel(),
     ProductCatalogEventHandler {
-    private val products = mutableListOf<Product>()
+    private val products = mutableMapOf<Product, Int>()
+    private var offset = FIRST_OFFSET
 
     private val _productItems = MutableLiveData<List<ProductCatalogItem>>()
     val productItems: LiveData<List<ProductCatalogItem>> = _productItems
 
     private val _selectedProduct = MutableLiveData<Product>()
     val selectedProduct: LiveData<Product> = _selectedProduct
-
-    private var offset = FIRST_OFFSET
 
     init {
         loadMoreProducts()
@@ -31,10 +30,31 @@ class ProductCatalogViewModel(
         _selectedProduct.value = item
     }
 
+    override fun onAddClick(item: Product) {
+        cartProductRepository.insert(item.id)
+        updateProductQuantity(item, 1)
+    }
+
     override fun onQuantityIncreaseClick(item: Product) {
+        val currentQuantity = products[item] ?: 0
+        val newQuantity = currentQuantity + 1
+        if (currentQuantity == 0) {
+            cartProductRepository.insert(item.id)
+        } else {
+            cartProductRepository.updateQuantity(item.id, newQuantity)
+        }
+        updateProductQuantity(item, newQuantity)
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
+        val currentQuantity = products[item] ?: 0
+        val newQuantity = currentQuantity - 1
+        if (currentQuantity == 1) {
+            cartProductRepository.deleteByProductId(item.id)
+        } else {
+            cartProductRepository.updateQuantity(item.id, newQuantity)
+        }
+        updateProductQuantity(item, newQuantity)
     }
 
     override fun onMoreClick() {
@@ -43,14 +63,36 @@ class ProductCatalogViewModel(
 
     private fun loadMoreProducts() {
         val result = productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset)
-        products.addAll(result.items)
+        result.items.forEach { product ->
+            val quantity = cartProductRepository.getQuantityByProductId(product.id)
+            products[product] = quantity ?: 0
+        }
         offset += result.items.size
-        val items =
-            products.map {
-                val quantity = cartProductRepository.getQuantityByProductId(it.id)
-                ProductCatalogItem.ProductItem(it, quantity ?: 0)
+        _productItems.value = createProductItems(result.hasNext)
+    }
+
+    private fun updateProductQuantity(
+        product: Product,
+        quantity: Int,
+    ) {
+        products[product] = quantity
+        _productItems.value =
+            productItems.value?.map {
+                when (it) {
+                    is ProductCatalogItem.ProductItem ->
+                        if (it.product.id == product.id) it.copy(quantity = quantity) else it
+
+                    ProductCatalogItem.LoadMoreItem -> it
+                }
             }
-        _productItems.value = if (result.hasNext) items + ProductCatalogItem.LoadMoreItem else items
+    }
+
+    private fun createProductItems(hasNext: Boolean): List<ProductCatalogItem> {
+        val items =
+            products.map { (product, quantity) ->
+                ProductCatalogItem.ProductItem(product, quantity)
+            }
+        return if (hasNext) items + ProductCatalogItem.LoadMoreItem else items
     }
 
     companion object {

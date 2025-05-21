@@ -34,11 +34,29 @@ class ProductAdapter(
     override fun getItemViewType(position: Int): Int = items[position].type.ordinal
 
     fun updateItems(newItems: List<ProductCatalogItem>) {
-        val positionStart = items.size
-        val itemCount = newItems.size - positionStart
+        val oldSize = items.size
+        val newSize = newItems.size
+        val minSize = minOf(oldSize, newSize)
 
-        items.clear()
-        items.addAll(newItems)
-        notifyItemRangeInserted(positionStart, itemCount)
+        for (i in 0 until minSize) {
+            val oldItem = items[i]
+            val newItem = newItems[i]
+
+            if (oldItem != newItem) {
+                items[i] = newItem
+                notifyItemChanged(i)
+            }
+        }
+
+        if (newSize > oldSize) {
+            val addedItems = newItems.subList(oldSize, newSize)
+            items.addAll(addedItems)
+            notifyItemRangeInserted(oldSize, addedItems.size)
+        } else if (oldSize > newSize) {
+            for (i in oldSize - 1 downTo newSize) {
+                items.removeAt(i)
+            }
+            notifyItemRangeRemoved(newSize, oldSize - newSize)
+        }
     }
 }

@@ -82,6 +82,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/style_round_button"
             android:padding="4dp"
+            android:onClick="@{() -> handler.onAddClick(product)}"
             android:src="@drawable/ic_add"
             android:text="@string/plus"
             android:visibility="@{quantity == 0 ? View.VISIBLE : View.GONE}"
