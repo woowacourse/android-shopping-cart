@@ -18,7 +18,14 @@ class CartRepositoryImpl(
 
     override fun insert(goods: Goods) {
         thread {
-            cartDatabase.cartDao().insertAll(goods.toEntity())
+            val dao = cartDatabase.cartDao()
+            val existing = dao.findById(goods.id)
+            if (existing != null) {
+                val updated = existing.copy(quantity = existing.quantity + 1)
+                dao.update(updated)
+            } else {
+                dao.insertAll(goods.toEntity())
+            }
         }
     }
 

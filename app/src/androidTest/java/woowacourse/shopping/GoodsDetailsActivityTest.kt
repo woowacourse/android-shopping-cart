@@ -19,6 +19,7 @@ class GoodsDetailsActivityTest {
 
     private val testGoods =
         GoodsUiModel(
+            id = 0,
             name = "테스트 상품",
             price = 10000,
             thumbnailUrl = "",

@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface CartDao {
@@ -25,4 +26,10 @@ interface CartDao {
 
     @Query("SELECT COUNT(*) FROM cart")
     fun getAllItemsSize(): LiveData<Int>
+
+    @Query("SELECT * FROM cart WHERE id = :id LIMIT 1")
+    fun findById(id: Long): CartEntity?
+
+    @Update
+    fun update(cartEntity: CartEntity)
 }
