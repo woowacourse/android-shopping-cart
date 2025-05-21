@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.util.SingleLiveData
+import woowacourse.shopping.utils.SingleLiveData
 
 class ProductDetailViewModel(
     val product: Product,
