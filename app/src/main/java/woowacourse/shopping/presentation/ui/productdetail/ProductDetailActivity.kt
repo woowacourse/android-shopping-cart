@@ -21,6 +21,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
         removeSupportActionBarTitle()
         updateProductDetail()
         initViewBinding()
+
         viewModel.putProductFlag.observe(this) {
             Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
         }

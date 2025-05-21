@@ -52,34 +52,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_name" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingHorizontal="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@{@string/products_price(viewModel.product.price)}"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_product_detail">
+            app:layout_constraintTop_toBottomOf="@+id/divider_product_detail"
+            app:layout_constraintVertical_bias="0.058"
+            tools:text="99,800원" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/divider_product_detail"
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/product_detail_price"
+                android:text="@string/minus"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
+                android:textSize="30sp"
+                android:layout_marginEnd="30dp"
+                android:onClick="@{()->viewModel.downCount()}"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/products_price(viewModel.product.price)}"
+                android:text="@{String.valueOf(viewModel.count)}"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                tools:text="99,800원" />
+                android:textSize="30sp"
+                android:layout_marginEnd="30dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plus"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:onClick="@{()->viewModel.upCount()}"/>
         </LinearLayout>
 
         <TextView

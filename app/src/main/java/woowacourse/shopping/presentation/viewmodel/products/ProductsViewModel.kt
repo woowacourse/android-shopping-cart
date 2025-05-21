@@ -26,6 +26,10 @@ class ProductsViewModel(
         _cart.value = cartRepository.fetchAllProduct().associate { it.product.id to it.count }
     }
 
+    fun reloadCart() {
+        _cart.value = cartRepository.fetchAllProduct().associate { it.product.id to it.count }
+    }
+
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
         val newProducts =
             productsRepository.fetchProducts(count, products.value?.lastOrNull()?.id ?: 0)

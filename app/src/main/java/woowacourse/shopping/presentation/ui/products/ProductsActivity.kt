@@ -26,6 +26,12 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         viewModel.updateProducts()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.reloadCart()
+        productsAdapter.notifyDataSetChanged()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_products, menu)
         return true

@@ -18,6 +18,9 @@ class ProductDetailViewModel(
         MutableLiveData(Product.Companion.INVALID_PRODUCT)
     val product: LiveData<Product> get() = _product
 
+    private val _count: MutableLiveData<Int> = MutableLiveData(0)
+    val count: LiveData<Int> get() = _count
+
     val putProductFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
     val finishFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
 
@@ -26,8 +29,17 @@ class ProductDetailViewModel(
     }
 
     fun addCartProduct() {
-        // cartDummyRepository.addCartProduct(product.value ?: return)
+        cartDummyRepository.upsertCartProduct(product.value ?: return, _count.value ?: return)
         putProductFlag.call()
         finishFlag.call()
+    }
+
+    fun upCount() {
+        _count.value = (_count.value ?: 0) + 1
+    }
+
+    fun downCount() {
+        _count.value = (_count.value ?: 0) - 1
+        if ((_count.value ?: 0) <= 0) _count.value = 0
     }
 }
