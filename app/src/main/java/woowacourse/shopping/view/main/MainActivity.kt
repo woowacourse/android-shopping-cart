@@ -37,15 +37,20 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        setUpBinding()
+        setUpSystemBar()
+        setupRecyclerView()
+        observeViewModel()
+        setUpListener()
+    }
+
+    private fun setUpBinding() {
         with(binding) {
             lifecycleOwner = this@MainActivity
             adapter = productsAdapter
             vm = viewModel
         }
-        setUpSystemBar()
-        setupRecyclerView()
-        observeViewModel()
-        setUpListener()
     }
 
     private fun setUpSystemBar() {
