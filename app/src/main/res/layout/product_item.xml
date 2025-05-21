@@ -17,7 +17,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/product_item"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:onClick="@{() -> productClickListener.onClick(product)}"
         android:paddingVertical="10dp">
@@ -29,9 +29,9 @@
             android:contentDescription="@string/product_description"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:setImageWithGlide="@{product.imageUrl}"
             tools:src="@drawable/ic_launcher_background" />
 
@@ -39,17 +39,16 @@
             android:id="@+id/tv_product_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="end"
-            android:maxEms="10"
+            android:maxEms="8"
             android:singleLine="true"
             android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image"
             app:layout_constraintTop_toBottomOf="@id/iv_product_image"
             tools:text="바지" />
 
@@ -57,11 +56,10 @@
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
             android:text="@{@string/price(product.price)}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_product_title"
             app:layout_constraintTop_toBottomOf="@id/tv_product_title"
             tools:text="10,000원" />
 
