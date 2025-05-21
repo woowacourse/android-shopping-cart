@@ -14,9 +14,6 @@ import woowacourse.shopping.model.product.Product
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData(cartRepository.products)
-    val products: LiveData<MutableList<Product>> = _products
-
     private val _currentPageNumber = MutableLiveData(1)
     val currentPageNumber: LiveData<Int> = _currentPageNumber
 
@@ -40,7 +37,6 @@ class CartViewModel(
 
     fun removeToCart(product: Product) {
         cartRepository.remove(product)
-        _products.value = cartRepository.products
         _isOnlyOnePage.value = checkOnlyOnePage()
         loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
     }

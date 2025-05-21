@@ -22,8 +22,7 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = cartViewModel
         initRecyclerView()
-        observeLoadedItems()
-        observeProducts()
+        observeLoadedProducts()
         setButtonsClickListener()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -57,13 +56,7 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeProducts() {
-        cartViewModel.products.observe(this) {
-            adapter.updateProductsView(it)
-        }
-    }
-
-    private fun observeLoadedItems() {
+    private fun observeLoadedProducts() {
         cartViewModel.loadedProducts.observe(this) {
             adapter.updateProductsView(it)
         }
