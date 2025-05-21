@@ -10,11 +10,15 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.model.GoodsUiModel
 
 class ShoppingCartActivity : BaseActivity() {
     private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
     private val viewModel: ShoppingCartViewModel by viewModels {
-        ShoppingCartViewModel.provideFactory((application as ShoppingApplication).shoppingRepository)
+        ShoppingCartViewModel.provideFactory(
+            (application as ShoppingApplication).goodsRepository,
+            (application as ShoppingApplication).shoppingRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +29,22 @@ class ShoppingCartActivity : BaseActivity() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-        val adapter = ShoppingCartAdapter { goods -> viewModel.deleteGoods(goods) }
+        val adapter =
+            ShoppingCartAdapter(
+                object : ShoppingCartClickListener {
+                    override fun onDeleteGoods(goods: GoodsUiModel) {
+                        viewModel.deleteGoods(goods)
+                    }
+
+                    override fun onIncreaseQuantity(position: Int) {
+                        viewModel.increaseGoodsCount(position)
+                    }
+
+                    override fun onDecreaseQuantity(position: Int) {
+                        viewModel.decreaseGoodsCount(position)
+                    }
+                },
+            )
         binding.rvSelectedGoodsList.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
@@ -33,6 +52,10 @@ class ShoppingCartActivity : BaseActivity() {
 
         viewModel.goods.observe(this) { goods ->
             adapter.updateItems(goods)
+        }
+
+        viewModel.isQuantityChanged.observe(this) {
+            adapter.notifyItemChanged(it)
         }
     }
 

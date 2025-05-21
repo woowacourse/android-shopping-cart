@@ -15,9 +15,12 @@ class ShoppingCartViewHolder(
 
     init {
         binding.clickListener = clickListener
+        binding.clGoodsCount.clickListener = clickListener
     }
 
     fun bind(goods: GoodsUiModel) {
         binding.goods = goods
+        binding.clGoodsCount.count = goods.quantity
+        binding.clGoodsCount.position = adapterPosition
     }
 }
