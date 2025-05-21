@@ -9,8 +9,8 @@
             type="woowacourse.shopping.view.detail.event.DetailScreenEventHandler" />
 
         <variable
-            name="model"
-            type="woowacourse.shopping.domain.Product" />
+            name="vm"
+            type="woowacourse.shopping.view.detail.vm.DetailViewModel" />
 
     </data>
 
@@ -24,7 +24,7 @@
             android:id="@+id/image_view_product"
             android:layout_width="match_parent"
             android:layout_height="360dp"
-            setImage="@{model.imgUrl}"
+            setImage="@{vm.product.imgUrl}"
             tools:src="@drawable/ic_close"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             android:id="@+id/text_view_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{model.name}"
+            android:text="@{vm.product.name}"
             app:layout_constraintTop_toBottomOf="@id/image_view_product"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="16dp"
@@ -70,7 +70,7 @@
             android:id="@+id/text_view_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/format_thousand_won(model.priceValue)}"
+            android:text="@{@string/format_thousand_won(vm.product.priceValue)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
             android:layout_marginEnd="18dp"

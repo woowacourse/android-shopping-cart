@@ -29,18 +29,20 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        binding.lifecycleOwner = this@DetailActivity
-        binding.eventHandler =
-            DetailScreenEventHandler {
-                viewModel.addProduct()
-                startActivity(CartActivity.newIntent(this@DetailActivity))
-            }
+        with(binding) {
+            lifecycleOwner = this@DetailActivity
+            eventHandler =
+                DetailScreenEventHandler {
+                    viewModel.addProduct()
+                    startActivity(CartActivity.newIntent(this@DetailActivity))
+                }
+            vm = viewModel
+        }
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
 
         initView()
-        observeViewModel()
     }
 
     private fun initView() {
@@ -51,12 +53,6 @@ class DetailActivity : AppCompatActivity() {
             insets
         }
         supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    private fun observeViewModel() {
-        viewModel.product.observe(this) {
-            binding.model = it
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
