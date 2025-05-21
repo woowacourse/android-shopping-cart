@@ -156,4 +156,6 @@ object DummyProducts {
                 39700,
             ),
         )
+
+    fun getAllProducts(): List<Product> = dummyProducts.toList()
 }
