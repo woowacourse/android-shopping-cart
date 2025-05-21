@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="model"
-            type="woowacourse.shopping.view.main.adapter.ProductRvItems.ProductItem" />
+            type="woowacourse.shopping.view.main.vm.state.ProductState" />
         <variable
             name="eventHandler"
             type="woowacourse.shopping.view.core.handler.CartQuantityHandler" />
@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="@{model.quantityVisible ? View.VISIBLE : View.GONE}">
+        android:visibility="@{model.cartQuantityValue > 0 ? View.VISIBLE : View.GONE}">
 
         <ImageView
             android:id="@+id/image_view_minus"
@@ -33,7 +33,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:text="@{String.valueOf(model.quantity)}"
+            android:text="@{String.valueOf(model.cartQuantityValue)}"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

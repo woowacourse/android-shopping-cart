@@ -54,7 +54,7 @@ class ProductAdapter(
             .items
             .forEachIndexed { index, newState ->
                 val existingItem = items.getOrNull(index) as? ProductRvItems.ProductItem
-                val newItem = newState.toProductRvItems()
+                val newItem = ProductRvItems.ProductItem(newState)
                 applyItemChange(existingItem, newItem, index)
             }
 
@@ -85,9 +85,8 @@ class ProductAdapter(
         oldItem: ProductRvItems.ProductItem,
         newItem: ProductRvItems.ProductItem,
     ): Boolean {
-        return oldItem.item == newItem.item &&
-            oldItem.quantity == newItem.quantity &&
-            oldItem.quantityVisible == newItem.quantityVisible
+        return oldItem.data.item == newItem.data.item &&
+            oldItem.data.cartQuantity == newItem.data.cartQuantity
     }
 
     private fun generateLoad(load: LoadState) {

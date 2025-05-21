@@ -20,7 +20,7 @@ class ProductViewHolder(
     ) {
     fun bind(item: ProductRvItems.ProductItem) {
         with(binding) {
-            model = item
+            model = item.data
             adapterEventHandler = handler
             cartQuantityEventHandler = quantityHandler
             executePendingBindings()

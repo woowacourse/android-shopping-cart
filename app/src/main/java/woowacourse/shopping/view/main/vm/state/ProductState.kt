@@ -7,6 +7,9 @@ data class ProductState(
     val item: Product,
     val cartQuantity: Quantity,
 ) {
+    val cartQuantityValue: Int
+        get() = cartQuantity.value
+
     fun isSaveInCart(): CartSavingState {
         return if (cartQuantity.hasQuantity()) {
             CartSavingState.SAVED
