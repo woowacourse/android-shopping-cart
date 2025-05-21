@@ -3,8 +3,6 @@ package woowacourse.shopping.data.storage
 import woowacourse.shopping.domain.Product
 
 object DummyProducts : ProductStorage {
-    private var currentIndex = 0
-
     private val value =
         listOf(
             Product(
@@ -191,9 +189,11 @@ object DummyProducts : ProductStorage {
 
     override fun getProducts(): List<Product> = value
 
-    override fun getProducts(limit: Int): List<Product> {
+    override fun getProducts(
+        currentIndex: Int,
+        limit: Int,
+    ): List<Product> {
         val products = value.drop(currentIndex).take(limit)
-        currentIndex += limit
         return products
     }
 

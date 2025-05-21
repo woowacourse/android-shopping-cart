@@ -8,7 +8,10 @@ class ProductRepositoryImpl private constructor(
 ) : ProductRepository {
     override fun getProducts(): List<Product> = storage.getProducts()
 
-    override fun getProducts(limit: Int): List<Product> = storage.getProducts(limit)
+    override fun getProducts(
+        currentIndex: Int,
+        limit: Int,
+    ): List<Product> = storage.getProducts(currentIndex, limit)
 
     override fun getProductsSize(): Int = storage.getProductsSize()
 

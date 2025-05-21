@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.product
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +19,8 @@ class ProductViewModel(
     val products: LiveData<List<Product>> get() = _products
     private val _isShowMore: MutableLiveData<Boolean> = MutableLiveData(false)
     val isShowMore: LiveData<Boolean> get() = _isShowMore
-    private var totalProductsCount: Int = 0
+    var totalProductsCount: Int = 0
+    private var currentIndex = 0
 
     fun fetchInitData() {
         totalProductsCount = productRepository.getProductsSize()
@@ -26,8 +28,14 @@ class ProductViewModel(
     }
 
     fun fetchData() {
-        val newProducts = productRepository.getProducts(LIMIT_COUNT)
+        val newProducts = productRepository.getProducts(currentIndex, LIMIT_COUNT)
         _products.value = (_products.value ?: emptyList()).plus(newProducts)
+        currentIndex += LIMIT_COUNT
+        Log.d("test", "$newProducts")
+    }
+
+    fun changeShowState(isShow: Boolean) {
+        _isShowMore.postValue(isShow)
     }
 
     companion object {

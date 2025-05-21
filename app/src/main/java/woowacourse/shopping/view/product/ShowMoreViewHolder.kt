@@ -10,7 +10,7 @@ class ShowMoreViewHolder(
     val toShowMore: () -> Boolean,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.toShowMore = ::toShowMore
+        binding.toShowMore = toShowMore
     }
 
     companion object {

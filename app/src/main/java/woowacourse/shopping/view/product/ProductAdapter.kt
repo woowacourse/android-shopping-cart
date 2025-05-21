@@ -10,12 +10,13 @@ class ProductAdapter(
     private val onShowMore: () -> Boolean,
     private val onSelectedProduct: (Product) -> Unit,
 ) : RecyclerView.Adapter<ViewHolder>() {
-    private val products: MutableList<Product> = mutableListOf()
+    private var products: List<Product> = emptyList()
 
     override fun getItemViewType(position: Int): Int =
-        when (position != 0 && position % LIMIT_COUNT == 0) {
-            true -> 1
-            false -> 0
+        if (position < products.size) {
+            ViewType.PRODUCTS.ordinal
+        } else {
+            ViewType.SHOW_MORE.ordinal
         }
 
     override fun onCreateViewHolder(
@@ -34,17 +35,24 @@ class ProductAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(products[position])
+            is ProductViewHolder -> {
+                if (position < products.size) {
+                    holder.bind(products[position])
+                }
+            }
+
             is ShowMoreViewHolder -> holder
         }
     }
 
-    override fun getItemCount(): Int = products.size + (products.size / LIMIT_COUNT)
+    override fun getItemCount(): Int {
+        val hasShowMore = products.size % LIMIT_COUNT == 0 && products.isNotEmpty()
+        return products.size + if (hasShowMore) 1 else 0
+    }
 
     fun setData(newProducts: List<Product>) {
-        val previous = products.size
-        products += newProducts
-        notifyItemRangeInserted(previous, newProducts.size)
+        products = newProducts
+        notifyDataSetChanged()
     }
 
     companion object {

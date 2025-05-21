@@ -30,6 +30,10 @@ class ProductActivity : AppCompatActivity() {
         initDataBinding()
         initView()
         bindData()
+        bindingAdapterManager()
+    }
+
+    private fun bindingAdapterManager() {
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
@@ -37,8 +41,8 @@ class ProductActivity : AppCompatActivity() {
                     when (productAdapter.getItemViewType(position)) {
                         0 -> 1
                         1 -> 2
-                        else -> IllegalArgumentException()
-                    } as Int
+                        else -> 2
+                    }
             }
         binding.rvProducts.layoutManager = layoutManager
     }
@@ -75,7 +79,11 @@ class ProductActivity : AppCompatActivity() {
         startActivity(CartActivity.newIntent(context = this))
     }
 
-    private fun onShowMore(): Boolean = true
+    private fun onShowMore(): Boolean {
+        productViewModel.changeShowState(true)
+        productViewModel.fetchData()
+        return true
+    }
 
     private fun navigateToProductDetail(product: Product) {
         startActivity(ProductDetailActivity.newIntent(context = this, product = product))
