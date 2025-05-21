@@ -8,12 +8,10 @@ import woowacourse.shopping.domain.model.Goods
 
 class GoodsViewHolder(
     private val binding: ItemGoodsBinding,
-    private val goodsClickListener: GoodsClickListener,
+    goodsClickListener: GoodsClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        itemView.setOnClickListener {
-            binding.goods?.let { goodsClickListener.onClickGoods(it) }
-        }
+        binding.clickListener = goodsClickListener
     }
 
     fun bind(goods: Goods) {

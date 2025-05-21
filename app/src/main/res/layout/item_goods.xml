@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.feature.goods.adapter.GoodsClickListener" />
         <variable
             name="goods"
             type="woowacourse.shopping.domain.model.Goods" />
@@ -14,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="6dp"
-        android:paddingBottom="12dp">
+        android:paddingBottom="12dp"
+        android:onClick="@{() -> clickListener.onClickGoods(goods)}">
 
 
         <ImageView
