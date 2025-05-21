@@ -41,15 +41,10 @@ class ShoppingCartViewModel(
         updateState()
     }
 
-    fun deleteGoods(goods: GoodsUiModel) {
-        shoppingRepository.removeItem(goods.id)
-        updateState()
-    }
-
     fun increaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoods(position) {
-                it.copy(quantity = it.quantity + 1)
+                it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.increaseItemQuantity(updatedItem.id)
     }
@@ -57,14 +52,19 @@ class ShoppingCartViewModel(
     fun decreaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoods(position) {
-                it.copy(quantity = it.quantity - 1)
+                it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
 
-        if (updatedItem.quantity <= 0) {
+        if (updatedItem.quantity <= MINIMUM_QUANTITY) {
             deleteGoods(updatedItem)
         } else {
             shoppingRepository.decreaseItemQuantity(updatedItem.id)
         }
+    }
+
+    fun deleteGoods(goods: GoodsUiModel) {
+        shoppingRepository.removeItem(goods.id)
+        updateState()
     }
 
     private fun updateGoods(
@@ -118,6 +118,8 @@ class ShoppingCartViewModel(
         private const val ITEM_COUNT: Int = 5
         private const val DEFAULT_PAGE_VALUE: Int = 0
         private const val PAGE_CHANGE_AMOUNT: Int = 1
+        private const val QUANTITY_CHANGE_AMOUNT: Int = 1
+        private const val MINIMUM_QUANTITY: Int = 0
 
         fun provideFactory(
             goodsRepository: GoodsRepository,

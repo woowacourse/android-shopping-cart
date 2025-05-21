@@ -24,27 +24,11 @@ class ShoppingCartActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        setupAppBar()
+        setUpAppBar()
+        setUpBinding()
 
-        binding.vm = viewModel
-        binding.lifecycleOwner = this
+        val adapter = makeAdapter()
 
-        val adapter =
-            ShoppingCartAdapter(
-                object : ShoppingCartClickListener {
-                    override fun onDeleteGoods(goods: GoodsUiModel) {
-                        viewModel.deleteGoods(goods)
-                    }
-
-                    override fun onIncreaseQuantity(position: Int) {
-                        viewModel.increaseGoodsCount(position)
-                    }
-
-                    override fun onDecreaseQuantity(position: Int) {
-                        viewModel.decreaseGoodsCount(position)
-                    }
-                },
-            )
         binding.rvSelectedGoodsList.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
@@ -59,11 +43,34 @@ class ShoppingCartActivity : BaseActivity() {
         }
     }
 
-    private fun setupAppBar() {
+    private fun setUpBinding() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+    }
+
+    private fun setUpAppBar() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = getString(R.string.label_shopping_cart_title)
         }
+    }
+
+    private fun makeAdapter(): ShoppingCartAdapter {
+        return ShoppingCartAdapter(
+            object : ShoppingCartClickListener {
+                override fun onDeleteGoods(goods: GoodsUiModel) {
+                    viewModel.deleteGoods(goods)
+                }
+
+                override fun onIncreaseQuantity(position: Int) {
+                    viewModel.increaseGoodsCount(position)
+                }
+
+                override fun onDecreaseQuantity(position: Int) {
+                    viewModel.decreaseGoodsCount(position)
+                }
+            },
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
