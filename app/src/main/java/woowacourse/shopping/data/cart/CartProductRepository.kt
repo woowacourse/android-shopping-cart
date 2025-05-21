@@ -13,5 +13,5 @@ interface CartProductRepository {
         offset: Int,
     ): PagedResult<CartProduct>
 
-    fun delete(shoppingCartId: Long)
+    fun delete(shoppingCartId: Long?)
 }

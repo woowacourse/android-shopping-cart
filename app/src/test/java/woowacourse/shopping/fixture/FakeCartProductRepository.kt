@@ -36,7 +36,7 @@ class FakeCartProductRepository : CartProductRepository {
         )
     }
 
-    override fun delete(shoppingCartId: Long) {
+    override fun delete(shoppingCartId: Long?) {
         items.removeIf { it.id == shoppingCartId }
     }
 }

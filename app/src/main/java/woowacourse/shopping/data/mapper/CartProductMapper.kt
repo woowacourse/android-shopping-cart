@@ -13,6 +13,5 @@ fun List<CartProductEntity>.toDomain() =
 
 fun CartProduct.toEntity() =
     CartProductEntity(
-        id = this.id,
         productId = this.product.toId(),
     )

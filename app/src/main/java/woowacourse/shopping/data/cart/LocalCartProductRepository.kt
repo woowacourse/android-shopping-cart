@@ -45,9 +45,11 @@ class LocalCartProductRepository(
         totalCount++
     }
 
-    override fun delete(shoppingCartId: Long) {
+    override fun delete(shoppingCartId: Long?) {
         thread {
-            dao.delete(shoppingCartId)
+            if (shoppingCartId != null) {
+                dao.delete(shoppingCartId)
+            }
         }.join()
         totalCount--
     }
