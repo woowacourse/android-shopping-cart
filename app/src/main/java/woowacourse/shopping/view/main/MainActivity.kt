@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.core.ext.showToast
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
         setUpSystemBar()
         setupRecyclerView()
         observeViewModel()
+        setUpListener()
     }
 
     private fun setUpSystemBar() {
@@ -90,6 +92,12 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
                     )
                 }
             }
+        }
+    }
+
+    private fun setUpListener() {
+        binding.cartContainer.setOnClickListener {
+            startActivity(CartActivity.newIntent(this))
         }
     }
 
