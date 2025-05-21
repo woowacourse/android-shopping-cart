@@ -7,7 +7,10 @@ import woowacourse.shopping.domain.cart.CartSinglePage
 interface CartRepository {
     operator fun get(id: Long): Cart?
 
-    fun insert(productId: Long)
+    fun insert(
+        productId: Long,
+        quantity: Int = 1,
+    )
 
     fun modifyQuantity(
         productId: Long,

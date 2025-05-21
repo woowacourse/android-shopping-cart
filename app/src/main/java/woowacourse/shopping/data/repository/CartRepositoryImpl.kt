@@ -7,11 +7,13 @@ import woowacourse.shopping.domain.cart.CartSinglePage
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(private val storage: CartStorage) : CartRepository {
-    override fun get(id: Long): Cart = storage[id] ?: Cart(Quantity(0), id)
+    override fun get(id: Long): Cart? = storage[id]
 
-    override fun insert(productId: Long) =
-        storage
-            .insert(Cart(productId = productId, quantity = Quantity(1)))
+    override fun insert(
+        productId: Long,
+        quantity: Int,
+    ) = storage
+        .insert(Cart(productId = productId, quantity = Quantity(quantity)))
 
     override fun modifyQuantity(
         productId: Long,
