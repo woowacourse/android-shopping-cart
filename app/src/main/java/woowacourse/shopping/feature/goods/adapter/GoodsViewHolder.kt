@@ -10,8 +10,7 @@ class GoodsViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(goods: Goods) {
         binding.goods = goods
-        itemView.setOnClickListener { goodsClickListener.onClickGoods(goods) }
-        binding.btnAddCart.setOnClickListener { goodsClickListener.insertToCart(goods) }
+        binding.goodsClickListener = goodsClickListener
     }
 
     interface GoodsClickListener {

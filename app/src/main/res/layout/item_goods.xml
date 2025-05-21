@@ -11,13 +11,17 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.feature.goods.GoodsViewModel" />
+        <variable
+            name="goodsClickListener"
+            type="woowacourse.shopping.feature.goods.adapter.GoodsViewHolder.GoodsClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="6dp"
-        android:paddingBottom="12dp">
+        android:paddingBottom="12dp"
+        android:onClick="@{() -> goodsClickListener.onClickGoods(goods)}">
 
 
         <ImageView
@@ -41,6 +45,7 @@
             android:contentDescription="@string/goods_cart_add_button_description"
             android:src="@drawable/ic_add"
             android:visibility="visible"
+            android:onClick="@{() -> goodsClickListener.insertToCart(goods)}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_item_goods_thumbnail"
             app:layout_constraintEnd_toEndOf="@+id/iv_item_goods_thumbnail" />
 
