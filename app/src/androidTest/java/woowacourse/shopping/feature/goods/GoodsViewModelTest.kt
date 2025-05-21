@@ -22,8 +22,6 @@ class GoodsViewModelTest {
 
     @Test
     fun 앱_진입시_첫_20개의_상품을_로딩한다() {
-        val viewModel = GoodsViewModel()
-
         val loadedGoods = viewModel.goods.getOrAwaitValue()
 
         assertEquals(20, loadedGoods.size)
