@@ -33,6 +33,7 @@ class ProductDetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_product)
         binding.lifecycleOwner = this
+        binding.vm = viewModel
 
         initInsets()
         setupToolbar()
@@ -81,6 +82,10 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.product.observe(this) {
             binding.product = it
+        }
+
+        viewModel.toastMessage.observe(this) { resId ->
+            showToast(resId)
         }
 
         viewModel.insertProductResult.observe(this) { result ->
