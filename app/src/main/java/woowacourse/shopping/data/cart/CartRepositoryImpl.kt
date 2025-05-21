@@ -15,6 +15,14 @@ object CartRepositoryImpl : CartRepository {
         products.remove(product)
     }
 
+    override fun fetchProducts(
+        offset: Int,
+        limit: Int,
+    ): List<Product> {
+        val end = (offset + limit).coerceAtMost(products.size)
+        return products.subList(offset, end)
+    }
+
     override fun clear() {
         products.clear()
     }

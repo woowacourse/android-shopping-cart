@@ -80,7 +80,7 @@ class CartViewModel(
         val start = (page - ONE_PAGE_COUNT) * PAGE_SIZE
         val end = minOf(start + PAGE_SIZE, cartRepository.getAll().size)
 
-        val items = cartRepository.getAll().subList(start, end)
+        val items = cartRepository.fetchProducts(start, end)
         _loadedProducts.postValue(items)
         _currentPageNumber.value = page
         _isOnlyOnePage.value = checkOnlyOnePage()

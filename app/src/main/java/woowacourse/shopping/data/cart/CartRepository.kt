@@ -9,5 +9,10 @@ interface CartRepository {
 
     fun remove(product: Product)
 
+    fun fetchProducts(
+        offset: Int,
+        limit: Int,
+    ): List<Product>
+
     fun clear()
 }
