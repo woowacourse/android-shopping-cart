@@ -40,18 +40,18 @@
             android:id="@+id/tv_detail_product_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="15dp"
             android:text="@{viewModel.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_detail_image"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constrainedWidth="true"
             tools:text="[이든] 동원 스위트콘" />
 
 
@@ -65,33 +65,33 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_detail_product_title" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:text="@string/price_title"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/tv_detail_product_title"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
-
-        <TextView
             android:id="@+id/tv_detail_product_price"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
-            android:layout_marginEnd="15dp"
             android:text="@{@string/price(viewModel.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/include_detail_product_quantity_select"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@+id/tv_detail_product_title"
             app:layout_constraintTop_toBottomOf="@+id/divider"
-            tools:text="99,000원" />
+            app:layout_constraintWidth_default="wrap"
+            tools:text="30,000,000,000,000,00원" />
+
+        <include
+            android:id="@+id/include_detail_product_quantity_select"
+            layout="@layout/quantity_select"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_add_cart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/button_active"
+            android:backgroundTint="@color/neo_green"
             android:onClick="@{() -> viewModel.addCart()}"
             android:text="@string/add_cart"
             android:textColor="@color/white"
