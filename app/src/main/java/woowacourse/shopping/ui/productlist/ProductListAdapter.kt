@@ -1,12 +1,8 @@
 package woowacourse.shopping.ui.productlist
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.databinding.LoadMoreItemBinding
-import woowacourse.shopping.databinding.ProductItemBinding
 
 class ProductListAdapter(
     private var items: List<ProductListViewType>,
@@ -24,21 +20,10 @@ class ProductListAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            R.layout.product_item -> {
-                val binding: ProductItemBinding =
-                    DataBindingUtil.inflate(inflater, R.layout.product_item, parent, false)
-                ProductItemViewHolder(binding, productClickListener)
-            }
-
-            R.layout.load_more_item -> {
-                val binding: LoadMoreItemBinding =
-                    DataBindingUtil.inflate(inflater, R.layout.load_more_item, parent, false)
-                LoadMoreViewHolder(binding, loadMoreClickListener)
-            }
-
-            else -> throw IllegalArgumentException("지원하지 않는 타입입니다.")
+            R.layout.product_item -> ProductItemViewHolder.create(parent, productClickListener)
+            R.layout.load_more_item -> LoadMoreViewHolder.create(parent, loadMoreClickListener)
+            else -> throw IllegalArgumentException(ERROR_INVALID_VIEW_HOLDER_TYPE)
         }
     }
 
@@ -58,5 +43,9 @@ class ProductListAdapter(
         val itemCount = items.size - itemCount
         this.items = items
         notifyItemRangeInserted(positionStart, itemCount)
+    }
+
+    companion object {
+        private const val ERROR_INVALID_VIEW_HOLDER_TYPE = "지원하지 않는 타입입니다."
     }
 }
