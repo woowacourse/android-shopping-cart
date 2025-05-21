@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.fixture.SUNDAE
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.model.toUiModel

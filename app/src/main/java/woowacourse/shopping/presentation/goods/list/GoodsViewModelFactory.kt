@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.goods.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.goods.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.GoodsRepository
 
 class GoodsViewModelFactory(private val repository: GoodsRepository) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

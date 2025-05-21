@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.goods
 
-import woowacourse.shopping.data.goods.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.model.Goods
 
 class FakeGoodsRepository(

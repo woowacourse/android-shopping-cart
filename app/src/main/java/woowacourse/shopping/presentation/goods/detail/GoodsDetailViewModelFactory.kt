@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.goods.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
 
 class GoodsDetailViewModelFactory(

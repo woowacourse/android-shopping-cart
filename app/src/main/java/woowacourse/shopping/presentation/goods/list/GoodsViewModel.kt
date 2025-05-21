@@ -3,7 +3,7 @@ package woowacourse.shopping.presentation.goods.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.goods.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.model.toUiModel
 
@@ -19,7 +19,7 @@ class GoodsViewModel(private val repository: GoodsRepository) : ViewModel() {
     private var page: Int = DEFAULT_PAGE
 
     init {
-        _goodsUiModels.value = repository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        loadGoods()
     }
 
     fun addGoods() {
@@ -33,8 +33,12 @@ class GoodsViewModel(private val repository: GoodsRepository) : ViewModel() {
     }
 
     private fun loadNextPage() {
-        val newGoods = repository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        val newGoods = loadGoods()
         _goodsUiModels.value = _goodsUiModels.value.orEmpty() + newGoods
+    }
+
+    private fun loadGoods(): List<GoodsUiModel> {
+        return repository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
     }
 
     companion object {

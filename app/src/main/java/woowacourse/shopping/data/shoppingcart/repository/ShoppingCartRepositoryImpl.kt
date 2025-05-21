@@ -2,6 +2,7 @@ package woowacourse.shopping.data.shoppingcart.repository
 
 import woowacourse.shopping.data.shoppingcart.ShoppingDataBase
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class ShoppingCartRepositoryImpl(
     private val database: ShoppingDataBase = ShoppingDataBase,

@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.shoppingcart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class ShoppingCartViewModelFactory(private val repository: ShoppingCartRepository) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
