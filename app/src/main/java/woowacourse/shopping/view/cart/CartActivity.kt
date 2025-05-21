@@ -35,7 +35,7 @@ class CartActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         adapter =
             CartAdapter(onProductRemoveClickListener = { product ->
-                cartViewModel.removeToCart(
+                cartViewModel.removeFromCart(
                     product,
                 )
             })

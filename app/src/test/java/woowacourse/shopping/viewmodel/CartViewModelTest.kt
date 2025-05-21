@@ -33,7 +33,7 @@ class CartViewModelTest {
         // given
 
         // when
-        viewModel.removeToCart(PRODUCT_1)
+        viewModel.removeFromCart(PRODUCT_1)
 
         // then
         viewModel.isOnlyOnePage.value shouldBe true

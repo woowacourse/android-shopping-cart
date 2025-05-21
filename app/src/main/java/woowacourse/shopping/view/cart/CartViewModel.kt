@@ -35,7 +35,7 @@ class CartViewModel(
         loadPage(1)
     }
 
-    fun removeToCart(product: Product) {
+    fun removeFromCart(product: Product) {
         cartRepository.remove(product)
         _isOnlyOnePage.value = checkOnlyOnePage()
         loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
