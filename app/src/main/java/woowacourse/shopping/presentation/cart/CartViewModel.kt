@@ -18,8 +18,6 @@ class CartViewModel(
     CartPageClickListener {
     private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
     val products: LiveData<ResultState<List<CartItem>>> = _products
-    private val _productsCount: MutableLiveData<Int> = MutableLiveData()
-    val productsCount: LiveData<Int> = _productsCount
     private val _deleteProduct: MutableLiveData<ResultState<Long>> = MutableLiveData()
     val deleteProduct: LiveData<ResultState<Long>> = _deleteProduct
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
@@ -53,15 +51,6 @@ class CartViewModel(
 //                .onFailure { _products.postValue(ResultState.Failure()) }
 //        }
     }
-
-//    override fun onClickMinus() {
-//        _productsCount.value = (_productsCount.value ?: 0) - 1
-//        Log.d("aaa", "minus click")
-//    }
-//
-//    override fun onClickPlus() {
-//        _productsCount.value = (_productsCount.value ?: 0) + 1
-//    }
 
     fun changePage(next: Boolean) {
         val currentPage = _currentPage.value ?: 0
@@ -123,10 +112,9 @@ class CartViewModel(
         val result = cartRepository.increaseQuantity(productId)
         result
             .onSuccess {
-                Log.d("Aaa", "increase")
-//                _products.postValue()
+                updateQuantity(productId, 1)
             }.onFailure {
-                Log.d("aa", "fail")
+                Log.d("CartViewModel", "increase fail")
             }
     }
 
@@ -134,17 +122,38 @@ class CartViewModel(
         val result = cartRepository.decreaseQuantity(productId)
         result
             .onSuccess {
-                Log.d("Aaa", "decrease")
+                updateQuantity(productId, -1)
             }.onFailure {
+                Log.d("CartViewModel", "decrease fail")
             }
     }
 
+    private fun updateQuantity(
+        productId: Long,
+        amount: Int,
+    ) {
+        // TODO: 상품 수량 + - 시, 전체 화면 갱신됨..
+        val currentState = _products.value
+
+        if (currentState is ResultState.Success) {
+            val updatedList =
+                currentState.data.map { item ->
+                    if (item.product.productId == productId) {
+                        item.copy(quantity = item.quantity + amount)
+                    } else {
+                        item
+                    }
+                }
+            _products.value = ResultState.Success(updatedList)
+        }
+    }
+
     override fun onClickPrevious() {
-//        changePage(next = false)
+        changePage(next = false)
     }
 
     override fun onClickNext() {
-//        changePage(next = true)
+        changePage(next = true)
     }
 //
 //    private fun updateTotalPageAsync(onComplete: (() -> Unit)? = null) {

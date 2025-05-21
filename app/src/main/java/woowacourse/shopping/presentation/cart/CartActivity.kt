@@ -68,10 +68,6 @@ class CartActivity :
             showToast(resId)
         }
 
-        viewModel.productsCount.observe(this) {
-//            binding.
-        }
-
         viewModel.products.observe(this) { result ->
             when (result) {
                 is ResultState.Success -> {
