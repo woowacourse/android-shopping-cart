@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PaginationNextButton">
+        <item name="android:background">@drawable/pagination_next_selector</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+    </style>
+
+    <style name="PaginationPrevButton">
+        <item name="android:background">@drawable/pagination_prev_selector</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+    </style>
+
+</resources>

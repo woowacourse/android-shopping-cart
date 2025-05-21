@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="format_price">%,d원</string>
+    <string name="text_product_detail_image">product_detail_image</string>
+    <string name="text_product_image">product_image</string>
+    <string name="text_price">가격</string>
+    <string name="text_add_to_cart">장바구니 담기</string>
+    <string name="text_cart">Cart</string>
+    <string name="text_add_to_cart_success">장바구니에 상품이 추가되었습니다.</string>
+    <string name="text_menu_back">Back</string>
+    <string name="text_cart_action_bar">Cart</string>
+    <string name="text_prev_button"><![CDATA[<]]></string>
+    <string name="text_next_button"><![CDATA[>]]></string>
+    <string name="text_unInserted_toast">장바구니에 추가되지 않았습니다.</string>
+    <string name="cart_product_image_description">cart_product_image</string>
+    <string name="cart_product_delete_button_description">cart_product_delete_button</string>
 </resources>
