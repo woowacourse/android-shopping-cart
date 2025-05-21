@@ -36,5 +36,5 @@ interface HistoryDao {
     fun deleteOldestHistories(count: Int)
 
     @Query("SELECT * FROM search_history ORDER BY timestamp DESC LIMIT 1")
-    fun fetchRecentHistoryProduct(): ExploreHistoryProductDto?
+    fun getRecentHistoryProduct(): ExploreHistoryProductDto?
 }

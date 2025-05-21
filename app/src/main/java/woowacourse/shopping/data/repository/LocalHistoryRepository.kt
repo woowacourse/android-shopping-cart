@@ -30,7 +30,7 @@ class LocalHistoryRepository(
     override fun fetchRecentSearchHistory(callback: (HistoryProduct?) -> Unit) {
         thread {
             callback(
-                dao.fetchRecentHistoryProduct()?.toDomain(),
+                dao.getRecentHistoryProduct()?.toDomain(),
             )
         }
     }
