@@ -30,7 +30,7 @@ class ShoppingCartViewModel(
         shoppingCartRepository.load(offset, limit) { result ->
             result
                 .onSuccess { products ->
-                    if (handleEmptyPage(products)) return@load
+                    if (isEmptyPage(products)) return@load
 
                     updatePaginationState(products)
 
@@ -42,7 +42,7 @@ class ShoppingCartViewModel(
         }
     }
 
-    private fun handleEmptyPage(products: List<Product>): Boolean =
+    private fun isEmptyPage(products: List<Product>): Boolean =
         if (products.isEmpty() && page != MINIMUM_PAGE) {
             minusPage()
             true
