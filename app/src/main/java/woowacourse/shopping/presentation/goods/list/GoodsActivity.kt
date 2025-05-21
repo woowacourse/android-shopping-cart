@@ -30,26 +30,7 @@ class GoodsActivity : BaseActivity() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-        val adapter =
-            GoodsAdapter(
-                object : GoodsClickListener {
-                    override fun onGoodsClick(goods: GoodsUiModel) {
-                        navigateToDetail(goods)
-                    }
-
-                    override fun onPlusClick(position: Int) {
-                        viewModel.increaseGoodsCount(position)
-                    }
-
-                    override fun onIncreaseQuantity(position: Int) {
-                        viewModel.increaseGoodsCount(position)
-                    }
-
-                    override fun onDecreaseQuantity(position: Int) {
-                        viewModel.decreaseGoodsCount(position)
-                    }
-                },
-            )
+        val adapter = makeAdapter()
         setUpGoodsList(adapter)
 
         viewModel.goods.observe(this) { goods ->
@@ -65,6 +46,28 @@ class GoodsActivity : BaseActivity() {
         super.onStart()
 
         viewModel.restoreGoods()
+    }
+
+    private fun makeAdapter(): GoodsAdapter {
+        return GoodsAdapter(
+            object : GoodsClickListener {
+                override fun onGoodsClick(goods: GoodsUiModel) {
+                    navigateToDetail(goods)
+                }
+
+                override fun onPlusClick(position: Int) {
+                    viewModel.increaseGoodsCount(position)
+                }
+
+                override fun onIncreaseQuantity(position: Int) {
+                    viewModel.increaseGoodsCount(position)
+                }
+
+                override fun onDecreaseQuantity(position: Int) {
+                    viewModel.decreaseGoodsCount(position)
+                }
+            },
+        )
     }
 
     private fun setUpGoodsList(adapter: GoodsAdapter) {
