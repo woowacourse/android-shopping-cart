@@ -55,7 +55,7 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun bindData() {
         viewModel.products.observe(this) { products: List<ProductsItem> ->
-            productAdapter.submitList(products)
+            productAdapter.appendItems(products)
         }
     }
 
