@@ -25,7 +25,7 @@ class ShoppingCartActivity :
 
         with(viewModel) {
             requestProductsPage(0)
-            productsLiveData.observe(this@ShoppingCartActivity) { page ->
+            products.observe(this@ShoppingCartActivity) { page ->
                 val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
                 adapter.updateProducts(page.items)
             }
@@ -44,11 +44,11 @@ class ShoppingCartActivity :
     }
 
     override fun onPaginationPrevious() {
-        viewModel.requestProductsPage((viewModel.productsLiveData.value?.pageIndex ?: 0) - 1)
+        viewModel.requestProductsPage((viewModel.products.value?.pageIndex ?: 0) - 1)
     }
 
     override fun onPaginationNext() {
-        viewModel.requestProductsPage((viewModel.productsLiveData.value?.pageIndex ?: 0) + 1)
+        viewModel.requestProductsPage((viewModel.products.value?.pageIndex ?: 0) + 1)
     }
 
     companion object {

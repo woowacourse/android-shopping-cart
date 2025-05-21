@@ -19,7 +19,7 @@ class ShoppingCartViewModelTest {
         val viewModel = ShoppingCartViewModel(repository)
         val page = repository.getPage(5, 0)
         viewModel.requestProductsPage(0)
-        assert(viewModel.productsLiveData.getOrAwaitValue() == page)
+        assert(viewModel.products.getOrAwaitValue() == page)
     }
 
     @Test
@@ -33,7 +33,7 @@ class ShoppingCartViewModelTest {
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/3c68d05b-d392-4a38-8637-a25068220fa4.jpg",
             )
         viewModel.removeProduct(product)
-        assert(!viewModel.productsLiveData.getOrAwaitValue().items.contains(product))
+        assert(!viewModel.products.getOrAwaitValue().items.contains(product))
     }
 
     @Test
@@ -48,6 +48,6 @@ class ShoppingCartViewModelTest {
             )
         viewModel.removeProduct(product)
         val page = repository.getPage(5, 4)
-        assert(viewModel.productsLiveData.getOrAwaitValue() == page)
+        assert(viewModel.products.getOrAwaitValue() == page)
     }
 }
