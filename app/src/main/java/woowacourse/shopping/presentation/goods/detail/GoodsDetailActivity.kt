@@ -12,6 +12,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 import woowacourse.shopping.presentation.util.getSerializableCompat
 
 class GoodsDetailActivity : BaseActivity() {
@@ -30,6 +31,21 @@ class GoodsDetailActivity : BaseActivity() {
 
         viewModel.isItemAddedToCart.observe(this) {
             Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.clGoodsCount.clickListener =
+            object : QuantitySelectorListener {
+                override fun onIncreaseQuantity(position: Int) {
+                    viewModel.increaseCount()
+                }
+
+                override fun onDecreaseQuantity(position: Int) {
+                    viewModel.decreaseCount()
+                }
+            }
+
+        viewModel.count.observe(this) {
+            binding.clGoodsCount.count = it
         }
     }
 

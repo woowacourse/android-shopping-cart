@@ -188,6 +188,10 @@ object GoodsDataBase : GoodsRepository {
             ),
         )
 
+    override fun getById(id: Int): Goods {
+        return getAllGoods().find { it.id == id } ?: throw IllegalArgumentException()
+    }
+
     override fun getPagedGoods(
         page: Int,
         count: Int,

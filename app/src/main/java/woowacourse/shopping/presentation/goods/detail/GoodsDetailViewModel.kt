@@ -19,6 +19,10 @@ class GoodsDetailViewModel(
     val goods: LiveData<GoodsUiModel>
         get() = _goods
 
+    private val _count: MutableLiveData<Int> = MutableLiveData(MIN_PURCHASE_QUANTITY)
+    val count: LiveData<Int>
+        get() = _count
+
     private val _isItemAddedToCart: MutableSingleLiveData<Unit> = MutableSingleLiveData()
     val isItemAddedToCart: SingleLiveData<Unit>
         get() = _isItemAddedToCart
@@ -32,7 +36,18 @@ class GoodsDetailViewModel(
         _isItemAddedToCart.setValue(Unit)
     }
 
+    fun increaseCount() {
+        _count.value = _count.value?.plus(QUANTITY_STEP)
+    }
+
+    fun decreaseCount() {
+        _count.value = _count.value?.minus(QUANTITY_STEP)
+    }
+
     companion object {
+        private const val MIN_PURCHASE_QUANTITY: Int = 1
+        private const val QUANTITY_STEP: Int = 1
+
         fun provideFactory(shoppingRepository: ShoppingRepository): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
