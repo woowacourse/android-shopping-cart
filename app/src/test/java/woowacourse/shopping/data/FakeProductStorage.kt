@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.data.storage.ProductStorage
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.fixture.productFixture1
 

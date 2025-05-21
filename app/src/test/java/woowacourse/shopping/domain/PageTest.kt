@@ -75,7 +75,7 @@ class PageTest {
     @Test
     fun `현재 페이지가 마지막 페이지이면 true를 반환한다`() {
         page.moveToNextPage()
-        assertThat(page.isLastPage(fakeCartStorage.totalSize())).isTrue()
+        assertThat(page.hasOnePage(fakeCartStorage.totalSize())).isTrue()
     }
 
     @Test

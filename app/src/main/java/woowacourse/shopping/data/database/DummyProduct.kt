@@ -1,9 +1,9 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.database
 
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 
-object ProductDatabase {
+object DummyProduct {
     val products = mutableMapOf<Long, Product>()
     val productsValues get() = products.values.toList()
     val size get() = productsValues.size
