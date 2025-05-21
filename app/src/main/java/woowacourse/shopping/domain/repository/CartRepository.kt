@@ -12,6 +12,8 @@ interface CartRepository {
         quantity: Int = 1,
     )
 
+    fun delete(id: Long)
+
     fun modifyQuantity(
         productId: Long,
         quantity: Quantity,

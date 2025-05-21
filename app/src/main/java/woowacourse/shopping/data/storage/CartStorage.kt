@@ -16,6 +16,10 @@ object CartStorage {
         carts[item.productId] = item
     }
 
+    fun delete(cardId: Long) {
+        carts.remove(cardId)
+    }
+
     fun modifyQuantity(
         cardId: Long,
         quantity: Quantity,

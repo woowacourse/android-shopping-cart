@@ -15,6 +15,8 @@ class CartRepositoryImpl(private val storage: CartStorage) : CartRepository {
     ) = storage
         .insert(Cart(productId = productId, quantity = Quantity(quantity)))
 
+    override fun delete(id: Long) = storage.delete(id)
+
     override fun modifyQuantity(
         productId: Long,
         quantity: Quantity,
