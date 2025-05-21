@@ -8,24 +8,25 @@ import woowacourse.shopping.domain.CartItem
 
 class CartAdapter(
     private val onDeleteClick: (CartItem) -> Unit,
-) : RecyclerView.Adapter<CartAdapter.CartProductViewHolder>() {
+    private val cartCounterClickListener: CartCounterClickListener,
+) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: MutableList<CartItem> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): CartProductViewHolder {
+    ): CartViewHolder {
         val binding =
             ItemCartProductBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
             )
-        return CartProductViewHolder(binding, onDeleteClick)
+        return CartViewHolder(binding, onDeleteClick, cartCounterClickListener)
     }
 
     override fun onBindViewHolder(
-        holder: CartProductViewHolder,
+        holder: CartViewHolder,
         position: Int,
     ) {
         holder.bind(products[position])
@@ -54,9 +55,10 @@ class CartAdapter(
 //        }
     }
 
-    class CartProductViewHolder(
+    class CartViewHolder(
         val binding: ItemCartProductBinding,
         private val onDeleteClick: (CartItem) -> Unit,
+        private val cartCounterClickListener: CartCounterClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         private lateinit var cartItem: CartItem
 
@@ -68,7 +70,10 @@ class CartAdapter(
 
         fun bind(cartItem: CartItem) {
             binding.cartItem = cartItem
-            binding.layoutCartQuantityBox.tvCartQuantity.text = cartItem.quantity.toString()
+//            binding.includedLayoutCart.tvCartQuantity.text = cartItem.quantity.toString()
+//            binding.includedLayoutCart.clickListener =
+//                cartQuantityClickListener
+            binding.clickListener = cartCounterClickListener
             this.cartItem = cartItem
         }
     }

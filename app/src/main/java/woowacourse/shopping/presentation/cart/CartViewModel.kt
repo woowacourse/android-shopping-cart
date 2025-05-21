@@ -1,19 +1,25 @@
 package woowacourse.shopping.presentation.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.SingleLiveData
 
 class CartViewModel(
+    private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
 ) : ViewModel(),
-    CartClickHandler {
+    CartPageClickListener {
     private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
     val products: LiveData<ResultState<List<CartItem>>> = _products
+    private val _productsCount: MutableLiveData<Int> = MutableLiveData()
+    val productsCount: LiveData<Int> = _productsCount
     private val _deleteProduct: MutableLiveData<ResultState<Long>> = MutableLiveData()
     val deleteProduct: LiveData<ResultState<Long>> = _deleteProduct
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
@@ -48,23 +54,32 @@ class CartViewModel(
 //        }
     }
 
-//    fun changePage(next: Boolean) {
-//        val currentPage = _currentPage.value ?: 0
-//        val totalPages = _totalPages.value ?: 0
-//
-//        if (!next && currentPage == 0) {
-//            _toastMessage.value = R.string.cart_first_page_toast
-//            return
-//        }
-//
-//        if (next && currentPage >= totalPages - 1) {
-//            _toastMessage.value = R.string.cart_last_page_toast
-//            return
-//        }
-//
-//        _currentPage.value = if (next) currentPage + 1 else currentPage - 1
-//        loadItems()
+//    override fun onClickMinus() {
+//        _productsCount.value = (_productsCount.value ?: 0) - 1
+//        Log.d("aaa", "minus click")
 //    }
+//
+//    override fun onClickPlus() {
+//        _productsCount.value = (_productsCount.value ?: 0) + 1
+//    }
+
+    fun changePage(next: Boolean) {
+        val currentPage = _currentPage.value ?: 0
+        val totalPages = _totalPages.value ?: 0
+
+        if (!next && currentPage == 0) {
+            _toastMessage.value = R.string.cart_first_page_toast
+            return
+        }
+
+        if (next && currentPage >= totalPages - 1) {
+            _toastMessage.value = R.string.cart_last_page_toast
+            return
+        }
+
+        _currentPage.value = if (next) currentPage + 1 else currentPage - 1
+        loadItems()
+    }
 //
 //    fun deleteProduct(product: Product) {
 //        val currentPage = _currentPage.value ?: 0
@@ -103,6 +118,26 @@ class CartViewModel(
 //            _products.postValue(ResultState.Success(emptyList()))
 //        }
 //    }
+
+    fun increaseQuantity(productId: Long) {
+        val result = cartRepository.increaseQuantity(productId)
+        result
+            .onSuccess {
+                Log.d("Aaa", "increase")
+//                _products.postValue()
+            }.onFailure {
+                Log.d("aa", "fail")
+            }
+    }
+
+    fun decreaseQuantity(productId: Long) {
+        val result = cartRepository.decreaseQuantity(productId)
+        result
+            .onSuccess {
+                Log.d("Aaa", "decrease")
+            }.onFailure {
+            }
+    }
 
     override fun onClickPrevious() {
 //        changePage(next = false)

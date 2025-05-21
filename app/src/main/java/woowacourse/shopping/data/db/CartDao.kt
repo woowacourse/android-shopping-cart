@@ -21,6 +21,12 @@ interface CartDao {
         offset: Int,
     ): List<Long>
 
+    @Query("UPDATE cart SET quantity = quantity + 1 WHERE product_id = :productId")
+    fun increaseQuantity(productId: Long)
+
+    @Query("UPDATE cart SET quantity = quantity - 1 WHERE product_id = :productId")
+    fun decreaseQuantity(productId: Long)
+
     @Insert
     fun insertProduct(cartEntity: CartEntity)
 

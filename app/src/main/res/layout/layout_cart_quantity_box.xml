@@ -4,6 +4,17 @@
 
     <data>
 
+        <variable
+            name="id"
+            type="Long" />
+
+        <variable
+            name="quantity"
+            type="Integer" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.cart.CartCounterClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
+            android:onClick="@{() -> clickListener.onClickMinus(id)}"
             android:text="−"
             android:textColor="@color/gray5"
             android:textSize="24sp"
@@ -31,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
+            android:text="@{String.valueOf(quantity)}"
             android:textColor="@color/gray5"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -46,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:includeFontPadding="false"
+            android:onClick="@{() -> clickListener.onClickPlus(id)}"
             android:text="+"
             android:textColor="@color/gray5"
             android:textSize="24sp"

@@ -16,10 +16,17 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.presentation.ResultState
 
-class CartActivity : AppCompatActivity() {
+class CartActivity :
+    AppCompatActivity(),
+    CartCounterClickListener {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels { CartViewModelFactory(applicationContext) }
-    private val cartAdapter by lazy { CartAdapter(::deleteProduct) }
+    private val cartAdapter by lazy {
+        CartAdapter(
+            onDeleteClick = ::deleteProduct,
+            cartCounterClickListener = this,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +34,7 @@ class CartActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.vm = viewModel
-        binding.clickHandler = viewModel
+//        binding.clickListener = this
         binding.lifecycleOwner = this
 
         initInsets()
@@ -59,6 +66,10 @@ class CartActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.toastMessage.observe(this) { resId ->
             showToast(resId)
+        }
+
+        viewModel.productsCount.observe(this) {
+//            binding.
         }
 
         viewModel.products.observe(this) { result ->
@@ -99,5 +110,13 @@ class CartActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
+    }
+
+    override fun onClickMinus(id: Long) {
+        viewModel.decreaseQuantity(id)
+    }
+
+    override fun onClickPlus(id: Long) {
+        viewModel.increaseQuantity(id)
     }
 }

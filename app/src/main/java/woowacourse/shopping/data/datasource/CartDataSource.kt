@@ -14,13 +14,11 @@ interface CartDataSource {
         onResult: (Result<List<Long>>) -> Unit,
     )
 
-    fun insertProduct(
-        product: Product,
-        onResult: (Result<Unit>) -> Unit,
-    )
+    fun increaseQuantity(productId: Long)
 
-    fun deleteProduct(
-        productId: Long,
-        onResult: (Result<Long>) -> Unit,
-    )
+    fun decreaseQuantity(productId: Long)
+
+    fun insertProduct(product: Product)
+
+    fun deleteProduct(productId: Long)
 }

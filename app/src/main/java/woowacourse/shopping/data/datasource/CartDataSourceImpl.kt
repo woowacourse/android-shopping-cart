@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.data.CartMapper.toEntity
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.domain.Product
@@ -35,27 +34,31 @@ class CartDataSourceImpl(
         )
     }
 
-    override fun insertProduct(
-        product: Product,
-        onResult: (Result<Unit>) -> Unit,
-    ) {
-        runThread(
-            block = { dao.insertProduct(product.toEntity()) },
-            onResult = onResult,
-        )
+    override fun increaseQuantity(productId: Long) {
+        thread {
+            dao.increaseQuantity(productId)
+        }
     }
 
-    override fun deleteProduct(
-        productId: Long,
-        onResult: (Result<Long>) -> Unit,
-    ) {
-        runThread(
-            block = {
-                dao.deleteByProductId(productId)
-                productId
-            },
-            onResult = onResult,
-        )
+    override fun decreaseQuantity(productId: Long) {
+        thread {
+            dao.decreaseQuantity(productId)
+        }
+    }
+
+    override fun insertProduct(product: Product) {
+//        runThread(
+//            block = { dao.insertProduct(product.toEntity()) },
+//        )
+    }
+
+    override fun deleteProduct(productId: Long) {
+//        runThread(
+//            block = {
+//                dao.deleteByProductId(productId)
+//                productId
+//            },
+//        )
     }
 
     private inline fun <T> runThread(
