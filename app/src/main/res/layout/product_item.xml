@@ -10,8 +10,8 @@
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.product.catalog.ProductClickListener" />
+            name="handler"
+            type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
 
     </data>
 
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{() -> clickListener.onClick(product)}"
+        android:onClick="@{() -> handler.onProductClick(product)}"
         >
 
         <ImageView

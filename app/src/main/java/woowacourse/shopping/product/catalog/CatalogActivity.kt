@@ -35,7 +35,7 @@ class CatalogActivity : AppCompatActivity() {
         applyWindowInsets()
 
         setProductAdapter()
-        observeCatalogProducts()
+        observePagingData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -54,35 +54,37 @@ class CatalogActivity : AppCompatActivity() {
         }
 
     private fun setProductAdapter() {
-        val adapter =
-            ProductAdapter(
-                emptyList(),
-                ProductClickListener { product ->
-                    val intent = newIntent(this, product)
-                    startActivity(intent)
-                },
-                onLoadButtonClick = {
-                    viewModel.loadNextCatalogProducts()
-                },
-                isLoadButtonEnabled = {
-                    viewModel.isLoadButtonEnabled()
+        val handler =
+            CatalogEventHandlerImpl(
+                viewModel = viewModel,
+                onNavigateToDetail = { product ->
+                    startActivity(newIntent(this, product))
                 },
             )
 
+        val adapter =
+            ProductAdapter(
+                emptyList(),
+                handler = handler,
+            )
+
         binding.recyclerViewProducts.adapter = adapter
+
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int = spanSizeByPosition(position, adapter.itemCount)
+                override fun getSpanSize(position: Int): Int = if (adapter.isLoadMoreButtonPosition(position)) 2 else 1
             }
         binding.recyclerViewProducts.layoutManager = gridLayoutManager
     }
 
-    private fun observeCatalogProducts() {
-        viewModel.catalogProducts.observe(this) { value ->
-            (binding.recyclerViewProducts.adapter as ProductAdapter).setData(value)
+    private fun observePagingData() {
+        viewModel.pagingData.observe(this) { paging ->
+            (binding.recyclerViewProducts.adapter as ProductAdapter).apply {
+                setData(paging.products)
+                setLoadButtonVisible(paging.hasNext)
+            }
         }
-        binding.lifecycleOwner = this
     }
 
     private fun applyWindowInsets() {
@@ -92,9 +94,4 @@ class CatalogActivity : AppCompatActivity() {
             insets
         }
     }
-
-    private fun spanSizeByPosition(
-        position: Int,
-        itemCount: Int,
-    ): Int = if (position == itemCount - 1 && itemCount % 20 == 1) 2 else 1
 }

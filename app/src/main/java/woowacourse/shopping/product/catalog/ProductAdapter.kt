@@ -5,18 +5,18 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ProductAdapter(
     private var products: List<ProductUiModel>,
-    private val onProductClick: ProductClickListener,
-    private val onLoadButtonClick: LoadButtonClickListener,
-    private val isLoadButtonEnabled: () -> Boolean,
+    private val handler: CatalogEventHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var showLoadMoreButton = false
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == PRODUCT) {
-            ProductViewHolder.from(parent, onProductClick)
+            ProductViewHolder.from(parent, handler)
         } else {
-            LoadButtonViewHolder.from(parent, onLoadButtonClick)
+            LoadButtonViewHolder.from(parent, handler)
         }
 
     override fun onBindViewHolder(
@@ -31,10 +31,10 @@ class ProductAdapter(
     }
 
     override fun getItemViewType(position: Int): Int =
-        when {
-            position < products.size -> PRODUCT
-            position == products.size && isLoadButtonEnabled() -> LOAD_BUTTON
-            else -> PRODUCT
+        if (isLoadMoreButtonPosition(position)) {
+            LOAD_BUTTON
+        } else {
+            PRODUCT
         }
 
     fun setData(newProducts: List<ProductUiModel>) {
@@ -42,7 +42,7 @@ class ProductAdapter(
         val newSize = newProducts.size
         this.products = newProducts
 
-        if (isLoadButtonEnabled()) {
+        if (showLoadMoreButton) {
             notifyItemRemoved(oldSize)
             notifyItemRangeInserted(oldSize, newSize - oldSize)
         } else {
@@ -50,7 +50,21 @@ class ProductAdapter(
         }
     }
 
-    override fun getItemCount(): Int = products.size + if (isLoadButtonEnabled()) 1 else 0
+    override fun getItemCount(): Int = products.size + if (showLoadMoreButton) 1 else 0
+
+    fun setLoadButtonVisible(visible: Boolean) {
+        val previous = showLoadMoreButton
+        showLoadMoreButton = visible
+        if (previous != visible) {
+            if (visible) {
+                notifyItemInserted(products.size)
+            } else {
+                notifyItemRemoved(products.size)
+            }
+        }
+    }
+
+    fun isLoadMoreButtonPosition(position: Int): Boolean = showLoadMoreButton && position == products.size
 
     companion object {
         private const val PRODUCT = 1

@@ -16,30 +16,34 @@ class CatalogViewModel(
     private val _page = MutableLiveData<Int>(INITIAL_PAGE)
     val page: LiveData<Int> = _page
 
+    private val _pagingData = MutableLiveData<PagingData>()
+    val pagingData: LiveData<PagingData> = _pagingData
+
+    private var currentPage = INITIAL_PAGE
+    private var loadedProducts = emptyList<ProductUiModel>()
+
     init {
-        loadCatalogProducts(PAGE_SIZE)
+        loadCatalogProducts()
     }
 
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
-        increasePage()
+        currentPage += 1
         loadCatalogProducts(pageSize)
     }
 
-    fun isLoadButtonEnabled(): Boolean {
-        val totalLoaded = _catalogProducts.value?.size ?: 0
-        return totalLoaded < dataSource.getProductsSize()
-    }
-
-    fun increasePage() {
-        _page.value = _page.value?.plus(1)
-    }
-
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
-        val fromIndex = (page.value ?: 0) * pageSize
+        val fromIndex = currentPage * pageSize
         val toIndex = minOf(fromIndex + pageSize, dataSource.getProductsSize())
-
         val pagedProducts = dataSource.getSubListedProducts(fromIndex, toIndex)
-        _catalogProducts.value = _catalogProducts.value?.plus(pagedProducts)
+
+        loadedProducts += pagedProducts
+        val hasNext = loadedProducts.size < dataSource.getProductsSize()
+
+        _pagingData.value =
+            PagingData(
+                products = loadedProducts,
+                hasNext = hasNext,
+            )
     }
 
     companion object {

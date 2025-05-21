@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.product.catalog.LoadButtonClickListener" />
+            name="handler"
+            type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:onClick="@{() -> clickListener.onClick()}"
+            android:onClick="@{() -> handler.onLoadButtonClick()}"
             android:id="@+id/button_load_more"
             android:textStyle="bold"
             android:text="더보기"

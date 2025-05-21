@@ -11,11 +11,11 @@ class LoadButtonViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            onLoadButtonClick: LoadButtonClickListener,
+            handler: CatalogEventHandler,
         ): LoadButtonViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = LoadMoreButtonItemBinding.inflate(inflater, parent, false)
-            binding.clickListener = onLoadButtonClick
+            binding.handler = handler
             return LoadButtonViewHolder(binding)
         }
     }

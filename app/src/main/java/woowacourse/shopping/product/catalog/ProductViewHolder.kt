@@ -15,11 +15,11 @@ class ProductViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            onProductClick: ProductClickListener,
+            handler: CatalogEventHandler,
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ProductItemBinding.inflate(inflater, parent, false)
-            binding.clickListener = onProductClick
+            binding.handler = handler
             return ProductViewHolder(binding)
         }
     }
