@@ -5,6 +5,7 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
@@ -58,5 +59,41 @@ class DetailViewModelTest {
 
     @Test
     fun `장바구니_상품_저장소에_현재_상품을_추가한다`() {
+        // given
+        every { cartStorage[1L] } returns null
+        every { cartStorage.insert(any()) } just Runs
+        every { productStorage[1L] } returns productFixture1
+        viewModel = DetailViewModel(productRepository, cartRepository)
+
+        viewModel.load(1L)
+
+        // when
+        viewModel.saveCart()
+
+        // then
+        verify {
+            cartStorage.insert(
+                match {
+                    it.productId == 1L && it.quantity == Quantity(1)
+                },
+            )
+        }
+    }
+
+    @Test
+    fun `이미_장바구니에_상품이_있는_경우_수량을_수정한다`() {
+        // given
+        every { cartStorage[1L] } returns Cart(productId = 1L, quantity = Quantity(2))
+        every { cartStorage.modifyQuantity(any(), any()) } just Runs
+        every { productStorage[1L] } returns productFixture1
+        viewModel = DetailViewModel(productRepository, cartRepository)
+
+        viewModel.load(1L)
+
+        // when
+        viewModel.saveCart()
+
+        // then
+        verify { cartStorage.modifyQuantity(1L, Quantity(1)) }
     }
 }

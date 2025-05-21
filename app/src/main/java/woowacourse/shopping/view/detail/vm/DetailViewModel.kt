@@ -24,8 +24,7 @@ class DetailViewModel(
 
     fun load(productId: Long) {
         val product = productRepository[productId]
-        val quantity = cartRepository[productId]?.quantity ?: Quantity(1)
-        _uiState.value = ProductState(product, quantity)
+        _uiState.value = ProductState(product, Quantity(1))
     }
 
     fun increaseCartQuantity() {
@@ -44,16 +43,27 @@ class DetailViewModel(
 
     fun decreaseCartQuantity() {
         val currentUiState = _uiState.value ?: return
-        val result = currentUiState.decreaseCartQuantity()
+        val decreasedCartQuantity = (currentUiState.cartQuantity - 1)
+
         val quantity =
-            if (result.cartQuantity.value == 0) {
+            if (!decreasedCartQuantity.hasQuantity()) {
                 _event.setValue(DetailUiEvent.ShowCannotDecrease)
                 Quantity(1)
             } else {
-                result.cartQuantity
+                decreasedCartQuantity
             }
 
-        _uiState.value = result.copy(cartQuantity = quantity)
+        _uiState.value = currentUiState.copy(cartQuantity = quantity)
+    }
+
+    fun saveCart() {
+        val state = _uiState.value ?: return
+        cartRepository[state.item.id]?.let {
+            cartRepository.modifyQuantity(state.item.id, state.cartQuantity)
+        } ?: run {
+            cartRepository.insert(state.item.id, state.cartQuantity.value)
+        }
+        sendEvent(DetailUiEvent.MoveToCart)
     }
 
     private fun sendEvent(event: DetailUiEvent) {
