@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="126dp"
-    android:layout_height="42dp">
+    android:layout_height="42dp"
+    android:background="@color/white">
 
     <ImageButton
         android:id="@+id/quantity_decrease_btn"

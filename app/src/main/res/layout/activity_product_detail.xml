@@ -58,30 +58,30 @@
             android:layout_height="1dp"
             android:background="#AAAAAA" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:padding="18dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/price_text"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@{String.format(@string/product_price_format,product.price)}"
-                android:textAlignment="textEnd"
+                android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="99,800원" />
-        </LinearLayout>
+
+            <include
+                android:id="@+id/quantity_selector"
+                layout="@layout/item_product_quantity_selector"
+                android:layout_width="126dp"
+                android:layout_height="42dp"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:layout_width="match_parent"
@@ -91,12 +91,12 @@
 
         <TextView
             android:id="@+id/tv_add_to_cart"
-            android:onClick="@{()-> viewModel.onAddToCartClicked(product)}"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/mint_green"
             android:clickable="true"
             android:gravity="center"
+            android:onClick="@{()-> viewModel.onAddToCartClicked(product)}"
             android:text="@string/button_add_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

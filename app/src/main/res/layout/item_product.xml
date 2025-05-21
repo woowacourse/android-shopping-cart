@@ -8,6 +8,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.product.Product" />
+
+        <variable
+            name="visible"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,6 +39,16 @@
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@id/product_image" />
+
+        <include
+            android:id="@+id/btn_quantity_select"
+            layout="@layout/item_product_quantity_selector"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="@id/product_image"
+            app:layout_constraintStart_toStartOf="@id/product_image" />
 
 
         <TextView
