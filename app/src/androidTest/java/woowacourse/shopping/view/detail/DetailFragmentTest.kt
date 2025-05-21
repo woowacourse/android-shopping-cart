@@ -9,29 +9,26 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
-import woowacourse.shopping.RepositoryProvider
-import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.FakeShoppingRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
 import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class DetailFragmentTest {
-    private val fakeRepository =
-        object : ProductRepository {
-            override fun findProductById(id: Long): Result<Product> = Result.success(dummyProductsFixture[0])
-
-            override fun findProductsByIds(ids: List<Long>): Result<List<Product>> = Result.success(emptyList())
-
-            override fun loadProducts(
-                offset: Int,
-                loadSize: Int,
-            ): Result<PageableItem<Product>> = Result.success(PageableItem(emptyList(), false))
-        }
+    private lateinit var fakeRepository: ShoppingRepository
 
     @BeforeEach
     fun setup() {
-        RepositoryProvider.initProductRepository(fakeRepository)
+        fakeRepository =
+            FakeShoppingRepository(
+                dummyProductsFixture,
+                mutableMapOf(
+                    dummyProductsFixture[0].id to 1,
+                ),
+            )
+
+        RepositoryProvider.initShoppingRepository(fakeRepository)
 
         launchFragmentInContainer(
             DetailFragment.newBundle(dummyProductsFixture[0].id),

@@ -13,11 +13,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 
 class CartDaoTest {
     private lateinit var cartDao: CartDao
-    private val cartItem: CartEntity =
-        CartEntity(
-            cartId = 1,
-            productId = 101,
-        )
+    private val cartItem: CartEntity = CartEntity(productId = 101)
 
     @Before
     fun setUp() {
@@ -64,7 +60,7 @@ class CartDaoTest {
     @Test
     fun `특정_시간_이후에_담겨진_상품_존재_여부_확인할_수_있다`() {
         val now = System.currentTimeMillis()
-        val oldProduct = CartEntity(cartId = 1, productId = 201, createdAt = now + 10000)
+        val oldProduct = CartEntity(productId = 201, createdAt = now + 10000)
         cartDao.insert(oldProduct)
 
         val exists = cartDao.existsItemCreatedAfter(now)
@@ -82,7 +78,6 @@ class CartDaoTest {
         val products =
             (1..5).map {
                 CartEntity(
-                    cartId = it.toLong(),
                     productId = it.toLong(),
                     createdAt = baseTime + it,
                 )

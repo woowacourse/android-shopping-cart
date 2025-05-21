@@ -4,9 +4,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.FakeShoppingRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
-import woowacourse.shopping.fixture.fakeCartRepository
-import woowacourse.shopping.fixture.fakeProductRepository
 import woowacourse.shopping.presentation.model.toProduct
 import woowacourse.shopping.presentation.view.detail.DetailViewModel
 import woowacourse.shopping.presentation.view.util.InstantTaskExecutorExtension
@@ -15,10 +15,16 @@ import woowacourse.shopping.presentation.view.util.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class DetailViewModelTest {
     private lateinit var viewModel: DetailViewModel
+    private lateinit var fakeRepository: ShoppingRepository
 
     @BeforeEach
     fun setUp() {
-        viewModel = DetailViewModel(fakeCartRepository(), fakeProductRepository)
+        fakeRepository =
+            FakeShoppingRepository(
+                dummyProductsFixture,
+                mutableMapOf(),
+            )
+        viewModel = DetailViewModel(fakeRepository)
     }
 
     @Test

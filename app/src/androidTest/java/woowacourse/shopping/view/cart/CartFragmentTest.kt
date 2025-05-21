@@ -15,11 +15,9 @@ import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
-import woowacourse.shopping.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.FakeShoppingRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.util.clickOnViewChild
@@ -27,54 +25,18 @@ import woowacourse.shopping.util.nthChildOf
 
 class CartFragmentTest {
     private lateinit var fragmentScenario: FragmentScenario<CartFragment>
-
-    private val fakeRepository =
-        object : CartRepository {
-            private val shoppingCart = dummyProductsFixture.take(15).toMutableList()
-
-            override fun getCartItems(
-                limit: Int,
-                offset: Int,
-                onResult: (Result<PageableItem<CartItem>>) -> Unit,
-            ) {
-                val result =
-                    runCatching {
-                        val products = shoppingCart.subList(offset, offset + limit)
-                        val cartItems = products.map { CartItem(it.id, it, 1) }
-                        val hasMore =
-                            products
-                                .lastOrNull()
-                                ?.let { shoppingCart.any { product -> it.id < product.id } } ?: false
-                        PageableItem(cartItems, hasMore)
-                    }
-                onResult(result)
-            }
-
-            override fun deleteCartItem(
-                id: Long,
-                onResult: (Result<Long>) -> Unit,
-            ) {
-                val result =
-                    runCatching {
-                        val foundItem = shoppingCart.find { it.id == id }
-                        if (foundItem != null) {
-                            shoppingCart.remove(foundItem)
-                        }
-                        id
-                    }
-                onResult(result)
-            }
-
-            override fun addCartItem(
-                product: Product,
-                onResult: (Result<Unit>) -> Unit,
-            ) {
-            }
-        }
+    private lateinit var fakeRepository: ShoppingRepository
+    private val dummyCartItems =
+        dummyProductsFixture
+            .take(15)
+            .associate { it.id to 1 }
+            .toMutableMap()
 
     @Before
     fun setup() {
-        RepositoryProvider.initCartRepository(fakeRepository)
+        fakeRepository = FakeShoppingRepository(dummyProductsFixture, dummyCartItems)
+        RepositoryProvider.initShoppingRepository(fakeRepository)
+
         fragmentScenario =
             launchFragmentInContainer(
                 themeResId = R.style.Theme_Shopping,
@@ -110,7 +72,7 @@ class CartFragmentTest {
     }
 
     @Test
-    fun `마지막_페이지에서는_다음페이지_버튼을_클릭할_수_없다`() {
+    fun `다음_페이지에_조회_가능한_상품이_없다면_다음페이지_버튼을_클릭할_수_없다`() {
         onView(withId(R.id.btn_right)).perform(click())
         onView(withId(R.id.btn_right)).perform(click())
 

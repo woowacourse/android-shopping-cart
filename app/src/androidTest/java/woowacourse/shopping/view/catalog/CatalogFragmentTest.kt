@@ -12,42 +12,27 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
-import woowacourse.shopping.RepositoryProvider
-import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.FakeShoppingRepository
 import woowacourse.shopping.fixture.dummyProductsFixture
 import woowacourse.shopping.presentation.view.catalog.CatalogFragment
 
 class CatalogFragmentTest {
     private lateinit var fragmentScenario: FragmentScenario<CatalogFragment>
 
-    private val fakeRepository =
-        object : ProductRepository {
-            override fun findProductById(id: Long): Result<Product> = Result.success(dummyProductsFixture[0])
-
-            override fun findProductsByIds(ids: List<Long>): Result<List<Product>> = Result.success(emptyList())
-
-            override fun loadProducts(
-                offset: Int,
-                loadSize: Int,
-            ): Result<PageableItem<Product>> =
-                runCatching {
-                    val totalSize = dummyProductsFixture.size
-                    if (offset >= totalSize) {
-                        return@runCatching PageableItem(emptyList<Product>(), false)
-                    }
-
-                    val sublist = dummyProductsFixture.drop(offset).take(loadSize)
-                    val hasMore = offset + loadSize < totalSize
-
-                    PageableItem(sublist, hasMore)
-                }
-        }
+    private lateinit var fakeRepository: ShoppingRepository
 
     @BeforeEach
     fun setUp() {
-        RepositoryProvider.initProductRepository(fakeRepository)
+        fakeRepository =
+            FakeShoppingRepository(
+                dummyProductsFixture,
+                mutableMapOf(),
+            )
+
+        RepositoryProvider.initShoppingRepository(fakeRepository)
+
         fragmentScenario =
             launchFragmentInContainer<CatalogFragment>(themeResId = R.style.Theme_Shopping)
     }
@@ -57,10 +42,15 @@ class CatalogFragmentTest {
         val recyclerView = onView(withId(R.id.recycler_view_products))
 
         recyclerView.perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
+        Thread.sleep(1000)
         onView(withId(R.id.btn_load_more)).perform(click())
 
+        Thread.sleep(1000)
+
         recyclerView.perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
+        Thread.sleep(1000)
         onView(withId(R.id.btn_load_more)).check(doesNotExist())
+        Thread.sleep(1000)
     }
 
     @Test

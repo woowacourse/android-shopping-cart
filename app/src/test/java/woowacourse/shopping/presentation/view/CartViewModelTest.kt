@@ -5,7 +5,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.fixture.fakeCartRepository
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.FakeShoppingRepository
+import woowacourse.shopping.fixture.dummyProductsFixture
+import woowacourse.shopping.presentation.model.FetchPageDirection
 import woowacourse.shopping.presentation.view.cart.CartViewModel
 import woowacourse.shopping.presentation.view.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.view.util.getOrAwaitValue
@@ -13,10 +16,21 @@ import woowacourse.shopping.presentation.view.util.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
+    private lateinit var fakeRepository: ShoppingRepository
+    private val dummyCartItems =
+        dummyProductsFixture
+            .take(15)
+            .associate { it.id to 1 }
+            .toMutableMap()
 
     @BeforeEach
     fun setUp() {
-        viewModel = CartViewModel(fakeCartRepository())
+        fakeRepository =
+            FakeShoppingRepository(
+                dummyProductsFixture,
+                dummyCartItems,
+            )
+        viewModel = CartViewModel(fakeRepository)
     }
 
     @Test
@@ -37,7 +51,7 @@ class CartViewModelTest {
         val before = viewModel.cartItems.getOrAwaitValue()
 
         // When
-        viewModel.fetchCartItems(isNextPage = true)
+        viewModel.fetchCartItems(FetchPageDirection.NEXT)
         val after = viewModel.cartItems.getOrAwaitValue()
 
         // Then
@@ -61,7 +75,7 @@ class CartViewModelTest {
         assertAll(
             { assertThat(newItems).doesNotContain(target) },
             { assertThat(newItems.size).isEqualTo(items.size) },
-            { assertThat(newItems.last().id).isNotEqualTo(target.id) },
+            { assertThat(newItems.last().product.id).isNotEqualTo(target.product.id) },
         )
     }
 

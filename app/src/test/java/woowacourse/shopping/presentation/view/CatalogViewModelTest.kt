@@ -5,7 +5,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.fixture.fakeProductRepository
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.FakeShoppingRepository
+import woowacourse.shopping.fixture.dummyProductsFixture
 import woowacourse.shopping.presentation.view.catalog.CatalogViewModel
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
 import woowacourse.shopping.presentation.view.util.InstantTaskExecutorExtension
@@ -14,9 +16,15 @@ import woowacourse.shopping.presentation.view.util.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CatalogViewModelTest {
     private lateinit var viewModel: CatalogViewModel
+    private lateinit var fakeProductRepository: ShoppingRepository
 
     @BeforeEach
     fun setUp() {
+        fakeProductRepository =
+            FakeShoppingRepository(
+                dummyProductsFixture,
+                mutableMapOf(),
+            )
         viewModel = CatalogViewModel(fakeProductRepository)
     }
 
@@ -38,7 +46,7 @@ class CatalogViewModelTest {
         viewModel.fetchProducts()
         val observedItems = viewModel.products.getOrAwaitValue()
         val distinctCount =
-            observedItems.map { (it as CatalogItem.ProductItem).product.id }.distinct().count()
+            observedItems.map { (it as CatalogItem.ProductItem).product.productId }.distinct().count()
 
         // Then
         assertAll(
