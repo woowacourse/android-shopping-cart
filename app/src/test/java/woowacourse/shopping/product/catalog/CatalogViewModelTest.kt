@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.product.catalog.fixture.FakeMockProducts
+import woowacourse.shopping.product.catalog.fixture.FakeProductsDataSource
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -17,39 +17,34 @@ class CatalogViewModelTest {
 
     @Test
     fun `초기 상태 테스트`() {
-        viewModel = CatalogViewModel(FakeMockProducts(size = 1))
+        viewModel = CatalogViewModel(FakeProductsDataSource(size = 20))
 
         assertThat(0).isEqualTo(viewModel.page.value)
 
         val catalogProducts: List<ProductUiModel> = viewModel.catalogProducts.value ?: emptyList()
 
-        assertThat(MOCK_DATA_SIZE).isEqualTo(catalogProducts.size)
+        assertThat(catalogProducts.size).isEqualTo(20)
     }
 
     @Test
     fun `더보기 버튼을 눌렀을 때 페이지가 증가되고 상품이 로드된다`() {
         // given
-        viewModel = CatalogViewModel(FakeMockProducts(size = 5))
+        viewModel = CatalogViewModel(FakeProductsDataSource(size = 25))
         val catalogProducts: List<ProductUiModel> = (viewModel.catalogProducts.value ?: emptyList())
         assertThat(viewModel.page.value).isEqualTo(0)
 
         // when
-        viewModel.loadNextCatalogProducts(PAGE_SIZE)
+        viewModel.loadNextCatalogProducts(20)
 
         // then
         assertThat(viewModel.page.value).isEqualTo(1)
-        assertThat(catalogProducts.size).isEqualTo(25)
+        assertThat(viewModel.catalogProducts.value?.size).isEqualTo(25)
     }
 
     @Test
     fun `상품 목록이 20개 이상이면 더보기 버튼이 활성화된다`() {
-        viewModel = CatalogViewModel(FakeMockProducts(size = 5))
+        viewModel = CatalogViewModel(FakeProductsDataSource(size = 21))
 
         assertThat(viewModel.isLoadButtonEnabled()).isEqualTo(true)
-    }
-
-    companion object {
-        private const val MOCK_DATA_SIZE = 5
-        private const val PAGE_SIZE = 20
     }
 }
