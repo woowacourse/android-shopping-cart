@@ -40,7 +40,40 @@ class CartViewModelTest {
     }
 
     @Test
-    fun 첫_페이지에서_updatePageButton_호출시_왼쪽버튼_비활성_오른쪽버튼_활성화된다() {
+    fun 마지막_페이지의_마지막_아이템_삭제시_페이지가_이전_페이지로_이동한다() {
+        repeat(6) {
+            fakeRepository.insert(Goods(id = it.toLong(), name = "item $it", price = 100, thumbnailUrl = "url"))
+        }
+        viewModel.plusPage()
+        assertEquals(2, viewModel.page.getOrAwaitValue())
+
+        viewModel.delete(Goods(id = 999L, name = "dummy", price = 0, thumbnailUrl = "dummy"))
+        assertEquals(1, viewModel.page.getOrAwaitValue())
+    }
+
+    @Test
+    fun 아이템이_페이지크기보다_많을때_페이지버튼을_표시한다() {
+        repeat(6) {
+            fakeRepository.insert(Goods(id = it.toLong(), name = "item $it", price = 100, thumbnailUrl = "url"))
+        }
+        viewModel.updatePageButtonStates()
+
+        assertTrue(viewModel.showPageButton.getOrAwaitValue())
+    }
+
+    @Test
+    fun 아이템이_페이지크기보다_적거나_같을때_페이지버튼을_숨긴다() {
+        repeat(5) {
+            fakeRepository.insert(Goods(id = it.toLong(), name = "item $it", price = 100, thumbnailUrl = "url"))
+        }
+        viewModel.updatePageButtonStates()
+
+        assertFalse(viewModel.showPageButton.getOrAwaitValue())
+    }
+
+    @Test
+    fun 첫_페이지에서_왼쪽버튼이_비활성되고_오른쪽버튼이_활성화된다() {
+        assertEquals(1, viewModel.page.getOrAwaitValue())
         repeat(10) {
             fakeRepository.insert(Goods(id = it.toLong(), name = "item $it", price = 100, thumbnailUrl = "url"))
         }
@@ -51,14 +84,27 @@ class CartViewModelTest {
     }
 
     @Test
-    fun 마지막_페이지의_마지막_아이템_삭제시_페이지가_이전_페이지로_이동한다() {
-        repeat(6) {
+    fun 중간_페이지에서_양쪽_버튼이_모두_활성화된다() {
+        repeat(15) {
             fakeRepository.insert(Goods(id = it.toLong(), name = "item $it", price = 100, thumbnailUrl = "url"))
         }
         viewModel.plusPage()
-        assertEquals(2, viewModel.page.getOrAwaitValue())
+        viewModel.updatePageButtonStates()
 
-        viewModel.delete(Goods(id = 999L, name = "dummy", price = 0, thumbnailUrl = "dummy"))
-        assertEquals(1, viewModel.page.getOrAwaitValue())
+        assertTrue(viewModel.isLeftPageEnable.getOrAwaitValue())
+        assertTrue(viewModel.isRightPageEnable.getOrAwaitValue())
+    }
+
+    @Test
+    fun 마지막_페이지에서_왼쪽버튼이_활성화되고_오른쪽버튼이_비활성화된다() {
+        repeat(11) {
+            fakeRepository.insert(Goods(id = it.toLong(), name = "item $it", price = 100, thumbnailUrl = "url"))
+        }
+        viewModel.plusPage()
+        viewModel.plusPage()
+        viewModel.updatePageButtonStates()
+
+        assertTrue(viewModel.isLeftPageEnable.getOrAwaitValue())
+        assertFalse(viewModel.isRightPageEnable.getOrAwaitValue())
     }
 }
