@@ -1,6 +1,7 @@
 package woowacourse.shopping.viewmodel
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -32,6 +33,7 @@ class ProductDetailViewModelTest {
 
         // then
         repository.getAll() shouldBe listOf(PRODUCT_1, PRODUCT_2)
-        viewModel.addToCart.value shouldBe Unit
+        viewModel.addToCart.value shouldNotBe null
+        viewModel.addToCart.value?.peekContent() shouldBe Unit
     }
 }

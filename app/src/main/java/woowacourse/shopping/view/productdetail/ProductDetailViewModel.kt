@@ -10,16 +10,17 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.view.Event
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _addToCart = MutableLiveData<Unit>()
-    val addToCart: LiveData<Unit> = _addToCart
+    private val _addToCart = MutableLiveData<Event<Unit>>()
+    val addToCart: LiveData<Event<Unit>> = _addToCart
 
     fun onAddToCartClicked(product: Product) {
         cartRepository.add(product)
-        _addToCart.value = Unit
+        _addToCart.value = Event(Unit)
     }
 
     companion object {

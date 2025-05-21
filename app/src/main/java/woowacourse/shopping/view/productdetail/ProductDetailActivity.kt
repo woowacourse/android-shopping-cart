@@ -39,8 +39,10 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun observeAddToCart() {
         productDetailViewModel.addToCart.observe(this) {
-            showAddToCartToastMessage()
-            finish()
+            it.getContentIfNotHandled()?.let {
+                showAddToCartToastMessage()
+                finish()
+            }
         }
     }
 
