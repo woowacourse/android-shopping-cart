@@ -8,15 +8,16 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.ui.base.BaseActivity
+import woowacourse.shopping.presentation.ui.cart.CartAdapter
 import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
 
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels()
-    private val cartAdapter: CartAdapter = CartAdapter(createAdapterOnClickHandler())
+    private lateinit var cartAdapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        cartAdapter = CartAdapter(createAdapterOnClickHandler(), viewModel)
         initSupportActionBar()
         initViewBinding()
         initObservers()

@@ -6,8 +6,12 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="woowacourse.shopping.presentation.viewmodel.cart.CartViewModel" />
+
+        <variable
             name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            type="woowacourse.shopping.data.CartProductDTO" />
 
         <variable
             name="onClickHandler"
@@ -29,7 +33,7 @@
             android:layout_marginTop="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{product.product.name}"
             android:textColor="@color/gray_5"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -44,7 +48,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="20dp"
             android:scaleType="centerCrop"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{product.product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name"
             tools:src="@color/black" />
@@ -54,21 +58,62 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"
-            android:onClick="@{() -> onClickHandler.onRemoveCartProductClick(product.id)}"
+            android:onClick="@{() -> onClickHandler.onRemoveCartProductClick(product.product.id)}"
             android:padding="12dp"
             android:src="@drawable/ic_cart_remove"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="18dp"
-            android:text="@{@string/products_price(product.price)}"
+            android:text="@{@string/products_price(product.product.price*product.count)}"
             android:textColor="@color/gray_5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
+
+        <TextView
+            android:id="@+id/tv_cart_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="50dp"
+            android:text="@string/plus"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="@{() -> viewModel.increaseCount(product)}"/>
+
+
+        <TextView
+            android:id="@+id/tv_cart_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="50dp"
+            android:text="@{String.valueOf(product.count)}"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_cart_plus" />
+
+        <TextView
+            android:id="@+id/tv_cart_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="50dp"
+            android:text="@string/minus"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_cart_count"
+            android:onClick="@{() -> viewModel.decreaseCount(product)}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

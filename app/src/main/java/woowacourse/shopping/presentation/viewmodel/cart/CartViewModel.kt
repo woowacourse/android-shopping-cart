@@ -3,15 +3,16 @@ package woowacourse.shopping.presentation.viewmodel.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.CartProductDTO
 import woowacourse.shopping.data.repository.CartDummyRepositoryImpl
 import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.domain.model.Product
 
 class CartViewModel(
     private val cartDummyRepository: CartRepository = CartDummyRepositoryImpl,
 ) : ViewModel() {
-    private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList<Product>())
-    val products: LiveData<List<Product>> get() = _products
+    private val _products: MutableLiveData<List<CartProductDTO>> =
+        MutableLiveData(emptyList<CartProductDTO>())
+    val products: LiveData<List<CartProductDTO>> get() = _products
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
@@ -24,7 +25,8 @@ class CartViewModel(
     }
 
     fun updateCartProducts() {
-        _products.value = cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE).map { it.product }
+        _products.value =
+            cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE).map { it }
         if (products.value.isNullOrEmpty()) decreasePage()
         updateMaxPage()
     }
@@ -40,6 +42,7 @@ class CartViewModel(
 
     fun increasePage(step: Int = DEFAULT_PAGE_STEP) {
         _currentPage.value = currentPage.value?.plus(step)
+
         updateCartProducts()
     }
 
@@ -47,6 +50,37 @@ class CartViewModel(
         if (currentPage.value == INITIAL_PAGE) return
         _currentPage.value = currentPage.value?.minus(step)
         updateCartProducts()
+    }
+
+    fun increaseCount(cartProduct: CartProductDTO) {
+        val products: List<CartProductDTO> =
+            _products.value
+                .orEmpty()
+                .toMutableList()
+                .map { if (it.product.id == cartProduct.product.id) it.apply { it.count += 1 } else it }
+        _products.value = products
+        cartDummyRepository.upsertCartProduct(cartProduct.product, 1)
+    }
+
+    fun decreaseCount(cartProduct: CartProductDTO) {
+        if (cartProduct.count == 1) {
+            val products: List<CartProductDTO> =
+                products.value
+                    .orEmpty()
+                    .toMutableList()
+                    .filter { it.product.id != cartProduct.product.id }
+            _products.value = products
+            cartDummyRepository.removeCartProduct(cartProduct.product.id)
+            updateCartProducts()
+        } else {
+            val products: List<CartProductDTO> =
+                _products.value
+                    .orEmpty()
+                    .toMutableList()
+                    .map { if (it.product.id == cartProduct.product.id) it.apply { it.count -= 1 } else it }
+            _products.value = products
+            cartDummyRepository.upsertCartProduct(cartProduct.product, -1)
+        }
     }
 
     companion object {

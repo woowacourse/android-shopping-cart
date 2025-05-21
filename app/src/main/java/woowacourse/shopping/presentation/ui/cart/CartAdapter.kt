@@ -4,34 +4,36 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.CartProductDTO
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
 
 class CartAdapter(
     private val onClickHandler: CartViewHolder.OnClickHandler,
+    private val cartViewModel: CartViewModel,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private var items: List<Product> = emptyList<Product>()
+    private var items: List<CartProductDTO> = emptyList<CartProductDTO>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding, onClickHandler)
+        return CartViewHolder(binding, onClickHandler, cartViewModel)
     }
 
     override fun onBindViewHolder(
         holder: CartViewHolder,
         position: Int,
     ) {
-        val item: Product = items[position]
+        val item: CartProductDTO = items[position]
         holder.bind(item)
     }
 
     override fun getItemCount(): Int = items.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun replaceItems(newItems: List<Product>) {
+    fun replaceItems(newItems: List<CartProductDTO>) {
         items = newItems
         notifyDataSetChanged()
     }
