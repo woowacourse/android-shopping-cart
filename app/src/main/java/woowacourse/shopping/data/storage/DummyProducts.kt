@@ -196,4 +196,6 @@ object DummyProducts : ProductStorage {
         currentIndex += limit
         return products
     }
+
+    override fun getProductsSize(): Int = value.size
 }

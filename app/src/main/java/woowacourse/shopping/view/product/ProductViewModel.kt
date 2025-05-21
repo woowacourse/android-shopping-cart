@@ -16,6 +16,14 @@ class ProductViewModel(
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
+    private val _isShowMore: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isShowMore: LiveData<Boolean> get() = _isShowMore
+    private var totalProductsCount: Int = 0
+
+    fun fetchInitData() {
+        totalProductsCount = productRepository.getProductsSize()
+        _isShowMore.postValue(totalProductsCount > LIMIT_COUNT)
+    }
 
     fun fetchData() {
         val newProducts = productRepository.getProducts(LIMIT_COUNT)

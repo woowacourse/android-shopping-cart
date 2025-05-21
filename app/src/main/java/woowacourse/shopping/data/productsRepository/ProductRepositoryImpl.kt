@@ -10,6 +10,8 @@ class ProductRepositoryImpl private constructor(
 
     override fun getProducts(limit: Int): List<Product> = storage.getProducts(limit)
 
+    override fun getProductsSize(): Int = storage.getProductsSize()
+
     companion object {
         private var instance: ProductRepositoryImpl? = null
 

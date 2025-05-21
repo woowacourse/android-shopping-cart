@@ -6,4 +6,6 @@ interface ProductRepository {
     fun getProducts(): List<Product>
 
     fun getProducts(limit: Int): List<Product>
+
+    fun getProductsSize(): Int
 }
