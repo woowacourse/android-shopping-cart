@@ -5,12 +5,13 @@ import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 
 interface ShoppingRepository {
+    fun findProductInfoById(id: Long): Result<Product>
+
     fun loadProducts(
         offset: Int,
         limit: Int,
-    ): Result<PageableItem<Product>>
-
-    fun findProductInfoById(id: Long): Result<Product>
+        onResult: (Result<PageableItem<CartItem>>) -> Unit,
+    )
 
     fun loadCartItems(
         offset: Int,

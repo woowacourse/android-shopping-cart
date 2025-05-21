@@ -1,15 +1,19 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 
 interface ProductDataSource {
+    fun findProductById(id: Long): Product
+
+    fun findProductsByIds(ids: List<Long>): List<Product>
+
     fun loadProducts(
         offset: Int,
-        loadSize: Int,
-    ): Result<PageableItem<Product>>
+        limit: Int,
+    ): List<Product>
 
-    fun findProductById(id: Long): Result<Product>
-
-    fun findProductsByIds(ids: List<Long>): Result<List<Product>>
+    fun calculateHasMore(
+        offset: Int,
+        limit: Int,
+    ): Boolean
 }
