@@ -26,9 +26,7 @@ class GoodsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-
-        binding.vm = viewModel
-        binding.lifecycleOwner = this
+        setUpBinding()
 
         val adapter = makeAdapter()
         setUpGoodsList(adapter)
@@ -46,6 +44,11 @@ class GoodsActivity : BaseActivity() {
         super.onStart()
 
         viewModel.restoreGoods()
+    }
+
+    private fun setUpBinding() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun makeAdapter(): GoodsAdapter {

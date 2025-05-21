@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.domain.model.ShoppingGoods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
@@ -39,21 +40,21 @@ class GoodsViewModel(
         val currentGoods = goods.value.orEmpty()
         val selectedItems = shoppingRepository.getAllGoods()
 
+        val (updatedGoods, changedPositions) = getUpdatedGoods(currentGoods, selectedItems)
+
+        _goods.value = updatedGoods
+        _onQuantityChanged.setValue(changedPositions)
+    }
+
+    private fun getUpdatedGoods(
+        currentGoods: List<GoodsUiModel>,
+        selectedItems: Set<ShoppingGoods>,
+    ): Pair<List<GoodsUiModel>, List<Int>> {
         val changedPositions = mutableListOf<Int>()
 
-        val updatedGoods =
+        val updatedList =
             currentGoods.mapIndexed { index, goods ->
-                val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
-
-                val updated =
-                    when {
-                        selected != null -> goods.copy(isSelected = true, quantity = selected.goodsQuantity)
-
-                        goods.isSelected || goods.quantity != 0 -> goods.copy(isSelected = false, quantity = 0)
-
-                        else -> goods
-                    }
-
+                val updated = updateGoodsFromSelected(goods, selectedItems)
                 if (updated != goods) {
                     changedPositions.add(index)
                 }
@@ -61,13 +62,25 @@ class GoodsViewModel(
                 updated
             }
 
-        _goods.value = updatedGoods
-        _onQuantityChanged.setValue(changedPositions)
+        return updatedList to changedPositions
+    }
+
+    private fun updateGoodsFromSelected(
+        goods: GoodsUiModel,
+        selectedItems: Set<ShoppingGoods>,
+    ): GoodsUiModel {
+        val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
+
+        return when {
+            selected != null -> goods.copy(isSelected = true, quantity = selected.goodsQuantity)
+            goods.isSelected || goods.quantity != 0 -> goods.copy(isSelected = false, quantity = 0)
+            else -> goods
+        }
     }
 
     fun increaseGoodsCount(position: Int) {
         val updatedItem =
-            updateGoods(position) {
+            updateGoodsQuantity(position) {
                 it.copy(isSelected = true, quantity = it.quantity + 1)
             }
         shoppingRepository.increaseItemQuantity(updatedItem.id)
@@ -75,14 +88,14 @@ class GoodsViewModel(
 
     fun decreaseGoodsCount(position: Int) {
         val updatedItem =
-            updateGoods(position) {
+            updateGoodsQuantity(position) {
                 val isSelected = it.quantity - 1 != 0
                 it.copy(isSelected = isSelected, quantity = it.quantity - 1)
             }
         shoppingRepository.decreaseItemQuantity(updatedItem.id)
     }
 
-    private fun updateGoods(
+    private fun updateGoodsQuantity(
         position: Int,
         transform: (GoodsUiModel) -> GoodsUiModel,
     ): GoodsUiModel {
