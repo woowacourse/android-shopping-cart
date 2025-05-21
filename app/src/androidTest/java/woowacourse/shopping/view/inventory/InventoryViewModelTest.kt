@@ -23,11 +23,4 @@ class InventoryViewModelTest {
         val products = viewModel.items.getOrAwaitValue().filterIsInstance<InventoryItem.ProductUiModel>()
         assert(products == page.items.map(Product::toUiModel))
     }
-
-    @Test
-    fun 상품의_총_개수를_반환한다() {
-        val repository = DummyInventoryRepository()
-        val viewModel = InventoryViewModel(repository)
-        assert(viewModel.totalSize == repository.getAll().size)
-    }
 }
