@@ -1,8 +1,8 @@
 package woowacourse.shopping.product.catalog
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityCatalogBinding
+import woowacourse.shopping.databinding.MenuCartLayoutBinding
 import woowacourse.shopping.product.detail.DetailActivity
 
 class CatalogActivity : AppCompatActivity() {
@@ -32,18 +33,24 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cart_menu_item, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.menu_cart -> {
-                startActivity(CartActivity.newIntent(this))
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+        val menuItem = menu?.findItem(R.id.action_cart)
+        val binding =
+            DataBindingUtil.inflate<MenuCartLayoutBinding>(
+                LayoutInflater.from(this),
+                R.layout.menu_cart_layout,
+                null,
+                false,
+            )
+        binding.layoutCartMenu.setOnClickListener {
+            startActivity(CartActivity.newIntent(this))
         }
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
+        menuItem?.actionView = binding.root
+        return true
+    }
 
     private fun setProductAdapter() {
         val adapter =

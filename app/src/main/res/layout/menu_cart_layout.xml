@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.product.catalog.CatalogViewModel" />
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_cart_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/cart_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_cart" />
+
+        <TextView
+            android:id="@+id/cart_badge"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/badge_background"
+            android:gravity="center"
+            android:text="@{vm.cartItemSize.toString()}"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:visibility="@{vm.cartItemSize > 0 ? View.VISIBLE : View.GONE}" />
+    </LinearLayout>
+</layout>

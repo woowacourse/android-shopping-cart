@@ -31,11 +31,13 @@ class CatalogViewModel(
     fun increaseQuantity(product: ProductUiModel) {
         val item = dataSource.changeProductQuantity(product, 1)
         _updatedItem.value = item
+        _cartItemSize.value = _cartItemSize.value?.plus(1)
     }
 
     fun decreaseQuantity(product: ProductUiModel) {
         val item = dataSource.changeProductQuantity(product, -1)
         _updatedItem.value = item
+        _cartItemSize.value = _cartItemSize.value?.minus(1)
     }
 
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
