@@ -24,8 +24,8 @@ class CatalogViewModel(
     private val _products = MutableLiveData<List<CatalogItem>>()
     val products: LiveData<List<CatalogItem>> = _products
 
-    private val _quantityUpdateEvent = MutableSingleLiveData<Pair<Int, Int>>()
-    val quantityUpdateEvent: SingleLiveData<Pair<Int, Int>> = _quantityUpdateEvent
+    private val _quantityUpdateEvent = MutableSingleLiveData<Pair<Long, Int>>()
+    val quantityUpdateEvent: SingleLiveData<Pair<Long, Int>> = _quantityUpdateEvent
 
     private val limit: Int = 20
     private var page: Int = 0
@@ -61,26 +61,20 @@ class CatalogViewModel(
         }
     }
 
-    fun addProductToCart(
-        position: Int,
-        productId: Long,
-    ) {
-        shoppingRepository.addCartItem(productId) { result ->
+    fun addProductToCart(productId: Long) {
+        shoppingRepository.addCartItem(productId, QUANTITY_STEP) { result ->
             result.fold(
                 onFailure = { postFailureEvent(CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE) },
-                onSuccess = { updateQuantityAndNotify(productId, position) },
+                onSuccess = { updateQuantityAndNotify(productId) },
             )
         }
     }
 
-    fun removeProductFromCart(
-        position: Int,
-        productId: Long,
-    ) {
+    fun removeProductFromCart(productId: Long) {
         shoppingRepository.decreaseCartItemQuantity(productId) { result ->
             result.fold(
                 onFailure = { postFailureEvent(CatalogMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE) },
-                onSuccess = { updateQuantityAndNotify(productId, position) },
+                onSuccess = { updateQuantityAndNotify(productId) },
             )
         }
     }
@@ -124,14 +118,11 @@ class CatalogViewModel(
             if (hasMore) add(CatalogItem.LoadMoreItem)
         }
 
-    private fun updateQuantityAndNotify(
-        productId: Long,
-        position: Int,
-    ) {
+    private fun updateQuantityAndNotify(productId: Long) {
         fetchQuantityAndThen(
             productId = productId,
             onSuccess = { updatedQuantity ->
-                _quantityUpdateEvent.postValue(position to updatedQuantity)
+                _quantityUpdateEvent.postValue(productId to updatedQuantity)
                 updateProductQuantityInList(productId, updatedQuantity)
             },
         )
@@ -174,6 +165,7 @@ class CatalogViewModel(
 
     companion object {
         private const val OPEN_QUANTITY_SELECTOR_BASE_VALUE = 0
+        private const val QUANTITY_STEP = 1
 
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {

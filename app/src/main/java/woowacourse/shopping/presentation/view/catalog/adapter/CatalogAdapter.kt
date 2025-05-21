@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.view.catalog.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.ui.layout.QuantitySelectorListener
+import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem.CatalogType
 
 class CatalogAdapter(
@@ -43,23 +43,22 @@ class CatalogAdapter(
     }
 
     fun updateQuantityAt(
-        position: Int,
+        productId: Long,
         quantity: Int,
     ) {
-        val oldItem = (products[position] as? CatalogItem.ProductItem)?.product ?: return
+        val foundItem = products.find { (it as? CatalogItem.ProductItem)?.product?.productId == productId } ?: return
+        val oldItem = (foundItem as? CatalogItem.ProductItem)?.product ?: return
         val newItem = CatalogItem.ProductItem(oldItem.copy(quantity = quantity))
+        val position = products.indexOf(foundItem)
         products[position] = newItem
         notifyItemChanged(position)
     }
 
-    interface CatalogEventListener : QuantitySelectorListener {
+    interface CatalogEventListener : QuantityChangeListener {
         fun onProductClicked(productId: Long)
 
         fun onLoadMoreClicked()
 
-        fun onQuantitySelectorOpenButtonClicked(
-            productId: Long,
-            position: Int,
-        )
+        fun onQuantitySelectorOpenButtonClicked(productId: Long)
     }
 }

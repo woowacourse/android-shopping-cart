@@ -10,7 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCatalogBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.ui.decorations.GridSpacingItemDecoration
-import woowacourse.shopping.presentation.ui.layout.QuantitySelectorListener
+import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
@@ -20,7 +20,7 @@ import woowacourse.shopping.presentation.view.detail.DetailFragment
 class CatalogFragment :
     BaseFragment<FragmentCatalogBinding>(R.layout.fragment_catalog),
     CatalogAdapter.CatalogEventListener,
-    QuantitySelectorListener {
+    QuantityChangeListener {
     private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this) }
     private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
 
@@ -46,25 +46,16 @@ class CatalogFragment :
         viewModel.loadProducts()
     }
 
-    override fun onQuantitySelectorOpenButtonClicked(
-        productId: Long,
-        position: Int,
-    ) {
-        viewModel.addProductToCart(position, productId)
+    override fun onQuantitySelectorOpenButtonClicked(productId: Long) {
+        viewModel.addProductToCart(productId)
     }
 
-    override fun increaseQuantity(
-        productId: Long,
-        position: Int,
-    ) {
-        viewModel.addProductToCart(position, productId)
+    override fun increaseQuantity(productId: Long) {
+        viewModel.addProductToCart(productId)
     }
 
-    override fun decreaseQuantity(
-        productId: Long,
-        position: Int,
-    ) {
-        viewModel.removeProductFromCart(position, productId)
+    override fun decreaseQuantity(productId: Long) {
+        viewModel.removeProductFromCart(productId)
     }
 
     private fun setupUI() {
@@ -98,8 +89,8 @@ class CatalogFragment :
             catalogAdapter.appendProducts(it)
         }
 
-        viewModel.quantityUpdateEvent.observe(viewLifecycleOwner) { (position, quantity) ->
-            catalogAdapter.updateQuantityAt(position, quantity)
+        viewModel.quantityUpdateEvent.observe(viewLifecycleOwner) { (productId, quantity) ->
+            catalogAdapter.updateQuantityAt(productId, quantity)
         }
 
         viewModel.toastEvent.observe(viewLifecycleOwner) {
