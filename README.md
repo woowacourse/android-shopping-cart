@@ -25,3 +25,13 @@
 - [x] pageNo -> pageNumber로 변경
 - [x] Paging 객체 데이터 및 저장소 의존성 분리
 - [x] onScrollListener를 재사용 가능하게 커스텀
+
+### 2차 코드 리뷰 반영
+- [ ] 내부 속성이 변할 일 없으면 map{it.copy()} 제거
+- [ ] 임시 예외 처리 제거
+- [ ] DataBindingUtil과 xxxBinding 차이점 공부 후 수정
+- [ ] adapter에 mutablelist 수정
+- [ ] observe한 값들도 databinding을 활용해서 수정
+- [ ] addOnScrollListener를 apply 스코프 안에서 사용
+- [ ] ProductAdapter에 바인딩 파라미터 수정
+- [ ] Adapter의 ViewHolder 제너릭 타입을 생성한 ViewHolder로 명시
