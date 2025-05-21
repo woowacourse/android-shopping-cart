@@ -3,11 +3,11 @@ package woowacourse.shopping.repository
 import woowacourse.shopping.model.products.Product
 
 interface ProductRepository {
-    fun getAllProducts(): List<Product>
+    fun fetchAllProducts(): List<Product>
 
-    fun getSize(): Int
+    fun productCount(): Int
 
-    fun getSinglePage(
+    fun pageOfProducts(
         start: Int,
         end: Int,
     ): List<Product>

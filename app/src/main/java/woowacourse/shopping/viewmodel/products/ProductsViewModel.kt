@@ -28,13 +28,13 @@ class ProductsViewModel(
 
     fun loadNextPage() {
         val nextStart = currentPage * pageSize
-        val nextEnd = minOf(nextStart + pageSize, productRepository.getSize())
+        val nextEnd = minOf(nextStart + pageSize, productRepository.productCount())
 
-        if (nextStart < productRepository.getSize()) {
-            val nextItems = productRepository.getSinglePage(nextStart, nextEnd)
+        if (nextStart < productRepository.productCount()) {
+            val nextItems = productRepository.pageOfProducts(nextStart, nextEnd)
             loadedItems.addAll(nextItems)
 
-            if (nextEnd == productRepository.getSize()) {
+            if (nextEnd == productRepository.productCount()) {
                 _productsInShop.value =
                     loadedItems.map { ProductListViewType.ProductType(it) }
                 currentPage++
