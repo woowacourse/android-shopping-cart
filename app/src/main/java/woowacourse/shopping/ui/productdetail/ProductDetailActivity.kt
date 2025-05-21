@@ -24,7 +24,7 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
         initViewBinding()
         initObservers()
         initCartQuantityView()
-        handleFromProducts()
+        handleNavigateFromProducts()
         viewModel.loadProductDetail(productId)
         viewModel.addHistoryProduct(productId)
     }
@@ -100,8 +100,8 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
         )
     }
 
-    private fun handleFromProducts() {
-        intent.getBooleanExtra(KEY_IS_FROM_HOME, false).let { isRecentProductShown ->
+    private fun handleNavigateFromProducts() {
+        intent.getBooleanExtra(KEY_IS_NAVIGATE_FROM_HOME, false).let { isRecentProductShown ->
             if (isRecentProductShown) viewModel.loadLastHistoryProduct()
         }
     }
@@ -114,7 +114,7 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
 
     companion object {
         private const val KEY_PRODUCT_ID = "PRODUCT_ID"
-        private const val KEY_IS_FROM_HOME = "IS_FROM_PRODUCTS"
+        private const val KEY_IS_NAVIGATE_FROM_HOME = "IS_NAVIGATE_FROM_PRODUCTS"
 
         fun newIntent(
             context: Context,
@@ -123,7 +123,7 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT_ID, id)
-                putExtra(KEY_IS_FROM_HOME, isRecentHistoryProductShown)
+                putExtra(KEY_IS_NAVIGATE_FROM_HOME, isRecentHistoryProductShown)
             }
     }
 }
