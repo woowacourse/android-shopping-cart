@@ -1,7 +1,7 @@
 package woowacourse.shopping
 
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Price
+import woowacourse.shopping.domain.model.Product
 
 object FIXTURE {
     val DUMMY_PRODUCT =

@@ -1,9 +1,9 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
 import android.util.Log
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,

@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
-interface CartClickHandler {
+interface CartPageClickListener {
     fun onClickPrevious()
 
     fun onClickNext()

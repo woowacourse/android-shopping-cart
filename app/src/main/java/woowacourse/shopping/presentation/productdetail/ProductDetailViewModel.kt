@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ResultState
 
 class ProductDetailViewModel(
@@ -20,10 +20,10 @@ class ProductDetailViewModel(
     }
 
     fun addToCart(product: Product) {
-        cartDataSource.insertProduct(product) { result ->
-            result
-                .onSuccess { _insertProductResult.postValue(ResultState.Success(it)) }
-                .onFailure { _insertProductResult.postValue(ResultState.Failure()) }
-        }
+//        cartDataSource.insertProduct(product) { result ->
+//            result
+//                .onSuccess { _insertProductResult.postValue(ResultState.Success(it)) }
+//                .onFailure { _insertProductResult.postValue(ResultState.Failure()) }
+//        }
     }
 }

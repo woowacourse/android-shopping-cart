@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.databinding.ViewCartActionBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 

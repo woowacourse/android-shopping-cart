@@ -1,10 +1,11 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
+import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.data.datasource.ProductDataSource
-import woowacourse.shopping.domain.CartItem
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(
     private val cartDataSource: CartDataSource,

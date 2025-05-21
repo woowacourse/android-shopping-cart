@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.DummyProducts
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 class ProductDataSourceImpl : ProductDataSource {
     override fun getProducts(): List<Product> = DummyProducts.values

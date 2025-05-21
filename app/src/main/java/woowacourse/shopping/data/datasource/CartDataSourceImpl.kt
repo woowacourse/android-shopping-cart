@@ -2,7 +2,7 @@ package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.db.CartEntity
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 import kotlin.concurrent.thread
 
 class CartDataSourceImpl(

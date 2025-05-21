@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.DummyProducts
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductViewModel(
     private val productRepository: ProductRepository,

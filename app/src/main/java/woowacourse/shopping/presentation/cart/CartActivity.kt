@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.ResultState
 
 class CartActivity :

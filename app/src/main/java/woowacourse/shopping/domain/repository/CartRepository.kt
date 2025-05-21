@@ -1,4 +1,6 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.repository
+
+import woowacourse.shopping.domain.model.CartItem
 
 interface CartRepository {
     fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit)

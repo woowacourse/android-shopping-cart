@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.Extra
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.getSerializableExtraCompat

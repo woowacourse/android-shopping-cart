@@ -1,12 +1,12 @@
 package woowacourse.shopping.di
 
 import android.content.Context
-import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.ProductRepositoryImpl
 import woowacourse.shopping.data.datasource.CartDataSourceImpl
 import woowacourse.shopping.data.datasource.ProductDataSourceImpl
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 
 object RepositoryModule {
     private var productRepository: ProductRepository? = null

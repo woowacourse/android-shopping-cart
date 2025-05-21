@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.db.CartEntity
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 interface CartDataSource {
     fun getCartProductCount(onResult: (Result<Int?>) -> Unit)
