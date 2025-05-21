@@ -21,7 +21,7 @@ class GoodsActivity :
     GoodsViewHolder.GoodsClickListener {
     private lateinit var binding: ActivityGoodsBinding
     private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
-    val viewModel: GoodsViewModel by viewModels()
+    private val viewModel: GoodsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
