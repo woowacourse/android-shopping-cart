@@ -37,13 +37,12 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_prev"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/pagination_prev_selector"
+                android:layout_width="@dimen/size_button_square"
+                android:layout_height="@dimen/size_button_square"
+                style="@style/PaginationPrevButton"
                 android:enabled="@{isPrevButtonEnabled}"
                 android:onClick="@{() -> handler.onPrevPage()}"
                 android:text="@string/text_prev_button"
-                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -64,13 +63,12 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_next"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/pagination_next_selector"
+                android:layout_width="@dimen/size_button_square"
+                android:layout_height="@dimen/size_button_square"
+                style="@style/PaginationNextButton"
                 android:enabled="@{isNextButtonEnabled}"
                 android:onClick="@{() -> handler.onNextPage()}"
                 android:text="@string/text_next_button"
-                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

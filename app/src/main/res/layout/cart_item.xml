@@ -36,6 +36,7 @@
             tools:text="아이스 카페 아메리카노" />
 
         <ImageView
+            android:contentDescription="@string/cart_product_image_description"
             app:loadImage="@{cartProduct.imageUrl}"
             android:id="@+id/imageView_cart_product"
             android:layout_width="136dp"
@@ -54,6 +55,7 @@
             android:layout_height="40dp"
             android:layout_margin="8dp"
             android:background="@drawable/icon_delete"
+            android:contentDescription="@string/cart_product_delete_button_description"
             android:onClick="@{() -> handler.onDeleteProduct(cartProduct)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
