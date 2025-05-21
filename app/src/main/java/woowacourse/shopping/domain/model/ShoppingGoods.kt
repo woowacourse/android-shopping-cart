@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.model
 
-data class CartGoods(
+data class ShoppingGoods(
     val goodsId: Int,
-    val goodsCount: Int,
+    val goodsQuantity: Int,
 )
