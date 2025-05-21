@@ -51,7 +51,7 @@ class ShoppingCartViewModel(
             updateGoods(position) {
                 it.copy(quantity = it.quantity + 1)
             }
-        shoppingRepository.increaseItemCount(updatedItem.id)
+        shoppingRepository.increaseItemQuantity(updatedItem.id)
     }
 
     fun decreaseGoodsCount(position: Int) {
@@ -63,7 +63,7 @@ class ShoppingCartViewModel(
         if (updatedItem.quantity <= 0) {
             deleteGoods(updatedItem)
         } else {
-            shoppingRepository.decreaseItemCount(updatedItem.id)
+            shoppingRepository.decreaseItemQuantity(updatedItem.id)
         }
     }
 

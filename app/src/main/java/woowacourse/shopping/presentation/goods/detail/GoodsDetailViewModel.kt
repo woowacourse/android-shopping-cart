@@ -31,7 +31,7 @@ class GoodsDetailViewModel(
     }
 
     fun addToShoppingCart() {
-        _goods.value?.let { shoppingRepository.addItemsWithCount(it.id, _count.value!!) }
+        _goods.value?.let { shoppingRepository.increaseItemQuantity(it.id, _count.value!!) }
         _isItemAddedToCart.setValue(Unit)
     }
 

@@ -19,19 +19,18 @@ class ShoppingRepositoryImpl(
         return result
     }
 
-    override fun addItemsWithCount(
+    override fun increaseItemQuantity(
         id: Int,
-        count: Int,
+        quantity: Int,
     ) {
-        updateItem(id, count)
+        adjustItemQuantity(id, quantity)
     }
 
-    override fun increaseItemCount(id: Int) {
-        updateItem(id, 1)
-    }
-
-    override fun decreaseItemCount(id: Int) {
-        updateItem(id, -1)
+    override fun decreaseItemQuantity(
+        id: Int,
+        quantity: Int,
+    ) {
+        adjustItemQuantity(id, quantity)
     }
 
     override fun removeItem(id: Int) {
@@ -53,22 +52,22 @@ class ShoppingRepositoryImpl(
         return result
     }
 
-    private fun updateItem(
-        goodsId: Int,
+    private fun adjustItemQuantity(
+        id: Int,
         quantity: Int,
     ) {
         thread {
-            val itemInCart = shoppingDao.findGoodsById(goodsId)
+            val itemInCart = shoppingDao.findGoodsById(id)
 
             if (itemInCart == null && quantity > 0) {
-                shoppingDao.insert(ShoppingGoods(goodsId, quantity).toShoppingEntity())
+                shoppingDao.insert(ShoppingGoods(id, quantity).toShoppingEntity())
             } else if (itemInCart != null) {
                 val updatedCount = itemInCart.quantity + quantity
 
                 if (updatedCount <= 0) {
-                    shoppingDao.delete(goodsId)
+                    shoppingDao.delete(id)
                 } else {
-                    shoppingDao.updateQuantity(goodsId, updatedCount)
+                    shoppingDao.updateQuantity(id, updatedCount)
                 }
             }
         }.join()
