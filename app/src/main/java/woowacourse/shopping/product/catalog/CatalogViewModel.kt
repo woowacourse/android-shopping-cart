@@ -22,6 +22,22 @@ class CatalogViewModel(
         loadCatalogProducts()
     }
 
+    fun isQuantitySelectorExpanded(product: ProductUiModel) {
+        loadedProducts =
+            loadedProducts.map {
+                if (it.id == product.id) {
+                    it.copy(isExpanded = !it.isExpanded)
+                } else {
+                    it
+                }
+            }
+        _pagingData.value =
+            PagingData(
+                products = loadedProducts,
+                hasNext = loadedProducts.size < dataSource.getProductsSize(),
+            )
+    }
+
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
         currentPage += 1
         loadCatalogProducts(pageSize)

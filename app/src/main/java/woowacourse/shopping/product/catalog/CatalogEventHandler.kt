@@ -4,4 +4,6 @@ interface CatalogEventHandler {
     fun onProductClick(product: ProductUiModel)
 
     fun onLoadButtonClick()
+
+    fun onOpenProductQuantitySelector(product: ProductUiModel)
 }

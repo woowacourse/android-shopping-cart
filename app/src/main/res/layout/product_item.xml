@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
 
         <variable
             name="product"
@@ -14,8 +15,6 @@
             type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
 
     </data>
-
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -36,33 +35,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/imageView_product"
+        <include
+            app:product="@{product}"
+            app:handler="@{handler}"
+            android:visibility="@{product.isExpanded ? View.VISIBLE : View.GONE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp">
+            android:layout_marginBottom="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/imageView_product"
+            android:id="@+id/layout_quantity_selector"
+            layout="@layout/product_count_item" />
 
-            <include
-                android:id="@+id/product_count_layout"
-                layout="@layout/product_count_item" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="20dp"
+        <include
+            app:product="@{product}"
+            app:handler="@{handler}"
+            android:visibility="@{product.isExpanded ? View.GONE : View.VISIBLE}"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_marginBottom="13dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/imageView_product"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <include
-                android:id="@+id/product_count_open_layout"
-                layout="@layout/product_count_open_item"/>
-
-        </LinearLayout>
+            android:layout_marginEnd="13dp"
+            android:id="@+id/layout_button_open_quantity_selector"
+            layout="@layout/product_count_open_item"/>
 
 
         <TextView

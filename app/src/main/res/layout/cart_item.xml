@@ -68,7 +68,7 @@
             android:layout_height="wrap_content">
 
             <include
-                android:id="@+id/product_count_layout"
+                android:id="@+id/layout_quantity_selector"
                 layout="@layout/product_count_item"/>
 
         </LinearLayout>

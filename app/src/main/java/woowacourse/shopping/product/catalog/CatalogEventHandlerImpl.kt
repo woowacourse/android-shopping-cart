@@ -11,4 +11,8 @@ class CatalogEventHandlerImpl(
     override fun onLoadButtonClick() {
         viewModel.loadNextCatalogProducts()
     }
+
+    override fun onOpenProductQuantitySelector(product: ProductUiModel) {
+        viewModel.isQuantitySelectorExpanded(product)
+    }
 }

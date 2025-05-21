@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+        <data>
+                <variable
+                    name="product"
+                    type="woowacourse.shopping.product.catalog.ProductUiModel" />
+
+                <variable
+                    name="handler"
+                    type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
+        </data>
+
+        <FrameLayout
+            android:layout_width="53dp"
+            android:layout_height="53dp">
         <ImageButton
+            android:clickable="true"
+            android:onClick="@{() -> handler.onOpenProductQuantitySelector(product)}"
+            android:id="@+id/button_open_quantity_layout"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@string/text_product_count_open_button"
@@ -11,7 +27,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:clickable="true"
             app:srcCompat="@drawable/icon_product_count"
             app:tint="@color/black" />
-</merge>
+        </FrameLayout>
+</layout>
