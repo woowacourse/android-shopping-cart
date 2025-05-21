@@ -1,17 +1,30 @@
 package woowacourse.shopping.view.products
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.products.Product
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    private val productClickListener: (Product) -> Unit,
+    productClickListener: ProductsClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: Product) {
-        binding.product = item
-        binding.btnSelectedProduct.setOnClickListener {
-            productClickListener.invoke(item)
+    init {
+        binding.productClickListener = productClickListener
+    }
+
+    fun bind(item: ProductListViewType.ProductType) {
+        binding.product = item.product
+    }
+
+    companion object {
+        fun create(
+            parent: ViewGroup,
+            productClickListener: ProductsClickListener,
+        ): ProductViewHolder {
+            val binding =
+                ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ProductViewHolder(binding, productClickListener)
         }
     }
 }

@@ -1,42 +1,47 @@
 package woowacourse.shopping.view.products
 
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.R
 
 class ProductsAdapter(
-    private val products: MutableList<Product> = mutableListOf(),
-    private val productClickListener: (Product) -> Unit,
-) : RecyclerView.Adapter<ProductViewHolder>() {
+    private val productClickListener: ProductsClickListener,
+    private val loadMoreClickListener: LoadMoreClickListener,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var product: List<ProductListViewType> = emptyList()
+
+    override fun getItemViewType(position: Int): Int =
+        when (product[position]) {
+            is ProductListViewType.ProductType -> R.layout.item_product
+            is ProductListViewType.LoadMoreType -> R.layout.item_load_more
+        }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val productBinding =
-            ItemProductBinding.inflate(
-                inflater,
-                parent,
-                false,
-            )
+    ): RecyclerView.ViewHolder =
+        when (viewType) {
+            R.layout.item_product -> ProductViewHolder.create(parent, productClickListener)
+            R.layout.item_load_more -> LoadMoreViewHolder.create(parent, loadMoreClickListener)
 
-        return ProductViewHolder(productBinding, productClickListener)
-    }
+            else -> throw IllegalArgumentException("지원하지 않는 타입입니다")
+        }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = product.size
 
     override fun onBindViewHolder(
-        holder: ProductViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
+        when (holder) {
+            is ProductViewHolder -> holder.bind(product[position] as ProductListViewType.ProductType)
+        }
     }
 
-    fun updateProductsView(list: List<Product>) {
-        products.clear()
-        products.addAll(list)
+    fun updateProductsView(list: List<ProductListViewType>?) {
+        Log.d("TAG", "updateProductsView: $list")
+        product = list.orEmpty()
         notifyDataSetChanged()
     }
 }
