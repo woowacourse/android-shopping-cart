@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.shoppingcart
 
-import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -11,36 +11,18 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.GoodsRepositoryImpl
 import woowacourse.shopping.domain.model.ShoppingGoods
 import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.fixture.ICE_CREAM
-import woowacourse.shopping.fixture.SUNDAE
+import woowacourse.shopping.fixture.SHOPPING_GOODS_SUNDAE
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.model.toUiModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var shoppingCartViewModel: ShoppingCartViewModel
     private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
-    private val goods =
-        listOf(
-            SUNDAE,
-            ICE_CREAM,
-        )
 
     @BeforeEach
     fun setUp() {
+        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf(SHOPPING_GOODS_SUNDAE)
         shoppingCartViewModel = ShoppingCartViewModel(GoodsRepositoryImpl, shoppingRepository)
-    }
-
-    @Test
-    fun `장바구니의 물품을 삭제한다`() {
-        // given
-        goods.forEach { shoppingRepository.increaseItemQuantity(it.id) }
-
-        // when
-        shoppingCartViewModel.deleteGoods(SUNDAE.toUiModel())
-
-        // then
-        shoppingCartViewModel.goods.getOrAwaitValue().shouldNotContain(SUNDAE.toUiModel())
     }
 
     @Test
@@ -73,7 +55,7 @@ class ShoppingCartViewModelTest {
     @Test
     fun `다음 상품 목록이 존재하면 다음 페이지는 존재한다`() {
         // given
-        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf(ShoppingGoods(1, 1))
+        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf(ShoppingGoods(1, 2))
         shoppingCartViewModel = ShoppingCartViewModel(GoodsRepositoryImpl, shoppingRepository)
 
         // then
@@ -103,5 +85,31 @@ class ShoppingCartViewModelTest {
 
         // then
         shoppingCartViewModel.hasPreviousPage.getOrAwaitValue() shouldBe true
+    }
+
+    @Test
+    fun `구매할 물품 수량을 증가할 수 있다`() {
+        // when
+        shoppingCartViewModel.increaseGoodsCount(0)
+
+        // then
+        shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 3
+
+        verify {
+            shoppingRepository.increaseItemQuantity(1)
+        }
+    }
+
+    @Test
+    fun `구매할 물품 수량을 감소할 수 있다`() {
+        // when
+        shoppingCartViewModel.decreaseGoodsCount(0)
+
+        // then
+        shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 1
+
+        verify {
+            shoppingRepository.decreaseItemQuantity(1)
+        }
     }
 }
