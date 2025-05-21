@@ -10,4 +10,6 @@
     <string name="error">오류</string>
     <string name="server_error_message">일시적 서버 오류가 발생하였습니다.</string>
     <string name="confirm">확인</string>
+    <string name="quantity_minus">-</string>
+    <string name="quantity_plus">+</string>
 </resources>
