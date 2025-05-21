@@ -1,10 +1,10 @@
 package woowacourse.shopping.domain.model
 
 data class CatalogProducts(
-    val products: List<CartProduct>,
+    val products: List<CatalogProduct>,
     val hasMore: Boolean,
 ) {
-    val cartProductsQuantity: Int get() = products.sumOf { it.quantity }
+    val catalogProductsQuantity: Int get() = products.sumOf { it.quantity }
 
     operator fun plus(other: CatalogProducts): CatalogProducts {
         val mergedProducts = products + other.products
@@ -14,7 +14,7 @@ data class CatalogProducts(
         )
     }
 
-    fun updateCartProductQuantity(
+    fun updateCatalogProductQuantity(
         productId: Int,
         quantity: Int,
     ): CatalogProducts {
@@ -29,7 +29,7 @@ data class CatalogProducts(
         return copy(products = updatedProducts)
     }
 
-    fun updateCartProduct(newProduct: CartProduct): CatalogProducts {
+    fun updateCatalogProduct(newProduct: CatalogProduct): CatalogProducts {
         val updatedProducts =
             products.map { product ->
                 if (product.product.id == newProduct.product.id) {
@@ -41,7 +41,7 @@ data class CatalogProducts(
         return copy(products = updatedProducts)
     }
 
-    fun updateCartProducts(newProducts: List<CartProduct>): CatalogProducts {
+    fun updateCatalogProducts(newProducts: List<CatalogProduct>): CatalogProducts {
         val updatedProducts =
             products.map { product ->
                 newProducts.find { it.product.id == product.product.id } ?: product

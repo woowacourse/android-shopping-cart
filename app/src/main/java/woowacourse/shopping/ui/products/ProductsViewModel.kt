@@ -47,25 +47,25 @@ class ProductsViewModel(
 
     fun increaseCartProduct(id: Int) {
         cartRepository.increaseProductQuantity(id) { newQuantity ->
-            _catalogProducts.postValue(catalogProducts.value?.updateCartProductQuantity(id, newQuantity))
+            _catalogProducts.postValue(catalogProducts.value?.updateCatalogProductQuantity(id, newQuantity))
         }
     }
 
     fun decreaseCartProduct(id: Int) {
         cartRepository.decreaseProductQuantity(id) { newQuantity ->
-            _catalogProducts.postValue(catalogProducts.value?.updateCartProductQuantity(id, newQuantity))
+            _catalogProducts.postValue(catalogProducts.value?.updateCatalogProductQuantity(id, newQuantity))
         }
     }
 
     fun loadCartProduct(id: Int) {
         productRepository.fetchProduct(id) { cartProduct ->
-            _catalogProducts.postValue(catalogProducts.value?.updateCartProduct(cartProduct ?: return@fetchProduct))
+            _catalogProducts.postValue(catalogProducts.value?.updateCatalogProduct(cartProduct ?: return@fetchProduct))
         }
     }
 
     fun loadCartProducts(ids: List<Int>) {
         productRepository.fetchProducts(ids) { cartProducts ->
-            _catalogProducts.postValue(catalogProducts.value?.updateCartProducts(cartProducts))
+            _catalogProducts.postValue(catalogProducts.value?.updateCatalogProducts(cartProducts))
         }
     }
 

@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.model.CatalogProducts
 
 interface ProductRepository {
@@ -12,11 +12,11 @@ interface ProductRepository {
 
     fun fetchProduct(
         productId: Int,
-        callback: (CartProduct?) -> Unit,
+        callback: (CatalogProduct?) -> Unit,
     )
 
     fun fetchProducts(
         productIds: List<Int>,
-        callback: (List<CartProduct>) -> Unit,
+        callback: (List<CatalogProduct>) -> Unit,
     )
 }

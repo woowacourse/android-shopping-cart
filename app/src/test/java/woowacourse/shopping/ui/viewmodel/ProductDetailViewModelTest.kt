@@ -27,7 +27,7 @@ class ProductDetailViewModelTest {
         viewModel.loadProductDetail(targetProductId)
 
         // then
-        val actual = viewModel.cartProduct.getOrAwaitValue()
+        val actual = viewModel.catalogProduct.getOrAwaitValue()
         Assertions.assertEquals(expectedProduct, actual)
     }
 

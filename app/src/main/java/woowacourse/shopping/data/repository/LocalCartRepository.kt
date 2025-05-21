@@ -87,11 +87,7 @@ class LocalCartRepository(
 
     override fun saveCartProduct(cartProduct: CartProduct) {
         thread {
-            if (cartProduct.quantity == 0) {
-                dao.deleteCartProduct(cartProduct.product.id)
-            } else {
-                dao.insertCartProduct(cartProduct.toData())
-            }
+            dao.insertCartProduct(cartProduct.toData())
         }
     }
 }

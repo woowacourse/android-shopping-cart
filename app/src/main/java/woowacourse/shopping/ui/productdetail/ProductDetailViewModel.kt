@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.model.CartProduct.Companion.EMPTY_CART_PRODUCT
+import woowacourse.shopping.domain.model.CatalogProduct
+import woowacourse.shopping.domain.model.CatalogProduct.Companion.EMPTY_CATALOG_PRODUCT
 import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
@@ -21,8 +22,8 @@ class ProductDetailViewModel(
     private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
 ) : ViewModel() {
-    private val _cartProduct: MutableLiveData<CartProduct> = MutableLiveData(EMPTY_CART_PRODUCT)
-    val cartProduct: LiveData<CartProduct> get() = _cartProduct
+    private val _catalogProduct: MutableLiveData<CatalogProduct> = MutableLiveData(EMPTY_CATALOG_PRODUCT)
+    val catalogProduct: LiveData<CatalogProduct> get() = _catalogProduct
 
     private val _lastHistoryProduct: MutableLiveData<HistoryProduct?> = MutableLiveData(null)
     val lastHistoryProduct: LiveData<HistoryProduct?> get() = _lastHistoryProduct
@@ -31,8 +32,8 @@ class ProductDetailViewModel(
     val onCartProductAddSuccess: SingleLiveData<Boolean?> get() = _onCartProductAddSuccess
 
     fun loadProductDetail(id: Int) {
-        productRepository.fetchProduct(id) { cartProduct ->
-            _cartProduct.postValue(cartProduct)
+        productRepository.fetchProduct(id) { catalogProduct ->
+            _catalogProduct.postValue(catalogProduct)
         }
     }
 
@@ -47,16 +48,17 @@ class ProductDetailViewModel(
     }
 
     fun decreaseCartProductQuantity() {
-        _cartProduct.value = cartProduct.value?.decreaseQuantity()
+        _catalogProduct.value = catalogProduct.value?.decreaseQuantity()
     }
 
     fun increaseCartProductQuantity() {
-        _cartProduct.value = cartProduct.value?.increaseQuantity()
+        _catalogProduct.value = catalogProduct.value?.increaseQuantity()
     }
 
     fun updateCartProduct() {
+        val catalogProduct: CatalogProduct = catalogProduct.value ?: return
         runCatching {
-            cartRepository.saveCartProduct(cartProduct.value ?: return)
+            cartRepository.saveCartProduct(CartProduct.from(catalogProduct.product, catalogProduct.quantity))
         }.onSuccess {
             _onCartProductAddSuccess.postValue(true)
         }

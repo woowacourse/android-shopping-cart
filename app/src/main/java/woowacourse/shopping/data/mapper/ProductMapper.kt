@@ -2,7 +2,7 @@ package woowacourse.shopping.data.mapper
 
 import woowacourse.shopping.data.dto.ProductDto
 import woowacourse.shopping.data.entity.ProductEntity
-import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.model.Product
 
 fun ProductEntity.toDomain(): Product =
@@ -13,8 +13,8 @@ fun ProductEntity.toDomain(): Product =
         price = price,
     )
 
-fun ProductDto.toDomain(): CartProduct =
-    CartProduct(
+fun ProductDto.toDomain(): CatalogProduct =
+    CatalogProduct(
         product =
             Product(
                 id = id,

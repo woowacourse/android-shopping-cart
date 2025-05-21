@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.products.adapter.product
 
-import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.ui.products.adapter.product.ProductsItemViewType.LOAD_MORE
 import woowacourse.shopping.ui.products.adapter.product.ProductsItemViewType.PRODUCT
 
@@ -10,7 +10,7 @@ sealed class ProductsItem(
     abstract val id: Int
 
     data class ProductItem(
-        val value: CartProduct,
+        val value: CatalogProduct,
     ) : ProductsItem(PRODUCT) {
         override val id: Int
             get() = value.product.id

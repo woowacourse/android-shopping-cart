@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="cartProduct"
-            type="woowacourse.shopping.domain.model.CartProduct" />
+            name="catalogProduct"
+            type="woowacourse.shopping.domain.model.CatalogProduct" />
 
         <variable
             name="onClickHandler"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()->onClickHandler.onProductClick(cartProduct.product.id)}"
+        android:onClick="@{()->onClickHandler.onProductClick(catalogProduct.product.id)}"
         android:padding="6dp">
 
         <ImageView
@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:imageUrl="@{cartProduct.product.imageUrl}"
+            app:imageUrl="@{catalogProduct.product.imageUrl}"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
             android:layout_marginEnd="9dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{cartProduct.product.name}"
+            android:text="@{catalogProduct.product.name}"
             android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="9dp"
-            android:text="@{@string/products_price(cartProduct.product.price)}"
+            android:text="@{@string/products_price(catalogProduct.product.price)}"
             android:textColor="@color/gray_5"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,9 +70,9 @@
             android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:onClick="@{() -> onClickHandler.onIncreaseClick(cartProduct.product.id)}"
+            android:onClick="@{() -> onClickHandler.onIncreaseClick(catalogProduct.product.id)}"
             android:src="@drawable/ic_products_cart_add"
-            app:isGone="@{cartProduct.quantity != 0}"
+            app:isGone="@{catalogProduct.quantity != 0}"
             app:layout_constraintBottom_toBottomOf="@id/productPreviewImage"
             app:layout_constraintEnd_toEndOf="@id/productPreviewImage" />
 
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="8dp"
-            app:isGone="@{cartProduct.quantity == 0}"
+            app:isGone="@{catalogProduct.quantity == 0}"
             app:layout_constraintBottom_toBottomOf="@id/productPreviewImage"
             app:layout_constraintEnd_toEndOf="@id/productPreviewImage"
             app:layout_constraintStart_toStartOf="@id/productPreviewImage" />

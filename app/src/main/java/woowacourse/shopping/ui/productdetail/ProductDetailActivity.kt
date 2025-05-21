@@ -65,7 +65,7 @@ class ProductDetailActivity : DataBindingActivity<ActivityProductDetailBinding>(
     }
 
     private fun initObservers() {
-        viewModel.cartProduct.observe(this) { cartProduct ->
+        viewModel.catalogProduct.observe(this) { cartProduct ->
             binding.productDetailCartProductCount.setCount(cartProduct.quantity)
         }
         viewModel.onCartProductAddSuccess.observe(this) { isSuccess ->
