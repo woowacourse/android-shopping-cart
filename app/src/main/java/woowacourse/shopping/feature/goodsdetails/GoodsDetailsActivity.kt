@@ -34,17 +34,11 @@ class GoodsDetailsActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.isSuccess.observe(this) { isSuccess ->
-            val message: String =
-                getString(
-                    if (isSuccess) {
-                        R.string.goods_detail_cart_insert_success_toast_message
-                    } else {
-                        R.string.goods_detail_cart_insert_fail_toast_message
-                    },
-                )
-
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        viewModel.isSuccess.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
+        }
+        viewModel.isFail.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
         }
     }
 

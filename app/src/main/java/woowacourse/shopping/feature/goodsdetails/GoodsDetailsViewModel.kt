@@ -1,25 +1,26 @@
 package woowacourse.shopping.feature.goodsdetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.feature.GoodsUiModel
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.toDomain
 
 class GoodsDetailsViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _isSuccess = MutableLiveData<Boolean>()
-    val isSuccess: LiveData<Boolean> get() = _isSuccess
+    private val _isSuccess = MutableSingleLiveData<Unit>()
+    val isSuccess: SingleLiveData<Unit> get() = _isSuccess
+    private val _isFail = MutableSingleLiveData<Unit>()
+    val isFail: SingleLiveData<Unit> get() = _isFail
 
     fun insertToCart(goods: GoodsUiModel) {
-        runCatching {
+        try {
             repository.insert(goods.toDomain())
-        }.onSuccess {
-            _isSuccess.value = true
-        }.onFailure {
-            _isSuccess.value = false
+            _isSuccess.setValue(Unit)
+        } catch (e: Exception) {
+            _isFail.setValue(Unit)
         }
     }
 }
