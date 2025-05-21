@@ -1,8 +1,6 @@
 package woowacourse.shopping.view.mapper
 
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -10,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.view.main.ProductEventHandler
 
 @BindingAdapter("android:price")
 fun setPrice(
@@ -30,24 +29,16 @@ fun setImage(
         .into(view)
 }
 
-@BindingAdapter("shoppingCart:mutableVisibility")
+@BindingAdapter("shoppingCart:observe", "shoppingCart:observe_action", requireAll = true)
 fun setMutableVisibility(
     view: ViewGroup,
     quantity: MutableLiveData<Int>,
+    handler: ProductEventHandler,
 ) {
     view.findViewTreeLifecycleOwner()?.let {
         quantity.removeObservers(it)
-        quantity.observe(it) { currentQuantity ->
-            val button = view.findViewById<Button>(R.id.btn_item_product_add_to_cart)
-            val quantitySelector = view.findViewById<ViewGroup>(R.id.layout_product_quantity_selector)
-
-            if (currentQuantity < 1) {
-                button.visibility = View.VISIBLE
-                quantitySelector.visibility = View.GONE
-            } else {
-                button.visibility = View.GONE
-                quantitySelector.visibility = View.VISIBLE
-            }
+        quantity.observe(it) {
+            handler.whenQuantityChangedSelectView(quantity)
         }
     }
 }

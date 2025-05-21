@@ -5,11 +5,8 @@
             name="quantity"
             type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />
         <variable
-            name="onQuantityMinusSelected"
-            type="kotlin.jvm.functions.Function1&lt;androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;, kotlin.Unit&gt;" />
-        <variable
-            name="onQuantityPlusSelected"
-            type="kotlin.jvm.functions.Function1&lt;androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;, kotlin.Unit&gt;" />
+            name="handler"
+            type="woowacourse.shopping.view.main.ProductEventHandler" />
 
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,7 +22,7 @@
         android:padding="0dp">
 
         <Button
-            android:onClick="@{()->onQuantityMinusSelected.invoke(quantity)}"
+            android:onClick="@{()->handler.onQuantityMinusSelected(quantity)}"
             android:id="@+id/button_minus"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -53,7 +50,7 @@
             tools:text="2" />
 
         <Button
-            android:onClick="@{()->onQuantityPlusSelected.invoke(quantity)}"
+            android:onClick="@{()->handler.onQuantityPlusSelected(quantity)}"
             android:id="@+id/button_plus"
             android:layout_width="48dp"
             android:layout_height="48dp"

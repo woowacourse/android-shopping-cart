@@ -8,9 +8,7 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
-class ProductsAdapter(
-    private val onProductSelected: (Product) -> Unit,
-) : RecyclerView.Adapter<ProductsViewHolder>() {
+class ProductsAdapter : RecyclerView.Adapter<ProductsViewHolder>() {
     private var products: List<Product> = listOf()
     private var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
 
@@ -37,7 +35,8 @@ class ProductsAdapter(
                 parent,
                 false,
             )
-        return ProductsViewHolder(binding, onProductSelected)
+        val handler = ProductEventHandlerImpl(parent.context, binding)
+        return ProductsViewHolder(binding, handler)
     }
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {

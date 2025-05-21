@@ -13,7 +13,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
-import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
 
@@ -23,11 +22,7 @@ class MainActivity :
         R.layout.activity_main,
     ) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
-    private val productsAdapter: ProductsAdapter by lazy {
-        ProductsAdapter { product ->
-            startActivity(ProductDetailActivity.newIntent(this, product))
-        }
-    }
+    private val productsAdapter: ProductsAdapter = ProductsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

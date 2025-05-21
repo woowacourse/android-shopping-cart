@@ -7,19 +7,10 @@ import woowacourse.shopping.domain.Product
 
 class ProductsViewHolder(
     private val binding: ItemProductBinding,
-    onProductSelected: (Product) -> Unit,
+    private val handler: ProductEventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onProductSelected = onProductSelected
-        binding.onBtnItemProductAddToCartSelected = { quantity ->
-            quantity.value = quantity.value?.inc()
-        }
-        binding.onQuantityMinusSelected = { quantity ->
-            quantity.value = quantity.value?.dec()
-        }
-        binding.onQuantityPlusSelected = { quantity ->
-            quantity.value = quantity.value?.inc()
-        }
+        binding.handler = handler
     }
 
     fun bind(
@@ -29,4 +20,16 @@ class ProductsViewHolder(
         binding.product = item
         binding.quantity = quantityLiveData
     }
+}
+
+interface ProductEventHandler {
+    fun onProductSelected(product: Product)
+
+    fun onBtnItemProductAddToCartSelected(quantity: MutableLiveData<Int>)
+
+    fun onQuantityMinusSelected(quantity: MutableLiveData<Int>)
+
+    fun onQuantityPlusSelected(quantity: MutableLiveData<Int>)
+
+    fun whenQuantityChangedSelectView(quantity: MutableLiveData<Int>)
 }
