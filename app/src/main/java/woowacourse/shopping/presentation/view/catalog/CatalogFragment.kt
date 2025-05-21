@@ -29,9 +29,13 @@ class CatalogFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initObservers()
-        initListener()
-        initRecyclerView()
+        setupUI()
+        initObserver()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.refreshProductQuantities()
     }
 
     override fun onProductClicked(productId: Long) {
@@ -39,76 +43,67 @@ class CatalogFragment :
     }
 
     override fun onLoadMoreClicked() {
-        viewModel.fetchProducts()
+        viewModel.loadProducts()
     }
 
-    override fun onToggleQuantitySelector(position: Int) {
-        catalogAdapter.openQuantitySelectorAt(position)
+    override fun onQuantitySelectorOpenButtonClicked(
+        productId: Long,
+        position: Int,
+    ) {
+        viewModel.addProductToCart(position, productId)
     }
 
     override fun increaseQuantity(
         productId: Long,
         position: Int,
     ) {
-        viewModel.increaseProductToCart(position, productId)
+        viewModel.addProductToCart(position, productId)
     }
 
     override fun decreaseQuantity(
         productId: Long,
         position: Int,
     ) {
-        viewModel.decreaseProductFromCart(position, productId)
+        viewModel.removeProductFromCart(position, productId)
     }
 
-    private fun initObservers() {
-        viewModel.products.observe(viewLifecycleOwner) { items ->
-            catalogAdapter.appendProducts(items)
+    private fun setupUI() {
+        setupListeners()
+        setupRecyclerView()
+    }
+
+    private fun setupListeners() {
+        binding.btnNavigateCart.setOnClickListener {
+            navigateTo(CartFragment::class.java)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
+
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int = catalogAdapter.getSpanSizeAt(position)
+            }
+
+        binding.recyclerViewProducts.apply {
+            this.layoutManager = layoutManager
+            addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, ITEM_SPACING_DP))
+            adapter = catalogAdapter
+        }
+    }
+
+    private fun initObserver() {
+        viewModel.products.observe(viewLifecycleOwner) {
+            catalogAdapter.appendProducts(it)
         }
 
         viewModel.quantityUpdateEvent.observe(viewLifecycleOwner) { (position, quantity) ->
             catalogAdapter.updateQuantityAt(position, quantity)
         }
 
-        viewModel.toastEvent.observe(viewLifecycleOwner) { event ->
-            when (event) {
-                CatalogMessageEvent.FETCH_PRODUCTS_FAILURE ->
-                    showToast(R.string.catalog_screen_event_message_fetch_product_failure)
-
-                CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE ->
-                    showToast(R.string.catalog_screen_event_message_increase_cart_item_count_failure)
-
-                CatalogMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE ->
-                    showToast(R.string.catalog_screen_event_message_decrease_cart_item_count_failure)
-
-                CatalogMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE ->
-                    showToast(R.string.catalog_screen_event_message_find_quantity_failure)
-            }
-        }
-    }
-
-    private fun initListener() {
-        binding.btnNavigateCart.setOnClickListener {
-            navigateTo(CartFragment::class.java)
-        }
-    }
-
-    private fun initRecyclerView() {
-        val gridLayoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
-        gridLayoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    val viewType = catalogAdapter.getItemViewType(position)
-                    return when (CatalogItem.CatalogType.entries[viewType]) {
-                        CatalogItem.CatalogType.PRODUCT -> SINGLE_SPAN
-                        CatalogItem.CatalogType.LOAD_MORE -> SPAN_COUNT
-                    }
-                }
-            }
-
-        binding.recyclerViewProducts.apply {
-            layoutManager = gridLayoutManager
-            addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, ITEM_SPACING_DP))
-            adapter = catalogAdapter
+        viewModel.toastEvent.observe(viewLifecycleOwner) {
+            showToast(it.toMessageResId())
         }
     }
 
@@ -122,6 +117,27 @@ class CatalogFragment :
             addToBackStack(null)
         }
     }
+
+    private fun CatalogMessageEvent.toMessageResId(): Int =
+        when (this) {
+            CatalogMessageEvent.FETCH_PRODUCTS_FAILURE ->
+                R.string.catalog_screen_event_message_fetch_product_failure
+
+            CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE ->
+                R.string.catalog_screen_event_message_increase_cart_item_count_failure
+
+            CatalogMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE ->
+                R.string.catalog_screen_event_message_decrease_cart_item_count_failure
+
+            CatalogMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE ->
+                R.string.catalog_screen_event_message_find_quantity_failure
+        }
+
+    private fun CatalogAdapter.getSpanSizeAt(position: Int): Int =
+        when (CatalogItem.CatalogType.entries[getItemViewType(position)]) {
+            CatalogItem.CatalogType.PRODUCT -> SINGLE_SPAN
+            CatalogItem.CatalogType.LOAD_MORE -> SPAN_COUNT
+        }
 
     companion object {
         private const val SPAN_COUNT = 2

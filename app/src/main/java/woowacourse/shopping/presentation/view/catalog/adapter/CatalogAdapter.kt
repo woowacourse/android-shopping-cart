@@ -42,13 +42,6 @@ class CatalogAdapter(
         notifyItemRangeInserted(previousSize, products.size)
     }
 
-    fun openQuantitySelectorAt(position: Int) {
-        val oldItem = (products[position] as? CatalogItem.ProductItem)?.product ?: return
-        val newItem = CatalogItem.ProductItem(oldItem.copy(isOpenQuantitySelector = true))
-        products[position] = newItem
-        notifyItemChanged(position)
-    }
-
     fun updateQuantityAt(
         position: Int,
         quantity: Int,
@@ -64,6 +57,9 @@ class CatalogAdapter(
 
         fun onLoadMoreClicked()
 
-        fun onToggleQuantitySelector(position: Int)
+        fun onQuantitySelectorOpenButtonClicked(
+            productId: Long,
+            position: Int,
+        )
     }
 }

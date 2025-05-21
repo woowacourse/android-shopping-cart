@@ -5,8 +5,7 @@ import woowacourse.shopping.domain.model.CartItem
 data class CartItemUiModel(
     val product: ProductUiModel,
     val quantity: Int,
-) {
-    val totalPrice: Int get() = product.price * quantity
-}
+    val totalPrice: Int,
+)
 
-fun CartItem.toCartItemUiModel() = CartItemUiModel(product.toUiModel(), quantity)
+fun CartItem.toCartItemUiModel() = CartItemUiModel(product.toUiModel(), quantity, totalPrice)
