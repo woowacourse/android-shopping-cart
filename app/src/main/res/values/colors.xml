@@ -23,6 +23,7 @@
     <color name="orange">#FFFF9800</color>
     <color name="deep_orange">#FFFF5722</color>
     <color name="brown">#FF795548</color>
+    <color name="baemin_mint">#2ac1bc</color>
 
     <!-- 회색 계열 -->
     <color name="gray_50">#FFFAFAFA</color>

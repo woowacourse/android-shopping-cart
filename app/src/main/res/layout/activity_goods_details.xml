@@ -81,7 +81,7 @@
             android:id="@+id/tv_add_cart_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/cyan"
+            android:background="@color/baemin_mint"
             android:gravity="center"
             android:text="@string/goods_details_cart_button"
             android:textColor="@color/white"
