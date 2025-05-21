@@ -2,11 +2,11 @@ package woowacourse.shopping.data.dto
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import woowacourse.shopping.data.entity.ExploreHistoryProductEntity
+import woowacourse.shopping.data.entity.HistoryProductEntity
 import woowacourse.shopping.data.entity.ProductEntity
 
-data class ExploreHistoryProductDto(
-    @Embedded val exploreHistoryProduct: ExploreHistoryProductEntity,
+data class HistoryProductDto(
+    @Embedded val exploreHistoryProduct: HistoryProductEntity,
     @Relation(
         parentColumn = "productId",
         entityColumn = "id",

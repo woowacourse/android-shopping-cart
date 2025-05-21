@@ -8,11 +8,11 @@ import woowacourse.shopping.data.dao.CartDao
 import woowacourse.shopping.data.dao.HistoryDao
 import woowacourse.shopping.data.dao.ProductDao
 import woowacourse.shopping.data.entity.CartProductEntity
-import woowacourse.shopping.data.entity.ExploreHistoryProductEntity
+import woowacourse.shopping.data.entity.HistoryProductEntity
 import woowacourse.shopping.data.entity.ProductEntity
 
 @Database(
-    entities = [ProductEntity::class, CartProductEntity::class, ExploreHistoryProductEntity::class],
+    entities = [ProductEntity::class, CartProductEntity::class, HistoryProductEntity::class],
     version = 10001,
 )
 abstract class ShoppingDatabase : RoomDatabase() {

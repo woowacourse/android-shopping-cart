@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.dto.ExploreHistoryProductDto
+import woowacourse.shopping.data.dto.HistoryProductDto
 import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.model.HistoryProduct.Companion.EMPTY_HISTORY_PRODUCT
 
-fun ExploreHistoryProductDto.toDomain(): HistoryProduct =
+fun HistoryProductDto.toDomain(): HistoryProduct =
     if (product != null) {
         HistoryProduct(
             productId = product.id,

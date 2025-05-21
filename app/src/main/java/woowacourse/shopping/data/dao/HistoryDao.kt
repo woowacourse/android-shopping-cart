@@ -5,17 +5,17 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import woowacourse.shopping.data.dto.ExploreHistoryProductDto
-import woowacourse.shopping.data.entity.ExploreHistoryProductEntity
+import woowacourse.shopping.data.dto.HistoryProductDto
+import woowacourse.shopping.data.entity.HistoryProductEntity
 
 @Dao
 interface HistoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertHistory(history: ExploreHistoryProductEntity)
+    fun insertHistory(history: HistoryProductEntity)
 
     @Transaction
     fun insertHistoryWithLimit(
-        history: ExploreHistoryProductEntity,
+        history: HistoryProductEntity,
         limit: Int,
     ) {
         insertHistory(history)
@@ -27,7 +27,7 @@ interface HistoryDao {
     }
 
     @Query("SELECT * FROM search_history ORDER BY timestamp DESC")
-    fun getHistoryProducts(): List<ExploreHistoryProductDto>
+    fun getHistoryProducts(): List<HistoryProductDto>
 
     @Query("SELECT COUNT(*) FROM search_history")
     fun getHistoryCount(): Int
@@ -36,5 +36,5 @@ interface HistoryDao {
     fun deleteOldestHistories(count: Int)
 
     @Query("SELECT * FROM search_history ORDER BY timestamp DESC LIMIT 1")
-    fun getRecentHistoryProduct(): ExploreHistoryProductDto?
+    fun getRecentHistoryProduct(): HistoryProductDto?
 }

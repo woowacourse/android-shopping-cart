@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.dao.HistoryDao
-import woowacourse.shopping.data.entity.ExploreHistoryProductEntity
+import woowacourse.shopping.data.entity.HistoryProductEntity
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.repository.HistoryRepository
@@ -21,7 +21,7 @@ class LocalHistoryRepository(
     override fun saveSearchHistory(productId: Int) {
         thread {
             dao.insertHistoryWithLimit(
-                history = ExploreHistoryProductEntity(productId),
+                history = HistoryProductEntity(productId),
                 limit = MAX_HISTORY_COUNT,
             )
         }
