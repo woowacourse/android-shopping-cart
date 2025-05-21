@@ -36,7 +36,7 @@ class GoodsViewModel : ViewModel() {
         _showMoreButton.value = shouldShow
     }
 
-    fun getProducts(
+    private fun getProducts(
         page: Int,
         pageSize: Int = PAGE_SIZE,
     ): List<Goods> {
