@@ -24,7 +24,7 @@ class CartViewModel(
     }
 
     fun updateCartProducts() {
-        _products.value = cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE)
+        _products.value = cartDummyRepository.fetchCartProducts(currentPage.value ?: INITIAL_PAGE).map { it.product }
         if (products.value.isNullOrEmpty()) decreasePage()
         updateMaxPage()
     }

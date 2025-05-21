@@ -16,11 +16,11 @@ import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
 @SuppressLint("NotifyDataSetChanged")
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels()
-    private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
+    private lateinit var productsAdapter: ProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        productsAdapter = ProductsAdapter(createAdapterOnClickHandler(), this, viewModel)
         initViewBinding()
         initObservers()
         viewModel.updateProducts()
@@ -42,6 +42,21 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
                 navigateToProductDetail(id)
             }
 
+            override fun onInsertCartClick(id: Int) {
+                viewModel.upCount(id)
+                productsAdapter.refreshItemById(id)
+            }
+
+            override fun onPlusClick(id: Int) {
+                viewModel.upCount(id)
+                productsAdapter.refreshItemById(id)
+            }
+
+            override fun onMinusClick(id: Int) {
+                viewModel.downCount(id)
+                productsAdapter.refreshItemById(id)
+            }
+
             override fun onLoadMoreClick() {
                 viewModel.updateProducts()
             }
@@ -60,6 +75,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
     private fun initViewBinding() {
         binding.rvProducts.adapter = productsAdapter
         binding.rvProducts.layoutManager = createLayoutManager()
+        binding.lifecycleOwner = this
     }
 
     private fun createLayoutManager(): GridLayoutManager =

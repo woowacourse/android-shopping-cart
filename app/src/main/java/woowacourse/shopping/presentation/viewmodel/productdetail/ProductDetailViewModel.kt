@@ -26,7 +26,7 @@ class ProductDetailViewModel(
     }
 
     fun addCartProduct() {
-        cartDummyRepository.addCartProduct(product.value ?: return)
+        // cartDummyRepository.addCartProduct(product.value ?: return)
         putProductFlag.call()
         finishFlag.call()
     }

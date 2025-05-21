@@ -3,12 +3,16 @@ package woowacourse.shopping.presentation.ui.products
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
 
 @SuppressLint("NotifyDataSetChanged")
 class ProductsAdapter(
     private val onClickHandler: OnClickHandler,
+    private val lifecycleOwner: LifecycleOwner,
+    private val viewModel: ProductsViewModel,
 ) : RecyclerView.Adapter<ProductsItemViewHolder<ProductsItem, ViewDataBinding>>() {
     private val productsItems: MutableList<ProductsItem> = mutableListOf<ProductsItem>()
 
@@ -17,7 +21,7 @@ class ProductsAdapter(
         viewType: Int,
     ): ProductsItemViewHolder<ProductsItem, ViewDataBinding> =
         when (ProductsItemViewType.entries[viewType]) {
-            ProductsItemViewType.PRODUCT -> ProductViewHolder(parent, onClickHandler)
+            ProductsItemViewType.PRODUCT -> ProductViewHolder(parent, onClickHandler, lifecycleOwner, viewModel)
             ProductsItemViewType.LOAD_MORE -> LoadMoreViewHolder(parent, onClickHandler)
         } as ProductsItemViewHolder<ProductsItem, ViewDataBinding>
 
@@ -31,10 +35,12 @@ class ProductsAdapter(
 
     override fun getItemCount(): Int = productsItems.size
 
-    override fun getItemViewType(position: Int): Int = when(productsItems[position]) {
-        is ProductsItem.ProductProductsItem -> 0
-        is ProductsItem.LoadMoreProductsItem -> 1
-    }
+    override fun getItemViewType(position: Int): Int =
+        when (productsItems[position]) {
+            is ProductsItem.ProductProductsItem -> 0
+            is ProductsItem.LoadMoreProductsItem -> 1
+        }
+
     fun updateProductItems(newItems: List<Product>) {
         productsItems.clear()
         productsItems.addAll(newItems.map { ProductsItem.ProductProductsItem(it) })
@@ -42,6 +48,16 @@ class ProductsAdapter(
 
     fun updateLoadMoreItem(isLoadable: Boolean) {
         if (isLoadable) productsItems.add(ProductsItem.LoadMoreProductsItem)
+    }
+
+    fun refreshItemById(id: Int) {
+        val pos =
+            productsItems.indexOfFirst {
+                it is ProductsItem.ProductProductsItem && it.value.id == id
+            }
+        if (pos != -1) {
+            notifyItemChanged(pos)
+        }
     }
 
     interface OnClickHandler :
