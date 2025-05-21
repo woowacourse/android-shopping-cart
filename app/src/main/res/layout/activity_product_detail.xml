@@ -62,29 +62,37 @@
             android:background="#AAAAAA"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="19dp"
-            android:layout_marginTop="19dp"
-            android:text="@string/text_price"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_divider" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="19dp"
-            android:layout_marginEnd="19dp"
+            android:layout_marginStart="19dp"
             android:price="@{viewModel.productLiveData.price}"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_divider"
             tools:text="99,800원" />
+
+        <LinearLayout
+            android:id="@+id/layout_product_quantity_selector"
+            app:layout_constraintTop_toTopOf="@id/tv_product_price"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="19dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            >
+            <include
+                app:quantity="@{quantity}"
+                app:handler="@{handler}"
+                layout="@layout/button_quantity_selector" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_add_to_cart"

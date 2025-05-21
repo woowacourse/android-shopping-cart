@@ -33,7 +33,7 @@
             android:padding="0dp"
             android:text="@string/quantity_minus"
             android:textColor="#555555"
-            android:textSize="24sp"
+            android:textSize="22sp"
             app:backgroundTint="@null" />
 
         <TextView
@@ -45,7 +45,7 @@
             android:gravity="center"
             android:minWidth="24dp"
             android:textColor="#555555"
-            android:textSize="24sp"
+            android:textSize="22sp"
             shoppingCart:quantity="@{quantity}"
             tools:text="2" />
 
@@ -61,7 +61,7 @@
             android:padding="0dp"
             android:text="@string/quantity_plus"
             android:textColor="#555555"
-            android:textSize="24sp"
+            android:textSize="22sp"
             app:backgroundTint="@null" />
 
     </LinearLayout>
