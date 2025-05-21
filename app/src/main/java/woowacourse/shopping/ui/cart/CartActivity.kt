@@ -112,9 +112,9 @@ class CartActivity : AppCompatActivity() {
 
     private fun setPaginationButtonTint() {
         binding.btnPrevious.backgroundTintList =
-            ColorStateList.valueOf(getColor(if (viewModel.isFirstPage) R.color.button_inactive else R.color.button_active))
+            ColorStateList.valueOf(getColor(if (viewModel.isFirstPage) R.color.base_gray else R.color.neo_green))
         binding.btnNext.backgroundTintList =
-            ColorStateList.valueOf(getColor(if (viewModel.isLastPage) R.color.button_inactive else R.color.button_active))
+            ColorStateList.valueOf(getColor(if (viewModel.isLastPage) R.color.base_gray else R.color.neo_green))
     }
 
     companion object {
