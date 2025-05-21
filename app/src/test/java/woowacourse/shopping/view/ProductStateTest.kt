@@ -1,7 +1,6 @@
 package woowacourse.shopping.view
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.Quantity
@@ -48,21 +47,5 @@ class ProductStateTest {
         val result = state.decreaseCartQuantity()
 
         assertEquals(result.cartQuantity.value, 1)
-    }
-
-    @Test
-    fun `특정 상품이 장바구니에 저장된 수량이 0보다 클 경우 quantityVisible은 true다`() {
-        val product = productFixture2
-        val state = ProductState(product, Quantity(1))
-
-        assertTrue(state.quantityVisible)
-    }
-
-    @Test
-    fun `특정 상품이 장바구니에 저장된 수량이 0일 경우 quantityVisible은 false다`() {
-        val product = productFixture2
-        val state = ProductState(product, Quantity(0))
-
-        assertFalse(state.quantityVisible)
     }
 }

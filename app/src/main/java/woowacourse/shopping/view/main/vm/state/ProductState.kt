@@ -29,7 +29,4 @@ data class ProductState(
     fun decreaseCartQuantity(): ProductState {
         return copy(cartQuantity = cartQuantity - 1)
     }
-
-    val quantityVisible: Boolean
-        get() = cartQuantity.hasQuantity()
 }
