@@ -46,7 +46,11 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        adapter = ProductsAdapter { product -> navigateToProductDetail(product) }
+        adapter =
+            ProductsAdapter(
+                productClickListener = { product -> navigateToProductDetail(product) },
+                quantitySelectListener = { true },
+            )
         binding.rvProducts.adapter = adapter
         binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
     }

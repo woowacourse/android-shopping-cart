@@ -7,11 +7,12 @@ import woowacourse.shopping.model.product.Product
 class ProductsAdapter(
     private val products: MutableList<Product> = mutableListOf(),
     private val productClickListener: (Product) -> Unit,
+    private val quantitySelectListener: () -> Boolean,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductViewHolder = ProductViewHolder.from(parent, productClickListener)
+    ): ProductViewHolder = ProductViewHolder.from(parent, productClickListener, quantitySelectListener)
 
     override fun getItemCount(): Int = products.size
 
