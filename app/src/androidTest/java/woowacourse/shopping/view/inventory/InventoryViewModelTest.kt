@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.inventory
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyInventoryRepository
@@ -16,11 +17,16 @@ class InventoryViewModelTest {
 
     @Test
     fun 한_페이지에_상품이_20개씩_로드된다() {
+        // given
         val repository = DummyInventoryRepository()
         val viewModel = InventoryViewModel(repository)
-        val page = repository.getPage(20, 0)
+
+        // when
         viewModel.requestPage()
-        val products = viewModel.items.getOrAwaitValue().filterIsInstance<InventoryItem.ProductUiModel>()
-        assert(products == page.items.map(Product::toUiModel))
+
+        // then
+        val actual = viewModel.items.getOrAwaitValue().filterIsInstance<InventoryItem.ProductUiModel>()
+        val expected = repository.getPage(20, 0).items.map(Product::toUiModel)
+        assertThat(actual).isEqualTo(expected)
     }
 }
