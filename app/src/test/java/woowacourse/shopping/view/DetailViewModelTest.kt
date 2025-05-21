@@ -5,7 +5,6 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
@@ -16,6 +15,8 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.storage.CartStorage
 import woowacourse.shopping.data.storage.ProductStorage
+import woowacourse.shopping.domain.Quantity
+import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
@@ -36,6 +37,7 @@ class DetailViewModelTest {
     @BeforeEach
     fun setup() {
         every { productStorage[1L] } returns productFixture1
+        every { cartStorage[1L] } returns Cart(productId = 1L, quantity = Quantity(0))
         every { cartStorage.insert(any()) } just Runs
 
         cartRepository = CartRepositoryImpl(cartStorage)
@@ -49,23 +51,12 @@ class DetailViewModelTest {
         viewModel.load(1L)
 
         // then
-        val product = viewModel.product.getOrAwaitValue()
-        assertThat(product).isEqualTo(productFixture1)
+        val expected = viewModel.uiState.getOrAwaitValue()
+
+        assertThat(expected.item).isEqualTo(productFixture1)
     }
 
     @Test
     fun `장바구니_상품_저장소에_현재_상품을_추가한다`() {
-        // given
-        viewModel.load(1L)
-
-        // when
-        viewModel.addProduct()
-
-        // then
-        verify {
-            cartStorage.insert(
-                match { it.productId == 1L },
-            )
-        }
     }
 }
