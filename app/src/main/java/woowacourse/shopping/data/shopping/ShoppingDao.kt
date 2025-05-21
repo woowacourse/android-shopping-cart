@@ -1,0 +1,32 @@
+package woowacourse.shopping.data.shopping
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+
+@Dao
+interface ShoppingDao {
+    @Query("SELECT * FROM shoppingCart")
+    fun getAll(): List<ShoppingEntity>
+
+    @Query("DELETE FROM shoppingCart WHERE id = :id")
+    fun delete(id: Int)
+
+    @Query("UPDATE shoppingCart SET quantity = :quantity WHERE id = :id")
+    fun updateQuantity(
+        id: Int,
+        quantity: Int,
+    )
+
+    @Insert
+    fun insert(goods: ShoppingEntity)
+
+    @Query("SELECT * FROM shoppingCart ORDER BY id ASC LIMIT :count OFFSET (:page * :count)")
+    fun getPagedGoods(
+        page: Int,
+        count: Int,
+    ): List<ShoppingEntity>
+
+    @Query("SELECT * FROM shoppingCart WHERE id = :id")
+    fun findGoodsById(id: Int): ShoppingEntity?
+}
