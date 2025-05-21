@@ -31,6 +31,13 @@
         <item name="android:textColor">@color/gray5</item>
     </style>
 
+    <!--  프로덕트 페이지 더보기 스타일  -->
+    <style name="ProductShowMoreStyle" parent="BaseTextStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:textColor">@color/gray5</item>
+    </style>
+
     <!--  product detail 페이지 상품 이름 스타일  -->
     <style name="ProductDetailTitleStyle" parent="BaseTextStyle">
         <item name="android:gravity">start</item>

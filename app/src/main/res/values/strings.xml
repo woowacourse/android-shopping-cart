@@ -6,6 +6,7 @@
     <string name="product_list_explain">상품 목록 부분입니다</string>
     <string name="product_toolbar_text">Shopping</string>
     <string name="product_price">%,d원</string>
+    <string name="product_show_more">더보기</string>
 
     <!--  상품 상세 페이지  -->
     <string name="detail_product_price_text">가격</string>
