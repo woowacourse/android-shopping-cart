@@ -14,11 +14,10 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adapter.CartAdapter
-import woowacourse.shopping.view.cart.adapter.CartAdapterEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 
-class CartActivity : AppCompatActivity(), CartAdapterEventHandler {
+class CartActivity : AppCompatActivity(), CartAdapter.Handler {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         val container = (application as App).container

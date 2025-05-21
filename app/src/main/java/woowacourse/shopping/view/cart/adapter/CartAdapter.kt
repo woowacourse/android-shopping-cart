@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.view.cart.vm.CartState
+import woowacourse.shopping.view.main.vm.state.ProductState
 
 class CartAdapter(
-    private var items: List<CartState>,
-    private val handler: CartAdapterEventHandler,
+    private var items: List<ProductState>,
+    private val handler: Handler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    fun submitList(newItems: List<CartState>) {
+    fun submitList(newItems: List<ProductState>) {
         items = newItems
         notifyDataSetChanged()
     }
@@ -31,4 +31,6 @@ class CartAdapter(
     ) {
         holder.bind(items[position])
     }
+
+    interface Handler : CartViewHolder.Handler
 }
