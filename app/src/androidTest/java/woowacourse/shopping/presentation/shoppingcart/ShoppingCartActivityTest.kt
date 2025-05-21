@@ -1,7 +1,9 @@
 package woowacourse.shopping.presentation.shoppingcart
 
+import android.content.Context
 import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -15,19 +17,52 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.not
 import org.junit.Test
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ShoppingDataBase
-import woowacourse.shopping.fixture.createGoods
-import woowacourse.shopping.presentation.model.toDomain
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.shopping.ShoppingDao
+import woowacourse.shopping.data.shopping.ShoppingDatabase
+import woowacourse.shopping.data.shopping.ShoppingRepositoryImpl
+import woowacourse.shopping.domain.repository.ShoppingRepository
 
 class ShoppingCartActivityTest {
     private lateinit var scenario: ActivityScenario<ShoppingCartActivity>
     private lateinit var intent: Intent
+    private lateinit var db: ShoppingDatabase
+    private lateinit var dao: ShoppingDao
+    private lateinit var shoppingRepository: ShoppingRepository
+
+    // Before
+    private fun setUp(count: Int) {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val application = context as ShoppingApplication
+        db =
+            Room
+                .inMemoryDatabaseBuilder(context, ShoppingDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
+
+        dao = db.shoppingDao()
+        shoppingRepository = ShoppingRepositoryImpl(dao)
+        application.initShoppingRepository(shoppingRepository as ShoppingRepositoryImpl)
+
+        addItems(count)
+
+        intent = Intent(context, ShoppingCartActivity::class.java)
+        scenario = ActivityScenario.launch(intent)
+    }
+
+    // After
+    private fun tearDown(count: Int) {
+        removeItems(count)
+
+        scenario.close()
+        db.close()
+    }
 
     @Test
     fun `데이터베이스에_저장된_상품_목록이_보인다`() {
         setUp(1)
 
-        onView(withText("0"))
+        onView(withText("[병천아우내] 모듬순대"))
             .check(matches(isDisplayed()))
 
         onView(withText("11,900원"))
@@ -48,7 +83,7 @@ class ShoppingCartActivityTest {
             .perform(click())
 
         // then
-        onView(withText("0"))
+        onView(withText("[병천아우내] 모듬순대"))
             .check(doesNotExist())
 
         tearDown(1)
@@ -115,28 +150,15 @@ class ShoppingCartActivityTest {
         tearDown(10)
     }
 
-    private fun setUp(count: Int) {
-        addItems(count)
-
-        intent = Intent(ApplicationProvider.getApplicationContext(), ShoppingCartActivity::class.java)
-        scenario = ActivityScenario.launch(intent)
-    }
-
-    private fun tearDown(count: Int) {
-        removeItems(count)
-
-        scenario.close()
-    }
-
     private fun addItems(count: Int) {
         repeat(count) {
-            ShoppingDataBase.addItem(createGoods("$it").toDomain())
+            shoppingRepository.increaseItemQuantity(it + 1)
         }
     }
 
     private fun removeItems(count: Int) {
         repeat(count) {
-            ShoppingDataBase.removeItem(createGoods("$it").toDomain())
+            shoppingRepository.decreaseItemQuantity(it + 1)
         }
     }
 
