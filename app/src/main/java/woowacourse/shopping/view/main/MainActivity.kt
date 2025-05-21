@@ -61,7 +61,8 @@ class MainActivity : AppCompatActivity() {
             adapter = productsAdapter
             setHasFixedSize(true)
             setItemAnimator(null)
-        }.addOnScrollListener(scrollEndEvent)
+            addOnScrollListener(scrollEndEvent)
+        }
 
         binding.buttonLoad.setOnClickListener {
             binding.buttonLoad.visibility = View.GONE
