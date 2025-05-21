@@ -44,8 +44,8 @@ class ProductStateTest {
         val product = productFixture2 // quantity : 10
         val state = ProductState(product, Quantity(2))
 
-        val result = state.decreaseCartQuantity()
+        val result = state.decreaseCartQuantity().second
 
-        assertEquals(result.cartQuantity.value, 1)
+        assertEquals(result.value, 9)
     }
 }

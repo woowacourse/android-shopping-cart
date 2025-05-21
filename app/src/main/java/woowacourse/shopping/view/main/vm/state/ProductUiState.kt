@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.main.vm.state
 
+import woowacourse.shopping.domain.Quantity
+
 data class ProductUiState(
     val items: List<ProductState> = emptyList(),
     val load: LoadState = LoadState.CannotLoad,
@@ -29,7 +31,7 @@ data class ProductUiState(
         return result
     }
 
-    fun decreaseCartQuantity(productId: Long): ProductState {
+    fun decreaseCartQuantity(productId: Long): Pair<ProductState, Quantity> {
         val targetIndex = targetIndex(productId)
         val result = items[targetIndex].decreaseCartQuantity()
 
