@@ -7,20 +7,24 @@ import woowacourse.shopping.databinding.ItemProductMoreBinding
 
 class ProductMoreViewHolder(
     binding: ItemProductMoreBinding,
-    load: () -> Unit,
+    productListener: ProductMoreClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.load = load
+        binding.productMoreClickListener = productListener
     }
 
     companion object {
         fun of(
             parent: ViewGroup,
-            load: () -> Unit,
+            productListener: ProductMoreClickListener,
         ): ProductMoreViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemProductMoreBinding.inflate(layoutInflater, parent, false)
-            return ProductMoreViewHolder(binding, load)
+            return ProductMoreViewHolder(binding, productListener)
         }
+    }
+
+    fun interface ProductMoreClickListener {
+        fun onLoadClick()
     }
 }

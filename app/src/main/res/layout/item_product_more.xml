@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="load"
-            type="kotlin.jvm.functions.Function0" />
+            name="productMoreClickListener"
+            type="woowacourse.shopping.view.product.ProductMoreViewHolder.ProductMoreClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:minHeight="0dp"
-            android:onClick="@{() -> load.invoke()}"
+            android:onClick="@{() -> productMoreClickListener.onLoadClick()}"
             android:padding="12dp"
             android:text="@string/products_more_button"
             android:textColor="@color/black"

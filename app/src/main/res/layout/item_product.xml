@@ -10,8 +10,8 @@
             type="woowacourse.shopping.domain.product.Product" />
 
         <variable
-            name="onSelectProduct"
-            type="kotlin.jvm.functions.Function1" />
+            name="productClickListener"
+            type="woowacourse.shopping.view.product.ProductViewHolder.ProductClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,17 +19,28 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
-        android:onClick="@{() -> onSelectProduct.invoke(product)}">
+        android:onClick="@{() -> productClickListener.onProductClick(product)}">
 
         <ImageView
             android:id="@+id/productImage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/gray_a"
             android:contentDescription="@{product.name}"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/product_image_example" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> productClickListener.onPlusShoppingCartClick(product)}"
+            android:src="@drawable/btn_product_plus"
+            app:layout_constraintBottom_toBottomOf="@id/productImage"
+            app:layout_constraintEnd_toEndOf="@id/productImage" />
 
         <TextView
             android:id="@+id/productName"

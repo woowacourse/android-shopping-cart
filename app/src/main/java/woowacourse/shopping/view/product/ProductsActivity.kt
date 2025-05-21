@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.product
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,18 +11,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.showSnackBar
 import woowacourse.shopping.view.common.showToast
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 
-class ProductsActivity : AppCompatActivity() {
+class ProductsActivity :
+    AppCompatActivity(),
+    ProductAdapter.ProductListener {
     private val binding: ActivityProductsBinding by lazy {
         ActivityProductsBinding.inflate(layoutInflater)
     }
     private val viewModel: ProductsViewModel by viewModels()
-    private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(::navigateToProductDetail, viewModel::updateProducts)
-    }
+    private val productAdapter: ProductAdapter by lazy { ProductAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,10 @@ class ProductsActivity : AppCompatActivity() {
         viewModel.event.observe(this) { event: ProductsEvent ->
             when (event) {
                 ProductsEvent.UPDATE_PRODUCT_FAILURE -> showToast(getString(R.string.products_update_products_error_message))
+                ProductsEvent.NOT_ADD_TO_SHOPPING_CART ->
+                    binding.root.showSnackBar(
+                        getString(R.string.product_detail_add_shopping_cart_error_message),
+                    )
             }
         }
     }
@@ -56,6 +62,14 @@ class ProductsActivity : AppCompatActivity() {
     private fun bindData() {
         viewModel.products.observe(this) { products: List<ProductsItem> ->
             productAdapter.appendItems(products)
+        }
+
+        viewModel.shoppingCartQuantity.observe(this) { shoppingCartQuantity: Int ->
+            binding.productsShoppingCartQuantity.apply {
+                visibility =
+                    if (shoppingCartQuantity > 0) View.VISIBLE else View.GONE
+                text = shoppingCartQuantity.toString()
+            }
         }
     }
 
@@ -77,7 +91,19 @@ class ProductsActivity : AppCompatActivity() {
         startActivity(ShoppingCartActivity.newIntent(this))
     }
 
-    private fun navigateToProductDetail(product: Product) {
+    override fun onProductClick(product: Product) {
         startActivity(ProductDetailActivity.newIntent(this, product))
+    }
+
+    override fun onPlusShoppingCartClick(product: Product) {
+        viewModel.addProductToShoppingCart(product)
+    }
+
+    override fun onMinusShoppingCartClick(product: Product) {
+        // TODO : 장바구니에 수량 1개 삭제 버튼 로직 추가
+    }
+
+    override fun onLoadClick() {
+        viewModel.updateProducts()
     }
 }
