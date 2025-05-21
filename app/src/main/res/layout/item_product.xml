@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="10dp"
     android:padding="10dp">
 
@@ -12,7 +12,7 @@
 
         <variable
             name="model"
-            type="woowacourse.shopping.view.main.adapter.ProductRvItems.ProductItem" />
+            type="woowacourse.shopping.view.main.vm.state.ProductState" />
 
         <variable
             name="adapterEventHandler"
@@ -87,7 +87,7 @@
             android:onClick="@{() -> adapterEventHandler.showQuantity(model.item.id)}"
             android:scaleType="center"
             android:src="@drawable/ic_add"
-            android:visibility="@{model.quantityVisible ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.cartQuantityValue > 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/image_view_product"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -96,13 +96,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/product_quantity_background"
             app:layout_constraintBottom_toBottomOf="@id/image_view_product"
-            app:layout_constraintStart_toStartOf="@id/image_view_product"
-            app:layout_constraintEnd_toEndOf="@id/image_view_product">
+            app:layout_constraintEnd_toEndOf="@id/image_view_product"
+            app:layout_constraintStart_toStartOf="@id/image_view_product">
 
             <include
                 layout="@layout/item_quantity_changer"
-                bind:model="@{model}"
-                bind:eventHandler="@{cartQuantityEventHandler}" />
+                bind:eventHandler="@{cartQuantityEventHandler}"
+                bind:model="@{model}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
