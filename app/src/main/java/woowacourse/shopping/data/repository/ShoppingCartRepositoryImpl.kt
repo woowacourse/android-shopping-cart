@@ -4,12 +4,12 @@ import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.ext.subList
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartRepositoryImpl : ShoppingCartRepository {
-    override fun findAll(pageRequest: PageRequest): Page<Product> {
+    override fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
         val items =
-            DummyShoppingCart.products
+            DummyShoppingCart.items
                 .distinct()
                 .subList(pageRequest)
 
@@ -18,7 +18,7 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
 
     override fun totalSize(): Int = DummyShoppingCart.products.size
 
-    override fun remove(product: Product) {
-        DummyShoppingCart.products.remove(product)
+    override fun remove(item: ShoppingCartItem) {
+        DummyShoppingCart.items.remove(item)
     }
 }

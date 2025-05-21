@@ -2,7 +2,9 @@
 <layout>
 
     <data>
-
+        <variable
+            name="quantity"
+            type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
@@ -10,6 +12,18 @@
         <variable
             name="onProductSelected"
             type="kotlin.jvm.functions.Function1&lt;woowacourse.shopping.domain.Product, kotlin.Unit&gt;" />
+
+        <variable
+            name="onBtnItemProductAddToCartSelected"
+            type="kotlin.jvm.functions.Function1&lt;androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;, kotlin.Unit&gt;" />
+
+        <variable
+            name="onQuantityMinusSelected"
+            type="kotlin.jvm.functions.Function1&lt;androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;, kotlin.Unit&gt;" />
+
+        <variable
+            name="onQuantityPlusSelected"
+            type="kotlin.jvm.functions.Function1&lt;androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;, kotlin.Unit&gt;" />
 
     </data>
 
@@ -20,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{() -> onProductSelected.invoke(product)}"
+        shoppingCart:mutableVisibility="@{quantity}"
         android:padding="10dp">
 
         <ImageView
@@ -38,6 +53,7 @@
         </ImageView>
 
         <LinearLayout
+            android:id="@+id/layout_product_quantity_selector"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
@@ -47,11 +63,15 @@
             android:visibility="gone"
             >
             <include
+                app:quantity="@{quantity}"
+                app:onQuantityMinusSelected="@{onQuantityMinusSelected}"
+                app:onQuantityPlusSelected="@{onQuantityPlusSelected}"
                 layout="@layout/button_quantity_selector" />
 
         </LinearLayout>
 
         <Button
+            android:onClick="@{()->onBtnItemProductAddToCartSelected.invoke(quantity)}"
             android:id="@+id/btn_item_product_add_to_cart"
             android:layout_width="48dp"
             android:layout_height="48dp"

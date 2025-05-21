@@ -65,8 +65,8 @@ class MainActivity :
         }
         viewModel.apply {
             requestProductsPage(0)
-            productsLiveData.observe(this@MainActivity) { page ->
-                productsAdapter.updateProducts(page.items)
+            productsLiveData.observe(this@MainActivity) { mainRecyclerViewProduct ->
+                productsAdapter.updateProducts(mainRecyclerViewProduct)
             }
         }
     }

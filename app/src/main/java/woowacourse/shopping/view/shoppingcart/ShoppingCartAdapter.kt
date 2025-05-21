@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartAdapter(
-    private val onProductRemove: (Product, Int) -> Unit,
+    private val onProductRemove: (ShoppingCartItem, Int) -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private var products: List<Product> = listOf()
+    private var products: List<ShoppingCartItem> = listOf()
     private var currentPage: Int = 0
 
     override fun getItemCount(): Int = products.size
@@ -31,7 +31,7 @@ class ShoppingCartAdapter(
         return ShoppingCartViewHolder(binding, onProductRemove)
     }
 
-    fun updateProducts(page: Page<Product>) {
+    fun updateProducts(page: Page<ShoppingCartItem>) {
         val previousCount = itemCount
         products = page.items
         currentPage = page.currentPage

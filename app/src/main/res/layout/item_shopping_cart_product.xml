@@ -7,11 +7,11 @@
             type="int" />
         <variable
             name="product"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.domain.ShoppingCartItem" />
 
         <variable
             name="onProductRemove"
-            type="kotlin.jvm.functions.Function2&lt;woowacourse.shopping.domain.Product, java.lang.Integer,kotlin.Unit&gt;" />
+            type="kotlin.jvm.functions.Function2&lt;woowacourse.shopping.domain.ShoppingCartItem, java.lang.Integer,kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +35,7 @@
             android:layout_marginEnd="28dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{product.product.name}"
             android:textColor="#555555"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -50,7 +50,7 @@
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
-            shoppingCart:image="@{product.imageUrl}"
+            shoppingCart:image="@{product.product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,6 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginEnd="12dp"
-            android:onClick="@{() -> onProductRemove.invoke(product, page)}"
             android:src="@drawable/icon_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_shopping_cart_item"
@@ -73,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:price="@{product.price}"
+            android:price="@{product.product.price}"
             android:textColor="#555555"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_shopping_cart_image"

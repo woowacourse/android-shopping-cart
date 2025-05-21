@@ -8,16 +8,19 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingCartApplication
-import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
+import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
-    val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
+    private val _productsLiveData: MutableLiveData<MainRecyclerViewProduct> = MutableLiveData()
+    val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
+    val quantityLiveData: MutableLiveData<MutableMap<Product, MutableLiveData<Int>>> = MutableLiveData()
     val totalSize: Int get() = productsRepository.totalSize()
 
     fun requestProductsPage(requestPage: Int) {
@@ -26,19 +29,36 @@ class ProductsViewModel(
                 pageSize = PAGE_SIZE,
                 requestPage = requestPage,
             )
-        val items = productsRepository.findAll(pageRequest)
-        _productsLiveData.value = items
+        val page = productsRepository.findAll(pageRequest)
+        val shoppingCartItems = shoppingCartRepository.findAll(pageRequest)
+
+        val tempMap: MutableMap<Product, MutableLiveData<Int>> = mutableMapOf()
+        page.items.forEach {
+            val quantity =
+                shoppingCartItems.items.find { shoppingCartItem ->
+                    shoppingCartItem.product == it
+                }?.quantity ?: DEFAULT_QUANTITY
+            tempMap[it] = MutableLiveData(quantity)
+        }
+        quantityLiveData.value = tempMap
+
+        _productsLiveData.value =
+            MainRecyclerViewProduct(
+                page = page,
+                quantityMap = tempMap,
+            )
     }
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val DEFAULT_QUANTITY = 0
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val productsRepository =
-                        (this[APPLICATION_KEY] as ShoppingCartApplication).productsRepository
+                    val application = (this[APPLICATION_KEY] as ShoppingCartApplication)
                     ProductsViewModel(
-                        productsRepository,
+                        application.productsRepository,
+                        application.shoppingCartRepository,
                     )
                 }
             }

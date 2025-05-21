@@ -11,21 +11,21 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
+    private val _productsLiveData: MutableLiveData<Page<ShoppingCartItem>> = MutableLiveData()
     private val productsCount: Int get() = shoppingCartRepository.totalSize()
 
-    val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
+    val productsLiveData: LiveData<Page<ShoppingCartItem>> get() = _productsLiveData
 
     fun removeProduct(
-        product: Product,
+        shoppingCartItem: ShoppingCartItem,
         currentPage: Int,
     ) {
-        shoppingCartRepository.remove(product)
+        shoppingCartRepository.remove(shoppingCartItem)
         requestProductsPage(pageNumberAfterRemoval(currentPage))
     }
 

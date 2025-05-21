@@ -3,6 +3,7 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 
 object DummyShoppingCart {
     val products =
@@ -118,4 +119,17 @@ object DummyShoppingCart {
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/c1ea8fff-29d9-4e12-b2f1-667d76e2bdc9.jpeg",
             ),
         )
+
+    val items:MutableList<ShoppingCartItem> = mutableListOf(
+        ShoppingCartItem(
+            1,
+            DummyProducts.products[0],
+            1
+        ),
+        ShoppingCartItem(
+            2,
+            DummyProducts.products[1],
+            2
+        )
+    )
 }
