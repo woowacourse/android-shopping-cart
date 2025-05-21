@@ -13,12 +13,8 @@
             type="long" />
 
         <variable
-            name="adapterPosition"
-            type="int" />
-
-        <variable
             name="listener"
-            type="woowacourse.shopping.presentation.ui.layout.QuantitySelectorListener" />
+            type="woowacourse.shopping.presentation.ui.layout.QuantityChangeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:onClick="@{() -> listener.decreaseQuantity(productId, adapterPosition)}"
+            android:onClick="@{() -> listener.decreaseQuantity(productId)}"
             android:text="@string/minus"
             android:textColor="@color/gray_55"
             android:textSize="22sp"
@@ -64,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:onClick="@{() -> listener.increaseQuantity(productId, adapterPosition)}"
+            android:onClick="@{() -> listener.increaseQuantity(productId)}"
             android:text="@string/plus"
             android:textColor="@color/gray_55"
             android:textSize="22sp"
