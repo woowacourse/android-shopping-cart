@@ -8,6 +8,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.products.Product" />
+
+        <variable
+            name="productClickListener"
+            type="woowacourse.shopping.view.products.ProductsClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
