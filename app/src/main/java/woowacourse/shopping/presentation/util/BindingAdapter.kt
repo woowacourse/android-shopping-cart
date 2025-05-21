@@ -18,7 +18,10 @@ fun TextView.setPrice(price: Int) {
 
 @BindingAdapter("goodsImage")
 fun ImageView.setImage(imageUrl: String) {
-    Glide.with(this.context).load(imageUrl).into(this)
+    Glide.with(this.context)
+        .load(imageUrl)
+        .placeholder(R.drawable.loading)
+        .into(this)
 }
 
 @BindingAdapter("goodsList")
