@@ -15,6 +15,6 @@ object CartMapper {
     fun Product.toEntity(): CartEntity =
         CartEntity(
             productId = this.productId,
-            quantity = 2,
+            quantity = 1,
         )
 }

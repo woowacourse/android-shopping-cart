@@ -38,32 +38,4 @@ class ProductRepositoryImpl(
                 }
         }
     }
-
-    override fun insertProduct(
-        product: Product,
-        onResult: (Result<Unit>) -> Unit,
-    ) {
-        cartDataSource.insertProduct(product) { result ->
-            result
-                .onSuccess {
-                    onResult(Result.success(Unit))
-                }.onFailure { e ->
-                    onResult(Result.failure(e))
-                }
-        }
-    }
-
-    override fun deleteProduct(
-        productId: Long,
-        onResult: (Result<Long>) -> Unit,
-    ) {
-        cartDataSource.deleteProduct(productId) { result ->
-            result
-                .onSuccess { id ->
-                    onResult(Result.success(id))
-                }.onFailure { e ->
-                    onResult(Result.failure(e))
-                }
-        }
-    }
 }

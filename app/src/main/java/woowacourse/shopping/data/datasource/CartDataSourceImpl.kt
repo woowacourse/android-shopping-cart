@@ -2,7 +2,6 @@ package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.db.CartEntity
-import woowacourse.shopping.domain.model.Product
 import kotlin.concurrent.thread
 
 class CartDataSourceImpl(
@@ -34,25 +33,50 @@ class CartDataSourceImpl(
         )
     }
 
-    override fun increaseQuantity(productId: Long) {
-        thread {
-            dao.increaseQuantity(productId)
-        }
+    override fun increaseQuantity(
+        productId: Long,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        runThread(
+            block = { dao.increaseQuantity(productId) },
+            onResult = onResult,
+        )
     }
 
-    override fun decreaseQuantity(productId: Long) {
-        thread {
-            dao.decreaseQuantity(productId)
-        }
+    override fun decreaseQuantity(
+        productId: Long,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        runThread(
+            block = { dao.increaseQuantity(productId) },
+            onResult = onResult,
+        )
     }
 
-    override fun insertProduct(product: Product) {
-//        runThread(
-//            block = { dao.insertProduct(product.toEntity()) },
-//        )
+    override fun existsByProductId(
+        productId: Long,
+        onResult: (Result<Boolean>) -> Unit,
+    ) {
+        runThread(
+            block = { dao.existsByProductId(productId) },
+            onResult = onResult,
+        )
     }
 
-    override fun deleteProduct(productId: Long) {
+    override fun insertProduct(
+        cartEntity: CartEntity,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        runThread(
+            block = { dao.insertProduct(cartEntity) },
+            onResult = onResult,
+        )
+    }
+
+    override fun deleteProduct(
+        productId: Long,
+        onResult: (Result<Long>) -> Unit,
+    ) {
 //        runThread(
 //            block = {
 //                dao.deleteByProductId(productId)

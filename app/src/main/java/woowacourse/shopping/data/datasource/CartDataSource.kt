@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.db.CartEntity
-import woowacourse.shopping.domain.model.Product
 
 interface CartDataSource {
     fun getCartProductCount(onResult: (Result<Int?>) -> Unit)
@@ -14,11 +13,28 @@ interface CartDataSource {
         onResult: (Result<List<Long>>) -> Unit,
     )
 
-    fun increaseQuantity(productId: Long)
+    fun increaseQuantity(
+        productId: Long,
+        onResult: (Result<Unit>) -> Unit,
+    )
 
-    fun decreaseQuantity(productId: Long)
+    fun decreaseQuantity(
+        productId: Long,
+        onResult: (Result<Unit>) -> Unit,
+    )
 
-    fun insertProduct(product: Product)
+    fun existsByProductId(
+        productId: Long,
+        onResult: (Result<Boolean>) -> Unit,
+    )
 
-    fun deleteProduct(productId: Long)
+    fun insertProduct(
+        cartEntity: CartEntity,
+        onResult: (Result<Unit>) -> Unit,
+    )
+
+    fun deleteProduct(
+        productId: Long,
+        onResult: (Result<Long>) -> Unit,
+    )
 }

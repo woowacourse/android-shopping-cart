@@ -109,23 +109,25 @@ class CartViewModel(
 //    }
 
     fun increaseQuantity(productId: Long) {
-        val result = cartRepository.increaseQuantity(productId)
-        result
-            .onSuccess {
-                updateQuantity(productId, 1)
-            }.onFailure {
-                Log.d("CartViewModel", "increase fail")
-            }
+        cartRepository.increaseQuantity(productId) { result ->
+            result
+                .onSuccess {
+                    updateQuantity(productId, 1)
+                }.onFailure {
+                    Log.d("CartViewModel", "increase fail")
+                }
+        }
     }
 
     fun decreaseQuantity(productId: Long) {
-        val result = cartRepository.decreaseQuantity(productId)
-        result
-            .onSuccess {
-                updateQuantity(productId, -1)
-            }.onFailure {
-                Log.d("CartViewModel", "decrease fail")
-            }
+        cartRepository.decreaseQuantity(productId) { result ->
+            result
+                .onSuccess {
+                    updateQuantity(productId, -1)
+                }.onFailure {
+                    Log.d("CartViewModel", "decrease fail")
+                }
+        }
     }
 
     private fun updateQuantity(
@@ -144,7 +146,7 @@ class CartViewModel(
                         item
                     }
                 }
-            _products.value = ResultState.Success(updatedList)
+            _products.postValue(ResultState.Success(updatedList))
         }
     }
 
