@@ -52,7 +52,7 @@ class ShoppingCartViewModelTest {
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/3c68d05b-d392-4a38-8637-a25068220fa4.jpg",
             )
         viewModel.removeProduct(product, 0)
-        assertThat(viewModel.productsLiveData.getOrAwaitValue().items).contains(product)
+        assertThat(viewModel.productsLiveData.getOrAwaitValue().items).doesNotContain(product)
     }
 
     @Test
