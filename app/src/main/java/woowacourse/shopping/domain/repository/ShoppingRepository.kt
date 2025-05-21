@@ -26,6 +26,7 @@ interface ShoppingRepository {
 
     fun addCartItem(
         productId: Long,
+        increaseQuantity: Int,
         onResult: (Result<Unit>) -> Unit,
     )
 

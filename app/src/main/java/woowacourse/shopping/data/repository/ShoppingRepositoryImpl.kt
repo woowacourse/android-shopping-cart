@@ -46,8 +46,9 @@ class ShoppingRepositoryImpl(
 
     override fun addCartItem(
         productId: Long,
+        increaseQuantity: Int,
         onResult: (Result<Unit>) -> Unit,
-    ) = runCatchingInThread(onResult) { cartDataSource.addCartItem(productId).getOrThrow() }
+    ) = runCatchingInThread(onResult) { cartDataSource.addCartItem(productId, increaseQuantity).getOrThrow() }
 
     override fun decreaseCartItemQuantity(
         productId: Long,

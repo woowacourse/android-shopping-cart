@@ -26,16 +26,22 @@ interface CartDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(product: CartEntity)
 
-    @Query("UPDATE CartEntity SET quantity = quantity + 1 WHERE productId = :productId")
-    fun updateQuantity(productId: Long)
+    @Query("UPDATE CartEntity SET quantity = quantity + :increaseQuantity WHERE productId = :productId")
+    fun updateQuantity(
+        productId: Long,
+        increaseQuantity: Int,
+    )
 
     @Query("UPDATE CartEntity SET quantity = quantity - 1 WHERE productId = :productId AND quantity > 1")
     fun decreaseQuantity(productId: Long)
 
     @Transaction
-    fun insertOrUpdate(product: CartEntity) {
+    fun insertOrUpdate(
+        product: CartEntity,
+        increaseQuantity: Int,
+    ) {
         val existingProduct = findByProductId(product.productId)
-        if (existingProduct == null) insert(product) else updateQuantity(product.productId)
+        if (existingProduct == null) insert(product) else updateQuantity(product.productId, increaseQuantity)
     }
 
     @Transaction

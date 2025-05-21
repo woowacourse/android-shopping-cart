@@ -6,10 +6,13 @@ import woowacourse.shopping.data.db.CartEntity
 class CartDataSourceImpl(
     private val cartDao: CartDao,
 ) : CartDataSource {
-    override fun addCartItem(productId: Long): Result<Unit> =
+    override fun addCartItem(
+        productId: Long,
+        increaseQuantity: Int,
+    ): Result<Unit> =
         runCatching {
-            val entity = CartEntity(productId)
-            cartDao.insertOrUpdate(entity)
+            val entity = CartEntity(productId, increaseQuantity)
+            cartDao.insertOrUpdate(entity, increaseQuantity)
         }
 
     override fun decreaseCartItemQuantity(productId: Long): Result<Unit> =

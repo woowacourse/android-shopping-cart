@@ -3,7 +3,10 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.data.db.CartEntity
 
 interface CartDataSource {
-    fun addCartItem(productId: Long): Result<Unit>
+    fun addCartItem(
+        productId: Long,
+        increaseQuantity: Int,
+    ): Result<Unit>
 
     fun decreaseCartItemQuantity(productId: Long): Result<Unit>
 
