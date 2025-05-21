@@ -7,20 +7,20 @@ import woowacourse.shopping.databinding.ItemMoreButtonBinding
 
 class MoreButtonViewHolder(
     binding: ItemMoreButtonBinding,
-    private val onClick: () -> Unit,
+    moreButtonClickListener: MoreButtonClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.btnMore.setOnClickListener { onClick() }
+        binding.clickListener = moreButtonClickListener
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            onClick: () -> Unit,
+            moreButtonClickListener: MoreButtonClickListener,
         ): MoreButtonViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemMoreButtonBinding.inflate(inflater, parent, false)
-            return MoreButtonViewHolder(binding, onClick)
+            return MoreButtonViewHolder(binding, moreButtonClickListener)
         }
     }
 }

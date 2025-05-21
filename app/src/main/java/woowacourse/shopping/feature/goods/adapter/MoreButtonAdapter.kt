@@ -4,14 +4,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class MoreButtonAdapter(
-    private val onClick: () -> Unit,
+    private val moreButtonClickListener: MoreButtonClickListener,
 ) : RecyclerView.Adapter<MoreButtonViewHolder>() {
     private var isVisible: Boolean = true
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): MoreButtonViewHolder = MoreButtonViewHolder.from(parent, onClick)
+    ): MoreButtonViewHolder = MoreButtonViewHolder.from(parent, moreButtonClickListener)
 
     override fun onBindViewHolder(
         holder: MoreButtonViewHolder,
