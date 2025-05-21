@@ -3,22 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.product.catalog.ProductUiModel" />
+
+        <variable
+            name="fabQuantityControlClickListener"
+            type="woowacourse.shopping.product.catalog.QuantityAddClickListener" />
+
+        <variable
+            name="quantityClickListener"
+            type="woowacourse.shopping.product.catalog.QuantityControlClickListener" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_pagination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_quantity_control"
+            android:id="@+id/fab_quantity_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
+            android:onClick="@{() -> fabQuantityControlClickListener.onClick(product)}"
             android:src="@drawable/icon_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/linearLayout_quantity_control_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/quantity_control_background"
@@ -28,6 +46,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:onClick="@{() -> quantityClickListener.onClick(0, product)}"
                 android:id="@+id/button_decrease"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -46,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:paddingHorizontal="16dp"
+                android:text="@{String.valueOf(product.quantity)}"
                 android:textColor="@color/gray_5"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -56,6 +76,7 @@
                 tools:text="1" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:onClick="@{() -> quantityClickListener.onClick(1, product)}"
                 android:id="@+id/button_increase"
                 android:layout_width="42dp"
                 android:layout_height="42dp"

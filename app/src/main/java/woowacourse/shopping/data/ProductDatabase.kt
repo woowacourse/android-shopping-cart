@@ -1,6 +1,5 @@
 package woowacourse.shopping.data
 
-import android.util.Log
 import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.Product
 import woowacourse.shopping.product.catalog.ProductUiModel
@@ -13,12 +12,14 @@ object ProductDatabase : ProductsDataSource {
         endIndex: Int,
     ): List<ProductUiModel> = dummyProducts.subList(startIndex, endIndex).map { it.toUiModel() }
 
-    override fun updateProduct(product: ProductUiModel): ProductUiModel {
+    override fun changeProductQuantity(
+        product: ProductUiModel,
+        diff: Int,
+    ): ProductUiModel {
         val index = dummyProducts.indexOfFirst { it.name == product.name }
-        val updatedProduct: Product = dummyProducts[index].copy(quantity = dummyProducts[index].quantity + 1)
-        Log.d("DummyProduct", "${updatedProduct.quantity}")
+        val updatedProduct: Product =
+            dummyProducts[index].copy(quantity = dummyProducts[index].quantity + diff)
         dummyProducts[index] = updatedProduct
-        Log.d("DummyProduct", "${dummyProducts[index]}")
         return updatedProduct.toUiModel()
     }
 

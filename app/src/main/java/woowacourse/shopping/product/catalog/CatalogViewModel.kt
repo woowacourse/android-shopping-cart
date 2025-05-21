@@ -3,11 +3,11 @@ package woowacourse.shopping.product.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.DummyProducts
+import woowacourse.shopping.data.ProductDatabase
 import woowacourse.shopping.data.ProductsDataSource
 
 class CatalogViewModel(
-    private val dataSource: ProductsDataSource = DummyProducts,
+    private val dataSource: ProductsDataSource = ProductDatabase,
 ) : ViewModel() {
     private val _catalogProducts =
         MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
@@ -17,8 +17,21 @@ class CatalogViewModel(
 
     val page = MutableLiveData<Int>(INITIAL_PAGE)
 
+    private val _updatedItem = MutableLiveData<ProductUiModel>()
+    val updatedItem: LiveData<ProductUiModel> = _updatedItem
+
     init {
         loadCatalogProducts(PAGE_SIZE)
+    }
+
+    fun increaseQuantity(product: ProductUiModel) {
+        val item = dataSource.changeProductQuantity(product, 1)
+        _updatedItem.value = item
+    }
+
+    fun decreaseQuantity(product: ProductUiModel) {
+        val item = dataSource.changeProductQuantity(product, -1)
+        _updatedItem.value = item
     }
 
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {

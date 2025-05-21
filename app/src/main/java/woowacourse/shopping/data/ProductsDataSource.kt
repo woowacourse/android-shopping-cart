@@ -9,4 +9,9 @@ interface ProductsDataSource {
         startIndex: Int,
         endIndex: Int,
     ): List<ProductUiModel>
+
+    fun changeProductQuantity(
+        product: ProductUiModel,
+        diff: Int,
+    ): ProductUiModel
 }
