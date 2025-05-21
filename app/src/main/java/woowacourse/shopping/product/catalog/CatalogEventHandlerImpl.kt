@@ -15,4 +15,12 @@ class CatalogEventHandlerImpl(
     override fun onOpenProductQuantitySelector(product: ProductUiModel) {
         viewModel.isQuantitySelectorExpanded(product)
     }
+
+    override fun onPlusQuantity(product: ProductUiModel) {
+        viewModel.increaseQuantity(product)
+    }
+
+    override fun onMinusQuantity(product: ProductUiModel) {
+        viewModel.decreaseQuantity(product)
+    }
 }
