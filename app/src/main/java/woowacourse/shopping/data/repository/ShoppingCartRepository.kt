@@ -10,4 +10,6 @@ interface ShoppingCartRepository {
     fun totalSize(): Int
 
     fun remove(item: ShoppingCartItem)
+
+    fun save(item: ShoppingCartItem)
 }

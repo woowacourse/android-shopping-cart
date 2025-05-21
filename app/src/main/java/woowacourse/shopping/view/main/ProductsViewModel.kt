@@ -11,6 +11,8 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
 class ProductsViewModel(
@@ -37,6 +39,19 @@ class ProductsViewModel(
                 shoppingCartItems = shoppingCartItems,
                 totalShoppingCartSize = shoppingCartRepository.totalSize(),
             )
+    }
+
+    fun saveCurrentShoppingCart(quantityMap: Map<Product, MutableLiveData<Int>>) {
+        quantityMap.forEach {
+            if (it.value.value!! > 0) {
+                shoppingCartRepository.save(
+                    ShoppingCartItem(
+                        product = it.key,
+                        quantity = it.value.value!!,
+                    ),
+                )
+            }
+        }
     }
 
     companion object {

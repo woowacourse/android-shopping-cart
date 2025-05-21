@@ -11,7 +11,8 @@ class ProductsAdapter(
     private val totalShoppingCartSize: MutableLiveData<Int>,
 ) : RecyclerView.Adapter<ProductsViewHolder>() {
     private var products: List<Product> = listOf()
-    private var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
+    var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
+        private set
 
     override fun getItemCount(): Int = products.size
 

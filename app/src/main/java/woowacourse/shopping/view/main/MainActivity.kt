@@ -48,7 +48,13 @@ class MainActivity :
                 badge.visibility =
                     if (badge.text.toString().toInt() > 0) View.VISIBLE else View.GONE
             }
+            it.setOnClickListener {
+                viewModel.saveCurrentShoppingCart(productsAdapter.quantity)
+                val intent = ShoppingCartActivity.newIntent(this)
+                startActivity(intent)
+            }
         }
+
         return super.onCreateOptionsMenu(menu)
     }
 
