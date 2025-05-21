@@ -4,13 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.ScrollListener
 import woowacourse.shopping.feature.cart.CartActivity
+import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
@@ -21,7 +25,9 @@ class GoodsActivity :
     GoodsViewHolder.GoodsClickListener {
     private lateinit var binding: ActivityGoodsBinding
     private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
-    private val viewModel: GoodsViewModel by viewModels()
+    private val viewModel: GoodsViewModel by viewModels {
+        ViewModelFactory { GoodsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +39,12 @@ class GoodsActivity :
         binding.viewModel = viewModel
 
         updateMoreButton()
+        viewModel.isSuccess.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
+        }
+        viewModel.isFail.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -69,5 +81,9 @@ class GoodsActivity :
 
     override fun onClickGoods(goods: Goods) {
         navigate(goods)
+    }
+
+    override fun insertToCart(goods: Goods) {
+        viewModel.insertToCart(goods)
     }
 }

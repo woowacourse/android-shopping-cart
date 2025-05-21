@@ -8,6 +8,9 @@
         <variable
             name="goods"
             type="woowacourse.shopping.domain.model.Goods" />
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.feature.goods.GoodsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +33,7 @@
             tools:srcCompat="@drawable/ic_launcher_background" />
 
         <ImageButton
+            android:id="@+id/btn_add_cart"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="8dp"

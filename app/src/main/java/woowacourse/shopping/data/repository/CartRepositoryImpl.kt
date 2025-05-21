@@ -21,7 +21,11 @@ class CartRepositoryImpl(
             val dao = cartDatabase.cartDao()
             val existing = dao.findById(goods.id)
             if (existing != null) {
-                val updated = existing.copy(quantity = existing.quantity + 1)
+                val updated =
+                    existing.copy(
+                        quantity = existing.quantity + 1,
+                        price = existing.price + goods.price,
+                    )
                 dao.update(updated)
             } else {
                 dao.insertAll(goods.toEntity())

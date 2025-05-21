@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cart_add_remove"
     android:layout_width="match_parent"
@@ -7,41 +8,34 @@
     android:layout_marginHorizontal="5dp"
     android:layout_marginBottom="8dp"
     android:background="@drawable/goods_add_remove_button_background"
-    android:visibility="visible">
+    android:orientation="horizontal"
+    android:visibility="invisible">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/btn_decrease"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_remove"
+        android:contentDescription="@string/goods_cart_remove_button_description" />
+
+    <TextView
+        android:id="@+id/tv_quantity"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:gravity="center"
-        tools:ignore="UselessParent">
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="1" />
 
-        <ImageButton
-            android:id="@+id/btn_decrease"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_remove"
-            android:contentDescription="@string/goods_cart_remove_button_description" />
-
-        <TextView
-            android:id="@+id/tv_quantity"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            tools:text="1" />
-
-        <ImageButton
-            android:id="@+id/btn_increase"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_add"
-            android:contentDescription="@string/goods_cart_add_button_description" />
-    </LinearLayout>
-</FrameLayout>
+    <ImageButton
+        android:id="@+id/btn_increase"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_add"
+        android:contentDescription="@string/goods_cart_add_button_description" />
+</LinearLayout>

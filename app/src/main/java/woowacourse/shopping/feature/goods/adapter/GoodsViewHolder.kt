@@ -11,9 +11,12 @@ class GoodsViewHolder(
     fun bind(goods: Goods) {
         binding.goods = goods
         itemView.setOnClickListener { goodsClickListener.onClickGoods(goods) }
+        binding.btnAddCart.setOnClickListener { goodsClickListener.insertToCart(goods) }
     }
 
     interface GoodsClickListener {
         fun onClickGoods(goods: Goods)
+
+        fun insertToCart(goods: Goods)
     }
 }

@@ -3,17 +3,26 @@ package woowacourse.shopping.feature.goods
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 import kotlin.math.min
 
-class GoodsViewModel : ViewModel() {
+class GoodsViewModel(
+    private val repository: CartRepository,
+) : ViewModel() {
     private val _goods = MutableLiveData<List<Goods>>()
     val goods: LiveData<List<Goods>> get() = _goods
     private val _showMoreButton = MutableLiveData(false)
     val showMoreButton: LiveData<Boolean> get() = _showMoreButton
     private val _isFullLoaded = MutableLiveData<Boolean>()
     val isFullLoaded: LiveData<Boolean> get() = _isFullLoaded
+    private val _isSuccess = MutableSingleLiveData<Unit>()
+    val isSuccess: SingleLiveData<Unit> get() = _isSuccess
+    private val _isFail = MutableSingleLiveData<Unit>()
+    val isFail: SingleLiveData<Unit> get() = _isFail
     private var page: Int = 0
 
     init {
@@ -34,6 +43,15 @@ class GoodsViewModel : ViewModel() {
 
     fun updateMoreButtonVisibility(shouldShow: Boolean) {
         _showMoreButton.value = shouldShow
+    }
+
+    fun insertToCart(goods: Goods) {
+        try {
+            repository.insert(goods)
+            _isSuccess.setValue(Unit)
+        } catch (e: Exception) {
+            _isFail.setValue(Unit)
+        }
     }
 
     private fun getProducts(

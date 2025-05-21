@@ -82,14 +82,15 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/baemin_mint"
+            android:clickable="true"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.insertToCart(goods)}"
             android:text="@string/goods_details_cart_button"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:clickable="true"
-            android:onClick="@{() -> viewModel.insertToCart(goods)}"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
