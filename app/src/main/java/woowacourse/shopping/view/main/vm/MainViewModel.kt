@@ -31,19 +31,20 @@ class MainViewModel(
     fun loadProducts() {
         val newPage = _uiState.value?.itemCount()?.div(PAGE_SIZE) ?: 0
 
-        val productsResult = productRepository.loadSinglePage(newPage, PAGE_SIZE)
+        productRepository.loadSinglePage(newPage, PAGE_SIZE) {
+            val result =
+                it.products
+                    .map { product ->
+                        val cart = cartRepository[product.id]
+                        val quantity = cart?.quantity ?: Quantity(0)
 
-        val result =
-            productsResult
-                .products
-                .map { product ->
-                    val cart = cartRepository[product.id]
-                    val quantity = cart?.quantity ?: Quantity(0)
+                        ProductState(product, quantity)
+                    }
 
-                    ProductState(product, quantity)
-                }
-
-        _uiState.value = _uiState.value?.addItems(result, productsResult.hasNextPage)
+            _uiState.postValue(
+                _uiState.value?.addItems(result, it.hasNextPage),
+            )
+        }
     }
 
     fun decreaseCartQuantity(productId: Long) {

@@ -85,16 +85,17 @@ class CartViewModel(
 
     fun loadCarts() {
         val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
+        val carts = mutableListOf<ProductState>()
+        result.carts
+            .map { cart ->
+                productRepository[
+                    cart.productId, {
+                        carts.add(ProductState(it, cart.quantity))
+                    },
+                ]
+            }
 
-        val carts =
-            result
-                .carts
-                .map { cart ->
-                    val product = productRepository[cart.productId]
-                    ProductState(product, cart.quantity)
-                }
         val pageState = paging.createPageState(result.hasNextPage)
-
         _uiState.value = CartUiState(items = carts, pageState = pageState)
     }
 

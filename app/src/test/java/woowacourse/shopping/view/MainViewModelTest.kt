@@ -4,9 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
+import org.junit.Test
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
@@ -45,8 +46,10 @@ class MainViewModelTest {
                 productFixture4,
             )
 
-        every { productRepository.loadSinglePage(0, 20) } returns
-            ProductSinglePage(products = products, hasNextPage = true)
+        every { productRepository.loadSinglePage(0, 20, any()) } answers {
+            val callback = thirdArg<(ProductSinglePage) -> Unit>()
+            callback(ProductSinglePage(products, true))
+        }
 
         products.forEach {
             every { cartRepository[it.id] } returns Cart(Quantity(1), it.id)
@@ -60,12 +63,9 @@ class MainViewModelTest {
         val result = viewModel.uiState.getOrAwaitValue()
 
         assertAll(
-            { Assertions.assertThat(result.items).hasSize(4) },
-            { Assertions.assertThat(result.load).isInstanceOf(LoadState.CanLoad::class.java) },
-            {
-                Assertions.assertThat(result.items.map { it.item.id })
-                    .containsExactly(1L, 2L, 3L, 4L)
-            },
+            { assertThat(result.items).hasSize(4) },
+            { assertThat(result.load).isInstanceOf(LoadState.CanLoad::class.java) },
+            { assertThat(result.items.map { it.item.id }).containsExactly(1L, 2L, 3L, 4L) },
         )
     }
 

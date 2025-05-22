@@ -23,8 +23,12 @@ class DetailViewModel(
     val event: SingleLiveData<DetailUiEvent> get() = _event
 
     fun load(productId: Long) {
-        val product = productRepository[productId]
-        _uiState.value = ProductState(product, Quantity(1))
+        productRepository[
+            productId,
+            { result ->
+                _uiState.postValue(ProductState(result, Quantity(1)))
+            },
+        ]
     }
 
     fun increaseCartQuantity() {

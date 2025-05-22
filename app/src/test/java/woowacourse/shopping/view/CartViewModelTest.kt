@@ -1,21 +1,14 @@
 package woowacourse.shopping.view
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
+import org.junit.Test
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.storage.CartStorage
-import woowacourse.shopping.domain.Quantity
-import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.product.Price
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
@@ -32,18 +25,7 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        // 테스트 전 CartStorage 초기화
-        val cartStorageField = CartStorage::class.java.getDeclaredField("carts")
-        cartStorageField.isAccessible = true
-        (cartStorageField.get(CartStorage) as MutableMap<*, *>).clear()
-
-        // 장바구니 11개 삽입
-        (1L..11L).forEach {
-            CartStorage.insert(Cart(Quantity(1), it))
-            every { productRepository[it] } returns Product(it, "Product$it", "", Price(1000), Quantity(1))
-        }
-
-        cartRepository = CartRepositoryImpl(CartStorage)
+        cartRepository = mockk()
         viewModel = CartViewModel(cartRepository, productRepository)
     }
 
