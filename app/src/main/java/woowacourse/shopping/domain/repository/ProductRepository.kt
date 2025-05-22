@@ -4,10 +4,14 @@ import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductSinglePage
 
 interface ProductRepository {
-    operator fun get(id: Long): Product
+    operator fun get(
+        productId: Long,
+        onResult: (Product) -> Unit,
+    )
 
     fun loadSinglePage(
         page: Int,
         pageSize: Int,
-    ): ProductSinglePage
+        onResult: (ProductSinglePage) -> Unit,
+    )
 }
