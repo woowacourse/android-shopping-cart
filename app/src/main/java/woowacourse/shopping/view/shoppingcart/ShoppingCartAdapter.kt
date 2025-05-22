@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.view.uimodel.QuantityInfo
 
 class ShoppingCartAdapter(
     private val handler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var products: List<ShoppingCartItem> = listOf()
     private var currentPage: Int = 0
-    var quantityMap: Map<ShoppingCartItem, MutableLiveData<Int>> = mapOf()
+    var quantityInfo = QuantityInfo<ShoppingCartItem>()
         private set
 
     override fun getItemCount(): Int = products.size
@@ -23,9 +24,8 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = products[position]
-        handler.item = item
-        handler.page = currentPage
-        holder.bind(item, currentPage, quantityMap[item]!!)
+        val quantity = quantityInfo[item]
+        holder.bind(item, currentPage, quantity)
     }
 
     override fun onCreateViewHolder(
@@ -40,7 +40,10 @@ class ShoppingCartAdapter(
         val previousCount = itemCount
         products = page.items
         currentPage = page.currentPage
-        quantityMap = page.items.associateWith { MutableLiveData(it.quantity) }
+        quantityInfo =
+            QuantityInfo(
+                page.items.associateWith { MutableLiveData(it.quantity) },
+            )
         notifyItemRangeChanged(0, previousCount)
         notifyItemRangeRemoved(previousCount - itemCount, previousCount - itemCount)
     }

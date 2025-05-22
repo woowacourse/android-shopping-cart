@@ -13,17 +13,17 @@ class ProductEventHandlerImpl(
     val totalShoppingCartSize: MutableLiveData<Int>,
 ) : ProductEventHandler {
     override fun onBtnItemProductAddToCartSelected(quantity: MutableLiveData<Int>) {
-        quantity.value = quantity.value?.inc()
+        super.onQuantityPlusSelected(quantity)
         totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
     }
 
     override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
-        quantity.value = quantity.value?.dec()
+        super.onQuantityMinusSelected(quantity)
         totalShoppingCartSize.value = totalShoppingCartSize.value?.dec()
     }
 
     override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
-        quantity.value = quantity.value?.inc()
+        super.onQuantityPlusSelected(quantity)
         totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
     }
 

@@ -15,6 +15,7 @@ import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
+import woowacourse.shopping.view.uimodel.QuantityInfo
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
@@ -44,12 +45,12 @@ class ProductsViewModel(
             )
     }
 
-    fun saveCurrentShoppingCart(quantityMap: Map<Product, MutableLiveData<Int>>) {
-        quantityMap.forEach {
+    fun saveCurrentShoppingCart(quantityInfo: QuantityInfo<Product>) {
+        quantityInfo.forEach { product, data ->
             shoppingCartRepository.update(
                 ShoppingCartItem(
-                    product = it.key,
-                    quantity = it.value.value!!,
+                    product = product,
+                    quantity = data,
                 ),
             )
         }

@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
@@ -67,14 +66,6 @@ class ProductDetailActivity :
     }
 
     private inner class ProductDetailEventHandlerImpl : ProductDetailEventHandler {
-        override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
-            quantity.value = quantity.value?.minus(1)
-        }
-
-        override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
-            quantity.value = quantity.value?.plus(1)
-        }
-
         override fun onAddToCartSelected(product: Product) {
             viewModel.addProduct(product)
             startActivity(ShoppingCartActivity.newIntent(this@ProductDetailActivity))
