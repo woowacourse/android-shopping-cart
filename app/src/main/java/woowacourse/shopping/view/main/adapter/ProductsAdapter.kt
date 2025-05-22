@@ -13,6 +13,9 @@ class ProductsAdapter(
     var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
         private set
 
+    var currentPage: Int = -1
+        private set
+
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(
@@ -43,9 +46,17 @@ class ProductsAdapter(
                 )
             }
 
+        currentPage = mainRecyclerViewProduct.page.currentPage
         products += newProducts
         quantity += quantityMap
         notifyItemInserted(itemCount)
+    }
+
+    fun clear() {
+        val previousItemCount = itemCount
+        products = listOf()
+        quantity = mapOf()
+        notifyItemRangeRemoved(0, previousItemCount)
     }
 
     companion object {

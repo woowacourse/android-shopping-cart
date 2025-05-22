@@ -36,6 +36,16 @@ class MainActivity :
             viewModel = this@MainActivity.viewModel
             onLoadMoreProducts = ::onLoadMoreProducts
         }
+        binding.productList.apply {
+            adapter = productsAdapter
+            addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
+        }
+        viewModel.apply {
+            requestProductsPage(0)
+            productsLiveData.observe(this@MainActivity) { mainRecyclerViewProduct ->
+                productsAdapter.updateProducts(mainRecyclerViewProduct)
+            }
+        }
     }
 
     override fun onResume() {
@@ -77,15 +87,9 @@ class MainActivity :
 
     private fun initRecyclerview() {
         viewModel.updateShoppingCartSize()
-        binding.productList.apply {
-            adapter = productsAdapter
-            addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
-        }
-        viewModel.apply {
-            requestProductsPage(0)
-            productsLiveData.observe(this@MainActivity) { mainRecyclerViewProduct ->
-                productsAdapter.updateProducts(mainRecyclerViewProduct)
-            }
+        productsAdapter.clear()
+        (0..productsAdapter.currentPage).forEach {
+            viewModel.requestProductsPage(it)
         }
     }
 }
