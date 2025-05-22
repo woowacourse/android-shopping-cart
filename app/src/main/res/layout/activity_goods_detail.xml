@@ -86,6 +86,17 @@
             bind:clickListener="@{selectorClickListener}"
             bind:quantity="@{vm.count}" />
 
+        <include
+            android:id="@+id/cl_last_goods"
+            layout="@layout/view_last_goods"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/btn_shopping_cart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="35dp"
+            />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shopping_cart"
             android:layout_width="match_parent"

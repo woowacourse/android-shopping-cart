@@ -4,6 +4,7 @@
     <string name="text_price">%s원</string>
     <string name="text_save_goods">%d개의 상품이 장바구니에 담겼습니다</string>
     <string name="text_latest_goods_label">최근 본 상품</string>
+    <string name="text_last_goods_label">마지막으로 본 상품</string>
 
     <string name="label_shopping_cart_title">Cart</string>
 
