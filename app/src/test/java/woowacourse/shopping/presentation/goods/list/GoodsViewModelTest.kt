@@ -2,16 +2,21 @@ package woowacourse.shopping.presentation.goods.list
 
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.unmockkObject
+import io.mockk.verify
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.GoodsRepositoryImpl
+import woowacourse.shopping.domain.model.LatestGoods
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.createGoods
@@ -27,7 +32,8 @@ class GoodsViewModelTest {
     @BeforeEach
     fun setUp() {
         mockkObject(GoodsRepositoryImpl)
-        goodsViewModel = GoodsViewModel(GoodsRepositoryImpl, shoppingRepository, latestGoodsRepository)
+        goodsViewModel =
+            GoodsViewModel(GoodsRepositoryImpl, shoppingRepository, latestGoodsRepository)
     }
 
     @AfterEach
@@ -114,5 +120,32 @@ class GoodsViewModelTest {
 
         // then
         actual shouldBe 2
+    }
+
+    @Test
+    fun `최근 본 상품 목록을 가져온다`() {
+        // given
+        every { latestGoodsRepository.getAll() } returns listOf(LatestGoods(1), LatestGoods(2))
+
+        // when
+        goodsViewModel.setLatestGoods()
+
+        // then
+        goodsViewModel.latestGoods.getOrAwaitValue().size shouldBe 2
+    }
+
+    @Test
+    fun `상품이 선택될 때 최근 본 상품 목록을 갱신한다`() {
+        // given
+        val id = slot<Int>()
+        every { latestGoodsRepository.insertLatestGoods(capture(id)) } just Runs
+
+        // when
+        goodsViewModel.moveToDetail(1, { _, _ -> })
+
+        // then
+        verify { latestGoodsRepository.insertLatestGoods(any()) }
+
+        id.captured shouldBe 1
     }
 }
