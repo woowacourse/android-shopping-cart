@@ -68,9 +68,9 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun handleEventsFromViewModel() {
-        viewModel.event.observe(this) { event: ProductsViewModel.Event ->
+        viewModel.event.observe(this) { event: ProductsEvent ->
             when (event) {
-                ProductsViewModel.Event.UPDATE_PRODUCT_FAILURE ->
+                ProductsEvent.UPDATE_PRODUCT_FAILURE ->
                     showToast(getString(R.string.products_update_products_error_message))
             }
         }

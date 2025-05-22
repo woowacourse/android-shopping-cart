@@ -19,8 +19,8 @@ class ProductDetailViewModel(
 
     val imageUrl: LiveData<String> = _product.map { it.imageUrl }
 
-    private val _event: MutableSingleLiveData<Event> = MutableSingleLiveData()
-    val event: SingleLiveData<Event> get() = _event
+    private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ProductDetailEvent> get() = _event
 
     fun updateProduct(product: Product) {
         _product.value = product
@@ -29,22 +29,17 @@ class ProductDetailViewModel(
     fun addToShoppingCart() {
         val product: Product =
             product.value ?: run {
-                _event.setValue(Event.ADD_SHOPPING_CART_FAILURE)
+                _event.setValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
                 return
             }
 
         shoppingCartRepository.add(product) { result: Result<Unit> ->
             result
                 .onSuccess {
-                    _event.postValue(Event.ADD_SHOPPING_CART_SUCCESS)
+                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)
                 }.onFailure {
-                    _event.postValue(Event.ADD_SHOPPING_CART_FAILURE)
+                    _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
                 }
         }
-    }
-
-    enum class Event {
-        ADD_SHOPPING_CART_SUCCESS,
-        ADD_SHOPPING_CART_FAILURE,
     }
 }

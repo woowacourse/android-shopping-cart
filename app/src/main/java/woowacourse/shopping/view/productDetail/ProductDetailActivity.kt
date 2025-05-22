@@ -61,14 +61,14 @@ class ProductDetailActivity :
     }
 
     private fun handleEvents() {
-        viewModel.event.observe(this) { event: ProductDetailViewModel.Event ->
+        viewModel.event.observe(this) { event: ProductDetailEvent ->
             @StringRes
             val messageResourceId: Int =
                 when (event) {
-                    ProductDetailViewModel.Event.ADD_SHOPPING_CART_SUCCESS ->
+                    ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS ->
                         R.string.product_detail_add_shopping_cart_success_message
 
-                    ProductDetailViewModel.Event.ADD_SHOPPING_CART_FAILURE ->
+                    ProductDetailEvent.ADD_SHOPPING_CART_FAILURE ->
                         R.string.product_detail_add_shopping_cart_error_message
                 }
 

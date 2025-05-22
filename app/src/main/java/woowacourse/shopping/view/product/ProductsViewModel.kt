@@ -22,8 +22,8 @@ class ProductsViewModel(
     private val List<Product>.toProductItems: List<ProductsItem>
         get() = map(ProductsItem::ProductItem) + ProductsItem.LoadItem(loadable)
 
-    private val _event: MutableSingleLiveData<Event> = MutableSingleLiveData()
-    val event: SingleLiveData<Event> get() = _event
+    private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
+    val event: SingleLiveData<ProductsEvent> get() = _event
 
     init {
         loadAllProducts(productsRepository)
@@ -41,7 +41,7 @@ class ProductsViewModel(
         }.onSuccess { newProducts: List<Product> ->
             products.value = products.value?.plus(newProducts) ?: newProducts
         }.onFailure {
-            _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
+            _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
         }
     }
 
@@ -51,13 +51,9 @@ class ProductsViewModel(
                 .onSuccess { products: List<Product> ->
                     allProducts = products
                 }.onFailure {
-                    _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
+                    _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }
         }
-    }
-
-    enum class Event {
-        UPDATE_PRODUCT_FAILURE,
     }
 
     companion object {
