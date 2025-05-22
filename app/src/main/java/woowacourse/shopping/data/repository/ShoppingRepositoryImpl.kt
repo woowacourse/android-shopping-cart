@@ -57,9 +57,7 @@ class ShoppingRepositoryImpl(
     override fun findQuantityByProductId(
         productId: Long,
         onResult: (Result<Int>) -> Unit,
-    ) = runCatchingInThread(onResult) {
-        cartDataSource.findCartItemByProductId(productId).quantity
-    }
+    ) = runCatchingInThread(onResult) { findQuantityById(productId) }
 
     override fun addCartItem(
         productId: Long,
@@ -84,10 +82,13 @@ class ShoppingRepositoryImpl(
     private fun CartEntity.toCartItem() = CartItem(findProductInfoById(productId).getOrThrow(), quantity)
 
     private fun List<Product>.toCartItems(): List<CartItem> =
-        this.map {
-            val quantity = runCatching { cartDataSource.findCartItemByProductId(it.id).quantity }.getOrDefault(0)
-            CartItem(it, quantity)
+        this.map { product ->
+            val quantity = findQuantityById(product.id)
+            CartItem(product, quantity)
         }
+
+    private fun findQuantityById(productId: Long): Int =
+        runCatching { cartDataSource.findCartItemByProductId(productId).quantity }.getOrDefault(0)
 
     private fun List<CartEntity>.isHasMore(): Boolean {
         val lastCreatedAt = this.lastOrNull()?.createdAt
