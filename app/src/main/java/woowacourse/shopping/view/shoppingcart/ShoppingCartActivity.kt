@@ -79,12 +79,26 @@ class ShoppingCartActivity :
     }
 
     private inner class ShoppingCartEventHandlerImpl : ShoppingCartEventHandler {
+        override var item: ShoppingCartItem? = null
+        override var page: Int? = null
+
         override fun onPagination(page: Int) {
+            viewModel.saveCurrentShoppingCart(
+                shoppingCartAdapter.quantityMap.map {
+                    ShoppingCartItem(
+                        product = it.key.product,
+                        quantity = it.value.value!!,
+                    )
+                },
+            )
             viewModel.requestProductsPage(page)
         }
 
         override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
             quantity.value = quantity.value?.minus(1)
+            if (quantity.value == 0) {
+                onProductRemove(item!!, page!!)
+            }
         }
 
         override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
@@ -97,14 +111,23 @@ class ShoppingCartActivity :
         ) {
             viewModel.removeProduct(product, page)
         }
+
+        override fun whenQuantityChangedSelectView(quantity: MutableLiveData<Int>) {
+        }
     }
 }
 
 interface ShoppingCartEventHandler : QuantitySelectorEventHandler {
+    var item: ShoppingCartItem?
+
+    var page: Int?
+
     fun onPagination(page: Int)
 
     fun onProductRemove(
         product: ShoppingCartItem,
         page: Int,
     )
+
+    fun whenQuantityChangedSelectView(quantity: MutableLiveData<Int>)
 }

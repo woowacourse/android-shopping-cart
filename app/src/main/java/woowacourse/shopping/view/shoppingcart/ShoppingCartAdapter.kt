@@ -23,6 +23,8 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = products[position]
+        handler.item = item
+        handler.page = currentPage
         holder.bind(item, currentPage, quantityMap[item]!!)
     }
 

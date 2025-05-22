@@ -8,7 +8,7 @@
 
         <variable
             name="handler"
-            type="woowacourse.shopping.view.base.QuantitySelectorEventHandler" />
+            type="woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler" />
         <variable
             name="page"
             type="int" />
@@ -65,6 +65,7 @@
             tools:src="@drawable/sample_product_detail_image" />
 
         <ImageView
+            android:onClick="@{()->handler.onProductRemove(product, page)}"
             android:id="@+id/iv_remove_item_product_icon"
             android:layout_width="16dp"
             android:layout_height="16dp"
