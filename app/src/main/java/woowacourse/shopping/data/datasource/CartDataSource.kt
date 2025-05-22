@@ -3,46 +3,31 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.data.db.CartEntity
 
 interface CartDataSource {
-    fun getCartProductCount(onResult: (Result<Int?>) -> Unit)
+    fun getCartProductCount(): Int
 
-    fun getTotalQuantity(onResult: (Result<Int?>) -> Unit)
+    fun getTotalQuantity(): Int?
 
-    fun getCartProducts(onResult: (Result<List<CartEntity>>) -> Unit)
+    fun getCartProducts(): List<CartEntity>
 
-    fun getCartItemById(
-        productId: Long,
-        onResult: (Result<CartEntity?>) -> Unit,
-    )
+    fun getCartItemById(productId: Long): CartEntity
+
+    fun getQuantityById(productId: Long): Int
 
     fun getPagedCartProducts(
         limit: Int,
         page: Int,
-        onResult: (Result<List<CartEntity>>) -> Unit,
-    )
+    ): List<CartEntity>
 
-    fun existsByProductId(
-        productId: Long,
-        onResult: (Result<Boolean>) -> Unit,
-    )
+    fun existsByProductId(productId: Long): Boolean
 
     fun increaseQuantity(
         productId: Long,
         quantity: Int,
-        onResult: (Result<Unit>) -> Unit,
     )
 
-    fun decreaseQuantity(
-        productId: Long,
-        onResult: (Result<Unit>) -> Unit,
-    )
+    fun decreaseQuantity(productId: Long)
 
-    fun insertProduct(
-        cartEntity: CartEntity,
-        onResult: (Result<Unit>) -> Unit,
-    )
+    fun insertProduct(cartEntity: CartEntity)
 
-    fun deleteProductById(
-        productId: Long,
-        onResult: (Result<Unit>) -> Unit,
-    )
+    fun deleteProductById(productId: Long)
 }

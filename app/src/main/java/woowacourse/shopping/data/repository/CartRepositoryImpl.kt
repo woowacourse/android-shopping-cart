@@ -1,60 +1,48 @@
 package woowacourse.shopping.data.repository
 
-import android.util.Log
 import woowacourse.shopping.data.CartMapper.toEntity
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
     override fun getCartItemCount(onResult: (Result<Int?>) -> Unit) {
-        runCatching {
-            cartDataSource.getCartProductCount { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            onResult(Result.failure(e))
-        }
+        runThread(
+            block = { cartDataSource.getCartProductCount() },
+            onResult = onResult,
+        )
     }
 
     override fun getTotalQuantity(onResult: (Result<Int?>) -> Unit) {
-        runCatching {
-            cartDataSource.getTotalQuantity { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            onResult(Result.failure(e))
-        }
+        runThread(
+            block = { cartDataSource.getTotalQuantity() },
+            onResult = onResult,
+        )
     }
 
     override fun getCartItemById(
         productId: Long,
         onResult: (Result<CartEntity?>) -> Unit,
     ) {
-        runCatching {
-            cartDataSource.getCartItemById(productId) { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            onResult(Result.failure(e))
-        }
+        runThread(
+            block = { cartDataSource.getCartItemById(productId) },
+            onResult = onResult,
+        )
     }
 
     override fun insertProduct(
         cartItem: CartItem,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        runCatching {
-            cartDataSource.insertProduct(cartItem.toEntity()) { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            onResult(Result.failure(e))
-        }
+        runThread(
+            block = { cartDataSource.insertProduct(cartItem.toEntity()) },
+            onResult = onResult,
+        )
     }
 
     override fun insertOrIncrease(
@@ -62,21 +50,16 @@ class CartRepositoryImpl(
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        cartDataSource.existsByProductId(product.productId) { existsResult ->
-            existsResult
-                .onSuccess { exists ->
-                    if (exists) {
-                        cartDataSource.increaseQuantity(product.productId, quantity) { result ->
-                            onResult(result)
-                        }
-                    } else {
-                        cartDataSource.insertProduct(product.toEntity(quantity)) { result ->
-                            onResult(result)
-                        }
-                    }
-                }.onFailure { e ->
-                    onResult(Result.failure(e))
-                }
+        if (cartDataSource.existsByProductId(product.productId)) {
+            runThread(
+                block = { cartDataSource.increaseQuantity(product.productId, quantity) },
+                onResult = onResult,
+            )
+        } else {
+            runThread(
+                block = { cartDataSource.insertProduct(product.toEntity(quantity)) },
+                onResult = onResult,
+            )
         }
     }
 
@@ -85,39 +68,38 @@ class CartRepositoryImpl(
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        runCatching {
-            cartDataSource.increaseQuantity(productId, quantity) { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            Log.e("CartRepository", "increaseQuantity failed", e)
-            onResult(Result.failure(e))
-        }
+        runThread(
+            block = { cartDataSource.increaseQuantity(productId, quantity) },
+            onResult = onResult,
+        )
     }
 
     override fun decreaseQuantity(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        runCatching {
-            cartDataSource.decreaseQuantity(productId) { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            Log.e("CartRepository", "decreaseQuantity failed", e)
-        }
+        runThread(
+            block = { cartDataSource.decreaseQuantity(productId) },
+            onResult = onResult,
+        )
     }
 
     override fun deleteProduct(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        runCatching {
-            cartDataSource.deleteProductById(productId) { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            Log.e("CartRepository", "delete failed", e)
+        runThread(
+            block = { cartDataSource.deleteProductById(productId) },
+            onResult = onResult,
+        )
+    }
+
+    private inline fun <T> runThread(
+        crossinline block: () -> T,
+        crossinline onResult: (Result<T>) -> Unit,
+    ) {
+        thread {
+            onResult(runCatching { block() })
         }
     }
 }

@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.model.Product
 class ProductDataSourceImpl : ProductDataSource {
     override fun getProducts(): List<Product> = DummyProducts.values
 
-    override fun getProductById(id: Long): Product? = DummyProducts.values.find { it.productId == id }
+    override fun getProductById(id: Long): Product = DummyProducts.values.find { it.productId == id } ?: throw NoSuchElementException()
 
     override fun getPagedProducts(
         page: Int,

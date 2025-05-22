@@ -6,6 +6,8 @@ import woowacourse.shopping.domain.model.Product
 interface ProductRepository {
     fun getProducts(): List<Product>
 
+    fun getProductById(productId: Long): Product
+
     fun getPagedProducts(
         page: Int,
         pageSize: Int,
