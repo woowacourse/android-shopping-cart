@@ -163,7 +163,7 @@ class GoodsViewModel(
         goodsId: Int,
         move: (goodsId: Int, lastId: Int?) -> Unit,
     ) {
-        val lastGoodsId = latestGoodsRepository.getLast()?.goodsId
+        val lastGoodsId = _latestGoods.value?.get(0)?.id
         updateLatestGoods(goodsId)
         move(goodsId, lastGoodsId)
     }
