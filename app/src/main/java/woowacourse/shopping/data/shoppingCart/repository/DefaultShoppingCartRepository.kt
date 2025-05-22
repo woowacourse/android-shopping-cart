@@ -11,29 +11,27 @@ class DefaultShoppingCartRepository(
     private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage,
 ) : ShoppingCartRepository {
     override fun load(onLoad: (Result<List<Product>>) -> Unit) {
-        thread {
-            val result = runCatching { shoppingCartStorage.load().map(ProductEntity::toDomain) }
-            onLoad(result)
-        }
+        { shoppingCartStorage.load().map(ProductEntity::toDomain) }.runAsync(onLoad)
     }
 
     override fun add(
         product: Product,
         onAdd: (Result<Unit>) -> Unit,
     ) {
-        thread {
-            val result = runCatching { shoppingCartStorage.add(product.toEntity()) }
-            onAdd(result)
-        }
+        { shoppingCartStorage.add(product.toEntity()) }.runAsync(onAdd)
     }
 
     override fun remove(
         product: Product,
         onRemove: (Result<Unit>) -> Unit,
     ) {
+        { shoppingCartStorage.remove(product.toEntity()) }.runAsync(onRemove)
+    }
+
+    private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {
         thread {
-            val result = runCatching { shoppingCartStorage.remove(product.toEntity()) }
-            onRemove(result)
+            val result = runCatching(this)
+            onResult(result)
         }
     }
 }
