@@ -33,9 +33,9 @@ class ShoppingCartViewModel(
     val hasPreviousPage: LiveData<Boolean>
         get() = _hasPreviousPage
 
-    private val _isQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
-    val isQuantityChanged: SingleLiveData<Int>
-        get() = _isQuantityChanged
+    private val _onQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
+    val onQuantityChanged: SingleLiveData<Int>
+        get() = _onQuantityChanged
 
     init {
         updateState()
@@ -80,7 +80,7 @@ class ShoppingCartViewModel(
             }
 
         _goods.value = updatedList
-        _isQuantityChanged.setValue(position)
+        _onQuantityChanged.setValue(position)
         return updatedItem
     }
 

@@ -71,7 +71,7 @@ class ShoppingCartActivity : BaseActivity() {
             adapter.updateItems(goods)
         }
 
-        viewModel.isQuantityChanged.observe(this) {
+        viewModel.onQuantityChanged.observe(this) {
             adapter.notifyItemChanged(it)
         }
     }
