@@ -22,7 +22,7 @@ class ProductsViewModel(
     private val _productsLiveData: MutableLiveData<MainRecyclerViewProduct> = MutableLiveData()
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
     val totalSize: Int get() = productsRepository.totalSize()
-    val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalSize())
+    val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalQuantity())
 
     fun requestProductsPage(requestPage: Int) {
         val pageRequest =

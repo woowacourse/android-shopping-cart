@@ -14,4 +14,6 @@ interface ShoppingCartRepository {
     fun save(item: ShoppingCartItem)
 
     fun update(item: ShoppingCartItem)
+
+    fun totalQuantity(): Int
 }

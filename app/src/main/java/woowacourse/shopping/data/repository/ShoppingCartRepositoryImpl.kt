@@ -39,4 +39,8 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
             DummyShoppingCart.items.add(0, item)
         }
     }
+
+    override fun totalQuantity(): Int {
+        return DummyShoppingCart.items.sumOf { it.quantity }
+    }
 }
