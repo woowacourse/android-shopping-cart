@@ -9,7 +9,7 @@ import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 import woowacourse.shopping.view.uimodel.QuantityInfo
 
 class ProductsAdapter(
-    private val totalShoppingCartSize: MutableLiveData<Int>,
+    private val handler: ProductEventHandler,
 ) : RecyclerView.Adapter<ProductsViewHolder>() {
     private var products: List<Product> = listOf()
     var quantityInfo = QuantityInfo<Product>()
@@ -33,7 +33,7 @@ class ProductsAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ProductsViewHolder {
-        return ProductsViewHolder(parent, totalShoppingCartSize)
+        return ProductsViewHolder(parent, handler)
     }
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {

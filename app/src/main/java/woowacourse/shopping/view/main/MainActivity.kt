@@ -4,16 +4,21 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
+import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.main.adapter.ProductEventHandler
 import woowacourse.shopping.view.main.adapter.ProductsAdapter
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import kotlin.getValue
@@ -25,7 +30,9 @@ class MainActivity :
     ) {
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter by lazy {
-        ProductsAdapter(viewModel.totalShoppingCartSize)
+        ProductsAdapter(
+            ProductEventHandlerImpl(viewModel.totalShoppingCartSize),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +106,47 @@ class MainActivity :
     private fun updateProductList() {
         productsAdapter.clear()
         viewModel.updateShoppingCart(productsAdapter.currentPage)
+    }
+
+    private inner class ProductEventHandlerImpl(
+        val totalShoppingCartSize: MutableLiveData<Int>,
+    ) : ProductEventHandler {
+        override fun onBtnItemProductAddToCartSelected(quantity: MutableLiveData<Int>) {
+            super.onQuantityPlusSelected(quantity)
+            totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
+        }
+
+        override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
+            super.onQuantityMinusSelected(quantity)
+            totalShoppingCartSize.value = totalShoppingCartSize.value?.dec()
+        }
+
+        override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
+            super.onQuantityPlusSelected(quantity)
+            totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
+        }
+
+        override fun onProductSelected(product: Product) {
+            this@MainActivity.startActivity(ProductDetailActivity.newIntent(this@MainActivity, product))
+        }
+
+        override fun whenQuantityChangedSelectView(
+            view: ViewGroup,
+            quantity: MutableLiveData<Int>,
+        ) {
+            val btnItemProductAddToCart = view.findViewById<View>(R.id.btn_item_product_add_to_cart)
+            val layoutProductQuantitySelector = view.findViewById<View>(R.id.layout_product_quantity_selector)
+
+            quantity.value?.let { quantityValue ->
+                if (quantityValue < 1) {
+                    btnItemProductAddToCart.visibility = View.VISIBLE
+                    layoutProductQuantitySelector.visibility = View.GONE
+                } else {
+                    btnItemProductAddToCart.visibility = View.GONE
+                    layoutProductQuantitySelector.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 }
 

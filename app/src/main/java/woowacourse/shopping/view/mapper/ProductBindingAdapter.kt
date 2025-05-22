@@ -40,7 +40,7 @@ fun setMutableVisibility(
     view.findViewTreeLifecycleOwner()?.let {
         quantity.removeObservers(it)
         quantity.observe(it) {
-            handler.whenQuantityChangedSelectView(quantity)
+            handler.whenQuantityChangedSelectView(view, quantity)
         }
     }
 }

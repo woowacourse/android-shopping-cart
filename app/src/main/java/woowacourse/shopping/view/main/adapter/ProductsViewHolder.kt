@@ -9,11 +9,11 @@ import woowacourse.shopping.domain.Product
 
 class ProductsViewHolder(
     private val parent: ViewGroup,
-    private val shoppingCartSize: MutableLiveData<Int>,
+    private val handler: ProductEventHandler,
     private val binding: ItemProductBinding = inflate(parent),
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.handler = ProductEventHandlerImpl(parent.context, binding, shoppingCartSize)
+        binding.handler = handler
     }
 
     fun bind(
