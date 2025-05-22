@@ -81,8 +81,8 @@ class GoodsViewModel(
         val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
 
         return when {
-            selected != null -> goods.copy(isSelected = true, quantity = selected.goodsQuantity)
-            goods.isSelected || goods.quantity != MINIMUM_QUANTITY -> goods.copy(isSelected = false, quantity = MINIMUM_QUANTITY)
+            selected != null -> goods.copy(quantity = selected.goodsQuantity)
+            goods.quantity != MINIMUM_QUANTITY -> goods.copy(quantity = MINIMUM_QUANTITY)
             else -> goods
         }
     }
@@ -90,7 +90,7 @@ class GoodsViewModel(
     fun increaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoodsQuantity(position) {
-                it.copy(isSelected = true, quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
+                it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.increaseItemQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
@@ -99,8 +99,7 @@ class GoodsViewModel(
     fun decreaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoodsQuantity(position) {
-                val isSelected = it.quantity - 1 != MINIMUM_QUANTITY
-                it.copy(isSelected = isSelected, quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
+                it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.decreaseItemQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT)
