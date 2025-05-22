@@ -48,10 +48,6 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun addToCart(item: CartItem) {
-        TODO("Not yet implemented")
-    }
-
     override fun removeFromCart(
         productId: Long,
         onResult: (Result<Long>) -> Unit,
@@ -73,10 +69,16 @@ class CartRepositoryImpl(
     }
 
     override fun insertProduct(
-        product: Product,
+        cartItem: CartItem,
         onResult: (Result<Unit>) -> Unit,
     ) {
-//        TODO("Not yet implemented")
+        runCatching {
+            cartDataSource.insertProduct(cartItem.toEntity()) { result ->
+                onResult(result)
+            }
+        }.onFailure { e ->
+            onResult(Result.failure(e))
+        }
     }
 
     override fun insertOrIncrease(

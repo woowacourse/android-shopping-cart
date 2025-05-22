@@ -8,10 +8,13 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.presentation.cart.CartCounterClickListener
 
 class ProductAdapter(
     private val onClick: (CartItem) -> Unit,
     private val onClickLoadMore: () -> Unit,
+    private val cartCounterClickListener: CartCounterClickListener,
+    private val onAddToCartClick: (CartItem) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<CartItem> = emptyList()
     private var showLoadMore: Boolean = false
@@ -20,15 +23,16 @@ class ProductAdapter(
         newList: List<CartItem>,
         showLoadMore: Boolean,
     ) {
-        val oldSize = items.size
-        val newSize = newList.size
-
-        val insertItemSize = newSize - oldSize
+//        val oldSize = items.size
+//        val newSize = newList.size
+//
+//        val insertItemSize = newSize - oldSize
         this.items = newList
         this.showLoadMore = showLoadMore
-        if (insertItemSize > 0) {
-            notifyItemRangeInserted(oldSize, insertItemSize)
-        }
+//        if (insertItemSize > 0) {
+//            notifyItemRangeInserted(oldSize, insertItemSize)
+//        }
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
@@ -40,7 +44,7 @@ class ProductAdapter(
         return when (viewType) {
             R.layout.item_product -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ProductViewHolder(binding, onClick)
+                ProductViewHolder(binding, onClick, cartCounterClickListener, onAddToCartClick)
             }
 
             R.layout.item_load_more -> {
@@ -69,10 +73,14 @@ class ProductAdapter(
     class ProductViewHolder(
         private val binding: ItemProductBinding,
         private val onClick: (CartItem) -> Unit,
+        private val cartCounterClickListener: CartCounterClickListener,
+        private val onAddToCartClick: (CartItem) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CartItem) {
             binding.cartItem = item
             binding.clProductItem.setOnClickListener { onClick(item) }
+
+            binding.clickListener = cartCounterClickListener
 
             if (item.quantity > 0) {
                 binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.VISIBLE
@@ -85,6 +93,7 @@ class ProductAdapter(
             binding.ivAddCart.setOnClickListener {
                 binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.VISIBLE
                 binding.ivAddCart.visibility = View.GONE
+                onAddToCartClick(item)
             }
 
             binding.executePendingBindings()

@@ -47,14 +47,6 @@ class CartAdapter(
         notifyItemRangeInserted(0, newSize)
     }
 
-    fun removeItem(id: Long) {
-//        val index = products.indexOfFirst { it.productId == id }
-//        if (index != -1) {
-//            products.removeAt(index)
-//            notifyItemRemoved(index)
-//        }
-    }
-
     class CartViewHolder(
         val binding: ItemCartProductBinding,
         private val onDeleteClick: (CartItem) -> Unit,
@@ -70,9 +62,6 @@ class CartAdapter(
 
         fun bind(cartItem: CartItem) {
             binding.cartItem = cartItem
-//            binding.includedLayoutCart.tvCartQuantity.text = cartItem.quantity.toString()
-//            binding.includedLayoutCart.clickListener =
-//                cartQuantityClickListener
             binding.clickListener = cartCounterClickListener
             this.cartItem = cartItem
         }

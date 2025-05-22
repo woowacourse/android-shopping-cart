@@ -16,8 +16,6 @@ interface CartRepository {
         onResult: (Result<CartEntity?>) -> Unit,
     )
 
-    fun addToCart(item: CartItem)
-
     fun removeFromCart(
         productId: Long,
         onResult: (Result<Long>) -> Unit,
@@ -29,7 +27,7 @@ interface CartRepository {
     )
 
     fun insertProduct(
-        product: Product,
+        cartItem: CartItem,
         onResult: (Result<Unit>) -> Unit,
     )
 

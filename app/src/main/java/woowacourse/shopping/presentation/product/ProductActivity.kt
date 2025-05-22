@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.product
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,10 +16,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.databinding.ViewCartActionBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.cart.CartCounterClickListener
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 
-class ProductActivity : AppCompatActivity() {
+class ProductActivity :
+    AppCompatActivity(),
+    CartCounterClickListener {
     private lateinit var binding: ActivityProductBinding
     private val viewModel: ProductViewModel by viewModels {
         ProductViewModelFactory(applicationContext)
@@ -27,6 +32,8 @@ class ProductActivity : AppCompatActivity() {
         ProductAdapter(
             onClick = { cartItem -> navigateToProductDetail(cartItem.product) },
             onClickLoadMore = { viewModel.loadMore() },
+            cartCounterClickListener = this,
+            onAddToCartClick = { item -> viewModel.addToCart(item) },
         )
     }
 
@@ -40,6 +47,11 @@ class ProductActivity : AppCompatActivity() {
         setupToolbar()
         initAdapter()
         observeViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchData(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -108,14 +120,24 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { products ->
-            val showLoadMore = viewModel.showLoadMore.value == true
-            productAdapter.setData(products, showLoadMore)
+        viewModel.products.observe(this) { result ->
+            when (result) {
+                is ResultState.Success -> {
+                    val showLoadMore = viewModel.showLoadMore.value == true
+                    productAdapter.setData(result.data, showLoadMore)
+                }
+
+                is ResultState.Failure -> {
+                    Log.d("aaa", "load fail")
+                }
+            }
         }
 
         viewModel.showLoadMore.observe(this) { showLoadMore ->
-            val products = viewModel.products.value.orEmpty()
-            productAdapter.setData(products, showLoadMore)
+            val productsState = viewModel.products.value
+            if (productsState is ResultState.Success) {
+                productAdapter.setData(productsState.data, showLoadMore)
+            }
         }
     }
 
@@ -127,5 +149,13 @@ class ProductActivity : AppCompatActivity() {
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
         startActivity(intent)
+    }
+
+    override fun onClickMinus(id: Long) {
+        viewModel.decreaseQuantity(id)
+    }
+
+    override fun onClickPlus(id: Long) {
+        viewModel.increaseQuantity(id)
     }
 }
