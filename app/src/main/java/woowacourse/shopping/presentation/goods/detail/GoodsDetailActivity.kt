@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.goods.list.GoodsActivity
 import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
 class GoodsDetailActivity : BaseActivity() {
@@ -33,6 +35,10 @@ class GoodsDetailActivity : BaseActivity() {
         viewModel.onItemAddedToCart.observe(this) { count ->
             Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT)
                 .show()
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            navigateToGoodsList()
         }
     }
 
@@ -72,6 +78,12 @@ class GoodsDetailActivity : BaseActivity() {
         startActivity(intent)
     }
 
+    private fun navigateToGoodsList() {
+        val intent = GoodsActivity.newIntent(this)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.goods_detail_action_bar, menu)
         return super.onCreateOptionsMenu(menu)
@@ -80,7 +92,7 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cancel -> {
-                onBackPressedDispatcher.onBackPressed()
+                navigateToGoodsList()
                 true
             }
 

@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.goods.list
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
@@ -150,5 +152,11 @@ class GoodsActivity : BaseActivity() {
         private const val GOODS_SPAN_COUNT: Int = 2
         private const val LATEST_GOODS_SPAN_COUNT: Int = 1
         private const val SCROLL_DIRECTION: Int = 1
+
+        fun newIntent(context: Context): Intent =
+            Intent(
+                context,
+                GoodsActivity::class.java,
+            )
     }
 }
