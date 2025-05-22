@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 공통 스타일 -->
+    <style name="BaseTextStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:lineSpacingMultiplier">1.29</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!--  툴바 스타일  -->
+    <style name="ToolbarStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--  프로덕트 페이지 상품 이름 스타일  -->
+    <style name="ProductTitleStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--  프로덕트 페이지 상품 가격 스타일  -->
+    <style name="ProductPriceStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textColor">@color/gray5</item>
+    </style>
+
+    <!--  프로덕트 페이지 더보기 스타일  -->
+    <style name="ProductShowMoreStyle" parent="BaseTextStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:textColor">@color/gray5</item>
+    </style>
+
+    <!--  product detail 페이지 상품 이름 스타일  -->
+    <style name="ProductDetailTitleStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_xlarge</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--  product detail 페이지 상품 가격 스타일  -->
+    <style name="ProductDetailPriceStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+    </style>
+
+    <!--  product detail 페이지 상품 장바구니 담기 스타일  -->
+    <style name="ProductDetailCartStyle" parent="BaseTextStyle">
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--  cart 페이지 상품 이름 스타일  -->
+    <style name="CartTitleStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!--  cart 페이지 상품 가격 스타일  -->
+    <style name="CartPriceStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textColor">@color/gray5</item>
+    </style>
+
+    <!--  cart 페이지 페이지 글자 스타일  -->
+    <style name="CartPageStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_xlarge</item>
+        <item name="android:textColor">@color/gray5</item>
+    </style>
+</resources>

@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <!--  상품 페이지  -->
+    <string name="product_ic_cart_explain">장바구니 페이지로 이동하는 버튼입니다.</string>
+    <string name="product_list_explain">상품 목록 부분입니다</string>
+    <string name="product_toolbar_text">Shopping</string>
+    <string name="product_price">%,d원</string>
+    <string name="product_show_more">더보기</string>
+
+    <!--  상품 상세 페이지  -->
+    <string name="detail_product_price_text">가격</string>
+    <string name="detail_product_price">%,d원</string>
+    <string name="detail_product_add_cart">장바구니 담기</string>
+    <string name="detail_product_ic_exit">상품 목록으로 이동하는 버튼입니다.</string>
+    <string name="detail_product_add_cart_success">상품이 장바구니에 담겼습니다.</string>
+
+    <!--  카드 페이지  -->
+    <string name="cart_toolbar_text">Cart</string>
+    <string name="cart_price">%,d원</string>
+    <string name="cart_page">%d</string>
+    <string name="product_ic_back_explain">상품 목록으로 이동하는 버튼입니다.</string>
+    <string name="cart_product_delete">상품이 삭제되었습니다.</string>
 </resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="position"
+            type="int" />
+
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.CartItem" />
+
+        <variable
+            name="toDelete"
+            type="kotlin.jvm.functions.Function2" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:background="@drawable/bg_cart_item"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="18dp">
+
+        <TextView
+            android:id="@+id/tv_cart_product_name"
+            style="@style/CartTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{cartItem.name}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="맥심 마일드" />
+
+        <ImageView
+            android:id="@+id/iv_cart_product"
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="14dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            app:imageUrl="@{cartItem.imageUrl}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_cart_product_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_product_name" />
+
+        <ImageButton
+            android:id="@+id/ib_cart_product_delete"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@null"
+            android:onClick="@{() -> toDelete.invoke(cartItem, position)}"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@id/tv_cart_product_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_cart_product_name" />
+
+        <TextView
+            android:id="@+id/tv_cart_product_price"
+            style="@style/CartPriceStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/cart_price(cartItem.price)}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
+            app:layout_constraintEnd_toEndOf="@id/ib_cart_product_delete"
+            tools:text="100,000원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.view.cart.CartViewModel" />
+
+        <variable
+            name="toPrevious"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="toNext"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="toBack"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="currentPage"
+            type="int" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_cart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".view.cart.CartActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_cart"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/gray5"
+            app:layout_constraintBottom_toTopOf="@id/rv_cart_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="11dp"
+            android:backgroundTint="@color/gray5"
+            android:contentDescription="@string/product_ic_back_explain"
+            android:onClick="@{() -> toBack.invoke()}"
+            android:src="@drawable/ic_back"
+            app:layout_constraintBottom_toBottomOf="@id/tb_cart"
+            app:layout_constraintStart_toStartOf="@id/tb_cart"
+            app:layout_constraintTop_toTopOf="@id/tb_cart" />
+
+        <TextView
+            android:id="@+id/tv_cart_toolbar_title"
+            style="@style/ToolbarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="21dp"
+            android:text="@string/cart_toolbar_text"
+            app:layout_constraintBottom_toBottomOf="@id/ib_back"
+            app:layout_constraintStart_toEndOf="@id/ib_back"
+            app:layout_constraintTop_toTopOf="@id/ib_back"
+            tools:text="Cart" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_cart_product"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="4dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/btn_cart_previous"
+            app:layout_constraintTop_toBottomOf="@id/tb_cart"
+            tools:listitem="@layout/item_cart_product" />
+
+        <ImageButton
+            android:id="@+id/btn_cart_previous"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginVertical="50dp"
+            android:background="@drawable/round_btn_cart_previous"
+            android:contentDescription="@null"
+            android:enabled="@{viewModel.hasPrevious}"
+            android:onClick="@{()-> toPrevious.invoke()}"
+            android:src="@drawable/ic_previous"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_cart_page"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart_product" />
+
+        <TextView
+            android:id="@+id/tv_cart_page"
+            style="@style/CartPageStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/cart_page(viewModel.currentPage)}"
+            app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
+            app:layout_constraintEnd_toStartOf="@id/btn_cart_next"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/btn_cart_previous"
+            app:layout_constraintTop_toTopOf="@id/btn_cart_previous"
+            tools:text="1" />
+
+        <ImageButton
+            android:id="@+id/btn_cart_next"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginVertical="50dp"
+            android:background="@drawable/round_btn_cart_next"
+            android:contentDescription="@null"
+            android:enabled="@{viewModel.hasNext}"
+            android:onClick="@{()-> toNext.invoke()}"
+            android:src="@drawable/ic_next"
+            app:layout_constraintBottom_toBottomOf="@id/btn_cart_previous"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_cart_page"
+            app:layout_constraintTop_toTopOf="@id/btn_cart_previous" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

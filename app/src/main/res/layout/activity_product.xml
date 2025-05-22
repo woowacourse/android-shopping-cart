@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="onClick"
+            type="kotlin.jvm.functions.Function0" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_product"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.product.ProductActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_product"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/gray5"
+            app:layout_constraintBottom_toTopOf="@id/rv_products"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_product_toolbar_title"
+            style="@style/ToolbarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:layout_marginStart="26dp"
+            android:text="@string/product_toolbar_text"
+            app:layout_constraintBottom_toBottomOf="@id/tb_product"
+            app:layout_constraintStart_toStartOf="@id/tb_product"
+            app:layout_constraintTop_toTopOf="@id/tb_product"
+            tools:text="Shopping" />
+
+        <ImageButton
+            android:id="@+id/ib_cart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/gray5"
+            android:contentDescription="@string/product_ic_cart_explain"
+            android:onClick="@{() -> onClick.invoke()}"
+            android:src="@drawable/ic_cart"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_toolbar_title"
+            app:layout_constraintEnd_toEndOf="@id/tb_product"
+            app:layout_constraintTop_toTopOf="@id/tv_product_toolbar_title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_products"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:contentDescription="@string/product_list_explain"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_product"
+            app:spanCount="2"
+            tools:listitem="@layout/item_product" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
