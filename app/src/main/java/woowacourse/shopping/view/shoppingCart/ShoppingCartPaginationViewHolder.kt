@@ -8,7 +8,7 @@ import woowacourse.shopping.databinding.ItemShoppingCartPaginationBinding
 
 class ShoppingCartPaginationViewHolder(
     private val binding: ItemShoppingCartPaginationBinding,
-    private val onShoppingCartPaginationListener: OnShoppingCartPaginationListener,
+    onShoppingCartPaginationListener: OnShoppingCartPaginationListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.onShoppingCartPaginationListener = onShoppingCartPaginationListener
