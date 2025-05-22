@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <variable
+            name="quantityChangeListener"
+            type="woowacourse.shopping.feature.QuantityChangeListener" />
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.feature.goodsdetails.GoodsDetailsViewModel" />
@@ -21,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:contentDescription="@string/goods_detail_image_description"
-            app:imgUrl="@{viewModel.goods.thumbnailUrl}"
+            app:imgUrl="@{viewModel.cartItem.goods.thumbnailUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -32,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{viewModel.goods.name}"
+            android:text="@{viewModel.cartItem.goods.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -47,45 +52,47 @@
             android:background="@color/gray_400"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_details_name" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/goods_detail_price"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
-            tools:text="가격" />
+
 
         <TextView
             android:id="@+id/tv_goods_details_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="18dp"
-            android:text="@{@string/goods_price(viewModel.goods.price)}"
+            android:text="@{@string/goods_price(viewModel.cartItem.goods.price)}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view"
             tools:text="99,800원" />
+
+
+        <include
+            android:id="@+id/quantitySelector"
+            layout="@layout/quantity_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="12dp"
+            app:cartItem="@{viewModel.cartItem}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:quantityChangeListener="@{quantityChangeListener}" />
 
         <TextView
             android:id="@+id/tv_add_cart_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/cyan"
+            android:clickable="true"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.addToCart()}"
             android:text="@string/goods_details_cart_button"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:clickable="true"
-            android:onClick="@{() -> viewModel.addToCart()}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

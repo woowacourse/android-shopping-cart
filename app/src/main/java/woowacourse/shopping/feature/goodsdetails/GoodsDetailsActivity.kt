@@ -12,7 +12,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.feature.GoodsUiModel
+import woowacourse.shopping.feature.QuantityChangeListener
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
@@ -27,9 +29,19 @@ class GoodsDetailsActivity : AppCompatActivity() {
         val goodsUiModel = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
         viewModel = GoodsDetailsViewModel(goodsUiModel, CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
         binding.viewModel = viewModel
+        binding.quantityChangeListener =
+            object : QuantityChangeListener {
+                override fun onIncrease(cartItem: CartItem) {
+                    viewModel.increaseSelectorQuantity()
+                }
 
-        viewModel.alertEvent.observe(this) { message ->
-            showMessage(message)
+                override fun onDecrease(cartItem: CartItem) {
+                    viewModel.decreaseSelectorQuantity()
+                }
+            }
+
+        viewModel.alertEvent.observe(this) { goodsDetailsAlertMessage ->
+            showMessage(getString(goodsDetailsAlertMessage.resourceId, goodsDetailsAlertMessage.quantity))
         }
     }
 
@@ -47,11 +59,11 @@ class GoodsDetailsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showMessage(resourceId: Int) {
+    private fun showMessage(message: String) {
         Toast
             .makeText(
                 this,
-                resourceId,
+                message,
                 Toast.LENGTH_SHORT,
             ).show()
     }
