@@ -23,12 +23,14 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setUpView()
         val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT) ?: return
+        val app = application as ShoppingApplication
         viewModel =
             ViewModelProvider(
                 this,
                 ProductDetailViewModelFactory(
                     product,
-                    (application as ShoppingApplication).cartProductRepository,
+                    app.cartProductRepository,
+                    app.recentProductRepository,
                 ),
             )[ProductDetailViewModel::class.java]
         initBindings(product)

@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.domain.Product
 
 class ProductDetailViewModel(
     private val product: Product,
-    private val repository: CartProductRepository,
+    private val cartProductRepository: CartProductRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel(),
     ProductDetailEventHandler {
     private var shoppingCartQuantity = 0
@@ -21,14 +23,15 @@ class ProductDetailViewModel(
 
     init {
         loadQuantity()
+        recentProductRepository.replaceRecentProduct(product.id)
     }
 
     override fun onProductAddClick() {
         val currentQuantity = quantity.value ?: 1
         if (shoppingCartQuantity == 0) {
-            repository.insert(product.id, currentQuantity)
+            cartProductRepository.insert(product.id, currentQuantity)
         } else {
-            repository.updateQuantity(product.id, shoppingCartQuantity + currentQuantity)
+            cartProductRepository.updateQuantity(product.id, shoppingCartQuantity + currentQuantity)
         }
         _navigateEvent.value = Unit
     }
@@ -43,6 +46,6 @@ class ProductDetailViewModel(
     }
 
     private fun loadQuantity() {
-        shoppingCartQuantity = repository.getQuantityByProductId(product.id) ?: 0
+        shoppingCartQuantity = cartProductRepository.getQuantityByProductId(product.id) ?: 0
     }
 }
