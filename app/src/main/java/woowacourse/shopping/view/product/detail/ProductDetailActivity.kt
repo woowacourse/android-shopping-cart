@@ -60,6 +60,11 @@ class ProductDetailActivity : AppCompatActivity() {
             val intent = ShoppingCartActivity.newIntent(this)
             startActivity(intent)
         }
+
+        viewModel.lastProductClickEvent.observe(this) {
+            val intent = newIntent(this, viewModel.lastProduct?.product ?: return@observe)
+            startActivity(intent)
+        }
     }
 
     companion object {

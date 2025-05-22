@@ -21,6 +21,9 @@ class ProductDetailViewModel(
     private val _navigateEvent = MutableLiveData<Unit>()
     val navigateEvent: LiveData<Unit> = _navigateEvent
 
+    private val _lastProductClickEvent = MutableLiveData<Unit>()
+    val lastProductClickEvent: LiveData<Unit> = _lastProductClickEvent
+
     private val _quantity = MutableLiveData(1)
     val quantity: LiveData<Int> = _quantity
 
@@ -47,6 +50,10 @@ class ProductDetailViewModel(
     override fun onQuantityDecreaseClick(item: Product) {
         if ((quantity.value ?: 0) <= 1) return
         _quantity.value = quantity.value?.minus(1)
+    }
+
+    override fun onLastProductClick() {
+        _lastProductClickEvent.value = Unit
     }
 
     private fun loadQuantity() {
