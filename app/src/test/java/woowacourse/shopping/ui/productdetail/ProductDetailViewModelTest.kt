@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.viewmodel
+package woowacourse.shopping.ui.productdetail
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs

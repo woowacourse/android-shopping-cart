@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.viewmodel
+package woowacourse.shopping.ui.cart
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
@@ -16,7 +16,6 @@ import woowacourse.shopping.domain.model.CartProducts
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.model.DUMMY_CART_PRODUCTS
 import woowacourse.shopping.model.DUMMY_PRODUCT_1
-import woowacourse.shopping.ui.cart.CartViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 

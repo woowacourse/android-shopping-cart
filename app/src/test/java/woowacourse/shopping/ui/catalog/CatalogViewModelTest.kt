@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.viewmodel
+package woowacourse.shopping.ui.catalog
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -19,7 +19,6 @@ import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_2
 import woowacourse.shopping.model.DUMMY_HISTORY_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_PRODUCT_1
-import woowacourse.shopping.ui.catalog.CatalogViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 import woowacourse.shopping.util.setUpTestLiveData
