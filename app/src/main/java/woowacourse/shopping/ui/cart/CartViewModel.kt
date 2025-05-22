@@ -68,10 +68,10 @@ class CartViewModel(
 
     fun decreaseCartProductQuantity(id: Int) {
         cartRepository.decreaseProductQuantity(id) { newQuantity ->
-            if (newQuantity <= 0) {
-                loadCartProducts()
-            } else {
+            if (newQuantity > 0) {
                 _cartProducts.postValue(cartProducts.value?.updateCartProductQuantity(id, newQuantity))
+            } else {
+                loadCartProducts()
             }
         }
         _editedProductIds.value = editedProductIds.value?.plus(id)
