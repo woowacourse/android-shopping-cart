@@ -28,8 +28,11 @@ class DefaultShoppingCartRepository(
         { shoppingCartStorage.remove(cartItem.toEntity()) }.runAsync(onRemove)
     }
 
-    fun update(cartItems: List<CartItem>) {
-        shoppingCartStorage.update(cartItems.map { it.toEntity() })
+    override fun update(
+        cartItems: List<CartItem>,
+        onUpdate: (Result<Unit>) -> Unit,
+    ) {
+        { shoppingCartStorage.update(cartItems.map { it.toEntity() }) }.runAsync(onUpdate)
     }
 
     private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {

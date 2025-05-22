@@ -72,6 +72,9 @@ class ProductsActivity : AppCompatActivity() {
             when (event) {
                 ProductsEvent.UPDATE_PRODUCT_FAILURE ->
                     showToast(getString(R.string.products_update_products_error_message))
+
+                ProductsEvent.UPDATE_SHOPPING_CART_FAILURE ->
+                    showToast(getString(R.string.products_update_shopping_cart_error_message))
             }
         }
     }
@@ -83,10 +86,14 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun navigateToShoppingCart() {
-        startActivity(ShoppingCartActivity.newIntent(this))
+        viewModel.updateShoppingCart {
+            startActivity(ShoppingCartActivity.newIntent(this))
+        }
     }
 
     private fun navigateToProductDetail(cartItem: CartItem) {
-        startActivity(ProductDetailActivity.newIntent(this, cartItem))
+        viewModel.updateShoppingCart {
+            startActivity(ProductDetailActivity.newIntent(this, cartItem))
+        }
     }
 }

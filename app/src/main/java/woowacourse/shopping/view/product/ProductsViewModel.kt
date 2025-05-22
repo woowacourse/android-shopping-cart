@@ -19,10 +19,10 @@ class ProductsViewModel(
     private var allCartItems: List<CartItem> = emptyList()
 
     private val products: MutableLiveData<List<CartItem>> = MutableLiveData()
-    val productItems: LiveData<List<ProductsItem>> = products.map { it.toCartItemItems }
+    val productItems: LiveData<List<ProductsItem>> = products.map { it.toProductItems }
 
     private val loadable: Boolean get() = allCartItems.size > (products.value?.size ?: 0)
-    private val List<CartItem>.toCartItemItems: List<ProductsItem>
+    private val List<CartItem>.toProductItems: List<ProductsItem>
         get() = map(ProductsItem::ProductItem) + ProductsItem.LoadItem(loadable)
 
     private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
@@ -48,8 +48,23 @@ class ProductsViewModel(
         }
     }
 
-    fun updateShoppingCart() {
-        shoppingCartRepository
+    fun updateShoppingCart(onSuccess: () -> Unit) {
+        val productItems: List<ProductsItem.ProductItem> =
+            productItems.value?.filterIsInstance<ProductsItem.ProductItem>() ?: return
+
+        val cartItemsToUpdate: List<CartItem> =
+            productItems
+                .filterNot { it.quantity == it.cartItem.quantity }
+                .map { it.cartItem }
+
+        shoppingCartRepository.update(cartItemsToUpdate) { result: Result<Unit> ->
+            result
+                .onSuccess {
+                    onSuccess()
+                }.onFailure {
+                    _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
+                }
+        }
     }
 
     private fun loadAllProducts(productsRepository: ProductsRepository) {

@@ -7,7 +7,7 @@ sealed interface ProductsItem {
 
     data class ProductItem(
         val cartItem: CartItem,
-        var quantity: Int = 0,
+        var quantity: Int = cartItem.quantity,
     ) : ProductsItem {
         override val viewType: ItemType = ItemType.PRODUCT
     }

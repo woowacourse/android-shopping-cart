@@ -14,4 +14,9 @@ interface ShoppingCartRepository {
         cartItem: CartItem,
         onRemove: (Result<Unit>) -> Unit,
     )
+
+    fun update(
+        cartItems: List<CartItem>,
+        onUpdate: (Result<Unit>) -> Unit,
+    )
 }
