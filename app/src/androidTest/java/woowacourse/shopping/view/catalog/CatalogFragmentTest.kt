@@ -42,15 +42,10 @@ class CatalogFragmentTest {
         val recyclerView = onView(withId(R.id.recycler_view_products))
 
         recyclerView.perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
-        Thread.sleep(1000)
         onView(withId(R.id.btn_load_more)).perform(click())
 
-        Thread.sleep(1000)
-
         recyclerView.perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
-        Thread.sleep(1000)
         onView(withId(R.id.btn_load_more)).check(doesNotExist())
-        Thread.sleep(1000)
     }
 
     @Test
