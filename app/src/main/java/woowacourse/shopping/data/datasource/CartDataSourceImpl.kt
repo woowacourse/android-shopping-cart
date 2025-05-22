@@ -8,7 +8,7 @@ class CartDataSourceImpl(
 ) : CartDataSource {
     override fun getAll(): List<CartEntity> = cartDao.getAll()
 
-    override fun getCartItemCount(): Int = cartDao.getCartItemCount()
+    override fun getCartItemCount(): Int = cartDao.getTotalQuantity()
 
     override fun addCartItem(
         productId: Long,

@@ -11,8 +11,8 @@ interface CartDao {
     @Query("SELECT * FROM CartEntity ORDER BY productId ASC")
     fun getAll(): List<CartEntity>
 
-    @Query("SELECT COUNT(*) FROM CartEntity")
-    fun getCartItemCount(): Int
+    @Query("SELECT SUM(quantity) FROM CartEntity")
+    fun getTotalQuantity(): Int
 
     @Query("SELECT * FROM CartEntity ORDER BY createdAt ASC Limit :limit OFFSET :offset")
     fun getCartItemPaged(
