@@ -3,14 +3,19 @@ package woowacourse.shopping.view.cart.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.storage.CartStorage
+import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartEntry
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 
-class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
+class CartViewModel(
+    private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
+) : ViewModel() {
     private val page = Page(initialPage = INITIAL_PAGE_NUMBER, pageSize = PAGE_SIZE)
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> = _products
+    private val _carts = MutableLiveData<List<Cart>>()
+    val carts: LiveData<List<Cart>> = _carts
 
     private val _pageState = MutableLiveData<PageState>()
     val pageState: LiveData<PageState> = _pageState
@@ -23,7 +28,7 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     }
 
     fun deleteProduct(productId: Long) {
-        cartStorage.deleteProduct(productId) {
+        cartRepository.deleteById(productId) {
             loadCarts()
         }
     }
@@ -40,25 +45,35 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
 
     fun loadCarts() {
         val (offset, limit) = page.targetRange()
-        cartStorage.getPaged(offset, limit) { products: List<Product> ->
-            _products.postValue(products)
-            setPageState()
+        cartRepository.getPaged(offset, limit) { cartEntries: List<CartEntry> ->
+            val carts = mutableListOf<Cart>()
+            cartEntries.forEach { cartEntry ->
+                val product = productRepository.getById(cartEntry.productId)
+                carts.add(Cart(product, cartEntry.quantity))
+            }
+            _carts.postValue(carts)
         }
+        setPageState(offset, limit)
     }
 
-    private fun setPageState() {
-        cartStorage.totalSize { totalSize ->
-            val hasNext = page.hasNextPage(totalSize)
-            val hasOnePage = page.hasOnePage(totalSize)
-            _pageState.postValue(
-                PageState(
-                    previousPageEnabled = page.hasPreviousPage(),
-                    nextPageEnabled = hasNext,
-                    pageVisibility = hasOnePage,
-                ),
-            )
+    private fun setPageState(
+        offset: Int,
+        limit: Int,
+    ) {
+        cartRepository.totalSize { totalSize ->
+            cartRepository.hasNextPage(offset + 1, limit) { hasNext ->
+                cartRepository.hasOnlyPage(limit) { hasOnePage ->
+                    _pageState.postValue(
+                        PageState(
+                            previousPageEnabled = page.hasPreviousPage(),
+                            nextPageEnabled = hasNext,
+                            pageVisibility = hasOnePage,
+                        ),
+                    )
+                }
+            }
             updatePageNoText()
-            page.resetToLastPageIfEmpty(products.value?.size ?: 0) {
+            page.resetToLastPageIfEmpty(carts.value?.size ?: 0) {
                 loadCarts()
             }
         }
