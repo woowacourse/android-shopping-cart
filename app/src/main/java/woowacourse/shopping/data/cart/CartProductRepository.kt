@@ -18,6 +18,8 @@ interface CartProductRepository {
 
     fun getQuantityByProductId(productId: Long): Int?
 
+    fun getTotalQuantity(): Int?
+
     fun updateQuantity(
         productId: Long,
         quantity: Int,

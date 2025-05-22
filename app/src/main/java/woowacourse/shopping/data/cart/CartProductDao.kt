@@ -21,6 +21,9 @@ interface CartProductDao {
     @Query("SELECT quantity FROM cart_product WHERE product_id = :productId")
     fun getQuantityByProductId(productId: Long): Int?
 
+    @Query("SELECT SUM(quantity) FROM cart_product")
+    fun getTotalQuantity(): Int?
+
     @Query("UPDATE cart_product SET quantity = :quantity WHERE product_id = :productId")
     fun updateQuantity(
         productId: Long,

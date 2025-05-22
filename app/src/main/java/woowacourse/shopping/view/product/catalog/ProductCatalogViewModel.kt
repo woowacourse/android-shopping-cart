@@ -27,6 +27,7 @@ class ProductCatalogViewModel(
 
     init {
         loadMoreProducts()
+        _totalQuantity.value = cartProductRepository.getTotalQuantity()
     }
 
     override fun onProductClick(item: Product) {
@@ -36,6 +37,7 @@ class ProductCatalogViewModel(
     override fun onAddClick(item: Product) {
         cartProductRepository.insert(item.id)
         updateProductQuantity(item, 1)
+        _totalQuantity.value = totalQuantity.value?.plus(1)
     }
 
     override fun onQuantityIncreaseClick(item: Product) {
@@ -47,6 +49,7 @@ class ProductCatalogViewModel(
             cartProductRepository.updateQuantity(item.id, newQuantity)
         }
         updateProductQuantity(item, newQuantity)
+        _totalQuantity.value = totalQuantity.value?.plus(1)
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
@@ -58,6 +61,7 @@ class ProductCatalogViewModel(
             cartProductRepository.updateQuantity(item.id, newQuantity)
         }
         updateProductQuantity(item, newQuantity)
+        _totalQuantity.value = totalQuantity.value?.minus(1)
     }
 
     override fun onMoreClick() {
@@ -72,7 +76,6 @@ class ProductCatalogViewModel(
         }
         offset += result.items.size
         _productItems.value = createProductItems(result.hasNext)
-        _totalQuantity.value = products.values.sum()
     }
 
     private fun updateProductQuantity(
@@ -89,7 +92,6 @@ class ProductCatalogViewModel(
                     ProductCatalogItem.LoadMoreItem -> it
                 }
             }
-        _totalQuantity.value = products.values.sum()
     }
 
     private fun createProductItems(hasNext: Boolean): List<ProductCatalogItem> {
