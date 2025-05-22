@@ -11,14 +11,11 @@ class ProductViewHolder(
     private val binding: ItemProductBinding,
     eventListener: OnProductListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private lateinit var currentItem: Product
-
     init {
         binding.onClick = eventListener
     }
 
     fun bind(product: Product) {
-        currentItem = product
         binding.product = product
     }
 
