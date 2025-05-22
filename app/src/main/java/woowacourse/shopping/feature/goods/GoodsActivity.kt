@@ -42,7 +42,12 @@ class GoodsActivity : AppCompatActivity() {
                 },
         )
     }
-    private val moreButtonAdapter by lazy { MoreButtonAdapter { viewModel.addPage() } }
+    private val moreButtonAdapter by lazy {
+        MoreButtonAdapter {
+            viewModel.addPage()
+            viewModel.updateCartQuantity()
+        }
+    }
     private val concatAdapter by lazy { ConcatAdapter(goodsAdapter, moreButtonAdapter) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
