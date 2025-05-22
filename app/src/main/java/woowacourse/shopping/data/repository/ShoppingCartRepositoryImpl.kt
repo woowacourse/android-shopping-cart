@@ -23,6 +23,20 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
     }
 
     override fun save(item: ShoppingCartItem) {
-        DummyShoppingCart.items.add(0, item)
+        DummyShoppingCart.items.find { it.product.id == item.product.id }?.let {
+            DummyShoppingCart.items.remove(it)
+            DummyShoppingCart.items.add(0, it.copy(quantity = it.quantity + item.quantity))
+        } ?: run {
+            DummyShoppingCart.items.add(0, item)
+        }
+    }
+
+    override fun update(item: ShoppingCartItem) {
+        DummyShoppingCart.items.find { it.product.id == item.product.id }?.let {
+            DummyShoppingCart.items.remove(it)
+            DummyShoppingCart.items.add(item)
+        } ?: run {
+            DummyShoppingCart.items.add(0, item)
+        }
     }
 }

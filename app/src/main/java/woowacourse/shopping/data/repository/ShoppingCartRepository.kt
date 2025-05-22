@@ -12,4 +12,6 @@ interface ShoppingCartRepository {
     fun remove(item: ShoppingCartItem)
 
     fun save(item: ShoppingCartItem)
+
+    fun update(item: ShoppingCartItem)
 }
