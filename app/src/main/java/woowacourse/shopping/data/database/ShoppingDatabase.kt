@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.dao.ProductDao
-import woowacourse.shopping.data.entity.ProductEntity
+import woowacourse.shopping.data.dao.CartDao
+import woowacourse.shopping.data.entity.CartEntity
 
-@Database(entities = [ProductEntity::class], version = 1)
+@Database(entities = [CartEntity::class], version = 1)
 abstract class ShoppingDatabase : RoomDatabase() {
-    abstract fun productDao(): ProductDao
+    abstract fun cartDao(): CartDao
 
     companion object {
         @Volatile

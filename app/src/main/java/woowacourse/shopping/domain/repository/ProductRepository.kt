@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.storage
+package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.Product
 
-interface ProductStorage {
-    operator fun get(id: Long): Product
+interface ProductRepository {
+    fun getById(id: Long): Product
 
     fun getProducts(
         page: Int,

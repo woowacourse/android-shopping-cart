@@ -1,10 +1,11 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.datasource
 
+import woowacourse.shopping.data.database.DummyProduct
 import woowacourse.shopping.domain.Product
 
 @Suppress("ktlint:standard:max-line-length")
-class ProductStorageImpl : ProductStorage {
-    private val productDatabase = ProductDatabase
+class ProductDataSourceImpl : ProductDataSource {
+    private val productDatabase = DummyProduct
 
     override fun get(id: Long): Product = productDatabase.products[id] ?: throw IllegalArgumentException()
 
@@ -12,7 +13,7 @@ class ProductStorageImpl : ProductStorage {
         page: Int,
         pageSize: Int,
     ): List<Product> {
-        val fromIndex = page * pageSize
+        val fromIndex = (page - 1) * pageSize
         val toIndex = minOf(fromIndex + pageSize, productDatabase.size)
         return productDatabase.productsValues.subList(fromIndex, toIndex)
     }

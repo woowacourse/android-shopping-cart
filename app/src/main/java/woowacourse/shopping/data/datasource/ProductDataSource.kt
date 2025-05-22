@@ -1,8 +1,8 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.domain.Product
 
-interface ProductStorage {
+interface ProductDataSource {
     operator fun get(id: Long): Product
 
     fun getProducts(

@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
@@ -36,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.adapter = productsAdapter
-        viewModel.loadProducts(0, PAGE_SIZE)
-
         initView()
         observeViewModel()
     }
@@ -49,14 +46,17 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        viewModel.loadProducts()
         val scrollEndEvent =
             ScrollEndEvent(
-                viewModel.loadable.value,
-                { binding.buttonLoad.visibility = View.VISIBLE },
-                { binding.buttonLoad.visibility = View.GONE },
+                onScrollEnd = {
+                    if (viewModel.loadable.value == true) {
+                        binding.buttonLoad.visibility =
+                            View.VISIBLE
+                    }
+                },
+                onScrollReset = { binding.buttonLoad.visibility = View.GONE },
             )
-
         binding.recyclerViewProduct.apply {
             adapter = productsAdapter
             setHasFixedSize(true)
@@ -66,15 +66,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.buttonLoad.setOnClickListener {
             binding.buttonLoad.visibility = View.GONE
-            val layoutManager = binding.recyclerViewProduct.layoutManager as? LinearLayoutManager
-
-            val visiblePosition = layoutManager?.itemCount
-            viewModel.loadProducts(visiblePosition ?: 0, PAGE_SIZE)
+            viewModel.moveNextPage()
         }
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { value ->
+        viewModel.carts.observe(this) { value ->
             productsAdapter.submitList(value)
         }
     }
@@ -94,9 +91,5 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_action_bar_menu, menu)
         return true
-    }
-
-    companion object {
-        const val PAGE_SIZE = 20
     }
 }
