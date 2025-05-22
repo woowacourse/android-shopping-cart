@@ -10,6 +10,8 @@ import androidx.core.util.component2
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ShoppingDatabase
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.cart.CartActivity
@@ -20,7 +22,9 @@ import woowacourse.shopping.util.toUi
 
 class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
-    private val viewModel: GoodsViewModel by viewModels()
+    private val viewModel: GoodsViewModel by viewModels {
+        GoodsViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
+    }
     private val goodsAdapter by lazy { GoodsAdapter { goods -> navigateGoodsDetails(goods) } }
     private val moreButtonAdapter by lazy { MoreButtonAdapter { viewModel.addPage() } }
     private val concatAdapter by lazy { ConcatAdapter(goodsAdapter, moreButtonAdapter) }
@@ -50,6 +54,11 @@ class GoodsActivity : AppCompatActivity() {
                 }
             }
         return layoutManager
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateCartQuantity()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

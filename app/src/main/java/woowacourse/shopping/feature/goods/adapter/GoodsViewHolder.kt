@@ -4,18 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemGoodsBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.CartItem
 
 class GoodsViewHolder(
-    private val binding: ItemGoodsBinding,
+    val binding: ItemGoodsBinding,
     goodsClickListener: GoodsClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.clickListener = goodsClickListener
     }
 
-    fun bind(goods: Goods) {
-        binding.goods = goods
+    fun bind(cartItem: CartItem) {
+        binding.cartItem = cartItem
     }
 
     companion object {

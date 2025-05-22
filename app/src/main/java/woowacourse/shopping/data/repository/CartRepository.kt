@@ -4,7 +4,9 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 
 interface CartRepository {
-    fun getAll(): List<Goods>
+    fun getAll(): List<CartItem>
+
+    fun fetchAllCartItems(onComplete: (List<CartItem>) -> Unit)
 
     fun insert(
         goods: Goods,
