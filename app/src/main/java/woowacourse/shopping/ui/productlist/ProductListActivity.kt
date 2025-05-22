@@ -99,7 +99,7 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun initAdapter(): ProductListAdapter {
         return ProductListAdapter(
-            items = emptyList(),
+            items = mutableListOf(),
             productClickListener = { product ->
                 val intent = ProductDetailActivity.newIntent(this@ProductListActivity, product)
                 startActivity(intent)

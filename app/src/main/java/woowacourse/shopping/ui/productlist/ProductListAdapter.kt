@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 
 class ProductListAdapter(
-    private var items: List<ProductListViewType>,
+    private val items: MutableList<ProductListViewType>,
     private val productClickListener: ProductClickListener,
     private val loadMoreClickListener: LoadMoreClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -41,7 +41,8 @@ class ProductListAdapter(
     fun update(items: List<ProductListViewType>) {
         val positionStart = this.items.size
         val itemCount = items.size - (this.items.size - LOAD_MORE_BUTTON_OFFSET)
-        this.items = items
+        this.items.clear()
+        this.items.addAll(items)
         notifyItemRangeInserted(positionStart, itemCount)
     }
 
