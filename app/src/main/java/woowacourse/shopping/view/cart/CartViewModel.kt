@@ -31,6 +31,11 @@ class CartViewModel(
     private var offset = 0
     private val pageCache: MutableMap<Int, List<CartItem>> = mutableMapOf()
 
+    init {
+        fetchInfo()
+        fetchData()
+    }
+
     fun fetchInfo() {
         cartRepository.getAllProductsSize {
             totalProductsCount = it

@@ -66,8 +66,6 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun bindData() {
-        productViewModel.fetchInitData()
-        productViewModel.fetchData()
         productViewModel.products.observe(this) { products ->
             productAdapter.setData(products)
         }

@@ -51,8 +51,6 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun bindData() {
-        viewModel.fetchInfo()
-        viewModel.fetchData()
         viewModel.currentPage.observe(this) {
             viewModel.hasNext()
             viewModel.hasPrevious()

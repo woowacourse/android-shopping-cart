@@ -22,6 +22,11 @@ class ProductViewModel(
     var totalProductsCount: Int = 0
     private var currentIndex = 0
 
+    init {
+        fetchInitData()
+        fetchData()
+    }
+
     fun fetchInitData() {
         totalProductsCount = productRepository.getProductsSize()
         _isShowMore.postValue(totalProductsCount > LIMIT_COUNT)
