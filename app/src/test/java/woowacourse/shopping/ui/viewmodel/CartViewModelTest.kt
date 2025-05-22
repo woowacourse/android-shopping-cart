@@ -39,7 +39,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `loadCartProducts가 호출되면 LiveData에 DUMMY_CART_PRODUCTS가 저장된다`() {
+    fun `장바구니 상품 목록을 불러온다`() {
         // when
         viewModel = CartViewModel(cartRepository)
 
@@ -49,7 +49,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `increaseCartProductQuantity가 호출되면 수량을 증가시키고 editedProductIds에 추가하며 상태를 업데이트한다`() {
+    fun `장바구니 상품 수량을 증가시키고 수정된 상품 목록에 추가한다`() {
         // given
         val productId = DUMMY_PRODUCT_1.id
         val newQuantity = 10
@@ -68,14 +68,14 @@ class CartViewModelTest {
             viewModel.cartProducts
                 .getOrAwaitValue()
                 .products
-                ?.find { it.product.id == productId }
+                .find { it.product.id == productId }
 
         assertThat(updatedProduct?.quantity).isEqualTo(newQuantity)
         assertThat(viewModel.editedProductIds.getOrAwaitValue()).contains(productId)
     }
 
     @Test
-    fun `decreaseCartProductQuantity는 수량 감소 후 0일 경우 editedProductIds에 추가하며 상품을 다시 불러온다`() {
+    fun `장바구니 상품 수량을 감소시키고 장바구니 상품 목록을 불러온 뒤 수정된 상품 목록에 추가한다`() {
         // given
         val productId = DUMMY_PRODUCT_1.id
 
@@ -94,7 +94,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `removeCartProduct는 제품을 삭제하고 editedProductIds에 추가하며 상품을 다시 불러온다`() {
+    fun `장바구니 상품을 제거하고 상품 목록을 불러온다`() {
         // given
         val productId = DUMMY_PRODUCT_1.id
 
@@ -113,7 +113,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `increasePage 호출 시 페이지 증가하고 데이터 다시 불러온다`() {
+    fun `장바구니 상품 페이지를 증가시키고 상품 목록을 불러온다`() {
         // given
         clearMocks(cartRepository)
 
@@ -132,7 +132,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `updateTotalPage는 pageState의 total 값을 업데이트한다`() {
+    fun `장바구니 최대 상품 페이지 수를 불러온다`() {
         // given
         val expected = 100
 

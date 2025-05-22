@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.every
@@ -17,11 +16,13 @@ import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_HISTORY_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_PRODUCT_1
 import woowacourse.shopping.ui.productdetail.ProductDetailViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
+import woowacourse.shopping.util.setUpTestLiveData
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
@@ -40,9 +41,9 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `loadProductDetail은 상품 정보를 불러와 catalogProduct에 저장한다`() {
+    fun `상품 상세 정보를 불러온다`() {
         // given
-        val expected = CatalogProduct(DUMMY_PRODUCT_1, 5)
+        val expected = DUMMY_CATALOG_PRODUCT_1
         every {
             productRepository.fetchProduct(DUMMY_PRODUCT_1.id, any())
         } answers {
@@ -58,7 +59,7 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `loadLastHistoryProduct는 최근 검색어를 lastHistoryProduct에 저장한다`() {
+    fun `가장 최근에 탐색한 상품을 불러온다`() {
         // given
         every {
             historyRepository.fetchRecentSearchHistory(any())
@@ -75,7 +76,7 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `addHistoryProduct는 저장 요청만 보낸다`() {
+    fun `최근 탐색한 상품 목록에 현재 상품을 추가한다`() {
         // given
         val productId = DUMMY_PRODUCT_1.id
 
@@ -87,10 +88,10 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `increaseCartProductQuantity는 수량을 1 증가시킨다`() {
+    fun `상품 수량을 증가시킨다`() {
         // given
-        val initial = CatalogProduct(DUMMY_PRODUCT_1, 5)
-        setUpCatalogProduct(initial)
+        val initial = DUMMY_CATALOG_PRODUCT_1
+        setUpTestLiveData(initial, "_catalogProduct", viewModel)
 
         // when
         viewModel.increaseCartProductQuantity()
@@ -101,10 +102,10 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `decreaseCartProductQuantity는 수량을 1 감소시킨다`() {
+    fun `상품 수량을 감소시킨다`() {
         // given
-        val initial = CatalogProduct(DUMMY_PRODUCT_1, 5)
-        setUpCatalogProduct(initial)
+        val initial = DUMMY_CATALOG_PRODUCT_1
+        setUpTestLiveData(initial, "_catalogProduct", viewModel)
 
         // when
         viewModel.decreaseCartProductQuantity()
@@ -115,10 +116,10 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `updateCartProduct는 CartRepository에 저장하고 성공 이벤트를 발생시킨다`() {
+    fun `장바구니에 변경된 상품 수량을 반영한다`() {
         // given
-        val catalogProduct = CatalogProduct(DUMMY_PRODUCT_1, 5)
-        setUpCatalogProduct(catalogProduct)
+        val catalogProduct = DUMMY_CATALOG_PRODUCT_1
+        setUpTestLiveData(catalogProduct, "_catalogProduct", viewModel)
         every {
             cartRepository.saveCartProduct(CartProduct(DUMMY_PRODUCT_1, 5))
         } just Runs
@@ -134,13 +135,5 @@ class ProductDetailViewModelTest {
     @AfterEach
     fun tearDown() {
         unmockkAll()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun setUpCatalogProduct(product: CatalogProduct) {
-        val field = ProductDetailViewModel::class.java.getDeclaredField("_catalogProduct")
-        field.isAccessible = true
-        val liveData = field.get(viewModel) as MutableLiveData<CatalogProduct>
-        liveData.postValue(product)
     }
 }

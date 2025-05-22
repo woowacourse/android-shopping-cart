@@ -1,6 +1,7 @@
 package woowacourse.shopping.util
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -32,4 +33,16 @@ fun <T> LiveData<T>.getOrAwaitValue(
 
     @Suppress("UNCHECKED_CAST")
     return data as T
+}
+
+@Suppress("UNCHECKED_CAST")
+inline fun <ITEM, reified VIEWMODEL> setUpTestLiveData(
+    item: ITEM,
+    fieldName: String,
+    viewModel: VIEWMODEL,
+) {
+    val field = VIEWMODEL::class.java.getDeclaredField(fieldName)
+    field.isAccessible = true
+    val liveData = field.get(viewModel) as MutableLiveData<ITEM>
+    liveData.postValue(item)
 }

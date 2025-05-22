@@ -2,6 +2,8 @@ package woowacourse.shopping.model
 
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CartProducts
+import woowacourse.shopping.domain.model.CatalogProduct
+import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.model.Product
 
@@ -58,6 +60,9 @@ val DUMMY_HISTORY_PRODUCT_1 =
         imageUrl = DUMMY_PRODUCT_1.imageUrl,
     )
 
+val DUMMY_CATALOG_PRODUCT_1 = CatalogProduct(DUMMY_PRODUCT_1, quantity = 5)
+val DUMMY_CATALOG_PRODUCT_2 = CatalogProduct(DUMMY_PRODUCT_2, quantity = 6)
+
 val DUMMY_CART_PRODUCTS =
     CartProducts(
         products =
@@ -69,4 +74,10 @@ val DUMMY_CART_PRODUCTS =
                 DUMMY_CART_PRODUCT_5,
             ),
         totalPage = 1,
+    )
+
+val DUMMY_CATALOG_PRODUCTS =
+    CatalogProducts(
+        products = listOf(DUMMY_CATALOG_PRODUCT_1),
+        hasMore = true,
     )
