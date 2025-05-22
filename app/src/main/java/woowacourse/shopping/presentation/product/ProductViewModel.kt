@@ -29,6 +29,7 @@ class ProductViewModel(
 
     init {
         fetchData(currentPage)
+        fetchCartItemCount()
     }
 
     fun fetchData(currentPage: Int) {
@@ -36,7 +37,7 @@ class ProductViewModel(
             result
                 .onSuccess { cartItems ->
                     _products.postValue(ResultState.Success(cartItems))
-                    this.currentPage++
+                    this.currentPage = currentPage
                 }.onFailure { e ->
                     Log.e("ProductViewModel", "Failed to load products", e)
                 }
@@ -55,16 +56,15 @@ class ProductViewModel(
     }
 
     fun loadMore() {
+        this.currentPage++
         productRepository.getPagedProducts(currentPage, pageSize) { result ->
             result
                 .onSuccess { newItems ->
                     val currentList = (_products.value as? ResultState.Success)?.data.orEmpty()
                     val updatedList = currentList + newItems
                     _products.postValue(ResultState.Success(updatedList))
-                    this.currentPage++
                     _showLoadMore.postValue(updatedList.size < DummyProducts.values.size)
-                }.onFailure { e ->
-                    Log.e("ProductViewModel", "Failed to load next products", e)
+                }.onFailure {
                     _products.postValue(ResultState.Failure())
                 }
         }

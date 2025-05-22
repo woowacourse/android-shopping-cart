@@ -1,12 +1,13 @@
 package woowacourse.shopping.presentation.product
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.databinding.ViewCartActionBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.cart.CartActivity
@@ -23,7 +25,8 @@ import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 
 class ProductActivity :
     AppCompatActivity(),
-    CartCounterClickListener {
+    CartCounterClickListener,
+    ItemClickListener {
     private lateinit var binding: ActivityProductBinding
     private var _toolbarBinding: ViewCartActionBinding? = null
     private val toolbarBinding get() = _toolbarBinding!!
@@ -35,7 +38,7 @@ class ProductActivity :
             onClick = { cartItem -> navigateToProductDetail(cartItem.product) },
             onClickLoadMore = { viewModel.loadMore() },
             cartCounterClickListener = this,
-            onAddToCartClick = { item -> viewModel.addToCart(item) },
+            itemClickListener = this,
         )
     }
 
@@ -55,6 +58,7 @@ class ProductActivity :
         super.onResume()
         viewModel.fetchData(0)
         viewModel.fetchCartItemCount()
+        binding.rvProducts.adapter = productAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -62,7 +66,7 @@ class ProductActivity :
 
         val menuItem = menu?.findItem(R.id.action_cart)
         _toolbarBinding = ViewCartActionBinding.inflate(layoutInflater)
-        menuItem?.actionView = _toolbarBinding?.root
+        menuItem?.actionView = toolbarBinding.root
 
         toolbarBinding.ivCart.setOnClickListener {
             navigateToCart()
@@ -125,13 +129,13 @@ class ProductActivity :
                 }
 
                 is ResultState.Failure -> {
-                    Log.d("aaa", "load fail")
+                    showToast(R.string.product_toast_load_failure)
                 }
             }
         }
 
         viewModel.cartItemCount.observe(this) { count ->
-            toolbarBinding.tvCartCount.apply {
+            _toolbarBinding?.tvCartCount?.apply {
                 text = count.toString()
                 visibility = if (count > 0) View.VISIBLE else View.GONE
             }
@@ -145,6 +149,12 @@ class ProductActivity :
         }
     }
 
+    private fun showToast(
+        @StringRes messageResId: Int,
+    ) {
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+    }
+
     private fun navigateToProductDetail(product: Product) {
         val intent = ProductDetailActivity.newIntent(this, product)
         startActivity(intent)
@@ -155,11 +165,20 @@ class ProductActivity :
         startActivity(intent)
     }
 
+    override fun onAddToCartClick(cartItem: CartItem) {
+        viewModel.addToCart(cartItem)
+    }
+
     override fun onClickMinus(id: Long) {
         viewModel.decreaseQuantity(id)
     }
 
     override fun onClickPlus(id: Long) {
         viewModel.increaseQuantity(id)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _toolbarBinding = null
     }
 }

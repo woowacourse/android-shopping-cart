@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.product
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
@@ -14,7 +13,7 @@ class ProductAdapter(
     private val onClick: (CartItem) -> Unit,
     private val onClickLoadMore: () -> Unit,
     private val cartCounterClickListener: CartCounterClickListener,
-    private val onAddToCartClick: (CartItem) -> Unit,
+    private val itemClickListener: ItemClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<CartItem> = emptyList()
     private var showLoadMore: Boolean = false
@@ -44,7 +43,7 @@ class ProductAdapter(
         return when (viewType) {
             R.layout.item_product -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ProductViewHolder(binding, onClick, cartCounterClickListener, onAddToCartClick)
+                ProductViewHolder(binding, onClick, cartCounterClickListener, itemClickListener)
             }
 
             R.layout.item_load_more -> {
@@ -74,28 +73,13 @@ class ProductAdapter(
         private val binding: ItemProductBinding,
         private val onClick: (CartItem) -> Unit,
         private val cartCounterClickListener: CartCounterClickListener,
-        private val onAddToCartClick: (CartItem) -> Unit,
+        private val itemClickListener: ItemClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CartItem) {
             binding.cartItem = item
             binding.clProductItem.setOnClickListener { onClick(item) }
-
-            binding.clickListener = cartCounterClickListener
-
-            if (item.quantity > 0) {
-                binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.VISIBLE
-                binding.ivAddCart.visibility = View.GONE
-            } else {
-                binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.GONE
-                binding.ivAddCart.visibility = View.VISIBLE
-            }
-
-            binding.ivAddCart.setOnClickListener {
-                binding.includedLayoutCart.layoutCartQuantityBox.visibility = View.VISIBLE
-                binding.ivAddCart.visibility = View.GONE
-                onAddToCartClick(item)
-            }
-
+            binding.itemClickListener = itemClickListener
+            binding.counterClickListener = cartCounterClickListener
             binding.executePendingBindings()
         }
     }

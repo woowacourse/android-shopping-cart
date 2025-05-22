@@ -10,7 +10,11 @@
             type="woowacourse.shopping.domain.model.CartItem" />
 
         <variable
-            name="clickListener"
+            name="itemClickListener"
+            type="woowacourse.shopping.presentation.product.ItemClickListener" />
+
+        <variable
+            name="counterClickListener"
             type="woowacourse.shopping.presentation.cart.CartCounterClickListener" />
     </data>
 
@@ -55,10 +59,11 @@
             android:layout_marginBottom="8dp"
             android:contentDescription="@null"
             android:elevation="2dp"
+            android:onClick="@{() -> itemClickListener.onAddToCartClick(cartItem)}"
             android:src="@drawable/ic_add"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
-            app:layout_constraintEnd_toEndOf="@id/iv_product" />
+            app:layout_constraintEnd_toEndOf="@id/iv_product"
+            app:visibleIf="@{cartItem.quantity == 0}" />
 
         <include
             android:id="@+id/included_layout_cart"
@@ -67,13 +72,13 @@
             android:layout_height="48dp"
             android:layout_marginHorizontal="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
-            app:clickListener="@{clickListener}"
+            app:clickListener="@{counterClickListener}"
             app:id="@{cartItem.product.productId}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="@id/iv_product"
             app:layout_constraintStart_toStartOf="@id/iv_product"
-            app:quantity="@{cartItem.quantity}" />
+            app:quantity="@{cartItem.quantity}"
+            app:visibleIf="@{cartItem.quantity > 0}" />
 
         <TextView
             android:id="@+id/tv_product_price"
