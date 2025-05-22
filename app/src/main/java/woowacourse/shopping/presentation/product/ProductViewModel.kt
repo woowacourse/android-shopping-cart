@@ -48,7 +48,7 @@ class ProductViewModel(
                     val currentList = (_products.value as? ResultState.Success)?.data.orEmpty()
                     val updatedList = currentList + newItems
                     _products.postValue(ResultState.Success(updatedList))
-                    currentPage++
+                    this.currentPage++
                     _showLoadMore.postValue(updatedList.size < DummyProducts.values.size)
                 }.onFailure { e ->
                     Log.e("ProductViewModel", "Failed to load next products", e)
@@ -117,6 +117,6 @@ class ProductViewModel(
     }
 
     companion object {
-        private const val FIRST_PAGE = 1
+        private const val FIRST_PAGE = 0
     }
 }

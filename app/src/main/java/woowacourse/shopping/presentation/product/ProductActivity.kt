@@ -51,7 +51,7 @@ class ProductActivity :
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchData(0)
+//        viewModel.fetchData(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

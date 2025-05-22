@@ -19,29 +19,28 @@ class ProductRepositoryImpl(
         onResult: (Result<List<CartItem>>) -> Unit,
     ) {
         val fromIndex = page * pageSize
-//        val toIndex = minOf(fromIndex + pageSize, DummyProducts.values.size)
+        val toIndex = minOf(fromIndex + pageSize, DummyProducts.values.size)
         if (fromIndex >= DummyProducts.values.size) return onResult(Result.success(emptyList()))
 
-        val productPage = productDataSource.getPagedProducts(page, pageSize)
-        val resultList = mutableListOf<CartItem>()
+        val productPage = DummyProducts.values.slice(fromIndex until toIndex)
+        val resultList = MutableList<CartItem?>(productPage.size) { null }
         var completedCount = 0
 
-        productPage.forEach { product ->
+        productPage.forEachIndexed { index, product ->
             cartDataSource.getCartItemById(product.productId) { result ->
                 result
                     .onSuccess {
                         val quantity = result.getOrNull()?.quantity ?: 0
 
-                        resultList.add(
+                        resultList[index] =
                             CartItem(
                                 product = product,
                                 quantity = quantity,
-                            ),
-                        )
+                            )
 
                         completedCount++
                         if (completedCount == productPage.size) {
-                            onResult(Result.success(resultList))
+                            onResult(Result.success(resultList.filterNotNull()))
                         }
                     }.onFailure { e ->
                         onResult(Result.failure(e))
