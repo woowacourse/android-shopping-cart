@@ -6,10 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(
     indices = [Index(value = ["productId"], unique = true)],
-    tableName = "ShoppingCart",
+    tableName = "RecentViewedProducts",
 )
-data class CartEntity(
+data class RecentProductEntity(
     @PrimaryKey val productId: Long,
-    val quantity: Int = 1,
-    val createdAt: Long = System.currentTimeMillis(),
+    val lastViewedAt: Long = System.currentTimeMillis(),
 )

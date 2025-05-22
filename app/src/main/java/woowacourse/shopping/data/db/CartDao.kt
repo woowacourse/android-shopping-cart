@@ -8,37 +8,37 @@ import androidx.room.Transaction
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM CartEntity ORDER BY productId ASC")
+    @Query("SELECT * FROM ShoppingCart ORDER BY productId ASC")
     fun getAll(): List<CartEntity>
 
-    @Query("SELECT SUM(quantity) FROM CartEntity")
+    @Query("SELECT SUM(quantity) FROM ShoppingCart")
     fun getTotalQuantity(): Int
 
-    @Query("SELECT * FROM CartEntity ORDER BY createdAt ASC Limit :limit OFFSET :offset")
+    @Query("SELECT * FROM ShoppingCart ORDER BY createdAt ASC Limit :limit OFFSET :offset")
     fun getCartItemPaged(
         limit: Int,
         offset: Int,
     ): List<CartEntity>
 
-    @Query("SELECT EXISTS(SELECT 1 FROM CartEntity WHERE createdAt > :createdAt)")
+    @Query("SELECT EXISTS(SELECT 1 FROM ShoppingCart WHERE createdAt > :createdAt)")
     fun existsItemCreatedAfter(createdAt: Long): Boolean
 
-    @Query("SELECT * FROM CartEntity WHERE productId = :productId")
+    @Query("SELECT * FROM ShoppingCart WHERE productId = :productId")
     fun findByProductId(productId: Long): CartEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(product: CartEntity)
 
-    @Query("UPDATE CartEntity SET quantity = quantity + :increaseQuantity WHERE productId = :productId")
+    @Query("UPDATE ShoppingCart SET quantity = quantity + :increaseQuantity WHERE productId = :productId")
     fun updateQuantity(
         productId: Long,
         increaseQuantity: Int,
     )
 
-    @Query("UPDATE CartEntity SET quantity = quantity - 1 WHERE productId = :productId AND quantity > 1")
+    @Query("UPDATE ShoppingCart SET quantity = quantity - 1 WHERE productId = :productId AND quantity > 1")
     fun decreaseQuantity(productId: Long)
 
-    @Query("DELETE FROM CartEntity WHERE productId = :id")
+    @Query("DELETE FROM ShoppingCart WHERE productId = :id")
     fun delete(id: Long)
 
     @Transaction
