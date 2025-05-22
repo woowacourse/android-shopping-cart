@@ -56,11 +56,8 @@ class ProductsViewModel(
         }
     }
 
-    fun updateShoppingCartSize() {
-        totalShoppingCartSize.value = shoppingCartRepository.totalQuantity()
-    }
-
     fun updateShoppingCart(currentPage: Int) {
+        totalShoppingCartSize.value = shoppingCartRepository.totalQuantity()
         (0..currentPage).forEach {
             requestProductsPage(it)
         }
