@@ -40,12 +40,13 @@ class ProductListAdapter(
 
     fun update(items: List<ProductListViewType>) {
         val positionStart = this.items.size
-        val itemCount = items.size - itemCount
+        val itemCount = items.size - (this.items.size - LOAD_MORE_BUTTON_OFFSET)
         this.items = items
         notifyItemRangeInserted(positionStart, itemCount)
     }
 
     companion object {
         private const val ERROR_INVALID_VIEW_HOLDER_TYPE = "지원하지 않는 타입입니다."
+        private const val LOAD_MORE_BUTTON_OFFSET = 1
     }
 }
