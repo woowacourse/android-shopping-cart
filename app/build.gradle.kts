@@ -80,5 +80,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     testImplementation(libs.truth)
+    androidTestImplementation(libs.truth)
     testImplementation(libs.mockk)
 }
