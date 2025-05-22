@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@null"
+            android:onClick="@{ () -> productClickListener.onClick(product) }"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             android:scaleType="centerCrop"
