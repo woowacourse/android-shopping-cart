@@ -4,16 +4,17 @@ import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 
 class ProductsAdapter(
     private val totalShoppingCartSize: MutableLiveData<Int>,
 ) : RecyclerView.Adapter<ProductsViewHolder>() {
     private var products: List<Product> = listOf()
-    var quantity: Map<Product, MutableLiveData<Int>> = mapOf()
+    var quantityMap: Map<Product, MutableLiveData<Int>> = mapOf()
         private set
 
-    var currentPage: Int = -1
+    var currentPage: Int = 0
         private set
 
     override fun getItemCount(): Int = products.size
@@ -23,7 +24,7 @@ class ProductsAdapter(
         position: Int,
     ) {
         val item = products[position]
-        val quantityLiveData = quantity[item] ?: return
+        val quantityLiveData = quantityMap[item] ?: return
         holder.bind(item, quantityLiveData)
     }
 
@@ -38,25 +39,26 @@ class ProductsAdapter(
         val newProducts = mainRecyclerViewProduct.page.items
         val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItems
 
-        val quantityMap =
-            newProducts.associateWith { product ->
-                MutableLiveData(
-                    newShoppingCartItems.find { it.product == product }
-                        ?.quantity ?: DEFAULT_QUANTITY,
-                )
-            }
-
         currentPage = mainRecyclerViewProduct.page.currentPage
         products += newProducts
-        quantity += quantityMap
+        quantityMap += newProducts.quantityMap(newShoppingCartItems)
         notifyItemInserted(itemCount)
     }
 
     fun clear() {
         val previousItemCount = itemCount
         products = listOf()
-        quantity = mapOf()
+        quantityMap = mapOf()
         notifyItemRangeRemoved(0, previousItemCount)
+    }
+
+    private fun List<Product>.quantityMap(newShoppingCartItems: List<ShoppingCartItem>): Map<Product, MutableLiveData<Int>> {
+        return associateWith { product ->
+            MutableLiveData(
+                newShoppingCartItems.find { it.product.id == product.id }
+                    ?.quantity ?: DEFAULT_QUANTITY,
+            )
+        }
     }
 
     companion object {

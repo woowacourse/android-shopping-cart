@@ -25,7 +25,7 @@ class ProductsViewModel(
     val totalSize: Int get() = productsRepository.totalSize()
     val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalQuantity())
     val menuBadgeViewRule = { text: String ->
-        if (text.toInt() > 0) View.VISIBLE else View.GONE
+        if (text.toInt() > MINIMUM_BADGE_DISPLAY_QUANTITY) View.VISIBLE else View.GONE
     }
 
     fun requestProductsPage(requestPage: Int) {
@@ -64,6 +64,7 @@ class ProductsViewModel(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val MINIMUM_BADGE_DISPLAY_QUANTITY = 0
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {

@@ -74,7 +74,7 @@ class MainActivity :
     }
 
     private fun onShoppingCartClicked() {
-        viewModel.saveCurrentShoppingCart(productsAdapter.quantity)
+        viewModel.saveCurrentShoppingCart(productsAdapter.quantityMap)
         val intent = ShoppingCartActivity.newIntent(this)
         startActivity(intent)
     }
