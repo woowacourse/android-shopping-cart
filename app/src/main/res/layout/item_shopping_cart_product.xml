@@ -62,6 +62,53 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="#AAAAAA" />
 
+
+        <TextView
+            android:id="@+id/btn_decrease_quantity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/button_minus"
+            android:textColor="@color/gray"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_quantity"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/tv_product_quantity" />
+
+        <TextView
+            android:id="@+id/tv_product_quantity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/tv_price"
+            app:layout_constraintEnd_toStartOf="@id/btn_increase_quantity"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/btn_increase_quantity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/button_plus"
+            android:textColor="@color/gray"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_quantity"
+            app:layout_constraintEnd_toEndOf="@id/tv_price" />
+
         <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
