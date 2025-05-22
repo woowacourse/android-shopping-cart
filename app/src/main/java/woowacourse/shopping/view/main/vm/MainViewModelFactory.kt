@@ -2,15 +2,13 @@ package woowacourse.shopping.view.main.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.storage.ProductStorage
-import woowacourse.shopping.data.storage.ProductStorageImpl
+import woowacourse.shopping.view.ShoppingApp.Companion.cartRepository
+import woowacourse.shopping.view.ShoppingApp.Companion.productRepository
 
 class MainViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val storage: ProductStorage = ProductStorageImpl()
-
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(storage) as T
+            return MainViewModel(cartRepository, productRepository) as T
         }
         throw IllegalArgumentException()
     }
