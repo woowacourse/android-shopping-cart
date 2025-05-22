@@ -5,7 +5,6 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
@@ -40,33 +39,33 @@ class CartActivity : AppCompatActivity() {
             binding.tvPageCount.text = pageCount.toString()
             if (viewModel.isFirstPage(pageCount)) {
                 binding.btnPreviousPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_6,
+                    (
+                        binding.btnPreviousPage.context.getColor(
+                            R.color.gray_6,
+                        )
                     ),
                 )
             } else {
                 binding.btnPreviousPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.aqua_green,
+                    (
+                        binding.btnPreviousPage.context.getColor(
+                            R.color.aqua_green,
+                        )
                     ),
                 )
             }
 
             if (viewModel.isLastPage(pageCount)) {
                 binding.btnNextPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_6,
+                    (
+                        binding.btnNextPage.context.getColor(
+                            R.color.gray_6,
+                        )
                     ),
                 )
             } else {
                 binding.btnNextPage.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.aqua_green,
-                    ),
+                    (binding.btnNextPage.context.getColor(R.color.aqua_green)),
                 )
             }
         }
