@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.mapper.toProductDomain
@@ -12,15 +11,12 @@ class SelectedProductViewHolder(
     private val binding: ItemSelectedProductBinding,
     eventListener: OnRemoveProductListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private lateinit var currentItem: ShoppingProduct
-
     init {
-        binding.onRemoveClick =
-            OnClickListener { eventListener.onClickCancel(currentItem) }
+        binding.onRemoveProductListener = eventListener
     }
 
     fun bind(shoppingProduct: ShoppingProduct) {
-        currentItem = shoppingProduct
+        binding.shoppingProduct = shoppingProduct
         binding.product = shoppingProduct.productId.toProductDomain()
     }
 
