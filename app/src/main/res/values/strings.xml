@@ -3,9 +3,9 @@
     <string name="app_name">Shopping</string>
 
     <!--    상품 목록-->
-    <string name="products_price">%,d원</string>
-    <string name="products_load_more">더보기</string>
-    <string name="products_history_title">최근 본 상품</string>
+    <string name="catalog_price">%,d원</string>
+    <string name="catalog_load_more">더보기</string>
+    <string name="catalog_history_title">최근 본 상품</string>
 
     <!--    상품 상세-->
     <string name="product_detail_cart_add_success">성공적으로 장바구니에 반영되었습니다!</string>

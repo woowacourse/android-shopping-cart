@@ -1,22 +1,22 @@
-package woowacourse.shopping.ui.products.adapter.product
+package woowacourse.shopping.ui.catalog.adapter.product
 
 import android.content.Context
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class ProductsLayoutManager(
+class CatalogLayoutManager(
     context: Context,
-    private val productsAdapter: RecyclerView.Adapter<ProductsItemViewHolder<ProductsItem, ViewDataBinding>>,
+    private val productsAdapter: RecyclerView.Adapter<CatalogItemViewHolder<CatalogItem, ViewDataBinding>>,
 ) : GridLayoutManager(context, GRID_LAYOUT_SIZE) {
     init {
         spanSizeLookup =
             object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     val viewType = productsAdapter.getItemViewType(position)
-                    return when (ProductsItemViewType.entries[viewType]) {
-                        ProductsItemViewType.PRODUCT -> PRODUCT_LAYOUT_SIZE
-                        ProductsItemViewType.LOAD_MORE -> LOAD_MORE_LAYOUT_SIZE
+                    return when (CatalogItemViewType.entries[viewType]) {
+                        CatalogItemViewType.PRODUCT -> PRODUCT_LAYOUT_SIZE
+                        CatalogItemViewType.LOAD_MORE -> LOAD_MORE_LAYOUT_SIZE
                     }
                 }
             }

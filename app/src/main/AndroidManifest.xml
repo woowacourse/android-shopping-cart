@@ -19,7 +19,7 @@
             android:name=".ui.cart.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.products.ProductsActivity"
+            android:name=".ui.catalog.CatalogActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

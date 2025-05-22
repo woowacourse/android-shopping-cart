@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products.adapter.history
+package woowacourse.shopping.ui.catalog.adapter.history
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

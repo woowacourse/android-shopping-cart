@@ -1,13 +1,13 @@
-package woowacourse.shopping.ui.products.adapter.product
+package woowacourse.shopping.ui.catalog.adapter.product
 
 import androidx.annotation.CallSuper
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class ProductsItemViewHolder<ITEM : ProductsItem, BINDING : ViewDataBinding>(
+abstract class CatalogItemViewHolder<ITEM : CatalogItem, BINDING : ViewDataBinding>(
     protected val binding: BINDING,
 ) : RecyclerView.ViewHolder(binding.root) {
-    protected lateinit var item: ProductsItem
+    protected lateinit var item: CatalogItem
 
     @CallSuper
     open fun bind(item: ITEM) {

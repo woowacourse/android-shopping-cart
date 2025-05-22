@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products
+package woowacourse.shopping.ui.catalog
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,20 +9,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.databinding.LayoutProductsCartQuantityBinding
+import woowacourse.shopping.databinding.ActivityCatalogBinding
+import woowacourse.shopping.databinding.LayoutCatalogCartQuantityBinding
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.catalog.adapter.history.HistoryProductAdapter
+import woowacourse.shopping.ui.catalog.adapter.product.CatalogAdapter
+import woowacourse.shopping.ui.catalog.adapter.product.CatalogAdapter.OnClickHandler
+import woowacourse.shopping.ui.catalog.adapter.product.CatalogLayoutManager
 import woowacourse.shopping.ui.common.DataBindingActivity
 import woowacourse.shopping.ui.model.ActivityResult
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.products.adapter.history.HistoryProductAdapter
-import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter
-import woowacourse.shopping.ui.products.adapter.product.ProductsAdapter.OnClickHandler
-import woowacourse.shopping.ui.products.adapter.product.ProductsLayoutManager
 
-class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.activity_products) {
-    private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
-    private val productsAdapter: ProductsAdapter = ProductsAdapter(createAdapterOnClickHandler())
+class CatalogActivity : DataBindingActivity<ActivityCatalogBinding>(R.layout.activity_catalog) {
+    private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
+    private val catalogAdapter: CatalogAdapter = CatalogAdapter(createAdapterOnClickHandler())
     private val historyProductAdapter: HistoryProductAdapter = HistoryProductAdapter { id -> navigateToProductDetail(id) }
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
@@ -41,12 +41,12 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_products, menu)
+        menuInflater.inflate(R.menu.menu_catalog, menu)
 
         val binding =
-            DataBindingUtil.inflate<LayoutProductsCartQuantityBinding>(
+            DataBindingUtil.inflate<LayoutCatalogCartQuantityBinding>(
                 LayoutInflater.from(this),
-                R.layout.layout_products_cart_quantity,
+                R.layout.layout_catalog_cart_quantity,
                 null,
                 false,
             )
@@ -100,8 +100,8 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
     }
 
     private fun initProductsView() {
-        binding.productItemsContainer.adapter = productsAdapter
-        binding.productItemsContainer.layoutManager = ProductsLayoutManager(this, productsAdapter)
+        binding.productItemsContainer.adapter = catalogAdapter
+        binding.productItemsContainer.layoutManager = CatalogLayoutManager(this, catalogAdapter)
         binding.productItemsContainer.itemAnimator = null
     }
 
@@ -112,7 +112,7 @@ class ProductsActivity : DataBindingActivity<ActivityProductsBinding>(R.layout.a
 
     private fun initObservers() {
         viewModel.catalogProducts.observe(this) { products ->
-            productsAdapter.submitItems(products.products, products.hasMore)
+            catalogAdapter.submitItems(products.products, products.hasMore)
         }
 
         viewModel.historyProducts.observe(this) { products ->

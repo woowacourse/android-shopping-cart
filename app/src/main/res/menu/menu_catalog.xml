@@ -4,6 +4,6 @@
     <item
         android:id="@+id/itemCart"
         android:title="@string/products_cart"
-        app:actionLayout="@layout/layout_products_cart_quantity"
+        app:actionLayout="@layout/layout_catalog_cart_quantity"
         app:showAsAction="always" />
 </menu>

@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.products
+package woowacourse.shopping.ui.catalog
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class ProductsViewModel(
+class CatalogViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
@@ -81,7 +81,7 @@ class ProductsViewModel(
                 ): T {
                     val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
-                    return ProductsViewModel(
+                    return CatalogViewModel(
                         application.productRepository,
                         application.cartRepository,
                         application.historyRepository,

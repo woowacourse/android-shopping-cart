@@ -11,7 +11,7 @@
 
         <variable
             name="onClickHandler"
-            type="woowacourse.shopping.ui.products.adapter.history.HistoryProductViewHolder.OnClickHandler" />
+            type="woowacourse.shopping.ui.catalog.adapter.history.HistoryProductViewHolder.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

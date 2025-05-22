@@ -19,17 +19,17 @@ import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_2
 import woowacourse.shopping.model.DUMMY_HISTORY_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_PRODUCT_1
-import woowacourse.shopping.ui.products.ProductsViewModel
+import woowacourse.shopping.ui.catalog.CatalogViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 import woowacourse.shopping.util.setUpTestLiveData
 
 @ExtendWith(InstantTaskExecutorExtension::class)
-class ProductsViewModelTest {
+class CatalogViewModelTest {
     private lateinit var productRepository: ProductRepository
     private lateinit var cartRepository: CartRepository
     private lateinit var historyRepository: HistoryRepository
-    private lateinit var viewModel: ProductsViewModel
+    private lateinit var viewModel: CatalogViewModel
 
     @BeforeEach
     fun setup() {
@@ -37,7 +37,7 @@ class ProductsViewModelTest {
         cartRepository = mockk(relaxed = true)
         historyRepository = mockk(relaxed = true)
 
-        viewModel = ProductsViewModel(productRepository, cartRepository, historyRepository)
+        viewModel = CatalogViewModel(productRepository, cartRepository, historyRepository)
     }
 
     @Test

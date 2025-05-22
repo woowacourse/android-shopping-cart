@@ -1,31 +1,31 @@
-package woowacourse.shopping.ui.products.adapter.product
+package woowacourse.shopping.ui.catalog.adapter.product
 
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.CatalogProduct
 
-class ProductsAdapter(
+class CatalogAdapter(
     private val onClickHandler: OnClickHandler,
-) : RecyclerView.Adapter<ProductsItemViewHolder<ProductsItem, ViewDataBinding>>() {
-    private val items: MutableList<ProductsItem> = mutableListOf()
+) : RecyclerView.Adapter<CatalogItemViewHolder<CatalogItem, ViewDataBinding>>() {
+    private val items: MutableList<CatalogItem> = mutableListOf()
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductsItemViewHolder<ProductsItem, ViewDataBinding> =
-        when (ProductsItemViewType.entries[viewType]) {
-            ProductsItemViewType.PRODUCT -> ProductViewHolder(parent, onClickHandler)
-            ProductsItemViewType.LOAD_MORE -> LoadMoreViewHolder(parent, onClickHandler)
-        } as ProductsItemViewHolder<ProductsItem, ViewDataBinding>
+    ): CatalogItemViewHolder<CatalogItem, ViewDataBinding> =
+        when (CatalogItemViewType.entries[viewType]) {
+            CatalogItemViewType.PRODUCT -> ProductViewHolder(parent, onClickHandler)
+            CatalogItemViewType.LOAD_MORE -> LoadMoreViewHolder(parent, onClickHandler)
+        } as CatalogItemViewHolder<CatalogItem, ViewDataBinding>
 
     override fun onBindViewHolder(
-        holder: ProductsItemViewHolder<ProductsItem, ViewDataBinding>,
+        holder: CatalogItemViewHolder<CatalogItem, ViewDataBinding>,
         position: Int,
     ) {
-        val productsItem: ProductsItem = items[position]
-        holder.bind(productsItem)
+        val catalogItem: CatalogItem = items[position]
+        holder.bind(catalogItem)
     }
 
     override fun getItemCount(): Int = items.size
@@ -36,7 +36,7 @@ class ProductsAdapter(
         newItems: List<CatalogProduct>,
         hasMore: Boolean,
     ) {
-        val newProductItems = newItems.map { ProductsItem.ProductItem(it) }
+        val newProductItems = newItems.map { CatalogItem.ProductItem(it) }
         val oldProductItems = items.toList()
 
         updateNewItems(newProductItems, oldProductItems)
@@ -45,8 +45,8 @@ class ProductsAdapter(
     }
 
     private fun updateNewItems(
-        newProductItems: List<ProductsItem.ProductItem>,
-        oldProductItems: List<ProductsItem>,
+        newProductItems: List<CatalogItem.ProductItem>,
+        oldProductItems: List<CatalogItem>,
     ) {
         for ((position, newItem) in newProductItems.withIndex()) {
             val oldItem = oldProductItems.getOrNull(position)
@@ -59,30 +59,30 @@ class ProductsAdapter(
     }
 
     private fun isContentTheSame(
-        oldItem: ProductsItem,
-        newItem: ProductsItem,
+        oldItem: CatalogItem,
+        newItem: CatalogItem,
     ): Boolean =
         when (oldItem) {
-            is ProductsItem.ProductItem -> oldItem.value == (newItem as ProductsItem.ProductItem).value
-            is ProductsItem.LoadMoreItem -> false
+            is CatalogItem.ProductItem -> oldItem.value == (newItem as CatalogItem.ProductItem).value
+            is CatalogItem.LoadMoreItem -> false
         }
 
     private fun replaceItem(
         position: Int,
-        newItem: ProductsItem,
+        newItem: CatalogItem,
     ) {
         items[position] = newItem
         notifyItemChanged(position)
     }
 
-    private fun addItem(item: ProductsItem) {
+    private fun addItem(item: CatalogItem) {
         items.add(item)
         notifyItemInserted(items.size - 1)
     }
 
     private fun removeExceedingItems(
-        oldProductItems: List<ProductsItem>,
-        newProductItems: List<ProductsItem.ProductItem>,
+        oldProductItems: List<CatalogItem>,
+        newProductItems: List<CatalogItem.ProductItem>,
     ) {
         if (oldProductItems.size > newProductItems.size) {
             for (position in oldProductItems.lastIndex downTo newProductItems.size) {
@@ -97,13 +97,13 @@ class ProductsAdapter(
     }
 
     private fun updateLoadMoreItem(hasMore: Boolean) {
-        val loadMoreIndex = items.indexOfFirst { it is ProductsItem.LoadMoreItem }
+        val loadMoreIndex = items.indexOfFirst { it is CatalogItem.LoadMoreItem }
 
         when {
-            hasMore && loadMoreIndex == -1 -> addItem(ProductsItem.LoadMoreItem)
+            hasMore && loadMoreIndex == -1 -> addItem(CatalogItem.LoadMoreItem)
             hasMore && loadMoreIndex != -1 -> {
                 removeItem(loadMoreIndex)
-                addItem(ProductsItem.LoadMoreItem)
+                addItem(CatalogItem.LoadMoreItem)
             }
 
             !hasMore && loadMoreIndex != -1 -> removeItem(loadMoreIndex)

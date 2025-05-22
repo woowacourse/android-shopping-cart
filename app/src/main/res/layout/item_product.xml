@@ -11,7 +11,7 @@
 
         <variable
             name="onClickHandler"
-            type="woowacourse.shopping.ui.products.adapter.product.ProductViewHolder.OnClickHandler" />
+            type="woowacourse.shopping.ui.catalog.adapter.product.ProductViewHolder.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="9dp"
-            android:text="@{@string/products_price(catalogProduct.product.price)}"
+            android:text="@{@string/catalog_price(catalogProduct.product.price)}"
             android:textColor="@color/gray_5"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
