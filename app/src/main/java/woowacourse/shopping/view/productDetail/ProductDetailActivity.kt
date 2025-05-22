@@ -33,17 +33,17 @@ class ProductDetailActivity :
             insets
         }
 
-        initViewModel()
-        bindViewModel()
-        handleEvents()
-    }
-
-    private fun initViewModel() {
         val product =
             intent.getProductExtra() ?: run {
                 showToast(getString(R.string.product_not_provided_error_message))
                 return finish()
             }
+        initViewModel(product)
+        bindViewModel()
+        handleEvents()
+    }
+
+    private fun initViewModel(product: Product) {
         viewModel.updateProduct(product)
     }
 
