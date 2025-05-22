@@ -29,14 +29,14 @@ class GoodsActivity : BaseActivity() {
         setUpScreen(binding.root)
         setUpBinding()
 
-        val adapter = makeAdapter()
-        setUpGoodsList(adapter)
-        setUpObserver(adapter)
+        val goodsAdapter = makeAdapter()
+        setUpGoodsList(goodsAdapter)
 
-        val latestGoodsAdapter = LatestGoodsAdapter(viewModel.latestGoods.value ?: emptyList())
+        val latestGoodsAdapter = LatestGoodsAdapter()
         setUpLatestGoodsList(latestGoodsAdapter)
 
         setSupportActionBar(binding.toolbar)
+        setUpObserver(goodsAdapter, latestGoodsAdapter)
     }
 
     override fun onStart() {
@@ -76,7 +76,7 @@ class GoodsActivity : BaseActivity() {
     private fun setUpGoodsList(adapter: GoodsAdapter) {
         binding.rvGoodsList.apply {
             this.adapter = adapter
-            layoutManager = GridLayoutManager(this@GoodsActivity, SPAN_COUNT)
+            layoutManager = GridLayoutManager(this@GoodsActivity, GOODS_SPAN_COUNT)
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(
@@ -95,22 +95,29 @@ class GoodsActivity : BaseActivity() {
     private fun setUpLatestGoodsList(adapter: LatestGoodsAdapter) {
         binding.rvLatestGoodsList.apply {
             this.adapter = adapter
-            layoutManager = GridLayoutManager(this@GoodsActivity, 1, GridLayoutManager.HORIZONTAL, false)
+            layoutManager = GridLayoutManager(this@GoodsActivity, LATEST_GOODS_SPAN_COUNT, GridLayoutManager.HORIZONTAL, false)
         }
     }
 
-    private fun setUpObserver(adapter: GoodsAdapter) {
+    private fun setUpObserver(
+        goodsAdapter: GoodsAdapter,
+        latestGoodsAdapter: LatestGoodsAdapter,
+    ) {
         viewModel.goods.observe(this) { goods ->
-            adapter.loadMoreItems(goods)
+            goodsAdapter.loadMoreItems(goods)
         }
 
         viewModel.onQuantityChanged.observe(this) { goods ->
-            goods.forEach { adapter.notifyItemChanged(it) }
+            goods.forEach { goodsAdapter.notifyItemChanged(it) }
         }
 
         viewModel.shouldNavigateToShoppingCart.observe(this) {
             val intent = ShoppingCartActivity.newIntent(this)
             startActivity(intent)
+        }
+
+        viewModel.latestGoods.observe(this) {
+            latestGoodsAdapter.addLatestGoods(it)
         }
     }
 
@@ -132,7 +139,8 @@ class GoodsActivity : BaseActivity() {
     }
 
     companion object {
-        private const val SPAN_COUNT: Int = 2
+        private const val GOODS_SPAN_COUNT: Int = 2
+        private const val LATEST_GOODS_SPAN_COUNT: Int = 1
         private const val SCROLL_DIRECTION: Int = 1
     }
 }

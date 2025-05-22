@@ -149,7 +149,7 @@ class GoodsViewModel(
     }
 
     fun updateLatestGoods(goods: GoodsUiModel) {
-        _latestGoods.value = _latestGoods.value?.plus(goods)
+        _latestGoods.value = listOf(goods) + (_latestGoods.value ?: emptyList())
         latestGoodsRepository.insertLatestGoods(goods.id)
     }
 
