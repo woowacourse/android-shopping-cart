@@ -79,6 +79,28 @@ class ShoppingCartViewModel(
         }
     }
 
+    fun decreaseQuantity(product: Product) {
+        shoppingCartRepository.decreaseQuantity(product) { result ->
+            result
+                .onSuccess {
+                    updateShoppingCart()
+                }.onFailure {
+                    _event.postValue(ShoppingCartEvent.DECREASE_SHOPPING_CART_PRODUCT_FAILURE)
+                }
+        }
+    }
+
+    fun addQuantity(product: Product) {
+        shoppingCartRepository.add(product, 1) { result ->
+            result
+                .onSuccess {
+                    updateShoppingCart()
+                }.onFailure {
+                    _event.postValue(ShoppingCartEvent.ADD_SHOPPING_CART_PRODUCT_FAILURE)
+                }
+        }
+    }
+
     fun plusPage() {
         page++
         updateShoppingCart()

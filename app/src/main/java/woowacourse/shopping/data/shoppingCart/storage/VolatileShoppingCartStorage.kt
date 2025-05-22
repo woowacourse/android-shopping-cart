@@ -60,7 +60,8 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
     }
 
     override fun remove(product: ProductEntity) {
+        val updateShoppingCart = products.filterNot { it.product == product }
         products.clear()
-        products.addAll(products.filterNot { it.product == product })
+        products.addAll(updateShoppingCart)
     }
 }

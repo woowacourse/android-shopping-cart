@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.product.Product
 
 class ShoppingCartProductAdapter(
     private val onRemoveProduct: (product: Product) -> Unit,
-    private val onShoppingCartPaginationClickListener: OnShoppingCartPaginationClickListener,
+    private val shoppingCartListener: ShoppingCartListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<ShoppingCartItem> = emptyList()
 
@@ -21,13 +21,13 @@ class ShoppingCartProductAdapter(
             ShoppingCartItem.ItemType.PRODUCT ->
                 ShoppingCartProductViewHolder.of(
                     parent,
-                    onRemoveProduct,
+                    shoppingCartListener,
                 )
 
             ShoppingCartItem.ItemType.PAGINATION ->
                 ShoppingCartPaginationViewHolder.of(
                     parent,
-                    onShoppingCartPaginationClickListener,
+                    shoppingCartListener,
                 )
         }
     }
@@ -48,4 +48,8 @@ class ShoppingCartProductAdapter(
         this.items = items
         notifyDataSetChanged()
     }
+
+    interface ShoppingCartListener :
+        ShoppingCartPaginationViewHolder.ShoppingCartPaginationClickListener,
+        ShoppingCartProductViewHolder.ShoppingCartProductClickListener
 }

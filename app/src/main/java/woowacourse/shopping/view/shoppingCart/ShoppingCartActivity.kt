@@ -11,11 +11,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.view.common.showToast
+import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.showSnackBar
 
 class ShoppingCartActivity :
     AppCompatActivity(),
-    OnShoppingCartPaginationClickListener {
+    ShoppingCartProductAdapter.ShoppingCartListener {
     private val viewModel: ShoppingCartViewModel by viewModels()
     private val binding: ActivityShoppingCartBinding by lazy {
         ActivityShoppingCartBinding.inflate(layoutInflater)
@@ -62,9 +63,15 @@ class ShoppingCartActivity :
 
                     ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE ->
                         R.string.shopping_cart_remove_shopping_cart_product_error_message
+
+                    ShoppingCartEvent.DECREASE_SHOPPING_CART_PRODUCT_FAILURE ->
+                        R.string.products_minus_shopping_cart_product_error_message
+
+                    ShoppingCartEvent.ADD_SHOPPING_CART_PRODUCT_FAILURE ->
+                        R.string.product_detail_add_shopping_cart_error_message
                 }
 
-            showToast(getString(messageResourceId))
+            binding.root.showSnackBar(getString(messageResourceId))
         }
     }
 
@@ -74,6 +81,18 @@ class ShoppingCartActivity :
 
     override fun onPlusPage() {
         viewModel.plusPage()
+    }
+
+    override fun onRemoveButton(product: Product) {
+        viewModel.removeShoppingCartProduct(product)
+    }
+
+    override fun onMinusButton(product: Product) {
+        viewModel.decreaseQuantity(product)
+    }
+
+    override fun onPlusButton(product: Product) {
+        viewModel.addQuantity(product)
     }
 
     companion object {
