@@ -15,17 +15,6 @@ class ProductsViewModel(
 ) : ViewModel() {
     private var allProducts: List<Product> = emptyList()
 
-    init {
-        productsRepository.load { result: Result<List<Product>> ->
-            result
-                .onSuccess { products: List<Product> ->
-                    allProducts = products
-                }.onFailure {
-                    _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
-                }
-        }
-    }
-
     private val products: MutableLiveData<List<Product>> = MutableLiveData()
     val productItems: LiveData<List<ProductsItem>> = products.map { it.toProductItems }
 
@@ -37,6 +26,7 @@ class ProductsViewModel(
     val event: SingleLiveData<Event> get() = _event
 
     init {
+        loadAllProducts(productsRepository)
         updateProducts()
     }
 
@@ -52,6 +42,17 @@ class ProductsViewModel(
             products.value = products.value?.plus(newProducts) ?: newProducts
         }.onFailure {
             _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
+        }
+    }
+
+    private fun loadAllProducts(productsRepository: ProductsRepository) {
+        productsRepository.load { result: Result<List<Product>> ->
+            result
+                .onSuccess { products: List<Product> ->
+                    allProducts = products
+                }.onFailure {
+                    _event.postValue(Event.UPDATE_PRODUCT_FAILURE)
+                }
         }
     }
 
