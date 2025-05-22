@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.domain.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.model.toUiModel
@@ -16,6 +17,7 @@ import woowacourse.shopping.presentation.util.event.SingleLiveData
 class GoodsDetailViewModel(
     private val goodsRepository: GoodsRepository,
     private val shoppingRepository: ShoppingRepository,
+    private val latestGoodsRepository: LatestGoodsRepository,
 ) : ViewModel() {
     var lastGoods: GoodsUiModel? = null
         private set
@@ -63,6 +65,10 @@ class GoodsDetailViewModel(
 
     private fun canDecreaseCount(): Boolean = (_count.value ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY
 
+    fun updateLatestGoods(goodsId: Int) {
+        latestGoodsRepository.insertLatestGoods(goodsId)
+    }
+
     companion object {
         private const val MIN_PURCHASE_QUANTITY: Int = 1
         private const val QUANTITY_STEP: Int = 1
@@ -70,10 +76,11 @@ class GoodsDetailViewModel(
         fun provideFactory(
             goodsRepository: GoodsRepository,
             shoppingRepository: ShoppingRepository,
+            latestGoodsRepository: LatestGoodsRepository,
         ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    GoodsDetailViewModel(goodsRepository, shoppingRepository)
+                    GoodsDetailViewModel(goodsRepository, shoppingRepository, latestGoodsRepository)
                 }
             }
     }

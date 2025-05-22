@@ -21,6 +21,7 @@ class GoodsDetailActivity : BaseActivity() {
         GoodsDetailViewModel.provideFactory(
             (application as ShoppingApplication).goodsRepository,
             (application as ShoppingApplication).shoppingRepository,
+            (application as ShoppingApplication).latestGoodsRepository,
         )
     }
 
@@ -57,7 +58,10 @@ class GoodsDetailActivity : BaseActivity() {
             }
 
         binding.lastGoodsClickListener =
-            LastGoodsClickListener { lastGoodsId -> navigateToLastGoodsDetail(lastGoodsId) }
+            LastGoodsClickListener { lastGoodsId ->
+                viewModel.updateLatestGoods(lastGoodsId)
+                navigateToLastGoodsDetail(lastGoodsId)
+            }
     }
 
     private fun getGoodsId(): Int {

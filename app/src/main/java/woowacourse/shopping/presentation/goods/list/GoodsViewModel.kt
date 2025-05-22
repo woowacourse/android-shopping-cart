@@ -48,6 +48,9 @@ class GoodsViewModel(
 
     init {
         _goods.value = goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+    }
+
+    fun setLatestGoods() {
         _latestGoods.value =
             latestGoodsRepository.getAll().map {
                 goodsRepository.getById(it.goodsId).toUiModel()

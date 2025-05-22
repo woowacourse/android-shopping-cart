@@ -48,6 +48,7 @@ class GoodsActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
 
+        viewModel.setLatestGoods()
         viewModel.restoreGoods()
     }
 
