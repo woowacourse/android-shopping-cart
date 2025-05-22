@@ -18,7 +18,7 @@ class ShoppingRepositoryImpl(
             cartDataSource.getAll().map { it.toCartItem() }
         }
 
-    override fun getCartItemCount(onResult: (Result<Int>) -> Unit) =
+    override fun getTotalQuantity(onResult: (Result<Int>) -> Unit) =
         runCatchingInThread(onResult) {
             cartDataSource.getTotalQuantity()
         }

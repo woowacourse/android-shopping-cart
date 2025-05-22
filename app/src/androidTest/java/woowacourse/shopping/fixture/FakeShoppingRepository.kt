@@ -9,13 +9,47 @@ class FakeShoppingRepository(
     private val initialProducts: List<Product>,
     private val initialCartItems: MutableMap<Long, Int> = mutableMapOf(),
 ) : ShoppingRepository {
+    override fun getAll(onResult: (Result<List<CartItem>>) -> Unit) {
+        val result =
+            initialCartItems.mapNotNull { (productId, quantity) ->
+                val product = initialProducts.find { it.id == productId }
+                product?.let { CartItem(it, quantity) }
+            }
+        onResult(Result.success(result))
+    }
+
     override fun loadProducts(
         offset: Int,
         limit: Int,
-    ): Result<PageableItem<Product>> {
+        onResult: (Result<PageableItem<CartItem>>) -> Unit,
+    ) {
         val products = initialProducts.drop(offset).take(limit)
+        val cartItems = products.map { CartItem(it, initialCartItems.getOrDefault(it.id, 0)) }
         val hasMore = offset + limit < initialProducts.size
-        return Result.success(PageableItem(products, hasMore))
+        onResult(Result.success(PageableItem(cartItems, hasMore)))
+    }
+
+    override fun addCartItem(
+        productId: Long,
+        increaseQuantity: Int,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        initialCartItems[productId] = (initialCartItems.getOrDefault(productId, 0)) + 1
+        onResult(Result.success(Unit))
+    }
+
+    override fun getTotalQuantity(onResult: (Result<Int>) -> Unit) {
+        val result = initialCartItems.values.sum()
+        onResult(Result.success(result))
+    }
+
+    override fun findCartItemByProductId(
+        productId: Long,
+        onResult: (Result<CartItem>) -> Unit,
+    ) {
+        val product = initialProducts.find { it.id == productId }
+        val quantity = initialCartItems.getOrDefault(productId, 0)
+        product?.let { onResult(Result.success(CartItem(it, quantity))) }
     }
 
     override fun findProductInfoById(id: Long): Result<Product> {
@@ -46,14 +80,6 @@ class FakeShoppingRepository(
     ) {
         val quantity = initialCartItems.getOrDefault(productId, 0)
         onResult(Result.success(quantity))
-    }
-
-    override fun addCartItem(
-        productId: Long,
-        onResult: (Result<Unit>) -> Unit,
-    ) {
-        initialCartItems[productId] = (initialCartItems.getOrDefault(productId, 0)) + 1
-        onResult(Result.success(Unit))
     }
 
     override fun decreaseCartItemQuantity(

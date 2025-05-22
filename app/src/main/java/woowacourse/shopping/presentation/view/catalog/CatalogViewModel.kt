@@ -73,7 +73,7 @@ class CatalogViewModel(
     }
 
     private fun fetchCartItemCount() {
-        shoppingRepository.getCartItemCount { result ->
+        shoppingRepository.getTotalQuantity { result ->
             result.fold(
                 onSuccess = { _cartItemCount.postValue(it) },
                 onFailure = { postFailureEvent(CatalogMessageEvent.FETCH_CART_ITEM_COUNT_FAILURE) },
