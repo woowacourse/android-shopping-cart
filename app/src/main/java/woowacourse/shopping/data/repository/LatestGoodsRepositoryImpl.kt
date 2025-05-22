@@ -42,7 +42,7 @@ class LatestGoodsRepositoryImpl(
         var result: LatestGoods? = null
 
         thread {
-            result = latestGoodsDao.getLast().toLatestGoods()
+            result = latestGoodsDao.getLast()?.toLatestGoods()
         }.join()
 
         return result
