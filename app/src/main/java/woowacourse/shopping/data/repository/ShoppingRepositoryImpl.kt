@@ -85,7 +85,7 @@ class ShoppingRepositoryImpl(
 
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map {
-            val quantity = cartDataSource.findCartItemByProductId(it.id).quantity
+            val quantity = runCatching { cartDataSource.findCartItemByProductId(it.id).quantity }.getOrDefault(0)
             CartItem(it, quantity)
         }
 
