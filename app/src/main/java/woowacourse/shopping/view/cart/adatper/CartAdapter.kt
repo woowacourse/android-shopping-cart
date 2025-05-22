@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.event.CartAdapterEventHandler
 
 class CartAdapter(
-    private val items: MutableList<Product> = mutableListOf(),
+    private val items: MutableList<Cart> = mutableListOf(),
     private val handler: CartAdapterEventHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    fun submitList(newItems: List<Product>) {
+    fun submitList(newItems: List<Cart>) {
         val oldSize = items.size
         items.clear()
         items.addAll(newItems)
