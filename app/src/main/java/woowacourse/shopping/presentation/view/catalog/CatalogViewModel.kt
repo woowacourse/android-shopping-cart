@@ -72,6 +72,29 @@ class CatalogViewModel(
         }
     }
 
+    fun refreshCartState() {
+        productRepository.loadCartItems { cartItems ->
+            val updatedCartState =
+                cartItems?.associateBy(
+                    { it.product.id },
+                    { it.toUiModel() },
+                )
+
+            val updatedItems =
+                _items.value
+                    ?.map {
+                        if (it is CatalogItem.ProductItem) {
+                            val updatedProduct = updatedCartState?.get(it.product.id)
+                            CatalogItem.ProductItem(updatedProduct ?: it.product.copy(amount = 0))
+                        } else {
+                            it
+                        }
+                    }
+
+            _items.postValue(updatedItems ?: emptyList())
+        }
+    }
+
     fun initialAddToCart(product: ProductUiModel) {
         val updatedProduct = product.copy(amount = 1)
         cartRepository.addCartItem(updatedProduct.toCartItem()) {

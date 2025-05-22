@@ -35,6 +35,11 @@ class CatalogFragment :
         setCatalogAdapter()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshCartState()
+    }
+
     override fun onProductClicked(product: ProductUiModel) {
         navigateToScreen(DetailFragment::class.java, DetailFragment.newBundle(product))
     }
