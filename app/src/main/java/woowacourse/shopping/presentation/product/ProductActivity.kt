@@ -133,7 +133,7 @@ class ProductActivity :
         viewModel.cartItemCount.observe(this) { count ->
             toolbarBinding.tvCartCount.apply {
                 text = count.toString()
-                visibility = if (count!! > 0) View.VISIBLE else View.GONE
+                visibility = if (count > 0) View.VISIBLE else View.GONE
             }
         }
 

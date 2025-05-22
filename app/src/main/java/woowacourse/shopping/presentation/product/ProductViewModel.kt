@@ -17,8 +17,8 @@ class ProductViewModel(
 ) : ViewModel() {
     private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
     val products: LiveData<ResultState<List<CartItem>>> = _products
-    private val _cartItemCount = MutableLiveData<Int?>()
-    val cartItemCount: LiveData<Int?> = _cartItemCount
+    private val _cartItemCount = MutableLiveData<Int>()
+    val cartItemCount: LiveData<Int> = _cartItemCount
     private val _showLoadMore: MutableLiveData<Boolean> = MutableLiveData(true)
     val showLoadMore: LiveData<Boolean> = _showLoadMore
     private val _toastMessage = SingleLiveData<Int>()
@@ -47,12 +47,7 @@ class ProductViewModel(
         cartRepository.getTotalQuantity { result ->
             result
                 .onSuccess { count ->
-                    if (count == null) {
-                        Log.e("ProductViewModel", "Total quantity is null")
-                        _cartItemCount.postValue(0)
-                        return@onSuccess
-                    }
-                    _cartItemCount.postValue(count)
+                    _cartItemCount.postValue(count ?: 0)
                 }.onFailure {
                     Log.e("ProductViewModel", "Failed to load cart total quantity")
                 }
