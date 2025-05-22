@@ -65,6 +65,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <include
+            layout="@layout/item_quantity_changer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toEndOf="@id/image_view_product"
+            app:layout_constraintTop_toBottomOf="@id/image_view_delete"
+            bind:eventHandler="@{cartQuantityEventHandler}"
+            bind:model="@{model}"
+            />
+
         <TextView
             android:id="@+id/text_view_product_price"
             android:layout_width="wrap_content"

@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
 import woowacourse.shopping.view.main.vm.state.ProductState
 
 class CartAdapter(
     private var items: List<ProductState>,
     private val handler: Handler,
+    private val cartQuantityHandler: CartQuantityHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     fun submitList(newItems: List<ProductState>) {
         items = newItems
@@ -20,7 +22,7 @@ class CartAdapter(
         viewType: Int,
     ): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding, handler)
+        return CartViewHolder(binding, handler, cartQuantityHandler)
     }
 
     override fun getItemCount(): Int = items.size
