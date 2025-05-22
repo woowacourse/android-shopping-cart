@@ -23,12 +23,9 @@ object CartMapper {
     fun CartEntity.toUiModel(): CartItem =
         CartItem(
             cartItemId = this.id,
-            product =
-                Product(
-                    id = this.productId,
-                    name = this.name,
-                    imageUrl = this.imageUrl,
-                    price = this.price,
-                ),
+            id = this.productId,
+            name = this.name,
+            imageUrl = this.imageUrl,
+            price = this.price,
         )
 }
