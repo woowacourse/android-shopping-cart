@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.goods.detail
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.GoodsRepositoryImpl
+import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.GOODS_SUNDAE
 import woowacourse.shopping.getOrAwaitValue
@@ -20,11 +22,13 @@ import woowacourse.shopping.getOrAwaitValue
 class GoodsDetailViewModelTest {
     private lateinit var goodsDetailViewModel: GoodsDetailViewModel
     private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
+    private val latestGoodsRepository: LatestGoodsRepository = mockk(relaxed = true)
     private val goods = GOODS_SUNDAE
 
     @BeforeEach
     fun setUp() {
-        goodsDetailViewModel = GoodsDetailViewModel(GoodsRepositoryImpl, shoppingRepository)
+        goodsDetailViewModel =
+            GoodsDetailViewModel(GoodsRepositoryImpl, shoppingRepository, latestGoodsRepository)
         goodsDetailViewModel.setGoods(1)
     }
 
@@ -70,5 +74,35 @@ class GoodsDetailViewModelTest {
 
         // then
         goodsDetailViewModel.count.getOrAwaitValue() shouldBe 1
+    }
+
+    @Test
+    fun `마지막으로 본 상품이 없으면 마지막으로 본 상품에 대한 정보가 없다`() {
+        // then
+        goodsDetailViewModel.lastGoods shouldBe null
+    }
+
+    @Test
+    fun `마지막으로 본 상품이 있으면 마지막으로 본 상품에 대한 정보가 있다`() {
+        // given
+        goodsDetailViewModel.setLastGoods(5)
+
+        // then
+        goodsDetailViewModel.lastGoods shouldNotBe null
+    }
+
+    @Test
+    fun `마지막으로 본 상품을 갱신한다`() {
+        // given
+        val id = slot<Int>()
+        every { latestGoodsRepository.insertLatestGoods(capture(id)) } just Runs
+
+        // when
+        goodsDetailViewModel.updateLatestGoods(1)
+
+        // then
+        verify { latestGoodsRepository.insertLatestGoods(capture(id)) }
+
+        id.captured shouldBe 1
     }
 }
