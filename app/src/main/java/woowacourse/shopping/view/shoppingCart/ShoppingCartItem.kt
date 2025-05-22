@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.shoppingCart
 
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ItemType.entries
 
 sealed interface ShoppingCartItem {
     val viewType: ItemType
@@ -18,10 +17,14 @@ sealed interface ShoppingCartItem {
         val previousEnabled: Boolean,
     ) : ShoppingCartItem {
         override val viewType: ItemType = ItemType.PAGINATION
+
+        val enabled: Boolean = previousEnabled || nextEnabled
     }
 
     enum class ItemType {
-        PRODUCT, PAGINATION, ;
+        PRODUCT,
+        PAGINATION,
+        ;
 
         companion object {
             fun from(viewType: Int): ItemType = entries[viewType]
