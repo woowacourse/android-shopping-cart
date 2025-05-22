@@ -1,13 +1,21 @@
 package woowacourse.shopping.view.shoppingcart
 
-import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.base.BaseViewHolder
 
 class ShoppingCartViewHolder(
-    private val binding: ItemShoppingCartProductBinding,
+    parent: ViewGroup,
     handler: ShoppingCartEventHandler,
-) : RecyclerView.ViewHolder(binding.root) {
+) : BaseViewHolder<ItemShoppingCartProductBinding>(
+        ItemShoppingCartProductBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false,
+        ),
+    ) {
     init {
         binding.handler = handler
     }

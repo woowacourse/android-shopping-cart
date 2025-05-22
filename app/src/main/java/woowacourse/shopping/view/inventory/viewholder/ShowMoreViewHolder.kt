@@ -2,23 +2,17 @@ package woowacourse.shopping.view.inventory.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemInventoryShowMoreBinding
+import woowacourse.shopping.view.base.BaseViewHolder
 import woowacourse.shopping.view.inventory.InventoryEventHandler
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 
-class ShowMoreViewHolder private constructor(
-    private val binding: ItemInventoryShowMoreBinding,
+class ShowMoreViewHolder(
+    parent: ViewGroup,
     handler: InventoryEventHandler,
-) : RecyclerView.ViewHolder(binding.root) {
-    constructor(
-        parent: ViewGroup,
-        handler: InventoryEventHandler,
-    ) : this (
+) : BaseViewHolder<ItemInventoryShowMoreBinding>(
         ItemInventoryShowMoreBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-        handler,
-    )
-
+    ) {
     init {
         binding.handler = handler
     }

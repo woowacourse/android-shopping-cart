@@ -1,9 +1,7 @@
 package woowacourse.shopping.view.shoppingcart
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.Product
 
 class ShoppingCartAdapter(
@@ -25,8 +23,7 @@ class ShoppingCartAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ShoppingCartViewHolder {
-        val binding = ItemShoppingCartProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingCartViewHolder(binding, handler)
+        return ShoppingCartViewHolder(parent, handler)
     }
 
     fun updateProducts(newProducts: List<Product>) {
