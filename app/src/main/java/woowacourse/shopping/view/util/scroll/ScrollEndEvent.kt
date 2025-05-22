@@ -3,7 +3,6 @@ package woowacourse.shopping.view.util.scroll
 import androidx.recyclerview.widget.RecyclerView
 
 class ScrollEndEvent(
-    private val isLoadable: Boolean?,
     private val onScrollEnd: () -> Unit,
     private val onScrollReset: () -> Unit,
 ) : RecyclerView.OnScrollListener() {
@@ -12,7 +11,7 @@ class ScrollEndEvent(
         dx: Int,
         dy: Int,
     ) {
-        if (isLoadable?.not() ?: return &&
+        if (
             !recyclerView.canScrollVertically(
                 RECYCLER_VIEW_END_POSITION,
             )
