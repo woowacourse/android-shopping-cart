@@ -68,7 +68,7 @@
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.format(@string/product_price, cartProduct.product.price)}"
+            android:text="@{String.format(@string/product_price, cartProduct.product.price * cartProduct.quantity)}"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
