@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.shoppingCart.storage
 
 import woowacourse.shopping.data.product.entity.ProductEntity
+import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
 
 object VolatileShoppingCartStorage : ShoppingCartStorage {
     private var products: List<ProductEntity> = emptyList()
@@ -19,6 +20,12 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
 
     override fun add(product: ProductEntity) {
         products += product
+    }
+
+    override fun addWithQuantity(shoppingCartProductEntity: ShoppingCartProductEntity) {
+        repeat(shoppingCartProductEntity.quantity) {
+            products += shoppingCartProductEntity.product
+        }
     }
 
     override fun remove(product: ProductEntity) {

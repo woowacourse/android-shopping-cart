@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -14,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.common.showToast
+import woowacourse.shopping.view.common.showSnackBar
 
 class ProductDetailActivity :
     AppCompatActivity(),
@@ -36,17 +35,12 @@ class ProductDetailActivity :
 
         val product: Product =
             intent.getProductExtra() ?: run {
-                Toast
-                    .makeText(
-                        this,
-                        getString(R.string.product_not_provided_error_message),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                binding.root.showSnackBar(getString(R.string.product_not_provided_error_message))
                 return finish()
             }
         viewModel.updateProduct(product)
         bindViewModel()
-        handleEvents()
+        setupObservers()
     }
 
     private fun Intent.getProductExtra(): Product? =
@@ -60,27 +54,46 @@ class ProductDetailActivity :
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.productDetailEventListener = this
+        binding.productDetailQuantityComponent.onPlusButtonClick = ::onPlusQuantity
+        binding.productDetailQuantityComponent.onMinusButtonClick = ::onMinusQuantity
     }
 
-    private fun handleEvents() {
+    private fun setupObservers() {
         viewModel.event.observe(this) { event: ProductDetailEvent ->
-            @StringRes
-            val messageResourceId: Int =
-                when (event) {
-                    ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> R.string.product_detail_add_shopping_cart_success_message
-                    ProductDetailEvent.ADD_SHOPPING_CART_FAILURE -> R.string.product_detail_add_shopping_cart_error_message
-                }
+            handleEvent(event)
+        }
 
-            showToast(getString(messageResourceId))
+        viewModel.quantity.observe(this) { quantity: Int ->
+            binding.productDetailQuantityComponent.quantity = quantity
         }
     }
 
-    override fun close() {
+    private fun handleEvent(event: ProductDetailEvent) {
+        @StringRes
+        val messageResourceId: Int =
+            when (event) {
+                ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> R.string.product_detail_add_shopping_cart_success_message
+                ProductDetailEvent.ADD_SHOPPING_CART_FAILURE -> R.string.product_detail_add_shopping_cart_error_message
+                ProductDetailEvent.ADD_SHOPPING_CART_EMPTY -> R.string.product_detail_add_shopping_cart_empty_message
+            }
+
+        binding.root.showSnackBar(getString(messageResourceId))
+    }
+
+    override fun onCloseButton() {
         finish()
     }
 
-    override fun addToShoppingCart() {
+    override fun onAddingToShoppingCart() {
         viewModel.addToShoppingCart()
+    }
+
+    override fun onPlusQuantity() {
+        viewModel.plusQuantity()
+    }
+
+    override fun onMinusQuantity() {
+        viewModel.minusQuantity()
     }
 
     companion object {

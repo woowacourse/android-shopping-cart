@@ -2,9 +2,11 @@ package woowacourse.shopping.data.shoppingCart.repository
 
 import woowacourse.shopping.data.product.entity.ProductEntity
 import woowacourse.shopping.data.product.entity.toEntity
+import woowacourse.shopping.data.shoppingCart.entity.toEntity
 import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartStorage
 import woowacourse.shopping.data.shoppingCart.storage.VolatileShoppingCartStorage
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(
@@ -33,6 +35,23 @@ class DefaultShoppingCartRepository(
         thread {
             runCatching {
                 shoppingCartStorage.add(product.toEntity())
+            }.onSuccess {
+                onResult(Result.success(Unit))
+            }.onFailure { exception ->
+                onResult(Result.failure(exception))
+            }
+        }
+    }
+
+    override fun addWithQuantity(
+        product: Product,
+        quantity: Int,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        val shoppingCartProduct = ShoppingCartProduct(product, quantity)
+        thread {
+            runCatching {
+                shoppingCartStorage.addWithQuantity(shoppingCartProduct.toEntity())
             }.onSuccess {
                 onResult(Result.success(Unit))
             }.onFailure { exception ->

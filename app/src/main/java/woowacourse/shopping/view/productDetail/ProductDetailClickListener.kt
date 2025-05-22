@@ -1,7 +1,11 @@
 package woowacourse.shopping.view.productDetail
 
 interface ProductDetailClickListener {
-    fun close()
+    fun onCloseButton()
 
-    fun addToShoppingCart()
+    fun onAddingToShoppingCart()
+
+    fun onPlusQuantity()
+
+    fun onMinusQuantity()
 }
