@@ -26,14 +26,10 @@ class LatestGoodsAdapter(
     }
 
     fun addLatestGoods(newItems: List<GoodsUiModel>) {
-        val oldSize = items.size
-
         items.clear()
         items.addAll(newItems)
 
-        val newSize = items.size
-        val insertedCount = newSize - oldSize
-        notifyItemRangeInserted(POSITION_START, insertedCount)
+        notifyItemRangeChanged(POSITION_START, items.size)
     }
 
     companion object {

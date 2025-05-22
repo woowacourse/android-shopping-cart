@@ -149,8 +149,11 @@ class GoodsViewModel(
     }
 
     fun updateLatestGoods(goods: GoodsUiModel) {
-        _latestGoods.value = listOf(goods) + (_latestGoods.value ?: emptyList())
         latestGoodsRepository.insertLatestGoods(goods.id)
+        _latestGoods.value =
+            latestGoodsRepository.getAll().map {
+                goodsRepository.getById(it.goodsId).toUiModel()
+            }
     }
 
     private fun canLoadMore(): Boolean {

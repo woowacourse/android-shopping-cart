@@ -13,7 +13,19 @@ class LatestGoodsRepositoryImpl(
     override fun insertLatestGoods(goodsId: Int) {
         thread {
             latestGoodsDao.insert(LatestGoodsEntity(goodsId))
+            if (isFull()) {
+                deleteOldest()
+            }
         }.join()
+    }
+
+    private fun isFull(): Boolean {
+        val latestGoods = latestGoodsDao.getAll()
+        return latestGoods.size > MAX_SIZE
+    }
+
+    private fun deleteOldest() {
+        latestGoodsDao.deleteOldest()
     }
 
     override fun getAll(): List<LatestGoods> {
@@ -24,5 +36,9 @@ class LatestGoodsRepositoryImpl(
         }.join()
 
         return result
+    }
+
+    companion object {
+        private const val MAX_SIZE: Int = 10
     }
 }
