@@ -43,15 +43,17 @@ class ProductsViewModel(
 
     fun saveCurrentShoppingCart(quantityMap: Map<Product, MutableLiveData<Int>>) {
         quantityMap.forEach {
-            if (it.value.value!! > 0) {
-                shoppingCartRepository.update(
-                    ShoppingCartItem(
-                        product = it.key,
-                        quantity = it.value.value!!,
-                    ),
-                )
-            }
+            shoppingCartRepository.update(
+                ShoppingCartItem(
+                    product = it.key,
+                    quantity = it.value.value!!,
+                ),
+            )
         }
+    }
+
+    fun updateShoppingCartSize() {
+        totalShoppingCartSize.value = shoppingCartRepository.totalQuantity()
     }
 
     companion object {

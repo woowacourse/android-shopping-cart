@@ -13,6 +13,8 @@ class ShoppingCartAdapter(
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var products: List<ShoppingCartItem> = listOf()
     private var currentPage: Int = 0
+    var quantityMap: Map<ShoppingCartItem, MutableLiveData<Int>> = mapOf()
+        private set
 
     override fun getItemCount(): Int = products.size
 
@@ -21,7 +23,7 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = products[position]
-        holder.bind(item, currentPage, MutableLiveData(item.quantity))
+        holder.bind(item, currentPage, quantityMap[item]!!)
     }
 
     override fun onCreateViewHolder(
@@ -36,6 +38,7 @@ class ShoppingCartAdapter(
         val previousCount = itemCount
         products = page.items
         currentPage = page.currentPage
+        quantityMap = page.items.associateWith { MutableLiveData(it.quantity) }
         notifyItemRangeChanged(0, previousCount)
         notifyItemRangeRemoved(previousCount - itemCount, previousCount - itemCount)
     }

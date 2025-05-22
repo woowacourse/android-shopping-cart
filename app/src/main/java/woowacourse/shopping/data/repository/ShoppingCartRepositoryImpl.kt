@@ -34,9 +34,9 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
     override fun update(item: ShoppingCartItem) {
         DummyShoppingCart.items.find { it.product.id == item.product.id }?.let {
             DummyShoppingCart.items.remove(it)
-            DummyShoppingCart.items.add(item)
+            if (item.quantity > 0) DummyShoppingCart.items.add(item)
         } ?: run {
-            DummyShoppingCart.items.add(0, item)
+            if (item.quantity > 0) DummyShoppingCart.items.add(0, item)
         }
     }
 

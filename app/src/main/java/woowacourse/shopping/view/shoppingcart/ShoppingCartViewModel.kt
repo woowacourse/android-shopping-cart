@@ -39,6 +39,12 @@ class ShoppingCartViewModel(
         _productsLiveData.value = item
     }
 
+    fun saveCurrentShoppingCart(shoppingCartItems: List<ShoppingCartItem>) {
+        shoppingCartItems.forEach {
+            shoppingCartRepository.update(it)
+        }
+    }
+
     private fun pageNumberAfterRemoval(currentPage: Int): Int {
         val newPageNumber =
             if (productsCount % PAGE_SIZE == 0 && currentPage * PAGE_SIZE == productsCount) {

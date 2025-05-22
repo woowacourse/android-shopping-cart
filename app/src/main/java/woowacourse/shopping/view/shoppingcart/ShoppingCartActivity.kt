@@ -43,6 +43,18 @@ class ShoppingCartActivity :
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.saveCurrentShoppingCart(
+            shoppingCartAdapter.quantityMap.map {
+                ShoppingCartItem(
+                    product = it.key.product,
+                    quantity = it.value.value!!,
+                )
+            },
+        )
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()

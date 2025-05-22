@@ -76,6 +76,7 @@ class MainActivity :
     }
 
     private fun initRecyclerview() {
+        viewModel.updateShoppingCartSize()
         binding.productList.apply {
             adapter = productsAdapter
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
