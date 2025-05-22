@@ -49,12 +49,12 @@ class CartViewModel(
         val totalPages = _totalPages.value ?: 0
 
         if (!next && currentPage == 0) {
-            _toastMessage.value = R.string.cart_first_page_toast
+            _toastMessage.value = R.string.cart_toast_first_page_toast
             return
         }
 
         if (next && currentPage >= totalPages - 1) {
-            _toastMessage.value = R.string.cart_last_page_toast
+            _toastMessage.value = R.string.cart_toast_last_page_toast
             return
         }
 
@@ -111,6 +111,14 @@ class CartViewModel(
     }
 
     fun decreaseQuantity(productId: Long) {
+        val currentItems = (_products.value as? ResultState.Success)?.data ?: return
+        val item = currentItems.find { it.product.productId == productId } ?: return
+
+        if (item.quantity == 1) {
+            _toastMessage.value = R.string.cart_toast_invalid_quantity
+            return
+        }
+
         cartRepository.decreaseQuantity(productId) { result ->
             result
                 .onSuccess {
@@ -125,20 +133,12 @@ class CartViewModel(
         productId: Long,
         amount: Int,
     ) {
-        // TODO: 상품 수량 + - 시, 전체 화면 갱신됨..
-        val currentState = _products.value
-
-        if (currentState is ResultState.Success) {
-            val updatedList =
-                currentState.data.map { item ->
-                    if (item.product.productId == productId) {
-                        item.copy(quantity = item.quantity + amount)
-                    } else {
-                        item
-                    }
-                }
-            _products.postValue(ResultState.Success(updatedList))
-        }
+        val currentItems = (_products.value as? ResultState.Success)?.data ?: return
+        val updatedItem =
+            currentItems.map {
+                if (it.product.productId == productId) it.copy(quantity = it.quantity + amount) else it
+            }
+        _products.postValue(ResultState.Success(updatedItem))
     }
 
     override fun onClickPrevious() {

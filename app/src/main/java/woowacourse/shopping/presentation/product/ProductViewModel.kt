@@ -63,7 +63,7 @@ class ProductViewModel(
                 .onSuccess {
                     updateQuantity(productId, 1)
                 }.onFailure {
-                    Log.d("CartViewModel", "increase fail")
+                    Log.d("ProductViewModel", "increase fail")
                 }
         }
     }
@@ -78,7 +78,7 @@ class ProductViewModel(
                     .onSuccess {
                         updateQuantity(productId, -1)
                     }.onFailure {
-                        Log.d("CartViewModel", "delete fail")
+                        Log.d("ProductViewModel", "delete fail")
                     }
             }
         } else {
@@ -87,7 +87,7 @@ class ProductViewModel(
                     .onSuccess {
                         updateQuantity(productId, -1)
                     }.onFailure {
-                        Log.d("CartViewModel", "decrease fail")
+                        Log.d("ProductViewModel", "decrease fail")
                     }
             }
         }
@@ -99,7 +99,7 @@ class ProductViewModel(
                 .onSuccess {
                     updateQuantity(productId = cartItem.product.productId, 1)
                 }.onFailure {
-                    Log.d("CartViewModel", "add to Cart fail")
+                    Log.d("ProductViewModel", "add to Cart fail")
                 }
         }
     }

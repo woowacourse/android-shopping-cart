@@ -17,9 +17,10 @@
     <string name="cart_toolbar_text">Cart</string>
     <string name="cart_product_price">%,d원</string>
     <string name="cart_delete_complete">상품이 삭제되었습니다.</string>
-    <string name="cart_first_page_toast">첫번째 페이지입니다.</string>
-    <string name="cart_last_page_toast">마지막 페이지입니다.</string>
+    <string name="cart_toast_first_page_toast">첫번째 페이지입니다.</string>
+    <string name="cart_toast_last_page_toast">마지막 페이지입니다.</string>
     <string name="cart_toast_load_failure">장바구니 DB 조회를 실패하였습니다</string>
+    <string name="cart_toast_invalid_quantity">수량은 1 이상이어야 합니다</string>
     <string name="cart_toast_delete_success">장바구니에서 아이템을 삭제했습니다</string>
     <string name="cart_toast_delete_failure">장바구니에서 아이템 삭제에 실패하였습니다</string>
 
