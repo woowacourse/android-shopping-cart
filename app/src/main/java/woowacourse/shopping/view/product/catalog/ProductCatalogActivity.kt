@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.databinding.CustomToolbarShoppingCartBinding
 import woowacourse.shopping.view.cart.ShoppingCartActivity
@@ -21,9 +22,10 @@ import woowacourse.shopping.view.product.detail.ProductDetailActivity
 class ProductCatalogActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductCatalogBinding.inflate(layoutInflater) }
     private val viewModel by lazy {
+        val app = application as ShoppingApplication
         ViewModelProvider(
             this,
-            ProductCatalogViewModelFactory(applicationContext),
+            ProductCatalogViewModelFactory(app.productRepository, app.cartProductRepository),
         )[ProductCatalogViewModel::class.java]
     }
 
