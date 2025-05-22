@@ -57,7 +57,7 @@
             app:layout_constraintEnd_toEndOf="@id/productImage" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/product_quantity_stepper"
+            android:id="@+id/productQuantityStepper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
