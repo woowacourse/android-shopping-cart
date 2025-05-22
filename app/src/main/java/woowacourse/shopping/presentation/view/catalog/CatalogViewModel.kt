@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toCartItem
+import woowacourse.shopping.presentation.model.toProduct
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
 
@@ -125,6 +126,10 @@ class CatalogViewModel(
                 calculateTotalCartCount()
             }
         }
+    }
+
+    fun addRecentProduct(product: ProductUiModel) {
+        productRepository.addRecentProduct(product.toProduct())
     }
 
     private fun calculateTotalCartCount() {

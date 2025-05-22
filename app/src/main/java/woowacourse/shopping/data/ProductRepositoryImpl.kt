@@ -1,7 +1,9 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.data.db.CartDao
+import woowacourse.shopping.data.db.RecentProductDao
 import woowacourse.shopping.data.mapper.toCartItem
+import woowacourse.shopping.data.mapper.toRecentEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -10,6 +12,7 @@ import kotlin.concurrent.thread
 class ProductRepositoryImpl(
     private val products: List<Product>,
     private val cartDao: CartDao,
+    private val recentProductDao: RecentProductDao,
 ) : ProductRepository {
     override fun loadProducts(
         lastItemId: Long,
@@ -28,6 +31,12 @@ class ProductRepositoryImpl(
         thread {
             val cartItems = cartDao.getCartItems().map { it.toCartItem() }
             callback(cartItems)
+        }
+    }
+
+    override fun addRecentProduct(product: Product) {
+        thread {
+            recentProductDao.insert(product.toRecentEntity())
         }
     }
 }

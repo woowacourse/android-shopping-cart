@@ -4,6 +4,7 @@ import android.app.Application
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ProductRepositoryImpl
 import woowacourse.shopping.data.db.CartDao
+import woowacourse.shopping.data.db.RecentProductDao
 import woowacourse.shopping.data.db.ShoppingDatabase
 import woowacourse.shopping.data.dummyProducts
 
@@ -16,13 +17,17 @@ class ShoppingApplication : Application() {
 
     private fun initRepository() {
         val cartDao = ShoppingDatabase.getDatabase(this).cartDao()
+        val recentProductDao = ShoppingDatabase.getDatabase(this).recentProductDao()
 
         initCartRepository(cartDao)
-        initProductRepository(cartDao)
+        initProductRepository(cartDao, recentProductDao)
     }
 
-    private fun initProductRepository(cartDao: CartDao) {
-        val productRepository = ProductRepositoryImpl(dummyProducts, cartDao)
+    private fun initProductRepository(
+        cartDao: CartDao,
+        recentProductDao: RecentProductDao,
+    ) {
+        val productRepository = ProductRepositoryImpl(dummyProducts, cartDao, recentProductDao)
         RepositoryProvider.initProductRepository(productRepository)
     }
 
