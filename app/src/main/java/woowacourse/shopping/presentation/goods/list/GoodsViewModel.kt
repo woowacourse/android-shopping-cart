@@ -22,9 +22,17 @@ class GoodsViewModel(
     val goods: LiveData<List<GoodsUiModel>>
         get() = _goods
 
+    private val _shoppingGoodsCount: MutableLiveData<Int> = MutableLiveData(0)
+    val shoppingGoodsCount: LiveData<Int>
+        get() = _shoppingGoodsCount
+
     private val _shouldShowLoadMore: MutableLiveData<Boolean> = MutableLiveData(false)
     val shouldShowLoadMore: LiveData<Boolean>
         get() = _shouldShowLoadMore
+
+    private val _shouldNavigateToShoppingCart: MutableSingleLiveData<Unit> = MutableSingleLiveData()
+    val shouldNavigateToShoppingCart: SingleLiveData<Unit>
+        get() = _shouldNavigateToShoppingCart
 
     private val _onQuantityChanged: MutableSingleLiveData<List<Int>> = MutableSingleLiveData()
     val onQuantityChanged: SingleLiveData<List<Int>>
@@ -44,6 +52,7 @@ class GoodsViewModel(
 
         _goods.value = updatedGoods
         _onQuantityChanged.setValue(changedPositions)
+        _shoppingGoodsCount.value = selectedItems.sumOf { it.goodsQuantity }
     }
 
     private fun getUpdatedGoods(
@@ -84,6 +93,7 @@ class GoodsViewModel(
                 it.copy(isSelected = true, quantity = it.quantity + 1)
             }
         shoppingRepository.increaseItemQuantity(updatedItem.id)
+        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(1)
     }
 
     fun decreaseGoodsCount(position: Int) {
@@ -93,6 +103,7 @@ class GoodsViewModel(
                 it.copy(isSelected = isSelected, quantity = it.quantity - 1)
             }
         shoppingRepository.decreaseItemQuantity(updatedItem.id)
+        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(1)
     }
 
     private fun updateGoodsQuantity(
@@ -122,6 +133,10 @@ class GoodsViewModel(
 
     fun updateShouldShowLoadMore() {
         _shouldShowLoadMore.value = canLoadMore()
+    }
+
+    fun updateShouldNavigateToShoppingCart() {
+        _shouldNavigateToShoppingCart.setValue(Unit)
     }
 
     private fun canLoadMore(): Boolean {
