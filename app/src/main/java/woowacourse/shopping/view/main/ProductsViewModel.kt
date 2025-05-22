@@ -9,13 +9,17 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingCartApplication
+import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.view.toProduct
+import woowacourse.shopping.view.toProductUiModel
+import woowacourse.shopping.view.toShoppingCartItemUiModel
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo
-import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
@@ -45,11 +49,17 @@ class ProductsViewModel(
                 requestPage = requestPage,
             )
         val page = productsRepository.findAll(pageRequest)
-        val shoppingCartItems = shoppingCartRepository.findAll()
+        val shoppingCartItems = shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
 
         _productsLiveData.value =
             MainRecyclerViewProduct(
-                page = page,
+                page =
+                    Page(
+                        items = page.items.map { it.toProductUiModel() },
+                        totalCounts = page.totalCounts,
+                        currentPage = page.currentPage,
+                        pageSize = page.pageSize,
+                    ),
                 shoppingCartItemUiModels = shoppingCartItems,
             )
     }
@@ -57,8 +67,8 @@ class ProductsViewModel(
     fun saveCurrentShoppingCart(quantityInfo: QuantityInfo<ProductUiModel>) {
         quantityInfo.forEach { product, data ->
             shoppingCartRepository.update(
-                ShoppingCartItemUiModel(
-                    productUiModel = product,
+                ShoppingCartItem(
+                    product = product.toProduct(),
                     quantity = data,
                 ),
             )

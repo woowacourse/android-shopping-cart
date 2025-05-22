@@ -4,10 +4,10 @@ import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.ext.subList
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
-import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartRepositoryImpl : ShoppingCartRepository {
-    override fun findAll(pageRequest: PageRequest): Page<ShoppingCartItemUiModel> {
+    override fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
         val items =
             DummyShoppingCart.items
                 .distinct()
@@ -16,18 +16,18 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         return pageRequest.toPage(items, totalSize())
     }
 
-    override fun findAll(): List<ShoppingCartItemUiModel> {
+    override fun findAll(): List<ShoppingCartItem> {
         return DummyShoppingCart.items
     }
 
     override fun totalSize(): Int = DummyShoppingCart.items.size
 
-    override fun remove(item: ShoppingCartItemUiModel) {
+    override fun remove(item: ShoppingCartItem) {
         DummyShoppingCart.items.remove(item)
     }
 
-    override fun save(item: ShoppingCartItemUiModel) {
-        DummyShoppingCart.items.find { it.productUiModel.id == item.productUiModel.id }?.let {
+    override fun save(item: ShoppingCartItem) {
+        DummyShoppingCart.items.find { it.product.id == item.product.id }?.let {
             DummyShoppingCart.items.remove(it)
             DummyShoppingCart.items.add(0, it.copy(quantity = it.quantity + item.quantity))
         } ?: run {
@@ -35,8 +35,8 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         }
     }
 
-    override fun update(item: ShoppingCartItemUiModel) {
-        DummyShoppingCart.items.find { it.productUiModel.id == item.productUiModel.id }?.let {
+    override fun update(item: ShoppingCartItem) {
+        DummyShoppingCart.items.find { it.product.id == item.product.id }?.let {
             DummyShoppingCart.items.remove(it)
             if (item.quantity > 0) DummyShoppingCart.items.add(item)
         } ?: run {

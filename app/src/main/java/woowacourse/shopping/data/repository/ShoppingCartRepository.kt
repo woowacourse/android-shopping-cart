@@ -2,20 +2,20 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
-import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import woowacourse.shopping.domain.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    fun findAll(pageRequest: PageRequest): Page<ShoppingCartItemUiModel>
+    fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem>
 
-    fun findAll(): List<ShoppingCartItemUiModel>
+    fun findAll(): List<ShoppingCartItem>
 
     fun totalSize(): Int
 
-    fun remove(item: ShoppingCartItemUiModel)
+    fun remove(item: ShoppingCartItem)
 
-    fun save(item: ShoppingCartItemUiModel)
+    fun save(item: ShoppingCartItem)
 
-    fun update(item: ShoppingCartItemUiModel)
+    fun update(item: ShoppingCartItem)
 
     fun totalQuantity(): Int
 }

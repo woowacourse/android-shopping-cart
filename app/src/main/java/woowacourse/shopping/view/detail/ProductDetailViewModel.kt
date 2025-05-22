@@ -9,8 +9,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.view.toProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
-import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -20,12 +21,14 @@ class ProductDetailViewModel(
     val quantityLiveData: MutableLiveData<Int> = MutableLiveData(1)
 
     fun addProduct(productUiModel: ProductUiModel) {
-        shoppingCartRepository.save(
-            ShoppingCartItemUiModel(
-                productUiModel = productUiModel,
-                quantity = quantityLiveData.value!!,
-            ),
-        )
+        quantityLiveData.value?.let {
+            shoppingCartRepository.save(
+                ShoppingCartItem(
+                    product = productUiModel.toProduct(),
+                    quantity = it,
+                ),
+            )
+        }
     }
 
     fun setProduct(productUiModel: ProductUiModel) {

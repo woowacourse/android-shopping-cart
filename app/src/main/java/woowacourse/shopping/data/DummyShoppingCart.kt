@@ -2,6 +2,8 @@
 
 package woowacourse.shopping.data
 
+import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.view.toProductUiModel
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
@@ -192,15 +194,15 @@ object DummyShoppingCart {
             )
         )
 
-    val items:MutableList<ShoppingCartItemUiModel> = mutableListOf(
-        ShoppingCartItemUiModel(
+    val items:MutableList<ShoppingCartItem> = mutableListOf(
+        ShoppingCartItem(
             1,
-            DummyProducts.productUiModels[0],
+            DummyProducts.products[0],
             1
         ),
-        ShoppingCartItemUiModel(
+        ShoppingCartItem(
             2,
-            DummyProducts.productUiModels[1],
+            DummyProducts.products[1],
             2
         )
     )

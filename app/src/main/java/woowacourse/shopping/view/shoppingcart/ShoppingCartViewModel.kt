@@ -11,6 +11,8 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.view.toShoppingCartItem
+import woowacourse.shopping.view.toShoppingCartItemUiModel
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartViewModel(
@@ -25,7 +27,7 @@ class ShoppingCartViewModel(
         shoppingCartItemUiModel: ShoppingCartItemUiModel,
         currentPage: Int,
     ) {
-        shoppingCartRepository.remove(shoppingCartItemUiModel)
+        shoppingCartRepository.remove(shoppingCartItemUiModel.toShoppingCartItem())
         requestProductsPage(pageNumberAfterRemoval(currentPage))
     }
 
@@ -36,12 +38,18 @@ class ShoppingCartViewModel(
                 requestPage = requestPage,
             )
         val item = shoppingCartRepository.findAll(pageRequest)
-        _productsLiveData.value = item
+        _productsLiveData.value =
+            Page(
+                items = item.items.map { it.toShoppingCartItemUiModel() },
+                totalCounts = item.totalCounts,
+                currentPage = item.currentPage,
+                pageSize = item.pageSize,
+            )
     }
 
     fun saveCurrentShoppingCart(shoppingCartItemUiModels: List<ShoppingCartItemUiModel>) {
         shoppingCartItemUiModels.forEach {
-            shoppingCartRepository.update(it)
+            shoppingCartRepository.update(it.toShoppingCartItem())
         }
     }
 
