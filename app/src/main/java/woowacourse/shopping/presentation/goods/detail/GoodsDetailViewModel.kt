@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.domain.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.model.toUiModel
@@ -16,6 +17,7 @@ import woowacourse.shopping.presentation.util.event.SingleLiveData
 class GoodsDetailViewModel(
     private val goodsRepository: GoodsRepository,
     private val shoppingRepository: ShoppingRepository,
+    private val latestGoodsRepository: LatestGoodsRepository,
 ) : ViewModel() {
     private val _goods: MutableLiveData<GoodsUiModel> = MutableLiveData()
     val goods: LiveData<GoodsUiModel>
@@ -58,10 +60,11 @@ class GoodsDetailViewModel(
         fun provideFactory(
             goodsRepository: GoodsRepository,
             shoppingRepository: ShoppingRepository,
+            latestGoodsRepository: LatestGoodsRepository,
         ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    GoodsDetailViewModel(goodsRepository, shoppingRepository)
+                    GoodsDetailViewModel(goodsRepository, shoppingRepository, latestGoodsRepository)
                 }
             }
     }

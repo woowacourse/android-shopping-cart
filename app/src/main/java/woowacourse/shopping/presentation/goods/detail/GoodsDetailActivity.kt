@@ -19,6 +19,7 @@ class GoodsDetailActivity : BaseActivity() {
         GoodsDetailViewModel.provideFactory(
             (application as ShoppingApplication).goodsRepository,
             (application as ShoppingApplication).shoppingRepository,
+            (application as ShoppingApplication).latestGoodsRepository,
         )
     }
 
