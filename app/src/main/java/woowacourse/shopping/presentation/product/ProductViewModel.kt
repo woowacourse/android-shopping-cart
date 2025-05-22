@@ -58,15 +58,17 @@ class ProductViewModel(
     fun loadMore() {
         this.currentPage++
         productRepository.getPagedProducts(currentPage, pageSize) { result ->
-            result
-                .onSuccess { newItems ->
+            result.fold(
+                onSuccess = { newItems ->
                     val currentList = (_products.value as? ResultState.Success)?.data.orEmpty()
                     val updatedList = currentList + newItems
                     _products.postValue(ResultState.Success(updatedList))
                     _showLoadMore.postValue(updatedList.size < DummyProducts.values.size)
-                }.onFailure {
+                },
+                onFailure = {
                     _products.postValue(ResultState.Failure())
-                }
+                },
+            )
         }
     }
 
