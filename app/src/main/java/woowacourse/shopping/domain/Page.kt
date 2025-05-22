@@ -4,7 +4,8 @@ class Page(
     private val initialPage: Int,
     private val pageSize: Int,
 ) {
-    private var currentPage: Int = initialPage
+    var currentPage: Int = initialPage
+        private set
 
     fun getPageNumber(): Int = currentPage
 
@@ -34,11 +35,4 @@ class Page(
     }
 
     fun hasPreviousPage() = currentPage > initialPage
-
-    fun hasNextPage(itemSize: Int): Boolean {
-        val fromIndex = currentPage * pageSize
-        return fromIndex < itemSize
-    }
-
-    fun hasOnePage(itemSize: Int) = pageSize < itemSize
 }
