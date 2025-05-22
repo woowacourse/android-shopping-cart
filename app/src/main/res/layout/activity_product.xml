@@ -7,7 +7,6 @@
 
     </data>
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_product"
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
             android:id="@+id/tb_product"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/gray5"
+            android:background="@color/baemin"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:layout_constraintTop_toTopOf="parent"
