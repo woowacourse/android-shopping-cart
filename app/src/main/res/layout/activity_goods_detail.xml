@@ -86,12 +86,13 @@
             bind:clickListener="@{selectorClickListener}"
             bind:quantity="@{vm.count}" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:onClick="@{() -> vm.addToShoppingCart()}"
             android:text="@string/btn_shopping_cart"
+            android:backgroundTint="@color/primary_color"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
