@@ -33,6 +33,10 @@ class ProductCatalogViewModel(
         _totalQuantity.value = cartProductRepository.getTotalQuantity()
     }
 
+    override fun onRecentProductClick(item: RecentProduct) {
+        _selectedProduct.value = item.product
+    }
+
     override fun onProductClick(item: Product) {
         _selectedProduct.value = item
     }

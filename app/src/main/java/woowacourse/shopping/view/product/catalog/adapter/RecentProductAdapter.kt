@@ -6,13 +6,14 @@ import woowacourse.shopping.domain.RecentProduct
 
 class RecentProductAdapter(
     items: List<RecentProduct> = emptyList(),
+    private val eventHandler: RecentProductViewHolder.EventHandler,
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
     private val items = items.toMutableList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecentProductViewHolder = RecentProductViewHolder.from(parent)
+    ): RecentProductViewHolder = RecentProductViewHolder.from(parent, eventHandler)
 
     override fun getItemCount(): Int = items.size
 

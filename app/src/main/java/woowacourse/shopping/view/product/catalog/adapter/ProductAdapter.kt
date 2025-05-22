@@ -15,7 +15,7 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (ProductCatalogItem.ViewType.entries[viewType]) {
-            ProductCatalogItem.ViewType.RECENT_PRODUCT -> RecentProductsViewHolder.from(parent)
+            ProductCatalogItem.ViewType.RECENT_PRODUCT -> RecentProductsViewHolder.from(parent, eventHandler)
             ProductCatalogItem.ViewType.PRODUCT -> ProductViewHolder.from(parent, eventHandler)
             ProductCatalogItem.ViewType.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventHandler)
         }
