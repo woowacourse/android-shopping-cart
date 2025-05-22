@@ -46,7 +46,8 @@ class ProductsActivity : AppCompatActivity() {
         }
 
         binding.cartImageBtn.setOnClickListener {
-            startActivity(Intent(this, CartActivity::class.java))
+            val intent = CartActivity.newIntent(this@ProductsActivity)
+            startActivity(intent)
         }
         binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
 
@@ -74,7 +75,13 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun newIntent(context: Context): Intent = Intent(context, ProductsActivity::class.java)
+        fun newIntent(
+            context: Context,
+            product: Product,
+        ): Intent =
+            Intent(context, ProductsActivity::class.java).apply {
+                putExtra("product", product)
+            }
 
         private const val SPAN_COUNT = 2
         private const val SPACING_DP = 12f
