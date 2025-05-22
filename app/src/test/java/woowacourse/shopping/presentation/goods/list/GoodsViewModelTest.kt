@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.GoodsRepositoryImpl
+import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.createGoods
 import woowacourse.shopping.fixture.createShoppingGoods
@@ -21,11 +22,12 @@ import woowacourse.shopping.getOrAwaitValue
 class GoodsViewModelTest {
     private lateinit var goodsViewModel: GoodsViewModel
     private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
+    private val latestGoodsRepository: LatestGoodsRepository = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
         mockkObject(GoodsRepositoryImpl)
-        goodsViewModel = GoodsViewModel(GoodsRepositoryImpl, shoppingRepository)
+        goodsViewModel = GoodsViewModel(GoodsRepositoryImpl, shoppingRepository, latestGoodsRepository)
     }
 
     @AfterEach

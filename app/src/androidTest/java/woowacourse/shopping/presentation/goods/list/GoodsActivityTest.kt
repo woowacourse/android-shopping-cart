@@ -70,7 +70,12 @@ class GoodsActivityTest {
         )
 
         // then
-        onView(withText("11,900원")).check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(R.id.tv_goods_price),
+                withText("5,000원"),
+            ),
+        ).check(matches(isDisplayed()))
     }
 
     @Test
@@ -85,9 +90,7 @@ class GoodsActivityTest {
     @Test
     fun `페이지_끝에_도달하면_더보기_버튼이_나타난다`() {
         // when
-        repeat(5) {
-            onView(withId(R.id.rv_goods_list)).perform(swipeUp())
-        }
+        onView(withId(R.id.scroll)).perform(swipeUp())
 
         // then
         await.atMost(1, TimeUnit.SECONDS).until {
@@ -103,9 +106,7 @@ class GoodsActivityTest {
     @Test
     fun `더보기_버튼을_클릭하면_사라진다`() {
         // when
-        repeat(5) {
-            onView(withId(R.id.rv_goods_list)).perform(swipeUp())
-        }
+        onView(withId(R.id.scroll)).perform(swipeUp())
 
         // then
         await.atMost(2, TimeUnit.SECONDS).until {
