@@ -2,8 +2,8 @@ package woowacourse.shopping
 
 import android.app.Application
 import woowacourse.shopping.data.GoodsRepositoryImpl
-import woowacourse.shopping.data.shopping.ShoppingDatabase
-import woowacourse.shopping.data.shopping.ShoppingRepositoryImpl
+import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
 import woowacourse.shopping.domain.repository.ShoppingRepository
 
 class ShoppingApplication : Application() {

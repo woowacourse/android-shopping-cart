@@ -1,7 +1,15 @@
-package woowacourse.shopping.data.mapper
+package woowacourse.shopping.data.entity
 
-import woowacourse.shopping.data.shopping.ShoppingEntity
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import woowacourse.shopping.domain.model.ShoppingGoods
+
+@Entity(tableName = "shoppingCart")
+data class ShoppingEntity(
+    @PrimaryKey val id: Int,
+    @ColumnInfo val quantity: Int,
+)
 
 fun ShoppingEntity.toShoppingGoods() =
     ShoppingGoods(

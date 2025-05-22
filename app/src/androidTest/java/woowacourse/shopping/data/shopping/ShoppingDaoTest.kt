@@ -8,6 +8,8 @@ import io.kotest.matchers.shouldBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.data.dao.ShoppingDao
+import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.mapper.toShoppingEntity
 import woowacourse.shopping.fixture.createShoppingGoods
 

@@ -26,9 +26,9 @@ import org.hamcrest.TypeSafeMatcher
 import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.shopping.ShoppingDao
-import woowacourse.shopping.data.shopping.ShoppingDatabase
-import woowacourse.shopping.data.shopping.ShoppingRepositoryImpl
+import woowacourse.shopping.data.dao.ShoppingDao
+import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
 import woowacourse.shopping.domain.repository.ShoppingRepository
 
 class ShoppingCartActivityTest {
