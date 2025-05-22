@@ -94,9 +94,6 @@ class CatalogActivity : AppCompatActivity() {
         viewModel.updatedItem.observe(this) { product ->
             (binding.recyclerViewProducts.adapter as ProductAdapter).updateItem(product)
         }
-        viewModel.cartItemSize.observe(this) { size ->
-            // TODO ActionBar에 메뉴 아이템 추가
-        }
         binding.lifecycleOwner = this
     }
 
