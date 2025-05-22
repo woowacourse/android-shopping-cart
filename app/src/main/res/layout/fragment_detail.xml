@@ -94,6 +94,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
             app:layout_constraintTop_toTopOf="@id/text_view_detail_price"
+            app:amount="@{vm.amount}"
             app:productId="@{product.id}" />
 
         <androidx.appcompat.widget.AppCompatButton
