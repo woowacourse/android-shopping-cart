@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.data.dao.ShoppingDao
 import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.mapper.toShoppingEntity
+import woowacourse.shopping.data.entity.toShoppingEntity
 import woowacourse.shopping.fixture.createShoppingGoods
 
 class ShoppingDaoTest {
