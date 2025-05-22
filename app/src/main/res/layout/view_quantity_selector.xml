@@ -24,6 +24,7 @@
         android:background="@drawable/bg_quantity_selector">
 
         <TextView
+            android:id="@+id/tv_minus"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
@@ -53,6 +54,7 @@
             tools:text="2" />
 
         <TextView
+            android:id="@+id/tv_plus"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
