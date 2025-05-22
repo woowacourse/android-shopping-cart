@@ -32,7 +32,20 @@ class CartRepositoryImpl(
 
     override fun delete(cart: Cart) {
         thread {
-            cartDatabase.cartDao().delete(cart.toEntity())
+            val dao = cartDatabase.cartDao()
+            val existing = dao.findById(cart.goods.id)
+            if (existing != null) {
+                if (existing.quantity > 1) {
+                    val updated =
+                        existing.copy(
+                            quantity = existing.quantity - 1,
+                            price = existing.price - cart.goods.price,
+                        )
+                    dao.update(updated)
+                } else {
+                    dao.delete(cart.toEntity())
+                }
+            }
         }
     }
 

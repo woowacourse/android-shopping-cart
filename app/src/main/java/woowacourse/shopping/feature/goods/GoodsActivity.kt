@@ -62,6 +62,18 @@ class GoodsActivity :
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onClickGoods(cart: Cart) {
+        navigate(cart)
+    }
+
+    override fun insertToCart(cart: Cart) {
+        viewModel.insertToCart(cart)
+    }
+
+    override fun removeFromCart(cart: Cart) {
+        viewModel.removeFromCart(cart)
+    }
+
     private fun updateMoreButton() {
         viewModel.isFullLoaded.observe(this) { isFullLoaded ->
             binding.rvGoods.clearOnScrollListeners()
@@ -77,13 +89,5 @@ class GoodsActivity :
     private fun navigate(cart: Cart) {
         val intent = GoodsDetailsActivity.newIntent(this, cart.toUi())
         startActivity(intent)
-    }
-
-    override fun onClickGoods(cart: Cart) {
-        navigate(cart)
-    }
-
-    override fun insertToCart(cart: Cart) {
-        viewModel.insertToCart(cart)
     }
 }

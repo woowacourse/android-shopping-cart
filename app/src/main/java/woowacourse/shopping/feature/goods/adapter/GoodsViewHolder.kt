@@ -19,7 +19,7 @@ class GoodsViewHolder(
                 }
 
                 override fun onRemoveClick() {
-                    TODO("Not yet implemented")
+                    goodsClickListener.removeFromCart(cart)
                 }
             },
         )
@@ -29,5 +29,7 @@ class GoodsViewHolder(
         fun onClickGoods(cart: Cart)
 
         fun insertToCart(cart: Cart)
+
+        fun removeFromCart(cart: Cart)
     }
 }

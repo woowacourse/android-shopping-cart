@@ -50,6 +50,10 @@ class GoodsViewModel(
         }
     }
 
+    fun removeFromCart(cart: Cart) {
+        repository.delete(cart)
+    }
+
     private fun getProducts(
         page: Int,
         pageSize: Int = PAGE_SIZE,
@@ -59,7 +63,7 @@ class GoodsViewModel(
         return dummyGoods.subList(fromIndex, toIndex)
     }
 
-    fun loadGoods() {
+    private fun loadGoods() {
         viewModelScope.launch {
             val currentList = _carts.value ?: emptyList()
             val newGoods = getProducts(page)
