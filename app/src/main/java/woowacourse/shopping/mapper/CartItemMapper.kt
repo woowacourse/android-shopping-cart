@@ -5,7 +5,7 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 fun CartItem.toUiModel() =
     ProductUiModel(
-        id = this.uid,
+        id = this.id,
         imageUrl = this.imageUrl,
         name = this.name,
         price = this.price,

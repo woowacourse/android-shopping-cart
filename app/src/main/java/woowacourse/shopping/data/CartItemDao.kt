@@ -1,27 +1,29 @@
 package woowacourse.shopping.data
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
 interface CartItemDao {
     @Insert
-    suspend fun insertCartItem(cartItem: CartItem)
+    fun insertCartItem(cartItem: CartItem)
 
-    @Delete
-    fun deleteCartItem(cartItem: CartItem)
+    @Query("DELETE FROM CartItemEntity WHERE id = :id")
+    fun deleteByProductId(id: Long)
 
-    @Query("SELECT * FROM CartItemEntity WHERE uid = :uid")
-    fun getCartItemByUid(uid: Int): CartItem
+    @Query("SELECT * FROM CartItemEntity WHERE id = :id")
+    fun getCartItemById(id: Long): CartItem
 
     @Query("SELECT * FROM CartItemEntity")
     fun getAll(): List<CartItem>
 
-    @Query("UPDATE CartItemEntity SET quantity = :quantity WHERE uid = :uid")
+    @Query("UPDATE CartItemEntity SET quantity = :quantity WHERE id = :id")
     fun updateQuantity(
-        uid: Long,
+        id: Long,
         quantity: Int,
     )
+
+    @Query("SELECT EXISTS(SELECT * FROM CartItemEntity WHERE id = :id)")
+    fun isCartItemExist(id: Long): Boolean
 }

@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import woowacourse.shopping.cart.CartItemRepository
+import woowacourse.shopping.data.CartItem
+import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.ProductUiModel
+import kotlin.concurrent.thread
 
 class DetailViewModel(
     private val repository: CartItemRepository,
@@ -18,9 +19,20 @@ class DetailViewModel(
     private val _uiState = MutableLiveData<CartUiState>()
     val uiState: LiveData<CartUiState> = _uiState
 
-    fun addToCart(product: ProductUiModel) {
-        viewModelScope.launch {
-            repository.insertCartItem(product)
+    fun addToCart() {
+        thread {
+            val currentProduct = _product.value ?: return@thread
+            if (currentProduct.quantity <= 0) return@thread
+
+            val existItem = repository.findCartItem(currentProduct)
+            if (existItem != null) {
+                val updated: CartItem = existItem.copy(quantity = currentProduct.quantity)
+                repository.updateCartItem(updated.toUiModel())
+            } else {
+                repository.insertCartItem(currentProduct)
+            }
+
+            _uiState.postValue(CartUiState.SUCCESS)
         }
     }
 
@@ -29,25 +41,22 @@ class DetailViewModel(
     }
 
     fun increaseQuantity() {
-        viewModelScope.launch {
+        thread {
             _product.value?.let { currentProduct ->
                 val newProduct = currentProduct.copy(quantity = currentProduct.quantity + 1)
-                _product.value = newProduct
-                repository.insertCartItem(newProduct)
+                _product.postValue(newProduct)
             }
         }
     }
 
     fun decreaseQuantity() {
-        viewModelScope.launch {
+        thread {
             _product.value?.let { currentProduct ->
                 if (currentProduct.quantity > 1) {
                     val newProduct = currentProduct.copy(quantity = currentProduct.quantity - 1)
-                    _product.value = newProduct
-                    repository.insertCartItem(newProduct)
-                } else {
-                    repository.deleteCartItem(currentProduct)
-                    _product.value = null
+                    _product.postValue(newProduct)
+                } else if (currentProduct.quantity == 1) {
+                    _product.postValue(currentProduct.copy(quantity = 0))
                 }
             }
         }

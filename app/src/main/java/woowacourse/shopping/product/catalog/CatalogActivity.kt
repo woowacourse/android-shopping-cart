@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
+import woowacourse.shopping.cart.CartItemRepository
+import woowacourse.shopping.data.CartItemDatabase
 import woowacourse.shopping.data.MockProducts
 import woowacourse.shopping.databinding.ActivityCatalogBinding
 import woowacourse.shopping.product.catalog.CatalogViewModel.Companion.factory
@@ -21,9 +23,11 @@ import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
     private val viewModel: CatalogViewModel by lazy {
+        val db = CartItemDatabase.getInstance(this)
+        val repository = CartItemRepository(db.cartItemDao())
         ViewModelProvider(
             this,
-            factory(MockProducts),
+            factory(MockProducts, repository),
         )[CatalogViewModel::class.java]
     }
 

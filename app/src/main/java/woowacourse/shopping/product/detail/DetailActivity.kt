@@ -40,8 +40,6 @@ class DetailActivity : AppCompatActivity() {
         applyWindowInsets()
         setSupportActionBar()
 
-//        setAddToCartClickListener()
-
         observeCartUiState()
 
         val product: ProductUiModel? = productFromIntent()

@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.cart.CartItemRepository
 import woowacourse.shopping.data.ProductsDataSource
+import kotlin.concurrent.thread
 
 class CatalogViewModel(
     private val dataSource: ProductsDataSource,
+    private val repository: CartItemRepository,
 ) : ViewModel() {
     private val _pagingData = MutableLiveData<PagingData>()
     val pagingData: LiveData<PagingData> = _pagingData
@@ -25,17 +28,21 @@ class CatalogViewModel(
         loadCatalogProducts()
     }
 
-    fun isQuantitySelectorExpanded(product: ProductUiModel) {
-        loadedProducts =
-            loadedProducts.map {
-                if (it.id == product.id) {
-                    it.copy(isExpanded = !it.isExpanded, quantity = 1)
-                } else {
-                    it
+    fun onQuantitySelectorToggled(product: ProductUiModel) {
+        thread {
+            val cartItem = repository.findCartItem(product)
+            val cartQuantity = cartItem?.quantity ?: 0
+            loadedProducts =
+                loadedProducts.map {
+                    if (it.id == product.id) {
+                        it.copy(isExpanded = !it.isExpanded, quantity = if (cartItem == null) 1 else cartQuantity)
+                    } else {
+                        it
+                    }
                 }
-            }
-
-        updatePaging()
+            updatePaging()
+            if (cartItem == null) repository.insertCartItem(product.copy(quantity = 1))
+        }
     }
 
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
@@ -44,31 +51,45 @@ class CatalogViewModel(
     }
 
     fun increaseQuantity(product: ProductUiModel) {
-        loadedProducts =
-            loadedProducts.map {
-                if (it.id == product.id) it.copy(quantity = it.quantity + 1) else it
+        thread {
+            val current = findAndUpdateProduct(product.id) { it.copy(quantity = it.quantity + 1) }
+            updatePaging()
+
+            if (repository.findCartItem(product) != null) {
+                repository.updateCartItem(current)
+            } else {
+                repository.insertCartItem(current)
             }
-        updatePaging()
+        }
     }
 
     fun decreaseQuantity(product: ProductUiModel) {
-        loadedProducts =
-            loadedProducts.map {
-                if (it.id == product.id && it.quantity > 1) {
-                    it.copy(quantity = it.quantity - 1)
-                } else {
-                    it
+        thread {
+            val updated =
+                findAndUpdateProduct(product.id) {
+                    when {
+                        it.quantity <= 1 -> it.copy(quantity = 0, isExpanded = false)
+                        else -> it.copy(quantity = it.quantity - 1)
+                    }
                 }
+
+            if (updated.quantity == 0) {
+                repository.deleteCartItemById(updated.id)
+            } else {
+                repository.updateCartItem(updated)
             }
-        updatePaging()
+
+            updatePaging()
+        }
     }
 
     private fun updatePaging() {
-        _pagingData.value =
+        _pagingData.postValue(
             PagingData(
                 products = loadedProducts,
                 hasNext = loadedProducts.size < dataSource.getProductsSize(),
-            )
+            ),
+        )
     }
 
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
@@ -77,13 +98,20 @@ class CatalogViewModel(
         val pagedProducts = dataSource.getSubListedProducts(fromIndex, toIndex)
 
         loadedProducts += pagedProducts
-        val hasNext = loadedProducts.size < dataSource.getProductsSize()
 
-        _pagingData.value =
-            PagingData(
-                products = loadedProducts,
-                hasNext = hasNext,
-            )
+        updatePaging()
+    }
+
+    private fun findAndUpdateProduct(
+        id: Long,
+        transform: (ProductUiModel) -> ProductUiModel,
+    ): ProductUiModel {
+        val updated =
+            loadedProducts.map {
+                if (it.id == id) transform(it) else it
+            }
+        loadedProducts = updated
+        return updated.first { it.id == id }
     }
 
     companion object {
@@ -91,15 +119,17 @@ class CatalogViewModel(
         private const val INITIAL_PAGE = 0
         private const val INITIAL_QUANTITY = 0
 
-        fun factory(dataSource: ProductsDataSource): ViewModelProvider.Factory =
+        fun factory(
+            dataSource: ProductsDataSource,
+            repository: CartItemRepository,
+        ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
                     if (modelClass.isAssignableFrom(CatalogViewModel::class.java)) {
-                        return CatalogViewModel(dataSource) as T
+                        CatalogViewModel(dataSource, repository) as T
+                    } else {
+                        throw IllegalArgumentException("Unknown ViewModel class")
                     }
-                    throw IllegalArgumentException("Unknown ViewModel class")
-                }
             }
     }
 }

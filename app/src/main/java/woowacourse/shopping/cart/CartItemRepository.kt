@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import woowacourse.shopping.data.CartItem
 import woowacourse.shopping.data.CartItemDao
 import woowacourse.shopping.mapper.toCartItem
 import woowacourse.shopping.mapper.toUiModel
@@ -8,21 +9,21 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 class CartItemRepository(
     private val dao: CartItemDao,
 ) {
-    suspend fun getAllCartItem(): List<ProductUiModel> = dao.getAll().map { it.toUiModel() }
+    fun getAllCartItem(): List<ProductUiModel> = dao.getAll().map { it.toUiModel() }
 
-    suspend fun insertCartItem(product: ProductUiModel) {
+    fun insertCartItem(product: ProductUiModel) {
         dao.insertCartItem(product.toCartItem())
     }
 
-    suspend fun updateCartItem(product: ProductUiModel) {
+    fun updateCartItem(product: ProductUiModel) {
         dao.updateQuantity(product.id, product.quantity)
     }
 
-    suspend fun deleteCartItem(product: ProductUiModel) {
-        dao.deleteCartItem(product.toCartItem())
+    fun deleteCartItemById(productId: Long) {
+        dao.deleteByProductId(productId)
     }
 
-//    suspend fun findCartItem(product: ProductUiModel) {
-//        dao.getCartItemByUid(product.toCartItem().uid)
-//    }
+    fun findCartItem(product: ProductUiModel): CartItem? = dao.getCartItemById(product.id)
+
+    fun isCartItemAvailable(product: ProductUiModel): Boolean = dao.isCartItemExist(product.id)
 }
