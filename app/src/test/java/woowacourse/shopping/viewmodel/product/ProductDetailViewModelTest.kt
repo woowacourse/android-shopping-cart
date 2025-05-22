@@ -5,22 +5,26 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.data.cart.CartProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.fixture.FakeCartProductRepository
+import woowacourse.shopping.fixture.FakeRecentProductRepository
 import woowacourse.shopping.view.product.detail.ProductDetailViewModel
 import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
-    private lateinit var repository: CartProductRepository
+    private lateinit var cartProductRepository: CartProductRepository
+    private lateinit var recentProductRepository: RecentProductRepository
     private lateinit var product: Product
 
     @BeforeEach
     fun setup() {
-        repository = FakeCartProductRepository()
+        cartProductRepository = FakeCartProductRepository()
+        recentProductRepository = FakeRecentProductRepository()
         product = Product(id = 0L, imageUrl = "", name = "Product 0", price = 1000)
-        viewModel = ProductDetailViewModel(product, repository)
+        viewModel = ProductDetailViewModel(product, cartProductRepository, recentProductRepository)
     }
 
     @Test
@@ -29,7 +33,7 @@ class ProductDetailViewModelTest {
         viewModel.onProductAddClick()
 
         // then
-        val cartProducts = repository.getAll()
+        val cartProducts = cartProductRepository.getAll()
         assertEquals(1, cartProducts.size)
         assertEquals(product, cartProducts.first().product)
     }

@@ -44,8 +44,8 @@ class LocalCartProductRepository(
         return result
     }
 
-    override fun getTotalQuantity(): Int? {
-        var result: Int? = null
+    override fun getTotalQuantity(): Int {
+        var result = 0
         thread { result = dao.getTotalQuantity() }.join()
         return result
     }

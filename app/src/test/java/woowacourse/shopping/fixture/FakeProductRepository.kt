@@ -17,6 +17,8 @@ class FakeProductRepository : ProductRepository {
 
     override fun getAll(): List<Product> = fakeProducts
 
+    override fun getProductById(id: Long): Product? = fakeProducts.find { it.id == id }
+
     override fun getPagedProducts(
         limit: Int,
         offset: Int,

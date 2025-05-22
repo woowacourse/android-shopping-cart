@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.dummy
 
+import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.domain.Product
 
 @Suppress("ktlint:standard:max-line-length")
@@ -75,7 +76,23 @@ object ProductData {
         )
 
     val products: List<Product> =
-        (0..4).flatMap { i ->
-            items.map { it.copy(id = it.id + i * items.size) }
-        }
+        (0..4)
+            .flatMap { i -> items.map { it.copy(id = it.id + i * items.size) } }
+
+    private val productsMap: Map<Long, Product> = products.associateBy { it.id }
+
+    fun getProductById(id: Long): Product? = productsMap[id]
+
+    fun getPagedProducts(
+        limit: Int,
+        offset: Int,
+    ): PagedResult<Product> {
+        val total = products.size
+        if (offset >= total) return PagedResult(emptyList(), false)
+
+        val endIndex = (offset + limit).coerceAtMost(total)
+        val items = products.subList(offset, endIndex)
+        val hasNext = endIndex < total
+        return PagedResult(items, hasNext)
+    }
 }

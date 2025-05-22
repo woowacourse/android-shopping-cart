@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.fixture.FakeCartProductRepository
 import woowacourse.shopping.fixture.FakeProductRepository
+import woowacourse.shopping.fixture.FakeRecentProductRepository
 import woowacourse.shopping.view.product.catalog.ProductCatalogViewModel
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
 import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
@@ -17,12 +19,19 @@ class ProductCatalogViewModelTest {
     private lateinit var viewModel: ProductCatalogViewModel
     private lateinit var productRepository: ProductRepository
     private lateinit var cartProductRepository: CartProductRepository
+    private lateinit var recentProductRepository: RecentProductRepository
 
     @BeforeEach
     fun setup() {
         productRepository = FakeProductRepository()
         cartProductRepository = FakeCartProductRepository()
-        viewModel = ProductCatalogViewModel(productRepository, cartProductRepository)
+        recentProductRepository = FakeRecentProductRepository()
+        viewModel =
+            ProductCatalogViewModel(
+                productRepository,
+                cartProductRepository,
+                recentProductRepository,
+            )
     }
 
     @Test

@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.room.runtime)
     implementation(libs.okhttp)
+    implementation(libs.mockwebserver)
+    implementation(libs.converter.gson)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)

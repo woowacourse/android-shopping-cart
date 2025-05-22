@@ -6,33 +6,35 @@ import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 
 class FakeCartProductRepository : CartProductRepository {
-    private val items = mutableListOf<CartProduct>()
+    private val cartProducts = mutableListOf<CartProduct>()
     private var nextId = 1L
 
-    override fun getAll(): List<CartProduct> = items.toList()
+    override fun getAll(): List<CartProduct> = cartProducts.toList()
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): PagedResult<CartProduct> {
-        val pagedItems = items.drop(offset).take(limit)
-        val hasNext = offset + pagedItems.size < items.size
+        val pagedItems = cartProducts.drop(offset).take(limit)
+        val hasNext = offset + pagedItems.size < cartProducts.size
         return PagedResult(pagedItems, hasNext)
     }
 
-    override fun getQuantityByProductId(productId: Long): Int? = items.find { it.product.id == productId }?.quantity
+    override fun getQuantityByProductId(productId: Long): Int? = cartProducts.find { it.product.id == productId }?.quantity
+
+    override fun getTotalQuantity(): Int = cartProducts.sumOf { it.quantity }
 
     override fun updateQuantity(
         productId: Long,
         quantity: Int,
     ) {
-        items.replaceAll {
+        cartProducts.replaceAll {
             if (it.product.id == productId) it.copy(quantity = quantity) else it
         }
     }
 
     override fun deleteByProductId(productId: Long) {
-        items.removeIf { it.product.id == productId }
+        cartProducts.removeIf { it.product.id == productId }
     }
 
     override fun insert(
@@ -46,7 +48,7 @@ class FakeCartProductRepository : CartProductRepository {
                 name = "Product $productId",
                 price = 1000,
             )
-        items.add(
+        cartProducts.add(
             CartProduct(
                 id = nextId++,
                 product = product,
