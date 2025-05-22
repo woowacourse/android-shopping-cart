@@ -54,12 +54,23 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginTop="108dp"
-            android:text="@{@string/goods_price(cart.goods.price)}"
+            android:text="@{@string/goods_price(cart.totalPrice)}"
             android:textSize="16sp"
             android:textColor="@color/gray_700"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="84,400원" />
+
+        <woowacourse.shopping.feature.CustomCartQuantity
+            android:id="@+id/custom_cart_quantity"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="12dp"
+            app:visible="@{cart.quantity > 0}"
+            app:count="@{cart.quantity}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/iv_cart_item_delete_button"

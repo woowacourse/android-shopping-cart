@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.feature.CustomCartQuantity
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
@@ -16,6 +17,17 @@ class CartViewHolder(
 
     fun bind(cart: Cart) {
         binding.cart = cart
+        binding.customCartQuantity.setClickListener(
+            object : CustomCartQuantity.CartQuantityClickListener {
+                override fun onAddClick() {
+                    cartClickListener.insertToCart(cart)
+                }
+
+                override fun onRemoveClick() {
+                    cartClickListener.removeFromCart(cart)
+                }
+            },
+        )
     }
 
     companion object {
@@ -31,5 +43,9 @@ class CartViewHolder(
 
     interface CartClickListener {
         fun onClickDeleteButton(cart: Cart)
+
+        fun insertToCart(cart: Cart)
+
+        fun removeFromCart(cart: Cart)
     }
 }

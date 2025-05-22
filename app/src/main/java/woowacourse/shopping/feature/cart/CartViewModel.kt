@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.util.updateQuantity
 
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
+    private val carts = MutableLiveData<List<Cart>>()
     private val _showPageButton = MutableLiveData(false)
     val showPageButton: LiveData<Boolean> get() = _showPageButton
     private var currentPage: Int = 1
@@ -59,6 +61,16 @@ class CartViewModel(
         _isLeftPageEnable.value = leftEnabled
         _isRightPageEnable.value = rightEnabled
         _showPageButton.value = showButtons
+    }
+
+    fun insertToCart(cart: Cart) {
+        cartRepository.insert(cart)
+        carts.value = carts.value?.updateQuantity(cart.goods.id, cart.quantity + 1)
+    }
+
+    fun removeFromCart(cart: Cart) {
+        cartRepository.delete(cart)
+        carts.value = carts.value?.updateQuantity(cart.goods.id, cart.quantity - 1)
     }
 
     private fun getProducts(page: Int): LiveData<List<Cart>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)

@@ -41,6 +41,14 @@ class CartActivity :
         viewModel.delete(cart)
     }
 
+    override fun insertToCart(cart: Cart) {
+        viewModel.insertToCart(cart)
+    }
+
+    override fun removeFromCart(cart: Cart) {
+        viewModel.removeFromCart(cart)
+    }
+
     private fun updatePageButton() {
         viewModel.totalItemsCount.observe(this) {
             viewModel.updatePageButtonStates()
