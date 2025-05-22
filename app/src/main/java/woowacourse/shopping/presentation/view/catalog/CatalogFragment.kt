@@ -91,6 +91,14 @@ class CatalogFragment :
         viewModel.itemUpdateEvent.observe(viewLifecycleOwner) {
             catalogAdapter.updateItem(it)
         }
+        viewModel.totalCartCount.observe(viewLifecycleOwner) {
+            if (it == 0) {
+                binding.textViewCartTotalAmount.visibility = View.GONE
+            } else {
+                binding.textViewCartTotalAmount.visibility = View.VISIBLE
+            }
+            binding.textViewCartTotalAmount.text = it.toString()
+        }
     }
 
     private fun initListener() {

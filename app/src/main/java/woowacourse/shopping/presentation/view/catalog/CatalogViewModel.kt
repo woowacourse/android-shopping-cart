@@ -23,6 +23,9 @@ class CatalogViewModel(
     private val _itemUpdateEvent = MutableLiveData<ProductUiModel>()
     val itemUpdateEvent: LiveData<ProductUiModel> = _itemUpdateEvent
 
+    private val _totalCartCount = MutableLiveData<Int>()
+    val totalCartCount: LiveData<Int> = _totalCartCount
+
     private val loadSize: Int = 20
     private var lastId: Long = DEFAULT_ID
 
@@ -80,6 +83,9 @@ class CatalogViewModel(
                     { it.toUiModel() },
                 )
 
+            val totalCount = cartItems?.sumOf { it.amount } ?: 0
+            _totalCartCount.postValue(totalCount)
+
             val updatedItems =
                 _items.value
                     ?.map {
@@ -99,6 +105,7 @@ class CatalogViewModel(
         val updatedProduct = product.copy(amount = 1)
         cartRepository.addCartItem(updatedProduct.toCartItem()) {
             _itemUpdateEvent.postValue(updatedProduct)
+            calculateTotalCartCount()
         }
     }
 
@@ -106,6 +113,7 @@ class CatalogViewModel(
         cartRepository.increaseCartItem(productId) { updatedCartItem ->
             updatedCartItem?.let {
                 _itemUpdateEvent.postValue(it.toUiModel())
+                calculateTotalCartCount()
             }
         }
     }
@@ -114,7 +122,15 @@ class CatalogViewModel(
         cartRepository.decreaseCartItem(productId) { updatedCartItem ->
             updatedCartItem?.let {
                 _itemUpdateEvent.postValue(it.toUiModel())
+                calculateTotalCartCount()
             }
+        }
+    }
+
+    private fun calculateTotalCartCount() {
+        productRepository.loadCartItems { cartItems ->
+            val totalCount = cartItems?.sumOf { it.amount } ?: 0
+            _totalCartCount.postValue(totalCount)
         }
     }
 
