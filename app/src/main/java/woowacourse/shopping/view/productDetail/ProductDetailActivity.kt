@@ -74,7 +74,6 @@ class ProductDetailActivity :
             when (event) {
                 ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> R.string.product_detail_add_shopping_cart_success_message
                 ProductDetailEvent.ADD_SHOPPING_CART_FAILURE -> R.string.product_detail_add_shopping_cart_error_message
-                ProductDetailEvent.ADD_SHOPPING_CART_EMPTY -> R.string.product_detail_add_shopping_cart_empty_message
             }
 
         binding.root.showSnackBar(getString(messageResourceId))

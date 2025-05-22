@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="@{@string/product_price_format(viewModel.product.price)}"
+                    android:text="@{@string/product_price_format(viewModel.price)}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"

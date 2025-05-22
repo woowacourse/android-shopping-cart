@@ -19,18 +19,18 @@ class ProductDetailViewModel(
         MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
 
-    private val _quantity: MutableLiveData<Int> = MutableLiveData(0)
+    private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
     val quantity: LiveData<Int> get() = _quantity
+
+    private val _price: MutableLiveData<Int> = MutableLiveData()
+    val price: LiveData<Int> get() = _price
 
     fun updateProduct(product: Product) {
         _product.value = product
+        _price.value = product.price
     }
 
     fun addToShoppingCart() {
-        if (quantity.value == 0) {
-            _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_EMPTY)
-            return
-        }
         val product = requireNotNull(product.value) { "product.value가 null입니다." }
         shoppingCartRepository.addWithQuantity(product, quantity.value ?: return) { result ->
             result
@@ -44,9 +44,11 @@ class ProductDetailViewModel(
 
     fun plusQuantity() {
         _quantity.value = (_quantity.value ?: 0) + 1
+        _price.value = quantity.value?.times(product.value?.price ?: 0)
     }
 
     fun minusQuantity() {
-        _quantity.value = (_quantity.value)?.minus(1)?.coerceAtLeast(0)
+        _quantity.value = (_quantity.value)?.minus(1)?.coerceAtLeast(1)
+        _price.value = quantity.value?.times(product.value?.price ?: 0)
     }
 }
