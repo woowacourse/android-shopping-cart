@@ -43,7 +43,7 @@ class GoodsDetailActivity : BaseActivity() {
                 }
 
                 override fun onDecreaseQuantity(position: Int) {
-                    viewModel.decreaseCount()
+                    viewModel.tryDecreaseCount()
                 }
             }
     }

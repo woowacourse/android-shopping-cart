@@ -40,9 +40,13 @@ class GoodsDetailViewModel(
         _count.value = _count.value?.plus(QUANTITY_STEP)
     }
 
-    fun decreaseCount() {
-        _count.value = _count.value?.minus(QUANTITY_STEP)
+    fun tryDecreaseCount() {
+        if (canDecreaseCount()) {
+            _count.value = _count.value?.minus(QUANTITY_STEP)
+        }
     }
+
+    private fun canDecreaseCount(): Boolean = (_count.value ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY
 
     companion object {
         private const val MIN_PURCHASE_QUANTITY: Int = 1

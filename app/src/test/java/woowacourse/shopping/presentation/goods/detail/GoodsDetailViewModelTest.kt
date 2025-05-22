@@ -66,7 +66,7 @@ class GoodsDetailViewModelTest {
         goodsDetailViewModel.increaseCount()
 
         // when
-        goodsDetailViewModel.decreaseCount()
+        goodsDetailViewModel.tryDecreaseCount()
 
         // then
         goodsDetailViewModel.count.getOrAwaitValue() shouldBe 1
