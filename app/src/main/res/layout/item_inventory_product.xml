@@ -61,5 +61,60 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10,000원" />
+
+        <ImageView
+            android:id="@+id/iv_add_product_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/icon_plus"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+
+        <Button
+            android:id="@+id/btn_decrease_quantity"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/button_minus"
+            android:textColor="@color/gray"
+            android:textSize="30sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_quantity"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/tv_product_quantity" />
+
+        <TextView
+            android:id="@+id/tv_product_quantity"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            android:textSize="30sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="1" />
+
+        <Button
+            android:id="@+id/btn_increase_quantity"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/button_plus"
+            android:textColor="@color/gray"
+            android:textSize="30sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_quantity"
+            app:layout_constraintStart_toEndOf="@id/tv_product_quantity" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
