@@ -34,6 +34,8 @@ class ShoppingCart(
         return ShoppingCart(updated)
     }
 
+    operator fun minus(cartProduct: CartProduct): ShoppingCart = ShoppingCart(cartProducts - cartProduct)
+
     fun getQuantity(product: Product): Int = cartProducts.find { it.product.id == product.id }?.quantity ?: 0
 
     companion object {

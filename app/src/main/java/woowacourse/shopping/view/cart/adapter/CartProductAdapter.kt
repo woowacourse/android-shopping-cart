@@ -19,9 +19,30 @@ class CartProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun updateItems(newItems: List<CartProduct>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
+        val oldSize = items.size
+        val newSize = newItems.size
+        val minSize = minOf(oldSize, newSize)
+
+        for (i in 0 until minSize) {
+            val oldItem = items[i]
+            val newItem = newItems[i]
+
+            if (oldItem != newItem) {
+                items[i] = newItem
+                notifyItemChanged(i)
+            }
+        }
+
+        if (newSize > oldSize) {
+            val addedItems = newItems.subList(oldSize, newSize)
+            items.addAll(addedItems)
+            notifyItemRangeInserted(oldSize, addedItems.size)
+        } else if (oldSize > newSize) {
+            for (i in oldSize - 1 downTo newSize) {
+                items.removeAt(i)
+            }
+            notifyItemRangeRemoved(newSize, oldSize - newSize)
+        }
     }
 
     override fun onBindViewHolder(

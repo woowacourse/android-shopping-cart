@@ -45,7 +45,7 @@ class ShoppingCartViewModel(
 
     override fun onProductRemoveClick(item: CartProduct) {
         repository.deleteByProductId(item.product.id)
-        shoppingCart -= item.product
+        shoppingCart -= item
         reloadCurrentPage()
     }
 

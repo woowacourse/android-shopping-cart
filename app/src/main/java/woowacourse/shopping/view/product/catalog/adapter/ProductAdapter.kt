@@ -52,11 +52,6 @@ class ProductAdapter(
             val addedItems = newItems.subList(oldSize, newSize)
             items.addAll(addedItems)
             notifyItemRangeInserted(oldSize, addedItems.size)
-        } else if (oldSize > newSize) {
-            for (i in oldSize - 1 downTo newSize) {
-                items.removeAt(i)
-            }
-            notifyItemRangeRemoved(newSize, oldSize - newSize)
         }
     }
 }
