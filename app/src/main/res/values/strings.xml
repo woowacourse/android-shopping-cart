@@ -7,4 +7,6 @@
     <string name="text_add_to_cart">장바구니 담기</string>
 
     <string name="action_bar_title_cart_screen">Cart</string>
+    <string name="plus">+</string>
+    <string name="minus">−</string>
 </resources>
