@@ -95,7 +95,7 @@ class CatalogViewModel(
         _products.value.orEmpty().filterIsInstance<CatalogItem.ProductItem>()
 
     private fun mapToProductItems(items: List<CartItem>): List<CatalogItem.ProductItem> =
-        items.map { CatalogItem.ProductItem(it.toCatalogItem(isOpenQuantitySelector(it.quantity))) }
+        items.map { CatalogItem.ProductItem(it.toCatalogItem()) }
 
     private fun mergeProducts(
         oldItems: List<CatalogItem.ProductItem>,
@@ -157,20 +157,14 @@ class CatalogViewModel(
 
     private fun CatalogItem.ProductItem.copyWithQuantity(quantity: Int): CatalogItem.ProductItem =
         CatalogItem.ProductItem(
-            this.product.copy(
-                quantity = quantity,
-                isOpenQuantitySelector = isOpenQuantitySelector(quantity),
-            ),
+            this.product.copy(quantity = quantity),
         )
-
-    private fun isOpenQuantitySelector(quantity: Int): Boolean = quantity > OPEN_QUANTITY_SELECTOR_BASE_VALUE
 
     private fun postFailureEvent(event: CatalogMessageEvent) {
         _toastEvent.postValue(event)
     }
 
     companion object {
-        private const val OPEN_QUANTITY_SELECTOR_BASE_VALUE = 0
         private const val QUANTITY_STEP = 1
 
         val Factory =

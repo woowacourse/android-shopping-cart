@@ -8,15 +8,13 @@ data class CatalogItemUiModel(
     val productName: String,
     val price: Int,
     var quantity: Int,
-    var isOpenQuantitySelector: Boolean = false,
 )
 
-fun CartItem.toCatalogItem(isOpenQuantitySelector: Boolean) =
+fun CartItem.toCatalogItem() =
     CatalogItemUiModel(
         productId = product.id,
         productName = product.name,
         imageUrl = product.imageUrl,
         price = product.price.value,
         quantity = quantity,
-        isOpenQuantitySelector = isOpenQuantitySelector,
     )

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="product"
@@ -41,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
-            android:visibility="@{product.isOpenQuantitySelector ? View.VISIBLE : View.GONE}"
+            android:visibility="@{product.quantity > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/image_view_product"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -53,12 +54,12 @@
             android:layout_margin="12dp"
             android:background="@drawable/shape_circle_bg"
             android:backgroundTint="@color/white"
-            android:visibility="@{product.isOpenQuantitySelector ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> eventListener.onQuantitySelectorOpenButtonClicked(product.productId)}"
-            app:layout_constraintBottom_toBottomOf="@id/image_view_product"
-            app:layout_constraintEnd_toEndOf="@id/image_view_product"
             android:src="@drawable/ic_add"
-            android:tint="@color/gray_55"/>
+            android:tint="@color/gray_55"
+            android:visibility="@{product.quantity > 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_product"
+            app:layout_constraintEnd_toEndOf="@id/image_view_product" />
 
         <TextView
             android:id="@+id/text_view_product_name"
