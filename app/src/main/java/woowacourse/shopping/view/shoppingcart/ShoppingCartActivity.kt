@@ -96,9 +96,6 @@ class ShoppingCartActivity :
 
         override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
             quantity.value = quantity.value?.minus(1)
-            if (quantity.value == 0) {
-                onProductRemove(item!!, page!!)
-            }
         }
 
         override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
@@ -112,7 +109,16 @@ class ShoppingCartActivity :
             viewModel.removeProduct(product, page)
         }
 
-        override fun whenQuantityChangedSelectView(quantity: MutableLiveData<Int>) {
+        override fun whenQuantityChangedSelectView(
+            quantity: MutableLiveData<Int>,
+            item: ShoppingCartItem?,
+            page: Int,
+        ) {
+            item?.let {
+                if (quantity.value == 0) {
+                    onProductRemove(item, page)
+                }
+            }
         }
     }
 }
@@ -129,5 +135,9 @@ interface ShoppingCartEventHandler : QuantitySelectorEventHandler {
         page: Int,
     )
 
-    fun whenQuantityChangedSelectView(quantity: MutableLiveData<Int>)
+    fun whenQuantityChangedSelectView(
+        quantity: MutableLiveData<Int>,
+        item: ShoppingCartItem?,
+        page: Int,
+    )
 }

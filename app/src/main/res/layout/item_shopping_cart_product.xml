@@ -31,6 +31,10 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="18dp"
+        shoppingCart:observe="@{quantity}"
+        shoppingCart:observe_action="@{handler}"
+        shoppingCart:observe_argument_item="@{product}"
+        shoppingCart:observe_argument_page="@{page}"
 
         android:background="@drawable/background_item_shopping_cart">
 
