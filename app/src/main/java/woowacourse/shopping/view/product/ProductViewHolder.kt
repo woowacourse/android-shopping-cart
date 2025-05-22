@@ -3,7 +3,6 @@ package woowacourse.shopping.view.product
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.product.CartItem
 
@@ -12,34 +11,26 @@ class ProductViewHolder(
     onSelectProduct: (CartItem) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onSelectProduct = onSelectProduct
+        binding.productItemActionListener =
+            object : ProductItemActionListener {
+                override fun onSelectProduct(item: ProductsItem.ProductItem) {
+                    onSelectProduct(item.cartItem)
+                }
+
+                override fun onPlusProductQuantity(item: ProductsItem.ProductItem) {
+                    item.quantity++
+                    binding.invalidateAll()
+                }
+
+                override fun onMinusProductQuantity(item: ProductsItem.ProductItem) {
+                    item.quantity--
+                    binding.invalidateAll()
+                }
+            }
     }
 
     fun bind(item: ProductsItem.ProductItem) {
-        binding.product = item.cartItem
-        binding.imageUrl = item.cartItem.imageUrl
-        binding.quantity = item.quantity
-
-        binding.productAddButton.setOnClickListener {
-            item.quantity++
-            updateQuantity(item.quantity)
-        }
-
-        binding.productQuantityMinusButton.setOnClickListener {
-            item.quantity--
-            updateQuantity(item.quantity)
-        }
-
-        binding.productQuantityPlusButton.setOnClickListener {
-            item.quantity++
-            updateQuantity(item.quantity)
-        }
-    }
-
-    private fun updateQuantity(quantity: Int) {
-        binding.quantity = quantity
-        binding.productAddButton.invalidate()
-        binding.productQuantityStepper.invalidate()
+        binding.productItem = item
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.product
 
+import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.domain.product.CartItem
 
 sealed interface ProductsItem {
@@ -7,9 +8,10 @@ sealed interface ProductsItem {
 
     data class ProductItem(
         val cartItem: CartItem,
-        var quantity: Int = cartItem.quantity,
     ) : ProductsItem {
         override val viewType: ItemType = ItemType.PRODUCT
+        val imageUrl = cartItem.imageUrl
+        var quantity: Int = cartItem.quantity
     }
 
     data class LoadItem(
