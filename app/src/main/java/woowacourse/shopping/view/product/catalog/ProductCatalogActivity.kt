@@ -25,7 +25,11 @@ class ProductCatalogActivity : AppCompatActivity() {
         val app = application as ShoppingApplication
         ViewModelProvider(
             this,
-            ProductCatalogViewModelFactory(app.productRepository, app.cartProductRepository),
+            ProductCatalogViewModelFactory(
+                app.productRepository,
+                app.cartProductRepository,
+                app.recentProductRepository,
+            ),
         )[ProductCatalogViewModel::class.java]
     }
 
@@ -86,8 +90,9 @@ class ProductCatalogActivity : AppCompatActivity() {
                             ),
                         ]
                     ) {
-                        ProductCatalogItem.ViewType.LOAD_MORE -> GRID_SPAN_COUNT
+                        ProductCatalogItem.ViewType.RECENT_PRODUCT -> GRID_SPAN_COUNT
                         ProductCatalogItem.ViewType.PRODUCT -> 1
+                        ProductCatalogItem.ViewType.LOAD_MORE -> GRID_SPAN_COUNT
                     }
             }
         binding.rvProducts.layoutManager = gridLayoutManager

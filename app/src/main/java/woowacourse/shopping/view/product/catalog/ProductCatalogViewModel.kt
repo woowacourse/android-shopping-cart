@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
 
 class ProductCatalogViewModel(
     private val productRepository: ProductRepository,
     private val cartProductRepository: CartProductRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel(),
     ProductCatalogEventHandler {
     private val products = mutableMapOf<Product, Int>()
@@ -69,13 +72,15 @@ class ProductCatalogViewModel(
     }
 
     private fun loadMoreProducts() {
+        val recentProducts = recentProductRepository.getPagedProducts(RECENT_PRODUCT_SIZE_LIMIT)
+
         val result = productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset)
         result.items.forEach { product ->
             val quantity = cartProductRepository.getQuantityByProductId(product.id)
             products[product] = quantity ?: 0
         }
         offset += result.items.size
-        _productItems.value = createProductItems(result.hasNext)
+        _productItems.value = createProductItems(recentProducts, result.hasNext)
     }
 
     private fun updateProductQuantity(
@@ -86,6 +91,7 @@ class ProductCatalogViewModel(
         _productItems.value =
             productItems.value?.map {
                 when (it) {
+                    is ProductCatalogItem.RecentProductsItem -> it
                     is ProductCatalogItem.ProductItem ->
                         if (it.product.id == product.id) it.copy(quantity = quantity) else it
 
@@ -94,16 +100,28 @@ class ProductCatalogViewModel(
             }
     }
 
-    private fun createProductItems(hasNext: Boolean): List<ProductCatalogItem> {
+    private fun createProductItems(
+        recentProducts: List<RecentProduct>,
+        hasNext: Boolean,
+    ): List<ProductCatalogItem> {
         val items =
             products.map { (product, quantity) ->
                 ProductCatalogItem.ProductItem(product, quantity)
             }
-        return if (hasNext) items + ProductCatalogItem.LoadMoreItem else items
+        return buildList {
+            if (recentProducts.isNotEmpty()) {
+                add(ProductCatalogItem.RecentProductsItem(recentProducts))
+            }
+            addAll(items)
+            if (hasNext) {
+                add(ProductCatalogItem.LoadMoreItem)
+            }
+        }
     }
 
     companion object {
         private const val FIRST_OFFSET = 0
         private const val PRODUCT_SIZE_LIMIT = 20
+        private const val RECENT_PRODUCT_SIZE_LIMIT = 10
     }
 }

@@ -9,7 +9,7 @@ interface RecentProductRepository {
 
     fun getPagedProducts(
         limit: Int,
-        offset: Int,
+        offset: Int = 0,
     ): List<RecentProduct>
 
     fun replaceRecentProduct(productId: Long)
