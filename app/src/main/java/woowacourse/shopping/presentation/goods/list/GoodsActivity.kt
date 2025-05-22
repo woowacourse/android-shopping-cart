@@ -103,7 +103,7 @@ class GoodsActivity : BaseActivity() {
     }
 
     private fun navigateToDetail(goods: GoodsUiModel) {
-        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
+        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods.id)
         startActivity(intent)
     }
 

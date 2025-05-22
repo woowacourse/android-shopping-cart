@@ -11,14 +11,15 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
 import woowacourse.shopping.presentation.BaseActivity
-import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.util.QuantitySelectorListener
-import woowacourse.shopping.presentation.util.getSerializableCompat
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
     private val viewModel: GoodsDetailViewModel by viewModels {
-        GoodsDetailViewModel.provideFactory((application as ShoppingApplication).shoppingRepository)
+        GoodsDetailViewModel.provideFactory(
+            (application as ShoppingApplication).goodsRepository,
+            (application as ShoppingApplication).shoppingRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,10 +27,11 @@ class GoodsDetailActivity : BaseActivity() {
         setUpScreen(binding.root)
         setUpBinding()
 
-        viewModel.setGoods(intent.getSerializableCompat<GoodsUiModel>(EXTRA_GOODS))
+        viewModel.setGoods(intent.getIntExtra(EXTRA_GOODS, -1))
 
         viewModel.onItemAddedToCart.observe(this) { count ->
-            Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -69,10 +71,10 @@ class GoodsDetailActivity : BaseActivity() {
 
         fun newIntent(
             context: Context,
-            goods: GoodsUiModel,
+            goodsId: Int,
         ): Intent =
             Intent(context, GoodsDetailActivity::class.java).apply {
-                putExtra(EXTRA_GOODS, goods)
+                putExtra(EXTRA_GOODS, goodsId)
             }
     }
 }
