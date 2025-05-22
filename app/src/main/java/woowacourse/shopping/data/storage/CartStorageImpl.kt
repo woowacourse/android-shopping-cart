@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread
 
-class CartStorageImplAsRoom private constructor(
+class CartStorageImpl private constructor(
     private val cartDao: CartDao,
 ) : CartStorage {
     override fun getAllProductsSize(onResult: (Int) -> Unit) {
@@ -40,8 +40,8 @@ class CartStorageImplAsRoom private constructor(
     }
 
     companion object {
-        private var instance: CartStorageImplAsRoom? = null
+        private var instance: CartStorageImpl? = null
 
-        fun initialize(cartDao: CartDao): CartStorageImplAsRoom = instance ?: CartStorageImplAsRoom(cartDao).also { instance = it }
+        fun initialize(cartDao: CartDao): CartStorageImpl = instance ?: CartStorageImpl(cartDao).also { instance = it }
     }
 }
