@@ -81,20 +81,20 @@ class CartViewModel(
     private fun checkNextButtonEnabled(totalSize: Int) {
         val currentPage = page.value ?: INITIAL_PAGE
         val lastPage = (totalSize - 1) / PAGE_SIZE
-        _isNextButtonEnabled.value = currentPage < lastPage
+        _isNextButtonEnabled.postValue(currentPage < lastPage)
     }
 
     private fun checkPrevButtonEnabled() {
         val currentPage = page.value ?: INITIAL_PAGE
-        _isPrevButtonEnabled.value = currentPage >= 1
+        _isPrevButtonEnabled.postValue(currentPage >= 1)
     }
 
     private fun increasePage() {
-        _page.value = page.value?.plus(1)
+        _page.postValue(page.value?.plus(1))
     }
 
     private fun decreasePage() {
-        _page.value = page.value?.minus(1)
+        _page.postValue(page.value?.minus(1))
     }
 
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
