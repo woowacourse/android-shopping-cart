@@ -4,7 +4,7 @@ import woowacourse.shopping.data.product.entity.ProductEntity
 import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
 
 object VolatileShoppingCartStorage : ShoppingCartStorage {
-    private var products: List<ProductEntity> = emptyList()
+    private val products: MutableList<ShoppingCartProductEntity> = mutableListOf()
     override val size: Int
         get() {
             return products.size
@@ -13,22 +13,36 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
     override fun load(
         offset: Int,
         limit: Int,
-    ): List<ProductEntity> {
+    ): List<ShoppingCartProductEntity> {
         if (limit > size) return products.subList(offset, size)
-        return products.subList(offset, limit)
+        return products.subList(offset, limit).toList()
     }
 
-    override fun add(product: ProductEntity) {
-        products += product
-    }
+    override fun add(shoppingCartProductEntity: ShoppingCartProductEntity) {
+        val index = products.indexOfFirst { it.product == shoppingCartProductEntity.product }
 
-    override fun addWithQuantity(shoppingCartProductEntity: ShoppingCartProductEntity) {
-        repeat(shoppingCartProductEntity.quantity) {
-            products += shoppingCartProductEntity.product
+        if (index != -1) {
+            val currentShoppingCartProduct = products[index]
+            val updatedShoppingCartProduct =
+                currentShoppingCartProduct.copy(
+                    quantity = currentShoppingCartProduct.quantity + shoppingCartProductEntity.quantity,
+                )
+            products[index] = updatedShoppingCartProduct
+        } else {
+            products += shoppingCartProductEntity
         }
     }
 
     override fun remove(product: ProductEntity) {
-        products -= product
+        val index = products.indexOfFirst { it.product == product }
+
+        if (index != -1) {
+            val currentShoppingCartProduct = products[index]
+            val updatedShoppingCartProduct =
+                currentShoppingCartProduct.copy(
+                    quantity = currentShoppingCartProduct.quantity - 1,
+                )
+            products[index] = updatedShoppingCartProduct
+        }
     }
 }

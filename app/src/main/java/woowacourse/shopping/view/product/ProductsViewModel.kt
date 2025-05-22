@@ -72,7 +72,7 @@ class ProductsViewModel(
     }
 
     fun addProductToShoppingCart(product: Product) {
-        shoppingCartRepository.add(product) { result ->
+        shoppingCartRepository.add(product, 1) { result ->
             result
                 .onSuccess {
                     val currentProducts = products.value?.toMutableList() ?: return@add

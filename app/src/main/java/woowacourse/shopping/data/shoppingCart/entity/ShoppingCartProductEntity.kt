@@ -7,7 +7,13 @@ import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 data class ShoppingCartProductEntity(
     val product: ProductEntity,
     val quantity: Int,
-)
+) {
+    fun toDomain(): ShoppingCartProduct =
+        ShoppingCartProduct(
+            product = product.toDomain(),
+            quantity = quantity,
+        )
+}
 
 fun ShoppingCartProduct.toEntity(): ShoppingCartProductEntity =
     ShoppingCartProductEntity(

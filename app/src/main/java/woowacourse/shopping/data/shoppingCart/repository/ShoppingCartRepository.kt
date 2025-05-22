@@ -1,20 +1,16 @@
 package woowacourse.shopping.data.shoppingCart.repository
 
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 
 interface ShoppingCartRepository {
     fun load(
         offset: Int,
         limit: Int,
-        onResult: (Result<List<Product>>) -> Unit,
+        onResult: (Result<List<ShoppingCartProduct>>) -> Unit,
     )
 
     fun add(
-        product: Product,
-        onResult: (Result<Unit>) -> Unit,
-    )
-
-    fun addWithQuantity(
         product: Product,
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,

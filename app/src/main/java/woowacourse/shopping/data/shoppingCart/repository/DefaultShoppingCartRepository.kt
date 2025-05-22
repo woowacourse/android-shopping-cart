@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.shoppingCart.repository
 
-import woowacourse.shopping.data.product.entity.ProductEntity
 import woowacourse.shopping.data.product.entity.toEntity
+import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
 import woowacourse.shopping.data.shoppingCart.entity.toEntity
 import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartStorage
 import woowacourse.shopping.data.shoppingCart.storage.VolatileShoppingCartStorage
@@ -15,11 +15,13 @@ class DefaultShoppingCartRepository(
     override fun load(
         offset: Int,
         limit: Int,
-        onResult: (Result<List<Product>>) -> Unit,
+        onResult: (Result<List<ShoppingCartProduct>>) -> Unit,
     ) {
         thread {
             runCatching {
-                shoppingCartStorage.load(offset, offset + limit).map(ProductEntity::toDomain)
+                shoppingCartStorage
+                    .load(offset, offset + limit)
+                    .map(ShoppingCartProductEntity::toDomain)
             }.onSuccess { productList ->
                 onResult(Result.success(productList))
             }.onFailure { exception ->
@@ -30,28 +32,13 @@ class DefaultShoppingCartRepository(
 
     override fun add(
         product: Product,
-        onResult: (Result<Unit>) -> Unit,
-    ) {
-        thread {
-            runCatching {
-                shoppingCartStorage.add(product.toEntity())
-            }.onSuccess {
-                onResult(Result.success(Unit))
-            }.onFailure { exception ->
-                onResult(Result.failure(exception))
-            }
-        }
-    }
-
-    override fun addWithQuantity(
-        product: Product,
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
         val shoppingCartProduct = ShoppingCartProduct(product, quantity)
         thread {
             runCatching {
-                shoppingCartStorage.addWithQuantity(shoppingCartProduct.toEntity())
+                shoppingCartStorage.add(shoppingCartProduct.toEntity())
             }.onSuccess {
                 onResult(Result.success(Unit))
             }.onFailure { exception ->

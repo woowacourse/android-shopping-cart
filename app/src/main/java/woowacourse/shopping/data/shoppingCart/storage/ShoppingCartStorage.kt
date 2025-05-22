@@ -9,11 +9,9 @@ interface ShoppingCartStorage {
     fun load(
         offset: Int,
         limit: Int,
-    ): List<ProductEntity>
+    ): List<ShoppingCartProductEntity>
 
-    fun add(product: ProductEntity)
-
-    fun addWithQuantity(shoppingCartProductEntity: ShoppingCartProductEntity)
+    fun add(shoppingCartProductEntity: ShoppingCartProductEntity)
 
     fun remove(product: ProductEntity)
 }
