@@ -6,7 +6,7 @@ import woowacourse.shopping.data.entity.HistoryProductEntity
 import woowacourse.shopping.data.entity.ProductEntity
 
 data class HistoryProductDto(
-    @Embedded val exploreHistoryProduct: HistoryProductEntity,
+    @Embedded val historyProduct: HistoryProductEntity,
     @Relation(
         parentColumn = "productId",
         entityColumn = "id",
