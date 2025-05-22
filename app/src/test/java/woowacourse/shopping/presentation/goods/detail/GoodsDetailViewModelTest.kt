@@ -11,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.data.GoodsRepositoryImpl
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.GOODS_SUNDAE
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.model.toUiModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsDetailViewModelTest {
@@ -24,8 +24,8 @@ class GoodsDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        goodsDetailViewModel = GoodsDetailViewModel(shoppingRepository)
-        goodsDetailViewModel.setGoods(goods.toUiModel())
+        goodsDetailViewModel = GoodsDetailViewModel(GoodsRepositoryImpl, shoppingRepository)
+        goodsDetailViewModel.setGoods(1)
     }
 
     @Test
