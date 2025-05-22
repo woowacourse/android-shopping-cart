@@ -10,8 +10,13 @@
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.product.detail.AddToCartClickListener" />
+            name="handler"
+            type="woowacourse.shopping.product.ProductQuantityHandler" />
+
+        <variable
+            name="detailHandler"
+            type="woowacourse.shopping.product.detail.DetailEventHandler" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,25 +78,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="18dp"
-                    android:text="@{@string/format_price(product.price)}"
+                    android:text="@{@string/format_price(product.price * product.quantity)}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="99,800원" />
 
-                <LinearLayout
-                    android:layout_marginEnd="14dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/textView_price_info"
-                    app:layout_constraintBottom_toBottomOf="@id/textView_price_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
                     <include
+                        app:product="@{product}"
+                        app:handler="@{handler}"
+                        android:layout_marginEnd="14dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/textView_price_info"
+                        app:layout_constraintBottom_toBottomOf="@id/textView_price_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:id="@+id/layout_quantity_selector"
                         layout="@layout/product_count_item" />
 
-                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
@@ -100,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/add_to_cart_button"
-            android:onClick="@{() -> clickListener.onClick(product)}"
+            android:onClick="@{() -> detailHandler.onAddCartItem(product)}"
             android:padding="12dp"
             android:text="@string/text_add_to_cart"
             android:textAlignment="center"

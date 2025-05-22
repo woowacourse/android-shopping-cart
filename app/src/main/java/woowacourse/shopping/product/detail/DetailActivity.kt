@@ -40,13 +40,22 @@ class DetailActivity : AppCompatActivity() {
         applyWindowInsets()
         setSupportActionBar()
 
-        setAddToCartClickListener()
+//        setAddToCartClickListener()
+
         observeCartUiState()
 
         val product: ProductUiModel? = productFromIntent()
         product?.let {
             binding.product = it
+            viewModel.setProduct(it)
         }
+
+        binding.handler =
+            DetailEventHandlerImpl(
+                viewModel,
+            )
+        binding.detailHandler = DetailEventHandlerImpl(viewModel)
+        observeProduct()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -64,13 +73,6 @@ class DetailActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
 
-    private fun setAddToCartClickListener() {
-        binding.clickListener =
-            AddToCartClickListener { product ->
-                viewModel.addToCart(product)
-            }
-    }
-
     private fun observeCartUiState() {
         viewModel.uiState.observe(this) { value ->
             when (value) {
@@ -79,6 +81,13 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         binding.lifecycleOwner = this
+    }
+
+    private fun observeProduct() {
+        viewModel.product.observe(this) { product ->
+            binding.product = product
+            binding.executePendingBindings()
+        }
     }
 
     private fun setSupportActionBar() {

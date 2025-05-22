@@ -11,8 +11,12 @@
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
-            name="handler"
+            name="catalogHandler"
             type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.product.ProductQuantityHandler" />
 
     </data>
 
@@ -20,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{() -> handler.onProductClick(product)}"
+        android:onClick="@{() -> catalogHandler.onProductClick(product)}"
         >
 
         <ImageView
@@ -50,7 +54,7 @@
 
         <include
             app:product="@{product}"
-            app:handler="@{handler}"
+            app:handler="@{catalogHandler}"
             android:visibility="@{product.isExpanded ? View.GONE : View.VISIBLE}"
             android:layout_width="53dp"
             android:layout_height="53dp"

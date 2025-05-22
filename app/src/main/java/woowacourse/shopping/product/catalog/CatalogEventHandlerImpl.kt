@@ -1,9 +1,12 @@
 package woowacourse.shopping.product.catalog
 
+import woowacourse.shopping.product.ProductQuantityHandler
+
 class CatalogEventHandlerImpl(
     private val viewModel: CatalogViewModel,
     private val onNavigateToDetail: (ProductUiModel) -> Unit,
-) : CatalogEventHandler {
+) : CatalogEventHandler,
+    ProductQuantityHandler {
     override fun onProductClick(product: ProductUiModel) {
         onNavigateToDetail(product)
     }

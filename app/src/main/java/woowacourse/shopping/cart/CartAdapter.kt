@@ -7,7 +7,7 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
     private var cartProducts: List<ProductUiModel>,
-    private val handler: CartEventHandler,
+    private val handler: CartEventHandlerImpl,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,

@@ -65,7 +65,8 @@ class CatalogActivity : AppCompatActivity() {
         val adapter =
             ProductAdapter(
                 emptyList(),
-                handler = handler,
+                catalogHandler = handler,
+                quantityHandler = handler,
             )
 
         binding.recyclerViewProducts.adapter = adapter

@@ -16,7 +16,7 @@ class CartViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            handler: CartEventHandler,
+            handler: CartEventHandlerImpl,
         ): CartViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = CartItemBinding.inflate(inflater, parent, false)

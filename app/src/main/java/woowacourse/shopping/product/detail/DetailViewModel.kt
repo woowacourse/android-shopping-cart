@@ -12,12 +12,44 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 class DetailViewModel(
     private val repository: CartItemRepository,
 ) : ViewModel() {
+    private val _product = MutableLiveData<ProductUiModel>()
+    val product: LiveData<ProductUiModel> = _product
+
     private val _uiState = MutableLiveData<CartUiState>()
     val uiState: LiveData<CartUiState> = _uiState
 
     fun addToCart(product: ProductUiModel) {
         viewModelScope.launch {
             repository.insertCartItem(product)
+        }
+    }
+
+    fun setProduct(product: ProductUiModel) {
+        _product.value = product
+    }
+
+    fun increaseQuantity() {
+        viewModelScope.launch {
+            _product.value?.let { currentProduct ->
+                val newProduct = currentProduct.copy(quantity = currentProduct.quantity + 1)
+                _product.value = newProduct
+                repository.insertCartItem(newProduct)
+            }
+        }
+    }
+
+    fun decreaseQuantity() {
+        viewModelScope.launch {
+            _product.value?.let { currentProduct ->
+                if (currentProduct.quantity > 1) {
+                    val newProduct = currentProduct.copy(quantity = currentProduct.quantity - 1)
+                    _product.value = newProduct
+                    repository.insertCartItem(newProduct)
+                } else {
+                    repository.deleteCartItem(currentProduct)
+                    _product.value = null
+                }
+            }
         }
     }
 

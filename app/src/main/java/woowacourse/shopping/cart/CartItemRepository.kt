@@ -21,4 +21,8 @@ class CartItemRepository(
     suspend fun deleteCartItem(product: ProductUiModel) {
         dao.deleteCartItem(product.toCartItem())
     }
+
+//    suspend fun findCartItem(product: ProductUiModel) {
+//        dao.getCartItemByUid(product.toCartItem().uid)
+//    }
 }

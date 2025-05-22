@@ -3,10 +3,12 @@ package woowacourse.shopping.product.catalog
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.product.ProductQuantityHandler
 
 class ProductAdapter(
     private var products: List<ProductUiModel>,
-    private val handler: CatalogEventHandler,
+    private val catalogHandler: CatalogEventHandler,
+    private val quantityHandler: ProductQuantityHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var showLoadMoreButton = false
 
@@ -15,9 +17,9 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == PRODUCT) {
-            ProductViewHolder.from(parent, handler)
+            ProductViewHolder.from(parent, catalogHandler, quantityHandler)
         } else {
-            LoadButtonViewHolder.from(parent, handler)
+            LoadButtonViewHolder.from(parent, catalogHandler)
         }
 
     override fun onBindViewHolder(
