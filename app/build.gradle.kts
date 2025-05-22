@@ -54,32 +54,42 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraintlayout)
+    // Android
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.constraintlayout)
     implementation(libs.google.material)
-    implementation(libs.androidx.junit.ktx)
-    testImplementation(libs.assertj.core)
+
+    // Image
+    implementation(libs.glide)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
+    // Network
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // Unit Test
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.truth)
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockwebserver)
     testImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.androidx.espresso.core)
+
+    // Android Test
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.assertj.core)
     androidTestImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.mannodermaus.junit5.core)
-    androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
-    implementation(libs.glide)
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.okhttp)
-    testImplementation(libs.mockwebserver)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
-    testImplementation(libs.mockk)
+    androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
 }
