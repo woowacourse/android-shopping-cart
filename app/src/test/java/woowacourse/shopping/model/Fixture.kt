@@ -62,8 +62,9 @@ val DUMMY_HISTORY_PRODUCT_1 =
 
 val DUMMY_CATALOG_PRODUCT_1 = CatalogProduct(DUMMY_PRODUCT_1, quantity = 5)
 val DUMMY_CATALOG_PRODUCT_2 = CatalogProduct(DUMMY_PRODUCT_2, quantity = 6)
+val DUMMY_CATALOG_PRODUCT_3 = CatalogProduct(DUMMY_PRODUCT_3, quantity = 7)
 
-val DUMMY_CART_PRODUCTS =
+val DUMMY_CART_PRODUCTS_1 =
     CartProducts(
         products =
             listOf(
@@ -73,10 +74,20 @@ val DUMMY_CART_PRODUCTS =
                 DUMMY_CART_PRODUCT_4,
                 DUMMY_CART_PRODUCT_5,
             ),
-        totalPage = 1,
+        totalPage = 2,
     )
 
-val DUMMY_CATALOG_PRODUCTS =
+val DUMMY_CATALOG_PRODUCTS_1 =
+    CatalogProducts(
+        products =
+            listOf(
+                DUMMY_CATALOG_PRODUCT_1,
+                DUMMY_CATALOG_PRODUCT_2,
+                DUMMY_CATALOG_PRODUCT_3,
+            ),
+        hasMore = true,
+    )
+val DUMMY_CATALOG_PRODUCTS_2 =
     CatalogProducts(
         products = listOf(DUMMY_CATALOG_PRODUCT_1),
         hasMore = true,

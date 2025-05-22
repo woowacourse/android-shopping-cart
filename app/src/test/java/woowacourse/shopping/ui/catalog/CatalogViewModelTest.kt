@@ -14,7 +14,8 @@ import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCTS
+import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCTS_1
+import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCTS_2
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_2
 import woowacourse.shopping.model.DUMMY_HISTORY_PRODUCT_1
@@ -42,7 +43,7 @@ class CatalogViewModelTest {
     @Test
     fun `전체 상품 목록과 다른 상품 존재 여부를 불러온다`() {
         // given
-        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS, "_catalogProducts", viewModel)
+        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_1, "_catalogProducts", viewModel)
 
         val newProduct = DUMMY_CATALOG_PRODUCT_2
         val newData = CatalogProducts(products = listOf(DUMMY_CATALOG_PRODUCT_2), hasMore = false)
@@ -58,7 +59,7 @@ class CatalogViewModelTest {
 
         // then
         val result = viewModel.catalogProducts.getOrAwaitValue()
-        assertThat(result.products).containsExactlyElementsIn(DUMMY_CATALOG_PRODUCTS.products + newProduct)
+        assertThat(result.products).containsExactlyElementsIn(DUMMY_CATALOG_PRODUCTS_1.products + newProduct)
         assertThat(result.hasMore).isFalse()
     }
 
@@ -85,7 +86,7 @@ class CatalogViewModelTest {
     fun `장바구니 상품 갯수를 증가시킨다`() {
         // given
         val productId = DUMMY_CATALOG_PRODUCT_1.product.id
-        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS, "_catalogProducts", viewModel)
+        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_1, "_catalogProducts", viewModel)
 
         every {
             cartRepository.increaseProductQuantity(eq(productId), any(), any())
@@ -105,7 +106,7 @@ class CatalogViewModelTest {
     fun `장바구니 상품 갯수를 감소시킨다`() {
         // given
         val productId = DUMMY_CATALOG_PRODUCT_1.product.id
-        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS, "_catalogProducts", viewModel)
+        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_1, "_catalogProducts", viewModel)
 
         every {
             cartRepository.decreaseProductQuantity(eq(productId), any(), any())
@@ -125,7 +126,7 @@ class CatalogViewModelTest {
     fun `특정 상품의 정보를 불러와 상품 목록에 반영한다`() {
         // given
         val productId = DUMMY_CATALOG_PRODUCT_1.product.id
-        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS, "_catalogProducts", viewModel)
+        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_1, "_catalogProducts", viewModel)
 
         val updatedProduct = DUMMY_CATALOG_PRODUCT_1.copy(quantity = 100)
 
@@ -146,14 +147,14 @@ class CatalogViewModelTest {
     @Test
     fun `특정 상품들의 정보를 불러와 상품 목록에 반영한다`() {
         // given
-        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS, "_catalogProducts", viewModel)
+        setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_2, "_catalogProducts", viewModel)
 
-        val updatedList = listOf(DUMMY_CATALOG_PRODUCT_1.copy(quantity = 6))
+        val updatedProducts = listOf(DUMMY_CATALOG_PRODUCT_1.copy(quantity = 6))
 
         every {
             productRepository.fetchProducts(any<List<Int>>(), any())
         } answers {
-            secondArg<(List<CatalogProduct>) -> Unit>().invoke(updatedList)
+            secondArg<(List<CatalogProduct>) -> Unit>().invoke(updatedProducts)
         }
 
         // when
@@ -161,7 +162,7 @@ class CatalogViewModelTest {
 
         // then
         val result = viewModel.catalogProducts.getOrAwaitValue()
-        assertThat(result.products).containsExactlyElementsIn(updatedList)
+        assertThat(result.products).containsExactlyElementsIn(updatedProducts)
     }
 
     @AfterEach

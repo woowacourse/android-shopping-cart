@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.CartProducts
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.model.DUMMY_CART_PRODUCTS
+import woowacourse.shopping.model.DUMMY_CART_PRODUCTS_1
 import woowacourse.shopping.model.DUMMY_PRODUCT_1
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
@@ -31,7 +31,7 @@ class CartViewModelTest {
         every {
             cartRepository.fetchCartProducts(any(), any(), any())
         } answers {
-            thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS)
+            thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS_1)
         }
 
         viewModel = CartViewModel(cartRepository)
@@ -44,7 +44,7 @@ class CartViewModelTest {
 
         // then
         assertThat(viewModel.cartProducts.getOrAwaitValue().products).hasSize(5)
-        assertThat(viewModel.cartProducts.getOrAwaitValue().products).containsExactlyElementsIn(DUMMY_CART_PRODUCTS.products)
+        assertThat(viewModel.cartProducts.getOrAwaitValue().products).containsExactlyElementsIn(DUMMY_CART_PRODUCTS_1.products)
     }
 
     @Test
@@ -119,7 +119,7 @@ class CartViewModelTest {
         every {
             cartRepository.fetchCartProducts(any(), any(), any())
         } answers {
-            thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS)
+            thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS_1)
         }
 
         // when
