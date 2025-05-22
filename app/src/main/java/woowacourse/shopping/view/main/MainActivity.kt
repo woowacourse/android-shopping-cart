@@ -19,7 +19,6 @@ import woowacourse.shopping.view.main.adapter.ProductAdapterEventHandler
 import woowacourse.shopping.view.main.adapter.ProductRvItems
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
-import woowacourse.shopping.view.main.vm.event.MainUiEvent
 
 class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     private val viewModel: MainViewModel by viewModels {

@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.main.adapter
 
-import woowacourse.shopping.view.main.vm.state.ProductState
+import woowacourse.shopping.view.main.state.ProductState
 
 sealed class ProductRvItems(val viewType: ViewType) {
     data class ProductItem(

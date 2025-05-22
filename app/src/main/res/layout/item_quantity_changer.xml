@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="model"
-            type="woowacourse.shopping.view.main.vm.state.ProductState" />
+            type="woowacourse.shopping.view.main.state.ProductState" />
         <variable
             name="eventHandler"
             type="woowacourse.shopping.view.core.handler.CartQuantityHandler" />

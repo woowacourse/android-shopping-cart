@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main.vm.state
+package woowacourse.shopping.view.main.state
 
 sealed interface IncreaseState {
     data class CanIncrease(val value: ProductState) : IncreaseState

@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main.vm.state
+package woowacourse.shopping.view.main.state
 
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.product.Product

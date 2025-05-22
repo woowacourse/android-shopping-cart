@@ -8,11 +8,11 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
-import woowacourse.shopping.view.main.vm.event.MainUiEvent
-import woowacourse.shopping.view.main.vm.state.CartSavingState
-import woowacourse.shopping.view.main.vm.state.IncreaseState
-import woowacourse.shopping.view.main.vm.state.ProductState
-import woowacourse.shopping.view.main.vm.state.ProductUiState
+import woowacourse.shopping.view.main.MainUiEvent
+import woowacourse.shopping.view.main.state.CartSavingState
+import woowacourse.shopping.view.main.state.IncreaseState
+import woowacourse.shopping.view.main.state.ProductState
+import woowacourse.shopping.view.main.state.ProductUiState
 
 class MainViewModel(
     private val productRepository: ProductRepository,

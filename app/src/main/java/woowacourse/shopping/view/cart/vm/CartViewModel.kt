@@ -6,13 +6,15 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.cart.CartUiEvent
+import woowacourse.shopping.view.cart.state.CartUiState
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
-import woowacourse.shopping.view.main.vm.state.CartSavingState
-import woowacourse.shopping.view.main.vm.state.IncreaseState
-import woowacourse.shopping.view.main.vm.state.ProductState
+import woowacourse.shopping.view.main.state.CartSavingState
+import woowacourse.shopping.view.main.state.IncreaseState
+import woowacourse.shopping.view.main.state.ProductState
 
 class CartViewModel(
     private val cartRepository: CartRepository,

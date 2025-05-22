@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.cart.vm
 
-import woowacourse.shopping.view.main.vm.state.ProductState
+import woowacourse.shopping.view.cart.state.PageState
+import woowacourse.shopping.view.main.state.ProductState
 
 class Paging(
     private val initialPage: Int = INITIAL_PAGE_NO,

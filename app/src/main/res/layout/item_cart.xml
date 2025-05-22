@@ -9,7 +9,7 @@
 
         <variable
             name="model"
-            type="woowacourse.shopping.view.main.vm.state.ProductState" />
+            type="woowacourse.shopping.view.main.state.ProductState" />
 
         <variable
             name="eventHandler"

@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
-import woowacourse.shopping.view.main.vm.state.CartSavingState
-import woowacourse.shopping.view.main.vm.state.IncreaseState
-import woowacourse.shopping.view.main.vm.state.ProductState
+import woowacourse.shopping.view.main.state.CartSavingState
+import woowacourse.shopping.view.main.state.IncreaseState
+import woowacourse.shopping.view.main.state.ProductState
 
 class ProductStateTest {
     @Test

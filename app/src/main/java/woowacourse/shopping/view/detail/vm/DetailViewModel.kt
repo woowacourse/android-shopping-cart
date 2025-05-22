@@ -9,8 +9,8 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
 import woowacourse.shopping.view.detail.DetailUiEvent
-import woowacourse.shopping.view.main.vm.state.IncreaseState
-import woowacourse.shopping.view.main.vm.state.ProductState
+import woowacourse.shopping.view.main.state.IncreaseState
+import woowacourse.shopping.view.main.state.ProductState
 
 class DetailViewModel(
     private val productRepository: ProductRepository,

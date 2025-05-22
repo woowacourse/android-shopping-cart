@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main.vm.state
+package woowacourse.shopping.view.main.state
 
 data class ProductUiState(
     val items: List<ProductState> = emptyList(),

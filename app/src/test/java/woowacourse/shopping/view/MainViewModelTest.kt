@@ -20,8 +20,8 @@ import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3
 import woowacourse.shopping.fixture.productFixture4
+import woowacourse.shopping.view.main.state.LoadState
 import woowacourse.shopping.view.main.vm.MainViewModel
-import woowacourse.shopping.view.main.vm.state.LoadState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MainViewModelTest {

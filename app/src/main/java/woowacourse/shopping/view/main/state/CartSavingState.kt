@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.main.vm.state
+package woowacourse.shopping.view.main.state
 
 enum class CartSavingState {
     SAVED,
