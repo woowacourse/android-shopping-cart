@@ -34,6 +34,11 @@ class CatalogActivity : AppCompatActivity() {
         observeCatalogProducts()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadCatalogProducts()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cart_menu_item, menu)
 

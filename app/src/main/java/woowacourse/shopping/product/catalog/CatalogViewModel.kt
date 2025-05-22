@@ -81,10 +81,8 @@ class CatalogViewModel(
             catalogDataSource.getProductsInRange(startIndex, endIndex)
 
         cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
-            // cartProduct의 uid를 기준으로 Map을 만든다
             val cartProductMap = cartProducts.associateBy { it.uid }
 
-            // pagedProducts를 순회하면서 quantity를 반영
             val mergedProducts: List<ProductUiModel> =
                 pagedProducts.map { product ->
                     val cartProduct = cartProductMap[product.id]
@@ -97,7 +95,6 @@ class CatalogViewModel(
 
             val mergedCatalogItems = mergedProducts.map { CatalogItem.ProductItem(it) }
 
-            // LoadMoreButtonItem 포함 여부 결정
             val items: List<CatalogItem> =
                 if (mergedProducts.size == pageSize &&
                     (pageSize * currentPage) + mergedProducts.size < allProductsSize
