@@ -22,6 +22,16 @@ interface CartDao {
         update(cartEntity.copy(quantity = 1))
     }
 
+    @Transaction
+    fun updateQuantity(cartEntity: CartEntity) {
+        val existing = findById(cartEntity.id)
+        if (existing != null) {
+            update(cartEntity.copy(quantity = cartEntity.quantity))
+        } else {
+            insertAll(cartEntity)
+        }
+    }
+
     @Delete
     fun delete(cartEntity: CartEntity)
 

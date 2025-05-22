@@ -33,7 +33,6 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
         cart = IntentCompat.getParcelableExtra(intent, GOODS_KEY, CartUiModel::class.java) ?: return
         viewModel.setInitialCart(cart.toDomain())
-        binding.cart = cart.toDomain()
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -75,10 +74,11 @@ class GoodsDetailsActivity : AppCompatActivity() {
         binding.customCartQuantity.setClickListener(
             object : CustomCartQuantity.CartQuantityClickListener {
                 override fun onAddClick() {
-                    viewModel.insertToCart(cart.toDomain())
+                    viewModel.increaseQuantity()
                 }
 
                 override fun onRemoveClick() {
+                    viewModel.decreaseQuantity()
                 }
             },
         )

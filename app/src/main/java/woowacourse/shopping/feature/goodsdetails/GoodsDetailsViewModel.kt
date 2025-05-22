@@ -23,12 +23,28 @@ class GoodsDetailsViewModel(
         _cart.value = cart
     }
 
-    fun insertToCart(cart: Cart) {
-        try {
-            val updated = cart.updateQuantity(cart.quantity + 1)
-            repository.insert(updated)
+    fun increaseQuantity() {
+        val current = _cart.value
+        if (current != null) {
+            val updated = current.updateQuantity(current.quantity + 1)
             _cart.value = updated
-            _isSuccess.setValue(Unit)
+        }
+    }
+
+    fun decreaseQuantity() {
+        val current = _cart.value
+        if (current != null) {
+            val updated = current.updateQuantity(current.quantity - 1)
+            _cart.value = updated
+        }
+    }
+
+    fun commitCart() {
+        try {
+            _cart.value?.let {
+                repository.insertAll(it)
+                _isSuccess.setValue(Unit)
+            }
         } catch (e: Exception) {
             _isFail.setValue(Unit)
         }

@@ -30,6 +30,13 @@ class CartRepositoryImpl(
         }
     }
 
+    override fun insertAll(cart: Cart) {
+        thread {
+            val dao = cartDatabase.cartDao()
+            dao.updateQuantity(cart.toEntity())
+        }
+    }
+
     override fun delete(cart: Cart) {
         thread {
             val dao = cartDatabase.cartDao()

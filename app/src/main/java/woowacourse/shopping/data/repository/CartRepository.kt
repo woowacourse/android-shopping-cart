@@ -8,6 +8,8 @@ interface CartRepository {
 
     fun insert(cart: Cart)
 
+    fun insertAll(cart: Cart)
+
     fun delete(cart: Cart)
 
     fun getPage(

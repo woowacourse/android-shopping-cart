@@ -5,9 +5,6 @@
 
     <data>
         <variable
-            name="cart"
-            type="woowacourse.shopping.domain.model.Cart" />
-        <variable
             name="viewModel"
             type="woowacourse.shopping.feature.goodsdetails.GoodsDetailsViewModel" />
     </data>
@@ -81,7 +78,7 @@
             android:background="@color/baemin_mint"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="@{() -> viewModel.insertToCart(cart)}"
+            android:onClick="@{() -> viewModel.commitCart()}"
             android:text="@string/goods_details_cart_button"
             android:textColor="@color/white"
             android:textSize="24sp"
