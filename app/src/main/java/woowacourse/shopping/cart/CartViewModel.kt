@@ -4,14 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.cart.CartItem.ProductItem
-import woowacourse.shopping.data.CartDatabase
-import woowacourse.shopping.data.CartProductDataSource
+import woowacourse.shopping.data.CatalogDataSource
+import woowacourse.shopping.data.CatalogDatabase
+import woowacourse.shopping.data.mapper.toEntity
+import woowacourse.shopping.data.mapper.toUiModel
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.repository.CartProductRepository
 
 class CartViewModel(
-    private val dataSource: CartProductDataSource = CartDatabase,
+    private val cartProductRepository: CartProductRepository,
+    private val catalogDataSource: CatalogDataSource = CatalogDatabase,
 ) : ViewModel() {
-    private val allCartProductsSize get() = dataSource.getAllProductsSize()
     private val products = mutableListOf<ProductUiModel>()
 
     private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
@@ -25,7 +28,6 @@ class CartViewModel(
 
     private val _page = MutableLiveData<Int>(INITIAL_PAGE)
     val page: LiveData<Int> = _page
-    val currentPage: Int get() = page.value ?: 1
 
     init {
         loadCartProducts()
@@ -33,46 +35,52 @@ class CartViewModel(
 
     fun deleteCartProduct(cartProduct: ProductItem) {
         products.remove(cartProduct.productItem)
-        dataSource.deleteCartProduct(cartProduct.productItem)
+        cartProductRepository.deleteCartProduct(cartProduct.productItem.toEntity())
+        catalogDataSource.initQuantity(cartProduct.productItem)
 
-        val currentPage = page.value ?: INITIAL_PAGE
-        val updatedSize = dataSource.getAllProductsSize()
-
-        val startIndex = currentPage * PAGE_SIZE
-        if (startIndex >= updatedSize && currentPage > 0) {
-            decreasePage()
+        cartProductRepository.getAllProductsSize { updatedSize ->
+            val currentPage = page.value ?: INITIAL_PAGE
+            val startIndex = currentPage * PAGE_SIZE
+            if (startIndex >= updatedSize && currentPage > 0) {
+                decreasePage()
+            }
+            loadCartProducts()
         }
-
-        loadCartProducts()
     }
 
     fun onPaginationButtonClick(buttonDirection: Int) {
-        val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
+        cartProductRepository.getAllProductsSize { totalSize ->
+            val currentPage = page.value ?: INITIAL_PAGE
+            val lastPage = (totalSize - 1) / PAGE_SIZE
 
-        when (buttonDirection) {
-            PREV_BUTTON ->
-                if (currentPage > 0) {
-                    decreasePage()
-                    loadCartProducts()
+            when (buttonDirection) {
+                PREV_BUTTON -> {
+                    if (currentPage > 0) {
+                        decreasePage()
+                        loadCartProducts()
+                    }
                 }
 
-            NEXT_BUTTON ->
-                if (currentPage < lastPage) {
-                    increasePage()
-                    loadCartProducts()
+                NEXT_BUTTON -> {
+                    if (currentPage < lastPage) {
+                        increasePage()
+                        loadCartProducts()
+                    }
                 }
+            }
         }
     }
 
     fun updateButtons() {
-        checkNextButtonEnabled()
-        checkPrevButtonEnabled()
+        cartProductRepository.getAllProductsSize { totalSize ->
+            checkNextButtonEnabled(totalSize)
+            checkPrevButtonEnabled()
+        }
     }
 
-    private fun checkNextButtonEnabled() {
+    private fun checkNextButtonEnabled(totalSize: Int) {
         val currentPage = page.value ?: INITIAL_PAGE
-        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
+        val lastPage = (totalSize - 1) / PAGE_SIZE
         _isNextButtonEnabled.value = currentPage < lastPage
     }
 
@@ -90,16 +98,25 @@ class CartViewModel(
     }
 
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
-        val currentPage = page.value ?: INITIAL_PAGE
-        val startIndex = currentPage * pageSize
-        val endIndex = minOf(startIndex + pageSize, allCartProductsSize)
-        if (startIndex >= allCartProductsSize) {
-            _cartProducts.value = emptyList()
-            return
+        cartProductRepository.getAllProductsSize { totalSize ->
+            val currentPage = page.value ?: INITIAL_PAGE
+            val startIndex = currentPage * pageSize
+            val endIndex = minOf(startIndex + pageSize, totalSize)
+
+            if (startIndex >= totalSize) {
+                _cartProducts.postValue(emptyList())
+                return@getAllProductsSize
+            }
+
+            val pagedProducts: List<ProductUiModel> =
+                cartProductRepository
+                    .getCartProductsInRange(startIndex, endIndex)
+                    .map { it.toUiModel() }
+
+            _cartProducts.postValue(pagedProducts)
+            checkNextButtonEnabled(totalSize)
+            checkPrevButtonEnabled()
         }
-        val pagedProducts: List<ProductUiModel> = dataSource.getCartProductsInRange(startIndex, endIndex)
-        _cartProducts.value = pagedProducts
-        updateButtons()
     }
 
     companion object {

@@ -1,15 +1,19 @@
 package woowacourse.shopping.product.catalog
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.CatalogDataSource
 import woowacourse.shopping.data.CatalogDatabase
+import woowacourse.shopping.data.mapper.toEntity
+import woowacourse.shopping.repository.CartProductRepository
 
 class CatalogViewModel(
-    private val dataSource: CatalogDataSource = CatalogDatabase,
+    private val catalogDataSource: CatalogDataSource = CatalogDatabase,
+    private val cartProductRepository: CartProductRepository,
 ) : ViewModel() {
-    val allProductsSize get() = dataSource.getAllProductsSize()
+    val allProductsSize get() = catalogDataSource.getAllProductsSize()
 
     private val _catalogItems =
         MutableLiveData<List<CatalogItem>>(emptyList<CatalogItem>())
@@ -29,15 +33,29 @@ class CatalogViewModel(
     }
 
     fun increaseQuantity(product: ProductUiModel) {
-        val item = dataSource.changeProductQuantity(product, 1)
+        val item = catalogDataSource.changeProductQuantity(product, 1)
         _updatedItem.value = item
-        _cartItemSize.value = _cartItemSize.value?.plus(1)
+        cartProductRepository.updateProduct(item.toEntity())
+        loadCartItemSize()
     }
 
     fun decreaseQuantity(product: ProductUiModel) {
-        val item = dataSource.changeProductQuantity(product, -1)
+        val item = catalogDataSource.changeProductQuantity(product, -1)
         _updatedItem.value = item
-        _cartItemSize.value = _cartItemSize.value?.minus(1)
+        Log.d("UPDATED", "$item")
+        if (item.quantity == 0) {
+            Log.d("DELETED", "Deleting target is $product")
+            cartProductRepository.deleteCartProduct(product.toEntity())
+        } else {
+            cartProductRepository.updateProduct(item.toEntity())
+        }
+        loadCartItemSize()
+    }
+
+    fun loadCartItemSize() {
+        cartProductRepository.getCartItemSize { size ->
+            _cartItemSize.postValue(size)
+        }
     }
 
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
@@ -49,7 +67,7 @@ class CatalogViewModel(
         _page.value = _page.value?.plus(1)
     }
 
-    private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
+    fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
         val currentPage = page.value ?: INITIAL_PAGE
         val startIndex = currentPage * pageSize
         val endIndex = minOf(startIndex + pageSize, allProductsSize)
@@ -58,7 +76,9 @@ class CatalogViewModel(
             return
         }
         val pagedProducts: List<CatalogItem> =
-            dataSource.getProductsInRange(startIndex, endIndex).map { CatalogItem.ProductItem(it) }
+            catalogDataSource
+                .getProductsInRange(startIndex, endIndex)
+                .map { CatalogItem.ProductItem(it) }
         val items: List<CatalogItem> =
             if (pagedProducts.size == PAGE_SIZE && (PAGE_SIZE * currentPage) + pagedProducts.size < allProductsSize) {
                 pagedProducts + CatalogItem.LoadMoreButtonItem
