@@ -30,7 +30,6 @@ class ProductsViewModel(
 
     init {
         loadAllProducts(productsRepository)
-        updateProducts()
     }
 
     fun updateProducts() {
@@ -42,7 +41,7 @@ class ProductsViewModel(
 
             allCartItems.subList(startExclusive + 1, lastExclusive)
         }.onSuccess { newCartItems: List<CartItem> ->
-            products.value = products.value?.plus(newCartItems) ?: newCartItems
+            products.postValue(products.value?.plus(newCartItems) ?: newCartItems)
         }.onFailure {
             _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
         }
@@ -78,6 +77,7 @@ class ProductsViewModel(
             result
                 .onSuccess { cartItems: List<CartItem> ->
                     allCartItems = cartItems
+                    updateProducts()
                 }.onFailure {
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }
