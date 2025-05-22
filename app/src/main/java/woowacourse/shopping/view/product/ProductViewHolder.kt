@@ -18,6 +18,28 @@ class ProductViewHolder(
     fun bind(item: ProductsItem.ProductItem) {
         binding.product = item.product
         binding.imageUrl = item.product.imageUrl
+        binding.quantity = item.quantity
+
+        binding.productAddButton.setOnClickListener {
+            item.quantity++
+            updateQuantity(item.quantity)
+        }
+
+        binding.productQuantityMinusButton.setOnClickListener {
+            item.quantity--
+            updateQuantity(item.quantity)
+        }
+
+        binding.productQuantityPlusButton.setOnClickListener {
+            item.quantity++
+            updateQuantity(item.quantity)
+        }
+    }
+
+    private fun updateQuantity(quantity: Int) {
+        binding.quantity = quantity
+        binding.productAddButton.invalidate()
+        binding.productQuantityStepper.invalidate()
     }
 
     companion object {
