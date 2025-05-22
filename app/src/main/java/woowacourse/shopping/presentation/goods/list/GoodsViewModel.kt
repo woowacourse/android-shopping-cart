@@ -148,8 +148,8 @@ class GoodsViewModel(
         _shouldNavigateToShoppingCart.setValue(Unit)
     }
 
-    fun updateLatestGoods(goods: GoodsUiModel) {
-        latestGoodsRepository.insertLatestGoods(goods.id)
+    private fun updateLatestGoods(goodsId: Int) {
+        latestGoodsRepository.insertLatestGoods(goodsId)
         _latestGoods.value =
             latestGoodsRepository.getAll().map {
                 goodsRepository.getById(it.goodsId).toUiModel()
@@ -160,6 +160,7 @@ class GoodsViewModel(
         goodsId: Int,
         move: (goodsId: Int, lastId: Int?) -> Unit,
     ) {
+        updateLatestGoods(goodsId)
         val lastGoodsId = latestGoodsRepository.getLast()?.goodsId
         move(goodsId, lastGoodsId)
     }
