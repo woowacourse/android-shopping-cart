@@ -24,6 +24,9 @@ class CatalogViewModel(
     private val _products = MutableLiveData<List<CatalogItem>>()
     val products: LiveData<List<CatalogItem>> = _products
 
+    private val _cartItemCount = MutableLiveData<Int>()
+    val cartItemCount: LiveData<Int> = _cartItemCount
+
     private val limit = 20
     private var page = 0
 
@@ -69,12 +72,23 @@ class CatalogViewModel(
         }
     }
 
+    private fun fetchCartItemCount() {
+        shoppingRepository.getCartItemCount { result ->
+            result.fold(
+                onSuccess = { _cartItemCount.postValue(it) },
+                onFailure = { postFailureEvent(CatalogMessageEvent.FETCH_CART_ITEM_COUNT_FAILURE) },
+            )
+        }
+    }
+
     private fun handleProductPageLoaded(pageable: PageableItem<CartItem>) {
         page++
         val currentItems = getCurrentProductItems()
         val newItems = mapToProductItems(pageable.items)
         val merged = mergeProducts(currentItems, newItems)
         _products.postValue(buildCatalogItems(merged, pageable.hasMore))
+
+        fetchCartItemCount()
     }
 
     private fun getCurrentProductItems(): List<CatalogItem.ProductItem> =
@@ -98,11 +112,16 @@ class CatalogViewModel(
         }
 
     private fun updateQuantitiesWithCart(cartItems: List<CartItem>) {
+        val currentItems = _products.value.orEmpty()
         val updated =
-            _products.value.orEmpty().map { item ->
-                if (item is CatalogItem.ProductItem) updateQuantityFromCart(item, cartItems) else item
+            currentItems.map { item ->
+                if (item !is CatalogItem.ProductItem) return@map item
+
+                updateQuantityFromCart(item, cartItems)
             }
+
         _products.postValue(updated)
+        fetchCartItemCount()
     }
 
     private fun updateQuantityFromCart(
@@ -110,20 +129,16 @@ class CatalogViewModel(
         cartItems: List<CartItem>,
     ): CatalogItem.ProductItem {
         val quantity = cartItems.find { it.product.id == item.product.productId }?.quantity ?: 0
-        return item.copy(
-            product =
-                item.product.copy(
-                    quantity = quantity,
-                    isOpenQuantitySelector = isOpenQuantitySelector(quantity),
-                ),
-        )
+        return item.copyWithQuantity(quantity)
     }
 
     private fun refreshQuantity(productId: Long) {
-        fetchQuantityById(
-            productId = productId,
-            onSuccess = { updateQuantityInList(productId, it) },
-        )
+        shoppingRepository.findQuantityByProductId(productId) { result ->
+            result.fold(
+                onSuccess = { updateQuantityInList(productId, it) },
+                onFailure = { postFailureEvent(CatalogMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE) },
+            )
+        }
     }
 
     private fun updateQuantityInList(
@@ -134,28 +149,19 @@ class CatalogViewModel(
         val updated =
             currentItems.map { item ->
                 if (item !is CatalogItem.ProductItem || item.product.productId != productId) return@map item
-                val newProduct =
-                    item.product.copy(
-                        quantity = quantity,
-                        isOpenQuantitySelector = isOpenQuantitySelector(quantity),
-                    )
-                item.copy(newProduct)
+                item.copyWithQuantity(quantity)
             }
         _products.postValue(updated)
+        fetchCartItemCount()
     }
 
-    private fun fetchQuantityById(
-        productId: Long,
-        onSuccess: (Int) -> Unit,
-        onFailureEvent: CatalogMessageEvent = CatalogMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE,
-    ) {
-        shoppingRepository.findQuantityByProductId(productId) { result ->
-            result.fold(
-                onSuccess = onSuccess,
-                onFailure = { postFailureEvent(onFailureEvent) },
-            )
-        }
-    }
+    private fun CatalogItem.ProductItem.copyWithQuantity(quantity: Int): CatalogItem.ProductItem =
+        CatalogItem.ProductItem(
+            this.product.copy(
+                quantity = quantity,
+                isOpenQuantitySelector = isOpenQuantitySelector(quantity),
+            ),
+        )
 
     private fun isOpenQuantitySelector(quantity: Int): Boolean = quantity > OPEN_QUANTITY_SELECTOR_BASE_VALUE
 

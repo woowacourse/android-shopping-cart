@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.view.catalog
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -8,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCatalogBinding
+import woowacourse.shopping.databinding.MenuItemCartBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.ui.decorations.GridSpacingItemDecoration
 import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
@@ -24,18 +26,27 @@ class CatalogFragment :
     private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this) }
     private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
 
+    private var _toolbarBinding: MenuItemCartBinding? = null
+    private val toolbarBinding: MenuItemCartBinding get() = _toolbarBinding!!
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
-        initObserver()
+        setupListener()
+        observeViewModel()
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.fetchCartInfoChanged()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _toolbarBinding = null
     }
 
     override fun onProductClicked(productId: Long) {
@@ -59,22 +70,34 @@ class CatalogFragment :
     }
 
     private fun setupUI() {
-        setupListeners()
         setupRecyclerView()
+        setupCartToolbarMenu()
     }
 
-    private fun setupListeners() {
-        binding.btnNavigateCart.setOnClickListener {
+    private fun setupListener() {
+        toolbarBinding.ivShoppingCart.setOnClickListener {
             navigateTo(CartFragment::class.java)
         }
     }
 
-    private fun setupRecyclerView() {
-        val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
+    private fun setupCartToolbarMenu() {
+        binding.toolbarCatalog.inflateMenu(R.menu.toolbar_menu_cart)
+        val menuItem = binding.toolbarCatalog.menu.findItem(R.id.action_cart)
 
-        layoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int = catalogAdapter.getSpanSizeAt(position)
+        _toolbarBinding = MenuItemCartBinding.inflate(LayoutInflater.from(requireContext()))
+        menuItem.actionView = toolbarBinding.root
+
+        toolbarBinding.vm = viewModel
+        toolbarBinding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun setupRecyclerView() {
+        val layoutManager =
+            GridLayoutManager(requireContext(), SPAN_COUNT).apply {
+                spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int) = catalogAdapter.getSpanSizeAt(position)
+                    }
             }
 
         binding.recyclerViewProducts.apply {
@@ -84,7 +107,7 @@ class CatalogFragment :
         }
     }
 
-    private fun initObserver() {
+    private fun observeViewModel() {
         viewModel.products.observe(viewLifecycleOwner) {
             catalogAdapter.updateProducts(it)
         }
@@ -109,6 +132,9 @@ class CatalogFragment :
         when (this) {
             CatalogMessageEvent.FETCH_PRODUCTS_FAILURE ->
                 R.string.catalog_screen_event_message_fetch_product_failure
+
+            CatalogMessageEvent.FETCH_CART_ITEM_COUNT_FAILURE ->
+                R.string.catalog_screen_event_message_fetch_cart_item_count_failure
 
             CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE ->
                 R.string.catalog_screen_event_message_increase_cart_item_count_failure

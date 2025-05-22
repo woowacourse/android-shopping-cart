@@ -25,6 +25,7 @@
     <string name="toolbar_catalog_title">Shopping</string>
     <string name="load_more_text">더보기</string>
     <string name="catalog_screen_event_message_fetch_product_failure">상품 목록을 불러오는데 실패했습니다</string>
+    <string name="catalog_screen_event_message_fetch_cart_item_count_failure">장바구니에 담긴 상품 개수를 불러오는데 실패했습니다</string>
     <string name="catalog_screen_event_message_increase_cart_item_count_failure">장바구니에 담기 실패</string>
     <string name="catalog_screen_event_message_decrease_cart_item_count_failure">장바구니에서 담은 수량 감소 실패</string>
     <string name="catalog_screen_event_message_find_quantity_failure">장바구니 담은 수량 조회 실패</string>
