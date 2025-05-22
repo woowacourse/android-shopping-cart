@@ -17,7 +17,7 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
-    val imageUrl: LiveData<String> = _product.map { it.imageUrl }
+    val imageUrl: LiveData<String?> = _product.map { it.imageUrl }
 
     private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
