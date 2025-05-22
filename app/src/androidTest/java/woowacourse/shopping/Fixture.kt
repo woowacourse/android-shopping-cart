@@ -1,10 +1,18 @@
 package woowacourse.shopping
 
+import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
 
-object FIXTURE {
-    val DUMMY_PRODUCT =
+object Fixture {
+    val dummyCartEntity =
+        CartEntity(
+            0,
+            0,
+            10,
+        )
+
+    val dummyProduct =
         Product(
             0,
             "맥심 모카골드 마일드",
