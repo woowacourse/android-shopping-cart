@@ -28,18 +28,13 @@ class RecentProductRepositoryImpl(
         trimRecentProductsToLimit()
     }
 
-    override fun deleteByProductId(
-        productId: Long,
-        onResult: (Result<Unit>) -> Unit,
-    ) = runCatchingInThread(onResult) {
-        recentProductLocalDataSource.deleteByProductId(productId)
-    }
-
     private fun trimRecentProductsToLimit() {
-        val recentProducts = recentProductLocalDataSource.getRecentProducts(RECENT_PRODUCT_LIMIT)
-        if (recentProducts.size > RECENT_PRODUCT_LIMIT) {
-            val overflowProducts = recentProducts.dropLast(recentProducts.size - RECENT_PRODUCT_LIMIT)
-            overflowProducts.forEach { recentProductLocalDataSource.deleteByProductId(it.productId) }
+        val savedRecentProductCount = recentProductLocalDataSource.getRecentProductCount()
+        if (savedRecentProductCount > RECENT_PRODUCT_LIMIT) {
+            val overflowCount = savedRecentProductCount - RECENT_PRODUCT_LIMIT
+            repeat(overflowCount) {
+                recentProductLocalDataSource.deleteOldestRecentProduct()
+            }
         }
     }
 

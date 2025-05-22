@@ -12,9 +12,4 @@ interface RecentProductRepository {
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     )
-
-    fun deleteByProductId(
-        productId: Long,
-        onResult: (Result<Unit>) -> Unit,
-    )
 }
