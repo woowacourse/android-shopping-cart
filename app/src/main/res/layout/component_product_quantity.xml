@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="quantity"
+            type="int" />
+
+        <variable
+            name="onMinusButtonClick"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="onPlusButtonClick"
+            type="kotlin.jvm.functions.Function0" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/productQuantityComponentRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/productMinusQuantityButton"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="@drawable/background_product_minus_quantity_button"
+            android:gravity="center"
+            android:onClick="@{() -> onMinusButtonClick.invoke()}"
+            android:text="@string/product_minus_quantity_button"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/productQuantity"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/productQuantity"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="@drawable/background_product_quantity"
+            android:gravity="center"
+            android:text="@{String.valueOf(quantity)}"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/productMinusQuantityButton"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/productPlusQuantityButton"
+            app:layout_constraintStart_toEndOf="@id/productMinusQuantityButton"
+            app:layout_constraintTop_toTopOf="@id/productPlusQuantityButton"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/productPlusQuantityButton"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="@drawable/background_product_plus_quantity_button"
+            android:gravity="center"
+            android:onClick="@{() -> onPlusButtonClick.invoke()}"
+            android:text="@string/product_plus_quantity_button"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/productPlusQuantityButton"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/productQuantity"
+            app:layout_constraintTop_toTopOf="@id/productPlusQuantityButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
