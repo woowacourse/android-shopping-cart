@@ -4,16 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.cart.CartItem
-import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.products.ProductRepository
-import woowacourse.shopping.data.products.RecentProduct
+import woowacourse.shopping.data.cart.CartDao
+import woowacourse.shopping.data.cart.CartItemEntity
+import woowacourse.shopping.data.recentProducts.RecentProductDao
+import woowacourse.shopping.data.recentProducts.RecentProductEntity
 
-@Database(entities = [RecentProduct::class, CartItem::class], version = 1)
+@Database(entities = [RecentProductEntity::class, CartItemEntity::class], version = 1)
 abstract class ShoppingDatabase : RoomDatabase() {
-    abstract fun cartRepository(): CartRepository
+    abstract fun cartDao(): CartDao
 
-    abstract fun productRepository(): ProductRepository
+    abstract fun recentProductDao(): RecentProductDao
 
     companion object {
         @Volatile
