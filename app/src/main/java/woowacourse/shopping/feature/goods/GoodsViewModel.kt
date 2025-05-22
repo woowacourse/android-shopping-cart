@@ -11,6 +11,7 @@ import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
+import woowacourse.shopping.util.updateQuantity
 import kotlin.math.min
 
 class GoodsViewModel(
@@ -44,6 +45,10 @@ class GoodsViewModel(
     fun insertToCart(cart: Cart) {
         try {
             repository.insert(cart)
+
+            _carts.value =
+                _carts.value?.updateQuantity(cart.goods.id, cart.quantity + 1)
+
             _isSuccess.setValue(Unit)
         } catch (e: Exception) {
             _isFail.setValue(Unit)
@@ -52,6 +57,8 @@ class GoodsViewModel(
 
     fun removeFromCart(cart: Cart) {
         repository.delete(cart)
+
+        _carts.value = _carts.value?.updateQuantity(cart.goods.id, cart.quantity - 1)
     }
 
     private fun getProducts(

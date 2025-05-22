@@ -12,12 +12,22 @@ class GoodsAdapter(
     private val items: MutableList<Cart> = mutableListOf()
 
     fun setItems(newItems: List<Cart>) {
-        val positionStart = items.size
-        val newItemCount = newItems.size
+        newItems.forEachIndexed { index, newItem ->
+            val oldItem = items.getOrNull(index)
+            if (oldItem != null && oldItem.goods.id == newItem.goods.id && oldItem.quantity != newItem.quantity) {
+                items[index] = newItem
+                notifyItemChanged(index)
+            }
+        }
 
-        items.clear()
-        items.addAll(newItems)
-        notifyItemRangeInserted(positionStart, newItemCount)
+        if (items.size != newItems.size) {
+            val positionStart = items.size
+            val newItemCount = newItems.size
+
+            items.clear()
+            items.addAll(newItems)
+            notifyItemRangeInserted(positionStart, newItemCount)
+        }
     }
 
     override fun onCreateViewHolder(
