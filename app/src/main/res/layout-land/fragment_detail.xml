@@ -48,54 +48,107 @@
             app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
             tools:background="#FFF0F0F0" />
 
-        <TextView
-            android:id="@+id/text_view_detail_product_name"
+        <ScrollView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="@{vm.product.name}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/divider"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_cart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_detail_product"
-            app:layout_constraintTop_toTopOf="@id/image_view_detail_product"
-            tools:text="나이키 에어포스" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_detail">
 
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="@id/text_view_detail_product_name"
-            app:layout_constraintStart_toStartOf="@id/text_view_detail_product_name"
-            app:layout_constraintTop_toBottomOf="@id/text_view_detail_product_name" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp">
 
-        <TextView
-            android:id="@+id/text_view_detail_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="12dp"
-            android:text="@{String.format(@string/product_price_format, vm.product.price)}"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@id/text_view_detail_product_name"
-            app:layout_constraintStart_toStartOf="@id/text_view_detail_product_name"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            tools:text="10,000원" />
+                <TextView
+                    android:id="@+id/text_view_detail_product_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:text="@{vm.product.name}"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="나이키 에어포스" />
 
-        <include
-            android:id="@+id/view_quantity_selector"
-            layout="@layout/view_quantity_selector"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="@id/text_view_detail_product_name"
-            app:layout_constraintStart_toStartOf="@id/text_view_detail_product_name"
-            app:layout_constraintTop_toBottomOf="@id/text_view_detail_price"/>
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="@id/text_view_detail_product_name"
+                    app:layout_constraintStart_toStartOf="@id/text_view_detail_product_name"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_detail_product_name" />
+
+                <TextView
+                    android:id="@+id/text_view_detail_price"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:text="@{String.format(@string/product_price_format, vm.product.price)}"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@id/view_quantity_selector"
+                    app:layout_constraintEnd_toStartOf="@id/view_quantity_selector"
+                    app:layout_constraintStart_toStartOf="@id/text_view_detail_product_name"
+                    app:layout_constraintTop_toTopOf="@id/view_quantity_selector"
+                    tools:text="10,000원" />
+
+                <include
+                    android:id="@+id/view_quantity_selector"
+                    layout="@layout/view_quantity_selector"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/text_view_detail_price"
+                    app:layout_constraintEnd_toEndOf="@id/text_view_detail_product_name"
+                    app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
+                    app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                <LinearLayout
+                    android:id="@+id/view_recent_product"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:background="@drawable/shape_cart_item"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:visibility="@{(vm.recentProduct == null || vm.recentProduct.id == vm.product.id) ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/text_view_detail_product_name"
+                    app:layout_constraintStart_toStartOf="@id/text_view_detail_product_name"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_detail_price">
+
+                    <TextView
+                        android:id="@+id/tv_recent_product_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/detail_recent_product_title"
+                        android:textColor="@color/mint"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp" />
+
+                    <TextView
+                        android:id="@+id/tv_recent_product_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{vm.recentProduct.name}"
+                        android:textColor="@color/gray_55"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="최근 본 상품" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"

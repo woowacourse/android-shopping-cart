@@ -10,6 +10,7 @@
     <!-- Detail Screen -->
     <string name="detail_add_cart_button_text">장바구니 담기</string>
     <string name="detail_price_text">가격</string>
+    <string name="detail_recent_product_title">마지막으로 본 상품</string>
     <string name="detail_screen_event_message_fetch_product_failure">상품 정보를 불러오는데 실패했습니다</string>
     <string name="detail_screen_event_message_add_product_failure">상품을 장바구니에 추가하는데 실패했습니다</string>
 

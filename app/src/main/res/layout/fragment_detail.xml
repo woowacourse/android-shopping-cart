@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.view.detail.DetailViewModel" />
@@ -89,6 +91,42 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
             app:layout_constraintTop_toTopOf="@id/text_view_detail_price" />
+
+        <LinearLayout
+            android:id="@+id/view_recent_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/shape_cart_item"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:visibility="@{(vm.recentProduct == null || vm.recentProduct.id == vm.product.id) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_cart"
+            app:layout_constraintTop_toBottomOf="@id/text_view_detail_price">
+
+            <TextView
+                android:id="@+id/tv_recent_product_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_recent_product_title"
+                android:textColor="@color/mint"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <TextView
+                android:id="@+id/tv_recent_product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{vm.recentProduct.name}"
+                android:textColor="@color/gray_55"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="최근 본 상품" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toUiModel
@@ -14,7 +15,8 @@ import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailViewModel(
-    private val repository: ShoppingRepository,
+    private val shoppingRepository: ShoppingRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _toastEvent = MutableSingleLiveData<DetailMessageEvent>()
     val toastEvent: SingleLiveData<DetailMessageEvent> = _toastEvent
@@ -25,13 +27,22 @@ class DetailViewModel(
     private val _quantity = MutableLiveData(DEFAULT_QUANTITY)
     val quantity: LiveData<Int> = _quantity
 
+    private val _recentProduct = MutableLiveData<ProductUiModel>()
+    val recentProduct: LiveData<ProductUiModel> = _recentProduct
+
     private val _addToCartSuccessEvent = MutableSingleLiveData<Unit>()
     val addToCartSuccessEvent: SingleLiveData<Unit> = _addToCartSuccessEvent
+
+    init {
+        fetchRecentProduct()
+    }
 
     fun fetchProduct(productId: Long) {
         if (_product.value != null) return
 
-        repository
+        updateRecentProduct(productId)
+
+        shoppingRepository
             .findProductInfoById(productId)
             .onSuccess { _product.postValue(it.toUiModel()) }
             .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
@@ -53,10 +64,25 @@ class DetailViewModel(
         val product = _product.value ?: return
         val quantity = _quantity.value ?: DEFAULT_QUANTITY
 
-        repository.addCartItem(product.id, quantity) { result ->
+        shoppingRepository.addCartItem(product.id, quantity) { result ->
             result
                 .onSuccess { _addToCartSuccessEvent.postValue(Unit) }
                 .onFailure { _toastEvent.postValue(DetailMessageEvent.ADD_PRODUCT_FAILURE) }
+        }
+    }
+
+    private fun updateRecentProduct(productId: Long) {
+        recentProductRepository.insertAndTrimToLimit(productId) { result ->
+            result.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
+        }
+    }
+
+    private fun fetchRecentProduct() {
+        recentProductRepository.getRecentProducts(1) { result ->
+            result.fold(
+                onSuccess = { _recentProduct.postValue(it.firstOrNull()?.toUiModel()) },
+                onFailure = { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) },
+            )
         }
     }
 
@@ -70,8 +96,9 @@ class DetailViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val repository = RepositoryProvider.shoppingRepository
-                    return DetailViewModel(repository) as T
+                    val shoppingRepository = RepositoryProvider.shoppingRepository
+                    val recentProductRepository = RepositoryProvider.recentProductRepository
+                    return DetailViewModel(shoppingRepository, recentProductRepository) as T
                 }
             }
     }
