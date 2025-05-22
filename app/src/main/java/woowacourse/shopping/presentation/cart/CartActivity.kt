@@ -18,13 +18,14 @@ import woowacourse.shopping.presentation.ResultState
 
 class CartActivity :
     AppCompatActivity(),
+    CartPageClickListener,
     CartCounterClickListener {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels { CartViewModelFactory(applicationContext) }
     private val cartAdapter by lazy {
         CartAdapter(
-            onDeleteClick = ::deleteProduct,
             cartCounterClickListener = this,
+            cartPageClickListener = this,
         )
     }
 
@@ -48,6 +49,18 @@ class CartActivity :
 
     override fun onClickPlus(id: Long) {
         viewModel.increaseQuantity(id)
+    }
+
+    override fun onClickPrevious() {
+        viewModel.changePage(false)
+    }
+
+    override fun onClickNext() {
+        viewModel.changePage(true)
+    }
+
+    override fun onClickDelete(cartItem: CartItem) {
+        viewModel.deleteProduct(cartItem)
     }
 
     private fun initInsets() {
@@ -86,10 +99,6 @@ class CartActivity :
                 }
             }
         }
-    }
-
-    private fun deleteProduct(cartItem: CartItem) {
-        viewModel.deleteProduct(cartItem)
     }
 
     private fun showToast(

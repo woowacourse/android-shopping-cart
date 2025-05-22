@@ -10,7 +10,11 @@
             type="woowacourse.shopping.domain.model.CartItem" />
 
         <variable
-            name="clickListener"
+            name="cartPageClickListener"
+            type="woowacourse.shopping.presentation.cart.CartPageClickListener" />
+
+        <variable
+            name="counterClickListener"
             type="woowacourse.shopping.presentation.cart.CartCounterClickListener" />
     </data>
 
@@ -54,6 +58,7 @@
             android:layout_height="48dp"
             android:backgroundTint="@color/white"
             android:contentDescription="@null"
+            android:onClick="@{() -> cartPageClickListener.onClickDelete(cartItem)}"
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_product_name"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +69,7 @@
             layout="@layout/layout_cart_quantity_box"
             android:layout_width="140dp"
             android:layout_height="44dp"
-            app:clickListener="@{clickListener}"
+            app:clickListener="@{counterClickListener}"
             app:id="@{cartItem.product.productId}"
             app:layout_constraintEnd_toEndOf="@id/tv_cart_product_price"
             app:layout_constraintTop_toTopOf="@id/iv_cart_product"

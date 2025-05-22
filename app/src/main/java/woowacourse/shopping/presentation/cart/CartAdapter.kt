@@ -7,8 +7,8 @@ import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.domain.model.CartItem
 
 class CartAdapter(
-    private val onDeleteClick: (CartItem) -> Unit,
     private val cartCounterClickListener: CartCounterClickListener,
+    private val cartPageClickListener: CartPageClickListener,
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: MutableList<CartItem> = mutableListOf()
 
@@ -22,7 +22,7 @@ class CartAdapter(
                 parent,
                 false,
             )
-        return CartViewHolder(binding, onDeleteClick, cartCounterClickListener)
+        return CartViewHolder(binding, cartCounterClickListener, cartPageClickListener)
     }
 
     override fun onBindViewHolder(
@@ -49,21 +49,14 @@ class CartAdapter(
 
     class CartViewHolder(
         val binding: ItemCartProductBinding,
-        private val onDeleteClick: (CartItem) -> Unit,
         private val cartCounterClickListener: CartCounterClickListener,
+        private val cartPageClickListener: CartPageClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private lateinit var cartItem: CartItem
-
-        init {
-            binding.ibCartProductDelete.setOnClickListener {
-                onDeleteClick(cartItem)
-            }
-        }
-
         fun bind(cartItem: CartItem) {
             binding.cartItem = cartItem
-            binding.clickListener = cartCounterClickListener
-            this.cartItem = cartItem
+            binding.cartPageClickListener = cartPageClickListener
+            binding.counterClickListener = cartCounterClickListener
+            binding.executePendingBindings()
         }
     }
 }

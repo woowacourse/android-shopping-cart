@@ -14,8 +14,7 @@ import woowacourse.shopping.presentation.SingleLiveData
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-) : ViewModel(),
-    CartPageClickListener {
+) : ViewModel() {
     private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
     val products: LiveData<ResultState<List<CartItem>>> = _products
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
@@ -139,14 +138,6 @@ class CartViewModel(
                 if (it.product.productId == productId) it.copy(quantity = it.quantity + amount) else it
             }
         _products.postValue(ResultState.Success(updatedItem))
-    }
-
-    override fun onClickPrevious() {
-        changePage(next = false)
-    }
-
-    override fun onClickNext() {
-        changePage(next = true)
     }
 
     private fun updateTotalPageAsync(onComplete: (() -> Unit)? = null) {
