@@ -45,16 +45,9 @@ class ShoppingCartProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ShoppingCartItem>) {
-        if (items.isEmpty()) {
-            this.items = items
-            notifyDataSetChanged()
-            return
-        }
-
         val isProductItemEmpty = items.size == 1
         if (isProductItemEmpty) {
             onShoppingCartPaginationListener.onMinusPage()
-            return
         }
 
         val oldItems = this.items.size

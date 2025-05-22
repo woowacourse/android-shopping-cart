@@ -80,12 +80,10 @@ class ShoppingCartViewModel(
     }
 
     fun minusPage() {
-        if (page == FIRST_PAGE) {
-            _shoppingCartItems.value = emptyList()
-            return
+        if (page != FIRST_PAGE) {
+            page--
         }
 
-        page--
         updateShoppingCart()
     }
 
