@@ -4,16 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.CartProductDataSource
 import woowacourse.shopping.product.catalog.ProductUiModel
+import kotlin.concurrent.thread
 
 class CartViewModel(
-    private val dataSource: CartProductDataSource,
+    private val repository: CartItemRepository,
 ) : ViewModel(),
     CartEventHandler {
-    private val allCartProducts get() = dataSource.cartProducts()
-    private val allCartProductsSize get() = dataSource.getCartProductsSize()
-
     private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
     val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
 
@@ -33,75 +30,72 @@ class CartViewModel(
     }
 
     override fun onDeleteProduct(cartProduct: ProductUiModel) {
-        dataSource.deleteCartProduct(cartProduct)
-        loadCartProducts()
+        thread {
+            repository.deleteCartItemById(cartProduct.id)
+            loadCartProducts()
+        }
     }
 
     override fun onNextPage() {
-        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
-        if (currentPage < lastPage) {
-            increasePage()
-            loadCartProducts()
+        thread {
+            val lastPage = (repository.allCartItemSize - 1) / PAGE_SIZE
+            if (currentPage < lastPage) {
+                currentPage++
+                _pageEvent.postValue(currentPage)
+                loadCartProducts()
+            }
         }
     }
 
     override fun onPrevPage() {
-        if (currentPage > 0) {
-            decreasePage()
-            loadCartProducts()
+        thread {
+            if (currentPage > 0) {
+                currentPage--
+                _pageEvent.postValue(currentPage)
+                loadCartProducts()
+            }
         }
     }
 
-    override fun isNextButtonEnabled(): Boolean {
-        val lastPage = (allCartProductsSize - 1) / PAGE_SIZE
-        return currentPage < lastPage
-    }
+    override fun isNextButtonEnabled(): Boolean = _isNextButtonEnabled.value == true
 
-    override fun isPrevButtonEnabled(): Boolean = currentPage > 0
+    override fun isPrevButtonEnabled(): Boolean = _isPrevButtonEnabled.value == true
 
     override fun isPaginationEnabled(): Boolean = isNextButtonEnabled() || isPrevButtonEnabled()
 
     override fun getPage(): Int = currentPage
 
-    private fun increasePage() {
-        currentPage += 1
-        _pageEvent.value = currentPage
-    }
-
-    private fun decreasePage() {
-        currentPage -= 1
-        _pageEvent.value = currentPage
-    }
-
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
-        var current = currentPage
-        val totalSize = allCartProductsSize
+        thread {
+            var current = currentPage
+            val totalSize = repository.allCartItemSize
 
-        while (current > 0 && current * pageSize >= totalSize) {
-            current--
+            while (current > 0 && current * pageSize >= totalSize) {
+                current--
+            }
+
+            currentPage = current
+            _pageEvent.postValue(current)
+
+            val startIndex = current * pageSize
+            val endIndex = minOf(startIndex + pageSize, totalSize)
+
+            _cartProducts.postValue(repository.subListCartItems(startIndex, endIndex))
+            _isNextButtonEnabled.postValue(current < (totalSize - 1) / pageSize)
+            _isPrevButtonEnabled.postValue(current > 0)
         }
-
-        currentPage = current
-        _pageEvent.value = current
-
-        val startIndex = current * pageSize
-        val endIndex = minOf(startIndex + pageSize, totalSize)
-
-        _cartProducts.value = allCartProducts.subList(startIndex, endIndex)
-        _isNextButtonEnabled.value = current < (totalSize - 1) / pageSize
-        _isPrevButtonEnabled.value = current > 0
     }
 
     companion object {
         private const val PAGE_SIZE = 5
         private const val INITIAL_PAGE = 0
 
-        fun factory(dataSource: CartProductDataSource): ViewModelProvider.Factory =
+        fun factory(repository: CartItemRepository): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
-                        return CartViewModel(dataSource) as T
+                        return CartViewModel(repository) as T
                     }
                     throw IllegalArgumentException("Unknown ViewModel class")
                 }

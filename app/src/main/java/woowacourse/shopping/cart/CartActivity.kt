@@ -9,15 +9,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartViewModel.Companion.factory
-import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.CartItemDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel by lazy {
+        val db = CartItemDatabase.getInstance(this)
+        val repository = CartItemRepository(db.cartItemDao())
         ViewModelProvider(
             this,
-            factory(CartDatabase),
+            factory(repository),
         )[CartViewModel::class.java]
     }
 

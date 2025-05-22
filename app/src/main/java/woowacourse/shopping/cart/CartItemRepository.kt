@@ -9,7 +9,14 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 class CartItemRepository(
     private val dao: CartItemDao,
 ) {
+    val allCartItemSize get() = dao.getAll().size
+
     fun getAllCartItem(): List<ProductUiModel> = dao.getAll().map { it.toUiModel() }
+
+    fun subListCartItems(
+        startIndex: Int,
+        endIndex: Int,
+    ): List<ProductUiModel> = getAllCartItem().subList(startIndex, endIndex)
 
     fun insertCartItem(product: ProductUiModel) {
         dao.insertCartItem(product.toCartItem())
