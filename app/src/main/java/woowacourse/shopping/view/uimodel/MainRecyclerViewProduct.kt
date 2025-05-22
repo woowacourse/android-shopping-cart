@@ -7,5 +7,4 @@ import woowacourse.shopping.domain.ShoppingCartItem
 data class MainRecyclerViewProduct(
     val page: Page<Product>,
     val shoppingCartItems: List<ShoppingCartItem>,
-    val totalShoppingCartSize: Int,
 )

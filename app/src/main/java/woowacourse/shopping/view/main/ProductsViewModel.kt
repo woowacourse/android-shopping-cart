@@ -41,7 +41,6 @@ class ProductsViewModel(
             MainRecyclerViewProduct(
                 page = page,
                 shoppingCartItems = shoppingCartItems,
-                totalShoppingCartSize = shoppingCartRepository.totalSize(),
             )
     }
 
