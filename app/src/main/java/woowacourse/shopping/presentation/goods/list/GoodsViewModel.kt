@@ -28,6 +28,10 @@ class GoodsViewModel(
     val shoppingGoodsCount: LiveData<Int>
         get() = _shoppingGoodsCount
 
+    private val _latestGoods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
+    val latestGoods: LiveData<List<GoodsUiModel>>
+        get() = _latestGoods
+
     private val _shouldShowLoadMore: MutableLiveData<Boolean> = MutableLiveData(false)
     val shouldShowLoadMore: LiveData<Boolean>
         get() = _shouldShowLoadMore
@@ -44,6 +48,10 @@ class GoodsViewModel(
 
     init {
         _goods.value = goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        _latestGoods.value =
+            latestGoodsRepository.getAll().map {
+                goodsRepository.getById(it.goodsId).toUiModel()
+            }
     }
 
     fun restoreGoods() {
@@ -141,6 +149,7 @@ class GoodsViewModel(
     }
 
     fun updateLatestGoods(goods: GoodsUiModel) {
+        _latestGoods.value = _latestGoods.value?.plus(goods)
         latestGoodsRepository.insertLatestGoods(goods.id)
     }
 
