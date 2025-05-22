@@ -38,7 +38,7 @@ class GoodsDetailViewModel(
 
     fun setLastGoods(id: Int?) {
         lastGoods =
-            if (id == null) {
+            if (id == null || id == goods.value?.id) {
                 null
             } else {
                 goodsRepository.getById(id).toUiModel()
