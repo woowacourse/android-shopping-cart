@@ -78,7 +78,7 @@ class GoodsDetailActivity : BaseActivity() {
 
     companion object {
         private const val EXTRA_GOODS = "goods"
-        const val EXTRA_LAST_GOODS = "last_goods"
+        private const val EXTRA_LAST_GOODS = "last_goods"
 
         fun newIntent(
             context: Context,
