@@ -54,8 +54,14 @@ class ProductsViewModel(
 
         val cartItemsToUpdate: List<CartItem> =
             productItems
-                .filterNot { it.quantity == it.cartItem.quantity }
-                .map { it.cartItem }
+                .map { productItem: ProductsItem.ProductItem ->
+                    CartItem(
+                        productItem.cartItem.id,
+                        productItem.cartItem.name,
+                        productItem.cartItem.price,
+                        productItem.quantity,
+                    )
+                }.filter { cartItem -> cartItem.quantity != 0 }
 
         shoppingCartRepository.update(cartItemsToUpdate) { result: Result<Unit> ->
             result

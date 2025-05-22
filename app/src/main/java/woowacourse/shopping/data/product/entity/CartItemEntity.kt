@@ -6,12 +6,14 @@ data class CartItemEntity(
     val id: Long,
     val name: String,
     val price: Int,
+    val quantity: Int,
 ) {
     fun toDomain(): CartItem =
         CartItem(
             id,
             name,
             price,
+            quantity,
         )
 
     companion object {
@@ -20,6 +22,7 @@ data class CartItemEntity(
                 id,
                 name,
                 price,
+                quantity,
             )
     }
 }

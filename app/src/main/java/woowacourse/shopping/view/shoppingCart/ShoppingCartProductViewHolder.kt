@@ -17,7 +17,7 @@ class ShoppingCartProductViewHolder(
     }
 
     fun bind(item: ProductItem) {
-        binding.product = item.cartItem
+        binding.cartItem = item.cartItem
         binding.imageUrl = item.cartItem.imageUrl
     }
 
