@@ -108,14 +108,14 @@ class CartViewModel(
                 return@getAllProductsSize
             }
 
-            val pagedProducts: List<ProductUiModel> =
-                cartProductRepository
-                    .getCartProductsInRange(startIndex, endIndex)
-                    .map { it.toUiModel() }
+            cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
+                val pagedProducts: List<ProductUiModel> =
+                    cartProducts.map { it.toUiModel() }
 
-            _cartProducts.postValue(pagedProducts)
-            checkNextButtonEnabled(totalSize)
-            checkPrevButtonEnabled()
+                _cartProducts.postValue(pagedProducts)
+                checkNextButtonEnabled(totalSize)
+                checkPrevButtonEnabled()
+            }
         }
     }
 

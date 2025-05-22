@@ -10,7 +10,8 @@ interface CartProductRepository {
     fun getCartProductsInRange(
         startIndex: Int,
         endIndex: Int,
-    ): List<CartProductEntity>
+        callback: (List<CartProductEntity>) -> Unit,
+    )
 
     fun updateProduct(product: CartProductEntity)
 

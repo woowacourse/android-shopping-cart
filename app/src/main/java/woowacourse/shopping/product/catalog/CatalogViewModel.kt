@@ -71,22 +71,44 @@ class CatalogViewModel(
         val currentPage = page.value ?: INITIAL_PAGE
         val startIndex = currentPage * pageSize
         val endIndex = minOf(startIndex + pageSize, allProductsSize)
+
         if (startIndex >= allProductsSize) {
             _catalogItems.value = emptyList()
             return
         }
-        val pagedProducts: List<CatalogItem> =
-            catalogDataSource
-                .getProductsInRange(startIndex, endIndex)
-                .map { CatalogItem.ProductItem(it) }
-        val items: List<CatalogItem> =
-            if (pagedProducts.size == PAGE_SIZE && (PAGE_SIZE * currentPage) + pagedProducts.size < allProductsSize) {
-                pagedProducts + CatalogItem.LoadMoreButtonItem
-            } else {
-                pagedProducts
-            }
 
-        _catalogItems.value = items
+        val pagedProducts: List<ProductUiModel> =
+            catalogDataSource.getProductsInRange(startIndex, endIndex)
+
+        cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
+            // cartProduct의 uid를 기준으로 Map을 만든다
+            val cartProductMap = cartProducts.associateBy { it.uid }
+
+            // pagedProducts를 순회하면서 quantity를 반영
+            val mergedProducts: List<ProductUiModel> =
+                pagedProducts.map { product ->
+                    val cartProduct = cartProductMap[product.id]
+                    if (cartProduct != null) {
+                        product.copy(quantity = cartProduct.quantity)
+                    } else {
+                        product
+                    }
+                }
+
+            val mergedCatalogItems = mergedProducts.map { CatalogItem.ProductItem(it) }
+
+            // LoadMoreButtonItem 포함 여부 결정
+            val items: List<CatalogItem> =
+                if (mergedProducts.size == pageSize &&
+                    (pageSize * currentPage) + mergedProducts.size < allProductsSize
+                ) {
+                    mergedCatalogItems + CatalogItem.LoadMoreButtonItem
+                } else {
+                    mergedCatalogItems
+                }
+
+            _catalogItems.postValue(items)
+        }
     }
 
     companion object {

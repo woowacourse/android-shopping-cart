@@ -18,7 +18,13 @@ class CartProductRepositoryImpl(
     override fun getCartProductsInRange(
         startIndex: Int,
         endIndex: Int,
-    ): List<CartProductEntity> = cartProductDao.getCartProductsInRange(startIndex, endIndex)
+        callback: (List<CartProductEntity>) -> Unit,
+    ) {
+        thread {
+            val list = cartProductDao.getCartProductsInRange(startIndex, endIndex)
+            callback(list)
+        }
+    }
 
     override fun updateProduct(product: CartProductEntity) {
         thread { cartProductDao.updateProduct(product) }
