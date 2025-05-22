@@ -1,70 +1,150 @@
 package woowacourse.shopping.ui.viewmodel
 
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
+import io.mockk.Runs
+import io.mockk.clearMocks
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.unmockkAll
+import io.mockk.verify
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.dummyProducts
+import woowacourse.shopping.domain.model.CartProducts
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.model.DUMMY_CART_PRODUCTS
+import woowacourse.shopping.model.DUMMY_PRODUCT_1
 import woowacourse.shopping.ui.cart.CartViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
+    private lateinit var cartRepository: CartRepository
     private lateinit var viewModel: CartViewModel
 
     @BeforeEach
     fun setup() {
-        CartDummyRepositoryImpl.clearCart()
-        dummyProducts.take(10).forEach { CartDummyRepositoryImpl.addCartProduct(it) }
-        viewModel = CartViewModel()
+        cartRepository = mockk(relaxed = true)
+
+        every {
+            cartRepository.fetchCartProducts(any(), any(), any())
+        } answers {
+            thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS)
+        }
+
+        viewModel = CartViewModel(cartRepository)
     }
 
     @Test
-    fun `초기화 시 products 값이 장바구니 목록으로 설정된다`() {
-        val products = viewModel.cartProducts.getOrAwaitValue()
-        Assertions.assertTrue(products.isNotEmpty())
+    fun `loadCartProducts가 호출되면 LiveData에 DUMMY_CART_PRODUCTS가 저장된다`() {
+        // when
+        viewModel = CartViewModel(cartRepository)
+
+        // then
+        assertThat(viewModel.cartProducts.getOrAwaitValue().products).hasSize(5)
+        assertThat(viewModel.cartProducts.getOrAwaitValue().products).containsExactlyElementsIn(DUMMY_CART_PRODUCTS.products)
     }
 
     @Test
-    fun `removeCartProduct 호출 시 products 값에서 해당 상품이 제거된다`() {
-        val before = viewModel.cartProducts.getOrAwaitValue()
-        val targetId = before.first().id
+    fun `increaseCartProductQuantity가 호출되면 수량을 증가시키고 editedProductIds에 추가하며 상태를 업데이트한다`() {
+        // given
+        val productId = DUMMY_PRODUCT_1.id
+        val newQuantity = 10
 
-        viewModel.removeCartProduct(targetId)
+        every {
+            cartRepository.increaseProductQuantity(eq(productId), any(), any())
+        } answers {
+            thirdArg<(Int) -> Unit>().invoke(newQuantity)
+        }
 
-        val after = viewModel.cartProducts.getOrAwaitValue()
-        Assertions.assertFalse(after.any { it.id == targetId })
+        // when
+        viewModel.increaseCartProductQuantity(productId)
+
+        // then
+        val updatedProduct =
+            viewModel.cartProducts
+                .getOrAwaitValue()
+                .products
+                ?.find { it.product.id == productId }
+
+        assertThat(updatedProduct?.quantity).isEqualTo(newQuantity)
+        assertThat(viewModel.editedProductIds.getOrAwaitValue()).contains(productId)
     }
 
     @Test
-    fun `increasePage 호출 시 currentPage 값이 증가하고 products가 갱신된다`() {
-        val beforePage = viewModel.pageState.getOrAwaitValue()
+    fun `decreaseCartProductQuantity는 수량 감소 후 0일 경우 editedProductIds에 추가하며 상품을 다시 불러온다`() {
+        // given
+        val productId = DUMMY_PRODUCT_1.id
+
+        every {
+            cartRepository.decreaseProductQuantity(eq(productId), any(), any())
+        } answers {
+            thirdArg<(Int) -> Unit>().invoke(0)
+        }
+
+        // when
+        viewModel.decreaseCartProductQuantity(productId)
+
+        // then
+        verify { cartRepository.fetchCartProducts(any(), any(), any()) }
+        assertThat(viewModel.editedProductIds.getOrAwaitValue()).contains(productId)
+    }
+
+    @Test
+    fun `removeCartProduct는 제품을 삭제하고 editedProductIds에 추가하며 상품을 다시 불러온다`() {
+        // given
+        val productId = DUMMY_PRODUCT_1.id
+
+        every {
+            cartRepository.removeCartProduct(productId)
+        } just Runs
+
+        // when
+        viewModel.removeCartProduct(productId)
+
+        // then
+        verify { cartRepository.removeCartProduct(productId) }
+        verify { cartRepository.fetchCartProducts(any(), any(), any()) }
+
+        assertThat(viewModel.editedProductIds.getOrAwaitValue()).contains(productId)
+    }
+
+    @Test
+    fun `increasePage 호출 시 페이지 증가하고 데이터 다시 불러온다`() {
+        // given
+        clearMocks(cartRepository)
+
+        every {
+            cartRepository.fetchCartProducts(any(), any(), any())
+        } answers {
+            thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS)
+        }
+
+        // when
         viewModel.increasePage()
 
-        val afterPage = viewModel.pageState.getOrAwaitValue()
-        Assertions.assertEquals(beforePage + 1, afterPage)
-
-        val products = viewModel.cartProducts.getOrAwaitValue()
-        Assertions.assertTrue(products.isNotEmpty())
+        // then
+        verify { cartRepository.fetchCartProducts(2, 5, any()) }
+        assertThat(viewModel.pageState.getOrAwaitValue().current).isEqualTo(2)
     }
 
     @Test
-    fun `decreasePage 호출 시 currentPage 값이 감소하고 products가 갱신된다`() {
-        viewModel.increasePage()
-        val increasedPage = viewModel.pageState.getOrAwaitValue()
+    fun `updateTotalPage는 pageState의 total 값을 업데이트한다`() {
+        // given
+        val expected = 100
 
-        viewModel.decreasePage()
-        val decreasedPage = viewModel.pageState.getOrAwaitValue()
+        // when
+        viewModel.updateTotalPage(expected)
 
-        Assertions.assertEquals(increasedPage - 1, decreasedPage)
+        // then
+        assertThat(viewModel.pageState.getOrAwaitValue().total).isEqualTo(expected)
     }
 
-    @Test
-    fun `loadMaxPage 호출 시 maxPage 값이 업데이트된다`() {
-        viewModel.loadMaxPage()
-        val maxPage = viewModel.maxPage.getOrAwaitValue()
-
-        Assertions.assertTrue(maxPage >= 1)
+    @AfterEach
+    fun tearDown() {
+        unmockkAll()
     }
 }

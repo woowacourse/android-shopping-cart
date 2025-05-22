@@ -58,7 +58,7 @@ class ProductDetailViewModel(
     fun updateCartProduct() {
         val catalogProduct: CatalogProduct = catalogProduct.value ?: return
         runCatching {
-            cartRepository.saveCartProduct(CartProduct.from(catalogProduct.product, catalogProduct.quantity))
+            cartRepository.saveCartProduct(CartProduct(catalogProduct.product, catalogProduct.quantity))
         }.onSuccess {
             _onCartProductAddSuccess.postValue(true)
         }
