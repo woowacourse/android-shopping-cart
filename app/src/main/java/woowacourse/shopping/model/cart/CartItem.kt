@@ -4,5 +4,5 @@ import woowacourse.shopping.model.product.Product
 
 data class CartItem(
     val product: Product,
-    val quantity: Int,
+    val quantity: Int = 1,
 )
