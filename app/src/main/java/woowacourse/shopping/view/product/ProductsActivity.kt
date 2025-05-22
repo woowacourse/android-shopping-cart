@@ -36,8 +36,7 @@ class ProductsActivity :
         }
 
         initDataBinding()
-        handleEventsFromViewModel()
-        bindData()
+        setupObservers()
         setupAdapter()
     }
 
@@ -47,29 +46,40 @@ class ProductsActivity :
         binding.lifecycleOwner = this
     }
 
-    private fun handleEventsFromViewModel() {
-        viewModel.event.observe(this) { event: ProductsEvent ->
-            when (event) {
-                ProductsEvent.UPDATE_PRODUCT_FAILURE -> showToast(getString(R.string.products_update_products_error_message))
-                ProductsEvent.NOT_ADD_TO_SHOPPING_CART ->
-                    binding.root.showSnackBar(
-                        getString(R.string.product_detail_add_shopping_cart_error_message),
-                    )
-            }
-        }
-    }
-
-    private fun bindData() {
+    private fun setupObservers() {
         viewModel.products.observe(this) { products: List<ProductsItem> ->
-            productAdapter.appendItems(products)
+            productAdapter.submitList(products)
         }
 
         viewModel.shoppingCartQuantity.observe(this) { shoppingCartQuantity: Int ->
-            binding.productsShoppingCartQuantity.apply {
-                visibility =
-                    if (shoppingCartQuantity > 0) View.VISIBLE else View.GONE
-                text = shoppingCartQuantity.toString()
-            }
+            handleShoppingCartQuantity(shoppingCartQuantity)
+        }
+
+        viewModel.event.observe(this) { event: ProductsEvent ->
+            handleUiEvent(event)
+        }
+    }
+
+    private fun handleShoppingCartQuantity(shoppingCartQuantity: Int) {
+        binding.productsShoppingCartQuantity.apply {
+            visibility =
+                if (shoppingCartQuantity > 0) View.VISIBLE else View.GONE
+            text = shoppingCartQuantity.toString()
+        }
+    }
+
+    private fun handleUiEvent(event: ProductsEvent) {
+        when (event) {
+            ProductsEvent.UPDATE_PRODUCT_FAILURE -> showToast(getString(R.string.products_update_products_error_message))
+            ProductsEvent.NOT_ADD_TO_SHOPPING_CART ->
+                binding.root.showSnackBar(
+                    getString(R.string.product_detail_add_shopping_cart_error_message),
+                )
+
+            ProductsEvent.NOT_MINUS_TO_SHOPPING_CART ->
+                binding.root.showSnackBar(
+                    getString(R.string.products_minus_shopping_cart_product_error_message),
+                )
         }
     }
 
@@ -100,7 +110,7 @@ class ProductsActivity :
     }
 
     override fun onMinusShoppingCartClick(product: Product) {
-        // TODO : 장바구니에 수량 1개 삭제 버튼 로직 추가
+        viewModel.minusProductToShoppingCart(product)
     }
 
     override fun onLoadClick() {

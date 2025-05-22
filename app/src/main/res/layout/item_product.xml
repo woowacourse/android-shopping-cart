@@ -33,6 +33,7 @@
             tools:src="@drawable/product_image_example" />
 
         <ImageView
+            android:id="@+id/productPlusQuantityButtonDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -41,6 +42,59 @@
             android:src="@drawable/btn_product_plus"
             app:layout_constraintBottom_toBottomOf="@id/productImage"
             app:layout_constraintEnd_toEndOf="@id/productImage" />
+
+        <TextView
+            android:id="@+id/productMinusQuantityButton"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/background_product_minus_quantity_button"
+            android:gravity="center"
+            android:onClick="@{() -> productClickListener.onMinusShoppingCartClick(product)}"
+            android:text="@string/product_minus_quantity_button"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/productImage"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/productQuantity"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/productQuantity"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="@drawable/background_product_quantity"
+            android:gravity="center"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/productMinusQuantityButton"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/productPlusQuantityButton"
+            app:layout_constraintStart_toEndOf="@id/productMinusQuantityButton"
+            app:layout_constraintTop_toTopOf="@id/productPlusQuantityButton"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/productPlusQuantityButton"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/background_product_plus_quantity_button"
+            android:gravity="center"
+            android:onClick="@{() -> productClickListener.onPlusShoppingCartClick(product)}"
+            android:text="@string/product_plus_quantity_button"
+            android:textColor="@color/gray_5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/productPlusQuantityButton"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/productQuantity"
+            app:layout_constraintTop_toTopOf="@id/productPlusQuantityButton" />
 
         <TextView
             android:id="@+id/productName"

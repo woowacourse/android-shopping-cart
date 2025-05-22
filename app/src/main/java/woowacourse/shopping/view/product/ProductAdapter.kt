@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ProductAdapter(
     private val productListener: ProductListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: List<ProductsItem> = emptyList()
+    private val items: MutableList<ProductsItem> = mutableListOf()
 
     override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
 
@@ -30,11 +30,31 @@ class ProductAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun appendItems(items: List<ProductsItem>) {
+    fun submitList(items: List<ProductsItem>) {
+        if (items.size > this.items.size) {
+            appendItems(items)
+            return
+        }
+
+        changeItems(items)
+    }
+
+    private fun changeItems(items: List<ProductsItem>) {
+        items.forEachIndexed { index, newItem ->
+            val oldItem = this.items[index]
+            if (oldItem != newItem) {
+                this.items[index] = newItem
+                notifyItemChanged(index)
+            }
+        }
+    }
+
+    private fun appendItems(items: List<ProductsItem>) {
         val previousSize = this.items.size
         val insertedCount = items.size - previousSize
 
-        this.items = items
+        this.items.clear()
+        this.items.addAll(items)
 
         notifyItemRangeInserted(previousSize, insertedCount)
     }

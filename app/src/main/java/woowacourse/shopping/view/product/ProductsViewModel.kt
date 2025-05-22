@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
 import woowacourse.shopping.data.product.repository.ProductsRepository
+import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
+import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.common.MutableSingleLiveData
 import woowacourse.shopping.view.common.SingleLiveData
@@ -13,12 +15,16 @@ import woowacourse.shopping.view.product.ProductsItem.ProductItem
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository = DefaultProductsRepository(),
+    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
     private val _products: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
     val products: LiveData<List<ProductsItem>> get() = _products
 
     private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductsEvent> get() = _event
+
+    private val _shoppingCartQuantity: MutableLiveData<Int> = MutableLiveData(0)
+    val shoppingCartQuantity: LiveData<Int> get() = _shoppingCartQuantity
 
     private var loadable: Boolean = false
 
@@ -62,6 +68,50 @@ class ProductsViewModel(
             addAll(productsWithoutLoadItem)
             addAll(productsToShow.map(::ProductItem))
             if (loadable) add(LoadItem)
+        }
+    }
+
+    fun addProductToShoppingCart(product: Product) {
+        shoppingCartRepository.add(product) { result ->
+            result
+                .onSuccess {
+                    val currentProducts = products.value?.toMutableList() ?: return@add
+                    val index: Int =
+                        currentProducts.indexOfFirst { it is ProductItem && it.product == product }
+
+                    if (index != -1) {
+                        val productItem = currentProducts[index] as ProductItem
+                        val updatedItem =
+                            productItem.copy(selectedQuantity = productItem.selectedQuantity + 1)
+                        currentProducts[index] = updatedItem
+                        _products.postValue(currentProducts)
+                    }
+                    _shoppingCartQuantity.postValue(shoppingCartQuantity.value?.plus(1))
+                }.onFailure {
+                    _event.postValue(ProductsEvent.NOT_ADD_TO_SHOPPING_CART)
+                }
+        }
+    }
+
+    fun minusProductToShoppingCart(product: Product) {
+        shoppingCartRepository.remove(product) { result ->
+            result
+                .onSuccess {
+                    val currentProducts = products.value?.toMutableList() ?: return@remove
+                    val index: Int =
+                        currentProducts.indexOfFirst { it is ProductItem && it.product == product }
+
+                    if (index != -1) {
+                        val productItem = currentProducts[index] as ProductItem
+                        val updatedItem =
+                            productItem.copy(selectedQuantity = productItem.selectedQuantity - 1)
+                        currentProducts[index] = updatedItem
+                        _products.postValue(currentProducts)
+                    }
+                    _shoppingCartQuantity.postValue(shoppingCartQuantity.value?.minus(1))
+                }.onFailure {
+                    _event.postValue(ProductsEvent.NOT_MINUS_TO_SHOPPING_CART)
+                }
         }
     }
 

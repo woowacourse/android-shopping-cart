@@ -4,7 +4,10 @@
     <!-- 상품 목록 페이지 -->
     <string name="product_price_format">%,d원</string>
     <string name="products_update_products_error_message">상품 목록을 불러오는 데 실패했습니다.</string>
+    <string name="products_minus_shopping_cart_product_error_message">장바구니에 담긴 수량을 빼는 데 실패했습니다.</string>
     <string name="products_more_button">더보기</string>
+    <string name="product_plus_quantity_button">+</string>
+    <string name="product_minus_quantity_button">-</string>
 
     <!-- 장바구니 페이지 -->
     <string name="shopping_cart_title">Cart</string>
