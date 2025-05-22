@@ -47,6 +47,21 @@ class DefaultShoppingCartRepository(
         }
     }
 
+    override fun decreaseQuantity(
+        product: Product,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        thread {
+            runCatching {
+                shoppingCartStorage.decreaseQuantity(product.toEntity())
+            }.onSuccess {
+                onResult(Result.success(Unit))
+            }.onFailure { exception ->
+                onResult(Result.failure(exception))
+            }
+        }
+    }
+
     override fun remove(
         product: Product,
         onResult: (Result<Unit>) -> Unit,

@@ -13,5 +13,7 @@ interface ShoppingCartStorage {
 
     fun add(shoppingCartProductEntity: ShoppingCartProductEntity)
 
+    fun decreaseQuantity(product: ProductEntity)
+
     fun remove(product: ProductEntity)
 }

@@ -94,10 +94,10 @@ class ProductsViewModel(
     }
 
     fun minusProductToShoppingCart(product: Product) {
-        shoppingCartRepository.remove(product) { result ->
+        shoppingCartRepository.decreaseQuantity(product) { result ->
             result
                 .onSuccess {
-                    val currentProducts = products.value?.toMutableList() ?: return@remove
+                    val currentProducts = products.value?.toMutableList() ?: return@decreaseQuantity
                     val index: Int =
                         currentProducts.indexOfFirst { it is ProductItem && it.product == product }
 

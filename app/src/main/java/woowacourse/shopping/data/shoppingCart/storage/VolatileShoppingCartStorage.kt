@@ -33,16 +33,34 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
         }
     }
 
-    override fun remove(product: ProductEntity) {
+    override fun decreaseQuantity(product: ProductEntity) {
         val index = products.indexOfFirst { it.product == product }
 
         if (index != -1) {
             val currentShoppingCartProduct = products[index]
+            val updatedQuantity: Int = currentShoppingCartProduct.quantity - 1
+
+            if (isEmptyQuantity(updatedQuantity, product)) return
+
             val updatedShoppingCartProduct =
-                currentShoppingCartProduct.copy(
-                    quantity = currentShoppingCartProduct.quantity - 1,
-                )
+                currentShoppingCartProduct.copy(quantity = updatedQuantity)
             products[index] = updatedShoppingCartProduct
         }
+    }
+
+    private fun isEmptyQuantity(
+        updatedQuantity: Int,
+        product: ProductEntity,
+    ): Boolean {
+        if (updatedQuantity == 0) {
+            remove(product)
+            return true
+        }
+        return false
+    }
+
+    override fun remove(product: ProductEntity) {
+        products.clear()
+        products.addAll(products.filterNot { it.product == product })
     }
 }
