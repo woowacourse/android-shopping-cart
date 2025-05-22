@@ -3,7 +3,6 @@ package woowacourse.shopping.view.product
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
 import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
@@ -18,12 +17,8 @@ class ProductsViewModel(
 ) : ViewModel() {
     private var allCartItems: List<CartItem> = emptyList()
 
-    private val products: MutableLiveData<List<CartItem>> = MutableLiveData()
-    val productItems: LiveData<List<ProductsItem>> = products.map { it.toProductItems }
-
-    private val loadable: Boolean get() = allCartItems.size > (products.value?.size ?: 0)
-    private val List<CartItem>.toProductItems: List<ProductsItem>
-        get() = map(ProductsItem::ProductItem) + ProductsItem.LoadItem(loadable)
+    private val _productItems: MutableLiveData<List<ProductsItem>> = MutableLiveData()
+    val productItems: LiveData<List<ProductsItem>> get() = _productItems
 
     private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductsEvent> get() = _event
@@ -34,14 +29,23 @@ class ProductsViewModel(
 
     fun updateProducts() {
         runCatching {
-            val lastCartItem: CartItem? = products.value?.lastOrNull()
+            val lastCartItem: CartItem? =
+                _productItems.value
+                    ?.filterIsInstance<ProductsItem.ProductItem>()
+                    ?.lastOrNull()
+                    ?.cartItem
             val startExclusive: Int = allCartItems.indexOf(lastCartItem)
             val lastExclusive: Int =
                 (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allCartItems.size)
 
             allCartItems.subList(startExclusive + 1, lastExclusive)
         }.onSuccess { newCartItems: List<CartItem> ->
-            products.postValue(products.value?.plus(newCartItems) ?: newCartItems)
+            val currentProductItems =
+                productItems.value?.filterIsInstance<ProductsItem.ProductItem>() ?: emptyList()
+            val productItems = currentProductItems + newCartItems.map(ProductsItem::ProductItem)
+            val loadItem = ProductsItem.LoadItem(allCartItems.size > productItems.size)
+
+            _productItems.postValue(productItems + loadItem)
         }.onFailure {
             _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
         }
