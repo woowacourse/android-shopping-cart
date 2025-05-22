@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemRecentProductsBinding
+import woowacourse.shopping.databinding.ItemRecentProductListBinding
 
-class RecentProductsViewHolder(
-    private val binding: ItemRecentProductsBinding,
-    private val eventHandler: RecentProductViewHolder.EventHandler,
+class RecentProductListViewHolder(
+    binding: ItemRecentProductListBinding,
+    eventHandler: RecentProductViewHolder.EventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     private val adapter = RecentProductAdapter(eventHandler = eventHandler)
 
@@ -26,10 +26,10 @@ class RecentProductsViewHolder(
         fun from(
             parent: ViewGroup,
             eventHandler: RecentProductViewHolder.EventHandler,
-        ): RecentProductsViewHolder {
+        ): RecentProductListViewHolder {
             val inflater = LayoutInflater.from(parent.context)
-            val binding = ItemRecentProductsBinding.inflate(inflater, parent, false)
-            return RecentProductsViewHolder(binding, eventHandler)
+            val binding = ItemRecentProductListBinding.inflate(inflater, parent, false)
+            return RecentProductListViewHolder(binding, eventHandler)
         }
     }
 }

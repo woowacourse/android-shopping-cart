@@ -15,7 +15,7 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (ProductCatalogItem.ViewType.entries[viewType]) {
-            ProductCatalogItem.ViewType.RECENT_PRODUCT -> RecentProductsViewHolder.from(parent, eventHandler)
+            ProductCatalogItem.ViewType.RECENT_PRODUCT -> RecentProductListViewHolder.from(parent, eventHandler)
             ProductCatalogItem.ViewType.PRODUCT -> ProductViewHolder.from(parent, eventHandler)
             ProductCatalogItem.ViewType.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventHandler)
         }
@@ -28,7 +28,7 @@ class ProductAdapter(
     ) {
         when (val item = items[position]) {
             is ProductCatalogItem.RecentProductsItem ->
-                (holder as RecentProductsViewHolder).bind(
+                (holder as RecentProductListViewHolder).bind(
                     item,
                 )
 

@@ -113,13 +113,9 @@ class ProductCatalogViewModel(
                 ProductCatalogItem.ProductItem(product, quantity)
             }
         return buildList {
-            if (recentProducts.isNotEmpty()) {
-                add(ProductCatalogItem.RecentProductsItem(recentProducts))
-            }
+            if (recentProducts.isNotEmpty()) add(ProductCatalogItem.RecentProductsItem(recentProducts))
             addAll(items)
-            if (hasNext) {
-                add(ProductCatalogItem.LoadMoreItem)
-            }
+            if (hasNext) add(ProductCatalogItem.LoadMoreItem)
         }
     }
 
