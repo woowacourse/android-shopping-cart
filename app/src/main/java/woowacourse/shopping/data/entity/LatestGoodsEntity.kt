@@ -8,17 +8,15 @@ import woowacourse.shopping.domain.model.LatestGoods
 @Entity(tableName = "latestGoods")
 data class LatestGoodsEntity(
     @PrimaryKey val goodsId: Int,
-    @ColumnInfo val timestamp: Long,
+    @ColumnInfo val timestamp: Long = System.currentTimeMillis(),
 )
 
 fun LatestGoodsEntity.toLatestGoods() =
     LatestGoods(
         goodsId = goodsId,
-        timestamp = timestamp,
     )
 
 fun LatestGoods.toLatestGoodsEntity() =
     LatestGoodsEntity(
         goodsId = goodsId,
-        timestamp = timestamp,
     )
