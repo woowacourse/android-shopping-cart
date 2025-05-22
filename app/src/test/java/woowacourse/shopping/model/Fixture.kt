@@ -2,6 +2,7 @@ package woowacourse.shopping.model
 
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CartProducts
+import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.model.Product
 
 val DUMMY_PRODUCT_1 =
@@ -49,6 +50,13 @@ val DUMMY_CART_PRODUCT_2 = CartProduct(DUMMY_PRODUCT_2, 1)
 val DUMMY_CART_PRODUCT_3 = CartProduct(DUMMY_PRODUCT_3, 1)
 val DUMMY_CART_PRODUCT_4 = CartProduct(DUMMY_PRODUCT_4, 1)
 val DUMMY_CART_PRODUCT_5 = CartProduct(DUMMY_PRODUCT_5, 1)
+
+val DUMMY_HISTORY_PRODUCT_1 =
+    HistoryProduct(
+        productId = DUMMY_PRODUCT_1.id,
+        name = DUMMY_PRODUCT_1.name,
+        imageUrl = DUMMY_PRODUCT_1.imageUrl,
+    )
 
 val DUMMY_CART_PRODUCTS =
     CartProducts(
