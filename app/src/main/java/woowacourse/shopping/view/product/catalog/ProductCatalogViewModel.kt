@@ -22,6 +22,9 @@ class ProductCatalogViewModel(
     private val _selectedProduct = MutableLiveData<Product>()
     val selectedProduct: LiveData<Product> = _selectedProduct
 
+    private val _totalQuantity = MutableLiveData(0)
+    val totalQuantity: LiveData<Int> = _totalQuantity
+
     init {
         loadMoreProducts()
     }
@@ -69,6 +72,7 @@ class ProductCatalogViewModel(
         }
         offset += result.items.size
         _productItems.value = createProductItems(result.hasNext)
+        _totalQuantity.value = products.values.sum()
     }
 
     private fun updateProductQuantity(
@@ -85,6 +89,7 @@ class ProductCatalogViewModel(
                     ProductCatalogItem.LoadMoreItem -> it
                 }
             }
+        _totalQuantity.value = products.values.sum()
     }
 
     private fun createProductItems(hasNext: Boolean): List<ProductCatalogItem> {

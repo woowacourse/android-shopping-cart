@@ -80,7 +80,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_margin="8dp"
-            android:background="@drawable/style_round_button"
+            android:background="@drawable/style_round_white"
             android:padding="4dp"
             android:onClick="@{() -> handler.onAddClick(product)}"
             android:src="@drawable/ic_add"

@@ -4,9 +4,8 @@
 
     <item
         android:id="@+id/shopping_cart"
-        android:icon="@drawable/ic_shopping_cart"
-        app:showAsAction="always"
+        android:actionLayout="@layout/custom_toolbar_shopping_cart"
         android:title="@string/shopping"
-        />
+        app:showAsAction="always" />
 
 </menu>

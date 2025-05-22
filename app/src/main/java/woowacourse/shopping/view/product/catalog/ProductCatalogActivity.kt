@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
+import woowacourse.shopping.databinding.CustomToolbarShoppingCartBinding
 import woowacourse.shopping.view.cart.ShoppingCartActivity
 import woowacourse.shopping.view.product.catalog.adapter.ProductAdapter
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
@@ -35,9 +36,18 @@ class ProductCatalogActivity : AppCompatActivity() {
         initObservers()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_shopping_cart, menu)
+
+        val binding = CustomToolbarShoppingCartBinding.inflate(layoutInflater)
+        binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
+
+        val menuItem = menu.findItem(R.id.shopping_cart)
+        menuItem.actionView = binding.root
+        menuItem.actionView?.setOnClickListener {
+            onOptionsItemSelected(menuItem)
+        }
         return true
     }
 
@@ -67,7 +77,13 @@ class ProductCatalogActivity : AppCompatActivity() {
         gridLayoutManager.spanSizeLookup =
             object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int =
-                    when (ProductCatalogItem.ViewType.entries[productAdapter.getItemViewType(position)]) {
+                    when (
+                        ProductCatalogItem.ViewType.entries[
+                            productAdapter.getItemViewType(
+                                position,
+                            ),
+                        ]
+                    ) {
                         ProductCatalogItem.ViewType.LOAD_MORE -> GRID_SPAN_COUNT
                         ProductCatalogItem.ViewType.PRODUCT -> 1
                     }
