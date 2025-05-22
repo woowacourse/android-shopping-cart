@@ -3,7 +3,6 @@ package woowacourse.shopping.view.shoppingCart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.CartItem
@@ -18,15 +17,15 @@ class ShoppingCartViewModel(
     private var allShoppingCartItems: List<CartItem> = emptyList()
     private var page: Int = FIRST_PAGE
 
-    private val _shoppingCartItems: MutableLiveData<List<CartItem>> = MutableLiveData()
-    val shoppingCartItems: LiveData<List<ShoppingCartItem>> =
-        _shoppingCartItems.map { it.toShoppingCartItems }
+    private val _shoppingCartItems: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
+    val shoppingCartItems: LiveData<List<ShoppingCartItem>> get() = _shoppingCartItems
 
     private val startInclusive: Int
         get() =
             (page.minus(1) * COUNT_PER_PAGE).coerceAtMost(
                 allShoppingCartItems.size,
             )
+
     private val endExclusive: Int
         get() =
             (page * COUNT_PER_PAGE).coerceAtMost(
@@ -55,7 +54,11 @@ class ShoppingCartViewModel(
                 .onSuccess { cartItems: List<CartItem> ->
                     allShoppingCartItems = cartItems
                     _shoppingCartItems.postValue(
-                        allShoppingCartItems.subList(startInclusive, endExclusive),
+                        allShoppingCartItems
+                            .subList(
+                                startInclusive,
+                                endExclusive,
+                            ).toShoppingCartItems,
                     )
                 }.onFailure {
                     _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
