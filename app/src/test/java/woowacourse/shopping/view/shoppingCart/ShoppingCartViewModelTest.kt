@@ -8,7 +8,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
-import woowacourse.shopping.fixture.PRODUCT_AIDA
+import woowacourse.shopping.fixture.CartItem_AIDA
 
 class ShoppingCartViewModelTest {
     private lateinit var repository: ShoppingCartRepository
@@ -40,7 +40,7 @@ class ShoppingCartViewModelTest {
         every { repository.remove(any()) } just Awaits
 
         // when:
-        viewModel.removeShoppingCartProduct(PRODUCT_AIDA)
+        viewModel.removeShoppingCartProduct(CartItem_AIDA)
 
         // then:
         verify { repository.remove(any()) }

@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.product.storage
 
-import woowacourse.shopping.data.product.entity.ProductEntity
+import woowacourse.shopping.data.product.entity.CartItemEntity
 
 interface ProductsStorage {
-    fun load(): List<ProductEntity>
+    fun load(): List<CartItemEntity>
 }

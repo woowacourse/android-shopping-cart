@@ -1,17 +1,17 @@
 package woowacourse.shopping.data.product.repository
 
-import woowacourse.shopping.data.product.entity.ProductEntity
+import woowacourse.shopping.data.product.entity.CartItemEntity
 import woowacourse.shopping.data.product.storage.ProductsStorage
 import woowacourse.shopping.data.product.storage.VolatileProductsStorage
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 import kotlin.concurrent.thread
 
 class DefaultProductsRepository(
     private val productsStorage: ProductsStorage = VolatileProductsStorage,
 ) : ProductsRepository {
-    override fun load(onLoad: (Result<List<Product>>) -> Unit) {
+    override fun load(onLoad: (Result<List<CartItem>>) -> Unit) {
         thread {
-            val result = runCatching { productsStorage.load().map(ProductEntity::toDomain) }
+            val result = runCatching { productsStorage.load().map(CartItemEntity::toDomain) }
             onLoad(result)
         }
     }

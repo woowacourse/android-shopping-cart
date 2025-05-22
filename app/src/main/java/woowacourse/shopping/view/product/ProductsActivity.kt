@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 import woowacourse.shopping.view.showToast
@@ -86,7 +86,7 @@ class ProductsActivity : AppCompatActivity() {
         startActivity(ShoppingCartActivity.newIntent(this))
     }
 
-    private fun navigateToProductDetail(product: Product) {
-        startActivity(ProductDetailActivity.newIntent(this, product))
+    private fun navigateToProductDetail(cartItem: CartItem) {
+        startActivity(ProductDetailActivity.newIntent(this, cartItem))
     }
 }

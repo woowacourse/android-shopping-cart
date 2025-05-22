@@ -7,33 +7,33 @@ import androidx.lifecycle.map
 import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
-    private val _product: MutableLiveData<Product> = MutableLiveData()
-    val product: LiveData<Product> get() = _product
+    private val _cartItem: MutableLiveData<CartItem> = MutableLiveData()
+    val cartItem: LiveData<CartItem> get() = _cartItem
 
-    val imageUrl: LiveData<String?> = _product.map { it.imageUrl }
+    val imageUrl: LiveData<String?> = _cartItem.map { it.imageUrl }
 
     private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
 
-    fun updateProduct(product: Product) {
-        _product.value = product
+    fun updateProduct(cartItem: CartItem) {
+        _cartItem.value = cartItem
     }
 
     fun addToShoppingCart() {
-        val product: Product =
-            product.value ?: run {
+        val cartItem: CartItem =
+            cartItem.value ?: run {
                 _event.setValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
                 return
             }
 
-        shoppingCartRepository.add(product) { result: Result<Unit> ->
+        shoppingCartRepository.add(cartItem) { result: Result<Unit> ->
             result
                 .onSuccess {
                     _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)

@@ -2,10 +2,10 @@ package woowacourse.shopping.view.product
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 
 class ProductAdapter(
-    private val onSelectProduct: (Product) -> Unit,
+    private val onSelectProduct: (CartItem) -> Unit,
     private val onLoad: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<ProductsItem> = emptyList()

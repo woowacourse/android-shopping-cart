@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.product
 
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 
 object ProductImageUrls {
     private val imageUrls: Map<Long, String> =
@@ -15,5 +15,5 @@ object ProductImageUrls {
             8L to "https://i.namu.wiki/i/GbfqspK0SdHUZd5sKj3z8KUn_EpcKkB0x_YTZu7eEXimuwFZFJxr5O9SUEaXwb7ryeWNsIgeXvuSVejFiVDgbw.webp",
         )
 
-    val Product.imageUrl: String? get() = imageUrls[id]
+    val CartItem.imageUrl: String? get() = imageUrls[id]
 }

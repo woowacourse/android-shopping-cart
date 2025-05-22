@@ -5,26 +5,26 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 
 class ShoppingCartProductViewHolder(
     private val binding: ItemShoppingCartProductBinding,
-    onRemoveProduct: (product: Product) -> Unit,
+    onRemoveProduct: (cartItem: CartItem) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.onRemoveProduct = onRemoveProduct
     }
 
     fun bind(item: ProductItem) {
-        binding.product = item.product
-        binding.imageUrl = item.product.imageUrl
+        binding.product = item.cartItem
+        binding.imageUrl = item.cartItem.imageUrl
     }
 
     companion object {
         fun of(
             parent: ViewGroup,
-            onRemoveProduct: (Product) -> Unit,
+            onRemoveProduct: (CartItem) -> Unit,
         ): ShoppingCartProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemShoppingCartProductBinding.inflate(layoutInflater, parent, false)

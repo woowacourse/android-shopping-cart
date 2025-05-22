@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.view.showToast
 
 class ProductDetailActivity :
@@ -43,15 +43,15 @@ class ProductDetailActivity :
         handleEvents()
     }
 
-    private fun initViewModel(product: Product) {
-        viewModel.updateProduct(product)
+    private fun initViewModel(cartItem: CartItem) {
+        viewModel.updateProduct(cartItem)
     }
 
-    private fun Intent.getProductExtra(): Product? =
+    private fun Intent.getProductExtra(): CartItem? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializableExtra(EXTRA_PRODUCT, Product::class.java)
+            getSerializableExtra(EXTRA_PRODUCT, CartItem::class.java)
         } else {
-            getSerializableExtra(EXTRA_PRODUCT) as? Product
+            getSerializableExtra(EXTRA_PRODUCT) as? CartItem
         }
 
     private fun bindViewModel() {
@@ -89,11 +89,11 @@ class ProductDetailActivity :
 
         fun newIntent(
             context: Context,
-            product: Product,
+            cartItem: CartItem,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).putExtra(
                 EXTRA_PRODUCT,
-                product,
+                cartItem,
             )
     }
 }

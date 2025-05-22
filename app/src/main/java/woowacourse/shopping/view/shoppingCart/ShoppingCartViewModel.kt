@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem
@@ -15,10 +15,10 @@ import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
-    private var allShoppingCartItems: List<Product> = emptyList()
+    private var allShoppingCartItems: List<CartItem> = emptyList()
     private var page: Int = FIRST_PAGE
 
-    private val _shoppingCartItems: MutableLiveData<List<Product>> = MutableLiveData()
+    private val _shoppingCartItems: MutableLiveData<List<CartItem>> = MutableLiveData()
     val shoppingCartItems: LiveData<List<ShoppingCartItem>> =
         _shoppingCartItems.map { it.toShoppingCartItems }
 
@@ -33,7 +33,7 @@ class ShoppingCartViewModel(
                 allShoppingCartItems.size,
             )
 
-    private val List<Product>.toShoppingCartItems: List<ShoppingCartItem>
+    private val List<CartItem>.toShoppingCartItems: List<ShoppingCartItem>
         get() {
             val hasNext = endExclusive < allShoppingCartItems.size
             val hasPrevious = page > FIRST_PAGE
@@ -50,10 +50,10 @@ class ShoppingCartViewModel(
     }
 
     fun updateShoppingCart() {
-        shoppingCartRepository.load { result: Result<List<Product>> ->
+        shoppingCartRepository.load { result: Result<List<CartItem>> ->
             result
-                .onSuccess { products: List<Product> ->
-                    allShoppingCartItems = products
+                .onSuccess { cartItems: List<CartItem> ->
+                    allShoppingCartItems = cartItems
                     _shoppingCartItems.postValue(
                         allShoppingCartItems.subList(startInclusive, endExclusive),
                     )
@@ -63,8 +63,8 @@ class ShoppingCartViewModel(
         }
     }
 
-    fun removeShoppingCartProduct(product: Product) {
-        shoppingCartRepository.remove(product) { result: Result<Unit> ->
+    fun removeShoppingCartProduct(cartItem: CartItem) {
+        shoppingCartRepository.remove(cartItem) { result: Result<Unit> ->
             result
                 .onSuccess {
                     updateShoppingCart()

@@ -1,12 +1,12 @@
 package woowacourse.shopping.view.shoppingCart
 
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 
 sealed interface ShoppingCartItem {
     val viewType: ItemType
 
     data class ProductItem(
-        val product: Product,
+        val cartItem: CartItem,
     ) : ShoppingCartItem {
         override val viewType: ItemType = ItemType.PRODUCT
     }

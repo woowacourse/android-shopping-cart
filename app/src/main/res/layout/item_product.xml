@@ -9,7 +9,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.domain.product.Product" />
+            type="woowacourse.shopping.domain.product.CartItem" />
 
         <variable
             name="imageUrl"

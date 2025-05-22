@@ -5,19 +5,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    onSelectProduct: (Product) -> Unit,
+    onSelectProduct: (CartItem) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.onSelectProduct = onSelectProduct
     }
 
     fun bind(item: ProductsItem.ProductItem) {
-        binding.product = item.product
-        binding.imageUrl = item.product.imageUrl
+        binding.product = item.cartItem
+        binding.imageUrl = item.cartItem.imageUrl
         binding.quantity = item.quantity
 
         binding.productAddButton.setOnClickListener {
@@ -45,7 +45,7 @@ class ProductViewHolder(
     companion object {
         fun of(
             parent: ViewGroup,
-            onSelectProduct: (Product) -> Unit,
+            onSelectProduct: (CartItem) -> Unit,
         ): ProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemProductBinding.inflate(layoutInflater, parent, false)

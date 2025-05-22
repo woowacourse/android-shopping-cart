@@ -6,20 +6,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
 import woowacourse.shopping.data.product.repository.ProductsRepository
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
+import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
 
 class ProductsViewModel(
     productsRepository: ProductsRepository = DefaultProductsRepository(),
+    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
-    private var allProducts: List<Product> = emptyList()
+    private var allCartItems: List<CartItem> = emptyList()
 
-    private val products: MutableLiveData<List<Product>> = MutableLiveData()
-    val productItems: LiveData<List<ProductsItem>> = products.map { it.toProductItems }
+    private val products: MutableLiveData<List<CartItem>> = MutableLiveData()
+    val productItems: LiveData<List<ProductsItem>> = products.map { it.toCartItemItems }
 
-    private val loadable: Boolean get() = allProducts.size > (products.value?.size ?: 0)
-    private val List<Product>.toProductItems: List<ProductsItem>
+    private val loadable: Boolean get() = allCartItems.size > (products.value?.size ?: 0)
+    private val List<CartItem>.toCartItemItems: List<ProductsItem>
         get() = map(ProductsItem::ProductItem) + ProductsItem.LoadItem(loadable)
 
     private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
@@ -32,24 +35,28 @@ class ProductsViewModel(
 
     fun updateProducts() {
         runCatching {
-            val lastProduct: Product? = products.value?.lastOrNull()
-            val startExclusive: Int = allProducts.indexOf(lastProduct)
+            val lastCartItem: CartItem? = products.value?.lastOrNull()
+            val startExclusive: Int = allCartItems.indexOf(lastCartItem)
             val lastExclusive: Int =
-                (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allProducts.size)
+                (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allCartItems.size)
 
-            allProducts.subList(startExclusive + 1, lastExclusive)
-        }.onSuccess { newProducts: List<Product> ->
-            products.value = products.value?.plus(newProducts) ?: newProducts
+            allCartItems.subList(startExclusive + 1, lastExclusive)
+        }.onSuccess { newCartItems: List<CartItem> ->
+            products.value = products.value?.plus(newCartItems) ?: newCartItems
         }.onFailure {
             _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
         }
     }
 
+    fun updateShoppingCart() {
+        shoppingCartRepository
+    }
+
     private fun loadAllProducts(productsRepository: ProductsRepository) {
-        productsRepository.load { result: Result<List<Product>> ->
+        productsRepository.load { result: Result<List<CartItem>> ->
             result
-                .onSuccess { products: List<Product> ->
-                    allProducts = products
+                .onSuccess { cartItems: List<CartItem> ->
+                    allCartItems = cartItems
                 }.onFailure {
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }

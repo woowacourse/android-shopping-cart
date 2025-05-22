@@ -1,17 +1,17 @@
 package woowacourse.shopping.data.shoppingCart.repository
 
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 
 interface ShoppingCartRepository {
-    fun load(onLoad: (Result<List<Product>>) -> Unit)
+    fun load(onLoad: (Result<List<CartItem>>) -> Unit)
 
     fun add(
-        product: Product,
+        cartItem: CartItem,
         onAdd: (Result<Unit>) -> Unit,
     )
 
     fun remove(
-        product: Product,
+        cartItem: CartItem,
         onRemove: (Result<Unit>) -> Unit,
     )
 }
