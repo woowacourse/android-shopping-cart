@@ -88,7 +88,7 @@ class CartViewModel(
                         handleFetchCartItemDeleted(productId)
                         return@fold
                     }
-                    postFailureEvent(CartMessageEvent.FETCH_CART_ITEMS_FAILURE)
+                    postFailureEvent(CartMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE)
                 },
             )
         }

@@ -20,15 +20,13 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         super.onViewCreated(view, savedInstanceState)
         initObserver()
         initListener()
-
-        val productId = arguments?.getLong(EXTRA_PRODUCT) ?: return
-        viewModel.fetchProduct(productId)
+        fetchProductFromArguments()
     }
 
     private fun initObserver() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
-        binding.viewQuantitySelector?.listener =
+        binding.viewQuantitySelector.listener =
             object : QuantityChangeListener {
                 override fun increaseQuantity(productId: Long) {
                     viewModel.increaseQuantity()
@@ -51,7 +49,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         }
 
         viewModel.quantity.observe(viewLifecycleOwner) {
-            binding.viewQuantitySelector?.quantity = it
+            binding.viewQuantitySelector.quantity = it
         }
     }
 
@@ -59,6 +57,11 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         binding.btnClose.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+    }
+
+    private fun fetchProductFromArguments() {
+        val productId = arguments?.getLong(EXTRA_PRODUCT) ?: return
+        viewModel.fetchProduct(productId)
     }
 
     companion object {
