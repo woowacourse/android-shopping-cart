@@ -27,20 +27,27 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
     }
 
     override fun save(item: ShoppingCartItem) {
-        DummyShoppingCart.items.find { it.product.id == item.product.id }?.let {
-            DummyShoppingCart.items.remove(it)
-            DummyShoppingCart.items.add(0, it.copy(quantity = it.quantity + item.quantity))
-        } ?: run {
+        val existingItemIndex = DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
+
+        if (existingItemIndex != -1) {
+            val existingItem = DummyShoppingCart.items[existingItemIndex]
+            val updatedItem = existingItem.copy(quantity = existingItem.quantity + item.quantity)
+            DummyShoppingCart.items[existingItemIndex] = updatedItem
+        } else {
             DummyShoppingCart.items.add(0, item)
         }
     }
 
     override fun update(item: ShoppingCartItem) {
-        DummyShoppingCart.items.find { it.product.id == item.product.id }?.let {
-            DummyShoppingCart.items.remove(it)
-            if (item.quantity > 0) DummyShoppingCart.items.add(item)
-        } ?: run {
-            if (item.quantity > 0) DummyShoppingCart.items.add(0, item)
+        val existingItemIndex = DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
+        if (item.quantity <= 0) return
+
+        if (existingItemIndex != -1) {
+            val existingItem = DummyShoppingCart.items[existingItemIndex]
+            val updatedItem = existingItem.copy(quantity = item.quantity)
+            DummyShoppingCart.items[existingItemIndex] = updatedItem
+        } else {
+            DummyShoppingCart.items.add(0, item)
         }
     }
 

@@ -127,6 +127,7 @@ class MainActivity :
         }
 
         override fun onProductSelected(productUiModel: ProductUiModel) {
+            viewModel.saveCurrentShoppingCart(productsAdapter.quantityInfo)
             this@MainActivity.startActivity(ProductDetailActivity.newIntent(this@MainActivity, productUiModel))
         }
 
