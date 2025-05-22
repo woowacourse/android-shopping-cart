@@ -56,13 +56,9 @@ class ShoppingCartViewModel(
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
-        val currentQuantity = shoppingCart.getQuantity(item)
-        if (currentQuantity == 1) {
-            repository.deleteByProductId(item.id)
-        } else {
-            repository.updateQuantity(item.id, currentQuantity - 1)
-        }
+        if (shoppingCart.getQuantity(item) == 1) return
         shoppingCart -= item
+        repository.updateQuantity(item.id, shoppingCart.getQuantity(item))
         reloadCurrentPage()
     }
 
