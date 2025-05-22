@@ -24,6 +24,9 @@ class ProductsViewModel(
     private val _navigateToCart = MutableLiveData<Event<Unit>>()
     val navigateToCart: LiveData<Event<Unit>> = _navigateToCart
 
+    private val _quantities = MutableLiveData<Map<Long, Int>>()
+    val quantities: LiveData<Map<Long, Int>> = _quantities
+
     private var isAllProductsFetched = false
     private var currentPage = INITIAL_PAGE
     private val loadedItems = mutableListOf<Product>()
@@ -52,6 +55,26 @@ class ProductsViewModel(
 
     fun onNavigateToCartClicked() {
         _navigateToCart.value = Event(Unit)
+    }
+
+    fun increaseQuantity(productId: Long) {
+        val quantities = _quantities.value ?: emptyMap()
+        val currentQuantity = quantities[productId] ?: 1
+        _quantities.value =
+            quantities.toMutableMap().apply {
+                put(productId, currentQuantity + 1)
+            }
+    }
+
+    fun decreaseQuantity(productId: Long) {
+        val currentMap = _quantities.value ?: emptyMap()
+        val currentQuantity = currentMap[productId] ?: 1
+        if (currentQuantity > 1) {
+            _quantities.value =
+                currentMap.toMutableMap().apply {
+                    put(productId, currentQuantity - 1)
+                }
+        }
     }
 
     companion object {

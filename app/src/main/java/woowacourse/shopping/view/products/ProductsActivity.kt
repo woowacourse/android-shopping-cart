@@ -27,6 +27,7 @@ class ProductsActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initRecyclerView()
         observeProductsView()
+        observeQuantity()
         observeCartButton()
         setupScrollListenerForMoreButton()
         enableEdgeToEdge()
@@ -50,9 +51,28 @@ class ProductsActivity : AppCompatActivity() {
             ProductsAdapter(
                 productClickListener = { product -> navigateToProductDetail(product) },
                 quantitySelectListener = { true },
+                quantitySelectButtonListener =
+                    object : QuantitySelectButtonListener {
+                        override fun increase(productId: Long) {
+                            productsViewModel.increaseQuantity(productId)
+                        }
+
+                        override fun decrease(productId: Long) {
+                            productsViewModel.decreaseQuantity(productId)
+                        }
+                    },
             )
+
         binding.rvProducts.adapter = adapter
         binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
+    }
+
+    private fun observeQuantity() {
+        productsViewModel.quantities.observe(this) { quantities ->
+            quantities.forEach { (productId, quantity) ->
+                adapter.updateQuantityView(productId, quantity)
+            }
+        }
     }
 
     private fun observeProductsView() {
