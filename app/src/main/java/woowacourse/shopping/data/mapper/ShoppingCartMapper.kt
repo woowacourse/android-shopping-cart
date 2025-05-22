@@ -8,11 +8,20 @@ fun List<ShoppingCartEntity>.toDomain() =
         ShoppingProduct(
             id = entity.id,
             productId = entity.productId,
+            quantity = entity.quantity,
         )
     }
+
+fun ShoppingCartEntity.toDomain() =
+    ShoppingProduct(
+        id = this.id,
+        productId = this.productId,
+        quantity = this.quantity,
+    )
 
 fun ShoppingProduct.toEntity() =
     ShoppingCartEntity(
         id = this.id,
         productId = this.productId,
+        quantity = this.quantity ?: 0,
     )
