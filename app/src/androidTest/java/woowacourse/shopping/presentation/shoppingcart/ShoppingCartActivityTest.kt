@@ -2,6 +2,8 @@ package woowacourse.shopping.presentation.shoppingcart
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.test.core.app.ActivityScenario
@@ -11,10 +13,16 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import io.kotest.matchers.shouldBe
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.TypeSafeMatcher
 import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -150,6 +158,85 @@ class ShoppingCartActivityTest {
         tearDown(10)
     }
 
+    @Test
+    fun `plus_버튼을_누르면_상품_개수가_증가한다`() {
+        // given
+        setUp(1)
+
+        // when
+        onView(
+            allOf(
+                withId(R.id.tv_plus),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_selected_goods_list), 0)),
+            ),
+        ).perform(click())
+
+        // then
+        onView(
+            allOf(
+                withId(R.id.tv_count),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_selected_goods_list), 0)),
+            ),
+        ).check(matches(withText("2")))
+
+        tearDown(1)
+    }
+
+    @Test
+    fun `minus_버튼을_누르면_상품_개수가_감소한다`() {
+        // given
+        setUp(1)
+
+        onView(
+            allOf(
+                withId(R.id.tv_plus),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_selected_goods_list), 0)),
+            ),
+        ).perform(click())
+
+        // when
+        onView(
+            allOf(
+                withId(R.id.tv_minus),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_selected_goods_list), 0)),
+            ),
+        ).perform(click())
+
+        // then
+        onView(
+            allOf(
+                withId(R.id.tv_count),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_selected_goods_list), 0)),
+            ),
+        ).check(matches(withText("1")))
+
+        tearDown(1)
+    }
+
+    @Test
+    fun `상품의_개수가_0이면_목록에서_삭제한다`() {
+        // given
+        setUp(1)
+
+        // when
+        onView(
+            allOf(
+                withId(R.id.tv_minus),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_selected_goods_list), 0)),
+            ),
+        ).perform(click())
+
+        // then
+        onView(withId(R.id.rv_selected_goods_list)).check { view, _ ->
+            val recyclerView = view as RecyclerView
+            val itemCount = recyclerView.adapter?.itemCount
+
+            itemCount shouldBe 0
+        }
+
+        tearDown(1)
+    }
+
     private fun addItems(count: Int) {
         repeat(count) {
             shoppingRepository.increaseItemQuantity(it + 1)
@@ -165,5 +252,23 @@ class ShoppingCartActivityTest {
     private fun clickButton(button: Int) {
         onView(withId(button))
             .perform(click())
+    }
+
+    private fun nthChildOf(
+        parentMatcher: Matcher<View>,
+        childPosition: Int,
+    ): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("Nth child of parent matcher")
+            }
+
+            override fun matchesSafely(view: View): Boolean {
+                val parent = view.parent
+                return parent is ViewGroup && parentMatcher.matches(parent) && parent.getChildAt(
+                    childPosition,
+                ) == view
+            }
+        }
     }
 }
