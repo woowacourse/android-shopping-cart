@@ -21,7 +21,6 @@ class CartRepositoryImpl(
                 val updated =
                     existing.copy(
                         quantity = existing.quantity + 1,
-                        price = existing.price + cart.goods.price,
                     )
                 dao.update(updated)
             } else {
@@ -46,7 +45,6 @@ class CartRepositoryImpl(
                     val updated =
                         existing.copy(
                             quantity = existing.quantity - 1,
-                            price = existing.price - cart.goods.price,
                         )
                     dao.update(updated)
                 } else {
