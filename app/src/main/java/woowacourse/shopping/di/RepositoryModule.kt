@@ -1,8 +1,6 @@
 package woowacourse.shopping.di
 
 import android.content.Context
-import woowacourse.shopping.data.datasource.CartDataSourceImpl
-import woowacourse.shopping.data.datasource.ProductDataSourceImpl
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.repository.CartRepository
@@ -14,10 +12,8 @@ object RepositoryModule {
 
     fun provideProductRepository(context: Context): ProductRepository =
         productRepository ?: run {
-            val db = DatabaseModule.provideDatabase(context)
-            val cartDao = DatabaseModule.provideCartDao(db)
-            val cartDataSource = CartDataSourceImpl(cartDao)
-            val productDataSource = ProductDataSourceImpl()
+            val cartDataSource = DataSourceModule.provideCartDataSource(context)
+            val productDataSource = DataSourceModule.provideProductDataSource()
             ProductRepositoryImpl(cartDataSource, productDataSource).also {
                 productRepository = it
             }
@@ -25,9 +21,7 @@ object RepositoryModule {
 
     fun provideCartRepository(context: Context): CartRepository =
         cartRepository ?: run {
-            val db = DatabaseModule.provideDatabase(context)
-            val cartDao = DatabaseModule.provideCartDao(db)
-            val cartDataSource = CartDataSourceImpl(cartDao)
+            val cartDataSource = DataSourceModule.provideCartDataSource(context)
             CartRepositoryImpl(cartDataSource).also {
                 cartRepository = it
             }
