@@ -1,13 +1,13 @@
 package woowacourse.shopping.product.catalog.fixture
 
-import woowacourse.shopping.data.ProductsDataSource
+import woowacourse.shopping.data.CatalogDataSource
 import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.Product
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-class FakeProductsDataSource(
+class FakeCatalogDataSource(
     size: Int,
-) : ProductsDataSource {
+) : CatalogDataSource {
     override fun getAllProductsSize(): Int = dummyProducts.size
 
     override fun getProductsInRange(

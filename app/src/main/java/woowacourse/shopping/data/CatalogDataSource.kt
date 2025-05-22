@@ -2,7 +2,7 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-interface ProductsDataSource {
+interface CatalogDataSource {
     fun getAllProductsSize(): Int
 
     fun getProductsInRange(

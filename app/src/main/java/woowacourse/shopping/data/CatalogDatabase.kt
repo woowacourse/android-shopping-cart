@@ -4,7 +4,7 @@ import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.Product
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-object ProductDatabase : ProductsDataSource {
+object CatalogDatabase : CatalogDataSource {
     override fun getAllProductsSize(): Int = dummyProducts.size
 
     override fun getProductsInRange(

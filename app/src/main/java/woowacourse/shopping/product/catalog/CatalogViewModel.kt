@@ -3,11 +3,11 @@ package woowacourse.shopping.product.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.ProductDatabase
-import woowacourse.shopping.data.ProductsDataSource
+import woowacourse.shopping.data.CatalogDataSource
+import woowacourse.shopping.data.CatalogDatabase
 
 class CatalogViewModel(
-    private val dataSource: ProductsDataSource = ProductDatabase,
+    private val dataSource: CatalogDataSource = CatalogDatabase,
 ) : ViewModel() {
     val allProductsSize get() = dataSource.getAllProductsSize()
 
