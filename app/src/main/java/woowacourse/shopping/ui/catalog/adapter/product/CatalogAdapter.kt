@@ -100,13 +100,18 @@ class CatalogAdapter(
         val loadMoreIndex = items.indexOfFirst { it is CatalogItem.LoadMoreItem }
 
         when {
-            hasMore && loadMoreIndex == -1 -> addItem(CatalogItem.LoadMoreItem)
+            hasMore && loadMoreIndex == -1 -> {
+                addItem(CatalogItem.LoadMoreItem)
+            }
+
             hasMore && loadMoreIndex != -1 -> {
                 removeItem(loadMoreIndex)
                 addItem(CatalogItem.LoadMoreItem)
             }
 
-            !hasMore && loadMoreIndex != -1 -> removeItem(loadMoreIndex)
+            !hasMore && loadMoreIndex != -1 -> {
+                removeItem(loadMoreIndex)
+            }
         }
     }
 

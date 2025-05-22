@@ -37,7 +37,9 @@ class CartViewModel(
             _cartProducts.postValue(cartProducts)
         }
 
-        if (cartProducts.value?.products.isNullOrEmpty()) decreasePage()
+        if (cartProducts.value?.products.isNullOrEmpty()) {
+            decreasePage()
+        }
     }
 
     fun removeCartProduct(id: Int) {
