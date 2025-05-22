@@ -15,10 +15,10 @@ class ProductViewHolder(
     }
 
     fun bind(product: CatalogItem.ProductItem) {
-        binding.product = product.product
+        binding.product = product
 
-        binding.viewQuantitySelector.productId = product.product.productId
-        binding.viewQuantitySelector.quantity = product.product.quantity
+        binding.viewQuantitySelector.productId = product.productId
+        binding.viewQuantitySelector.quantity = product.quantity
     }
 
     companion object {

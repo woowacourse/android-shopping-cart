@@ -1,12 +1,16 @@
 package woowacourse.shopping.presentation.view.catalog.adapter
 
-import woowacourse.shopping.presentation.model.CatalogItemUiModel
+import woowacourse.shopping.domain.model.CartItem
 
 sealed class CatalogItem(
     val viewType: CatalogType,
 ) {
     data class ProductItem(
-        val product: CatalogItemUiModel,
+        val productId: Long,
+        val imageUrl: String,
+        val productName: String,
+        val price: Int,
+        var quantity: Int,
     ) : CatalogItem(CatalogType.PRODUCT)
 
     data object LoadMoreItem : CatalogItem(CatalogType.LOAD_MORE)
@@ -16,3 +20,12 @@ sealed class CatalogItem(
         LOAD_MORE,
     }
 }
+
+fun CartItem.toCatalogProductItem() =
+    CatalogItem.ProductItem(
+        productId = product.id,
+        productName = product.name,
+        imageUrl = product.imageUrl,
+        price = product.price.value,
+        quantity = quantity,
+    )

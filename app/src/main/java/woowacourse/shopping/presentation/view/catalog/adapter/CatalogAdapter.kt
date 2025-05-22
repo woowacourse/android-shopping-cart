@@ -44,7 +44,7 @@ class CatalogAdapter(
 
     private fun updateProductItems(newItems: List<CatalogItem.ProductItem>) {
         newItems.forEach { newItem ->
-            val index = products.indexOfFirst { it is CatalogItem.ProductItem && it.product.productId == newItem.product.productId }
+            val index = products.indexOfFirst { it is CatalogItem.ProductItem && it.productId == newItem.productId }
 
             if (index != -1) {
                 val oldItem = products[index] as CatalogItem.ProductItem

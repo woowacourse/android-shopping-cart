@@ -9,10 +9,10 @@ import woowacourse.shopping.di.RepositoryProvider
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.presentation.model.toCatalogItem
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
+import woowacourse.shopping.presentation.view.catalog.adapter.toCatalogProductItem
 import woowacourse.shopping.presentation.view.catalog.event.CatalogMessageEvent
 
 class CatalogViewModel(
@@ -95,12 +95,12 @@ class CatalogViewModel(
         _products.value.orEmpty().filterIsInstance<CatalogItem.ProductItem>()
 
     private fun mapToProductItems(items: List<CartItem>): List<CatalogItem.ProductItem> =
-        items.map { CatalogItem.ProductItem(it.toCatalogItem()) }
+        items.map { cartItem -> cartItem.toCatalogProductItem() }
 
     private fun mergeProducts(
         oldItems: List<CatalogItem.ProductItem>,
         newItems: List<CatalogItem.ProductItem>,
-    ): List<CatalogItem.ProductItem> = (oldItems + newItems).distinctBy { it.product.productId }
+    ): List<CatalogItem.ProductItem> = (oldItems + newItems).distinctBy { it.productId }
 
     private fun buildCatalogItems(
         products: List<CatalogItem.ProductItem>,
@@ -128,8 +128,8 @@ class CatalogViewModel(
         item: CatalogItem.ProductItem,
         cartItems: List<CartItem>,
     ): CatalogItem.ProductItem {
-        val quantity = cartItems.find { it.product.id == item.product.productId }?.quantity ?: 0
-        return item.copyWithQuantity(quantity)
+        val quantity = cartItems.find { it.product.id == item.productId }?.quantity ?: 0
+        return item.copy(quantity = quantity)
     }
 
     private fun refreshQuantity(productId: Long) {
@@ -148,17 +148,12 @@ class CatalogViewModel(
         val currentItems = _products.value.orEmpty()
         val updated =
             currentItems.map { item ->
-                if (item !is CatalogItem.ProductItem || item.product.productId != productId) return@map item
-                item.copyWithQuantity(quantity)
+                if (item !is CatalogItem.ProductItem || item.productId != productId) return@map item
+                item.copy(quantity = quantity)
             }
         _products.postValue(updated)
         fetchCartItemCount()
     }
-
-    private fun CatalogItem.ProductItem.copyWithQuantity(quantity: Int): CatalogItem.ProductItem =
-        CatalogItem.ProductItem(
-            this.product.copy(quantity = quantity),
-        )
 
     private fun postFailureEvent(event: CatalogMessageEvent) {
         _toastEvent.postValue(event)
