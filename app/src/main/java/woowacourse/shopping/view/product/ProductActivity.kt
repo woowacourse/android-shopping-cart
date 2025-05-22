@@ -67,7 +67,7 @@ class ProductActivity : AppCompatActivity() {
 
     private fun bindData() {
         productViewModel.products.observe(this) { products ->
-            productAdapter.setData(products)
+            productAdapter.updateData(products)
         }
         productViewModel.isShowMore.observe(this) {
         }

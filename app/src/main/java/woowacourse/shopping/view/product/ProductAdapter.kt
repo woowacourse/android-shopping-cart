@@ -50,7 +50,7 @@ class ProductAdapter(
         return products.size + if (hasShowMore) 1 else 0
     }
 
-    fun setData(newProducts: List<Product>) {
+    fun updateData(newProducts: List<Product>) {
         products = newProducts
         notifyDataSetChanged()
     }
