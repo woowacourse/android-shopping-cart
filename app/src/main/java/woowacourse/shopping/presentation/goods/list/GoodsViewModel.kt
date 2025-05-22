@@ -22,7 +22,7 @@ class GoodsViewModel(
     val goods: LiveData<List<GoodsUiModel>>
         get() = _goods
 
-    private val _shoppingGoodsCount: MutableLiveData<Int> = MutableLiveData(0)
+    private val _shoppingGoodsCount: MutableLiveData<Int> = MutableLiveData(MINIMUM_QUANTITY)
     val shoppingGoodsCount: LiveData<Int>
         get() = _shoppingGoodsCount
 
@@ -82,7 +82,7 @@ class GoodsViewModel(
 
         return when {
             selected != null -> goods.copy(isSelected = true, quantity = selected.goodsQuantity)
-            goods.isSelected || goods.quantity != 0 -> goods.copy(isSelected = false, quantity = 0)
+            goods.isSelected || goods.quantity != MINIMUM_QUANTITY -> goods.copy(isSelected = false, quantity = MINIMUM_QUANTITY)
             else -> goods
         }
     }
@@ -90,20 +90,20 @@ class GoodsViewModel(
     fun increaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoodsQuantity(position) {
-                it.copy(isSelected = true, quantity = it.quantity + 1)
+                it.copy(isSelected = true, quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.increaseItemQuantity(updatedItem.id)
-        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(1)
+        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
     }
 
     fun decreaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoodsQuantity(position) {
-                val isSelected = it.quantity - 1 != 0
-                it.copy(isSelected = isSelected, quantity = it.quantity - 1)
+                val isSelected = it.quantity - 1 != MINIMUM_QUANTITY
+                it.copy(isSelected = isSelected, quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.decreaseItemQuantity(updatedItem.id)
-        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(1)
+        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT)
     }
 
     private fun updateGoodsQuantity(
@@ -144,7 +144,9 @@ class GoodsViewModel(
     }
 
     companion object {
+        private const val QUANTITY_CHANGE_AMOUNT: Int = 1
         private const val DEFAULT_PAGE: Int = 0
+        private const val MINIMUM_QUANTITY: Int = 0
         private const val ITEM_COUNT: Int = 20
 
         fun provideFactory(
