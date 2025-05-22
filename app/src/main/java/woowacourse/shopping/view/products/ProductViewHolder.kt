@@ -4,20 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    private val productClickListener: (Product) -> Unit,
+    private val productClickListener: (CartItem) -> Unit,
     private val openQuantitySelectListener: () -> Boolean,
     private val quantitySelectButtonListener: QuantitySelectButtonListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
-        item: Product,
-        quantity: Int,
+        item: CartItem,
         isQuantitySelectorOpened: Boolean,
     ) {
-        binding.product = item
+        binding.cartItem = item
         binding.btnSelectedProduct.setOnClickListener {
             productClickListener(item)
         }
@@ -26,15 +25,15 @@ class ProductViewHolder(
             binding.visible = openQuantitySelectListener()
         }
         val quantityBinding = binding.viewQuantitySelect
-        quantityBinding.productId = item.id
-        quantityBinding.quantity = quantity
+        quantityBinding.productId = item.product.id
+        quantityBinding.tvProductQuantity.text = item.quantity.toString()
         quantityBinding.quantitySelectButtonListener = quantitySelectButtonListener
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            productClickListener: (Product) -> Unit,
+            productClickListener: (CartItem) -> Unit,
             openQuantitySelectListener: () -> Boolean,
             quantitySelectButtonListener: QuantitySelectButtonListener,
         ): ProductViewHolder {

@@ -1,17 +1,18 @@
 package woowacourse.shopping.data.products
 
+import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.model.product.Product
 
 class ProductRepositoryImpl : ProductRepository {
     private val dummyProducts: List<Product> = dummyProductsData
 
-    override fun getAll(): List<Product> = dummyProducts
+    override fun getAll(): List<CartItem> = dummyProducts.map { CartItem(it) }
 
     override fun fetchProducts(
         offset: Int,
         limit: Int,
-    ): List<Product> {
+    ): List<CartItem> {
         val end = (offset + limit).coerceAtMost(dummyProducts.size)
-        return dummyProducts.subList(offset, end)
+        return dummyProducts.map { CartItem(it) }.subList(offset, end)
     }
 }

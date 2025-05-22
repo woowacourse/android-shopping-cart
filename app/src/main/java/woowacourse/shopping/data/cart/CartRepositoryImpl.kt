@@ -1,29 +1,29 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 
 object CartRepositoryImpl : CartRepository {
-    private val products = mutableListOf<Product>()
+    private val cartItems = mutableListOf<CartItem>()
 
-    override fun getAll(): List<Product> = products.toList()
+    override fun getAll(): List<CartItem> = cartItems.toList()
 
-    override fun add(product: Product) {
-        products.add(product)
+    override fun add(cartItem: CartItem) {
+        cartItems.add(cartItem)
     }
 
-    override fun remove(product: Product) {
-        products.remove(product)
+    override fun remove(cartItem: CartItem) {
+        cartItems.remove(cartItem)
     }
 
     override fun fetchProducts(
         offset: Int,
         limit: Int,
-    ): List<Product> {
-        val end = (offset + limit).coerceAtMost(products.size)
-        return products.subList(offset, end)
+    ): List<CartItem> {
+        val end = (offset + limit).coerceAtMost(cartItems.size)
+        return cartItems.subList(offset, end)
     }
 
     override fun clear() {
-        products.clear()
+        cartItems.clear()
     }
 }

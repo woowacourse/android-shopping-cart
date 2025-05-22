@@ -4,15 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductInCartBinding
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 
 class CartViewHolder(
     private val binding: ItemProductInCartBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     val removeProductButton = binding.removeProductBtn
 
-    fun bind(item: Product) {
-        binding.product = item
+    fun bind(item: CartItem) {
+        binding.cartItem = item
+        binding.quantitySelector.tvProductQuantity.text = item.quantity.toString()
     }
 
     companion object {

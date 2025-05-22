@@ -1,18 +1,18 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 
 interface CartRepository {
-    fun getAll(): List<Product>
+    fun getAll(): List<CartItem>
 
-    fun add(product: Product)
+    fun add(cartItem: CartItem)
 
-    fun remove(product: Product)
+    fun remove(cartItem: CartItem)
 
     fun fetchProducts(
         offset: Int,
         limit: Int,
-    ): List<Product>
+    ): List<CartItem>
 
     fun clear()
 }

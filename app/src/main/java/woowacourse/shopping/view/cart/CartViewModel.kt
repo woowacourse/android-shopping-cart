@@ -9,7 +9,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
 
 class CartViewModel(
@@ -18,8 +18,8 @@ class CartViewModel(
     private val _currentPageNumber = MutableLiveData(INITIAL_PAGE)
     val currentPageNumber: LiveData<Int> = _currentPageNumber
 
-    private val _loadedProducts = MutableLiveData<List<Product>>()
-    val loadedProducts: LiveData<List<Product>> = _loadedProducts
+    private val _loadedProducts = MutableLiveData<List<CartItem>>()
+    val loadedProducts: LiveData<List<CartItem>> = _loadedProducts
 
     private val _isOnlyOnePage = MutableLiveData<Boolean>()
     val isOnlyOnePage: LiveData<Boolean> = _isOnlyOnePage
@@ -37,8 +37,8 @@ class CartViewModel(
         loadPage(INITIAL_PAGE)
     }
 
-    fun removeFromCart(product: Product) {
-        cartRepository.remove(product)
+    fun removeFromCart(cartItem: CartItem) {
+        cartRepository.remove(cartItem)
         _loadedProducts.value = cartRepository.getAll()
         if (!existPage()) _currentPageNumber.value = minusPageNumber()
 

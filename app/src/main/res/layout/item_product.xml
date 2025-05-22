@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.product.Product" />
+            name="cartItem"
+            type="woowacourse.shopping.model.cart.CartItem" />
 
         <variable
             name="visible"
@@ -26,7 +26,7 @@
             android:layout_height="0dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{cartItem.product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,7 +63,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="@{product.title}"
+            android:text="@{cartItem.product.title}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -73,7 +73,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{String.format(@string/product_price_format,product.price)}"
+            android:text="@{String.format(@string/product_price_format,cartItem.product.price)}"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/product_title"
             app:layout_constraintStart_toStartOf="@id/product_title"

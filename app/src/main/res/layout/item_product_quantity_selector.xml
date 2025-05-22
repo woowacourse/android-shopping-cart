@@ -9,10 +9,6 @@
             type="java.lang.Long" />
 
         <variable
-            name="quantity"
-            type="java.lang.Integer" />
-
-        <variable
             name="quantitySelectButtonListener"
             type="woowacourse.shopping.view.products.QuantitySelectButtonListener" />
     </data>
@@ -41,7 +37,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@{String.valueOf(quantity)}"
             android:textAlignment="center"
             android:textSize="22sp"
             android:textStyle="bold"

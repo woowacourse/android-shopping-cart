@@ -2,11 +2,11 @@ package woowacourse.shopping.view.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 
 class CartAdapter(
-    private val itemsInCart: MutableList<Product> = mutableListOf(),
-    private val onProductRemoveClickListener: (Product) -> Unit,
+    private val itemsInCart: MutableList<CartItem> = mutableListOf(),
+    private val onProductRemoveClickListener: (CartItem) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +25,7 @@ class CartAdapter(
         holder.bind(itemsInCart[position])
     }
 
-    fun updateProductsView(items: List<Product>) {
+    fun updateProductsView(items: List<CartItem>) {
         val oldSize = itemsInCart.size
         itemsInCart.clear()
         notifyItemRangeRemoved(0, oldSize)

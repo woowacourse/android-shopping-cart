@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.intent.getSerializableExtraData
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -25,8 +25,10 @@ class ProductDetailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         binding.viewModel = productDetailViewModel
 
-        val intentProductData = intent.getSerializableExtraData<Product>(PRODUCT_DATA_KEY) ?: return
-        binding.product = intentProductData
+        val intentCartItemData =
+            intent.getSerializableExtraData<CartItem>(CART_ITEM_DATA_KEY) ?: return
+        binding.cartItem = intentCartItemData
+        binding.quantitySelector.tvProductQuantity.text = intentCartItemData.quantity.toString()
 
         setCloseButtonClickListener()
         observeAddToCart()
@@ -57,14 +59,14 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val PRODUCT_DATA_KEY = "product"
+        private const val CART_ITEM_DATA_KEY = "cartItem"
 
         fun getIntent(
             context: Context,
-            product: Product,
+            cartItem: CartItem,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(PRODUCT_DATA_KEY, product)
+                putExtra(CART_ITEM_DATA_KEY, cartItem)
             }
     }
 }

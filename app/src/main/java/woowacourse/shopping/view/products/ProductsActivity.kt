@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.model.product.Product
+import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
@@ -27,7 +27,6 @@ class ProductsActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initRecyclerView()
         observeProductsView()
-        observeQuantity()
         observeCartButton()
         setupScrollListenerForMoreButton()
         enableEdgeToEdge()
@@ -49,7 +48,7 @@ class ProductsActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         adapter =
             ProductsAdapter(
-                productClickListener = { product -> navigateToProductDetail(product) },
+                productClickListener = { cartItem -> navigateToProductDetail(cartItem) },
                 openQuantitySelectListener = { true },
                 quantitySelectButtonListener =
                     object : QuantitySelectButtonListener {
@@ -67,18 +66,18 @@ class ProductsActivity : AppCompatActivity() {
         binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
     }
 
-    private fun observeQuantity() {
-        productsViewModel.quantities.observe(this) { quantities ->
-            quantities.forEach { (productId, quantity) ->
-                adapter.updateQuantityView(productId, quantity)
-            }
-        }
-    }
-
     private fun observeProductsView() {
         productsViewModel.productsInShop.observe(this) { list ->
             adapter.updateProductsView(list)
+            list.forEach {
+                adapter.updateQuantityView(it.product.id)
+            }
         }
+//        productsViewModel.quantities.observe(this) { quantities ->
+//            quantities.forEach { (id, _) ->
+//                adapter.updateQuantityView(id)
+//            }
+//        }
     }
 
     private fun observeCartButton() {
@@ -89,8 +88,8 @@ class ProductsActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToProductDetail(product: Product) {
-        val intent = ProductDetailActivity.getIntent(this, product)
+    private fun navigateToProductDetail(cartItem: CartItem) {
+        val intent = ProductDetailActivity.getIntent(this, cartItem)
         startActivity(intent)
     }
 
