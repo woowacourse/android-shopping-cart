@@ -289,14 +289,6 @@ object ProductStorage {
 
     operator fun get(id: Long): Product = products[id] ?: throw IllegalArgumentException()
 
-    fun modifyQuantity(
-        productId: Long,
-        quantity: Quantity,
-    ) {
-        val target = products[productId] ?: throw IllegalArgumentException()
-        products[productId] = target.copy(quantity = quantity)
-    }
-
     fun singlePage(
         fromIndex: Int,
         toIndex: Int,

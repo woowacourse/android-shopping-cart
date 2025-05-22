@@ -23,22 +23,16 @@ data class ProductState(
         val canIncrease = item.canIncrease(increasedQuantity)
 
         return if (canIncrease) {
-            val stock = item.quantity - increasedQuantity.value
-
-            IncreaseState.CanIncrease(
-                copy(cartQuantity = increasedQuantity),
-                stock,
-            )
+            IncreaseState.CanIncrease(copy(cartQuantity = increasedQuantity))
         } else {
             IncreaseState.CannotIncrease(item.quantityValue)
         }
     }
 
-    fun decreaseCartQuantity(): Pair<ProductState, Quantity> {
+    fun decreaseCartQuantity(): ProductState {
         val decreasedCartQuantity = cartQuantity - 1
-        val productStock = item.quantity - decreasedCartQuantity.value
         val newState = copy(cartQuantity = decreasedCartQuantity)
 
-        return newState to productStock
+        return newState
     }
 }

@@ -48,10 +48,9 @@ class MainViewModel(
 
     fun decreaseCartQuantity(productId: Long) {
         val currentUiState = _uiState.value ?: return
-        val (result, quantity) = currentUiState.decreaseCartQuantity(productId)
+        val result = currentUiState.decreaseCartQuantity(productId)
 
         _uiState.value = currentUiState.modifyUiState(result)
-        productRepository.modifyQuantity(productId, quantity)
     }
 
     fun increaseCartQuantity(productId: Long) {
@@ -95,7 +94,6 @@ class MainViewModel(
             is IncreaseState.CanIncrease -> {
                 val newState = result.value
                 _uiState.value = currentUiState.modifyUiState(newState)
-                productRepository.modifyQuantity(productId, result.productStock)
                 onCartUpdate(newState.cartQuantity)
             }
 

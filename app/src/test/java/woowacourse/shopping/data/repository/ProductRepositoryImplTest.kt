@@ -1,15 +1,12 @@
 package woowacourse.shopping.data.repository
 
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.storage.ProductStorage
-import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.product.ProductSinglePage
 import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
@@ -80,20 +77,5 @@ class ProductRepositoryImplTest {
         assertTrue(actual.products.isEmpty())
         assertTrue(actual.hasNextPage)
         verify(exactly = 1) { storage.singlePage(fromIndex, toIndex) }
-    }
-
-    @Test
-    fun `modifyQuantity()는 productStorage의 modifyQuantity()를 호출해야 한다`() {
-        // given
-        val id = 1L
-        val quantity = Quantity(5)
-
-        every { storage.modifyQuantity(id, Quantity(5)) } just Runs
-
-        // when
-        productRepository.modifyQuantity(id, quantity)
-
-        // then
-        verify(exactly = 1) { storage.modifyQuantity(id, quantity) }
     }
 }
