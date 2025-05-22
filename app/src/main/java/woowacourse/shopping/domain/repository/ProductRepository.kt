@@ -7,7 +7,7 @@ interface ProductRepository {
     fun fetchProducts(
         lastId: Int,
         count: Int,
-        callback: (CatalogProducts) -> Unit = {},
+        callback: (CatalogProducts) -> Unit,
     )
 
     fun fetchProduct(
