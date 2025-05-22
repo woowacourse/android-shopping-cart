@@ -22,7 +22,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] = "de.mannodermaus.junit5.AndroidJUnit5Builder"
+        testInstrumentationRunnerArguments["runnerBuilder"] =
+            "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
 
     buildTypes {
@@ -56,8 +57,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.google.material)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.glide)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockk)
     testImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.contrib)
@@ -68,7 +71,6 @@ dependencies {
     androidTestImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.mannodermaus.junit5.core)
-    testImplementation(libs.mockk)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
-    implementation(libs.glide)
+    kapt(libs.androidx.room.compiler)
 }
