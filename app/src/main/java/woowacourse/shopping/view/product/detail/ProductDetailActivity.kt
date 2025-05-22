@@ -51,6 +51,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         binding.product = product
+        binding.lastProduct = viewModel.lastProduct
         binding.handler = viewModel
     }
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartProductRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.RecentProduct
 
 class ProductDetailViewModel(
     private val product: Product,
@@ -14,6 +15,8 @@ class ProductDetailViewModel(
 ) : ViewModel(),
     ProductDetailEventHandler {
     private var shoppingCartQuantity = 0
+    var lastProduct: RecentProduct? = null
+        private set
 
     private val _navigateEvent = MutableLiveData<Unit>()
     val navigateEvent: LiveData<Unit> = _navigateEvent
@@ -23,6 +26,7 @@ class ProductDetailViewModel(
 
     init {
         loadQuantity()
+        loadLastProduct()
         recentProductRepository.replaceRecentProduct(product.id)
     }
 
@@ -47,5 +51,12 @@ class ProductDetailViewModel(
 
     private fun loadQuantity() {
         shoppingCartQuantity = cartProductRepository.getQuantityByProductId(product.id) ?: 0
+    }
+
+    private fun loadLastProduct() {
+        lastProduct = recentProductRepository.getLastProduct()
+        if (lastProduct?.product?.id == product.id) {
+            lastProduct = null
+        }
     }
 }

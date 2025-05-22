@@ -13,7 +13,13 @@ class LocalRecentProductRepository(
 
     override fun getAll(): List<RecentProduct> {
         var result = listOf<RecentProduct>()
-        thread { result = dao.getAll().toDomain() }.join()
+        thread { result = dao.getAll().map { it.toDomain() } }.join()
+        return result
+    }
+
+    override fun getLastProduct(): RecentProduct? {
+        var result: RecentProduct? = null
+        thread { result = dao.getLastProduct()?.toDomain() }.join()
         return result
     }
 
@@ -22,7 +28,7 @@ class LocalRecentProductRepository(
         offset: Int,
     ): List<RecentProduct> {
         var result = listOf<RecentProduct>()
-        thread { result = dao.getPaged(limit, offset).toDomain() }.join()
+        thread { result = dao.getPaged(limit, offset).map { it.toDomain() } }.join()
         return result
     }
 

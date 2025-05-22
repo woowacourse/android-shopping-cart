@@ -16,6 +16,9 @@ interface RecentProductDao {
     @Query("SELECT * from recent_product")
     fun getAll(): List<RecentProductEntity>
 
+    @Query("SELECT * FROM recent_product ORDER BY id DESC LIMIT 1")
+    fun getLastProduct(): RecentProductEntity?
+
     @Query("SELECT * FROM recent_product ORDER BY id DESC LIMIT :limit OFFSET :offset")
     fun getPaged(
         limit: Int,

@@ -7,6 +7,8 @@ interface RecentProductRepository {
 
     fun getAll(): List<RecentProduct>
 
+    fun getLastProduct(): RecentProduct?
+
     fun getPagedProducts(
         limit: Int,
         offset: Int = 0,

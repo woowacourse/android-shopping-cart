@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewmodel"
             type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
@@ -12,6 +14,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="lastProduct"
+            type="woowacourse.shopping.domain.RecentProduct" />
 
         <variable
             name="handler"
@@ -76,6 +82,7 @@
                     tools:text="2,500원" />
 
                 <include
+                    android:id="@+id/item_quantity_control"
                     layout="@layout/item_quantity_control"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,6 +93,41 @@
                     app:layout_constraintTop_toTopOf="@id/tv_detail_product_price"
                     app:product="@{product}"
                     app:quantity="@{viewmodel.quantity}" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/style_product_edge"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="16dp"
+                    android:visibility="@{lastProduct == null ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toBottomOf="@id/item_quantity_control">
+
+                    <TextView
+                        android:id="@+id/tv_last_product"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/last_product"
+                        android:textColor="@color/primary_color"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@{lastProduct.product.name}"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_last_product"
+                        tools:text="아메리카노" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

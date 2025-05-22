@@ -17,7 +17,7 @@ class LocalCartProductRepository(
     override fun getAll(): List<CartProduct> {
         var result = listOf<CartProduct>()
         thread {
-            result = dao.getAll().toDomain()
+            result = dao.getAll().map { it.toDomain() }
         }.join()
         return result
     }
@@ -31,7 +31,7 @@ class LocalCartProductRepository(
         val endIndex = (offset + limit).coerceAtMost(totalCount)
         var items = listOf<CartProduct>()
         thread {
-            items = dao.getPaged(endIndex - offset, offset).toDomain()
+            items = dao.getPaged(endIndex - offset, offset).map { it.toDomain() }
         }.join()
 
         val hasNext = endIndex < totalCount
