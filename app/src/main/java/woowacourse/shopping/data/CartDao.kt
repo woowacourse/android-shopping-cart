@@ -38,7 +38,7 @@ interface CartDao {
     fun findByGoodsId(id: Long): CartEntity?
 
     @Transaction
-    fun insertOrAddQuantity(cartEntity: CartEntity) {
+    fun addOrIncreaseQuantity(cartEntity: CartEntity) {
         val existingItem = findByGoodsId(cartEntity.id)
         if (existingItem == null) {
             insert(cartEntity)
@@ -48,6 +48,22 @@ interface CartDao {
                     quantity = existingItem.quantity + cartEntity.quantity,
                 )
             update(quantityUpdatedItem)
+        }
+    }
+
+    @Transaction
+    fun removeOrDecreaseQuantity(cartEntity: CartEntity) {
+        val existingItem = findByGoodsId(cartEntity.id)
+        if (existingItem != null) {
+            val quantityUpdatedItem =
+                existingItem.copy(
+                    quantity = existingItem.quantity - cartEntity.quantity,
+                )
+            if (quantityUpdatedItem.quantity > 0) {
+                update(quantityUpdatedItem)
+            } else {
+                delete(existingItem)
+            }
         }
     }
 }

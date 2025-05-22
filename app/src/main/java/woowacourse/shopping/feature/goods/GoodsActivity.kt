@@ -13,7 +13,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.feature.QuantityChangeListener
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
@@ -25,7 +27,21 @@ class GoodsActivity : AppCompatActivity() {
     private val viewModel: GoodsViewModel by viewModels {
         GoodsViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
     }
-    private val goodsAdapter by lazy { GoodsAdapter { goods -> navigateGoodsDetails(goods) } }
+    private val goodsAdapter by lazy {
+        GoodsAdapter(
+            goodsClickListener = { goods -> navigateGoodsDetails(goods) },
+            quantityChangeListener =
+                object : QuantityChangeListener {
+                    override fun onIncrease(cartItem: CartItem) {
+                        viewModel.addCartItemOrIncraseQuantity(cartItem.copy(quantity = 1))
+                    }
+
+                    override fun onDecrease(cartItem: CartItem) {
+                        viewModel.removeCartItemOrDecreaseQuantity(cartItem.copy(quantity = 1))
+                    }
+                },
+        )
+    }
     private val moreButtonAdapter by lazy { MoreButtonAdapter { viewModel.addPage() } }
     private val concatAdapter by lazy { ConcatAdapter(goodsAdapter, moreButtonAdapter) }
 

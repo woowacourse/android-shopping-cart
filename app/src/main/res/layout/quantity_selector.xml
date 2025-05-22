@@ -5,8 +5,11 @@
 
     <data>
         <variable
-            name="quantity"
-            type="Integer" />
+            name="quantityChangeListener"
+            type="woowacourse.shopping.feature.QuantityChangeListener" />
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,6 +28,7 @@
             android:elevation="0dp"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:onClick="@{() -> quantityChangeListener.onDecrease(cartItem)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -42,7 +46,7 @@
             android:textStyle="bold"
             android:elevation="0dp"
             android:background="@color/white"
-            android:text="@{String.valueOf(quantity)}"
+            android:text="@{String.valueOf(cartItem.quantity)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/btn_minus_quantity"
@@ -60,6 +64,7 @@
             android:elevation="0dp"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:onClick="@{() -> quantityChangeListener.onIncrease(cartItem)}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

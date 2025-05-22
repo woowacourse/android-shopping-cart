@@ -26,7 +26,7 @@ class GoodsDetailsViewModel(
 
     fun addToCart() {
         goods.value?.let {
-            cartRepository.insertOrAddQuantity(it, 1) {
+            cartRepository.addOrIncreaseQuantity(it, 1) {
                 _alertEvent.setValue(R.string.goods_detail_cart_insert_complete_toast_message)
             }
         }

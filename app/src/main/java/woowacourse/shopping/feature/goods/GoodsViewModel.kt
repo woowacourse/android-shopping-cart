@@ -47,6 +47,18 @@ class GoodsViewModel(
         appendCartItemsWithZeroQuantity()
     }
 
+    fun addCartItemOrIncraseQuantity(cartItem: CartItem) {
+        cartRepository.addOrIncreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
+        }
+    }
+
+    fun removeCartItemOrDecreaseQuantity(cartItem: CartItem) {
+        cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
+        }
+    }
+
     private fun getProducts(pageSize: Int = PAGE_SIZE): List<Goods> {
         val fromIndex = (page - 1) * pageSize
         val toIndex = min(page * pageSize, dummyGoods.size)

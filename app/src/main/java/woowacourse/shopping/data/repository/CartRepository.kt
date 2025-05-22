@@ -13,9 +13,15 @@ interface CartRepository {
         onComplete: () -> Unit,
     )
 
-    fun insertOrAddQuantity(
+    fun addOrIncreaseQuantity(
         goods: Goods,
         addQuantity: Int,
+        onComplete: () -> Unit,
+    )
+
+    fun removeOrDecreaseQuantity(
+        goods: Goods,
+        removeQuantity: Int,
         onComplete: () -> Unit,
     )
 

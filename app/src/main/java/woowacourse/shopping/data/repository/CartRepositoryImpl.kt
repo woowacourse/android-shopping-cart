@@ -41,7 +41,7 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun insertOrAddQuantity(
+    override fun addOrIncreaseQuantity(
         goods: Goods,
         addQuantity: Int,
         onComplete: () -> Unit,
@@ -49,7 +49,23 @@ class CartRepositoryImpl(
         thread {
             shoppingDatabase
                 .cartDao()
-                .insertOrAddQuantity(goods.toEntity(addQuantity))
+                .addOrIncreaseQuantity(goods.toEntity(addQuantity))
+
+            Handler(Looper.getMainLooper()).post {
+                onComplete()
+            }
+        }
+    }
+
+    override fun removeOrDecreaseQuantity(
+        goods: Goods,
+        removeQuantity: Int,
+        onComplete: () -> Unit,
+    ) {
+        thread {
+            shoppingDatabase
+                .cartDao()
+                .removeOrDecreaseQuantity(goods.toEntity(removeQuantity))
 
             Handler(Looper.getMainLooper()).post {
                 onComplete()

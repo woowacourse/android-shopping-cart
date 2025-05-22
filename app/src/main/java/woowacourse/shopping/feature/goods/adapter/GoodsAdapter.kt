@@ -3,9 +3,11 @@ package woowacourse.shopping.feature.goods.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.feature.QuantityChangeListener
 
 class GoodsAdapter(
     private val goodsClickListener: GoodsClickListener,
+    private val quantityChangeListener: QuantityChangeListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
     private val items: MutableList<CartItem> = mutableListOf()
 
@@ -31,7 +33,7 @@ class GoodsAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): GoodsViewHolder = GoodsViewHolder.from(parent, goodsClickListener)
+    ): GoodsViewHolder = GoodsViewHolder.from(parent, goodsClickListener, quantityChangeListener)
 
     override fun onBindViewHolder(
         holder: GoodsViewHolder,
@@ -52,7 +54,7 @@ class GoodsAdapter(
             val payload = payloads[0]
             if (payload == "quantity_changed") {
                 holder.binding.cartItem = items[position]
-                holder.binding.quantitySelector.quantity = items[position].quantity
+                holder.binding.quantitySelector.cartItem = items[position]
             }
         }
     }

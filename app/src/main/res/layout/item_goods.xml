@@ -4,10 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="clickListener"
             type="woowacourse.shopping.feature.goods.adapter.GoodsClickListener" />
+
+        <variable
+            name="quantityChangeListener"
+            type="woowacourse.shopping.feature.QuantityChangeListener" />
 
         <variable
             name="cartItem"
@@ -50,11 +56,12 @@
                 android:background="@color/white"
                 android:elevation="0dp"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:visibility="@{cartItem.quantity &lt;= 0 ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> quantityChangeListener.onIncrease(cartItem)}"
                 android:stateListAnimator="@null"
                 android:text="+"
                 android:textColor="@color/gray_700"
                 android:textSize="30sp"
+                android:visibility="@{cartItem.quantity &lt;= 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -79,7 +86,8 @@
                 layout="@layout/quantity_selector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:quantity="@{cartItem.quantity}"/>
+                app:cartItem="@{cartItem}"
+                app:quantityChangeListener="@{quantityChangeListener}" />
         </androidx.cardview.widget.CardView>
 
         <TextView
