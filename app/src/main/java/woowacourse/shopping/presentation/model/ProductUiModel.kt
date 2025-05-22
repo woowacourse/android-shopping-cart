@@ -23,6 +23,15 @@ fun Product.toUiModel() =
         price = price.value,
     )
 
+fun CartItem.toUiModel() =
+    ProductUiModel(
+        id = product.id,
+        name = product.name,
+        imageUrl = product.imageUrl,
+        price = product.price.value,
+        amount = amount,
+    )
+
 fun ProductUiModel.toProduct() =
     Product(
         id = id,

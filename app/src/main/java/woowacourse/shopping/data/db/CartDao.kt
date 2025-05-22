@@ -17,6 +17,12 @@ interface CartDao {
         offset: Int,
     ): List<CartEntity>
 
+    @Query("SELECT * FROM CartEntity WHERE id = :id LIMIT 1")
+    fun getByProductId(id: Long): CartEntity?
+
+    @Query("SELECT * FROM CartEntity")
+    fun getCartItems(): List<CartEntity>
+
     @Query("DELETE FROM CartEntity WHERE id = :id")
     fun delete(id: Long)
 
@@ -25,9 +31,6 @@ interface CartDao {
 
     @Update
     fun update(product: CartEntity)
-
-    @Query("SELECT * FROM CartEntity WHERE id = :id LIMIT 1")
-    fun getByProductId(id: Long): CartEntity?
 
     @Transaction
     fun upsert(product: CartEntity) {

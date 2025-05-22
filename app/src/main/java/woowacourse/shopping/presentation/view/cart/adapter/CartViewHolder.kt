@@ -19,7 +19,6 @@ class CartViewHolder(
 
     fun bind(cartItem: CartItem) {
         binding.cartItem = cartItem
-        binding.executePendingBindings()
     }
 
     companion object {

@@ -20,6 +20,8 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingVertical="4dp"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

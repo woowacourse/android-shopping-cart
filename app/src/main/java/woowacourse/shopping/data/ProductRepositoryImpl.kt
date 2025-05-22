@@ -1,10 +1,15 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.data.db.CartDao
+import woowacourse.shopping.data.mapper.toCartItem
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import kotlin.concurrent.thread
 
 class ProductRepositoryImpl(
     private val products: List<Product>,
+    private val cartDao: CartDao,
 ) : ProductRepository {
     override fun loadProducts(
         lastItemId: Long,
@@ -17,5 +22,12 @@ class ProductRepositoryImpl(
         val hasMore = this.products.any { it.id > lastId }
 
         callback(products, hasMore)
+    }
+
+    override fun loadCartItems(callback: (List<CartItem>?) -> Unit) {
+        thread {
+            val cartItems = cartDao.getCartItems().map { it.toCartItem() }
+            callback(cartItems)
+        }
     }
 }

@@ -64,7 +64,7 @@
 
         <include
             android:id="@+id/cart_item_counter"
-            layout="@layout/item_select_amount"
+            layout="@layout/view_select_amount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"

@@ -53,6 +53,14 @@ class CartFragment :
         viewModel.deleteProduct(cartItem)
     }
 
+    override fun increase(productId: Long) {
+        viewModel.increaseAmount(productId)
+    }
+
+    override fun decrease(productId: Long) {
+        viewModel.decreaseAmount(productId)
+    }
+
     private fun setCartAdapter() {
         binding.recyclerViewCart.adapter = cartAdapter
     }
@@ -92,13 +100,5 @@ class CartFragment :
         parentFragmentManager.commit {
             remove(this@CartFragment)
         }
-    }
-
-    override fun increase(productId: Long) {
-        viewModel.increaseAmount(productId)
-    }
-
-    override fun decrease(productId: Long) {
-        viewModel.decreaseAmount(productId)
     }
 }

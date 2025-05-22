@@ -11,6 +11,7 @@ import woowacourse.shopping.databinding.FragmentCatalogBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.custom.GridSpacingItemDecoration
 import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.view.ItemCounterListener
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
@@ -18,8 +19,9 @@ import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class CatalogFragment :
     BaseFragment<FragmentCatalogBinding>(R.layout.fragment_catalog),
-    CatalogAdapter.CatalogEventListener {
-    private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this) }
+    CatalogAdapter.CatalogEventListener,
+    ItemCounterListener {
+    private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this, itemCounterListener = this) }
     private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
 
     override fun onViewCreated(
@@ -39,6 +41,18 @@ class CatalogFragment :
 
     override fun onLoadMoreClicked() {
         viewModel.fetchProducts()
+    }
+
+    override fun onInitialAddToCartClicked(product: ProductUiModel) {
+        viewModel.initialAddToCart(product)
+    }
+
+    override fun increase(productId: Long) {
+        viewModel.increaseCartItem(productId)
+    }
+
+    override fun decrease(productId: Long) {
+        viewModel.decreaseCartItem(productId)
     }
 
     private fun setCatalogAdapter() {
@@ -68,6 +82,9 @@ class CatalogFragment :
     private fun initObserver() {
         viewModel.items.observe(viewLifecycleOwner) { products ->
             catalogAdapter.updateProducts(products)
+        }
+        viewModel.itemUpdateEvent.observe(viewLifecycleOwner) {
+            catalogAdapter.updateItem(it)
         }
     }
 

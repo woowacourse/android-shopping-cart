@@ -6,15 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.model.toCartItem
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
 
 class CatalogViewModel(
     private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _items = MutableLiveData<List<CatalogItem>>()
     val items: LiveData<List<CatalogItem>> = _items
+
+    private val _itemUpdateEvent = MutableLiveData<ProductUiModel>()
+    val itemUpdateEvent: LiveData<ProductUiModel> = _itemUpdateEvent
 
     private val loadSize: Int = 20
     private var lastId: Long = DEFAULT_ID
@@ -24,30 +31,67 @@ class CatalogViewModel(
     }
 
     fun fetchProducts() {
-        productRepository.loadProducts(lastId, loadSize) { fetchedProducts, hasMore ->
-            val fetchedUiModels = fetchedProducts.map { it.toUiModel() }
-            lastId = fetchedUiModels.lastOrNull()?.id ?: DEFAULT_ID
+        productRepository.loadCartItems { cartItems ->
 
-            val currentUiModels =
-                _items.value
-                    .orEmpty()
-                    .filterIsInstance<CatalogItem.ProductItem>()
-                    .map { it.product }
+            val cartItemState =
+                cartItems?.associateBy(
+                    { it.product.id },
+                    { it.toUiModel() },
+                )
 
-            val combinedUiModels =
-                (currentUiModels + fetchedUiModels)
-                    .distinctBy { it.id }
+            productRepository.loadProducts(lastId, loadSize) { fetchedProducts, hasMore ->
 
-            val updatedItems =
-                combinedUiModels
-                    .map { CatalogItem.ProductItem(it) }
-                    .toMutableList<CatalogItem>()
+                val fetchedUiModels =
+                    fetchedProducts.map { product ->
+                        cartItemState?.get(product.id) ?: product.toUiModel()
+                    }
 
-            if (hasMore && updatedItems.none { it is CatalogItem.LoadMoreItem }) {
-                updatedItems.add(CatalogItem.LoadMoreItem)
+                lastId = fetchedUiModels.lastOrNull()?.id ?: DEFAULT_ID
+
+                val currentUiModels =
+                    _items.value
+                        .orEmpty()
+                        .filterIsInstance<CatalogItem.ProductItem>()
+                        .map { it.product }
+
+                val combinedUiModels =
+                    (currentUiModels + fetchedUiModels)
+                        .distinctBy { it.id }
+
+                val updatedItems =
+                    combinedUiModels
+                        .map { CatalogItem.ProductItem(it) }
+                        .toMutableList<CatalogItem>()
+
+                if (hasMore && updatedItems.none { it is CatalogItem.LoadMoreItem }) {
+                    updatedItems.add(CatalogItem.LoadMoreItem)
+                }
+
+                _items.postValue(updatedItems)
             }
+        }
+    }
 
-            _items.postValue(updatedItems)
+    fun initialAddToCart(product: ProductUiModel) {
+        val updatedProduct = product.copy(amount = 1)
+        cartRepository.addCartItem(updatedProduct.toCartItem()) {
+            _itemUpdateEvent.postValue(updatedProduct)
+        }
+    }
+
+    fun increaseCartItem(productId: Long) {
+        cartRepository.increaseCartItem(productId) { updatedCartItem ->
+            updatedCartItem?.let {
+                _itemUpdateEvent.postValue(it.toUiModel())
+            }
+        }
+    }
+
+    fun decreaseCartItem(productId: Long) {
+        cartRepository.decreaseCartItem(productId) { updatedCartItem ->
+            updatedCartItem?.let {
+                _itemUpdateEvent.postValue(it.toUiModel())
+            }
         }
     }
 
@@ -60,8 +104,9 @@ class CatalogViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    val repository = RepositoryProvider.productRepository
-                    return CatalogViewModel(repository) as T
+                    val productRepository = RepositoryProvider.productRepository
+                    val cartRepository = RepositoryProvider.cartRepository
+                    return CatalogViewModel(productRepository, cartRepository) as T
                 }
             }
     }

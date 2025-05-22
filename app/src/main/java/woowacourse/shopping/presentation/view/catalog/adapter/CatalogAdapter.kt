@@ -3,10 +3,12 @@ package woowacourse.shopping.presentation.view.catalog.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.view.ItemCounterListener
 
 class CatalogAdapter(
     items: List<CatalogItem> = emptyList(),
     private val eventListener: CatalogEventListener,
+    private val itemCounterListener: ItemCounterListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val items = mutableListOf<CatalogItem>()
 
@@ -19,7 +21,12 @@ class CatalogAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (CatalogItem.CatalogType.entries[viewType]) {
-            CatalogItem.CatalogType.PRODUCT -> ProductViewHolder.from(parent, eventListener)
+            CatalogItem.CatalogType.PRODUCT ->
+                ProductViewHolder.from(
+                    parent,
+                    eventListener,
+                    itemCounterListener,
+                )
             CatalogItem.CatalogType.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventListener)
         }
 
@@ -41,9 +48,23 @@ class CatalogAdapter(
         notifyItemRangeInserted(previousSize, items.size)
     }
 
+    fun updateItem(productUiModel: ProductUiModel) {
+        val index =
+            items.indexOfFirst {
+                it is CatalogItem.ProductItem && it.product.id == productUiModel.id
+            }
+
+        if (index != -1) {
+            items[index] = CatalogItem.ProductItem(productUiModel)
+            notifyItemChanged(index)
+        }
+    }
+
     interface CatalogEventListener {
         fun onProductClicked(product: ProductUiModel)
 
         fun onLoadMoreClicked()
+
+        fun onInitialAddToCartClicked(product: ProductUiModel)
     }
 }
