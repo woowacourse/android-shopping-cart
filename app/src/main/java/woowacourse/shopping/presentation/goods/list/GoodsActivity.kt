@@ -51,6 +51,7 @@ class GoodsActivity : BaseActivity() {
         return GoodsAdapter(
             object : GoodsClickListener {
                 override fun onGoodsClick(goods: GoodsUiModel) {
+                    viewModel.updateLatestGoods(goods)
                     navigateToDetail(goods)
                 }
 

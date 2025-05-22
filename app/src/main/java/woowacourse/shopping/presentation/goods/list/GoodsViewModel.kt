@@ -140,6 +140,10 @@ class GoodsViewModel(
         _shouldNavigateToShoppingCart.setValue(Unit)
     }
 
+    fun updateLatestGoods(goods: GoodsUiModel) {
+        latestGoodsRepository.insertLatestGoods(goods.id)
+    }
+
     private fun canLoadMore(): Boolean {
         return goodsRepository.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
     }
