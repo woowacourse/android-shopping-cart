@@ -4,12 +4,12 @@ import woowacourse.shopping.data.ext.subList
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.uimodel.ProductUiModel
 
 class FakeProductsRepository : ProductsRepository {
-    override fun findAll(pageRequest: PageRequest): Page<Product> {
+    override fun findAll(pageRequest: PageRequest): Page<ProductUiModel> {
         val items =
-            TestProducts.products
+            TestProducts.productUiModels
                 .distinct()
                 .subList(pageRequest)
 
@@ -17,6 +17,6 @@ class FakeProductsRepository : ProductsRepository {
     }
 
     override fun totalSize(): Int {
-        return TestProducts.products.size
+        return TestProducts.productUiModels.size
     }
 }

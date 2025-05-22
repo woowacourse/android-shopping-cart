@@ -11,21 +11,21 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _productsLiveData: MutableLiveData<Page<ShoppingCartItem>> = MutableLiveData()
+    private val _productsLiveData: MutableLiveData<Page<ShoppingCartItemUiModel>> = MutableLiveData()
     private val productsCount: Int get() = shoppingCartRepository.totalSize()
 
-    val productsLiveData: LiveData<Page<ShoppingCartItem>> get() = _productsLiveData
+    val productsLiveData: LiveData<Page<ShoppingCartItemUiModel>> get() = _productsLiveData
 
     fun removeProduct(
-        shoppingCartItem: ShoppingCartItem,
+        shoppingCartItemUiModel: ShoppingCartItemUiModel,
         currentPage: Int,
     ) {
-        shoppingCartRepository.remove(shoppingCartItem)
+        shoppingCartRepository.remove(shoppingCartItemUiModel)
         requestProductsPage(pageNumberAfterRemoval(currentPage))
     }
 
@@ -39,8 +39,8 @@ class ShoppingCartViewModel(
         _productsLiveData.value = item
     }
 
-    fun saveCurrentShoppingCart(shoppingCartItems: List<ShoppingCartItem>) {
-        shoppingCartItems.forEach {
+    fun saveCurrentShoppingCart(shoppingCartItemUiModels: List<ShoppingCartItemUiModel>) {
+        shoppingCartItemUiModels.forEach {
             shoppingCartRepository.update(it)
         }
     }

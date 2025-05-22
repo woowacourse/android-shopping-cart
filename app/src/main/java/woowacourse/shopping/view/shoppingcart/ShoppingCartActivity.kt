@@ -10,10 +10,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.base.QuantitySelectorEventHandler
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartActivity :
     AppCompatActivity(),
@@ -47,8 +47,8 @@ class ShoppingCartActivity :
         super.onPause()
         viewModel.saveCurrentShoppingCart(
             shoppingCartAdapter.quantityInfo.map { shoppingCartItem, quantity ->
-                ShoppingCartItem(
-                    product = shoppingCartItem.product,
+                ShoppingCartItemUiModel(
+                    productUiModel = shoppingCartItem.productUiModel,
                     quantity = quantity,
                 )
             },
@@ -82,8 +82,8 @@ class ShoppingCartActivity :
         override fun onPagination(page: Int) {
             viewModel.saveCurrentShoppingCart(
                 shoppingCartAdapter.quantityInfo.map { shoppingCartItem, quantity ->
-                    ShoppingCartItem(
-                        product = shoppingCartItem.product,
+                    ShoppingCartItemUiModel(
+                        productUiModel = shoppingCartItem.productUiModel,
                         quantity = quantity,
                     )
                 },
@@ -92,7 +92,7 @@ class ShoppingCartActivity :
         }
 
         override fun onProductRemove(
-            product: ShoppingCartItem,
+            product: ShoppingCartItemUiModel,
             page: Int,
         ) {
             viewModel.removeProduct(product, page)
@@ -100,7 +100,7 @@ class ShoppingCartActivity :
 
         override fun whenQuantityChangedSelectView(
             quantity: MutableLiveData<Int>,
-            item: ShoppingCartItem?,
+            item: ShoppingCartItemUiModel?,
             page: Int,
         ) {
             item?.let {
@@ -116,13 +116,13 @@ interface ShoppingCartEventHandler : QuantitySelectorEventHandler {
     fun onPagination(page: Int)
 
     fun onProductRemove(
-        product: ShoppingCartItem,
+        product: ShoppingCartItemUiModel,
         page: Int,
     )
 
     fun whenQuantityChangedSelectView(
         quantity: MutableLiveData<Int>,
-        item: ShoppingCartItem?,
+        item: ShoppingCartItemUiModel?,
         page: Int,
     )
 }

@@ -8,9 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.main.adapter.ProductEventHandler
 import woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 @BindingAdapter("android:price")
 fun setPrice(
@@ -68,7 +68,7 @@ fun setObservable(
     view: ViewGroup,
     quantity: MutableLiveData<Int>,
     action: ShoppingCartEventHandler,
-    item: ShoppingCartItem,
+    item: ShoppingCartItemUiModel,
     page: Int,
 ) {
     view.findViewTreeLifecycleOwner()?.let {

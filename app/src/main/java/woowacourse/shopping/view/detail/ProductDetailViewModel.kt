@@ -9,27 +9,27 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.view.uimodel.ProductUiModel
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _productLiveData: MutableLiveData<Product> = MutableLiveData()
-    val productLiveData: LiveData<Product> get() = _productLiveData
+    private val _productUiModelLiveData: MutableLiveData<ProductUiModel> = MutableLiveData()
+    val productUiModelLiveData: LiveData<ProductUiModel> get() = _productUiModelLiveData
     val quantityLiveData: MutableLiveData<Int> = MutableLiveData(1)
 
-    fun addProduct(product: Product) {
+    fun addProduct(productUiModel: ProductUiModel) {
         shoppingCartRepository.save(
-            ShoppingCartItem(
-                product = product,
+            ShoppingCartItemUiModel(
+                productUiModel = productUiModel,
                 quantity = quantityLiveData.value!!,
             ),
         )
     }
 
-    fun setProduct(product: Product) {
-        _productLiveData.value = product
+    fun setProduct(productUiModel: ProductUiModel) {
+        _productUiModelLiveData.value = productUiModel
     }
 
     companion object {

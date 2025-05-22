@@ -6,19 +6,19 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.fixture.TestProducts
-import woowacourse.shopping.products
+import woowacourse.shopping.productUiModels
 
 class PageTest {
     @Test
     fun 페이지의_크기만큼_항목이_들어있다() {
         val page =
             Page(
-                TestProducts.products.subList(0,5),
-                TestProducts.products.size,
+                TestProducts.productUiModels.subList(0,5),
+                TestProducts.productUiModels.size,
                 0,
                 5,
             )
-        assertThat(page.items).isEqualTo(products.subList(0, 5))
+        assertThat(page.items).isEqualTo(productUiModels.subList(0, 5))
         assertThat(page.items.size).isEqualTo(5)
     }
 
@@ -26,8 +26,8 @@ class PageTest {
     fun 첫_페이지는_이전_페이지가_없고_다음_페이지가_있다() {
         val page =
             Page(
-                TestProducts.products.subList(0,5),
-                TestProducts.products.size,
+                TestProducts.productUiModels.subList(0,5),
+                TestProducts.productUiModels.size,
                 0,
                 5,
             )
@@ -39,8 +39,8 @@ class PageTest {
     fun 첫_페이지의_인덱스는_0이다() {
         val page =
             Page(
-                TestProducts.products.subList(0,5),
-                TestProducts.products.size,
+                TestProducts.productUiModels.subList(0,5),
+                TestProducts.productUiModels.size,
                 0,
                 5,
             )
@@ -51,8 +51,8 @@ class PageTest {
     fun 중간에_있는_페이지는_이전_페이지와_다음_페이지가_있다() {
         val page =
             Page(
-                TestProducts.products.subList(0,5),
-                TestProducts.products.size,
+                TestProducts.productUiModels.subList(0,5),
+                TestProducts.productUiModels.size,
                 1,
                 5,
             )
@@ -64,8 +64,8 @@ class PageTest {
     fun 마지막_페이지는_이전_페이지가_없고_다음_페이지가_있다() {
         val page =
             Page(
-                TestProducts.products.subList(0,5),
-                TestProducts.products.size,
+                TestProducts.productUiModels.subList(0,5),
+                TestProducts.productUiModels.size,
                 5,
                 5,
             )

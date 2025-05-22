@@ -19,7 +19,7 @@ import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
-import woowacourse.shopping.product
+import woowacourse.shopping.productUiModel
 import woowacourse.shopping.view.detail.ProductDetailActivity
 
 class ProductDetailActivityTest {
@@ -31,7 +31,7 @@ class ProductDetailActivityTest {
     @Before
     fun setUp() {
         val fakeContext = ApplicationProvider.getApplicationContext<Context>()
-        val intent = ProductDetailActivity.newIntent(fakeContext, product)
+        val intent = ProductDetailActivity.newIntent(fakeContext, productUiModel)
         scenario = ActivityScenario.launch(intent)
     }
 
@@ -47,11 +47,11 @@ class ProductDetailActivityTest {
     fun 장바구니_담기를_클릭하면_장바구니에_상품이_담긴다() {
         onView(withId(R.id.btn_add_to_cart)).performClick()
         onView(withId(R.id.shopping_cart_list)).isDisplayed()
-        assertThat(DummyShoppingCart.products).contains(product)
+        assertThat(DummyShoppingCart.productUiModels).contains(productUiModel)
     }
 
     @After
     fun tearDown() {
-        DummyShoppingCart.products.remove(product)
+        DummyShoppingCart.productUiModels.remove(productUiModel)
     }
 }

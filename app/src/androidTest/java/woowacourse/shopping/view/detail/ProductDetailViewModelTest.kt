@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyShoppingCart
-import woowacourse.shopping.product
+import woowacourse.shopping.productUiModel
 
 @Suppress("FunctionName")
 class ProductDetailViewModelTest {
@@ -15,7 +15,7 @@ class ProductDetailViewModelTest {
     @Test
     fun 상품을_추가할_수_있다() {
         val viewModel = ProductDetailViewModel()
-        addProduct(product)
-        assertThat(DummyShoppingCart.products).contains(product)
+        addProduct(productUiModel)
+        assertThat(DummyShoppingCart.productUiModels).contains(productUiModel)
     }
 }

@@ -14,11 +14,11 @@
             type="int" />
         <variable
             name="product"
-            type="woowacourse.shopping.domain.ShoppingCartItem" />
+            type="woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel" />
 
         <variable
             name="onProductRemove"
-            type="kotlin.jvm.functions.Function2&lt;woowacourse.shopping.domain.ShoppingCartItem, java.lang.Integer,kotlin.Unit&gt;" />
+            type="kotlin.jvm.functions.Function2&lt;woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel, java.lang.Integer,kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +46,7 @@
             android:layout_marginEnd="28dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.product.name}"
+            android:text="@{product.productUiModel.name}"
             android:textColor="#555555"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -61,7 +61,7 @@
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
-            shoppingCart:image="@{product.product.imageUrl}"
+            shoppingCart:image="@{product.productUiModel.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:price="@{product.product.price}"
+            android:price="@{product.productUiModel.price}"
             android:textColor="#555555"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_shopping_cart_image"

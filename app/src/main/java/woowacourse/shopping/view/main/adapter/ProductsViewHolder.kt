@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.uimodel.ProductUiModel
 
 class ProductsViewHolder(
     private val parent: ViewGroup,
@@ -17,7 +17,7 @@ class ProductsViewHolder(
     }
 
     fun bind(
-        item: Product,
+        item: ProductUiModel,
         quantityLiveData: MutableLiveData<Int>,
     ) {
         binding.product = item

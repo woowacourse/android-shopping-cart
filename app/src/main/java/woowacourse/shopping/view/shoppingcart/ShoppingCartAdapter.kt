@@ -6,15 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.QuantityInfo
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartAdapter(
     private val handler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private var products: List<ShoppingCartItem> = listOf()
+    private var products: List<ShoppingCartItemUiModel> = listOf()
     private var currentPage: Int = 0
-    var quantityInfo = QuantityInfo<ShoppingCartItem>()
+    var quantityInfo = QuantityInfo<ShoppingCartItemUiModel>()
         private set
 
     override fun getItemCount(): Int = products.size
@@ -36,7 +36,7 @@ class ShoppingCartAdapter(
         return ShoppingCartViewHolder(binding, handler)
     }
 
-    fun updateProducts(page: Page<ShoppingCartItem>) {
+    fun updateProducts(page: Page<ShoppingCartItemUiModel>) {
         val previousCount = itemCount
         products = page.items
         currentPage = page.currentPage

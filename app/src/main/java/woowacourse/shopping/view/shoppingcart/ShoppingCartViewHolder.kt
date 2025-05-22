@@ -3,7 +3,7 @@ package woowacourse.shopping.view.shoppingcart
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartViewHolder(
     private val binding: ItemShoppingCartProductBinding,
@@ -14,7 +14,7 @@ class ShoppingCartViewHolder(
     }
 
     fun bind(
-        item: ShoppingCartItem,
+        item: ShoppingCartItemUiModel,
         currentPage: Int,
         quantity: MutableLiveData<Int>,
     ) {

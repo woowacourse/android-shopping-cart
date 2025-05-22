@@ -12,10 +12,10 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
+import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
@@ -50,15 +50,15 @@ class ProductsViewModel(
         _productsLiveData.value =
             MainRecyclerViewProduct(
                 page = page,
-                shoppingCartItems = shoppingCartItems,
+                shoppingCartItemUiModels = shoppingCartItems,
             )
     }
 
-    fun saveCurrentShoppingCart(quantityInfo: QuantityInfo<Product>) {
+    fun saveCurrentShoppingCart(quantityInfo: QuantityInfo<ProductUiModel>) {
         quantityInfo.forEach { product, data ->
             shoppingCartRepository.update(
-                ShoppingCartItem(
-                    product = product,
+                ShoppingCartItemUiModel(
+                    productUiModel = product,
                     quantity = data,
                 ),
             )

@@ -10,7 +10,7 @@
             type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />
         <variable
             name="product"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.view.uimodel.ProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

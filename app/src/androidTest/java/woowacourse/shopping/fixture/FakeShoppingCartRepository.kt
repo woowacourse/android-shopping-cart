@@ -5,12 +5,12 @@ import woowacourse.shopping.data.ext.subList
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ShoppingCartRepository
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.uimodel.ProductUiModel
 
 class FakeShoppingCartRepository(
-    private val data: MutableList<Product> = DummyShoppingCart.products.toMutableList(),
+    private val data: MutableList<ProductUiModel> = DummyShoppingCart.productUiModels.toMutableList(),
 ) : ShoppingCartRepository {
-    override fun findAll(pageRequest: PageRequest): Page<Product> {
+    override fun findAll(pageRequest: PageRequest): Page<ProductUiModel> {
         val items =
             data
                 .distinct()
@@ -19,11 +19,11 @@ class FakeShoppingCartRepository(
         return pageRequest.toPage(items, totalSize())
     }
 
-    override fun remove(product: Product) {
-        data.remove(product)
+    override fun remove(productUiModel: ProductUiModel) {
+        data.remove(productUiModel)
     }
 
     override fun totalSize(): Int {
-        return TestShoppingCart.products.size
+        return TestShoppingCart.productUiModels.size
     }
 }

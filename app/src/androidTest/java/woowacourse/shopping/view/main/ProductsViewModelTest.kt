@@ -22,8 +22,8 @@ class ProductsViewModelTest {
     fun 한_페이지에_상품이_20개씩_로드된다() {
         val page =
             Page(
-                TestProducts.products.subList(0, 20),
-                TestProducts.products.size,
+                TestProducts.productUiModels.subList(0, 20),
+                TestProducts.productUiModels.size,
                 0,
                 20,
             )
@@ -33,6 +33,6 @@ class ProductsViewModelTest {
 
     @Test
     fun 상품의_총_개수를_반환한다() {
-        assertThat(viewModel.totalSize).isEqualTo(DummyProducts.products.size)
+        assertThat(viewModel.totalSize).isEqualTo(DummyProducts.productUiModels.size)
     }
 }

@@ -3,28 +3,28 @@ package woowacourse.shopping.view.main.adapter
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
+import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductsAdapter(
     private val handler: ProductEventHandler,
 ) : RecyclerView.Adapter<ProductsViewHolder>() {
-    private var products: List<Product> = listOf()
-    var quantityInfo = QuantityInfo<Product>()
+    private var productUiModels: List<ProductUiModel> = listOf()
+    var quantityInfo = QuantityInfo<ProductUiModel>()
         private set
 
     var currentPage: Int = 0
         private set
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = productUiModels.size
 
     override fun onBindViewHolder(
         holder: ProductsViewHolder,
         position: Int,
     ) {
-        val item = products[position]
+        val item = productUiModels[position]
         val quantityLiveData = quantityInfo[item]
         holder.bind(item, quantityLiveData)
     }
@@ -38,25 +38,27 @@ class ProductsAdapter(
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {
         val newProducts = mainRecyclerViewProduct.page.items
-        val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItems
+        val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItemUiModels
 
         currentPage = mainRecyclerViewProduct.page.currentPage
-        products += newProducts
+        productUiModels += newProducts
         quantityInfo = quantityInfo + QuantityInfo(newProducts.quantityMap(newShoppingCartItems))
         notifyItemInserted(itemCount)
     }
 
     fun clear() {
         val previousItemCount = itemCount
-        products = listOf()
+        productUiModels = listOf()
         quantityInfo.clear()
         notifyItemRangeRemoved(0, previousItemCount)
     }
 
-    private fun List<Product>.quantityMap(newShoppingCartItems: List<ShoppingCartItem>): Map<Product, MutableLiveData<Int>> {
+    private fun List<ProductUiModel>.quantityMap(
+        newShoppingCartItemUiModels: List<ShoppingCartItemUiModel>,
+    ): Map<ProductUiModel, MutableLiveData<Int>> {
         return associateWith { product ->
             MutableLiveData(
-                newShoppingCartItems.find { it.product.id == product.id }
+                newShoppingCartItemUiModels.find { it.productUiModel.id == product.id }
                     ?.quantity ?: DEFAULT_QUANTITY,
             )
         }

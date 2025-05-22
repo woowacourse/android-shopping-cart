@@ -10,7 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.data.DummyShoppingCart
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.matchSize
@@ -44,8 +44,8 @@ class ShoppingCartActivityTest {
 
     @Test
     fun 장바구니에서_원하는_상품을_삭제할_수_있다() {
-        val expectedDeleteProduct =
-            Product(
+        val expectedDeleteProductUiModel =
+            ProductUiModel(
                 "[런던베이글뮤지엄] 베이글 6개 & 크림치즈 3개 세트",
                 42000,
                 "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/3c68d05b-d392-4a38-8637-a25068220fa4.jpg",
@@ -55,6 +55,6 @@ class ShoppingCartActivityTest {
                 .atPositionOnView(0, R.id.iv_remove_item_product_icon),
         ).performClick()
 
-        assertThat(DummyShoppingCart.products).doesNotContain(expectedDeleteProduct)
+        assertThat(DummyShoppingCart.productUiModels).doesNotContain(expectedDeleteProductUiModel)
     }
 }

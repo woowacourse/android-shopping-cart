@@ -14,13 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.main.adapter.ProductEventHandler
 import woowacourse.shopping.view.main.adapter.ProductsAdapter
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.view.uimodel.ProductUiModel
 import kotlin.getValue
 
 class MainActivity :
@@ -126,8 +126,8 @@ class MainActivity :
             totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
         }
 
-        override fun onProductSelected(product: Product) {
-            this@MainActivity.startActivity(ProductDetailActivity.newIntent(this@MainActivity, product))
+        override fun onProductSelected(productUiModel: ProductUiModel) {
+            this@MainActivity.startActivity(ProductDetailActivity.newIntent(this@MainActivity, productUiModel))
         }
 
         override fun whenQuantityChangedSelectView(
