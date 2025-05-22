@@ -13,14 +13,16 @@ data class CartUiState(
         val targetIndex = targetIndex(newState.item.id)
         val mutableItems = items.toMutableList()
         mutableItems[targetIndex] = newState
+
         return copy(items = mutableItems)
     }
 
     fun isAddedProduct(productId: Long): CartSavingState {
         val targetIndex = targetIndex(productId)
         val target = items[targetIndex]
+        val result = target.isSaveInCart()
 
-        return target.isSaveInCart()
+        return result
     }
 
     fun canIncreaseCartQuantity(productId: Long): IncreaseState {
@@ -38,6 +40,7 @@ data class CartUiState(
         if (!result.cartQuantity.hasQuantity()) {
             return result.copy(cartQuantity = Quantity(1))
         }
+
         return result
     }
 

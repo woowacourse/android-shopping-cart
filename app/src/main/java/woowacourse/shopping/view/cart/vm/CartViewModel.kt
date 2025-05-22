@@ -89,9 +89,9 @@ class CartViewModel(
         val carts =
             result
                 .carts
-                .map {
-                    val product = productRepository[it.productId]
-                    ProductState(product, it.quantity)
+                .map { cart ->
+                    val product = productRepository[cart.productId]
+                    ProductState(product, cart.quantity)
                 }
         val pageState = paging.createPageState(result.hasNextPage)
 

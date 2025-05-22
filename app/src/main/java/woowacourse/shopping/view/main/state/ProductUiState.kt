@@ -17,8 +17,9 @@ data class ProductUiState(
     fun isAddedProduct(productId: Long): CartSavingState {
         val targetIndex = targetIndex(productId)
         val target = items[targetIndex]
+        val result = target.isSaveInCart()
 
-        return target.isSaveInCart()
+        return result
     }
 
     fun canIncreaseCartQuantity(productId: Long): IncreaseState {

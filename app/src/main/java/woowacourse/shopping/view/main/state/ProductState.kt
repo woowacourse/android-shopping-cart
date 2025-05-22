@@ -11,11 +11,7 @@ data class ProductState(
         get() = cartQuantity.value
 
     fun isSaveInCart(): CartSavingState {
-        return if (cartQuantity.hasQuantity()) {
-            CartSavingState.SAVED
-        } else {
-            CartSavingState.NOT_SAVED
-        }
+        return CartSavingState.of(cartQuantity.hasQuantity())
     }
 
     fun increaseCartQuantity(): IncreaseState {
