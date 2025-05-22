@@ -3,8 +3,8 @@ package woowacourse.shopping.data.storage
 import woowacourse.shopping.data.cartRepository.CartDao
 import woowacourse.shopping.data.cartRepository.CartMapper.toEntity
 import woowacourse.shopping.data.cartRepository.CartMapper.toUiModel
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.uimodel.CartItem
 import kotlin.concurrent.thread
 
 class CartStorageImplAsRoom private constructor(

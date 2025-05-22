@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.uimodel.CartItem
+import woowacourse.shopping.domain.CartItem
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding

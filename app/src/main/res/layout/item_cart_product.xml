@@ -11,7 +11,7 @@
 
         <variable
             name="cartItem"
-            type="woowacourse.shopping.uimodel.CartItem" />
+            type="woowacourse.shopping.domain.CartItem" />
 
         <variable
             name="toDelete"

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.uimodel.CartItem
+import woowacourse.shopping.domain.CartItem
 
 class CartProductAdapter(
     private val onDeleteClick: (CartItem, Int) -> Unit,

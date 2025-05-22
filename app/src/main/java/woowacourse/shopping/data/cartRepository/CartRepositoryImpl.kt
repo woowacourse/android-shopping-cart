@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.cartRepository
 
 import woowacourse.shopping.data.storage.CartStorage
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.uimodel.CartItem
 
 class CartRepositoryImpl private constructor(
     private val cartStorage: CartStorage,

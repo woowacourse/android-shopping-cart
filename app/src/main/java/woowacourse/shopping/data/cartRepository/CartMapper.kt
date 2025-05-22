@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.cartRepository
 
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.uimodel.CartItem
 
 object CartMapper {
     fun CartEntity.toDomain(): Product =

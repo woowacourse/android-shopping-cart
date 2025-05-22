@@ -2,7 +2,7 @@ package woowacourse.shopping.view.cart
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.uimodel.CartItem
+import woowacourse.shopping.domain.CartItem
 
 class CartProductViewHolder(
     val binding: ItemCartProductBinding,

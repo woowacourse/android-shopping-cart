@@ -1,4 +1,4 @@
-package woowacourse.shopping.uimodel
+package woowacourse.shopping.domain
 
 data class CartItem(
     val cartItemId: Long,

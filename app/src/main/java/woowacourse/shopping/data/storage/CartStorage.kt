@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.storage
 
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.uimodel.CartItem
 
 interface CartStorage {
     fun getAllProductsSize(onResult: (Int) -> Unit)
