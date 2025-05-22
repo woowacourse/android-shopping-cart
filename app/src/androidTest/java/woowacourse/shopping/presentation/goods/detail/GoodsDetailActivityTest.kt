@@ -24,6 +24,7 @@ class GoodsDetailActivityTest {
                 GoodsDetailActivity::class.java,
             ).apply {
                 putExtra("goods", 1)
+                putExtra("last_goods", 2)
             }
 
         scenario = ActivityScenario.launch(intent)
@@ -70,5 +71,12 @@ class GoodsDetailActivityTest {
         // then
         onView(withId(R.id.tv_count))
             .check(matches(withText("1")))
+    }
+
+    @Test
+    fun `마지막으로_본_상품_이름이_표시된다`() {
+        // then
+        onView(withId(R.id.tv_last_goods_name))
+            .check(matches(withText("[빙그래] 요맘때 파인트 710mL 3종 (택1)")))
     }
 }
