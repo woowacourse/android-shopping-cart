@@ -33,6 +33,9 @@ class GoodsActivity : BaseActivity() {
         setUpGoodsList(adapter)
         setUpObserver(adapter)
 
+        val latestGoodsAdapter = LatestGoodsAdapter(viewModel.latestGoods.value ?: emptyList())
+        setUpLatestGoodsList(latestGoodsAdapter)
+
         setSupportActionBar(binding.toolbar)
     }
 
@@ -86,6 +89,13 @@ class GoodsActivity : BaseActivity() {
                     }
                 },
             )
+        }
+    }
+
+    private fun setUpLatestGoodsList(adapter: LatestGoodsAdapter) {
+        binding.rvLatestGoodsList.apply {
+            this.adapter = adapter
+            layoutManager = GridLayoutManager(this@GoodsActivity, 1, GridLayoutManager.HORIZONTAL, false)
         }
     }
 
