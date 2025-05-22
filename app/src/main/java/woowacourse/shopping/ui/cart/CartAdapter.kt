@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.cart.CartProduct
 
 class CartAdapter(
-    private var items: List<CartProduct>,
+    private val items: MutableList<CartProduct>,
     private val cartClickListener: CartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
@@ -25,18 +25,15 @@ class CartAdapter(
         holder.bind(item)
     }
 
-    fun updateItems(cartProducts: List<CartProduct>) {
-        val deletedItem = this.items.firstOrNull { product -> !cartProducts.contains(product) }
+    fun updateItems(newCartProducts: List<CartProduct>) {
+        val deletedItem = this.items.firstOrNull { product -> !newCartProducts.contains(product) }
         val startPosition = deletedItem?.let { this.items.indexOf(deletedItem) } ?: 0
         val itemCount = this.items.size - startPosition
 
-        if (isLastItem(startPosition, itemCount)) notifyItemChanged(0)
-        else notifyItemRangeChanged(startPosition, itemCount)
-        
-        items = cartProducts
-    }
+        items.clear()
+        notifyItemRangeRemoved(startPosition, itemCount)
 
-    private fun isLastItem(startPosition: Int, itemCount: Int): Boolean {
-        return startPosition == 0 && itemCount == 1
+        items.addAll(newCartProducts)
+        notifyItemRangeInserted(startPosition, itemCount)
     }
 }
