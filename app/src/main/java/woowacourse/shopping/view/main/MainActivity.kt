@@ -36,6 +36,10 @@ class MainActivity :
             viewModel = this@MainActivity.viewModel
             onLoadMoreProducts = ::onLoadMoreProducts
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         initRecyclerview()
     }
 
