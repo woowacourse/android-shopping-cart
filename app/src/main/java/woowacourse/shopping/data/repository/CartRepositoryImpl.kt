@@ -11,12 +11,7 @@ import kotlin.concurrent.thread
 class CartRepositoryImpl(
     private val cartDatabase: CartDatabase,
 ) : CartRepository {
-    override fun getAll(): LiveData<List<Cart>> =
-        cartDatabase.cartDao().getAll().map { entities ->
-            entities.map { entity ->
-                entity.toDomain()
-            }
-        }
+    override suspend fun getAll(): List<Cart> = cartDatabase.cartDao().getAll().map { it.toDomain() }
 
     override fun insert(cart: Cart) {
         thread {

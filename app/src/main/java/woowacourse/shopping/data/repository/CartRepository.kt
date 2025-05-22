@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import woowacourse.shopping.domain.model.Cart
 
 interface CartRepository {
-    fun getAll(): LiveData<List<Cart>>
+    suspend fun getAll(): List<Cart>
 
     fun insert(cart: Cart)
 

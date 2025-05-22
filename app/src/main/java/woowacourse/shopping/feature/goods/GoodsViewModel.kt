@@ -3,6 +3,8 @@ package woowacourse.shopping.feature.goods
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
@@ -14,8 +16,8 @@ import kotlin.math.min
 class GoodsViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _cart = MutableLiveData<List<Cart>>()
-    val cart: LiveData<List<Cart>> get() = _cart
+    private val _carts = MutableLiveData<List<Cart>>()
+    val carts: LiveData<List<Cart>> get() = _carts
     private val _showMoreButton = MutableLiveData(false)
     val showMoreButton: LiveData<Boolean> get() = _showMoreButton
     private val _isFullLoaded = MutableLiveData<Boolean>()
@@ -28,15 +30,6 @@ class GoodsViewModel(
 
     init {
         loadGoods()
-    }
-
-    fun loadGoods() {
-        val currentList = _cart.value ?: emptyList()
-        val newGoods = getProducts(page)
-        val newCarts = newGoods.map { goods -> Cart(goods = goods, quantity = 0) }
-
-        _cart.value = currentList + newCarts
-        _isFullLoaded.value = (page + 1) * PAGE_SIZE >= dummyGoods.size
     }
 
     fun addPage() {
@@ -64,6 +57,25 @@ class GoodsViewModel(
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, dummyGoods.size)
         return dummyGoods.subList(fromIndex, toIndex)
+    }
+
+    fun loadGoods() {
+        viewModelScope.launch {
+            val currentList = _carts.value ?: emptyList()
+            val newGoods = getProducts(page)
+
+            val existingCarts = repository.getAll()
+            val quantityMap = existingCarts.associateBy { it.goods.id }
+
+            val newCarts =
+                newGoods.map { goods ->
+                    val quantity = quantityMap[goods.id]?.quantity ?: 0
+                    Cart(goods = goods, quantity = quantity)
+                }
+
+            _carts.postValue(currentList + newCarts)
+            _isFullLoaded.postValue((page + 1) * PAGE_SIZE >= dummyGoods.size)
+        }
     }
 
     companion object {

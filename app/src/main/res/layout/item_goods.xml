@@ -50,10 +50,13 @@
             app:layout_constraintEnd_toEndOf="@+id/iv_item_goods_thumbnail" />
 
         <woowacourse.shopping.feature.CustomCartQuantity
+            android:id="@+id/custom_cart_quantity"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginHorizontal="5dp"
             android:layout_marginBottom="8dp"
+            app:visible="@{cart.quantity > 0}"
+            app:count="@{cart.quantity}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_item_goods_thumbnail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
