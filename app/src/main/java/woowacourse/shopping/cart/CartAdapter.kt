@@ -14,9 +14,6 @@ class CartAdapter(
     private val cartItems: MutableList<CartItem> = cartItems.toMutableList()
 
     fun setCartItems(cartProducts: List<CartItem>) {
-        Log.d("CART_ADAPTER", "cartProductsSize: ${cartProducts.size}")
-        Log.d("CART_ADAPTER", "cartItemsSize: ${cartItems.size}")
-
         notifyItemRangeRemoved(0, cartItems.size)
         cartItems.clear()
         cartItems.addAll(cartProducts)

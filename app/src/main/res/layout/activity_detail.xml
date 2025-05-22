@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.product.detail.DetailViewModel" />
 
         <variable
             name="product"
@@ -70,23 +75,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/text_price"
+                    android:text="@{@string/format_price(vm.price)}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="@id/textView_product_detail_name"
-                    app:layout_constraintTop_toBottomOf="@id/view_divider" />
+                    app:layout_constraintTop_toBottomOf="@id/view_divider"
+                    tools:text="30,000원" />
 
-                <TextView
+                <include
+                    android:id="@+id/layout_quantity_control_bar"
+                    layout="@layout/quantity_control_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="18dp"
-                    android:text="@{@string/format_price(product.price)}"
-                    android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="@id/textView_price_info"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/textView_price_info"
-                    tools:text="99,800원" />
+                    bind:quantity="@{vm.quantity.toString()}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="quantity"
+            type="String" />
 
         <variable
             name="product"
@@ -31,6 +34,7 @@
             android:backgroundTint="@color/white"
             android:onClick="@{() -> fabQuantityControlClickListener.onClick(product)}"
             android:src="@drawable/icon_add"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,12 +50,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:onClick="@{() -> quantityClickListener.onClick(0, product)}"
                 android:id="@+id/button_decrease"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_prev_selector"
                 android:backgroundTint="@color/white"
+                android:onClick="@{() -> quantityClickListener.onClick(0, product)}"
                 android:text="-"
                 android:textColor="@color/gray_5"
                 android:textSize="22dp"
@@ -65,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:paddingHorizontal="16dp"
-                android:text="@{String.valueOf(product.quantity)}"
+                android:text="@{quantity}"
                 android:textColor="@color/gray_5"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -76,12 +80,12 @@
                 tools:text="1" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:onClick="@{() -> quantityClickListener.onClick(1, product)}"
                 android:id="@+id/button_increase"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_next_selector"
                 android:backgroundTint="@color/white"
+                android:onClick="@{() -> quantityClickListener.onClick(1, product)}"
                 android:text="+"
                 android:textColor="@color/gray_5"
                 android:textSize="22sp"

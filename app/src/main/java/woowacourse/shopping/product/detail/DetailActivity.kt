@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailBinding
@@ -19,6 +20,7 @@ import woowacourse.shopping.util.intentParcelableExtra
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
+    private lateinit var viewModel: DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,30 @@ class DetailActivity : AppCompatActivity() {
         setAddToCartClickListener()
 
         val product: ProductUiModel? = productFromIntent()
-        product?.let { binding.product = it }
+        product?.let {
+            binding.product = it
+            binding.layoutQuantityControlBar.product = it
+            setViewModel(it)
+            observeProduct()
+        }
+    }
+
+    private fun setViewModel(product: ProductUiModel) {
+        viewModel =
+            ViewModelProvider(
+                this,
+                DetailViewModelFactory(product),
+            )[DetailViewModel::class.java]
+    }
+
+    private fun observeProduct() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
+        viewModel.product.observe(this) {
+            viewModel.setQuantity()
+            viewModel.setPriceSum()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
