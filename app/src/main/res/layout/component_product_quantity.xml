@@ -6,16 +6,20 @@
     <data>
 
         <variable
+            name="product"
+            type="woowacourse.shopping.domain.product.Product" />
+
+        <variable
             name="quantity"
             type="int" />
 
         <variable
             name="onMinusButtonClick"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1" />
 
         <variable
             name="onPlusButtonClick"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +33,7 @@
             android:layout_height="42dp"
             android:background="@drawable/background_product_minus_quantity_button"
             android:gravity="center"
-            android:onClick="@{() -> onMinusButtonClick.invoke()}"
+            android:onClick="@{() -> onMinusButtonClick.invoke(product)}"
             android:text="@string/product_minus_quantity_button"
             android:textColor="@color/gray_5"
             android:textSize="22sp"
@@ -63,7 +67,7 @@
             android:layout_height="42dp"
             android:background="@drawable/background_product_plus_quantity_button"
             android:gravity="center"
-            android:onClick="@{() -> onPlusButtonClick.invoke()}"
+            android:onClick="@{() -> onPlusButtonClick.invoke(product)}"
             android:text="@string/product_plus_quantity_button"
             android:textColor="@color/gray_5"
             android:textSize="22sp"

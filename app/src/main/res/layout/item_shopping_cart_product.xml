@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
+            name="shoppingCartProduct"
+            type="woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct" />
 
         <variable
             name="onRemoveProduct"
@@ -28,7 +28,7 @@
             android:layout_marginTop="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{shoppingCartProduct.product.name}"
             android:textColor="@color/gray_5"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -41,7 +41,7 @@
             android:id="@+id/shoppingCartProductDeleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> onRemoveProduct.invoke(product)}"
+            android:onClick="@{() -> onRemoveProduct.invoke(shoppingCartProduct)}"
             android:padding="16dp"
             android:src="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductName"
@@ -55,18 +55,33 @@
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="18dp"
-            app:imageUrl="@{product.imageUrl}"
+            android:background="@color/gray_a"
+            app:imageUrl="@{shoppingCartProduct.product.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/shoppingCartProductName"
             app:layout_constraintTop_toBottomOf="@id/shoppingCartProductName"
             tools:src="@drawable/product_image_example" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toTopOf="@id/shoppingCartPrice"
+            app:layout_constraintEnd_toEndOf="@id/shoppingCartPrice">
+
+            <include
+                android:id="@+id/shoppingCartQuantityComponent"
+                layout="@layout/component_product_quantity" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
+            android:id="@+id/shoppingCartPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:gravity="end"
-            android:text="@{@string/product_price_format(product.price)}"
+            android:text="@{@string/product_price_format(shoppingCartProduct.price)}"
             android:textColor="@color/gray_5"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductImage"

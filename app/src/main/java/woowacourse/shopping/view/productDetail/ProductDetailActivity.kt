@@ -39,7 +39,7 @@ class ProductDetailActivity :
                 return finish()
             }
         viewModel.updateProduct(product)
-        bindViewModel()
+        bindViewModel(product)
         setupObservers()
     }
 
@@ -50,10 +50,11 @@ class ProductDetailActivity :
             getSerializableExtra(EXTRA_PRODUCT) as? Product
         }
 
-    private fun bindViewModel() {
+    private fun bindViewModel(product: Product) {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.productDetailEventListener = this
+        binding.productDetailQuantityComponent.product = product
         binding.productDetailQuantityComponent.onPlusButtonClick = ::onPlusQuantity
         binding.productDetailQuantityComponent.onMinusButtonClick = ::onMinusQuantity
     }
@@ -87,11 +88,11 @@ class ProductDetailActivity :
         viewModel.addToShoppingCart()
     }
 
-    override fun onPlusQuantity() {
+    override fun onPlusQuantity(product: Product) {
         viewModel.plusQuantity()
     }
 
-    override fun onMinusQuantity() {
+    override fun onMinusQuantity(product: Product) {
         viewModel.minusQuantity()
     }
 

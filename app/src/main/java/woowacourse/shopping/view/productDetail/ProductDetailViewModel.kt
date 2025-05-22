@@ -32,7 +32,7 @@ class ProductDetailViewModel(
 
     fun addToShoppingCart() {
         val product = requireNotNull(product.value) { "product.value가 null입니다." }
-        shoppingCartRepository.addWithQuantity(product, quantity.value ?: return) { result ->
+        shoppingCartRepository.add(product, quantity.value ?: return) { result ->
             result
                 .onSuccess {
                     _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)

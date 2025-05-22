@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 import woowacourse.shopping.view.common.MutableSingleLiveData
 import woowacourse.shopping.view.common.SingleLiveData
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem
@@ -29,12 +30,12 @@ class ShoppingCartViewModel(
         val limit = COUNT_PER_PAGE + 1
         shoppingCartRepository.load(offset, limit) { result ->
             result
-                .onSuccess { products ->
-                    if (isEmptyPage(products)) return@load
+                .onSuccess { shoppingCartProducts: List<ShoppingCartProduct> ->
+                    if (isEmptyPage(shoppingCartProducts)) return@load
 
-                    updatePaginationState(products)
+                    updatePaginationState(shoppingCartProducts)
 
-                    val items = createShoppingCartItems(products)
+                    val items = createShoppingCartItems(shoppingCartProducts)
                     _shoppingCart.postValue(items)
                 }.onFailure {
                     _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
@@ -42,7 +43,7 @@ class ShoppingCartViewModel(
         }
     }
 
-    private fun isEmptyPage(products: List<Product>): Boolean =
+    private fun isEmptyPage(products: List<ShoppingCartProduct>): Boolean =
         if (products.isEmpty() && page != MINIMUM_PAGE) {
             minusPage()
             true
@@ -50,12 +51,12 @@ class ShoppingCartViewModel(
             false
         }
 
-    private fun updatePaginationState(products: List<Product>) {
+    private fun updatePaginationState(products: List<ShoppingCartProduct>) {
         hasNextPage = products.size > COUNT_PER_PAGE
         hasPreviousPage = page > MINIMUM_PAGE
     }
 
-    private fun createShoppingCartItems(products: List<Product>): List<ShoppingCartItem> {
+    private fun createShoppingCartItems(products: List<ShoppingCartProduct>): List<ShoppingCartItem> {
         val visibleProducts = products.take(COUNT_PER_PAGE)
         val paginationItem =
             PaginationItem(

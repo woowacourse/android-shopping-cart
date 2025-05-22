@@ -16,7 +16,9 @@ class ShoppingCartProductViewHolder(
     }
 
     fun bind(item: ProductItem) {
-        binding.product = item.product
+        binding.shoppingCartProduct = item.shoppingCartProduct
+        binding.shoppingCartQuantityComponent.product = item.shoppingCartProduct.product
+        binding.shoppingCartQuantityComponent.quantity = item.shoppingCartProduct.quantity
     }
 
     companion object {
