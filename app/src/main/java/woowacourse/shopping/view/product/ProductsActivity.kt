@@ -71,10 +71,10 @@ class ProductsActivity : AppCompatActivity() {
         viewModel.event.observe(this) { event: ProductsEvent ->
             when (event) {
                 ProductsEvent.UPDATE_PRODUCT_FAILURE ->
-                    showToast(getString(R.string.products_update_products_error_message))
+                    showToast(R.string.products_update_products_error_message)
 
                 ProductsEvent.UPDATE_SHOPPING_CART_FAILURE ->
-                    showToast(getString(R.string.products_update_shopping_cart_error_message))
+                    showToast(R.string.products_update_shopping_cart_error_message)
             }
         }
     }

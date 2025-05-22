@@ -62,7 +62,7 @@ class ShoppingCartActivity :
                         R.string.shopping_cart_remove_shopping_cart_product_error_message
                 }
 
-            showToast(getString(messageResourceId))
+            showToast(messageResourceId)
         }
     }
 

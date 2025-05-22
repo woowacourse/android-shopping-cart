@@ -35,7 +35,7 @@ class ProductDetailActivity :
 
         val product =
             intent.getProductExtra() ?: run {
-                showToast(getString(R.string.product_not_provided_error_message))
+                showToast(R.string.product_not_provided_error_message)
                 return finish()
             }
         initViewModel(product)
@@ -72,7 +72,7 @@ class ProductDetailActivity :
                         R.string.product_detail_add_shopping_cart_error_message
                 }
 
-            showToast(getString(messageResourceId))
+            showToast(messageResourceId)
         }
     }
 
