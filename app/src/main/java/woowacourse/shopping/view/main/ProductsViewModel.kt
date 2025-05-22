@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.main
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,6 +24,9 @@ class ProductsViewModel(
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
     val totalSize: Int get() = productsRepository.totalSize()
     val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalQuantity())
+    val menuBadgeViewRule = { text: String ->
+        if (text.toInt() > 0) View.VISIBLE else View.GONE
+    }
 
     fun requestProductsPage(requestPage: Int) {
         val pageRequest =

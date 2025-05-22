@@ -32,6 +32,54 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         initialize()
         setSupportActionBar(binding.toolbar as Toolbar)
+        initProductList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateProductList()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.menu_item_shopping_cart)?.actionView?.let { view ->
+            view.setOnClickListener {
+                onShoppingCartClicked()
+            }
+            view.findViewById<TextView>(R.id.shopping_cart_alarm_badge).apply {
+                viewModel.totalShoppingCartSize.observe(this@MainActivity) { it ->
+                    text = it.toString()
+                    visibility = viewModel.menuBadgeViewRule(text.toString())
+                }
+            }
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_item_shopping_cart) {
+            val intent = ShoppingCartActivity.newIntent(this)
+            startActivity(intent)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun onLoadMoreProducts(page: Int) {
+        binding.btnLoadMoreProducts.visibility = View.GONE
+        viewModel.requestProductsPage(page)
+    }
+
+    private fun onShoppingCartClicked() {
+        viewModel.saveCurrentShoppingCart(productsAdapter.quantity)
+        val intent = ShoppingCartActivity.newIntent(this)
+        startActivity(intent)
+    }
+
+    private fun initProductList() {
         binding.apply {
             viewModel = this@MainActivity.viewModel
             onLoadMoreProducts = ::onLoadMoreProducts
@@ -48,44 +96,7 @@ class MainActivity :
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        initRecyclerview()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
-        (binding.toolbar as Toolbar).menu.findItem(R.id.menu_item_shopping_cart).actionView?.let {
-            val badge = it.findViewById<TextView>(R.id.shopping_cart_alarm_badge)
-            viewModel.totalShoppingCartSize.observe(this) { it ->
-                badge.text = it.toString()
-                badge.visibility =
-                    if (badge.text.toString().toInt() > 0) View.VISIBLE else View.GONE
-            }
-            it.setOnClickListener {
-                viewModel.saveCurrentShoppingCart(productsAdapter.quantity)
-                val intent = ShoppingCartActivity.newIntent(this)
-                startActivity(intent)
-            }
-        }
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_item_shopping_cart) {
-            val intent = ShoppingCartActivity.newIntent(this)
-            startActivity(intent)
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun onLoadMoreProducts(page: Int) {
-        binding.btnLoadMoreProducts.visibility = View.GONE
-        viewModel.requestProductsPage(page)
-    }
-
-    private fun initRecyclerview() {
+    private fun updateProductList() {
         viewModel.updateShoppingCartSize()
         productsAdapter.clear()
         (0..productsAdapter.currentPage).forEach {
