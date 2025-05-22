@@ -1,7 +1,6 @@
 package woowacourse.shopping.product.catalog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
@@ -72,23 +71,30 @@ class CatalogActivity : AppCompatActivity() {
         val adapter =
             ProductAdapter(
                 products = emptyList(),
-                onProductClick =
-                    ProductClickListener { product ->
-                        Log.d("PRODUCT", "$product")
-                        val intent = DetailActivity.newIntent(this, product)
-                        startActivity(intent)
-                    },
-                onLoadButtonClick = viewModel::loadNextCatalogProducts,
-                onQuantityAddClickListener =
-                    QuantityAddClickListener { product ->
-                        viewModel.increaseQuantity(product)
-                    },
-                onQuantityControlClickListener =
-                    QuantityControlClickListener { event, product ->
-                        if (event == 1) {
+                productActionListener =
+                    object : ProductActionListener {
+                        override fun onProductClick(product: ProductUiModel) {
+                            val intent = DetailActivity.newIntent(this@CatalogActivity, product)
+                            startActivity(intent)
+                        }
+
+                        override fun onLoadButtonClick() {
+                            viewModel.loadNextCatalogProducts()
+                        }
+
+                        override fun onQuantityAddClick(product: ProductUiModel) {
                             viewModel.increaseQuantity(product)
-                        } else {
-                            viewModel.decreaseQuantity(product)
+                        }
+
+                        override fun onQuantityControlClick(
+                            event: Int,
+                            product: ProductUiModel,
+                        ) {
+                            if (event == 1) {
+                                viewModel.increaseQuantity(product)
+                            } else {
+                                viewModel.decreaseQuantity(product)
+                            }
                         }
                     },
             )

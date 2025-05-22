@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="quantity"
             type="String" />
@@ -13,12 +14,8 @@
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
         <variable
-            name="fabQuantityControlClickListener"
-            type="woowacourse.shopping.product.catalog.QuantityAddClickListener" />
-
-        <variable
-            name="quantityClickListener"
-            type="woowacourse.shopping.product.catalog.QuantityControlClickListener" />
+            name="productActionListener"
+            type="woowacourse.shopping.product.catalog.ProductActionListener" />
 
     </data>
 
@@ -32,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:onClick="@{() -> fabQuantityControlClickListener.onClick(product)}"
+            android:onClick="@{() -> productActionListener.onQuantityAddClick(product)}"
             android:src="@drawable/icon_add"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -55,7 +52,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_prev_selector"
                 android:backgroundTint="@color/white"
-                android:onClick="@{() -> quantityClickListener.onClick(0, product)}"
+                android:onClick="@{() -> productActionListener.onQuantityControlClick(0, product)}"
                 android:text="-"
                 android:textColor="@color/gray_5"
                 android:textSize="22dp"
@@ -85,7 +82,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_next_selector"
                 android:backgroundTint="@color/white"
-                android:onClick="@{() -> quantityClickListener.onClick(1, product)}"
+                android:onClick="@{() -> productActionListener.onQuantityControlClick(1, product)}"
                 android:text="+"
                 android:textColor="@color/gray_5"
                 android:textSize="22sp"

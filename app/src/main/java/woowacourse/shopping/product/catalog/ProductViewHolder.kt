@@ -28,16 +28,12 @@ class ProductViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            onProductClick: ProductClickListener,
-            onQuantityAddClickListener: QuantityAddClickListener,
-            onQuantityControlClickListener: QuantityControlClickListener,
+            productActionListener: ProductActionListener,
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ProductItemBinding.inflate(inflater, parent, false)
-            binding.productClickListener = onProductClick
-            binding.layoutQuantityControlBar.fabQuantityControlClickListener =
-                onQuantityAddClickListener
-            binding.layoutQuantityControlBar.quantityClickListener = onQuantityControlClickListener
+            binding.productActionListener = productActionListener
+            binding.layoutQuantityControlBar.productActionListener = productActionListener
             return ProductViewHolder(binding)
         }
     }
