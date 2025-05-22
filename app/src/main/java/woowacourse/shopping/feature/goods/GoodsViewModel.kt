@@ -65,7 +65,7 @@ class GoodsViewModel(
         appendCartItemsWithZeroQuantity()
     }
 
-    fun addCartItemOrIncraseQuantity(cartItem: CartItem) {
+    fun addCartItemOrIncreaseQuantity(cartItem: CartItem) {
         cartRepository.addOrIncreaseQuantity(cartItem.goods, cartItem.quantity) {
             updateCartQuantity()
         }

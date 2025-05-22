@@ -27,11 +27,11 @@ class CartActivity :
             quantityChangeListener =
                 object : QuantityChangeListener {
                     override fun onIncrease(cartItem: CartItem) {
-                        viewModel.addCartItemOrIncreaseQuantity(cartItem.copy(quantity = 1))
+                        viewModel.addCartItemOrIncreaseQuantity(cartItem.copy(quantity = QUANTITY_UPDATE_UNIT))
                     }
 
                     override fun onDecrease(cartItem: CartItem) {
-                        viewModel.removeCartItemOrDecreaseQuantity(cartItem.copy(quantity = 1))
+                        viewModel.removeCartItemOrDecreaseQuantity(cartItem.copy(quantity = QUANTITY_UPDATE_UNIT))
                     }
                 },
         )
@@ -65,6 +65,8 @@ class CartActivity :
     }
 
     companion object {
+        private const val QUANTITY_UPDATE_UNIT = 1
+
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

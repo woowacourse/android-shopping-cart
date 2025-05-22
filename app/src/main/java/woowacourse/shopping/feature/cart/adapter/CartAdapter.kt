@@ -44,7 +44,7 @@ class CartAdapter(
     }
 
     private fun updateItemQuantity(position: Int) {
-        notifyItemChanged(position, "quantity_changed")
+        notifyItemChanged(position, QUANTITY_CHANGED_PAYLOAD)
     }
 
     override fun onCreateViewHolder(
@@ -75,7 +75,7 @@ class CartAdapter(
             onBindViewHolder(holder, position)
         } else {
             val payload = payloads[0]
-            if (payload == "quantity_changed") {
+            if (payload == QUANTITY_CHANGED_PAYLOAD) {
                 holder.bind(cartItems[position])
                 holder.binding.quantitySelector.cartItem = cartItems[position]
             }
@@ -83,4 +83,8 @@ class CartAdapter(
     }
 
     override fun getItemCount(): Int = cartItems.size
+
+    companion object {
+        private const val QUANTITY_CHANGED_PAYLOAD = "quantity_changed"
+    }
 }

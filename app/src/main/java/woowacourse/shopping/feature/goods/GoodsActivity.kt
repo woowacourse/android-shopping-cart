@@ -34,7 +34,7 @@ class GoodsActivity : AppCompatActivity() {
             quantityChangeListener =
                 object : QuantityChangeListener {
                     override fun onIncrease(cartItem: CartItem) {
-                        viewModel.addCartItemOrIncraseQuantity(cartItem.copy(quantity = 1))
+                        viewModel.addCartItemOrIncreaseQuantity(cartItem.copy(quantity = 1))
                     }
 
                     override fun onDecrease(cartItem: CartItem) {
