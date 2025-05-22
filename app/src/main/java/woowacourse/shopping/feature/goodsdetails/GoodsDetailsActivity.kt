@@ -13,14 +13,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
+import woowacourse.shopping.feature.CustomCartQuantity
 import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.model.CartUiModel
+import woowacourse.shopping.util.toDomain
 import kotlin.getValue
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
-
-//    private lateinit var goods: GoodsUiModel
     private lateinit var cart: CartUiModel
     private val viewModel: GoodsDetailsViewModel by viewModels {
         ViewModelFactory { GoodsDetailsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
@@ -32,16 +32,13 @@ class GoodsDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         cart = IntentCompat.getParcelableExtra(intent, GOODS_KEY, CartUiModel::class.java) ?: return
-        binding.cart = cart
+        viewModel.setInitialCart(cart.toDomain())
+        binding.cart = cart.toDomain()
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.isSuccess.observe(this) {
-            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
-        }
-        viewModel.isFail.observe(this) {
-            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
-        }
+        observeCartInsertResult()
+        setOnClickListener()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -56,6 +53,35 @@ class GoodsDetailsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun observeCartInsertResult() {
+        viewModel.isSuccess.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
+            setResult(
+                1000,
+                Intent().apply {
+                    putExtra("GOODS_ID", cart.id)
+                    putExtra("GOODS_QUANTITY", viewModel.cart.value?.quantity)
+                },
+            )
+        }
+        viewModel.isFail.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setOnClickListener() {
+        binding.customCartQuantity.setClickListener(
+            object : CustomCartQuantity.CartQuantityClickListener {
+                override fun onAddClick() {
+                    viewModel.insertToCart(cart.toDomain())
+                }
+
+                override fun onRemoveClick() {
+                }
+            },
+        )
     }
 
     companion object {

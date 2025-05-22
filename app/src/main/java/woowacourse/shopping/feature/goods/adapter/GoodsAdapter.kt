@@ -30,6 +30,18 @@ class GoodsAdapter(
         }
     }
 
+    fun updateItemQuantity(
+        id: Long,
+        quantity: Int,
+    ) {
+        val index = items.indexOfFirst { it.goods.id == id }
+        if (index != -1) {
+            val oldItem = items[index]
+            items[index] = oldItem.copy(quantity = quantity)
+            notifyItemChanged(index)
+        }
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

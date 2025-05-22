@@ -32,3 +32,5 @@ fun List<Cart>.updateQuantity(
     this.map { cart ->
         if (cart.goods.id == id) cart.copy(quantity = newQuantity) else cart
     }
+
+fun Cart.updateQuantity(newQuantity: Int): Cart = this.copy(quantity = newQuantity)

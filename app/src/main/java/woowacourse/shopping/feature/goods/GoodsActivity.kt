@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
@@ -28,6 +30,7 @@ class GoodsActivity :
     private val viewModel: GoodsViewModel by viewModels {
         ViewModelFactory { GoodsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
     }
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +42,8 @@ class GoodsActivity :
         binding.viewModel = viewModel
 
         updateMoreButton()
-        viewModel.isSuccess.observe(this) {
-            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
-        }
-        viewModel.isFail.observe(this) {
-            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
-        }
+        observeCartInsertResult()
+        setupActivityResultLauncher()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,6 +73,30 @@ class GoodsActivity :
         viewModel.removeFromCart(cart)
     }
 
+    private fun setupActivityResultLauncher() {
+        activityResultLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult(),
+            ) { result ->
+                when (result.resultCode) {
+                    1000 -> {
+                        val changedId = result.data?.getLongExtra("GOODS_ID", 0) ?: 0
+                        val changedQuantity = result.data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
+                        adapter.updateItemQuantity(changedId, changedQuantity)
+                    }
+                }
+            }
+    }
+
+    private fun observeCartInsertResult() {
+        viewModel.isSuccess.observe(this) { cart ->
+            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
+        }
+        viewModel.isFail.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun updateMoreButton() {
         viewModel.isFullLoaded.observe(this) { isFullLoaded ->
             binding.rvGoods.clearOnScrollListeners()
@@ -88,6 +111,6 @@ class GoodsActivity :
 
     private fun navigate(cart: Cart) {
         val intent = GoodsDetailsActivity.newIntent(this, cart.toUi())
-        startActivity(intent)
+        activityResultLauncher.launch(intent)
     }
 }
