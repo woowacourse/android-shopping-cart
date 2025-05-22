@@ -35,9 +35,12 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_cart"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/gray5"
+            app:layout_constraintBottom_toTopOf="@id/rv_cart_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
