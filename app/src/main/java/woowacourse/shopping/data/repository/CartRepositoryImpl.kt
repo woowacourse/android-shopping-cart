@@ -28,6 +28,20 @@ class CartRepositoryImpl(
         }
     }
 
+    override fun fetchPageCartItems(
+        limit: Int,
+        offset: Int,
+        onComplete: (List<CartItem>) -> Unit,
+    ) {
+        thread {
+            val cartEntities = shoppingDatabase.cartDao().getPage(limit, offset)
+
+            Handler(Looper.getMainLooper()).post {
+                onComplete(cartEntities.map { it.toDomainCartItem() })
+            }
+        }
+    }
+
     override fun insert(
         goods: Goods,
         onComplete: () -> Unit,

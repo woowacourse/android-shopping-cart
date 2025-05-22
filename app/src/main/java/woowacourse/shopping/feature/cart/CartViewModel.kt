@@ -36,13 +36,31 @@ class CartViewModel(
     private val endPage: Int get() = max(1, (totalCartSizeData + PAGE_SIZE - 1) / PAGE_SIZE)
 
     init {
-        updateCartData()
+        updateCartQuantity()
         updateCartDataSize()
     }
 
     fun getPosition(cartItem: CartItem): Int? {
         val idx = cart.value?.indexOf(cartItem) ?: return null
         return if (idx >= 0) idx else null
+    }
+
+    fun addCartItemOrIncreaseQuantity(cartItem: CartItem) {
+        cartRepository.addOrIncreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
+        }
+    }
+
+    fun removeCartItemOrDecreaseQuantity(cartItem: CartItem) {
+        cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
+            updateCartQuantity()
+        }
+    }
+
+    fun updateCartQuantity() {
+        cartRepository.fetchPageCartItems(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE) { currentPageCartItems ->
+            _cart.value = currentPageCartItems
+        }
     }
 
     private fun updateCartData() {

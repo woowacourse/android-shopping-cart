@@ -8,6 +8,12 @@ interface CartRepository {
 
     fun fetchAllCartItems(onComplete: (List<CartItem>) -> Unit)
 
+    fun fetchPageCartItems(
+        limit: Int,
+        offset: Int,
+        onComplete: (List<CartItem>) -> Unit,
+    )
+
     fun insert(
         goods: Goods,
         onComplete: () -> Unit,

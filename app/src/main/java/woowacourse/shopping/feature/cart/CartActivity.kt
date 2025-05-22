@@ -10,6 +10,7 @@ import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.feature.QuantityChangeListener
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.adapter.CartViewHolder
 
@@ -20,7 +21,21 @@ class CartActivity :
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
     }
-    private val adapter: CartAdapter by lazy { CartAdapter(this) }
+    private val adapter: CartAdapter by lazy {
+        CartAdapter(
+            this,
+            quantityChangeListener =
+                object : QuantityChangeListener {
+                    override fun onIncrease(cartItem: CartItem) {
+                        viewModel.addCartItemOrIncreaseQuantity(cartItem.copy(quantity = 1))
+                    }
+
+                    override fun onDecrease(cartItem: CartItem) {
+                        viewModel.removeCartItemOrDecreaseQuantity(cartItem.copy(quantity = 1))
+                    }
+                },
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +45,11 @@ class CartActivity :
         binding.lifecycleOwner = this
         binding.rvCartItems.adapter = adapter
         binding.viewModel = viewModel
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateCartQuantity()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

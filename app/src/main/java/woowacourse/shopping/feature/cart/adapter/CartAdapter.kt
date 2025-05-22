@@ -5,9 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.feature.QuantityChangeListener
 
 class CartAdapter(
     private val cartClickListener: CartViewHolder.CartClickListener,
+    private val quantityChangeListener: QuantityChangeListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val cartItems: MutableList<CartItem> = mutableListOf()
 
@@ -23,14 +25,26 @@ class CartAdapter(
         if (newCartItems.size < oldItems.size) {
             notifyItemRangeRemoved(newCartItems.size, oldItems.size - newCartItems.size)
         }
-        newCartItems.forEachIndexed { index, newGoods ->
-            if (index < oldItems.size && newGoods != oldItems[index]) {
-                notifyItemChanged(index)
+
+        newCartItems.forEachIndexed { index, newCartItem ->
+            if (index < oldItems.size && newCartItem != oldItems[index]) {
+                if (newCartItem.goods == oldItems[index].goods &&
+                    newCartItem.quantity != oldItems[index].quantity
+                ) {
+                    updateItemQuantity(index)
+                } else {
+                    notifyItemChanged(index)
+                }
             }
         }
+
         if (newCartItems.size > oldItems.size) {
             notifyItemRangeInserted(oldItems.size, newCartItems.size - oldItems.size)
         }
+    }
+
+    private fun updateItemQuantity(position: Int) {
+        notifyItemChanged(position, "quantity_changed")
     }
 
     override fun onCreateViewHolder(
@@ -40,6 +54,7 @@ class CartAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartBinding.inflate(inflater, parent, false)
         binding.cartClickListener = cartClickListener
+        binding.quantityChangeListener = quantityChangeListener
         return CartViewHolder(binding)
     }
 
@@ -49,6 +64,22 @@ class CartAdapter(
     ) {
         val item: CartItem = cartItems[position]
         holder.bind(item)
+    }
+
+    override fun onBindViewHolder(
+        holder: CartViewHolder,
+        position: Int,
+        payloads: List<Any>,
+    ) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            val payload = payloads[0]
+            if (payload == "quantity_changed") {
+                holder.bind(cartItems[position])
+                holder.binding.quantitySelector.cartItem = cartItems[position]
+            }
+        }
     }
 
     override fun getItemCount(): Int = cartItems.size
