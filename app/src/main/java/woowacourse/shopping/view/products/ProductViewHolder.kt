@@ -9,20 +9,21 @@ import woowacourse.shopping.model.product.Product
 class ProductViewHolder(
     private val binding: ItemProductBinding,
     private val productClickListener: (Product) -> Unit,
-    private val quantitySelectListener: () -> Boolean,
+    private val openQuantitySelectListener: () -> Boolean,
     private val quantitySelectButtonListener: QuantitySelectButtonListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         item: Product,
         quantity: Int,
+        isQuantitySelectorOpened: Boolean,
     ) {
         binding.product = item
         binding.btnSelectedProduct.setOnClickListener {
             productClickListener(item)
         }
+        binding.visible = !openQuantitySelectListener() || isQuantitySelectorOpened
         binding.btnQuantitySelect.setOnClickListener {
-            val isVisible = quantitySelectListener()
-            binding.visible = isVisible
+            binding.visible = openQuantitySelectListener()
         }
         val quantityBinding = binding.viewQuantitySelect
         quantityBinding.productId = item.id
@@ -34,7 +35,7 @@ class ProductViewHolder(
         fun from(
             parent: ViewGroup,
             productClickListener: (Product) -> Unit,
-            quantitySelectListener: () -> Boolean,
+            openQuantitySelectListener: () -> Boolean,
             quantitySelectButtonListener: QuantitySelectButtonListener,
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
@@ -42,7 +43,7 @@ class ProductViewHolder(
             return ProductViewHolder(
                 binding,
                 productClickListener,
-                quantitySelectListener,
+                openQuantitySelectListener,
                 quantitySelectButtonListener,
             )
         }

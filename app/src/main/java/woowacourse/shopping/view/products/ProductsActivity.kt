@@ -50,7 +50,7 @@ class ProductsActivity : AppCompatActivity() {
         adapter =
             ProductsAdapter(
                 productClickListener = { product -> navigateToProductDetail(product) },
-                quantitySelectListener = { true },
+                openQuantitySelectListener = { true },
                 quantitySelectButtonListener =
                     object : QuantitySelectButtonListener {
                         override fun increase(productId: Long) {
