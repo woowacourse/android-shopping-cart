@@ -33,14 +33,7 @@ class ShoppingCartActivity : BaseActivity() {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
         }
-
-        viewModel.goods.observe(this) { goods ->
-            adapter.updateItems(goods)
-        }
-
-        viewModel.isQuantityChanged.observe(this) {
-            adapter.notifyItemChanged(it)
-        }
+        setUpObserver(adapter)
     }
 
     private fun setUpBinding() {
@@ -71,6 +64,16 @@ class ShoppingCartActivity : BaseActivity() {
                 }
             },
         )
+    }
+
+    private fun setUpObserver(adapter: ShoppingCartAdapter) {
+        viewModel.goods.observe(this) { goods ->
+            adapter.updateItems(goods)
+        }
+
+        viewModel.isQuantityChanged.observe(this) {
+            adapter.notifyItemChanged(it)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
