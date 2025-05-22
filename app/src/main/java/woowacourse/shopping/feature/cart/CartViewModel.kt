@@ -11,13 +11,14 @@ import woowacourse.shopping.util.updateQuantity
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val carts = MutableLiveData<List<Cart>>()
     private val _showPageButton = MutableLiveData(false)
     val showPageButton: LiveData<Boolean> get() = _showPageButton
     private var currentPage: Int = 1
     private val _page = MutableLiveData(currentPage)
     val page: LiveData<Int> get() = _page
-    val cart: LiveData<List<Cart>> =
+    private val _cart = MutableLiveData<Cart>()
+    val cart: LiveData<Cart> get() = _cart
+    val carts: LiveData<List<Cart>> =
         _page.switchMap { pageNum ->
             getProducts(pageNum)
         }
@@ -64,13 +65,23 @@ class CartViewModel(
     }
 
     fun insertToCart(cart: Cart) {
+        _cart.value = cart
         cartRepository.insert(cart)
-        carts.value = carts.value?.updateQuantity(cart.goods.id, cart.quantity + 1)
+        val current = _cart.value
+        if (current != null) {
+            val updated = current.updateQuantity(current.quantity + 1)
+            _cart.value = updated
+        }
     }
 
     fun removeFromCart(cart: Cart) {
+        _cart.value = cart
         cartRepository.delete(cart)
-        carts.value = carts.value?.updateQuantity(cart.goods.id, cart.quantity - 1)
+        val current = _cart.value
+        if (current != null) {
+            val updated = current.updateQuantity(current.quantity - 1)
+            _cart.value = updated
+        }
     }
 
     private fun getProducts(page: Int): LiveData<List<Cart>> = cartRepository.getPage(PAGE_SIZE, (page - 1) * PAGE_SIZE)

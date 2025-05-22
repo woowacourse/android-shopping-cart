@@ -20,6 +20,7 @@ import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
+import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.util.toUi
 
 class GoodsActivity :
@@ -55,7 +56,7 @@ class GoodsActivity :
         when (item.itemId) {
             R.id.nav_cart -> {
                 val intent = Intent(this, CartActivity::class.java)
-                startActivity(intent)
+                activityResultLauncher.launch(intent)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -79,13 +80,19 @@ class GoodsActivity :
                 ActivityResultContracts.StartActivityForResult(),
             ) { result ->
                 when (result.resultCode) {
-                    1000 -> {
-                        val changedId = result.data?.getLongExtra("GOODS_ID", 0) ?: 0
-                        val changedQuantity = result.data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
-                        adapter.updateItemQuantity(changedId, changedQuantity)
+                    ResultCode.GOODS_DETAIL_INSERT.code,
+                    ResultCode.CART_INSERT.code,
+                    -> {
+                        handleActivityResult(result.data)
                     }
                 }
             }
+    }
+
+    private fun handleActivityResult(data: Intent?) {
+        val changedId = data?.getLongExtra("GOODS_ID", 0) ?: 0
+        val changedQuantity = data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
+        adapter.updateItemQuantity(changedId, changedQuantity)
     }
 
     private fun observeCartInsertResult() {

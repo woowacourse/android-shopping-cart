@@ -16,6 +16,7 @@ import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.CustomCartQuantity
 import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.model.CartUiModel
+import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.util.toDomain
 import kotlin.getValue
 
@@ -58,7 +59,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
         viewModel.isSuccess.observe(this) {
             Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
             setResult(
-                1000,
+                ResultCode.GOODS_DETAIL_INSERT.code,
                 Intent().apply {
                     putExtra("GOODS_ID", cart.id)
                     putExtra("GOODS_QUANTITY", viewModel.cart.value?.quantity)

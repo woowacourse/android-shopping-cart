@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.cart
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.adapter.CartViewHolder
+import woowacourse.shopping.feature.model.ResultCode
 
 class CartActivity :
     AppCompatActivity(),
@@ -43,6 +45,13 @@ class CartActivity :
 
     override fun insertToCart(cart: Cart) {
         viewModel.insertToCart(cart)
+        setResult(
+            ResultCode.CART_INSERT.code,
+            Intent().apply {
+                putExtra("GOODS_ID", cart.goods.id)
+                putExtra("GOODS_QUANTITY", viewModel.cart.value?.quantity)
+            },
+        )
     }
 
     override fun removeFromCart(cart: Cart) {
