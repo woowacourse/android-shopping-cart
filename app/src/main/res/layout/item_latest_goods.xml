@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> latestGoodsClickListener.onLatestGoodsClick(goods)}"
+        android:onClick="@{() -> latestGoodsClickListener.onLatestGoodsClick(goods.id)}"
         android:padding="6dp">
 
         <ImageView

@@ -11,7 +11,6 @@ import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
-import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 
 class GoodsActivity : BaseActivity() {
@@ -33,8 +32,10 @@ class GoodsActivity : BaseActivity() {
         setUpGoodsList(goodsAdapter)
 
         val latestGoodsAdapter =
-            LatestGoodsAdapter { goods ->
-                navigateToDetail(goods)
+            LatestGoodsAdapter { selectedGoodsID ->
+                viewModel.moveToDetail(selectedGoodsID) { goodsId, lastGoodsId ->
+                    navigateToDetail(goodsId, lastGoodsId)
+                }
             }
         setUpLatestGoodsList(latestGoodsAdapter)
 
@@ -56,9 +57,10 @@ class GoodsActivity : BaseActivity() {
     private fun makeAdapter(): GoodsAdapter {
         return GoodsAdapter(
             object : GoodsClickListener {
-                override fun onGoodsClick(goods: GoodsUiModel) {
-                    viewModel.updateLatestGoods(goods)
-                    navigateToDetail(goods)
+                override fun onGoodsClick(selectedGoodsId: Int) {
+                    viewModel.moveToDetail(selectedGoodsId) { goodsId, lastGoodsId ->
+                        navigateToDetail(goodsId, lastGoodsId)
+                    }
                 }
 
                 override fun onPlusClick(position: Int) {
@@ -124,8 +126,11 @@ class GoodsActivity : BaseActivity() {
         }
     }
 
-    private fun navigateToDetail(goods: GoodsUiModel) {
-        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods.id)
+    private fun navigateToDetail(
+        goodsId: Int,
+        lastGoodsId: Int?,
+    ) {
+        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goodsId, lastGoodsId)
         startActivity(intent)
     }
 

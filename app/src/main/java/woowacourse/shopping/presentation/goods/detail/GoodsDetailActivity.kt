@@ -77,13 +77,16 @@ class GoodsDetailActivity : BaseActivity() {
 
     companion object {
         private const val EXTRA_GOODS = "goods"
+        const val EXTRA_LAST_GOODS = "last_goods"
 
         fun newIntent(
             context: Context,
             goodsId: Int,
+            lastGoodsId: Int?,
         ): Intent =
             Intent(context, GoodsDetailActivity::class.java).apply {
                 putExtra(EXTRA_GOODS, goodsId)
+                putExtra(EXTRA_LAST_GOODS, lastGoodsId)
             }
     }
 }

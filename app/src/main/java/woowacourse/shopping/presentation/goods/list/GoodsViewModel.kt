@@ -156,6 +156,14 @@ class GoodsViewModel(
             }
     }
 
+    fun moveToDetail(
+        goodsId: Int,
+        move: (goodsId: Int, lastId: Int?) -> Unit,
+    ) {
+        val lastGoodsId = latestGoodsRepository.getLast()?.goodsId
+        move(goodsId, lastGoodsId)
+    }
+
     private fun canLoadMore(): Boolean {
         return goodsRepository.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
     }
