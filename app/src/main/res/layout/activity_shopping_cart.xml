@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.shoppingcart.ShoppingCartViewModel" />
@@ -43,7 +44,7 @@
             android:enabled="@{viewModel.products.hasPrevious}"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onPaginationPrevious()}"
+            android:onClick="@{() -> handler.onGoToPreviousPage()}"
             android:text="@string/pagination_left"
             android:textColor="@color/white"
             android:textSize="22sp"
@@ -74,7 +75,7 @@
             android:enabled="@{viewModel.products.hasNext}"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onPaginationNext()}"
+            android:onClick="@{() -> handler.onGoToNextPage()}"
             android:text="@string/pagination_right"
             android:textColor="@color/white"
             android:textSize="22sp"

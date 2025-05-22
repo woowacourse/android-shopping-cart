@@ -17,11 +17,21 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
         val currentProductIndex = allProducts.indexOf(product)
         repository.remove(product)
         val pageNumber = pageNumberAfterRemoval(currentProductIndex)
-        requestProductsPage(pageNumber)
+        requestPage(pageNumber)
     }
 
-    fun requestProductsPage(pageIndex: Int) {
+    fun requestPage(pageIndex: Int) {
         _products.value = repository.getPage(PAGE_SIZE, pageIndex)
+    }
+
+    fun requestPreviousPage() {
+        val currentIndex = (_products.value?.pageIndex) ?: 0
+        _products.value = repository.getPage(PAGE_SIZE, (currentIndex - 1).coerceAtLeast(0))
+    }
+
+    fun requestNextPage() {
+        val currentIndex = (_products.value?.pageIndex) ?: 0
+        _products.value = repository.getPage(PAGE_SIZE, (currentIndex + 1))
     }
 
     private fun pageNumberAfterRemoval(index: Int): Int {

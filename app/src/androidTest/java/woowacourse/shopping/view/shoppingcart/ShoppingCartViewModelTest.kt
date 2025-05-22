@@ -9,9 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.DummyShoppingCartRepository
 import woowacourse.shopping.data.ShoppingCartRepository
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.inventoryItem
 import woowacourse.shopping.shoppingCartItem
 import woowacourse.shopping.shoppingCartLastPageItem
 
@@ -31,7 +29,7 @@ class ShoppingCartViewModelTest {
     @Test
     fun 한_페이지에_장바구니_상품이_5개씩_로드된다() {
         // when
-        viewModel.requestProductsPage(0)
+        viewModel.requestPage(0)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()

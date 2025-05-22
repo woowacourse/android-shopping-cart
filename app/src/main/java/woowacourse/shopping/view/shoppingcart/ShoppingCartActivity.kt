@@ -34,20 +34,20 @@ class ShoppingCartActivity :
                 val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
                 adapter.updateProducts(page.items)
             }
-            requestProductsPage(0)
+            requestPage(0)
         }
     }
 
-    override fun onProductRemove(product: Product) {
+    override fun onRemoveProduct(product: Product) {
         viewModel.removeProduct(product)
     }
 
-    override fun onPaginationPrevious() {
-        viewModel.requestProductsPage((viewModel.products.value?.pageIndex ?: 0) - 1)
+    override fun onGoToPreviousPage() {
+        viewModel.requestPreviousPage()
     }
 
-    override fun onPaginationNext() {
-        viewModel.requestProductsPage((viewModel.products.value?.pageIndex ?: 0) + 1)
+    override fun onGoToNextPage() {
+        viewModel.requestNextPage()
     }
 
     companion object {
