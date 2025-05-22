@@ -27,7 +27,7 @@ class GoodsDetailActivity : BaseActivity() {
         setUpScreen(binding.root)
         setUpBinding()
 
-        viewModel.setGoods(intent.getIntExtra(EXTRA_GOODS, -1))
+        viewModel.setGoods(getGoodsId())
 
         viewModel.onItemAddedToCart.observe(this) { count ->
             Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT)
@@ -48,6 +48,15 @@ class GoodsDetailActivity : BaseActivity() {
                     viewModel.tryDecreaseCount()
                 }
             }
+    }
+
+    private fun getGoodsId(): Int {
+        val id = intent.getIntExtra(EXTRA_GOODS, -1)
+        if (id == -1) {
+            Toast.makeText(this, R.string.error_no_goods, Toast.LENGTH_SHORT).show()
+            finish()
+        }
+        return id
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
