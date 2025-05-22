@@ -26,9 +26,10 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        setUpBinding()
-
         viewModel.setGoods(getGoodsId())
+        viewModel.setLastGoods(getLastGoodsId())
+
+        setUpBinding()
 
         viewModel.onItemAddedToCart.observe(this) { count ->
             Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT)
@@ -58,6 +59,10 @@ class GoodsDetailActivity : BaseActivity() {
             finish()
         }
         return id
+    }
+
+    private fun getLastGoodsId(): Int? {
+        return intent.getSerializableExtra(EXTRA_LAST_GOODS) as? Int?
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

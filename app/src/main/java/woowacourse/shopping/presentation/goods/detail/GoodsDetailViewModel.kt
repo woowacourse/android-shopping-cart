@@ -19,6 +19,8 @@ class GoodsDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val latestGoodsRepository: LatestGoodsRepository,
 ) : ViewModel() {
+    var lastGoods: GoodsUiModel? = null
+        private set
     private val _goods: MutableLiveData<GoodsUiModel> = MutableLiveData()
     val goods: LiveData<GoodsUiModel>
         get() = _goods
@@ -33,6 +35,11 @@ class GoodsDetailViewModel(
 
     fun setGoods(id: Int) {
         _goods.value = goodsRepository.getById(id).toUiModel()
+    }
+
+    fun setLastGoods(id: Int?) {
+        if (id == null) return
+        lastGoods = goodsRepository.getById(id).toUiModel()
     }
 
     fun addToShoppingCart() {
