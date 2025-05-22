@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 import kotlin.concurrent.thread
 import kotlin.math.max
 
@@ -35,6 +37,9 @@ class CartViewModel(
 
     private val endPage: Int get() = max(1, (totalCartSizeData + PAGE_SIZE - 1) / PAGE_SIZE)
 
+    private val _removeItemEvent = MutableSingleLiveData<CartItem>()
+    val removeItemEvent: SingleLiveData<CartItem> = _removeItemEvent
+
     init {
         updateCartQuantity()
         updateCartDataSize()
@@ -52,8 +57,14 @@ class CartViewModel(
     }
 
     fun removeCartItemOrDecreaseQuantity(cartItem: CartItem) {
-        cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
-            updateCartQuantity()
+        val currentItem = cart.value?.find { it.goods.id == cartItem.goods.id }
+
+        if (currentItem?.quantity == 1) {
+            _removeItemEvent.setValue(cartItem)
+        } else {
+            cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
+                updateCartQuantity()
+            }
         }
     }
 
