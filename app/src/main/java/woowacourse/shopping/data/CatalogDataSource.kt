@@ -14,4 +14,6 @@ interface CatalogDataSource {
         product: ProductUiModel,
         diff: Int,
     ): ProductUiModel
+
+    fun initQuantity(product: ProductUiModel)
 }

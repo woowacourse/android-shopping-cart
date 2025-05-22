@@ -23,6 +23,11 @@ object CatalogDatabase : CatalogDataSource {
         return updatedProduct.toUiModel()
     }
 
+    override fun initQuantity(product: ProductUiModel) {
+        val index = dummyProducts.indexOfFirst { it.name == product.name }
+        dummyProducts[index] = dummyProducts[index].copy(quantity = 0)
+    }
+
     var count = 1
 
     val dummyProducts =
