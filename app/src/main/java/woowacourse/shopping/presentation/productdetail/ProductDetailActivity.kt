@@ -82,16 +82,16 @@ class ProductDetailActivity : AppCompatActivity() {
             binding.product = it
         }
 
-        viewModel.toastMessage.observe(this) { resId ->
-            showToast(resId)
-        }
-
         viewModel.insertProductResult.observe(this) { result ->
             when (result) {
                 is ResultState.Success -> showToast(R.string.product_detail_add_cart_toast_insert_success)
                 is ResultState.Failure -> showToast(R.string.product_detail_add_cart_toast_insert_failure)
                 else -> Unit
             }
+        }
+
+        viewModel.toastMessage.observe(this) { resId ->
+            showToast(resId)
         }
     }
 

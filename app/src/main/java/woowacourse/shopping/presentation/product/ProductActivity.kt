@@ -146,14 +146,10 @@ class ProductActivity :
                 productAdapter.setData(productsState.data, showLoadMore)
             }
         }
-    }
 
-    override fun onClickProductItem(cartItem: CartItem) {
-        navigateToProductDetail(cartItem.product)
-    }
-
-    override fun onClickAddToCart(cartItem: CartItem) {
-        viewModel.addToCart(cartItem)
+        viewModel.toastMessage.observe(this) { ResId ->
+            showToast(ResId)
+        }
     }
 
     private fun showToast(
@@ -174,6 +170,14 @@ class ProductActivity :
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
         startActivity(intent)
+    }
+
+    override fun onClickProductItem(cartItem: CartItem) {
+        navigateToProductDetail(cartItem.product)
+    }
+
+    override fun onClickAddToCart(cartItem: CartItem) {
+        viewModel.addToCart(cartItem)
     }
 
     override fun onClickMinus(id: Long) {

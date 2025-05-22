@@ -43,26 +43,6 @@ class CartActivity :
         observeViewModel()
     }
 
-    override fun onClickMinus(id: Long) {
-        viewModel.decreaseQuantity(id)
-    }
-
-    override fun onClickPlus(id: Long) {
-        viewModel.increaseQuantity(id)
-    }
-
-    override fun onClickPrevious() {
-        viewModel.changePage(false)
-    }
-
-    override fun onClickNext() {
-        viewModel.changePage(true)
-    }
-
-    override fun onClickDelete(cartItem: CartItem) {
-        viewModel.deleteProduct(cartItem)
-    }
-
     private fun initInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.clCart) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -84,10 +64,6 @@ class CartActivity :
     }
 
     private fun observeViewModel() {
-        viewModel.toastMessage.observe(this) { resId ->
-            showToast(resId)
-        }
-
         viewModel.products.observe(this) { result ->
             when (result) {
                 is ResultState.Success -> {
@@ -99,12 +75,36 @@ class CartActivity :
                 }
             }
         }
+
+        viewModel.toastMessage.observe(this) { resId ->
+            showToast(resId)
+        }
     }
 
     private fun showToast(
         @StringRes messageResId: Int,
     ) {
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClickMinus(id: Long) {
+        viewModel.decreaseQuantity(id)
+    }
+
+    override fun onClickPlus(id: Long) {
+        viewModel.increaseQuantity(id)
+    }
+
+    override fun onClickPrevious() {
+        viewModel.changePage(false)
+    }
+
+    override fun onClickNext() {
+        viewModel.changePage(true)
+    }
+
+    override fun onClickDelete(cartItem: CartItem) {
+        viewModel.deleteProduct(cartItem)
     }
 
     companion object {
