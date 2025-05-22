@@ -11,8 +11,8 @@ import woowacourse.shopping.data.db.dao.CartDao
 import woowacourse.shopping.data.db.entity.CartEntity
 import woowacourse.shopping.fixture.cartEntityFixture1
 import woowacourse.shopping.fixture.cartEntityFixture2
-import woowacourse.shopping.fixture.cartEntityFixture3
 import woowacourse.shopping.fixture.cartEntityFixture4
+import woowacourse.shopping.fixture.cartEntityFixtures
 import woowacourse.shopping.fixture.fakeContext
 
 @RunWith(AndroidJUnit4::class)
@@ -41,7 +41,7 @@ class CartDaoTest {
 
         // given
         cartDao.insert(cart)
-        val expected = cartDao.getCartByProductId(1)
+        val expected = cartDao.cartByProductId(1)
 
         expected?.productId shouldBe cart.productId
     }
@@ -52,7 +52,7 @@ class CartDaoTest {
         val cart = cartEntityFixture2
 
         cartDao.insert(cart)
-        val expected = cartDao.getCartByProductId(2)
+        val expected = cartDao.cartByProductId(2)
 
         expected?.productId shouldBe cart.productId
 
@@ -60,26 +60,8 @@ class CartDaoTest {
         cartDao.upsert(CartEntity(2, 10))
 
         // then
-        val updated = cartDao.getCartByProductId(2)
+        val updated = cartDao.cartByProductId(2)
         updated?.quantity shouldBe 10
-    }
-
-    @Test
-    fun `상품이_존재하면_기존_수량에_새_수량을_더한다`() {
-        // when
-        val cart = cartEntityFixture3
-
-        cartDao.insert(cart)
-        val expected = cartDao.getCartByProductId(3)
-
-        expected?.quantity shouldBe cart.quantity
-
-        // given
-        cartDao.upsertWithAccumulation(CartEntity(3, 10))
-
-        // then
-        val updated = cartDao.getCartByProductId(3)
-        updated?.quantity shouldBe 13
     }
 
     @Test
@@ -92,8 +74,36 @@ class CartDaoTest {
         cartDao.deleteByProductId(4)
 
         // then
-        val expected = cartDao.getCartByProductId(4)
+        val expected = cartDao.cartByProductId(4)
         expected shouldBe null
+    }
+
+    @Test
+    fun `첫_번쟤_페이자의_장바구니_상품울_5개_가져온다`() {
+        // given
+        cartEntityFixtures.forEach {
+            cartDao.insert(it)
+        }
+
+        // when
+        val expected = cartDao.cartSinglePage(0, 5)
+
+        // then
+        expected shouldBe cartEntityFixtures
+    }
+
+    @Test
+    fun `장바구니_전체_페이지_개수를_가져온다`() {
+        // given
+        cartEntityFixtures.forEach {
+            cartDao.insert(it)
+        }
+
+        // when
+        val expected = cartDao.pageCount(5)
+
+        // then
+        expected shouldBe 1
     }
 
     @After
