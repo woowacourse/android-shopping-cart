@@ -1,8 +1,8 @@
 package woowacourse.shopping.presentation.ui.cart
 
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.CartProductDTO
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
 
 class CartViewHolder(
@@ -15,7 +15,7 @@ class CartViewHolder(
         binding.viewModel = viewModel
     }
 
-    fun bind(product: CartProductDTO) {
+    fun bind(product: CartProduct) {
         binding.product = product
     }
 

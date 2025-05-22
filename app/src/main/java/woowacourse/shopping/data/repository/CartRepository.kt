@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.CartProductDTO
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
-    fun fetchCartProducts(page: Int): List<CartProductDTO>
+    fun fetchCartProducts(page: Int): List<CartProduct>
 
     fun fetchMaxPageCount(): Int
 
@@ -12,7 +12,7 @@ interface CartRepository {
 
     fun clearCart()
 
-    fun fetchAllProduct(): List<CartProductDTO>
+    fun fetchAllProduct(): List<CartProduct>
 
     fun upsertCartProduct(
         product: Product,

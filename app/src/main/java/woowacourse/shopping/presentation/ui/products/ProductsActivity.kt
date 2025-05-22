@@ -89,6 +89,8 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
                         return when (ProductsItemViewType.entries[viewType]) {
                             ProductsItemViewType.PRODUCT -> PRODUCT_LAYOUT_SIZE
                             ProductsItemViewType.LOAD_MORE -> LOAD_MORE_LAYOUT_SIZE
+                            ProductsItemViewType.LAST_WATCH -> LAST_WATCH_LAYOUT_SIZE
+                            ProductsItemViewType.LAST_WATCH_TITLE -> LAST_WATCH_LAYOUT_SIZE
                         }
                     }
                 }
@@ -109,5 +111,6 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         private const val GRID_LAYOUT_SIZE: Int = 2
         private const val PRODUCT_LAYOUT_SIZE: Int = 1
         private const val LOAD_MORE_LAYOUT_SIZE: Int = 2
+        private const val LAST_WATCH_LAYOUT_SIZE: Int = 2
     }
 }

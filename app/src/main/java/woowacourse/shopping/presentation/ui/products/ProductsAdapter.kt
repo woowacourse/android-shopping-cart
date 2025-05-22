@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
 
@@ -21,8 +22,27 @@ class ProductsAdapter(
         viewType: Int,
     ): ProductsItemViewHolder<ProductsItem, ViewDataBinding> =
         when (ProductsItemViewType.entries[viewType]) {
-            ProductsItemViewType.PRODUCT -> ProductViewHolder(parent, onClickHandler, lifecycleOwner, viewModel)
+            ProductsItemViewType.PRODUCT ->
+                ProductViewHolder(
+                    parent,
+                    onClickHandler,
+                    lifecycleOwner,
+                    viewModel,
+                )
+
             ProductsItemViewType.LOAD_MORE -> LoadMoreViewHolder(parent, onClickHandler)
+            ProductsItemViewType.LAST_WATCH ->
+                LastWatchProductsViewHolder(
+                    parent,
+                    onClickHandler,
+                    lifecycleOwner,
+                    viewModel,
+                )
+
+            ProductsItemViewType.LAST_WATCH_TITLE ->
+                LastWatchTitleViewHolder(
+                    parent,
+                )
         } as ProductsItemViewHolder<ProductsItem, ViewDataBinding>
 
     override fun onBindViewHolder(
@@ -37,12 +57,16 @@ class ProductsAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when (productsItems[position]) {
+            is ProductsItem.LastWatchProductsItem -> 2
             is ProductsItem.ProductProductsItem -> 0
             is ProductsItem.LoadMoreProductsItem -> 1
+            is ProductsItem.LastWatchTitleItem -> 3
         }
 
     fun updateProductItems(newItems: List<Product>) {
         productsItems.clear()
+        productsItems.add(ProductsItem.LastWatchTitleItem)
+        productsItems.add(ProductsItem.LastWatchProductsItem(dummyProducts.drop(5)))
         productsItems.addAll(newItems.map { ProductsItem.ProductProductsItem(it) })
     }
 

@@ -11,7 +11,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.data.CartProductDTO" />
+            type="woowacourse.shopping.domain.model.CartProduct" />
 
         <variable
             name="onClickHandler"

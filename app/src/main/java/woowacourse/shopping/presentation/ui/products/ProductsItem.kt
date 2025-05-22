@@ -8,4 +8,10 @@ sealed class ProductsItem {
     ) : ProductsItem()
 
     data object LoadMoreProductsItem : ProductsItem()
+
+    data class LastWatchProductsItem(
+        val value: List<Product>,
+    ) : ProductsItem()
+
+    data object LastWatchTitleItem : ProductsItem()
 }
