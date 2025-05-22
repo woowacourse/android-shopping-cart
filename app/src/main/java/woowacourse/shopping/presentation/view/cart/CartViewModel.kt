@@ -23,11 +23,8 @@ class CartViewModel(
     private val _toastEvent = MutableSingleLiveData<CartMessageEvent>()
     val toastEvent: SingleLiveData<CartMessageEvent> = _toastEvent
 
-    private val _cartItems = MutableLiveData<List<CartItemUiModel>>()
+    private val _cartItems = MutableLiveData<List<CartItemUiModel>>(emptyList())
     val cartItems: LiveData<List<CartItemUiModel>> = _cartItems
-
-    private val _quantityUpdateEvent = MutableSingleLiveData<Pair<Long, Int>>()
-    val quantityUpdateEvent: SingleLiveData<Pair<Long, Int>> = _quantityUpdateEvent
 
     private val _page = MutableLiveData(DEFAULT_PAGE)
     val page: LiveData<Int> = _page
@@ -47,16 +44,16 @@ class CartViewModel(
 
         shoppingRepository.loadCartItems(offset, limit) { result ->
             result.fold(
-                onSuccess = { handleCartItemsSuccess(it, newPage) },
+                onSuccess = { handleFetchCartItemsSuccess(it, newPage) },
                 onFailure = { postFailureEvent(CartMessageEvent.FETCH_CART_ITEMS_FAILURE) },
             )
         }
     }
 
     fun deleteCartItem(item: CartItemUiModel) {
-        shoppingRepository.deleteCartItem(item.product.id) { result ->
+        shoppingRepository.deleteCartItem(item.productId) { result ->
             result.fold(
-                onSuccess = { handleCartItemDeleted(item) },
+                onSuccess = { handleFetchCartItemDeleted(item.productId) },
                 onFailure = { postFailureEvent(CartMessageEvent.DELETE_CART_ITEM_FAILURE) },
             )
         }
@@ -81,45 +78,33 @@ class CartViewModel(
     }
 
     private fun refreshProductQuantity(productId: Long) {
-        fetchQuantityAndThen(productId) { quantity ->
-            if (quantity < DEFAULT_PAGE) {
-                val items = _cartItems.value.orEmpty()
-                val foundItem = items.find { it.product.id == productId } ?: return@fetchQuantityAndThen
-                handleCartItemDeleted(foundItem)
-                return@fetchQuantityAndThen
-            }
-
-            _quantityUpdateEvent.postValue(productId to quantity)
-            updateItemQuantityInList(productId, quantity)
-        }
-    }
-
-    private fun fetchQuantityAndThen(
-        productId: Long,
-        onFailureEvent: CartMessageEvent = CartMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE,
-        onSuccess: (Int) -> Unit,
-    ) {
-        shoppingRepository.findQuantityByProductId(productId) { result ->
+        shoppingRepository.findCartItemByProductId(productId) { result ->
             result.fold(
-                onSuccess = onSuccess,
-                onFailure = { postFailureEvent(onFailureEvent) },
+                onSuccess = { cartItem ->
+                    updateItemQuantityInList(cartItem)
+                },
+                onFailure = {
+                    if (it is NoSuchElementException) {
+                        handleFetchCartItemDeleted(productId)
+                        return@fold
+                    }
+                    postFailureEvent(CartMessageEvent.FETCH_CART_ITEMS_FAILURE)
+                },
             )
         }
     }
 
-    private fun updateItemQuantityInList(
-        productId: Long,
-        newQuantity: Int,
-    ) {
+    private fun updateItemQuantityInList(updatedCartItem: CartItem) {
         val items = _cartItems.value.orEmpty()
         val updatedItems =
             items.map { item ->
-                if (item.product.id == productId) item.copy(quantity = newQuantity) else item
+                if (item.productId != updatedCartItem.product.id) return@map item
+                updatedCartItem.toCartItemUiModel()
             }
         _cartItems.postValue(updatedItems)
     }
 
-    private fun handleCartItemsSuccess(
+    private fun handleFetchCartItemsSuccess(
         pageableItem: PageableItem<CartItem>,
         newPage: Int,
     ) {
@@ -128,9 +113,9 @@ class CartViewModel(
         _page.postValue(newPage)
     }
 
-    private fun handleCartItemDeleted(deletedItem: CartItemUiModel) {
+    private fun handleFetchCartItemDeleted(deletedProductId: Long) {
         val items = _cartItems.value.orEmpty()
-        val isLastItem = items.size == 1 && items.first().product.id == deletedItem.product.id
+        val isLastItem = items.size == 1 && items.first().productId == deletedProductId
 
         fetchCartItems(if (isLastItem) FetchPageDirection.PREVIOUS else FetchPageDirection.CURRENT)
     }

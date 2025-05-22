@@ -18,7 +18,7 @@ class CartViewHolder(
     fun bind(cartItem: CartItemUiModel) {
         binding.cartItem = cartItem
         binding.viewQuantitySelector.quantity = cartItem.quantity
-        binding.viewQuantitySelector.productId = cartItem.product.id
+        binding.viewQuantitySelector.productId = cartItem.productId
     }
 
     companion object {

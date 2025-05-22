@@ -54,12 +54,8 @@ class CartFragment :
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.cartItems.observe(viewLifecycleOwner) {
-            it?.let { cartAdapter.updateItemsManually(it) }
-        }
-
-        viewModel.quantityUpdateEvent.observe(viewLifecycleOwner) { (productId, quantity) ->
-            cartAdapter.updateQuantityAt(productId, quantity)
+        viewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            cartAdapter.updateItemsManually(cartItems)
         }
 
         viewModel.toastEvent.observe(viewLifecycleOwner) { event ->
