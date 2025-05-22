@@ -49,6 +49,9 @@ class GoodsDetailActivity : BaseActivity() {
                     viewModel.tryDecreaseCount()
                 }
             }
+
+        binding.lastGoodsClickListener =
+            LastGoodsClickListener { lastGoodsId -> navigateToLastGoodsDetail(lastGoodsId) }
     }
 
     private fun getGoodsId(): Int {
@@ -62,6 +65,11 @@ class GoodsDetailActivity : BaseActivity() {
 
     private fun getLastGoodsId(): Int? {
         return intent.getSerializableExtra(EXTRA_LAST_GOODS) as? Int?
+    }
+
+    private fun navigateToLastGoodsDetail(lastGoodsId: Int) {
+        val intent = newIntent(this, lastGoodsId, null)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

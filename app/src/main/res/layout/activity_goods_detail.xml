@@ -9,6 +9,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="lastGoodsClickListener"
+            type="woowacourse.shopping.presentation.goods.detail.LastGoodsClickListener" />
+        
+        <variable
             name="selectorClickListener"
             type="woowacourse.shopping.presentation.util.QuantitySelectorListener" />
 
@@ -87,6 +91,7 @@
             bind:quantity="@{vm.count}" />
 
         <include
+            android:clickable="true"
             android:id="@+id/cl_last_goods"
             layout="@layout/view_last_goods"
             android:layout_width="380dp"
@@ -96,7 +101,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:visibility="@{vm.lastGoods == null ? View.INVISIBLE : View.VISIBLE}"
-            bind:goodsName="@{vm.lastGoods.name}" />
+            bind:clickListener="@{lastGoodsClickListener}"
+            bind:goods="@{vm.lastGoods}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shopping_cart"
