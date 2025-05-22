@@ -22,20 +22,19 @@ class ShoppingCartActivity :
         val shoppingApplication = application as ShoppingApplication
         val factory = ShoppingCartViewModel.createFactory(shoppingApplication.shoppingCartRepository)
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
-
-        with(viewModel) {
-            requestProductsPage(0)
-            products.observe(this@ShoppingCartActivity) { page ->
-                val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
-                adapter.updateProducts(page.items)
-            }
-        }
-
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
             rvShoppingCartList.itemAnimator = null
             viewModel = this@ShoppingCartActivity.viewModel
             handler = this@ShoppingCartActivity
+        }
+
+        with(viewModel) {
+            products.observe(this@ShoppingCartActivity) { page ->
+                val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
+                adapter.updateProducts(page.items)
+            }
+            requestProductsPage(0)
         }
     }
 
