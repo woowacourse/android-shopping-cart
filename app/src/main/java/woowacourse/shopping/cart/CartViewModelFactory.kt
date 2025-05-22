@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.repository.CartProductRepositoryImpl
+import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 
 class CartViewModelFactory(
     private val application: ShoppingApplication,

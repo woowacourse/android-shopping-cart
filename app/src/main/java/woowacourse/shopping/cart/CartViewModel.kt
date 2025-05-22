@@ -8,8 +8,8 @@ import woowacourse.shopping.data.CatalogDataSource
 import woowacourse.shopping.data.CatalogDatabase
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.mapper.toUiModel
+import woowacourse.shopping.data.repository.CartProductRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
-import woowacourse.shopping.repository.CartProductRepository
 
 class CartViewModel(
     private val cartProductRepository: CartProductRepository,

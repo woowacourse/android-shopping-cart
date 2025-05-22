@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.util.intentParcelableExtra
@@ -77,7 +76,7 @@ class DetailActivity : AppCompatActivity() {
         binding.clickListener =
             AddToCartClickListener { product ->
                 showToastMessage()
-                CartDatabase.insertCartProduct(product)
+//                CartDatabase.insertCartProduct(product)
             }
     }
 

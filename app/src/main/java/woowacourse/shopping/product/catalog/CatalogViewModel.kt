@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.CatalogDataSource
 import woowacourse.shopping.data.CatalogDatabase
 import woowacourse.shopping.data.mapper.toEntity
-import woowacourse.shopping.repository.CartProductRepository
+import woowacourse.shopping.data.repository.CartProductRepository
 
 class CatalogViewModel(
     private val catalogDataSource: CatalogDataSource = CatalogDatabase,
