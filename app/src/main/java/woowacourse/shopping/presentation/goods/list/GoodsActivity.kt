@@ -28,7 +28,7 @@ class GoodsActivity : BaseActivity() {
         setUpScreen(binding.root)
         setUpBinding()
 
-        val goodsAdapter = makeAdapter()
+        val goodsAdapter = makeGoodsAdapter()
         setUpGoodsList(goodsAdapter)
 
         val latestGoodsAdapter =
@@ -54,7 +54,7 @@ class GoodsActivity : BaseActivity() {
         binding.lifecycleOwner = this
     }
 
-    private fun makeAdapter(): GoodsAdapter {
+    private fun makeGoodsAdapter(): GoodsAdapter {
         return GoodsAdapter(
             object : GoodsClickListener {
                 override fun onGoodsClick(selectedGoodsId: Int) {
