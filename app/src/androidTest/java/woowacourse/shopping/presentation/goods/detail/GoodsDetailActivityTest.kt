@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -44,5 +45,31 @@ class GoodsDetailActivityTest {
     fun `상품의_가격이_보인다`() {
         onView(withId(R.id.tv_goods_price))
             .check(matches(withText("11,900원")))
+    }
+
+    @Test
+    fun `plus_버튼을_누르면_개수가_증가한다`() {
+        // when
+        onView(withId(R.id.tv_plus))
+            .perform(click())
+
+        // then
+        onView(withId(R.id.tv_count))
+            .check(matches(withText("2")))
+    }
+
+    @Test
+    fun `minus_버튼을_누르면_개수가_증가한다`() {
+        // given
+        onView(withId(R.id.tv_plus))
+            .perform(click())
+
+        // when
+        onView(withId(R.id.tv_minus))
+            .perform(click())
+
+        // then
+        onView(withId(R.id.tv_count))
+            .check(matches(withText("1")))
     }
 }
