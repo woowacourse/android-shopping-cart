@@ -1,9 +1,7 @@
 package woowacourse.shopping.view
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
@@ -14,8 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.storage.CartStorage
+import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartResult
 import woowacourse.shopping.domain.product.Price
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
@@ -29,102 +27,85 @@ class CartViewModelTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: CartViewModel
-    private lateinit var repository: CartRepository
-    private val cartStorage: CartStorage = mockk()
+    private lateinit var cartRepository: CartRepository
     private val productRepository: ProductRepository = mockk()
 
     @BeforeEach
     fun setUp() {
-        repository = CartRepositoryImpl(cartStorage)
-        viewModel = CartViewModel(repository, productRepository)
+        // 테스트 전 CartStorage 초기화
+        val cartStorageField = CartStorage::class.java.getDeclaredField("carts")
+        cartStorageField.isAccessible = true
+        (cartStorageField.get(CartStorage) as MutableMap<*, *>).clear()
 
-        every { cartStorage.singlePage(0, 5) } returns
-            CartResult(
-                carts = (1L..5L).map { Cart(productId = it) },
-                hasNextPage = true,
-            )
-        every { cartStorage.singlePage(5, 10) } returns
-            CartResult(
-                carts = (6L..10L).map { Cart(productId = it) },
-                hasNextPage = true,
-            )
-        every { cartStorage.singlePage(10, 15) } returns
-            CartResult(
-                carts = listOf(Cart(productId = 11L)),
-                hasNextPage = false,
-            )
-
+        // 장바구니 11개 삽입
         (1L..11L).forEach {
-            every { productRepository[it] } returns Product(it, "Product$it", Price(1000), "")
+            CartStorage.insert(Cart(Quantity(1), it))
+            every { productRepository[it] } returns Product(it, "Product$it", "", Price(1000), Quantity(1))
         }
 
-        every { cartStorage.delete(any()) } just Runs
+        cartRepository = CartRepositoryImpl(CartStorage)
+        viewModel = CartViewModel(cartRepository, productRepository)
     }
 
     @Test
-    fun `첫페이지_불러오기`() {
-        // When
+    fun `첫 페이지를 불러온다`() {
         viewModel.loadCarts()
 
-        // Then
-        val items = viewModel.uiState.getOrAwaitValue()
-        val carts = items.carts
-        val pageState = items.pageState
+        val state = viewModel.uiState.getOrAwaitValue()
 
         assertAll(
-            { assertThat(carts).hasSize(5) },
-            { assertThat(carts.map { it.product.id }).containsExactly(1L, 2L, 3L, 4L, 5L) },
-            { assertThat(pageState.page).isEqualTo(1) },
-            { assertThat(pageState.nextPageEnabled).isTrue() },
-            { assertThat(pageState.previousPageEnabled).isFalse() },
+            { assertThat(state.items).hasSize(5) },
+            { assertThat(state.items.map { it.item.id }).containsExactly(1L, 2L, 3L, 4L, 5L) },
+            { assertThat(state.pageState.page).isEqualTo(1) },
+            { assertThat(state.pageState.nextPageEnabled).isTrue() },
+            { assertThat(state.pageState.previousPageEnabled).isFalse() },
         )
     }
 
     @Test
-    fun `페이지_추가_동작`() {
-        // When
+    fun `페이지를 두 번 추가하면 세 번째 페이지로 이동한다`() {
         viewModel.addPage()
         viewModel.addPage()
 
-        // Then
-        val products = viewModel.uiState.getOrAwaitValue().carts
-        val pageState = viewModel.uiState.getOrAwaitValue().pageState
+        val state = viewModel.uiState.getOrAwaitValue()
 
         assertAll(
-            { assertThat(pageState.page).isEqualTo(3) },
-            { assertThat(products).hasSize(1) },
-            { assertThat(products.first().product.id).isEqualTo(11L) },
+            { assertThat(state.pageState.page).isEqualTo(3) },
+            { assertThat(state.items).hasSize(1) },
+            { assertThat(state.items.first().item.id).isEqualTo(11L) },
         )
     }
 
     @Test
-    fun `페이지_이전_동작`() {
-        // Given
+    fun `두 페이지 이동 후 한 페이지 이전하면 두 번째 페이지로 이동한다`() {
         viewModel.addPage()
         viewModel.addPage()
-
-        // When
         viewModel.subPage()
 
-        // Then
-        val carts = viewModel.uiState.getOrAwaitValue().carts
-        val pageState = viewModel.uiState.getOrAwaitValue().pageState
+        val state = viewModel.uiState.getOrAwaitValue()
 
         assertAll(
-            { assertThat(pageState.page).isEqualTo(2) },
-            { assertThat(carts).hasSize(5) },
-            { assertThat(carts.map { it.product.id }).containsExactly(6L, 7L, 8L, 9L, 10L) },
+            { assertThat(state.pageState.page).isEqualTo(2) },
+            { assertThat(state.items).hasSize(5) },
+            { assertThat(state.items.map { it.item.id }).containsExactly(6L, 7L, 8L, 9L, 10L) },
         )
     }
 
     @Test
-    fun `상품_삭제시_페이지_개수_조정`() {
-        // When
-        viewModel.deleteProduct(1)
-        viewModel.deleteProduct(2)
+    fun `상품 삭제 시 페이지 수가 줄어들 경우 마지막 페이지로 이동한다`() {
+        // 마지막 페이지로 이동
+        viewModel.addPage()
+        viewModel.addPage()
 
-        // Then
-        val products = viewModel.uiState.getOrAwaitValue()
-        assertThat(products.carts).hasSize(5)
+        // 상품 두 개 삭제
+        viewModel.deleteProduct(11)
+        viewModel.deleteProduct(10)
+
+        val state = viewModel.uiState.getOrAwaitValue()
+
+        assertAll(
+            { assertThat(state.pageState.page).isEqualTo(2) },
+            { assertThat(state.items.map { it.item.id }).containsExactly(6L, 7L, 8L, 9L) },
+        )
     }
 }

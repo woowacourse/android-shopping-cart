@@ -14,10 +14,13 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.view.cart.adapter.CartAdapter
+import woowacourse.shopping.view.cart.vm.CartUiEvent
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
+import woowacourse.shopping.view.core.ext.showToast
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
 
-class CartActivity : AppCompatActivity(), CartAdapter.Handler {
+class CartActivity : AppCompatActivity(), CartQuantityHandler, CartAdapter.Handler {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         val container = (application as App).container
@@ -27,21 +30,26 @@ class CartActivity : AppCompatActivity(), CartAdapter.Handler {
         )
     }
     private val cartAdapter by lazy {
-        CartAdapter(items = emptyList(), handler = this)
+        CartAdapter(items = emptyList(), handler = this, cartQuantityHandler = this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        viewModel.loadCarts()
+
+        setUpBinding()
+        setUpSystemBars()
+        initView()
+        observeViewModel()
+    }
+
+    private fun setUpBinding() {
         with(binding) {
             lifecycleOwner = this@CartActivity
             adapter = cartAdapter
             vm = viewModel
         }
-        viewModel.loadCarts()
-        setUpSystemBars()
-        initView()
-        observeViewModel()
     }
 
     private fun setUpSystemBars() {
@@ -64,7 +72,17 @@ class CartActivity : AppCompatActivity(), CartAdapter.Handler {
 
     private fun observeViewModel() {
         viewModel.uiState.observe(this) { value ->
-            cartAdapter.submitList(value.carts)
+            cartAdapter.submitList(value.items)
+        }
+
+        viewModel.event.observe(this) { value ->
+            when (value) {
+                is CartUiEvent.ShowCannotIncrease ->
+                    showToast(
+                        getString(R.string.text_over_quantity)
+                            .format(value.quantity),
+                    )
+            }
         }
     }
 
@@ -81,6 +99,14 @@ class CartActivity : AppCompatActivity(), CartAdapter.Handler {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onClickIncrease(productId: Long) {
+        viewModel.increaseCartQuantity(productId)
+    }
+
+    override fun onClickDecrease(productId: Long) {
+        viewModel.decreaseCartQuantity(productId)
     }
 
     companion object {
