@@ -36,7 +36,7 @@ class ProductsAdapter(
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {
         val newProducts = mainRecyclerViewProduct.page.items
-        val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItems.items
+        val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItems
 
         val quantityMap =
             newProducts.associateWith { product ->

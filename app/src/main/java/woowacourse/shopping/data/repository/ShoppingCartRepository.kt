@@ -7,6 +7,8 @@ import woowacourse.shopping.domain.ShoppingCartItem
 interface ShoppingCartRepository {
     fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem>
 
+    fun findAll(): List<ShoppingCartItem>
+
     fun totalSize(): Int
 
     fun remove(item: ShoppingCartItem)

@@ -99,9 +99,7 @@ class MainActivity :
     private fun updateProductList() {
         viewModel.updateShoppingCartSize()
         productsAdapter.clear()
-        (0..productsAdapter.currentPage).forEach {
-            viewModel.requestProductsPage(it)
-        }
+        viewModel.updateShoppingCart(productsAdapter.currentPage)
     }
 }
 

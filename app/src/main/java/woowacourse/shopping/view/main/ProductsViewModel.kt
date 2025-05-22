@@ -35,7 +35,7 @@ class ProductsViewModel(
                 requestPage = requestPage,
             )
         val page = productsRepository.findAll(pageRequest)
-        val shoppingCartItems = shoppingCartRepository.findAll(pageRequest)
+        val shoppingCartItems = shoppingCartRepository.findAll()
 
         _productsLiveData.value =
             MainRecyclerViewProduct(
@@ -58,6 +58,12 @@ class ProductsViewModel(
 
     fun updateShoppingCartSize() {
         totalShoppingCartSize.value = shoppingCartRepository.totalQuantity()
+    }
+
+    fun updateShoppingCart(currentPage: Int) {
+        (0..currentPage).forEach {
+            requestProductsPage(it)
+        }
     }
 
     companion object {

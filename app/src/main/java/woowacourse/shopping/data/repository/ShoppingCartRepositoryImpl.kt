@@ -16,6 +16,10 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         return pageRequest.toPage(items, totalSize())
     }
 
+    override fun findAll(): List<ShoppingCartItem> {
+        return DummyShoppingCart.items
+    }
+
     override fun totalSize(): Int = DummyShoppingCart.items.size
 
     override fun remove(item: ShoppingCartItem) {
