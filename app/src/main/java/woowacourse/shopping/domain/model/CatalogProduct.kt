@@ -14,7 +14,7 @@ data class CatalogProduct(
         if (quantity - delta >= 0) {
             copy(quantity = quantity - delta)
         } else {
-            this
+            copy(quantity = 0)
         }
 
     companion object {
