@@ -6,6 +6,7 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 fun CartProductEntity.toUiModel(): ProductUiModel =
     with(this) {
         ProductUiModel(
+            uid,
             imageUrl,
             name,
             price,
@@ -16,7 +17,7 @@ fun CartProductEntity.toUiModel(): ProductUiModel =
 fun ProductUiModel.toEntity(): CartProductEntity =
     with(this) {
         CartProductEntity(
-            0,
+            id,
             imageUrl,
             name,
             price,

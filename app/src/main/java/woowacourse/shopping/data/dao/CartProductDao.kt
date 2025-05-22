@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
-import androidx.room.Update
+import androidx.room.Upsert
 import woowacourse.shopping.data.entity.CartProductEntity
 
 @Dao
@@ -22,7 +22,7 @@ interface CartProductDao {
         endIndex: Int,
     ): List<CartProductEntity>
 
-    @Update
+    @Upsert
     fun updateProduct(product: CartProductEntity)
 
     @Query("SELECT COUNT(*) FROM CartProducts")
