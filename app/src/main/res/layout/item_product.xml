@@ -22,7 +22,8 @@
         android:id="@+id/cl_product_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_margin="16dp"
+        android:onClick="@{() -> itemClickListener.onClickProductItem(cartItem)}">
 
         <ImageView
             android:id="@+id/iv_product"
@@ -59,7 +60,7 @@
             android:layout_marginBottom="8dp"
             android:contentDescription="@null"
             android:elevation="2dp"
-            android:onClick="@{() -> itemClickListener.onAddToCartClick(cartItem)}"
+            android:onClick="@{() -> itemClickListener.onClickAddToCart(cartItem)}"
             android:src="@drawable/ic_add"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="@id/iv_product"

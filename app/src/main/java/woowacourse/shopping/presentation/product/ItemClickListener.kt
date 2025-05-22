@@ -3,5 +3,7 @@ package woowacourse.shopping.presentation.product
 import woowacourse.shopping.domain.model.CartItem
 
 interface ItemClickListener {
-    fun onAddToCartClick(cartItem: CartItem)
+    fun onClickProductItem(cartItem: CartItem)
+
+    fun onClickAddToCart(cartItem: CartItem)
 }

@@ -35,8 +35,7 @@ class ProductActivity :
     }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
-            onClick = { cartItem -> navigateToProductDetail(cartItem.product) },
-            onClickLoadMore = { viewModel.loadMore() },
+            onClickLoadMore = ::handleLoadMoreClick,
             cartCounterClickListener = this,
             itemClickListener = this,
         )
@@ -149,10 +148,22 @@ class ProductActivity :
         }
     }
 
+    override fun onClickProductItem(cartItem: CartItem) {
+        navigateToProductDetail(cartItem.product)
+    }
+
+    override fun onClickAddToCart(cartItem: CartItem) {
+        viewModel.addToCart(cartItem)
+    }
+
     private fun showToast(
         @StringRes messageResId: Int,
     ) {
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleLoadMoreClick() {
+        viewModel.loadMore()
     }
 
     private fun navigateToProductDetail(product: Product) {
@@ -163,10 +174,6 @@ class ProductActivity :
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
         startActivity(intent)
-    }
-
-    override fun onAddToCartClick(cartItem: CartItem) {
-        viewModel.addToCart(cartItem)
     }
 
     override fun onClickMinus(id: Long) {

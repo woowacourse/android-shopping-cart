@@ -10,7 +10,6 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.cart.CartCounterClickListener
 
 class ProductAdapter(
-    private val onClick: (CartItem) -> Unit,
     private val onClickLoadMore: () -> Unit,
     private val cartCounterClickListener: CartCounterClickListener,
     private val itemClickListener: ItemClickListener,
@@ -43,12 +42,12 @@ class ProductAdapter(
         return when (viewType) {
             R.layout.item_product -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ProductViewHolder(binding, onClick, cartCounterClickListener, itemClickListener)
+                ProductViewHolder(binding, cartCounterClickListener, itemClickListener)
             }
 
             R.layout.item_load_more -> {
                 val binding = ItemLoadMoreBinding.inflate(inflater, parent, false)
-                LoadMoreViewHolder(binding, onClickLoadMore)
+                LoadMoreViewHolder(binding)
             }
 
             else -> throw IllegalArgumentException("Invalid view type")
@@ -61,7 +60,7 @@ class ProductAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> holder.bind(items[position])
-            is LoadMoreViewHolder -> Unit
+            is LoadMoreViewHolder -> holder.bind(onClickLoadMore)
         }
     }
 
@@ -71,13 +70,11 @@ class ProductAdapter(
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        private val onClick: (CartItem) -> Unit,
         private val cartCounterClickListener: CartCounterClickListener,
         private val itemClickListener: ItemClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CartItem) {
             binding.cartItem = item
-            binding.clProductItem.setOnClickListener { onClick(item) }
             binding.itemClickListener = itemClickListener
             binding.counterClickListener = cartCounterClickListener
             binding.executePendingBindings()
@@ -85,11 +82,11 @@ class ProductAdapter(
     }
 
     class LoadMoreViewHolder(
-        binding: ItemLoadMoreBinding,
-        onClickLoadMore: () -> Unit,
+        private val binding: ItemLoadMoreBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.btnLoadMore.setOnClickListener { onClickLoadMore() }
+        fun bind(onClickLoadMore: () -> Unit) {
+            binding.onClickLoadMore = onClickLoadMore
+            binding.executePendingBindings()
         }
     }
 }
