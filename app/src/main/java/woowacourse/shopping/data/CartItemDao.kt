@@ -11,16 +11,16 @@ interface CartItemDao {
     suspend fun insertCartItem(cartItem: CartItem)
 
     @Delete
-    suspend fun deleteCartItem(cartItem: CartItem)
+    fun deleteCartItem(cartItem: CartItem)
 
     @Query("SELECT * FROM CartItemEntity WHERE uid = :uid")
-    suspend fun getCartItemByUid(uid: Int): CartItem
+    fun getCartItemByUid(uid: Int): CartItem
 
     @Query("SELECT * FROM CartItemEntity")
-    suspend fun getAll(): List<CartItem>
+    fun getAll(): List<CartItem>
 
     @Query("UPDATE CartItemEntity SET quantity = :quantity WHERE uid = :uid")
-    suspend fun updateQuantity(
+    fun updateQuantity(
         uid: Long,
         quantity: Int,
     )

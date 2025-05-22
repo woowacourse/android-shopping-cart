@@ -13,7 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.cart.CartItemRepository
+import woowacourse.shopping.data.CartItemDatabase
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.product.detail.DetailViewModel.Companion.factory
@@ -23,9 +24,11 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
 
     private val viewModel by lazy {
+        val db = CartItemDatabase.getInstance(this)
+        val repository = CartItemRepository(db.cartItemDao())
         ViewModelProvider(
             this,
-            factory(CartDatabase),
+            factory(repository),
         )[DetailViewModel::class.java]
     }
 
