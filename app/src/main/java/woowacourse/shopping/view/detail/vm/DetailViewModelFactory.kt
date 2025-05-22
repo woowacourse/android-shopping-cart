@@ -2,20 +2,14 @@ package woowacourse.shopping.view.detail.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.storage.CartStorage
-import woowacourse.shopping.data.storage.CartStorageImpl
-import woowacourse.shopping.data.storage.ProductStorage
-import woowacourse.shopping.data.storage.ProductStorageImpl
+import woowacourse.shopping.view.ShoppingApp.Companion.cartRepository
+import woowacourse.shopping.view.ShoppingApp.Companion.productRepository
 
-class DetailViewModelFactory(private val shoppingDatabase: ShoppingDatabase) :
+class DetailViewModelFactory :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
-            val productStorage: ProductStorage = ProductStorageImpl()
-            val cartStorage: CartStorage = CartStorageImpl(shoppingDatabase.productDao())
-
-            return DetailViewModel(productStorage, cartStorage) as T
+            return DetailViewModel(cartRepository, productRepository) as T
         }
         throw IllegalArgumentException()
     }
