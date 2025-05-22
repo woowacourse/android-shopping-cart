@@ -25,6 +25,9 @@ class CartViewModel(
     private val _pageEvent = SingleLiveEvent<Int>()
     val pageEvent: LiveData<Int> = _pageEvent
 
+    private val _product = MutableLiveData<ProductUiModel>()
+    val product: LiveData<ProductUiModel> = _product
+
     init {
         loadCartProducts()
     }
@@ -57,11 +60,32 @@ class CartViewModel(
         }
     }
 
+    fun increaseQuantity(product: ProductUiModel) {
+        thread {
+            val newProduct = product.copy(quantity = product.quantity + 1)
+            _product.postValue(newProduct)
+            repository.updateCartItem(newProduct)
+        }
+    }
+
+    fun decreaseQuantity(product: ProductUiModel) {
+        thread {
+            val newProduct =
+                if (product.quantity > 1) {
+                    product.copy(quantity = product.quantity - 1)
+                } else {
+                    product.copy(quantity = 1)
+                }
+            _product.postValue(newProduct)
+            repository.updateCartItem(newProduct)
+        }
+    }
+
     override fun isNextButtonEnabled(): Boolean = _isNextButtonEnabled.value == true
 
     override fun isPrevButtonEnabled(): Boolean = _isPrevButtonEnabled.value == true
 
-    override fun isPaginationEnabled(): Boolean = isNextButtonEnabled() || isPrevButtonEnabled()
+    override fun isPaginationEnabled(): Boolean = (_isNextButtonEnabled.value == true) || (_isPrevButtonEnabled.value == true)
 
     override fun getPage(): Int = currentPage
 

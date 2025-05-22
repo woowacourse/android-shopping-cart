@@ -3,20 +3,22 @@ package woowacourse.shopping.cart
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.product.ProductQuantityHandler
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartAdapter(
     private var cartProducts: List<ProductUiModel>,
-    private val handler: CartEventHandlerImpl,
+    private val cartHandler: CartEventHandler,
+    private val handler: ProductQuantityHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == VIEW_TYPE_CART_PRODUCT) {
-            CartViewHolder.from(parent, handler)
+            CartViewHolder.from(parent, cartHandler, handler)
         } else {
-            PaginationButtonViewHolder.from(parent, handler)
+            PaginationButtonViewHolder.from(parent, cartHandler)
         }
 
     override fun onBindViewHolder(
@@ -27,9 +29,9 @@ class CartAdapter(
             is CartViewHolder -> holder.bind(cartProducts[position])
             is PaginationButtonViewHolder ->
                 holder.bind(
-                    page = handler.getPage(),
-                    isNextButtonEnabled = handler.isNextButtonEnabled(),
-                    isPrevButtonEnabled = handler.isPrevButtonEnabled(),
+                    page = cartHandler.getPage(),
+                    isNextButtonEnabled = cartHandler.isNextButtonEnabled(),
+                    isPrevButtonEnabled = cartHandler.isPrevButtonEnabled(),
                 )
         }
     }
@@ -58,9 +60,20 @@ class CartAdapter(
         }
     }
 
-    private fun shouldShowPagination(): Boolean = handler.isNextButtonEnabled() || handler.isPrevButtonEnabled()
+    private fun shouldShowPagination(): Boolean = cartHandler.isNextButtonEnabled() || cartHandler.isPrevButtonEnabled()
 
     override fun getItemCount(): Int = cartProducts.size + if (shouldShowPagination()) 1 else 0
+
+    fun updateProduct(product: ProductUiModel) {
+        val index = cartProducts.indexOfFirst { it.id == product.id }
+        if (index != -1) {
+            cartProducts =
+                cartProducts.toMutableList().apply {
+                    set(index, product)
+                }
+            notifyItemChanged(index)
+        }
+    }
 
     companion object {
         private val VIEW_TYPE_CART_PRODUCT = R.layout.product_item

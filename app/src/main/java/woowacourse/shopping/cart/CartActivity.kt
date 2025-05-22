@@ -45,14 +45,22 @@ class CartActivity : AppCompatActivity() {
         binding.recyclerViewCart.adapter =
             CartAdapter(
                 cartProducts = emptyList(),
+                cartHandler = handler,
                 handler = handler,
             )
     }
 
     private fun observeCartProducts() {
+        val adapter = binding.recyclerViewCart.adapter as CartAdapter
+
         viewModel.cartProducts.observe(this) { value ->
-            (binding.recyclerViewCart.adapter as CartAdapter).setData(value)
+            adapter.setData(value)
         }
+
+        viewModel.product.observe(this) { product ->
+            adapter.updateProduct(product)
+        }
+
         binding.lifecycleOwner = this
     }
 
