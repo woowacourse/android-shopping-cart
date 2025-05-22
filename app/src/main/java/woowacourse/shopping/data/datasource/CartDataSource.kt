@@ -5,7 +5,16 @@ import woowacourse.shopping.data.db.CartEntity
 interface CartDataSource {
     fun getAll(): List<CartEntity>
 
-    fun getCartItemCount(): Int
+    fun getTotalQuantity(): Int
+
+    fun loadCartItems(
+        offset: Int,
+        limit: Int,
+    ): List<CartEntity>
+
+    fun existsItemCreatedAfter(createdAt: Long): Boolean
+
+    fun findCartItemByProductId(productId: Long): CartEntity
 
     fun addCartItem(
         productId: Long,
@@ -15,15 +24,4 @@ interface CartDataSource {
     fun decreaseCartItemQuantity(productId: Long)
 
     fun deleteCartItem(productId: Long)
-
-    fun loadCartItems(
-        offset: Int,
-        limit: Int,
-    ): List<CartEntity>
-
-    fun findCartItemByProductId(productId: Long): CartEntity
-
-    fun findQuantityByProductId(productId: Long): Int
-
-    fun existsItemCreatedAfter(createdAt: Long): Boolean
 }

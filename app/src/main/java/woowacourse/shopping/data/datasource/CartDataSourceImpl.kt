@@ -8,7 +8,12 @@ class CartDataSourceImpl(
 ) : CartDataSource {
     override fun getAll(): List<CartEntity> = cartDao.getAll()
 
-    override fun getCartItemCount(): Int = cartDao.getTotalQuantity()
+    override fun getTotalQuantity(): Int = cartDao.getTotalQuantity()
+
+    override fun loadCartItems(
+        offset: Int,
+        limit: Int,
+    ): List<CartEntity> = cartDao.getCartItemPaged(limit, offset)
 
     override fun addCartItem(
         productId: Long,
@@ -18,6 +23,12 @@ class CartDataSourceImpl(
         cartDao.insertOrUpdate(entity, increaseQuantity)
     }
 
+    override fun existsItemCreatedAfter(createdAt: Long): Boolean = cartDao.existsItemCreatedAfter(createdAt)
+
+    override fun findCartItemByProductId(productId: Long): CartEntity =
+        cartDao.findByProductId(productId)
+            ?: throw NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE.format(productId))
+
     override fun decreaseCartItemQuantity(productId: Long) {
         cartDao.decreaseOrDelete(productId)
     }
@@ -25,18 +36,6 @@ class CartDataSourceImpl(
     override fun deleteCartItem(productId: Long) {
         cartDao.delete(productId)
     }
-
-    override fun loadCartItems(
-        offset: Int,
-        limit: Int,
-    ): List<CartEntity> = cartDao.getCartItemPaged(limit, offset)
-
-    override fun findCartItemByProductId(productId: Long): CartEntity =
-        cartDao.findCartItemByProductId(productId) ?: throw NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE.format(productId))
-
-    override fun findQuantityByProductId(productId: Long): Int = cartDao.findQuantityByProductId(productId)
-
-    override fun existsItemCreatedAfter(createdAt: Long): Boolean = cartDao.existsItemCreatedAfter(createdAt)
 
     companion object {
         private const val NO_SUCH_ELEMENT_MESSAGE = "%d에 해당하는 상품을 찾을 수 없습니다."

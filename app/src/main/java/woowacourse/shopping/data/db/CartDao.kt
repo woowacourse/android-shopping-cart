@@ -20,17 +20,11 @@ interface CartDao {
         offset: Int,
     ): List<CartEntity>
 
-    @Query("SELECT * FROM CartEntity WHERE productId = :productId")
-    fun findCartItemByProductId(productId: Long): CartEntity?
-
     @Query("SELECT EXISTS(SELECT 1 FROM CartEntity WHERE createdAt > :createdAt)")
     fun existsItemCreatedAfter(createdAt: Long): Boolean
 
     @Query("SELECT * FROM CartEntity WHERE productId = :productId")
     fun findByProductId(productId: Long): CartEntity?
-
-    @Query("SELECT quantity FROM CartEntity WHERE productId = :productId")
-    fun findQuantityByProductId(productId: Long): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(product: CartEntity)
@@ -43,6 +37,9 @@ interface CartDao {
 
     @Query("UPDATE CartEntity SET quantity = quantity - 1 WHERE productId = :productId AND quantity > 1")
     fun decreaseQuantity(productId: Long)
+
+    @Query("DELETE FROM CartEntity WHERE productId = :id")
+    fun delete(id: Long)
 
     @Transaction
     fun insertOrUpdate(
@@ -58,7 +55,4 @@ interface CartDao {
         val foundProduct = findByProductId(productId)
         if (foundProduct != null && foundProduct.quantity <= 1) delete(productId) else decreaseQuantity(productId)
     }
-
-    @Query("DELETE FROM CartEntity WHERE productId = :id")
-    fun delete(id: Long)
 }

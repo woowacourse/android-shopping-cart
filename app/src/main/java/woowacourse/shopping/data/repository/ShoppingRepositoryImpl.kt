@@ -20,7 +20,7 @@ class ShoppingRepositoryImpl(
 
     override fun getCartItemCount(onResult: (Result<Int>) -> Unit) =
         runCatchingInThread(onResult) {
-            cartDataSource.getCartItemCount()
+            cartDataSource.getTotalQuantity()
         }
 
     override fun loadProducts(
@@ -58,7 +58,7 @@ class ShoppingRepositoryImpl(
         productId: Long,
         onResult: (Result<Int>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        cartDataSource.findQuantityByProductId(productId)
+        cartDataSource.findCartItemByProductId(productId).quantity
     }
 
     override fun addCartItem(
@@ -85,7 +85,7 @@ class ShoppingRepositoryImpl(
 
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map {
-            val quantity = cartDataSource.findQuantityByProductId(it.id)
+            val quantity = cartDataSource.findCartItemByProductId(it.id).quantity
             CartItem(it, quantity)
         }
 
