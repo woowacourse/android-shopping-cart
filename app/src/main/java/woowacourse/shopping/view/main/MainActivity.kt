@@ -138,13 +138,10 @@ class MainActivity :
             val layoutProductQuantitySelector = view.findViewById<View>(R.id.layout_product_quantity_selector)
 
             quantity.value?.let { quantityValue ->
-                if (quantityValue < 1) {
-                    btnItemProductAddToCart.visibility = View.VISIBLE
-                    layoutProductQuantitySelector.visibility = View.GONE
-                } else {
-                    btnItemProductAddToCart.visibility = View.GONE
-                    layoutProductQuantitySelector.visibility = View.VISIBLE
-                }
+                btnItemProductAddToCart.visibility =
+                    viewModel.onProductAddedButtonViewRule(quantityValue)
+                layoutProductQuantitySelector.visibility =
+                    viewModel.onProductAddedQuantitySelectorViewRule(quantityValue)
             }
         }
     }

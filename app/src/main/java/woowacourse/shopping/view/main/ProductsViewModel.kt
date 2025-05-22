@@ -25,8 +25,17 @@ class ProductsViewModel(
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
     val totalSize: Int get() = productsRepository.totalSize()
     val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalQuantity())
+
     val menuBadgeViewRule = { text: String ->
         if (text.toInt() > MINIMUM_BADGE_DISPLAY_QUANTITY) View.VISIBLE else View.GONE
+    }
+
+    val onProductAddedButtonViewRule: (Int) -> Int = { quantityValue: Int ->
+        if (quantityValue < 1) View.VISIBLE else View.GONE
+    }
+
+    val onProductAddedQuantitySelectorViewRule: (Int) -> Int = { quantityValue: Int ->
+        if (quantityValue < 1) View.GONE else View.VISIBLE
     }
 
     fun requestProductsPage(requestPage: Int) {
