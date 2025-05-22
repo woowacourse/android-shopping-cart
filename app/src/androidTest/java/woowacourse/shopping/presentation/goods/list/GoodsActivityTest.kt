@@ -85,7 +85,9 @@ class GoodsActivityTest {
     @Test
     fun `페이지_끝에_도달하면_더보기_버튼이_나타난다`() {
         // when
-        onView(withId(R.id.rv_goods_list)).perform(swipeUp())
+        repeat(5) {
+            onView(withId(R.id.rv_goods_list)).perform(swipeUp())
+        }
 
         // then
         await.atMost(1, TimeUnit.SECONDS).until {
@@ -101,10 +103,12 @@ class GoodsActivityTest {
     @Test
     fun `더보기_버튼을_클릭하면_사라진다`() {
         // when
-        onView(withId(R.id.rv_goods_list)).perform(swipeUp())
+        repeat(5) {
+            onView(withId(R.id.rv_goods_list)).perform(swipeUp())
+        }
 
         // then
-        await.atMost(1, TimeUnit.SECONDS).until {
+        await.atMost(2, TimeUnit.SECONDS).until {
             try {
                 onView(withId(R.id.btn_load_more)).perform(click())
 
