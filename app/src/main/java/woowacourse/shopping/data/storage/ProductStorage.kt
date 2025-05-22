@@ -27,7 +27,7 @@ object ProductStorage {
                 2L,
                 "비비고 통새우 만두 200g",
                 "https://images.emarteveryday.co.kr/images/product/8801392067167/vSYMPCA3qqbLJjhv.png",
-                Price(81980),
+                Price(2000),
                 Quantity(10),
             ),
             Product(
