@@ -48,7 +48,7 @@ class ProductsViewModel(
         }
     }
 
-    fun updateShoppingCart(onSuccess: () -> Unit) {
+    fun updateShoppingCart(onUpdate: () -> Unit) {
         val productItems: List<ProductsItem.ProductItem> =
             productItems.value?.filterIsInstance<ProductsItem.ProductItem>() ?: return
 
@@ -60,10 +60,10 @@ class ProductsViewModel(
         shoppingCartRepository.update(cartItemsToUpdate) { result: Result<Unit> ->
             result
                 .onSuccess {
-                    onSuccess()
                 }.onFailure {
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }
+            onUpdate()
         }
     }
 
