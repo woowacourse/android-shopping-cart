@@ -95,6 +95,7 @@
             app:layout_constraintBottom_toTopOf="@id/btn_shopping_cart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{vm.lastGoods == null ? View.INVISIBLE : View.VISIBLE}"
             bind:goodsName="@{vm.lastGoods.name}" />
 
         <androidx.appcompat.widget.AppCompatButton
