@@ -1,5 +1,8 @@
 package woowacourse.shopping.util
 
+/**
+ * 출처: MVVM 피드백 강의자료
+ */
 class MutableSingleLiveData<T> : SingleLiveData<T> {
     constructor() : super()
 

@@ -3,6 +3,9 @@ package woowacourse.shopping.util
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 
+/**
+ * 출처: MVVM 피드백 강의자료
+ */
 abstract class SingleLiveData<T> {
     private val liveData = MutableLiveData<Event<T>>()
 
