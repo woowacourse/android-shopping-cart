@@ -20,6 +20,11 @@ interface CartDataSource {
         onResult: (Result<List<CartEntity>>) -> Unit,
     )
 
+    fun existsByProductId(
+        productId: Long,
+        onResult: (Result<Boolean>) -> Unit,
+    )
+
     fun increaseQuantity(
         productId: Long,
         quantity: Int,
@@ -31,17 +36,12 @@ interface CartDataSource {
         onResult: (Result<Unit>) -> Unit,
     )
 
-    fun existsByProductId(
-        productId: Long,
-        onResult: (Result<Boolean>) -> Unit,
-    )
-
     fun insertProduct(
         cartEntity: CartEntity,
         onResult: (Result<Unit>) -> Unit,
     )
 
-    fun deleteProduct(
+    fun deleteProductById(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     )

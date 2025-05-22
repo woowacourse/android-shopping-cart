@@ -9,21 +9,9 @@ interface CartRepository {
 
     fun getTotalQuantity(onResult: (Result<Int?>) -> Unit)
 
-    fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit)
-
     fun getCartItemById(
         productId: Long,
         onResult: (Result<CartEntity?>) -> Unit,
-    )
-
-    fun removeFromCart(
-        productId: Long,
-        onResult: (Result<Long>) -> Unit,
-    )
-
-    fun existsByProductId(
-        productId: Long,
-        onResult: (Result<Boolean>) -> Unit,
     )
 
     fun insertProduct(

@@ -91,7 +91,7 @@ class CartDataSourceImpl(
         )
     }
 
-    override fun deleteProduct(
+    override fun deleteProductById(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) {

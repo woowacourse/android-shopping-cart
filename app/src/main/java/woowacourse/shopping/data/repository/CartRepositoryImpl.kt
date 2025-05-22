@@ -31,36 +31,12 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit) {
-        TODO("Not yet implemented")
-    }
-
     override fun getCartItemById(
         productId: Long,
         onResult: (Result<CartEntity?>) -> Unit,
     ) {
         runCatching {
             cartDataSource.getCartItemById(productId) { result ->
-                onResult(result)
-            }
-        }.onFailure { e ->
-            onResult(Result.failure(e))
-        }
-    }
-
-    override fun removeFromCart(
-        productId: Long,
-        onResult: (Result<Long>) -> Unit,
-    ) {
-        TODO("Not yet implemented")
-    }
-
-    override fun existsByProductId(
-        productId: Long,
-        onResult: (Result<Boolean>) -> Unit,
-    ) {
-        runCatching {
-            cartDataSource.existsByProductId(productId) { result ->
                 onResult(result)
             }
         }.onFailure { e ->
@@ -137,7 +113,7 @@ class CartRepositoryImpl(
         onResult: (Result<Unit>) -> Unit,
     ) {
         runCatching {
-            cartDataSource.deleteProduct(productId) { result ->
+            cartDataSource.deleteProductById(productId) { result ->
                 onResult(result)
             }
         }.onFailure { e ->

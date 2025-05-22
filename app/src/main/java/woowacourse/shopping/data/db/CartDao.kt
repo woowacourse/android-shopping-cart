@@ -24,6 +24,9 @@ interface CartDao {
         offset: Int,
     ): List<CartEntity>
 
+    @Query("SELECT EXISTS(SELECT 1 FROM cart WHERE product_id = :productId)")
+    fun existsByProductId(productId: Long): Boolean
+
     @Query("UPDATE cart SET quantity = quantity + :quantity WHERE product_id = :productId")
     fun increaseQuantity(
         productId: Long,
@@ -32,9 +35,6 @@ interface CartDao {
 
     @Query("UPDATE cart SET quantity = quantity - 1 WHERE product_id = :productId")
     fun decreaseQuantity(productId: Long)
-
-    @Query("SELECT EXISTS(SELECT 1 FROM cart WHERE product_id = :productId)")
-    fun existsByProductId(productId: Long): Boolean
 
     @Insert
     fun insertProduct(cartEntity: CartEntity)
