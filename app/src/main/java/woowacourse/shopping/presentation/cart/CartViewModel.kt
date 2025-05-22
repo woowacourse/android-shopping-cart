@@ -24,13 +24,11 @@ class CartViewModel(
     val toastMessage: LiveData<Int> = _toastMessage
 
     init {
-        loadItems()
+        loadItems(FIRST_PAGE)
     }
 
-    private fun loadItems() {
-        val page = _currentPage.value ?: 0
-
-        productRepository.getPagedCartItems(PAGE_SIZE, page) { result ->
+    fun loadItems(currentPage: Int) {
+        productRepository.getPagedCartItems(PAGE_SIZE, currentPage) { result ->
             result
                 .onSuccess { pagedProducts -> _products.postValue(ResultState.Success(pagedProducts)) }
                 .onFailure { _products.postValue(ResultState.Failure()) }
@@ -42,22 +40,27 @@ class CartViewModel(
         }
     }
 
-    fun changePage(next: Boolean) {
+    fun changeNextPage() {
         val currentPage = _currentPage.value ?: 0
         val totalPages = _totalPages.value ?: 0
 
-        if (!next && currentPage == 0) {
-            _toastMessage.value = R.string.cart_toast_first_page
-            return
-        }
-
-        if (next && currentPage >= totalPages - 1) {
+        if (currentPage >= totalPages - 1) {
             _toastMessage.value = R.string.cart_toast_last_page
             return
         }
 
-        _currentPage.value = if (next) currentPage + 1 else currentPage - 1
-        loadItems()
+        _currentPage.value = currentPage + 1
+    }
+
+    fun changePreviousPage() {
+        val currentPage = _currentPage.value ?: 0
+
+        if (currentPage == 0) {
+            _toastMessage.value = R.string.cart_toast_first_page
+            return
+        }
+
+        _currentPage.value = currentPage - 1
     }
 
     fun deleteProduct(cartItem: CartItem) {
@@ -155,6 +158,7 @@ class CartViewModel(
     }
 
     companion object {
+        private const val FIRST_PAGE = 1
         private const val PAGE_SIZE = 5
     }
 }

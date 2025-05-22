@@ -76,6 +76,10 @@ class CartActivity :
             }
         }
 
+        viewModel.currentPage.observe(this) { currentPage ->
+            viewModel.loadItems(currentPage)
+        }
+
         viewModel.toastMessage.observe(this) { resId ->
             showToast(resId)
         }
@@ -96,11 +100,11 @@ class CartActivity :
     }
 
     override fun onClickPrevious() {
-        viewModel.changePage(false)
+        viewModel.changePreviousPage()
     }
 
     override fun onClickNext() {
-        viewModel.changePage(true)
+        viewModel.changeNextPage()
     }
 
     override fun onClickDelete(cartItem: CartItem) {
