@@ -6,21 +6,26 @@
     <data>
 
         <variable
+            name="latestGoodsClickListener"
+            type="woowacourse.shopping.presentation.goods.list.LatestGoodsClickListener" />
+
+        <variable
             name="goods"
             type="woowacourse.shopping.presentation.model.GoodsUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:padding="6dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> latestGoodsClickListener.onLatestGoodsClick(goods)}"
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/iv_goods"
             android:layout_width="98dp"
             android:layout_height="98dp"
-            app:goodsImage="@{goods.imageUrl}"
             android:scaleType="centerCrop"
+            app:goodsImage="@{goods.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

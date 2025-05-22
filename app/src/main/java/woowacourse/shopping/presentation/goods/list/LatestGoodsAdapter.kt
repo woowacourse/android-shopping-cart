@@ -4,14 +4,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.GoodsUiModel
 
-class LatestGoodsAdapter() : RecyclerView.Adapter<LatestGoodsViewHolder>() {
+class LatestGoodsAdapter(
+    private val latestGoodsClickListener: LatestGoodsClickListener,
+) : RecyclerView.Adapter<LatestGoodsViewHolder>() {
     private val items: MutableList<GoodsUiModel> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): LatestGoodsViewHolder {
-        return LatestGoodsViewHolder(parent)
+        return LatestGoodsViewHolder(parent, latestGoodsClickListener)
     }
 
     override fun getItemCount(): Int = items.size

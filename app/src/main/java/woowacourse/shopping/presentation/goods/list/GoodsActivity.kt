@@ -32,7 +32,10 @@ class GoodsActivity : BaseActivity() {
         val goodsAdapter = makeAdapter()
         setUpGoodsList(goodsAdapter)
 
-        val latestGoodsAdapter = LatestGoodsAdapter()
+        val latestGoodsAdapter =
+            LatestGoodsAdapter { goods ->
+                navigateToDetail(goods)
+            }
         setUpLatestGoodsList(latestGoodsAdapter)
 
         setSupportActionBar(binding.toolbar)
