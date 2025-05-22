@@ -25,6 +25,8 @@ class ProductActivity :
     AppCompatActivity(),
     CartCounterClickListener {
     private lateinit var binding: ActivityProductBinding
+    private var _toolbarBinding: ViewCartActionBinding? = null
+    private val toolbarBinding get() = _toolbarBinding!!
     private val viewModel: ProductViewModel by viewModels {
         ProductViewModelFactory(applicationContext)
     }
@@ -51,27 +53,22 @@ class ProductActivity :
 
     override fun onResume() {
         super.onResume()
-//        viewModel.fetchData(0)
+        viewModel.fetchData(0)
+        viewModel.fetchCartItemCount()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product, menu)
 
         val menuItem = menu?.findItem(R.id.action_cart)
-        val binding = ViewCartActionBinding.inflate(layoutInflater)
-        menuItem?.actionView = binding.root
+        _toolbarBinding = ViewCartActionBinding.inflate(layoutInflater)
+        menuItem?.actionView = _toolbarBinding?.root
 
-        binding.ivCart.setOnClickListener {
+        toolbarBinding.ivCart.setOnClickListener {
             navigateToCart()
         }
 
-        val itemCount = 99
-        if (itemCount > 0) {
-            binding.tvCartCount.text = itemCount.toString()
-            binding.tvCartCount.visibility = View.VISIBLE
-        } else {
-            binding.tvCartCount.visibility = View.GONE
-        }
+        viewModel.fetchCartItemCount()
 
         return true
     }
@@ -130,6 +127,13 @@ class ProductActivity :
                 is ResultState.Failure -> {
                     Log.d("aaa", "load fail")
                 }
+            }
+        }
+
+        viewModel.cartItemCount.observe(this) { count ->
+            toolbarBinding.tvCartCount.apply {
+                text = count.toString()
+                visibility = if (count!! > 0) View.VISIBLE else View.GONE
             }
         }
 
