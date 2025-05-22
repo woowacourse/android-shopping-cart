@@ -42,9 +42,16 @@ class InventoryAdapter(
         }
     }
 
-    fun updateProducts(newProducts: List<InventoryItem>) {
-        items.remove(ShowMore)
-        items.addAll(newProducts)
-        notifyItemInserted(itemCount)
+    fun updateProducts(newItems: List<InventoryItem>) {
+        newItems.forEachIndexed { index, newItem ->
+            val oldItem = items.getOrNull(index)
+            if (oldItem == null) {
+                items.add(newItem)
+                notifyItemInserted(index)
+            } else if (oldItem != newItem) {
+                items[index] = newItem
+                notifyItemChanged(index)
+            }
+        }
     }
 }

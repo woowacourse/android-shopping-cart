@@ -15,10 +15,10 @@ class InventoryViewModel(private val repository: InventoryRepository) : ViewMode
     val items: LiveData<List<InventoryItem>> get() = _items
 
     fun requestPage() {
-        val currentProducts = _items.value ?: emptyList()
+        val currentProducts = _items.value?.filterNot { item -> item == ShowMore } ?: emptyList()
         val newPage = repository.getPage(PAGE_SIZE, currentProducts.size / PAGE_SIZE)
         val newProducts: List<InventoryItem> = newPage.items.map(Product::toUiModel)
-        val newItems = newProducts + if (newPage.hasNext) listOf(ShowMore) else emptyList()
+        val newItems = currentProducts + newProducts + if (newPage.hasNext) listOf(ShowMore) else emptyList()
         _items.value = newItems
     }
 
