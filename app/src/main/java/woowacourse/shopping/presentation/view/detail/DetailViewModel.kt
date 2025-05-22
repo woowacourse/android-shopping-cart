@@ -38,8 +38,6 @@ class DetailViewModel(
     }
 
     fun fetchProduct(productId: Long) {
-        if (_product.value != null) return
-
         updateRecentProduct(productId)
 
         shoppingRepository

@@ -57,6 +57,11 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         binding.btnClose.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
+        binding.viewRecentProduct.setOnClickListener {
+            val recentProductId = viewModel.recentProduct.value?.id ?: return@setOnClickListener
+            viewModel.fetchProduct(recentProductId)
+        }
     }
 
     private fun fetchProductFromArguments() {
