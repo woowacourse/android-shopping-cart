@@ -42,9 +42,7 @@ class ProductRepositoryImpl(
                         if (completedCount == productPage.size) {
                             onResult(Result.success(resultList.filterNotNull()))
                         }
-                    }.onFailure { e ->
-                        onResult(Result.failure(e))
-                    }
+                    }.onFailure { e -> onResult(Result.failure(e)) }
             }
         }
     }
@@ -59,9 +57,7 @@ class ProductRepositoryImpl(
                             product?.let { CartItem(it, entity.quantity) }
                         }
                     onResult(Result.success(cartItems))
-                }.onFailure { e ->
-                    onResult(Result.failure(e))
-                }
+                }.onFailure { e -> onResult(Result.failure(e)) }
         }
     }
 
@@ -79,9 +75,7 @@ class ProductRepositoryImpl(
                             product?.let { CartItem(it, entity.quantity) }
                         }
                     onResult(Result.success(cartItems))
-                }.onFailure { e ->
-                    onResult(Result.failure(e))
-                }
+                }.onFailure { e -> onResult(Result.failure(e)) }
         }
     }
 }

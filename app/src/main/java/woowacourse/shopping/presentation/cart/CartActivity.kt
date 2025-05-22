@@ -95,7 +95,7 @@ class CartActivity :
                 }
 
                 is ResultState.Failure -> {
-                    showToast(R.string.cart_toast_load_failure)
+                    showToast(R.string.cart_toast_load_fail)
                 }
             }
         }

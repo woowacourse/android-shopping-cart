@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,12 +47,12 @@ class CartViewModel(
         val totalPages = _totalPages.value ?: 0
 
         if (!next && currentPage == 0) {
-            _toastMessage.value = R.string.cart_toast_first_page_toast
+            _toastMessage.value = R.string.cart_toast_first_page
             return
         }
 
         if (next && currentPage >= totalPages - 1) {
-            _toastMessage.value = R.string.cart_toast_last_page_toast
+            _toastMessage.value = R.string.cart_toast_last_page
             return
         }
 
@@ -69,7 +68,7 @@ class CartViewModel(
                 .onSuccess {
                     reloadProductsByPage(currentPage)
                 }.onFailure {
-                    Log.d("aaa", "delete fail")
+                    _toastMessage.value = R.string.cart_toast_delete_fail
                 }
         }
     }
@@ -104,7 +103,7 @@ class CartViewModel(
                 .onSuccess {
                     updateQuantity(productId, 1)
                 }.onFailure {
-                    Log.d("CartViewModel", "increase fail")
+                    _toastMessage.value = R.string.cart_toast_increase_fail
                 }
         }
     }
@@ -123,7 +122,7 @@ class CartViewModel(
                 .onSuccess {
                     updateQuantity(productId, -1)
                 }.onFailure {
-                    Log.d("CartViewModel", "decrease fail")
+                    _toastMessage.value = R.string.cart_toast_decrease_fail
                 }
         }
     }

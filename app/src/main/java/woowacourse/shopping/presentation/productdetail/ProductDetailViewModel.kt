@@ -32,7 +32,7 @@ class ProductDetailViewModel(
         cartRepository.insertOrIncrease(product, quantity) { result ->
             result
                 .onSuccess { _insertProductResult.postValue(ResultState.Success(Unit)) }
-                .onFailure { e -> _insertProductResult.postValue(ResultState.Failure(e)) }
+                .onFailure { _insertProductResult.postValue(ResultState.Failure()) }
         }
     }
 

@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.product
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.R
 import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
@@ -38,8 +38,8 @@ class ProductViewModel(
                 .onSuccess { cartItems ->
                     _products.postValue(ResultState.Success(cartItems))
                     this.currentPage = currentPage
-                }.onFailure { e ->
-                    Log.e("ProductViewModel", "Failed to load products", e)
+                }.onFailure {
+                    _toastMessage.value = R.string.product_toast_load_failure
                 }
         }
     }
@@ -50,7 +50,7 @@ class ProductViewModel(
                 .onSuccess { count ->
                     _cartItemCount.postValue(count ?: 0)
                 }.onFailure {
-                    Log.e("ProductViewModel", "Failed to load cart total quantity")
+                    _toastMessage.value = R.string.product_toast_load_total_cart_quantity_fail
                 }
         }
     }
@@ -77,7 +77,7 @@ class ProductViewModel(
                     updateQuantity(productId, 1)
                     fetchCartItemCount()
                 }.onFailure {
-                    Log.d("ProductViewModel", "increase fail")
+                    _toastMessage.value = R.string.product_toast_increase_fail
                 }
         }
     }
@@ -86,14 +86,14 @@ class ProductViewModel(
         val currentItems = (_products.value as? ResultState.Success)?.data ?: return
         val item = currentItems.find { it.product.productId == productId } ?: return
 
-        if (item.quantity <= 1) {
+        if (item.quantity == 1) {
             cartRepository.deleteProduct(productId) { result ->
                 result
                     .onSuccess {
                         updateQuantity(productId, -1)
                         fetchCartItemCount()
                     }.onFailure {
-                        Log.d("ProductViewModel", "delete fail")
+                        _toastMessage.value = R.string.product_toast_delete_fail
                     }
             }
         } else {
@@ -103,7 +103,7 @@ class ProductViewModel(
                         updateQuantity(productId, -1)
                         fetchCartItemCount()
                     }.onFailure {
-                        Log.d("ProductViewModel", "decrease fail")
+                        _toastMessage.value = R.string.product_toast_decrease_fail
                     }
             }
         }
@@ -116,7 +116,7 @@ class ProductViewModel(
                     updateQuantity(productId = cartItem.product.productId, 1)
                     fetchCartItemCount()
                 }.onFailure {
-                    Log.d("ProductViewModel", "add to Cart fail")
+                    _toastMessage.value = R.string.product_toast_add_cart_fail
                 }
         }
     }

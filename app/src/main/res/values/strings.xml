@@ -4,7 +4,11 @@
     <string name="product_toolbar_text">Shopping</string>
     <string name="product_price">%,d원</string>
     <string name="product_btn_load_more">상품 더보기</string>
-    <string name="product_toast_load_fail">수량은 1 이상이어야 합니다</string>
+    <string name="product_toast_add_cart_fail">상품을 추가하는 데 실패했습니다</string>
+    <string name="product_toast_increase_fail">수량을 증가시키는 데 실패했습니다</string>
+    <string name="product_toast_decrease_fail">수량을 감소시키는 데 실패했습니다</string>
+    <string name="product_toast_delete_fail">상품을 삭제시키는 데 실패했습니다</string>
+    <string name="product_toast_load_total_cart_quantity_fail">장바구니 상품의 총합을 불러오는 데 실패했습니다</string>
     <string name="product_toast_load_failure">상품을 불러오는 데 실패했습니다</string>
 
     <string name="product_detail_price_text">가격</string>
@@ -18,12 +22,14 @@
     <string name="cart_toolbar_text">Cart</string>
     <string name="cart_product_price">%,d원</string>
     <string name="cart_delete_complete">상품이 삭제되었습니다.</string>
-    <string name="cart_toast_first_page_toast">첫번째 페이지입니다.</string>
-    <string name="cart_toast_last_page_toast">마지막 페이지입니다.</string>
-    <string name="cart_toast_load_failure">장바구니 DB 조회를 실패하였습니다</string>
+    <string name="cart_toast_first_page">첫번째 페이지입니다.</string>
+    <string name="cart_toast_last_page">마지막 페이지입니다.</string>
     <string name="cart_toast_invalid_quantity">수량은 1 이상이어야 합니다</string>
     <string name="cart_toast_delete_success">장바구니에서 아이템을 삭제했습니다</string>
-    <string name="cart_toast_delete_failure">장바구니에서 아이템 삭제에 실패하였습니다</string>
+    <string name="cart_toast_load_fail">장바구니 DB 조회를 실패하였습니다</string>
+    <string name="cart_toast_increase_fail">수량을 증가시키는 데 실패하였습니다</string>
+    <string name="cart_toast_decrease_fail">수량을 감소시키는 데 실패하였습니다</string>
+    <string name="cart_toast_delete_fail">상품을 삭제하는 데 실패하였습니다</string>
 
     <string name="menu_cart_title">장바구니</string>
     <string name="menu_cart_detail_title">닫기</string>
