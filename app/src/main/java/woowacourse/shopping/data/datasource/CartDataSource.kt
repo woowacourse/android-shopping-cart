@@ -21,6 +21,8 @@ interface CartDataSource {
         limit: Int,
     ): List<CartEntity>
 
+    fun findCartItemByProductId(productId: Long): CartEntity
+
     fun findQuantityByProductId(productId: Long): Int
 
     fun existsItemCreatedAfter(createdAt: Long): Boolean

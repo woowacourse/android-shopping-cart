@@ -23,6 +23,11 @@ interface ShoppingRepository {
         onResult: (Result<PageableItem<CartItem>>) -> Unit,
     )
 
+    fun findCartItemByProductId(
+        productId: Long,
+        onResult: (Result<CartItem>) -> Unit,
+    )
+
     fun findQuantityByProductId(
         productId: Long,
         onResult: (Result<Int>) -> Unit,

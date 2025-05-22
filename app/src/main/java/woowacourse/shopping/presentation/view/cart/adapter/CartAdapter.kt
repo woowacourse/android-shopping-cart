@@ -25,29 +25,17 @@ class CartAdapter(
         holder.bind(products[position])
     }
 
-    fun updateQuantityAt(
-        productId: Long,
-        quantity: Int,
-    ) {
-        val oldItem = products.find { it.product.id == productId } ?: return
-        val newItem = oldItem.copy(quantity = quantity)
-        val position = products.indexOf(oldItem)
-        products[position] = newItem
-
-        notifyItemChanged(position)
-    }
-
     fun updateItemsManually(newProducts: List<CartItemUiModel>) {
         removeMissingItems(newProducts)
+        updateChangedItems(newProducts)
         addNewItems(newProducts)
     }
 
     private fun removeMissingItems(newProducts: List<CartItemUiModel>) {
         val iterator = products.listIterator()
-
         while (iterator.hasNext()) {
             val item = iterator.next()
-            if (newProducts.none { it.product.id == item.product.id }) {
+            if (newProducts.none { it.productId == item.productId }) {
                 val index = iterator.previousIndex()
                 iterator.remove()
                 notifyItemRemoved(index)
@@ -55,9 +43,19 @@ class CartAdapter(
         }
     }
 
+    private fun updateChangedItems(newProducts: List<CartItemUiModel>) {
+        newProducts.forEach { newItem ->
+            val oldIndex = products.indexOfFirst { it.productId == newItem.productId }
+            if (oldIndex != -1 && products[oldIndex] != newItem) {
+                products[oldIndex] = newItem
+                notifyItemChanged(oldIndex)
+            }
+        }
+    }
+
     private fun addNewItems(newProducts: List<CartItemUiModel>) {
         newProducts.forEach { newItem ->
-            val exists = products.any { it.product.id == newItem.product.id }
+            val exists = products.any { it.productId == newItem.productId }
             if (!exists) {
                 products.add(newItem)
                 notifyItemInserted(itemCount - 1)

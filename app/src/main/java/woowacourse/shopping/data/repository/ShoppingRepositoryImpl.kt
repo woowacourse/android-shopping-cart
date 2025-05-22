@@ -34,6 +34,13 @@ class ShoppingRepositoryImpl(
         PageableItem(cartItems, hasMore)
     }
 
+    override fun findCartItemByProductId(
+        productId: Long,
+        onResult: (Result<CartItem>) -> Unit,
+    ) = runCatchingInThread(onResult) {
+        cartDataSource.findCartItemByProductId(productId).toCartItem()
+    }
+
     override fun findProductInfoById(id: Long): Result<Product> = runCatching { productDataSource.findProductById(id) }
 
     override fun loadCartItems(

@@ -20,6 +20,9 @@ interface CartDao {
         offset: Int,
     ): List<CartEntity>
 
+    @Query("SELECT * FROM CartEntity WHERE productId = :productId")
+    fun findCartItemByProductId(productId: Long): CartEntity?
+
     @Query("SELECT EXISTS(SELECT 1 FROM CartEntity WHERE createdAt > :createdAt)")
     fun existsItemCreatedAfter(createdAt: Long): Boolean
 
