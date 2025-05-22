@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="nav_cart_text_normal">16sp</dimen>
+    <dimen name="nav_cart_text_small">13sp</dimen>
+</resources>

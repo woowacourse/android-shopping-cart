@@ -7,6 +7,8 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
+import woowacourse.shopping.util.MutableSingleLiveData
+import woowacourse.shopping.util.SingleLiveData
 import kotlin.math.min
 
 class GoodsViewModel(
@@ -18,10 +20,18 @@ class GoodsViewModel(
     val isFullLoaded: LiveData<Boolean> get() = _isFullLoaded
     private val _cartItemsWithZeroQuantity = MutableLiveData<List<CartItem>>()
     val cartItemsWithZeroQuantity: LiveData<List<CartItem>> get() = _cartItemsWithZeroQuantity
+    private var _totalCartItemSize: MutableLiveData<String> = MutableLiveData("0")
+    val totalCartItemSize: LiveData<String> get() = _totalCartItemSize
+    private val _navigateToCart = MutableSingleLiveData<Unit>()
+    val navigateToCart: SingleLiveData<Unit> get() = _navigateToCart
 
     init {
         appendCartItemsWithZeroQuantity()
         updateCartQuantity()
+    }
+
+    fun onCartClicked() {
+        _navigateToCart.setValue(Unit)
     }
 
     private fun appendCartItemsWithZeroQuantity() {
@@ -34,11 +44,19 @@ class GoodsViewModel(
     fun updateCartQuantity() {
         cartRepository.fetchAllCartItems { cartItems ->
             val cartItemsMap = cartItems.associateBy { it.goods.id }
-
             _cartItemsWithZeroQuantity.value =
                 goods.map { goods ->
                     cartItemsMap[goods.id] ?: CartItem(goods = goods, quantity = 0)
                 }
+            setTotalCartItemSize(cartItems.sumOf { it.quantity })
+        }
+    }
+
+    private fun setTotalCartItemSize(totalCartQuantity: Int) {
+        when {
+            totalCartQuantity < 1 -> _totalCartItemSize.value = "0"
+            totalCartQuantity in 1..99 -> _totalCartItemSize.value = totalCartQuantity.toString()
+            else -> _totalCartItemSize.value = "99+"
         }
     }
 

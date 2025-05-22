@@ -2,7 +2,6 @@ package woowacourse.shopping.feature.goods
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.component1
@@ -13,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.databinding.MenuCartNavbarBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.QuantityChangeListener
@@ -24,6 +24,7 @@ import woowacourse.shopping.util.toUi
 
 class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
+    private lateinit var navbarBinding: MenuCartNavbarBinding
     private val viewModel: GoodsViewModel by viewModels {
         GoodsViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
     }
@@ -60,6 +61,11 @@ class GoodsActivity : AppCompatActivity() {
         binding.viewModel = viewModel
 
         binding.rvCartItems.layoutManager = getLayoutManager()
+
+        viewModel.navigateToCart.observe(this) {
+            val intent = CartActivity.newIntent(this)
+            startActivity(intent)
+        }
     }
 
     private fun getLayoutManager(): GridLayoutManager {
@@ -84,17 +90,13 @@ class GoodsActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_cart, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+        val menuItem = menu?.findItem(R.id.nav_cart)
+        navbarBinding = MenuCartNavbarBinding.inflate(layoutInflater)
+        navbarBinding.lifecycleOwner = this
+        navbarBinding.viewModel = viewModel
+        menuItem?.actionView = navbarBinding.root
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_cart -> {
-                val intent = CartActivity.newIntent(this)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item)
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun navigateGoodsDetails(goods: Goods) {
