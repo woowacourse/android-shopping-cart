@@ -16,16 +16,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_product_item"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:layout_margin="16dp">
 
         <ImageView
             android:id="@+id/iv_product"
             android:layout_width="180dp"
             android:layout_height="180dp"
             android:contentDescription="@null"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             app:imageUrl="@{cartItem.product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
