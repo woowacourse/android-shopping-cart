@@ -14,6 +14,9 @@ interface LatestGoodsDao {
     @Query("SELECT * FROM latestGoods ORDER BY timestamp DESC")
     fun getAll(): List<LatestGoodsEntity>
 
+    @Query("SELECT * FROM latestGoods ORDER BY timestamp DESC LIMIT 1")
+    fun getLast(): LatestGoodsEntity
+
     @Query("DELETE FROM latestGoods WHERE goodsId = (SELECT goodsId FROM latestGoods ORDER BY timestamp ASC LIMIT 1)")
     fun deleteOldest()
 }

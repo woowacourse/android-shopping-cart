@@ -6,4 +6,6 @@ interface LatestGoodsRepository {
     fun insertLatestGoods(goodsId: Int)
 
     fun getAll(): List<LatestGoods>
+
+    fun getLast(): LatestGoods?
 }

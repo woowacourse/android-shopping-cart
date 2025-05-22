@@ -38,6 +38,16 @@ class LatestGoodsRepositoryImpl(
         return result
     }
 
+    override fun getLast(): LatestGoods? {
+        var result: LatestGoods? = null
+
+        thread {
+            result = latestGoodsDao.getLast().toLatestGoods()
+        }.join()
+
+        return result
+    }
+
     companion object {
         private const val MAX_SIZE: Int = 10
     }
