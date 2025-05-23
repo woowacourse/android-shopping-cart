@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
-import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.GoodsAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonAdapter
 
 @BindingAdapter("imgUrl")
 fun loadImageFromUrl(
@@ -37,6 +37,7 @@ fun RecyclerView.bindCartItems(cartItems: List<CartItem>?) {
         is GoodsAdapter -> {
             if (cartItems != null) adapter.setItems(cartItems)
         }
+
         is CartAdapter -> {
             if (cartItems != null) adapter.setItems(cartItems)
         }

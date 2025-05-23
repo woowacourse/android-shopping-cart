@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.goods.adapter
+package woowacourse.shopping.feature.goods.adapter.vertical
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,8 @@ class MoreButtonAdapter(
     override fun onBindViewHolder(
         holder: MoreButtonViewHolder,
         position: Int,
-    ) {}
+    ) {
+    }
 
     override fun getItemCount() = if (isVisible) 1 else 0
 

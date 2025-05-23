@@ -9,7 +9,7 @@
 
         <variable
             name="clickListener"
-            type="woowacourse.shopping.feature.goods.adapter.GoodsClickListener" />
+            type="woowacourse.shopping.feature.goods.adapter.vertical.GoodsClickListener" />
 
         <variable
             name="quantityChangeListener"

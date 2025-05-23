@@ -2,27 +2,28 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <data>
-                <variable
-                    name="clickListener"
-                    type="woowacourse.shopping.feature.goods.adapter.MoreButtonClickListener" />
-        </data>
+    <data>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="3dp">
+
+        <Button
+            android:id="@+id/btn_more"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="3dp">
+            android:onClick="@{() -> clickListener.onCLickMoreButton()}"
+            android:text="@string/goods_more_button"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-                <Button
-                    android:id="@+id/btn_more"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/goods_more_button"
-                    android:onClick="@{() -> clickListener.onCLickMoreButton()}"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

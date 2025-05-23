@@ -19,8 +19,8 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.QuantityChangeListener
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.MoreButtonAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.GoodsAdapter
+import woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.util.toUi
 
@@ -28,7 +28,10 @@ class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
     private lateinit var navbarBinding: MenuCartNavbarBinding
     private val viewModel: GoodsViewModel by viewModels {
-        GoodsViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)), GoodsRepositoryImpl(GoodsRemoteDataSourceImpl()))
+        GoodsViewModelFactory(
+            CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
+            GoodsRepositoryImpl(GoodsRemoteDataSourceImpl()),
+        )
     }
     private val goodsAdapter by lazy {
         GoodsAdapter(
