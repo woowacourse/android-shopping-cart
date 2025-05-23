@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             android:padding="20dp"
             android:paddingBottom="80dp"
-            app:goodsList="@{vm.goodsUiModels}"
+            app:goodsList="@{vm.items}"
             app:layout_constraintBottom_toTopOf="@id/btn_load_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

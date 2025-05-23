@@ -10,8 +10,12 @@
             type="woowacourse.shopping.presentation.shoppingcart.ShoppingCartClickListener" />
 
         <variable
-            name="goodsUiModel"
-            type="woowacourse.shopping.presentation.model.GoodsUiModel" />
+            name="quantityClickListener"
+            type="woowacourse.shopping.presentation.util.QuantityClickListener" />
+
+        <variable
+            name="item"
+            type="woowacourse.shopping.presentation.model.ShoppingCartItemUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +30,7 @@
             android:id="@+id/tv_goods_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{goodsUiModel.name}"
+            android:text="@{item.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -41,7 +45,7 @@
             android:layout_marginTop="20dp"
             android:background="@color/black"
             android:scaleType="centerCrop"
-            app:goodsImage="@{goodsUiModel.imageUrl}"
+            app:goodsImage="@{item.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name" />
 
@@ -50,17 +54,28 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:onClick="@{() -> clickListener.onDeleteGoods(goodsUiModel)}"
+            android:onClick="@{() -> clickListener.onDeleteGoods(item)}"
             android:src="@drawable/btn_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/view_quantity_controller"
+            layout="@layout/view_quantity_controller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:item="@{item}"
+            app:quantityClickListener="@{quantityClickListener}"
+            app:layout_constraintBottom_toTopOf="@id/tv_goods_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_delete" />
 
         <TextView
             android:id="@+id/tv_goods_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:goodsPrice="@{goodsUiModel.price}"
+            app:goodsPrice="@{item.price}"
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
