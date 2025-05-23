@@ -44,6 +44,9 @@ interface CartDao {
     @Query("SELECT COUNT(*) FROM cart")
     fun getAllItemsSize(): LiveData<Int>
 
+    @Query("SELECT SUM(quantity) FROM cart")
+    fun getTotalQuantity(): Int
+
     @Query("SELECT * FROM cart WHERE id = :id LIMIT 1")
     fun findById(id: Long): CartEntity?
 

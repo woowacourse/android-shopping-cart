@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.cart
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -45,17 +46,12 @@ class CartActivity :
 
     override fun insertToCart(cart: Cart) {
         viewModel.insertToCart(cart)
-        setResult(
-            ResultCode.CART_INSERT.code,
-            Intent().apply {
-                putExtra("GOODS_ID", cart.goods.id)
-                putExtra("GOODS_QUANTITY", viewModel.cart.value?.quantity)
-            },
-        )
+        sendCartResult(cart)
     }
 
     override fun removeFromCart(cart: Cart) {
         viewModel.removeFromCart(cart)
+        sendCartResult(cart)
     }
 
     private fun updatePageButton() {
@@ -65,5 +61,16 @@ class CartActivity :
         viewModel.page.observe(this) {
             viewModel.updatePageButtonStates()
         }
+    }
+
+    private fun sendCartResult(cart: Cart) {
+        setResult(
+            ResultCode.CART_INSERT.code,
+            Intent().apply {
+                putExtra("GOODS_ID", cart.goods.id)
+                putExtra("GOODS_QUANTITY", viewModel.cart.value?.quantity)
+                Log.e("123451", "${viewModel.cart.value?.quantity}")
+            },
+        )
     }
 }

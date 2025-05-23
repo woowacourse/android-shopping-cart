@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:paddingHorizontal="18dp"
-            app:items="@{viewModel.carts}"
+            app:items="@{viewModel.carts.carts}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/paging"
             app:layout_constraintEnd_toEndOf="parent"

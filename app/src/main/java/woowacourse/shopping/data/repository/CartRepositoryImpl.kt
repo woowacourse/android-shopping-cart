@@ -6,12 +6,17 @@ import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.Carts
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDatabase: CartDatabase,
 ) : CartRepository {
-    override suspend fun getAll(): List<Cart> = cartDatabase.cartDao().getAll().map { it.toDomain() }
+    override suspend fun getAll(): Carts {
+        val cartList = cartDatabase.cartDao().getAll().map { it.toDomain() }
+        val totalQuantity = cartList.sumOf { it.quantity }
+        return Carts(carts = cartList, totalQuantity = totalQuantity)
+    }
 
     override fun insert(cart: Cart) {
         thread {
@@ -57,12 +62,19 @@ class CartRepositoryImpl(
     override fun getPage(
         limit: Int,
         offset: Int,
-    ): LiveData<List<Cart>> =
+    ): LiveData<Carts> =
         cartDatabase.cartDao().getPage(limit, offset).map { entities ->
-            entities.map { entity ->
-                entity.toDomain()
-            }
+            val cartList = entities.map { it.toDomain() }
+            val totalQuantity = cartList.sumOf { it.quantity }
+            Carts(carts = cartList, totalQuantity = totalQuantity)
         }
 
     override fun getAllItemsSize(): LiveData<Int> = cartDatabase.cartDao().getAllItemsSize()
+
+    override fun getTotalQuantity(callback: (Int) -> Unit) {
+        thread {
+            val totalQuantity = cartDatabase.cartDao().getTotalQuantity()
+            callback(totalQuantity)
+        }
+    }
 }

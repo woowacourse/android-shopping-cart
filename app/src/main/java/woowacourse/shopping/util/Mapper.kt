@@ -1,6 +1,7 @@
 package woowacourse.shopping.util
 
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.Carts
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.model.CartUiModel
 
@@ -25,12 +26,16 @@ fun CartUiModel.toDomain(): Cart =
             ),
     )
 
-fun List<Cart>.updateQuantity(
+fun Carts.updateQuantity(
     id: Long,
     newQuantity: Int,
-): List<Cart> =
-    this.map { cart ->
-        if (cart.goods.id == id) cart.copy(quantity = newQuantity) else cart
-    }
+): Carts {
+    val updatedCarts =
+        carts.map { cart ->
+            if (cart.goods.id == id) cart.copy(quantity = newQuantity) else cart
+        }
+    val updatedTotalQuantity = updatedCarts.sumOf { it.quantity }
+    return this.copy(carts = updatedCarts, totalQuantity = updatedTotalQuantity)
+}
 
 fun Cart.updateQuantity(newQuantity: Int): Cart = this.copy(quantity = newQuantity)

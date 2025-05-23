@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.goods
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -13,6 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDatabase
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.feature.ScrollListener
 import woowacourse.shopping.feature.cart.CartActivity
@@ -47,9 +49,19 @@ class GoodsActivity :
         setupActivityResultLauncher()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.nav_cart, menu)
-        return super.onCreateOptionsMenu(menu)
+        val menuItem = menu.findItem(R.id.nav_cart)
+        val binding = MenuCartActionViewBinding.inflate(layoutInflater)
+        menuItem.actionView = binding.root
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        binding.root.setOnClickListener {
+            onOptionsItemSelected(menuItem)
+        }
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -93,6 +105,7 @@ class GoodsActivity :
         val changedId = data?.getLongExtra("GOODS_ID", 0) ?: 0
         val changedQuantity = data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
         adapter.updateItemQuantity(changedId, changedQuantity)
+        Log.e("123451", "$changedQuantity")
     }
 
     private fun observeCartInsertResult() {
