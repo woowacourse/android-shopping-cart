@@ -20,7 +20,11 @@ class ShoppingCartActivity :
         setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
 
         val shoppingApplication = application as ShoppingApplication
-        val factory = ShoppingCartViewModel.createFactory(shoppingApplication.shoppingCartRepository)
+        val factory =
+            ShoppingCartViewModel.createFactory(
+                shoppingApplication.shoppingCartRepository,
+                shoppingApplication.shoppingCartRepository2,
+            )
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
