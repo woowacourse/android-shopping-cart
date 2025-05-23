@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.cart.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import woowacourse.shopping.data.CartDatabase
+import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.model.Cart

@@ -11,8 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDatabase
-import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.cart.CartDatabase
+import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart

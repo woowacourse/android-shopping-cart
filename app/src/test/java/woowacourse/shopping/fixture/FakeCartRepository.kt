@@ -2,7 +2,7 @@ package woowacourse.shopping.fixture
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.domain.model.Goods
 
 class FakeCartRepository : CartRepository {

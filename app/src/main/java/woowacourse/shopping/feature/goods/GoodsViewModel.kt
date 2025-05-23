@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Carts
 import woowacourse.shopping.domain.model.Goods
