@@ -23,7 +23,7 @@ interface ShoppingCartItemDao {
     @Query("SELECT COUNT(*) FROM shopping_cart_item")
     suspend fun count(): Int
 
-    @Query("DELETE FROM shopping_cart_item WHERE id = :id")
+    @Query("DELETE FROM shopping_cart_item WHERE product_id = :id")
     suspend fun delete(id: Long)
 
     @Transaction
@@ -45,7 +45,7 @@ interface ShoppingCartItemDao {
     suspend fun update(item: ShoppingCartItemEntity)
 
     @Query("SELECT SUM(quantity) FROM shopping_cart_item")
-    suspend fun totalQuantity(): Int
+    suspend fun totalQuantity(): Int?
 
     @Query("SELECT * FROM shopping_cart_item WHERE product_id = :productId LIMIT 1")
     suspend fun getShoppingCartItemByProductId(productId: String): ShoppingCartItemEntity?

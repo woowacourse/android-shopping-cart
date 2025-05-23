@@ -38,7 +38,6 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initialize()
-        viewModel.totalSize()
         setSupportActionBar(binding.toolbar as Toolbar)
         initProductList()
     }

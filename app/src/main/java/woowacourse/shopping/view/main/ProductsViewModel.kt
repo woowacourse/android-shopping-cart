@@ -33,9 +33,10 @@ class ProductsViewModel(
     val totalSize: MutableLiveData<Int> = MutableLiveData(0)
     val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData()
 
-    fun totalSize() {
+    init {
         viewModelScope.launch {
             totalSize.value = productsRepository.totalSize()
+            totalShoppingCartSize.value = shoppingCartRepository.totalQuantity()
         }
     }
 

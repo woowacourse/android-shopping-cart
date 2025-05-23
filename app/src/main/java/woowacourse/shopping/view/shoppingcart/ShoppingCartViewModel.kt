@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import woowacourse.shopping.ShoppingCartApplication
@@ -25,15 +26,7 @@ class ShoppingCartViewModel(
     private val _productsLiveData: MutableLiveData<Page<ShoppingCartItemUiModel>> =
         MutableLiveData()
 
-    private val productsCount: MutableLiveData<Int> = MutableLiveData(0)
-
     val productsLiveData: LiveData<Page<ShoppingCartItemUiModel>> get() = _productsLiveData
-
-    fun productsCount() {
-        viewModelScope.launch {
-            productsCount.value = shoppingCartRepository.totalSize()
-        }
-    }
 
     fun removeProduct(
         shoppingCartItemUiModel: ShoppingCartItemUiModel,
@@ -41,7 +34,8 @@ class ShoppingCartViewModel(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             shoppingCartRepository.remove(shoppingCartItemUiModel.toShoppingCartItem())
-            requestProductsPage(pageNumberAfterRemoval(currentPage))
+            val productsCount = async { shoppingCartRepository.totalSize() }.await()
+            requestProductsPage(pageNumberAfterRemoval(currentPage, productsCount))
         }
     }
 
@@ -75,9 +69,12 @@ class ShoppingCartViewModel(
         }
     }
 
-    private fun pageNumberAfterRemoval(currentPage: Int): Int {
+    private fun pageNumberAfterRemoval(
+        currentPage: Int,
+        productsCount: Int,
+    ): Int {
         val newPageNumber =
-            if (productsCount.value!! % PAGE_SIZE == 0 && currentPage * PAGE_SIZE == productsCount.value!!) {
+            if (productsCount % PAGE_SIZE == 0 && currentPage * PAGE_SIZE == productsCount) {
                 currentPage - 1
             } else {
                 currentPage

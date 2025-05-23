@@ -17,8 +17,10 @@ class RoomShoppingCartRepositoryImpl(
     }
 
     override suspend fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
+        val offset = pageRequest.requestPage * pageRequest.pageSize
+        val limit = pageRequest.pageSize
         val item =
-            shoppingCartItemDao.findAll().map {
+            shoppingCartItemDao.findAll(offset, limit).map {
                 it.toShoppingCartItem()
             }
         return pageRequest.toPage(item, totalSize())
@@ -29,7 +31,7 @@ class RoomShoppingCartRepositoryImpl(
     }
 
     override suspend fun remove(item: ShoppingCartItem) {
-        shoppingCartItemDao.delete(item.id)
+        shoppingCartItemDao.delete(item.product.id)
     }
 
     override suspend fun save(item: ShoppingCartItem) {
@@ -39,12 +41,13 @@ class RoomShoppingCartRepositoryImpl(
     }
 
     override suspend fun update(item: ShoppingCartItem) {
+        if (item.quantity <= 0) return
         shoppingCartItemDao.update(
             item.toEntity(),
         )
     }
 
     override suspend fun totalQuantity(): Int {
-        return shoppingCartItemDao.totalQuantity()
+        return shoppingCartItemDao.totalQuantity() ?: 0
     }
 }
