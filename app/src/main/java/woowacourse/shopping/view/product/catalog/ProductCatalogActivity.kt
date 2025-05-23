@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.OnQuantityControlListener
+import woowacourse.shopping.view.DefaultQuantityControlListener
 import woowacourse.shopping.view.product.catalog.ProductAdapter.Companion.LOAD_MORE
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
@@ -72,15 +72,10 @@ class ProductCatalogActivity : AppCompatActivity() {
                         }
                     },
                 onQuantityControlListener =
-                    object : OnQuantityControlListener {
-                        override fun onQuantityControlPlusClick(productId: Long) {
-                            viewModel.addToShoppingCart(productId)
-                        }
-
-                        override fun onQuantityControlMinusClick(productId: Long) {
-                            viewModel.removeToShoppingCart(productId)
-                        }
-                    },
+                    DefaultQuantityControlListener(
+                        onPlus = viewModel::addToShoppingCart,
+                        onMinus = viewModel::removeToShoppingCart,
+                    ),
                 loadEventListener = viewModel::loadProducts,
             )
 
