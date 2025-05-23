@@ -12,7 +12,7 @@ import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.view.base.BaseActivity
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.inventory.item.toDomain
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.util.getParcelableCompat
@@ -32,7 +32,7 @@ class ProductDetailActivity :
 
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
         val cartItem: CartItem =
-            intent.getParcelableCompat<ProductUiModel>(KEY_PRODUCT)?.toDomain()?.toCartItem() ?: run {
+            intent.getParcelableCompat<InventoryProduct>(KEY_PRODUCT)?.toDomain()?.toCartItem() ?: run {
                 onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
@@ -57,7 +57,7 @@ class ProductDetailActivity :
 
         fun newIntent(
             context: Context,
-            product: ProductUiModel,
+            product: InventoryProduct,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java).putExtra(KEY_PRODUCT, product)
         }

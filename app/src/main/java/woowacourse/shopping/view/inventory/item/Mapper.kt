@@ -1,10 +1,10 @@
 package woowacourse.shopping.view.inventory.item
 
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 
-fun Product.toUiModel(): ProductUiModel {
-    return ProductUiModel(
+fun Product.toUiModel(): InventoryProduct {
+    return InventoryProduct(
         id,
         name,
         price,
@@ -12,7 +12,7 @@ fun Product.toUiModel(): ProductUiModel {
     )
 }
 
-fun ProductUiModel.toDomain(): Product {
+fun InventoryProduct.toDomain(): Product {
     return Product(
         id,
         name,

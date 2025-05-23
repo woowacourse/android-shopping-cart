@@ -8,7 +8,7 @@ sealed interface InventoryItem {
     val type: InventoryItemType
 
     @Parcelize
-    data class ProductUiModel(
+    data class InventoryProduct(
         val id: Int,
         val name: String,
         val price: Int,

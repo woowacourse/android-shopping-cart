@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemInventoryProductBinding
 import woowacourse.shopping.view.base.BaseViewHolder
 import woowacourse.shopping.view.inventory.InventoryEventHandler
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 
 class ProductViewHolder(
     parent: ViewGroup,
@@ -21,7 +21,7 @@ class ProductViewHolder(
         binding.handler = handler
     }
 
-    fun bind(item: ProductUiModel) {
+    fun bind(item: InventoryProduct) {
         binding.product = item
     }
 }

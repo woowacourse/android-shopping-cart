@@ -10,7 +10,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.inventory.item.InventoryItemType
 
 class InventoryActivity :
@@ -61,7 +61,7 @@ class InventoryActivity :
         }
     }
 
-    override fun onProductSelected(product: ProductUiModel) {
+    override fun onProductSelected(product: InventoryProduct) {
         startActivity(ProductDetailActivity.newIntent(this, product))
     }
 

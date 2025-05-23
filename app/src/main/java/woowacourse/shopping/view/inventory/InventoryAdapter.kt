@@ -3,7 +3,7 @@ package woowacourse.shopping.view.inventory
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 import woowacourse.shopping.view.inventory.item.InventoryItemType
 import woowacourse.shopping.view.inventory.viewholder.ProductViewHolder
@@ -26,7 +26,7 @@ class InventoryAdapter(
     ) {
         val item = items[position]
         when (holder) {
-            is ProductViewHolder -> holder.bind(item as ProductUiModel)
+            is ProductViewHolder -> holder.bind(item as InventoryProduct)
             is ShowMoreViewHolder -> holder.bind(item as ShowMore)
         }
     }
