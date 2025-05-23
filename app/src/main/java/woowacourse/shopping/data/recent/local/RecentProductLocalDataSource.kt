@@ -20,5 +20,5 @@ class RecentProductLocalDataSource(
 
     fun deleteByProductId(productId: Long) = dao.deleteByProductId(productId)
 
-    fun replaceRecentProduct(productId: Long) = dao.replaceRecentProduct(productId)
+    fun replaceRecentProduct(recentProduct: RecentProductEntity) = dao.replaceRecentProduct(recentProduct)
 }

@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.recent
 
 import woowacourse.shopping.data.mapper.toDomain
+import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.recent.local.RecentProductLocalDataSource
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.RecentProductRepository
@@ -34,7 +35,7 @@ class RecentProductRepositoryImpl(
         return result
     }
 
-    override fun replaceRecentProduct(productId: Long) {
-        thread { localDataSource.replaceRecentProduct(productId) }.join()
+    override fun replaceRecentProduct(recentProduct: RecentProduct) {
+        thread { localDataSource.replaceRecentProduct(recentProduct.toEntity()) }.join()
     }
 }

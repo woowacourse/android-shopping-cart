@@ -30,7 +30,8 @@ class ProductDetailViewModel(
     init {
         loadQuantity()
         loadLastProduct()
-        recentProductRepository.replaceRecentProduct(product.id)
+        val recentProduct = RecentProduct(product = product)
+        recentProductRepository.replaceRecentProduct(recentProduct)
     }
 
     override fun onProductAddClick() {

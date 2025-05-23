@@ -14,5 +14,5 @@ interface RecentProductRepository {
         offset: Int = 0,
     ): List<RecentProduct>
 
-    fun replaceRecentProduct(productId: Long)
+    fun replaceRecentProduct(recentProduct: RecentProduct)
 }

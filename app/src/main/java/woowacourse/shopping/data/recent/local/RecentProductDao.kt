@@ -17,10 +17,10 @@ interface RecentProductDao {
     @Query("SELECT * from recent_product")
     fun getAll(): List<RecentProductEntity>
 
-    @Query("SELECT * FROM recent_product ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM recent_product ORDER BY viewed_at DESC LIMIT 1")
     fun getLastProduct(): RecentProductEntity?
 
-    @Query("SELECT * FROM recent_product ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM recent_product ORDER BY viewed_at DESC LIMIT :limit OFFSET :offset")
     fun getPaged(
         limit: Int,
         offset: Int,
@@ -30,8 +30,8 @@ interface RecentProductDao {
     fun deleteByProductId(productId: Long)
 
     @Transaction
-    fun replaceRecentProduct(productId: Long) {
-        deleteByProductId(productId)
-        insertByProductId(productId)
+    fun replaceRecentProduct(recentProduct: RecentProductEntity) {
+        deleteByProductId(recentProduct.productId)
+        insert(recentProduct)
     }
 }

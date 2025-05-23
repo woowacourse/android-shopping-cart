@@ -8,4 +8,5 @@ import androidx.room.PrimaryKey
 data class RecentProductEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo(name = "product_id") val productId: Long,
+    @ColumnInfo(name = "viewed_at") val viewedAt: Long = System.currentTimeMillis(),
 )
