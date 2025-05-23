@@ -15,7 +15,7 @@ interface CartDao {
     @Query("SELECT * FROM cart_table WHERE productId = :productId")
     fun cartByProductId(productId: Long): CartEntity?
 
-    @Query("SELECT * FROM cart_table ORDER BY productId ASC LIMIT :size OFFSET (:page - 1) * :size")
+    @Query("SELECT * FROM cart_table ORDER BY productId ASC LIMIT :size OFFSET :page * :size")
     fun cartSinglePage(
         page: Int,
         size: Int,
