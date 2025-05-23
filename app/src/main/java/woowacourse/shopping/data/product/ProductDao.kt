@@ -8,6 +8,9 @@ import woowacourse.shopping.data.product.ProductEntity.Companion.PRODUCT_TABLE_N
 
 @Dao
 interface ProductDao {
+    @Query("SELECT * FROM $PRODUCT_TABLE_NAME WHERE id == :id")
+    fun getOrNull(id: Int): ProductEntity?
+
     @Query("SELECT * FROM $PRODUCT_TABLE_NAME")
     fun getAll(): List<ProductEntity>
 
