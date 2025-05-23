@@ -1,6 +1,6 @@
 @file:Suppress("ktlint:standard:filename")
 
-import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.carts.repository.CartRepository
 import woowacourse.shopping.domain.model.Goods
 
 val fixtureGoods =
