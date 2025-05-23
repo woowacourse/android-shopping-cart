@@ -8,15 +8,11 @@ class RecentProductDataSourceImpl(
 ) : RecentProductDataSource {
     override fun getProducts(): List<RecentlyViewedProduct> = dao.getProducts()
 
-    override fun insert(product: RecentlyViewedProduct) {
-        val count = dao.getCount()
+    override fun getOldestProduct(): RecentlyViewedProduct? = dao.getOldestProduct()
 
-        if (count == 10) {
-            val oldest = dao.getOldestProduct()
-            if (oldest != null && oldest.productId != product.productId) {
-                dao.delete(oldest)
-            }
-        }
-        dao.insertProduct(product)
-    }
+    override fun getCount(): Int = dao.getCount()
+
+    override fun insert(product: RecentlyViewedProduct) = dao.insertProduct(product)
+
+    override fun delete(product: RecentlyViewedProduct) = dao.delete(product)
 }

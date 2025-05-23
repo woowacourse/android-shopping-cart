@@ -129,7 +129,28 @@ class ProductActivity :
                 is ResultState.Success -> {
                     val showLoadMore = viewModel.showLoadMore.value == true
                     productAdapter.setData(result.data, showLoadMore)
-                    recentAdapter.submitList(result.data.map { it.product })
+                }
+
+                is ResultState.Failure -> {
+                    showToast(R.string.product_toast_load_failure)
+                }
+            }
+        }
+
+        viewModel.recentProducts.observe(this) { result ->
+            when (result) {
+                is ResultState.Success -> {
+                    recentAdapter.submitList(result.data)
+//                    recentAdapter.submitList(
+//                        listOf(
+//                            Product(
+//                                1,
+//                                "맥심 슈프림골드 커피믹스",
+//                                Price(8000),
+//                                "https://sitem.ssgcdn.com/03/58/88/item/1000172885803_i1_464.jpg",
+//                            ),
+//                        ),
+//                    )
                 }
 
                 is ResultState.Failure -> {

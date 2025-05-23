@@ -4,6 +4,7 @@
     <string name="product_toolbar_text">Shopping</string>
     <string name="product_price">%,d원</string>
     <string name="product_btn_load_more">상품 더보기</string>
+    <string name="product_recent_product_text">최근 본 상품</string>
     <string name="product_toast_add_cart_fail">상품을 추가하는 데 실패했습니다</string>
     <string name="product_toast_increase_fail">수량을 증가시키는 데 실패했습니다</string>
     <string name="product_toast_decrease_fail">수량을 감소시키는 데 실패했습니다</string>
