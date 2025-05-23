@@ -21,7 +21,7 @@ interface CartItemDao {
     @Query("DELETE FROM $CART_ITEM_TABLE_NAME")
     fun clear()
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cartItem: CartItemEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
