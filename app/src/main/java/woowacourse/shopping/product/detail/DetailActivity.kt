@@ -13,7 +13,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.product.catalog.ProductActionListener
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.util.intentParcelableExtra
 
@@ -26,6 +28,7 @@ class DetailActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
+
         applyWindowInsets()
         setSupportActionBar()
         setAddToCartClickListener()
@@ -37,13 +40,34 @@ class DetailActivity : AppCompatActivity() {
             setViewModel(it)
             observeProduct()
         }
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+        binding.layoutQuantityControlBar.productActionListener =
+            object : ProductActionListener {
+                override fun onProductClick(product: ProductUiModel) = Unit
+
+                override fun onLoadButtonClick() = Unit
+
+                override fun onQuantityAddClick(product: ProductUiModel) = Unit
+
+                override fun onQuantityControlClick(
+                    event: Int,
+                    product: ProductUiModel,
+                ) {
+                    if (event == 1) {
+                        viewModel.increaseQuantity()
+                    } else {
+                        viewModel.decreaseQuantity()
+                    }
+                }
+            }
     }
 
     private fun setViewModel(product: ProductUiModel) {
         viewModel =
             ViewModelProvider(
                 this,
-                DetailViewModelFactory(product),
+                DetailViewModelFactory(product, application as ShoppingApplication),
             )[DetailViewModel::class.java]
     }
 
@@ -53,6 +77,10 @@ class DetailActivity : AppCompatActivity() {
 
         viewModel.product.observe(this) {
             viewModel.setQuantity()
+            viewModel.setPriceSum()
+        }
+
+        viewModel.quantity.observe(this) {
             viewModel.setPriceSum()
         }
     }
@@ -76,7 +104,8 @@ class DetailActivity : AppCompatActivity() {
         binding.clickListener =
             AddToCartClickListener { product ->
                 showToastMessage()
-//                CartDatabase.insertCartProduct(product)
+                viewModel.addToCart()
+                finish()
             }
     }
 
