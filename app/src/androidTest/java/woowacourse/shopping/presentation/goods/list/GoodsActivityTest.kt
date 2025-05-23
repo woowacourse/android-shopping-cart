@@ -1,9 +1,11 @@
 package woowacourse.shopping.presentation.goods.list
 
+import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -28,15 +30,37 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.dao.LatestGoodsDao
+import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.repository.LatestGoodsRepositoryImpl
+import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 import java.util.concurrent.TimeUnit
 
 class GoodsActivityTest {
     private lateinit var scenario: ActivityScenario<GoodsActivity>
+    private lateinit var db: ShoppingDatabase
+    private lateinit var dao: LatestGoodsDao
+    private lateinit var latestGoodsRepository: LatestGoodsRepository
 
     @Before
     fun setUp() {
         Intents.init()
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val application = context as ShoppingApplication
+        db =
+            Room
+                .inMemoryDatabaseBuilder(context, ShoppingDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
+
+        dao = db.latestGoodsDao()
+        latestGoodsRepository = LatestGoodsRepositoryImpl(dao)
+        application.initLatestGoodsRepository(latestGoodsRepository as LatestGoodsRepositoryImpl)
+
+        latestGoodsRepository.insertLatestGoods(1)
+
         val intent = Intent(ApplicationProvider.getApplicationContext(), GoodsActivity::class.java)
         scenario = ActivityScenario.launch(intent)
     }
@@ -57,7 +81,13 @@ class GoodsActivityTest {
         )
 
         // then
-        onView(withText("[병천아우내] 모듬순대")).check(matches(isDisplayed()))
+        onView(
+            allOf(
+                withId(R.id.tv_goods_name),
+                withText("[병천아우내] 모듬순대"),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_goods_list), 0)),
+            ),
+        ).check(matches(isDisplayed()))
     }
 
     @Test
@@ -73,7 +103,8 @@ class GoodsActivityTest {
         onView(
             allOf(
                 withId(R.id.tv_goods_price),
-                withText("5,000원"),
+                withText("11,900원"),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_goods_list), 0)),
             ),
         ).check(matches(isDisplayed()))
     }
@@ -187,6 +218,18 @@ class GoodsActivityTest {
                 isDescendantOfA(nthChildOf(withId(R.id.rv_goods_list), 0)),
             ),
         ).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun `최근_본_상품_목록이_보인다`() {
+        // then
+        onView(
+            allOf(
+                withId(R.id.tv_latest_goods_name),
+                withText("[병천아우내] 모듬순대"),
+                isDescendantOfA(nthChildOf(withId(R.id.rv_latest_goods_list), 0)),
+            ),
+        ).check(matches(isDisplayed()))
     }
 
     private fun nthChildOf(

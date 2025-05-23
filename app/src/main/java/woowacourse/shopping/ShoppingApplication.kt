@@ -5,16 +5,13 @@ import woowacourse.shopping.data.GoodsRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.repository.LatestGoodsRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
+import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 
 class ShoppingApplication : Application() {
     val goodsRepository by lazy { GoodsRepositoryImpl }
-    val latestGoodsRepository by lazy {
-        LatestGoodsRepositoryImpl(
-            ShoppingDatabase.getDatabase(this).latestGoodsDao(),
-        )
-    }
     lateinit var shoppingRepository: ShoppingRepository
+    lateinit var latestGoodsRepository: LatestGoodsRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -24,9 +21,19 @@ class ShoppingApplication : Application() {
             )
 
         initShoppingRepository(shoppingRepo)
+
+        val latestGoodsRepo =
+            LatestGoodsRepositoryImpl(
+                ShoppingDatabase.getDatabase(this).latestGoodsDao(),
+            )
+        initLatestGoodsRepository(latestGoodsRepo)
     }
 
     fun initShoppingRepository(repo: ShoppingRepositoryImpl) {
         shoppingRepository = repo
+    }
+
+    fun initLatestGoodsRepository(repo: LatestGoodsRepositoryImpl) {
+        latestGoodsRepository = repo
     }
 }
