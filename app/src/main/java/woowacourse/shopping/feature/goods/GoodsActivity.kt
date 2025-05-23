@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.carts.repository.CartRepositoryImpl
+import woowacourse.shopping.data.goods.repository.GoodsLocalDataSourceImpl
 import woowacourse.shopping.data.goods.repository.GoodsRemoteDataSourceImpl
 import woowacourse.shopping.data.goods.repository.GoodsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
@@ -31,7 +32,10 @@ class GoodsActivity : AppCompatActivity() {
     private val viewModel: GoodsViewModel by viewModels {
         GoodsViewModelFactory(
             CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
-            GoodsRepositoryImpl(GoodsRemoteDataSourceImpl()),
+            GoodsRepositoryImpl(
+                GoodsRemoteDataSourceImpl(),
+                GoodsLocalDataSourceImpl(ShoppingDatabase.getDatabase(this)),
+            ),
         )
     }
 
