@@ -12,6 +12,7 @@ sealed interface InventoryItem {
         val id: Int,
         val name: String,
         val price: Int,
+        val quantity: Int,
         val imageUrl: String,
     ) : InventoryItem, Parcelable {
         @IgnoredOnParcel

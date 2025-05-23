@@ -8,6 +8,7 @@ fun Product.toUiModel(): InventoryProduct {
         id,
         name,
         price,
+        0,
         imageUrl,
     )
 }
