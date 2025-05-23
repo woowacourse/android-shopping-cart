@@ -1,25 +1,59 @@
 package woowacourse.shopping.data.cart
 
+import kotlin.concurrent.thread
 import woowacourse.shopping.domain.cart.CartProduct
 import woowacourse.shopping.domain.cart.CartRepository
-import woowacourse.shopping.domain.product.Money
-import woowacourse.shopping.domain.product.Product
-import kotlin.concurrent.thread
+import woowacourse.shopping.utils.toProduct
 
 class CartRepositoryImpl(private val dao: CartDao) : CartRepository {
-    override fun insert(product: Product) {
+    override fun insert(
+        productId: Long,
+        quantity: Int,
+        onResult: (Result<Long>) -> Unit
+    ) {
         thread {
-            val cartItemEntity = CartItemEntity(productId = product.id!!)
-            dao.insert(cartItemEntity)
+            val cartItemEntity = CartItemEntity(
+                productId = productId,
+                quantity = quantity
+            )
+            runCatching {
+                dao.insert(cartItemEntity)
+            }.onSuccess { result ->
+                onResult(Result.success(result))
+            }.onFailure {
+                onResult(Result.failure(it))
+            }
         }
     }
 
-    override fun fetchById(
-        cartItemId: Long,
+    override fun insertOrAddQuantity(
+        productId: Long,
+        quantity: Int,
+        onResult: (Result<Unit>) -> Unit
+    ) {
+        thread {
+            val cartItemEntity = CartItemEntity(productId = productId, quantity = quantity)
+            runCatching {
+                dao.insert(cartItemEntity)
+            }.onSuccess { cartId ->
+                if (cartId == EXIST_PRODUCT_IN_CART) {
+                    dao.addQuantity(productId, quantity)
+                }
+                
+                onResult(Result.success(Unit))
+            }.onFailure {
+                onResult(Result.failure(it))
+            }
+
+        }
+    }
+
+    override fun fetchByProductId(
+        productId: Long,
         onResult: (CartProduct) -> Unit,
     ) {
         thread {
-            val cartItemDetail: CartItemDetail = dao.findByCartItemId(cartItemId)
+            val cartItemDetail: CartItemDetail = dao.findByCartItemId(productId)
             onResult(cartItemDetail.toDomain())
         }
     }
@@ -47,14 +81,16 @@ class CartRepositoryImpl(private val dao: CartDao) : CartRepository {
             }.onSuccess { onResult(Unit) }
         }
     }
+
+    companion object {
+        private const val EXIST_PRODUCT_IN_CART = -1L
+    }
 }
 
 private fun CartItemDetail.toDomain(): CartProduct {
     return CartProduct(
-        this.cartItem.id,
-        this.cartItem.productId,
-        this.productEntity.imageUrl,
-        this.productEntity.name,
-        Money(this.productEntity.price),
+        this.cartItemEntity.id,
+        this.productEntity.toProduct(),
+        this.cartItemEntity.quantity
     )
 }

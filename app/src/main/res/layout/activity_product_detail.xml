@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="woowacourse.shopping.ui.productdetail.ProductDetailViewModel" />
+
+        <variable
+            name="quantityChangeListener"
+            type="woowacourse.shopping.ui.common.QuantityChangeListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,24 +72,28 @@
             android:id="@+id/tv_detail_product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:text="@{@string/price(viewModel.product.price)}"
+            android:layout_marginTop="16dp"
+            android:text="@{@string/price(viewModel.totalPrice)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/include_detail_product_quantity_select"
-            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_detail_product_title"
-            app:layout_constraintTop_toBottomOf="@+id/divider"
-            app:layout_constraintWidth_default="wrap"
-            tools:text="30,000,000,000,000,00원" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="30,000,000,000,000,000원" />
 
         <include
             android:id="@+id/include_detail_product_quantity_select"
             layout="@layout/quantity_select"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
+            app:layout_constraintTop_toTopOf="@id/tv_detail_product_price"
+            bind:id="@{viewModel.product.id == null ? 0L : viewModel.product.id }"
+            bind:listener="@{quantityChangeListener}"
+            bind:quantity="@{viewModel.quantity}" />
+<!--            bind:quantity="@{viewModel.cartProduct.quantity}" />-->
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_add_cart"

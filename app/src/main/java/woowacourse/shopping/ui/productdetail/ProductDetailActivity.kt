@@ -15,13 +15,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.utils.intentSerializable
+import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.common.QuantityChangeListener
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
     private val viewModel: ProductDetailViewModel by viewModels {
-        ProductDetailViewModel.createFactory(getIntentProduct())
+        ProductDetailViewModel.createFactory(getProductIdFromIntent())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,12 +81,26 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun setupBindings() {
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.quantityChangeListener = initQuantityChangerListener()
+    }
+
+    private fun initQuantityChangerListener() = object : QuantityChangeListener {
+        override fun increase(cartId: Long) {
+            viewModel.increaseQuantity()
+        }
+
+        override fun decrease(cartId: Long) {
+            viewModel.decreaseQuantity()
+        }
     }
 
     private fun initObserve() {
         viewModel.eventAddedCartToast.observe(this) {
             showAddedCartToast()
+            startActivity(CartActivity.newIntent(this))
+            finish()
         }
     }
 
@@ -98,24 +112,19 @@ class ProductDetailActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun getIntentProduct(): Product {
-        return intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java)
-            ?: throw IllegalArgumentException(ERROR_INVALID_INTENT_VALUE)
+    private fun getProductIdFromIntent(): Long {
+        return intent.getLongExtra(EXTRA_PRODUCT, 0)
     }
 
     companion object {
         private const val EXTRA_PRODUCT = "EXTRA_PRODUCT"
-        private const val ERROR_INVALID_INTENT_VALUE = "알 수 없는 값입니다."
 
         fun newIntent(
             context: Context,
-            product: Product,
+            productId: Long,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(
-                    EXTRA_PRODUCT,
-                    product,
-                )
+                putExtra(EXTRA_PRODUCT, productId)
             }
         }
     }

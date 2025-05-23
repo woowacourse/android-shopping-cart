@@ -1,7 +1,5 @@
 package woowacourse.shopping.domain.cart
 
-import woowacourse.shopping.domain.product.Product
-
 interface CartRepository {
     fun fetchInRange(
         limit: Int,
@@ -9,12 +7,14 @@ interface CartRepository {
         onResult: (List<CartProduct>) -> Unit,
     )
 
-    fun fetchById(
-        cartItemId: Long,
+    fun fetchByProductId(
+        productId: Long,
         onResult: (CartProduct) -> Unit,
     )
 
-    fun insert(product: Product)
+    fun insert(productId: Long, quantity: Int, onResult: (Result<Long>) -> Unit)
+
+    fun insertOrAddQuantity(productId: Long, quantity: Int, onResult: (Result<Unit>) -> Unit)
 
     fun delete(
         cartItemId: Long,

@@ -5,7 +5,7 @@ import androidx.room.Relation
 import woowacourse.shopping.data.product.ProductEntity
 
 class CartItemDetail(
-    @Embedded val cartItem: CartItemEntity,
+    @Embedded val cartItemEntity: CartItemEntity,
     @Relation(
         parentColumn = "product_id",
         entityColumn = "id",

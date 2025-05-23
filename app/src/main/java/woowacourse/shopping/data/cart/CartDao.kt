@@ -2,6 +2,7 @@ package woowacourse.shopping.data.cart
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 
@@ -19,10 +20,14 @@ interface CartDao {
     fun findByCartItemId(cartItemId: Long): CartItemDetail
 
     @Transaction
-    @Insert
-    fun insert(cartItemEntity: CartItemEntity)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(cartItemEntity: CartItemEntity): Long
 
     @Transaction
     @Query("DELETE FROM cart WHERE id = :cartItemId")
     fun delete(cartItemId: Long)
+
+    @Transaction
+    @Query("UPDATE cart SET quantity = quantity + :additional WHERE product_id = :productId")
+    fun addQuantity(productId: Long, additional: Int)
 }
