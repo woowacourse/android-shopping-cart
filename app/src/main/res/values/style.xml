@@ -18,6 +18,14 @@
     </style>
 
     <!--  프로덕트 페이지 상품 이름 스타일  -->
+    <style name="ProductCartItemsCountStyle" parent="BaseTextStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--  프로덕트 페이지 상품 이름 스타일  -->
     <style name="ProductTitleStyle" parent="BaseTextStyle">
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/font_size_normal</item>

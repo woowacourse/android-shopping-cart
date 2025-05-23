@@ -60,6 +60,7 @@ class ProductActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product)
         binding.apply {
             lifecycleOwner = this@ProductActivity
+            vm = productViewModel
             onClick = ::navigateToCart
             rvProducts.adapter = productAdapter
         }

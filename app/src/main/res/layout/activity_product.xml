@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="vm"
+            type="woowacourse.shopping.view.product.ProductViewModel" />
+
+        <variable
             name="onClick"
             type="kotlin.jvm.functions.Function0" />
     </data>
@@ -43,14 +47,26 @@
             android:id="@+id/ib_cart"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
             android:backgroundTint="@color/gray5"
             android:contentDescription="@string/product_ic_cart_explain"
             android:onClick="@{() -> onClick.invoke()}"
             android:src="@drawable/ic_cart"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_toolbar_title"
-            app:layout_constraintEnd_toEndOf="@id/tb_product"
+            app:layout_constraintEnd_toStartOf="@id/tv_cart_items_count"
             app:layout_constraintTop_toTopOf="@id/tv_product_toolbar_title" />
+
+        <TextView
+            android:id="@+id/tv_cart_items_count"
+            style="@style/ProductCartItemsCountStyle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_cart_items_count"
+            android:text="@{String.valueOf(vm.cartItemCount)}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_toolbar_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_product_toolbar_title"
+            tools:text="99+" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"
