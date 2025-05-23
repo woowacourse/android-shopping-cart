@@ -1,8 +1,8 @@
 package woowacourse.shopping.fixture
 
-import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class FakeRecentProductRepository : RecentProductRepository {
     private val recentProducts = mutableListOf<RecentProduct>()

@@ -2,9 +2,9 @@ package woowacourse.shopping.view.product.catalog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.cart.CartProductRepository
-import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.domain.repository.CartProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductCatalogViewModelFactory(
     private val productRepository: ProductRepository,

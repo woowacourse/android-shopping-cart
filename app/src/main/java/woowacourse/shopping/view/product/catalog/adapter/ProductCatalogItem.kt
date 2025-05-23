@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.product.catalog.adapter
 
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
 
 sealed class ProductCatalogItem(
     val type: ViewType,

@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.model
 
 class ShoppingCart(
     products: Set<CartProduct> = emptySet(),

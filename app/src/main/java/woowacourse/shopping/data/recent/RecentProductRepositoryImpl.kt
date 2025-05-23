@@ -1,10 +1,11 @@
 package woowacourse.shopping.data.recent
 
 import woowacourse.shopping.data.mapper.toDomain
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import kotlin.concurrent.thread
 
-class LocalRecentProductRepository(
+class RecentProductRepositoryImpl(
     private val dao: RecentProductDao,
 ) : RecentProductRepository {
     override fun insert(productId: Long) {

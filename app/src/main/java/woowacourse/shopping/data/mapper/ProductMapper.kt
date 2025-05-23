@@ -2,7 +2,7 @@ package woowacourse.shopping.data.mapper
 
 import woowacourse.shopping.data.dummy.ProductData
 import woowacourse.shopping.data.product.ProductEntity
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 fun List<ProductEntity>.toDomain() =
     this.map { entity ->

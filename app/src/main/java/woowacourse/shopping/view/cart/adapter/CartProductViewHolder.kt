@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.view.common.QuantityControlEventHandler
 
 class CartProductViewHolder(

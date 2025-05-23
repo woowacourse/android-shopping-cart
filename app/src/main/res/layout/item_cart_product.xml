@@ -7,7 +7,7 @@
 
         <variable
             name="cartProduct"
-            type="woowacourse.shopping.domain.CartProduct" />
+            type="woowacourse.shopping.domain.model.CartProduct" />
 
         <variable
             name="handler"

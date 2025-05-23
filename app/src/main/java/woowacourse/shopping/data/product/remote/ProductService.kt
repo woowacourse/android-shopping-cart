@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.product.remote
 
 import woowacourse.shopping.data.PagedResult
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
-interface ProductDataSource {
+interface ProductService {
     fun getAll(): List<Product>
 
     fun getProductById(id: Long): Product?

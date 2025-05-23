@@ -2,10 +2,11 @@ package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.data.mapper.toDomain
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.repository.CartProductRepository
 import kotlin.concurrent.thread
 
-class LocalCartProductRepository(
+class CartProductRepositoryImpl(
     private val dao: CartProductDao,
 ) : CartProductRepository {
     private var totalCount: Int = 0

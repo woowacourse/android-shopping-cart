@@ -3,11 +3,11 @@ package woowacourse.shopping.view.product.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.cart.CartProductRepository
-import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.repository.CartProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
 
 class ProductCatalogViewModel(
@@ -113,7 +113,13 @@ class ProductCatalogViewModel(
                 ProductCatalogItem.ProductItem(product, quantity)
             }
         return buildList {
-            if (recentProducts.isNotEmpty()) add(ProductCatalogItem.RecentProductsItem(recentProducts))
+            if (recentProducts.isNotEmpty()) {
+                add(
+                    ProductCatalogItem.RecentProductsItem(
+                        recentProducts,
+                    ),
+                )
+            }
             addAll(items)
             if (hasNext) add(ProductCatalogItem.LoadMoreItem)
         }

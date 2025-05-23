@@ -1,9 +1,9 @@
 package woowacourse.shopping.fixture
 
 import woowacourse.shopping.data.PagedResult
-import woowacourse.shopping.data.cart.CartProductRepository
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartProductRepository
 
 class FakeCartProductRepository : CartProductRepository {
     private val cartProducts = mutableListOf<CartProduct>()

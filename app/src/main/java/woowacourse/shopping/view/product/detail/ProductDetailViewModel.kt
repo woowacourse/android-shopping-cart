@@ -3,10 +3,10 @@ package woowacourse.shopping.view.product.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.cart.CartProductRepository
-import woowacourse.shopping.data.recent.RecentProductRepository
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.repository.CartProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailViewModel(
     private val product: Product,

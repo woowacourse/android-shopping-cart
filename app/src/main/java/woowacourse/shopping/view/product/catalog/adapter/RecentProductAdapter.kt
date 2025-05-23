@@ -2,7 +2,7 @@ package woowacourse.shopping.view.product.catalog.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.RecentProduct
 
 class RecentProductAdapter(
     items: List<RecentProduct> = emptyList(),

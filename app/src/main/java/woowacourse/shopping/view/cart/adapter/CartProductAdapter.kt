@@ -2,7 +2,7 @@ package woowacourse.shopping.view.cart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.view.cart.ShoppingCartEventHandler
 
 class CartProductAdapter(

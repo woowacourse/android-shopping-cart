@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.cart.CartProductRepository
+import woowacourse.shopping.domain.repository.CartProductRepository
 import woowacourse.shopping.fixture.FakeCartProductRepository
 import woowacourse.shopping.view.cart.ShoppingCartViewModel
 import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
