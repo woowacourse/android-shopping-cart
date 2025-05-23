@@ -68,6 +68,10 @@ class GoodsActivity : AppCompatActivity() {
             val intent = CartActivity.newIntent(this)
             startActivity(intent)
         }
+
+        viewModel.cartItemsWithZeroQuantity.observe(this) {
+            viewModel.updateCartQuantity()
+        }
     }
 
     private fun getLayoutManager(): GridLayoutManager {
