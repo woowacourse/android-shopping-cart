@@ -8,9 +8,11 @@
         <variable
             name="id"
             type="Long" />
+
         <variable
             name="quantity"
-            type="int" />
+            type="androidx.lifecycle.LiveData&lt;java.lang.Integer>" />
+
         <variable
             name="listener"
             type="woowacourse.shopping.ui.common.QuantityChangeListener" />
@@ -50,7 +52,7 @@
             android:textColor="@color/deep_gray"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:text="@{String.valueOf(quantity)}"
+            app:bindLiveQuantityText="@{quantity}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_increase"
             app:layout_constraintStart_toEndOf="@id/tv_decrease"
