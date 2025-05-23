@@ -10,7 +10,8 @@ import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductsAdapter(
     private val handler: ProductEventHandler,
-) : RecyclerView.Adapter<ProductsViewHolder>() {
+    private val recentProductsAdapter: RecentProductsAdapter,
+) : RecyclerView.Adapter<MainViewHolder>() {
     private var productUiModels: List<ProductUiModel> = listOf()
     var quantityInfo = QuantityInfo<ProductUiModel>()
         private set
@@ -18,22 +19,44 @@ class ProductsAdapter(
     var currentPage: Int = -1
         private set
 
-    override fun getItemCount(): Int = productUiModels.size
+    override fun getItemCount(): Int = productUiModels.size + 1
 
     override fun onBindViewHolder(
-        holder: ProductsViewHolder,
+        holder: MainViewHolder,
         position: Int,
     ) {
-        val item = productUiModels[position]
+        if (position == 0) {
+            return
+        }
+
+        val item = productUiModels[position - 1]
         val quantityLiveData = quantityInfo[item]
-        holder.bind(item, quantityLiveData)
+        when (holder) {
+            is MainViewHolder.ProductsViewHolder -> holder.bind(item, quantityLiveData)
+            is MainViewHolder.RecentProductsViewHolder -> Unit
+        }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ProductsViewHolder {
-        return ProductsViewHolder(parent, handler)
+    ): MainViewHolder {
+        return if (viewType == 0) {
+            MainViewHolder.RecentProductsViewHolder(
+                recentProductsAdapter,
+                parent,
+            )
+        } else {
+            MainViewHolder.ProductsViewHolder(parent, handler)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) {
+            0
+        } else {
+            1
+        }
     }
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {

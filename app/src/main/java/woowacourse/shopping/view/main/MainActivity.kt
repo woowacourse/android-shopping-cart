@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
@@ -33,6 +34,7 @@ class MainActivity :
     private val productsAdapter: ProductsAdapter by lazy {
         ProductsAdapter(
             ProductEventHandlerImpl(),
+            recentProductsAdapter,
         )
     }
     private val recentProductsAdapter: RecentProductsAdapter by lazy {
@@ -100,9 +102,12 @@ class MainActivity :
         binding.productList.apply {
             adapter = productsAdapter
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
-        }
-        binding.recentProductList.apply {
-            adapter = recentProductsAdapter
+            (layoutManager as GridLayoutManager).spanSizeLookup =
+                object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        return if (position == 0) 2 else 1
+                    }
+                }
         }
 
         viewModel.apply {
