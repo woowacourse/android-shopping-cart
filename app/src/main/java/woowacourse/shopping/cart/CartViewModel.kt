@@ -115,7 +115,6 @@ class CartViewModel(
             val endIndex = minOf(startIndex + pageSize, totalSize)
 
             if (startIndex >= totalSize) {
-                _cartProducts.postValue(emptyList())
                 return@getAllProductsSize
             }
 
