@@ -35,7 +35,7 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadCatalogProducts()
+        viewModel.updateAfterCheckingDiff()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
