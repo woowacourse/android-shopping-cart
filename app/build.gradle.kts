@@ -17,6 +17,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "DB_NAME", "\"shopping_db\"")
+        buildConfigField("Boolean", "IS_MOCK_MODE", "true")
+        buildConfigField("String", "BASE_URL", "\"https://api.mock.com\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] = "de.mannodermaus.junit5.AndroidJUnit5Builder"
@@ -29,7 +31,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            buildConfigField("String", "DB_NAME", "\"shopping_release_db\"")
+            buildConfigField("String", "DB_NAME", "\"shopping_release_db/\"")
+            buildConfigField("Boolean", "IS_MOCK_MODE", "false")
+            buildConfigField("String", "BASE_URL", "\"https://api.realurl.com\"")
         }
     }
     compileOptions {
@@ -63,6 +67,8 @@ dependencies {
     implementation(libs.androidx.activity.ktx.v182)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.gson)
+    implementation(libs.okhttp)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
@@ -78,6 +84,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.contrib)
     androidTestImplementation(libs.espresso.intents)
     androidTestImplementation(libs.androidx.core.testing.v200)
+    testImplementation(libs.okhttp3.mockwebserver)
+    implementation(libs.okhttp)
+
     kapt(libs.compiler)
     kapt(libs.androidx.room.compiler)
 }

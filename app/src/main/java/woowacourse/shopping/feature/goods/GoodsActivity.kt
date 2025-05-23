@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.carts.repository.CartRepositoryImpl
+import woowacourse.shopping.data.goods.repository.GoodsRemoteDataSourceImpl
+import woowacourse.shopping.data.goods.repository.GoodsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartNavbarBinding
 import woowacourse.shopping.domain.model.CartItem
@@ -26,7 +28,7 @@ class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
     private lateinit var navbarBinding: MenuCartNavbarBinding
     private val viewModel: GoodsViewModel by viewModels {
-        GoodsViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
+        GoodsViewModelFactory(CartRepositoryImpl(ShoppingDatabase.getDatabase(this)), GoodsRepositoryImpl(GoodsRemoteDataSourceImpl()))
     }
     private val goodsAdapter by lazy {
         GoodsAdapter(

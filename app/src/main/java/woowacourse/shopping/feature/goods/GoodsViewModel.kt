@@ -4,19 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.carts.repository.CartRepository
+import woowacourse.shopping.data.goods.repository.GoodsRepository
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
-import kotlin.math.min
 
 class GoodsViewModel(
     private val cartRepository: CartRepository,
+    private val goodsRepository: GoodsRepository,
 ) : ViewModel() {
     private val goods = mutableListOf<Goods>()
     private var page: Int = 1
-    private val _isFullLoaded = MutableLiveData(PAGE_SIZE >= dummyGoods.size)
+    private val _isFullLoaded = MutableLiveData(false)
     val isFullLoaded: LiveData<Boolean> get() = _isFullLoaded
     private val _cartItemsWithZeroQuantity = MutableLiveData<List<CartItem>>()
     val cartItemsWithZeroQuantity: LiveData<List<CartItem>> get() = _cartItemsWithZeroQuantity
@@ -35,10 +35,14 @@ class GoodsViewModel(
     }
 
     private fun appendCartItemsWithZeroQuantity() {
-        val loadNewGoodsList = getProducts()
-        goods.addAll(loadNewGoodsList)
-        _isFullLoaded.value = page * PAGE_SIZE >= dummyGoods.size
-        _cartItemsWithZeroQuantity.value = goods.map { CartItem(goods = it, quantity = 0) }
+        val goodsLoadOffset = (page - 1) * PAGE_SIZE
+        goodsRepository.fetchPageGoods(limit = PAGE_SIZE, offset = goodsLoadOffset) { fetchedGoods ->
+            goods.addAll(fetchedGoods)
+            goodsRepository.fetchGoodsSize { totalSize ->
+                _isFullLoaded.postValue(page * PAGE_SIZE >= totalSize)
+            }
+            _cartItemsWithZeroQuantity.postValue(goods.map { CartItem(goods = it, quantity = 0) })
+        }
     }
 
     fun updateCartQuantity() {
@@ -53,11 +57,13 @@ class GoodsViewModel(
     }
 
     private fun setTotalCartItemSize(totalCartQuantity: Int) {
-        when {
-            totalCartQuantity < 1 -> _totalCartItemSize.value = "0"
-            totalCartQuantity in 1..99 -> _totalCartItemSize.value = totalCartQuantity.toString()
-            else -> _totalCartItemSize.value = "99+"
-        }
+        val sizeText =
+            when {
+                totalCartQuantity < 1 -> "0"
+                totalCartQuantity in 1..99 -> totalCartQuantity.toString()
+                else -> "99+"
+            }
+        _totalCartItemSize.postValue(sizeText)
     }
 
     fun addPage() {
@@ -75,12 +81,6 @@ class GoodsViewModel(
         cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
             updateCartQuantity()
         }
-    }
-
-    private fun getProducts(pageSize: Int = PAGE_SIZE): List<Goods> {
-        val fromIndex = (page - 1) * pageSize
-        val toIndex = min(page * pageSize, dummyGoods.size)
-        return dummyGoods.subList(fromIndex, toIndex)
     }
 
     companion object {
