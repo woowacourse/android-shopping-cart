@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="toolbar_title_cart">Cart</string>
+
+    <string name="content_description_product_image">상품 이미지</string>
+    <string name="menu_item_shopping_cart">장바구니</string>
+    <string name="button_text_add_to_shopping_cart">장바구니 담기</string>
+    <string name="text_price">가격</string>
+    <string name="template_price">%1$,d원</string>
+
+    <string name="error_product_is_null">상품 정보가 로드되지 못했습니다.</string>
+    <string name="pagination_left"><![CDATA[<]]></string>
+    <string name="pagination_right"><![CDATA[>]]></string>
+    <string name="button_text_load_more">더보기</string>
 </resources>

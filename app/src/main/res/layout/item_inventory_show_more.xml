@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="button"
+            type="woowacourse.shopping.view.inventory.item.InventoryItem" />
+
+        <variable
+            name="handler"
+            type="woowacourse.shopping.view.inventory.InventoryEventHandler" />
+    </data>
+
+    <Button
+        android:id="@+id/btn_show_more"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/pagination_enabled"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:onClick="@{() -> handler.onLoadMoreProducts()}"
+        android:text="@string/button_text_load_more"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:cornerRadius="0dp"
+        android:layout_marginVertical="10dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</layout>
