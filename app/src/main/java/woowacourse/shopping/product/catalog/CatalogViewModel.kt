@@ -24,8 +24,12 @@ class CatalogViewModel(
     val page: Int get() = currentPage
     val products: List<ProductUiModel> get() = loadedProducts
 
+    private val _cartCount: MutableLiveData<Int> = MutableLiveData<Int>(INITIAL_QUANTITY)
+    val cartCount: LiveData<Int> get() = _cartCount
+
     init {
         loadCatalogProducts()
+        updateCartCount()
     }
 
     fun onQuantitySelectorToggled(product: ProductUiModel) {
@@ -41,8 +45,17 @@ class CatalogViewModel(
                     }
                 }
             updatePaging()
-            if (cartItem == null) repository.insertCartItem(product.copy(quantity = 1))
+            updateCartCount()
+            if (cartItem == null) repository.insertCartItem(product.copy(quantity = 1, isExpanded = true))
         }
+    }
+
+    fun isProductInCart(product: ProductUiModel): Boolean {
+        var isInCart = false
+        thread {
+            isInCart = repository.findCartItem(product) != null
+        }
+        return isInCart
     }
 
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
@@ -60,6 +73,7 @@ class CatalogViewModel(
             } else {
                 repository.insertCartItem(current)
             }
+            updateCartCount()
         }
     }
 
@@ -80,6 +94,7 @@ class CatalogViewModel(
             }
 
             updatePaging()
+            updateCartCount()
         }
     }
 
@@ -92,14 +107,32 @@ class CatalogViewModel(
         )
     }
 
+    private fun updateCartCount() {
+        thread {
+            val count = repository.getAllCartItem().sumOf { it.quantity }
+            _cartCount.postValue(count)
+        }
+    }
+
     private fun loadCatalogProducts(pageSize: Int = PAGE_SIZE) {
         val fromIndex = currentPage * pageSize
         val toIndex = minOf(fromIndex + pageSize, dataSource.getProductsSize())
-        val pagedProducts = dataSource.getSubListedProducts(fromIndex, toIndex)
+        thread {
+            val pagedProducts =
+                dataSource
+                    .getSubListedProducts(fromIndex, toIndex)
+                    .map { product ->
+                        val cartItem = repository.findCartItem(product)
+                        if (cartItem != null && cartItem.quantity > 0) {
+                            product.copy(quantity = cartItem.quantity, isExpanded = true)
+                        } else {
+                            product
+                        }
+                    }
 
-        loadedProducts += pagedProducts
-
-        updatePaging()
+            loadedProducts += pagedProducts
+            updatePaging()
+        }
     }
 
     private fun findAndUpdateProduct(

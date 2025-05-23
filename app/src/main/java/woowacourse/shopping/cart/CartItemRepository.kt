@@ -31,6 +31,4 @@ class CartItemRepository(
     }
 
     fun findCartItem(product: ProductUiModel): CartItem? = dao.getCartItemById(product.id)
-
-    fun isCartItemAvailable(product: ProductUiModel): Boolean = dao.isCartItemExist(product.id)
 }

@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -44,7 +47,29 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cart_menu_item, menu)
-        return super.onCreateOptionsMenu(menu)
+
+        val menuItem = menu?.findItem(R.id.menu_cart)
+        val actionView = menuItem?.actionView
+
+        val cartIcon = actionView?.findViewById<ImageView>(R.id.imageView_cart)
+        val badgeView = actionView?.findViewById<TextView>(R.id.textView_cart_badge)
+
+        cartIcon?.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+
+        fun updateBadge(count: Int) {
+            badgeView?.apply {
+                text = count.toString()
+                visibility = if (count > 0) View.VISIBLE else View.GONE
+            }
+        }
+
+        viewModel.cartCount.observe(this) { products ->
+            updateBadge(products)
+        }
+
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
