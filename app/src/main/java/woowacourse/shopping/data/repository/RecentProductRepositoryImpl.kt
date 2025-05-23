@@ -22,6 +22,13 @@ class RecentProductRepositoryImpl(
         )
     }
 
+    override fun getMostRecentProduct(onResult: (Result<Product?>) -> Unit) {
+        runThread(
+            block = { recentProductDataSource.getMostRecentProduct()?.toProduct() },
+            onResult = onResult,
+        )
+    }
+
     override fun insertRecentProduct(
         product: RecentlyViewedProduct,
         onResult: (Result<Unit>) -> Unit,
@@ -32,7 +39,7 @@ class RecentProductRepositoryImpl(
 
                 if (count == 10) {
                     val oldest = recentProductDataSource.getOldestProduct()
-                    if (oldest != null && oldest.productId != product.productId) {
+                    if (oldest.productId != product.productId) {
                         recentProductDataSource.delete(oldest)
                     }
                 }
@@ -41,4 +48,6 @@ class RecentProductRepositoryImpl(
             onResult = onResult,
         )
     }
+
+    private fun RecentlyViewedProduct.toProduct(): Product = productDataSource.getProductById(this.productId)
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.CartMapper.toEntity
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.data.runThread
@@ -89,4 +88,10 @@ class CartRepositoryImpl(
             onResult = onResult,
         )
     }
+
+    private fun CartItem.toEntity(): CartEntity =
+        CartEntity(
+            productId = this.product.productId,
+            quantity = 1,
+        )
 }

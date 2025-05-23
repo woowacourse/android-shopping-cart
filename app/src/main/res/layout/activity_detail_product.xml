@@ -40,11 +40,13 @@
             android:id="@+id/tv_product_detail_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/textview_margin"
+            android:layout_marginVertical="@dimen/textview_margin"
+            android:layout_marginStart="16dp"
             android:text="@{vm.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
             tools:text="맥심 모카골드 마일드" />
@@ -53,7 +55,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
-            android:layout_marginTop="@dimen/divider_margin_top"
+            android:layout_marginTop="22dp"
             app:dividerColor="@color/gray1"
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_name" />
 
@@ -61,7 +63,8 @@
             android:id="@+id/tv_product_detail_price_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/textview_margin"
+            android:layout_marginVertical="@dimen/textview_margin"
+            android:layout_marginStart="18dp"
             android:text="@{@string/product_detail_price(vm.product.price * vm.productCount)}"
             android:textColor="@color/black"
             android:textSize="22sp"
@@ -80,6 +83,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_detail_price_text"
             app:quantity="@{vm.productCount}" />
+
+        <include
+            android:id="@+id/included_recent_product"
+            layout="@layout/layout_recent_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="40dp"
+            android:visibility="visible"
+            app:id="@{vm.recentProduct.productId}"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_detail_price_text"
+            app:name="@{vm.recentProduct.name}" />
 
         <Button
             android:id="@+id/btn_product_detail_add_cart"

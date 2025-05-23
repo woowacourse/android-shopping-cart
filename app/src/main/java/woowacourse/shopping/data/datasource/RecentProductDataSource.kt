@@ -5,7 +5,9 @@ import woowacourse.shopping.data.db.RecentlyViewedProduct
 interface RecentProductDataSource {
     fun getProducts(): List<RecentlyViewedProduct>
 
-    fun getOldestProduct(): RecentlyViewedProduct?
+    fun getMostRecentProduct(): RecentlyViewedProduct?
+
+    fun getOldestProduct(): RecentlyViewedProduct
 
     fun getCount(): Int
 

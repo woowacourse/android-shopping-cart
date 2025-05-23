@@ -8,7 +8,9 @@ class RecentProductDataSourceImpl(
 ) : RecentProductDataSource {
     override fun getProducts(): List<RecentlyViewedProduct> = dao.getProducts()
 
-    override fun getOldestProduct(): RecentlyViewedProduct? = dao.getOldestProduct()
+    override fun getMostRecentProduct(): RecentlyViewedProduct? = dao.getMostRecentProduct()
+
+    override fun getOldestProduct(): RecentlyViewedProduct = dao.getOldestProduct()
 
     override fun getCount(): Int = dao.getCount()
 

@@ -141,16 +141,6 @@ class ProductActivity :
             when (result) {
                 is ResultState.Success -> {
                     recentAdapter.submitList(result.data)
-//                    recentAdapter.submitList(
-//                        listOf(
-//                            Product(
-//                                1,
-//                                "맥심 슈프림골드 커피믹스",
-//                                Price(8000),
-//                                "https://sitem.ssgcdn.com/03/58/88/item/1000172885803_i1_464.jpg",
-//                            ),
-//                        ),
-//                    )
                 }
 
                 is ResultState.Failure -> {
@@ -173,8 +163,8 @@ class ProductActivity :
             }
         }
 
-        viewModel.toastMessage.observe(this) { ResId ->
-            showToast(ResId)
+        viewModel.toastMessage.observe(this) { resId ->
+            showToast(resId)
         }
     }
 

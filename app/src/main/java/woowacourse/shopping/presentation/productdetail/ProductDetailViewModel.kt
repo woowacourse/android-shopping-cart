@@ -22,6 +22,8 @@ class ProductDetailViewModel(
     val product: LiveData<Product> = _product
     private val _productCount: MutableLiveData<Int> = MutableLiveData(1)
     val productCount: LiveData<Int> = _productCount
+    private val _recentProduct: MutableLiveData<Product?> = MutableLiveData()
+    val recentProduct: LiveData<Product?> = _recentProduct
     private val _insertProductResult: MutableLiveData<ResultState<Unit>> = MutableLiveData()
     val insertProductResult: LiveData<ResultState<Unit>> = _insertProductResult
     private val _toastMessage = SingleLiveData<Int>()
@@ -29,6 +31,12 @@ class ProductDetailViewModel(
 
     fun fetchData(productId: Long) {
         _product.value = productRepository.getProductById(productId)
+
+        recentProductRepository.getMostRecentProduct { result ->
+            result
+                .onSuccess { product -> _recentProduct.postValue(product) }
+                .onFailure { _toastMessage.postValue(R.string.product_detail_toast_most_recent_load_fail) }
+        }
     }
 
     fun addToCart(productId: Long) {
