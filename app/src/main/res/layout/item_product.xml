@@ -45,7 +45,10 @@
             android:visibility="@{product.quantity > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/image_view_product"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:onDecreaseClicked="@{() -> eventListener.decreaseQuantity(product.productId)}"
+            app:onIncreaseClicked="@{() -> eventListener.increaseQuantity(product.productId)}"
+            app:quantity="@{product.quantity}" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_open_quantity_selector"

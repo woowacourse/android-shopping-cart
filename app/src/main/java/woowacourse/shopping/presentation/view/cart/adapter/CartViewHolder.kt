@@ -12,13 +12,10 @@ class CartViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.eventListener = eventListener
-        binding.viewQuantitySelector.listener = eventListener
     }
 
     fun bind(cartItem: CartItemUiModel) {
         binding.cartItem = cartItem
-        binding.viewQuantitySelector.quantity = cartItem.quantity
-        binding.viewQuantitySelector.productId = cartItem.productId
     }
 
     companion object {

@@ -90,7 +90,10 @@
             app:layout_constraintBottom_toBottomOf="@id/text_view_detail_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
-            app:layout_constraintTop_toTopOf="@id/text_view_detail_price" />
+            app:layout_constraintTop_toTopOf="@id/text_view_detail_price"
+            app:onDecreaseClicked="@{() -> vm.decreaseQuantity() }"
+            app:onIncreaseClicked="@{() -> vm.increaseQuantity() }"
+            app:quantity="@{vm.quantity}" />
 
         <LinearLayout
             android:id="@+id/view_recent_product"
