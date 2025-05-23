@@ -8,9 +8,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.ProductUiModel
+import woowacourse.shopping.view.inventory.item.toDomain
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.util.getParcelableCompat
 
@@ -24,17 +27,17 @@ class ProductDetailActivity :
 
         val shoppingApplication = application as ShoppingApplication
         val factory =
-            ProductDetailViewModel.createFactory(shoppingApplication.inventoryRepository)
+            ProductDetailViewModel.createFactory(shoppingApplication.shoppingCartRepository2)
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
 
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
-        val product: ProductUiModel =
-            intent.getParcelableCompat(KEY_PRODUCT) ?: run {
+        val cartItem: CartItem =
+            intent.getParcelableCompat<ProductUiModel>(KEY_PRODUCT)?.toDomain()?.toCartItem() ?: run {
                 onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
         binding.apply {
-            this.product = product
+            this.cartItem = cartItem
             handler = this@ProductDetailActivity
         }
     }
@@ -44,8 +47,8 @@ class ProductDetailActivity :
         return true
     }
 
-    override fun onAddToCartSelected(product: ProductUiModel) {
-        viewModel.addProduct(product)
+    override fun onAddToCartSelected(cartItem: CartItem) {
+        viewModel.addProduct(cartItem)
         startActivity(ShoppingCartActivity.newIntent(this))
     }
 

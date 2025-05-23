@@ -2,20 +2,19 @@ package woowacourse.shopping.view.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.inventory.InventoryRepository
-import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.toDomain
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository2
+import woowacourse.shopping.domain.CartItem
 
 class ProductDetailViewModel(
-    private val repository: InventoryRepository,
+    private val repository: ShoppingCartRepository2,
 ) : ViewModel() {
-    fun addProduct(product: InventoryItem.ProductUiModel) {
-        repository.insert(product.toDomain())
+    fun addProduct(cartItem: CartItem) {
+        repository.insert(cartItem)
     }
 
     companion object {
         @Suppress("UNCHECKED_CAST")
-        fun createFactory(repository: InventoryRepository): ViewModelProvider.Factory {
+        fun createFactory(repository: ShoppingCartRepository2): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return (ProductDetailViewModel(repository) as T)

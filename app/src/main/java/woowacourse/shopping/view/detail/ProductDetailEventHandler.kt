@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.detail
 
-import woowacourse.shopping.view.inventory.item.InventoryItem
+import woowacourse.shopping.domain.CartItem
 
 interface ProductDetailEventHandler {
-    fun onAddToCartSelected(product: InventoryItem.ProductUiModel)
+    fun onAddToCartSelected(cartItem: CartItem)
 }
