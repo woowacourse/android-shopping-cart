@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.shoppingcart
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,6 +14,9 @@ interface CartItemDao {
 
     @Query("SELECT * FROM $CART_ITEM_TABLE_NAME")
     fun getAll(): List<CartItemEntity>
+
+    @Delete
+    fun delete(cartItem: CartItemEntity)
 
     @Query("DELETE FROM $CART_ITEM_TABLE_NAME")
     fun clear()

@@ -18,4 +18,6 @@ interface ShoppingCartRepository2 {
     )
 
     fun insert(cartItem: CartItem)
+
+    fun delete(cartItem: CartItem)
 }

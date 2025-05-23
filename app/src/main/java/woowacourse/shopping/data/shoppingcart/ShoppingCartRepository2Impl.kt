@@ -51,4 +51,10 @@ class ShoppingCartRepository2Impl(private val cartItemDao: CartItemDao) : Shoppi
             cartItemDao.insert(cartItem.toEntity())
         }
     }
+
+    override fun delete(cartItem: CartItem) {
+        thread {
+            cartItemDao.delete(cartItem.toEntity())
+        }
+    }
 }
