@@ -28,6 +28,6 @@ interface CartDao {
     fun delete(cartItemId: Long)
 
     @Transaction
-    @Query("UPDATE cart SET quantity = quantity + :additional WHERE product_id = :productId")
-    fun addQuantity(productId: Long, additional: Int)
+    @Query("UPDATE cart SET quantity = quantity + :delta WHERE id = :cartItemId")
+    fun updateQuantity(cartItemId: Long, delta: Int)
 }

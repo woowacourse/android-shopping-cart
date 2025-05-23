@@ -16,6 +16,8 @@ interface CartRepository {
 
     fun insertOrAddQuantity(productId: Long, quantity: Int, onResult: (Result<Unit>) -> Unit)
 
+    fun updateQuantity(cartItemId: Long, delta: Int, onResult: (Result<Unit>) -> Unit)
+
     fun delete(
         cartItemId: Long,
         onResult: (Unit) -> Unit,

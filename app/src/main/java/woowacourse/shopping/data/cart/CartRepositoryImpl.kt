@@ -37,14 +37,26 @@ class CartRepositoryImpl(private val dao: CartDao) : CartRepository {
                 dao.insert(cartItemEntity)
             }.onSuccess { cartId ->
                 if (cartId == EXIST_PRODUCT_IN_CART) {
-                    dao.addQuantity(productId, quantity)
+                    dao.updateQuantity(cartId, quantity)
                 }
-                
+
                 onResult(Result.success(Unit))
             }.onFailure {
                 onResult(Result.failure(it))
             }
 
+        }
+    }
+
+    override fun updateQuantity(cartItemId: Long, delta: Int, onResult: (Result<Unit>) -> Unit) {
+        thread {
+            runCatching {
+                dao.updateQuantity(cartItemId, delta)
+            }.onSuccess {
+                onResult(Result.success(Unit))
+            }.onFailure {
+                onResult(Result.failure(it))
+            }
         }
     }
 
