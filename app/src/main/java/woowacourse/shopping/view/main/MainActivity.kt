@@ -38,6 +38,7 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initialize()
+        viewModel.totalSize()
         setSupportActionBar(binding.toolbar as Toolbar)
         initProductList()
     }
@@ -96,10 +97,10 @@ class MainActivity :
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
         }
         viewModel.apply {
-            requestProductsPage(0)
             productsLiveData.observe(this@MainActivity) { mainRecyclerViewProduct ->
                 productsAdapter.updateProducts(mainRecyclerViewProduct)
             }
+            requestProductsPage(0)
         }
     }
 
@@ -126,7 +127,12 @@ class MainActivity :
 
         override fun onProductSelected(productUiModel: ProductUiModel) {
             viewModel.saveCurrentShoppingCart(productsAdapter.quantityInfo)
-            this@MainActivity.startActivity(ProductDetailActivity.newIntent(this@MainActivity, productUiModel))
+            this@MainActivity.startActivity(
+                ProductDetailActivity.newIntent(
+                    this@MainActivity,
+                    productUiModel,
+                ),
+            )
         }
 
         override fun whenQuantityChangedSelectView(
@@ -134,7 +140,8 @@ class MainActivity :
             quantity: MutableLiveData<Int>,
         ) {
             val btnItemProductAddToCart = view.findViewById<View>(R.id.btn_item_product_add_to_cart)
-            val layoutProductQuantitySelector = view.findViewById<View>(R.id.layout_product_quantity_selector)
+            val layoutProductQuantitySelector =
+                view.findViewById<View>(R.id.layout_product_quantity_selector)
 
             quantity.value?.let { quantityValue ->
                 btnItemProductAddToCart.visibility =
@@ -144,27 +151,29 @@ class MainActivity :
             }
         }
     }
-}
 
-private class ProductsOnScrollListener(
-    private val binding: ActivityMainBinding,
-    private val viewModel: ProductsViewModel,
-) : RecyclerView.OnScrollListener() {
-    override fun onScrolled(
-        recyclerView: RecyclerView,
-        dx: Int,
-        dy: Int,
-    ) {
-        val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
-        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-        binding.btnLoadMoreProducts.visibility =
-            if (
-                lastVisibleItemPosition == layoutManager.itemCount - 1 &&
-                viewModel.totalSize > (recyclerView.adapter?.itemCount ?: 0)
-            ) {
-                View.VISIBLE
-            } else {
-                View.GONE
+    private inner class ProductsOnScrollListener(
+        private val binding: ActivityMainBinding,
+        private val viewModel: ProductsViewModel,
+    ) : RecyclerView.OnScrollListener() {
+        override fun onScrolled(
+            recyclerView: RecyclerView,
+            dx: Int,
+            dy: Int,
+        ) {
+            val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+            viewModel.totalSize.observe(this@MainActivity) {
+                binding.btnLoadMoreProducts.visibility =
+                    if (
+                        lastVisibleItemPosition == layoutManager.itemCount - 1 &&
+                        it > (recyclerView.adapter?.itemCount ?: 0)
+                    ) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
             }
+        }
     }
 }

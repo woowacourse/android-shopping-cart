@@ -5,8 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
@@ -26,8 +30,14 @@ class ProductsViewModel(
 ) : ViewModel(), ViewRule {
     private val _productsLiveData: MutableLiveData<MainRecyclerViewProduct> = MutableLiveData()
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
-    val totalSize: Int get() = productsRepository.totalSize()
-    val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalQuantity())
+    val totalSize: MutableLiveData<Int> = MutableLiveData(0)
+    val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData()
+
+    fun totalSize() {
+        viewModelScope.launch {
+            totalSize.value = productsRepository.totalSize()
+        }
+    }
 
     fun requestProductsPage(requestPage: Int) {
         val pageRequest =
@@ -35,44 +45,55 @@ class ProductsViewModel(
                 pageSize = PAGE_SIZE,
                 requestPage = requestPage,
             )
-        val page = productsRepository.findAll(pageRequest)
-        val shoppingCartItems = shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
 
-        _productsLiveData.value =
-            MainRecyclerViewProduct(
-                page =
-                    Page(
-                        items = page.items.map { it.toProductUiModel() },
-                        totalCounts = page.totalCounts,
-                        currentPage = page.currentPage,
-                        pageSize = page.pageSize,
-                    ),
-                shoppingCartItemUiModels = shoppingCartItems,
-            )
+        viewModelScope.launch {
+            val page =
+                withContext(Dispatchers.IO) {
+                    productsRepository.findAll(pageRequest)
+                }
+            val shoppingCartItems =
+                withContext(Dispatchers.IO) {
+                    shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
+                }
+
+            _productsLiveData.value =
+                MainRecyclerViewProduct(
+                    page =
+                        Page(
+                            items = page.items.map { it.toProductUiModel() },
+                            totalCounts = page.totalCounts,
+                            currentPage = page.currentPage,
+                            pageSize = page.pageSize,
+                        ),
+                    shoppingCartItemUiModels = shoppingCartItems,
+                )
+        }
     }
 
     fun saveCurrentShoppingCart(quantityInfo: QuantityInfo<ProductUiModel>) {
-        quantityInfo.forEach { product, data ->
-            shoppingCartRepository.update(
-                ShoppingCartItem(
-                    product = product.toProduct(),
-                    quantity = data,
-                ),
-            )
+        viewModelScope.launch(Dispatchers.IO) {
+            quantityInfo.toList().forEach {
+                shoppingCartRepository.update(
+                    ShoppingCartItem(
+                        product = it.first.toProduct(),
+                        quantity = it.second,
+                    ),
+                )
+            }
         }
     }
 
     fun updateShoppingCart(currentPage: Int) {
-        totalShoppingCartSize.value = shoppingCartRepository.totalQuantity()
-        (0..currentPage).forEach {
-            requestProductsPage(it)
+        viewModelScope.launch {
+            val totalQuantity =
+                withContext(Dispatchers.IO) {
+                    shoppingCartRepository.totalQuantity()
+                }
+            totalShoppingCartSize.value = totalQuantity
+            (0..currentPage).forEach {
+                requestProductsPage(it)
+            }
         }
-    }
-
-    fun increaseItem(productUiModel: ProductUiModel) {
-    }
-
-    fun decreaseItem(productUiModel: ProductUiModel) {
     }
 
     fun increaseShoppingCartTotalSize() {

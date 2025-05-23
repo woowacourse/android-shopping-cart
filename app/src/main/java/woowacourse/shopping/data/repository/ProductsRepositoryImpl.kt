@@ -7,7 +7,7 @@ import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.domain.Product
 
 class ProductsRepositoryImpl : ProductsRepository {
-    override fun findAll(pageRequest: PageRequest): Page<Product> {
+    override suspend fun findAll(pageRequest: PageRequest): Page<Product> {
         val items =
             DummyProducts.products
                 .distinct()
@@ -16,5 +16,5 @@ class ProductsRepositoryImpl : ProductsRepository {
         return pageRequest.toPage(items, totalSize())
     }
 
-    override fun totalSize(): Int = DummyProducts.products.size
+    override suspend fun totalSize(): Int = DummyProducts.products.size
 }

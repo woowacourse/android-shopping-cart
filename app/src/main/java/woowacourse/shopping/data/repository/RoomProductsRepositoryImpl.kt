@@ -9,7 +9,7 @@ import woowacourse.shopping.mapper.toProduct
 class RoomProductsRepositoryImpl(
     private val productDao: ProductDao,
 ) : ProductsRepository {
-    override fun findAll(pageRequest: PageRequest): Page<Product> {
+    override suspend fun findAll(pageRequest: PageRequest): Page<Product> {
         val offset = pageRequest.requestPage * pageRequest.pageSize
         val limit = pageRequest.pageSize
         val items =
@@ -19,7 +19,7 @@ class RoomProductsRepositoryImpl(
         return pageRequest.toPage(items, totalSize())
     }
 
-    override fun totalSize(): Int {
+    override suspend fun totalSize(): Int {
         return productDao.count()
     }
 }

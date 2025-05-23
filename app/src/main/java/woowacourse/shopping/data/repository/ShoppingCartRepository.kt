@@ -5,17 +5,17 @@ import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.domain.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem>
+    suspend fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem>
 
-    fun findAll(): List<ShoppingCartItem>
+    suspend fun findAll(): List<ShoppingCartItem>
 
-    fun totalSize(): Int
+    suspend fun totalSize(): Int
 
-    fun remove(item: ShoppingCartItem)
+    suspend fun remove(item: ShoppingCartItem)
 
-    fun save(item: ShoppingCartItem)
+    suspend fun save(item: ShoppingCartItem)
 
-    fun update(item: ShoppingCartItem)
+    suspend fun update(item: ShoppingCartItem)
 
-    fun totalQuantity(): Int
+    suspend fun totalQuantity(): Int
 }

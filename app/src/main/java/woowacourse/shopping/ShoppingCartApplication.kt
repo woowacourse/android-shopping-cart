@@ -1,16 +1,20 @@
 package woowacourse.shopping
 
 import android.app.Application
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.room.Room
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.ShoppingCartDatabase
-import woowacourse.shopping.data.entity.ProductEntity
-import woowacourse.shopping.data.entity.ShoppingCartItemEntity
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.data.repository.RoomProductsRepositoryImpl
 import woowacourse.shopping.data.repository.RoomShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.mapper.toEntity
 
 class ShoppingCartApplication : Application() {
     val productsRepository: ProductsRepository by lazy {
@@ -34,23 +38,25 @@ class ShoppingCartApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        DummyProducts.products.forEach {
-            db.productDao().insert(
-                ProductEntity(
-                    name = it.name,
-                    price = it.price,
-                    imageUrl = it.imageUrl,
-                ),
-            )
-        }
 
-        DummyShoppingCart.items.forEach {
-            db.shoppingCartDao().insert(
-                ShoppingCartItemEntity(
-                    productId = it.product.id,
-                    quantity = it.quantity,
-                ),
-            )
+        val prefs: SharedPreferences = getSharedPreferences("first_run", MODE_PRIVATE)
+        val isFirstRun = prefs.getBoolean("first_run", true)
+
+        if (isFirstRun) {
+            CoroutineScope(Dispatchers.IO).launch {
+                DummyProducts.products.forEach {
+                    db.productDao().insert(
+                        it.toEntity(),
+                    )
+                }
+
+                DummyShoppingCart.items.forEach {
+                    db.shoppingCartDao().insert(
+                        it.toEntity(),
+                    )
+                }
+            }
+            prefs.edit { putBoolean("first_run", false) }
         }
     }
 

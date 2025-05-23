@@ -9,14 +9,14 @@ import woowacourse.shopping.data.entity.ProductEntity
 @Dao
 interface ProductDao {
     @Query("SELECT * FROM product LIMIT :limit OFFSET :offset;\n")
-    fun findAll(
+    suspend fun findAll(
         offset: Int,
         limit: Int,
     ): List<ProductEntity>
 
     @Query("SELECT COUNT(*) FROM product;")
-    fun count(): Int
+    suspend fun count(): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(productEntity: ProductEntity)
+    suspend fun insert(productEntity: ProductEntity)
 }

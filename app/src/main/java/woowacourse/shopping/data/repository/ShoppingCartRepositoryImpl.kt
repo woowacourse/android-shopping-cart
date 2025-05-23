@@ -7,7 +7,7 @@ import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartRepositoryImpl : ShoppingCartRepository {
-    override fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
+    override suspend fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
         val items =
             DummyShoppingCart.items
                 .distinct()
@@ -16,17 +16,17 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         return pageRequest.toPage(items, totalSize())
     }
 
-    override fun findAll(): List<ShoppingCartItem> {
+    override suspend fun findAll(): List<ShoppingCartItem> {
         return DummyShoppingCart.items
     }
 
-    override fun totalSize(): Int = DummyShoppingCart.items.size
+    override suspend fun totalSize(): Int = DummyShoppingCart.items.size
 
-    override fun remove(item: ShoppingCartItem) {
+    override suspend fun remove(item: ShoppingCartItem) {
         DummyShoppingCart.items.remove(item)
     }
 
-    override fun save(item: ShoppingCartItem) {
+    override suspend fun save(item: ShoppingCartItem) {
         val existingItemIndex = DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
 
         if (existingItemIndex != -1) {
@@ -38,7 +38,7 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         }
     }
 
-    override fun update(item: ShoppingCartItem) {
+    override suspend fun update(item: ShoppingCartItem) {
         val existingItemIndex = DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
         if (item.quantity <= 0) return
 
@@ -51,7 +51,7 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         }
     }
 
-    override fun totalQuantity(): Int {
+    override suspend fun totalQuantity(): Int {
         return DummyShoppingCart.items.sumOf { it.quantity }
     }
 }

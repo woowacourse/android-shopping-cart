@@ -5,7 +5,7 @@ import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.domain.Product
 
 interface ProductsRepository {
-    fun findAll(pageRequest: PageRequest): Page<Product>
+    suspend fun findAll(pageRequest: PageRequest): Page<Product>
 
-    fun totalSize(): Int
+    suspend fun totalSize(): Int
 }

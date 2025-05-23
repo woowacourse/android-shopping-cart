@@ -34,6 +34,12 @@ class QuantityInfo<T>(
         }
     }
 
+    fun toList(): List<Pair<T, Int>>  {
+        return map.map {
+            (it.key to (it.value.value ?: throw IllegalStateException(ERR_CANNOT_FIND_LIVEDATA)))
+        }
+    }
+
     companion object {
         private const val ERR_CANNOT_FIND_LIVEDATA = "라이브데이터를 찾을 수 없습니다"
         private const val ERR_DUPLICATE_KEY = "중복된 키가 있습니다"

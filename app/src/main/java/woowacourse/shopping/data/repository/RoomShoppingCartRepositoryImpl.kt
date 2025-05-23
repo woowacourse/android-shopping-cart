@@ -10,13 +10,13 @@ import woowacourse.shopping.mapper.toShoppingCartItem
 class RoomShoppingCartRepositoryImpl(
     private val shoppingCartItemDao: ShoppingCartItemDao,
 ) : ShoppingCartRepository {
-    override fun findAll(): List<ShoppingCartItem> {
+    override suspend fun findAll(): List<ShoppingCartItem> {
         return shoppingCartItemDao.findAll().map {
             it.toShoppingCartItem()
         }
     }
 
-    override fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
+    override suspend fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
         val item =
             shoppingCartItemDao.findAll().map {
                 it.toShoppingCartItem()
@@ -24,27 +24,27 @@ class RoomShoppingCartRepositoryImpl(
         return pageRequest.toPage(item, totalSize())
     }
 
-    override fun totalSize(): Int {
+    override suspend fun totalSize(): Int {
         return shoppingCartItemDao.count()
     }
 
-    override fun remove(item: ShoppingCartItem) {
+    override suspend fun remove(item: ShoppingCartItem) {
         shoppingCartItemDao.delete(item.id)
     }
 
-    override fun save(item: ShoppingCartItem) {
+    override suspend fun save(item: ShoppingCartItem) {
         shoppingCartItemDao.saveOrInsert(
             item.toEntity(),
         )
     }
 
-    override fun update(item: ShoppingCartItem) {
+    override suspend fun update(item: ShoppingCartItem) {
         shoppingCartItemDao.update(
             item.toEntity(),
         )
     }
 
-    override fun totalQuantity(): Int {
+    override suspend fun totalQuantity(): Int {
         return shoppingCartItemDao.totalQuantity()
     }
 }

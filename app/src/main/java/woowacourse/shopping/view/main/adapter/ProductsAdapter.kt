@@ -15,7 +15,7 @@ class ProductsAdapter(
     var quantityInfo = QuantityInfo<ProductUiModel>()
         private set
 
-    var currentPage: Int = 0
+    var currentPage: Int = -1
         private set
 
     override fun getItemCount(): Int = productUiModels.size

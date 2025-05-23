@@ -5,8 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingCartItem
@@ -22,12 +25,14 @@ class ProductDetailViewModel(
 
     fun addProduct(productUiModel: ProductUiModel) {
         quantityLiveData.value?.let {
-            shoppingCartRepository.save(
-                ShoppingCartItem(
-                    product = productUiModel.toProduct(),
-                    quantity = it,
-                ),
-            )
+            viewModelScope.launch(Dispatchers.IO) {
+                shoppingCartRepository.save(
+                    ShoppingCartItem(
+                        product = productUiModel.toProduct(),
+                        quantity = it,
+                    ),
+                )
+            }
         }
     }
 
