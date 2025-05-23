@@ -19,6 +19,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.QuantityChangeListener
 import woowacourse.shopping.feature.cart.CartActivity
+import woowacourse.shopping.feature.goods.adapter.horizontal.HorizontalSectionAdapter
 import woowacourse.shopping.feature.goods.adapter.vertical.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
@@ -32,6 +33,10 @@ class GoodsActivity : AppCompatActivity() {
             CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
             GoodsRepositoryImpl(GoodsRemoteDataSourceImpl()),
         )
+    }
+
+    private val horizontalSelectionAdapter by lazy {
+        HorizontalSectionAdapter(goodsClickListener = { goods -> navigateGoodsDetails(goods) })
     }
     private val goodsAdapter by lazy {
         GoodsAdapter(
@@ -54,7 +59,13 @@ class GoodsActivity : AppCompatActivity() {
             viewModel.updateCartQuantity()
         }
     }
-    private val concatAdapter by lazy { ConcatAdapter(goodsAdapter, moreButtonAdapter) }
+    private val concatAdapter by lazy {
+        ConcatAdapter(
+            horizontalSelectionAdapter,
+            goodsAdapter,
+            moreButtonAdapter,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +86,9 @@ class GoodsActivity : AppCompatActivity() {
         viewModel.cartItemsWithZeroQuantity.observe(this) {
             viewModel.updateCartQuantity()
         }
+        binding.rvCartItems.addItemDecoration(
+            GoodsGridItemDecoration(concatAdapter, GRID_GOODS_ITEM_HORIZONTAL_PADDING),
+        )
     }
 
     private fun getLayoutManager(): GridLayoutManager {
@@ -111,5 +125,9 @@ class GoodsActivity : AppCompatActivity() {
     private fun navigateGoodsDetails(goods: Goods) {
         val intent = GoodsDetailsActivity.newIntent(this, goods.toUi())
         startActivity(intent)
+    }
+
+    companion object {
+        private const val GRID_GOODS_ITEM_HORIZONTAL_PADDING = 14
     }
 }

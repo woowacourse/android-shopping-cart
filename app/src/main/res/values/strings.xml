@@ -21,5 +21,6 @@
     <string name="cart_item_image_description">장바구니 아이템 이미지</string>
     <string name="cart_left_page_button"><![CDATA[<]]></string>
     <string name="cart_right_page_button"><![CDATA[>]]></string>
+    <string name="recently_viewed_goods_header">최근 본 상품</string>
 
 </resources>
