@@ -1,6 +1,7 @@
 package woowacourse.shopping.product.catalog
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
@@ -110,6 +111,7 @@ class CatalogActivity : AppCompatActivity() {
 
     private fun observeCatalogProducts() {
         viewModel.catalogItems.observe(this) { value ->
+            Log.d("OBSERVED", "${value.size}")
             (binding.recyclerViewProducts.adapter as ProductAdapter).addItems(value)
         }
         viewModel.updatedItem.observe(this) { product ->

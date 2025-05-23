@@ -66,17 +66,27 @@ class CatalogViewModel(
             catalogDataSource.getProductsInRange(startIndex, endIndex)
 
         cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
+
             val cartProductMap = cartProducts.associateBy { it.uid }
 
             val mergedProducts: List<ProductUiModel> =
                 pagedProducts.map { product ->
                     val cartProduct = cartProductMap[product.id]
-                    if (cartProduct != null) {
+                    if (cartProduct != null && product.id == cartProduct.uid) {
                         product.copy(quantity = cartProduct.quantity)
                     } else {
                         product
                     }
                 }
+
+            synchronized(CatalogDatabase.dummyProducts) {
+                mergedProducts.forEachIndexed { index, merged ->
+                    val dbIndex = CatalogDatabase.dummyProducts.indexOfFirst { it.id == merged.id }
+                    if (dbIndex != -1) {
+                        CatalogDatabase.dummyProducts[dbIndex] = merged
+                    }
+                }
+            }
 
             val mergedCatalogItems = mergedProducts.map { CatalogItem.ProductItem(it) }
 
@@ -101,7 +111,7 @@ class CatalogViewModel(
     }
 
     fun updateAfterCheckingDiff() {
-        val currentItems = catalogItems.value ?: return
+        val currentItems = catalogItems.value ?: emptyList()
         if (currentItems.isEmpty()) return
 
         val productItems = currentItems.filterIsInstance<ProductItem>()
