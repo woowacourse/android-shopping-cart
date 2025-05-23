@@ -23,7 +23,7 @@ class ShoppingCartActivity :
         val factory =
             ShoppingCartViewModel.createFactory(
                 shoppingApplication.shoppingCartRepository,
-                shoppingApplication.shoppingCartRepository2,
+                shoppingApplication.inventoryRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
         binding.apply {
