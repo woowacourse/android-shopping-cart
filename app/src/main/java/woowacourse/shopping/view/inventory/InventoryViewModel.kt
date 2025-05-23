@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository2
+import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
@@ -21,6 +22,7 @@ class InventoryViewModel(
     val items: LiveData<List<InventoryItem>> get() = _items
 
     fun requestPage() {
+        loadCartInfo()
         inventoryRepository.getPage(
             PAGE_SIZE,
             products.size / PAGE_SIZE,
@@ -30,6 +32,14 @@ class InventoryViewModel(
     private fun updateItems(newPage: Page<InventoryProduct>) {
         val newItems = products + newPage.items + if (newPage.hasNext) listOf(ShowMore) else emptyList()
         _items.postValue(newItems)
+    }
+
+    private fun loadCartInfo() {
+        shoppingCartRepository.getAll { allItems ->
+            allItems.forEach { item ->
+                inventoryRepository.insert(item.toInventoryProduct())
+            }
+        }
     }
 
     companion object {
