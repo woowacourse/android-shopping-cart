@@ -9,6 +9,7 @@ sealed interface InventoryItem {
 
     @Parcelize
     data class ProductUiModel(
+        val id: Int,
         val name: String,
         val price: Int,
         val imageUrl: String,
