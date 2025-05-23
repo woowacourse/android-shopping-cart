@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+            name="productId"
+            type="Long" />
 
         <variable
             name="shoppingProduct"
@@ -58,7 +58,7 @@
             android:includeFontPadding="false"
             android:text="@string/quantity_plus"
             android:textSize="22sp"
-            android:onClick="@{() -> onClick.onQuantityControlPlusClick(product)}"
+            android:onClick="@{() -> onClick.onQuantityControlPlusClick(productId)}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toEndOf="@+id/tv_quantity"
             app:layout_constraintTop_toTopOf="parent" />

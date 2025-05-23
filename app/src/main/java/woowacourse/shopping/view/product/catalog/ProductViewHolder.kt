@@ -22,9 +22,9 @@ class ProductViewHolder(
         val product = shoppingProduct.productId.toProductDomain()
         binding.product = product
         binding.quantity = shoppingProduct.quantity
-        binding.initQuantityControl.product = product
+        binding.initQuantityControl.productId = product.id
         binding.initQuantityControl.shoppingProduct = shoppingProduct
-        binding.initQuantityPlus.product = product
+        binding.initQuantityPlus.productId = product.id
     }
 
     companion object {

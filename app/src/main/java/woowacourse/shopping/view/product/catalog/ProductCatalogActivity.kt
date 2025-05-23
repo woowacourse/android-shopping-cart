@@ -67,12 +67,12 @@ class ProductCatalogActivity : AppCompatActivity() {
                             navigateToProductDetail(product)
                         }
 
-                        override fun onInitPlusButtonClick(product: Product) {
-                            viewModel.addToShoppingCart(product)
+                        override fun onInitPlusButtonClick(productId: Long) {
+                            viewModel.addToShoppingCart(productId)
                         }
 
-                        override fun onQuantityControlPlusClick(product: Product) {
-                            viewModel.addToShoppingCart(product)
+                        override fun onQuantityControlPlusClick(productId: Long) {
+                            viewModel.addToShoppingCart(productId)
                         }
 
                         override fun onQuantityControlMinusClick(productId: Long) {

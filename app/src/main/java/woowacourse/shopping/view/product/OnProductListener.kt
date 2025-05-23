@@ -5,9 +5,9 @@ import woowacourse.shopping.domain.Product
 interface OnProductListener {
     fun onItemClick(product: Product)
 
-    fun onInitPlusButtonClick(product: Product)
+    fun onInitPlusButtonClick(productId: Long)
 
-    fun onQuantityControlPlusClick(product: Product)
+    fun onQuantityControlPlusClick(productId: Long)
 
     fun onQuantityControlMinusClick(productId: Long)
 }

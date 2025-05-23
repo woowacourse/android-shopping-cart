@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+            name="productId"
+            type="Long" />
 
         <variable
             name="onClick"
@@ -23,7 +23,7 @@
             android:gravity="center"
             android:text="@string/quantity_plus"
             android:textSize="25sp"
-            android:onClick="@{()->onClick.onQuantityControlPlusClick(product)}"
+            android:onClick="@{()->onClick.onQuantityControlPlusClick(productId)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"

@@ -36,38 +36,38 @@ class ProductCatalogViewModel(
         return PagedResult(shoppingProduct, this.hasNext)
     }
 
-    fun addToShoppingCart(product: Product) {
-        val old = products.value ?: return
+    fun addToShoppingCart(productId: Long) {
+        val currentProducts = products.value ?: return
 
-        shoppingCartRepository.addProduct(product.id)
+        shoppingCartRepository.addProduct(productId)
 
         val updatedItems =
-            old.items.map {
-                if (it.productId == product.id) {
-                    it.copy(quantity = it.quantity?.plus(1))
+            currentProducts.items.map { item ->
+                if (item.productId == productId) {
+                    item.add()
                 } else {
-                    it
+                    item
                 }
             }
 
-        products.value = PagedResult(updatedItems, old.hasNext)
+        products.value = PagedResult(updatedItems, currentProducts.hasNext)
     }
 
     fun removeToShoppingCart(productId: Long) {
-        val old = products.value ?: return
+        val currentProducts = products.value ?: return
 
         shoppingCartRepository.removeProduct(productId)
 
         val updatedItems =
-            old.items.map {
-                if (it.productId == productId) {
-                    it.copy(quantity = it.quantity?.minus(1))
+            currentProducts.items.map { item ->
+                if (item.productId == productId) {
+                    item.remove()
                 } else {
-                    it
+                    item
                 }
             }
 
-        products.value = PagedResult(updatedItems, old.hasNext)
+        products.value = PagedResult(updatedItems, currentProducts.hasNext)
     }
 
     private fun PagedResult<ShoppingProduct>.toProductItems(): List<ProductItem> {
