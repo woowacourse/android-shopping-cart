@@ -1,10 +1,10 @@
 package woowacourse.shopping.view.product.catalog
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 
 sealed class ProductItem {
     data class CatalogProduct(
-        val product: Product,
+        val shoppingProduct: ShoppingProduct,
     ) : ProductItem()
 
     data object LoadMore : ProductItem()

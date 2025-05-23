@@ -9,17 +9,15 @@ import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.view.PagedResult
 
 class ProductCatalogViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val products = MutableLiveData<PagedResult<Product>>()
+    private val products = MutableLiveData<PagedResult<ShoppingProduct>>()
     val productItems: LiveData<List<ProductItem>> = products.map { it.toProductItems() }
-
-    private var _count = MutableLiveData(0)
-    val count: LiveData<Int> = _count
 
     private var currentPage = 0
 
@@ -29,21 +27,50 @@ class ProductCatalogViewModel(
 
     fun loadProducts() {
         val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
-        products.value = result
+        products.value = result.toShoppingProduct()
         currentPage++
     }
 
+    private fun PagedResult<Product>.toShoppingProduct(): PagedResult<ShoppingProduct> {
+        val shoppingProduct = this.items.map { shoppingCartRepository.get(it.id) ?: ShoppingProduct(it.id, 0) }
+        return PagedResult(shoppingProduct, this.hasNext)
+    }
+
     fun addToShoppingCart(product: Product) {
+        val old = products.value ?: return
+
         shoppingCartRepository.addProduct(product.id)
-        _count.value = (_count.value?.plus(1)) ?: 0
+
+        val updatedItems =
+            old.items.map {
+                if (it.productId == product.id) {
+                    it.copy(quantity = it.quantity?.plus(1))
+                } else {
+                    it
+                }
+            }
+
+        products.value = PagedResult(updatedItems, old.hasNext)
     }
 
     fun removeToShoppingCart(productId: Long) {
+        val old = products.value ?: return
+
         shoppingCartRepository.removeProduct(productId)
-        _count.value = (_count.value?.minus(1)) ?: 0
+
+        val updatedItems =
+            old.items.map {
+                if (it.productId == productId) {
+                    it.copy(quantity = it.quantity?.minus(1))
+                } else {
+                    it
+                }
+            }
+
+        products.value = PagedResult(updatedItems, old.hasNext)
     }
 
-    private fun PagedResult<Product>.toProductItems(): List<ProductItem> {
+    private fun PagedResult<ShoppingProduct>.toProductItems(): List<ProductItem> {
         val items = this.items.map { ProductItem.CatalogProduct(it) }.toMutableList<ProductItem>()
         if (hasNext) {
             items.add(ProductItem.LoadMore)

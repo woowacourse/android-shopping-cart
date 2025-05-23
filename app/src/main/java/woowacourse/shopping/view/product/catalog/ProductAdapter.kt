@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.product.catalog
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.product.OnProductListener
@@ -30,7 +29,7 @@ class ProductAdapter(
         when (getItemViewType(position)) {
             PRODUCT -> {
                 val productItem = items[position] as ProductItem.CatalogProduct
-                (holder as ProductViewHolder).bind(productItem.product)
+                (holder as ProductViewHolder).bind(productItem.shoppingProduct)
             }
             LOAD_MORE -> {}
         }
@@ -49,8 +48,9 @@ class ProductAdapter(
         notifyItemRangeInserted(startIndex, newItems.size)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun resetView() {
+    fun setItems(newItems: List<ProductItem>) {
+        items.clear()
+        items.addAll(newItems)
         notifyDataSetChanged()
     }
 

@@ -3,9 +3,9 @@ package woowacourse.shopping.view.product.catalog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.ShoppingProvider
+import woowacourse.shopping.data.mapper.toProductDomain
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.view.product.OnProductListener
 
 class ProductViewHolder(
@@ -18,11 +18,12 @@ class ProductViewHolder(
         binding.initQuantityPlus.onClick = eventListener
     }
 
-    fun bind(product: Product) {
+    fun bind(shoppingProduct: ShoppingProduct) {
+        val product = shoppingProduct.productId.toProductDomain()
         binding.product = product
-        binding.quantity = ShoppingProvider.shoppingCartRepository.get(product.id)?.quantity ?: 0
+        binding.quantity = shoppingProduct.quantity
         binding.initQuantityControl.product = product
-        binding.initQuantityControl.shoppingProduct = ShoppingProvider.shoppingCartRepository.get(product.id)
+        binding.initQuantityControl.shoppingProduct = shoppingProduct
         binding.initQuantityPlus.product = product
     }
 

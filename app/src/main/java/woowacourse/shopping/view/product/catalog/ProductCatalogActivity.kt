@@ -100,8 +100,8 @@ class ProductCatalogActivity : AppCompatActivity() {
         viewModel.productItems.observe(this) { value ->
             productAdapter.addItems(value)
         }
-        viewModel.count.observe(this) {
-            productAdapter.resetView()
+        viewModel.productItems.observe(this) { items ->
+            productAdapter.setItems(items)
         }
     }
 
