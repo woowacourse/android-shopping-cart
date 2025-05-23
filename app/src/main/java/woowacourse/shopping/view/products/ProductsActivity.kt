@@ -33,6 +33,13 @@ class ProductsActivity : AppCompatActivity() {
                         val intent = ProductDetailActivity.newIntent(this@ProductsActivity, product)
                         startActivity(intent)
                     }
+
+                    override fun onAddClick(
+                        product: Product,
+                        quantity: Int,
+                    ) {
+                        TODO("Not yet implemented")
+                    }
                 },
                 object : LoadMoreClickListener {
                     override fun onClick() {

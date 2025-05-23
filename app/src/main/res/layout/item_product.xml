@@ -26,11 +26,26 @@
             android:layout_height="0dp"
             android:contentDescription="@null"
             android:onClick="@{ () -> productClickListener.onClick(product) }"
+            android:scaleType="centerCrop"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
-            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_floating_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            app:backgroundTint="@color/white"
+            android:tint="@null"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/product_title"
