@@ -1,13 +1,11 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.DummyInventoryRepository
 import woowacourse.shopping.data.DummyShoppingCartRepository
-import woowacourse.shopping.data.InventoryRepository
 import woowacourse.shopping.data.ShoppingCartRepository
 import woowacourse.shopping.data.inventory.DummyProducts
-import woowacourse.shopping.data.inventory.InventoryRepository2
-import woowacourse.shopping.data.inventory.InventoryRepository2Impl
+import woowacourse.shopping.data.inventory.InventoryRepository
+import woowacourse.shopping.data.inventory.InventoryRepositoryImpl
 import woowacourse.shopping.data.product.ProductDatabase
 import woowacourse.shopping.data.product.toEntity
 import woowacourse.shopping.domain.Product
@@ -19,10 +17,9 @@ class ShoppingApplication : Application() {
             thread {
                 productDao().clear()
                 productDao().insertAll(DummyProducts.products.map(Product::toEntity))
-            }
+            }.join()
         }
     }
-    val inventoryRepository2: InventoryRepository2 by lazy { InventoryRepository2Impl(productDatabase.productDao()) }
-    val inventoryRepository: InventoryRepository by lazy { DummyInventoryRepository() }
+    val inventoryRepository: InventoryRepository by lazy { InventoryRepositoryImpl(productDatabase.productDao()) }
     val shoppingCartRepository: ShoppingCartRepository by lazy { DummyShoppingCartRepository() }
 }

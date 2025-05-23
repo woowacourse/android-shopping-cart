@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread
 
-class InventoryRepository2Impl(private val productDao: ProductDao) : InventoryRepository2 {
+class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRepository {
     override fun getAll(onSuccess: (List<Product>) -> Unit) {
         thread {
             val result = productDao.getAll().map(ProductEntity::toDomain)

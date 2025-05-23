@@ -3,7 +3,7 @@ package woowacourse.shopping.data.inventory
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 
-interface InventoryRepository2 {
+interface InventoryRepository {
     fun getAll(onSuccess: (List<Product>) -> Unit)
 
     fun getPage(
