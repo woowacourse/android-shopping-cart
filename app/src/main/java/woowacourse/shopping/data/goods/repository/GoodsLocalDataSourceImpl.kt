@@ -23,11 +23,13 @@ class GoodsLocalDataSourceImpl(
         goods: Goods,
         onComplete: () -> Unit,
     ) {
-        shoppingDatabase
-            .recentSeenGoodsDao()
-            .insert(RecentSeenGoodsEntity(goodsId = goods.id.toString()))
-        Handler(Looper.getMainLooper()).post {
-            onComplete()
+        thread {
+            shoppingDatabase
+                .recentSeenGoodsDao()
+                .insert(RecentSeenGoodsEntity(goodsId = goods.id.toString()))
+            Handler(Looper.getMainLooper()).post {
+                onComplete()
+            }
         }
     }
 }

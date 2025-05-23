@@ -11,10 +11,14 @@ import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.carts.repository.CartRepositoryImpl
+import woowacourse.shopping.data.goods.repository.GoodsLocalDataSourceImpl
+import woowacourse.shopping.data.goods.repository.GoodsRemoteDataSourceImpl
+import woowacourse.shopping.data.goods.repository.GoodsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.feature.QuantityChangeListener
+import woowacourse.shopping.util.toDomain
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
@@ -26,8 +30,18 @@ class GoodsDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.lifecycleOwner = this
 
-        val goodsUiModel = IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
-        viewModel = GoodsDetailsViewModel(goodsUiModel, CartRepositoryImpl(ShoppingDatabase.getDatabase(this)))
+        val goodsUiModel =
+            IntentCompat.getParcelableExtra(intent, GOODS_KEY, GoodsUiModel::class.java) ?: return
+
+        viewModel =
+            GoodsDetailsViewModel(
+                goodsUiModel,
+                CartRepositoryImpl(ShoppingDatabase.getDatabase(this)),
+                GoodsRepositoryImpl(
+                    GoodsRemoteDataSourceImpl(),
+                    GoodsLocalDataSourceImpl(ShoppingDatabase.getDatabase(this)),
+                ),
+            )
         binding.viewModel = viewModel
         binding.quantityChangeListener =
             object : QuantityChangeListener {
@@ -41,8 +55,14 @@ class GoodsDetailsActivity : AppCompatActivity() {
             }
 
         viewModel.alertEvent.observe(this) { goodsDetailsAlertMessage ->
-            showMessage(getString(goodsDetailsAlertMessage.resourceId, goodsDetailsAlertMessage.quantity))
+            showMessage(
+                getString(
+                    goodsDetailsAlertMessage.resourceId,
+                    goodsDetailsAlertMessage.quantity,
+                ),
+            )
         }
+        viewModel.loggingRecentViewedGoods(goodsUiModel.toDomain())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
