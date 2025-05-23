@@ -1,25 +1,24 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.data.PagedResult
+import woowacourse.shopping.data.cart.local.CartProductLocalDataSource
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.repository.CartProductRepository
 import kotlin.concurrent.thread
 
 class CartProductRepositoryImpl(
-    private val dao: CartProductDao,
+    private val localDataSource: CartProductLocalDataSource,
 ) : CartProductRepository {
     private var totalCount: Int = 0
 
     init {
-        thread { totalCount = dao.count() }.join()
+        thread { totalCount = localDataSource.count() }.join()
     }
 
     override fun getAll(): List<CartProduct> {
         var result = listOf<CartProduct>()
-        thread {
-            result = dao.getAll().map { it.toDomain() }
-        }.join()
+        thread { result = localDataSource.getAll().map { it.toDomain() } }.join()
         return result
     }
 
@@ -32,7 +31,7 @@ class CartProductRepositoryImpl(
         val endIndex = (offset + limit).coerceAtMost(totalCount)
         var items = listOf<CartProduct>()
         thread {
-            items = dao.getPaged(endIndex - offset, offset).map { it.toDomain() }
+            items = localDataSource.getPaged(endIndex - offset, offset).map { it.toDomain() }
         }.join()
 
         val hasNext = endIndex < totalCount
@@ -41,13 +40,13 @@ class CartProductRepositoryImpl(
 
     override fun getQuantityByProductId(productId: Long): Int? {
         var result: Int? = null
-        thread { result = dao.getQuantityByProductId(productId) }.join()
+        thread { result = localDataSource.getQuantityByProductId(productId) }.join()
         return result
     }
 
     override fun getTotalQuantity(): Int {
         var result = 0
-        thread { result = dao.getTotalQuantity() }.join()
+        thread { result = localDataSource.getTotalQuantity() }.join()
         return result
     }
 
@@ -55,9 +54,7 @@ class CartProductRepositoryImpl(
         productId: Long,
         quantity: Int,
     ) {
-        thread {
-            dao.updateQuantity(productId, quantity)
-        }.join()
+        thread { localDataSource.updateQuantity(productId, quantity) }.join()
     }
 
     override fun insert(
@@ -65,15 +62,13 @@ class CartProductRepositoryImpl(
         quantity: Int,
     ) {
         thread {
-            dao.insert(CartProductEntity(productId = productId, quantity = quantity))
+            localDataSource.insert(CartProductEntity(productId = productId, quantity = quantity))
         }.join()
         totalCount++
     }
 
     override fun deleteByProductId(productId: Long) {
-        thread {
-            dao.deleteByProductId(productId)
-        }.join()
+        thread { localDataSource.deleteByProductId(productId) }.join()
         totalCount--
     }
 }
