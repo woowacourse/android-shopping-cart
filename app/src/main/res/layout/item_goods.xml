@@ -9,11 +9,8 @@
             name="cart"
             type="woowacourse.shopping.domain.model.Cart" />
         <variable
-            name="viewModel"
-            type="woowacourse.shopping.feature.goods.GoodsViewModel" />
-        <variable
             name="goodsClickListener"
-            type="woowacourse.shopping.feature.goods.adapter.GoodsViewHolder.GoodsClickListener" />
+            type="woowacourse.shopping.feature.goods.adapter.GoodsClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

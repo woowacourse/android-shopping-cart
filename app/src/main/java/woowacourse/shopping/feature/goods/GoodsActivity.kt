@@ -2,7 +2,6 @@ package woowacourse.shopping.feature.goods
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -20,14 +19,14 @@ import woowacourse.shopping.feature.ScrollListener
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
-import woowacourse.shopping.feature.goods.adapter.GoodsViewHolder
+import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.util.toUi
 
 class GoodsActivity :
     AppCompatActivity(),
-    GoodsViewHolder.GoodsClickListener {
+    GoodsClickListener {
     private lateinit var binding: ActivityGoodsBinding
     private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
     private val viewModel: GoodsViewModel by viewModels {
@@ -44,7 +43,6 @@ class GoodsActivity :
         binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
 
-        updateMoreButton()
         observeCartInsertResult()
         setupActivityResultLauncher()
     }
@@ -86,6 +84,10 @@ class GoodsActivity :
         viewModel.removeFromCart(cart)
     }
 
+    override fun loadMore() {
+        TODO("Not yet implemented")
+    }
+
     private fun setupActivityResultLauncher() {
         activityResultLauncher =
             registerForActivityResult(
@@ -105,7 +107,6 @@ class GoodsActivity :
         val changedId = data?.getLongExtra("GOODS_ID", 0) ?: 0
         val changedQuantity = data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
         adapter.updateItemQuantity(changedId, changedQuantity)
-        Log.e("123451", "$changedQuantity")
     }
 
     private fun observeCartInsertResult() {

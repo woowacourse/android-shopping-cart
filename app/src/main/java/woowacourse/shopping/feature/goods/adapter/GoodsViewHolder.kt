@@ -24,12 +24,4 @@ class GoodsViewHolder(
             },
         )
     }
-
-    interface GoodsClickListener {
-        fun onClickGoods(cart: Cart)
-
-        fun insertToCart(cart: Cart)
-
-        fun removeFromCart(cart: Cart)
-    }
 }

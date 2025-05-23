@@ -17,30 +17,15 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_goods"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:padding="14dp"
             app:items="@{viewModel.carts.carts}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/btn_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:spanCount="2"
             tools:listitem="@layout/item_goods" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_more"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:text="@string/goods_more_button"
-            android:textColor="@color/white"
-            android:onClick="@{() -> viewModel.addPage()}"
-            android:background="@drawable/more_button_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:visible="@{viewModel.showMoreButton}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

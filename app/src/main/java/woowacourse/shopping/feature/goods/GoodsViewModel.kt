@@ -70,18 +70,18 @@ class GoodsViewModel(
     private fun loadGoods() {
         viewModelScope.launch {
             val newGoods = getProducts(page)
+
             val existingCarts = repository.getAll()
-            val quantityMap = existingCarts.carts.associateBy { it.goods.id }
 
             val updatedCarts =
                 newGoods.map { goods ->
-                    val quantity = quantityMap[goods.id]?.quantity ?: 0
+                    val quantity = existingCarts.carts.find { it.goods.id == goods.id }?.quantity ?: 0
                     Cart(goods = goods, quantity = quantity)
                 }
 
             val newCarts = (carts.value?.carts ?: emptyList()) + updatedCarts
-            val totalQuantity = newCarts.sumOf { it.quantity }
 
+            val totalQuantity = newCarts.sumOf { it.quantity }
             _carts.postValue(Carts(newCarts, totalQuantity))
             _isFullLoaded.postValue((page + 1) * PAGE_SIZE >= dummyGoods.size)
         }
