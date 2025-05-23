@@ -76,6 +76,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setupBindings() {
+        binding.lifecycleOwner = this
         binding.cartRecyclerView.adapter = cartAdapter
         binding.viewModel = viewModel
     }
@@ -83,22 +84,33 @@ class CartActivity : AppCompatActivity() {
     private fun initAdapter(): CartAdapter {
         return CartAdapter(
             items = mutableListOf(),
-            cartClickListener = { product ->
-                viewModel.deleteProduct(product)
-            },
+            cartClickListener =
+                object : CartClickListener {
+                    override fun onClick(cartId: Long) {
+                        viewModel.deleteProduct(cartId)
+                    }
+
+                    override fun increase(cartId: Long) {
+                        viewModel.increaseQuantity(cartId)
+                    }
+
+                    override fun decrease(cartId: Long) {
+                        viewModel.decreaseQuantity(cartId)
+                    }
+                },
+            viewModel = viewModel
         )
     }
 
     private fun initObserve() {
-        viewModel.products.observe(this) {
+        viewModel.cartProducts.observe(this) {
             cartAdapter.updateItems(it)
             setPaginationVisibility()
             setPaginationButtonTint()
         }
 
-        viewModel.pageNumber.observe(this) { pageNumber ->
-            binding.tvPageNumber.text = pageNumber.toString()
-            viewModel.update()
+        viewModel.pageNumber.observe(this) {
+            viewModel.loadCartProducts()
         }
     }
 

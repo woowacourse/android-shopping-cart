@@ -11,8 +11,8 @@ import woowacourse.shopping.providers.RepositoryProvider
 class CartViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<CartProduct>>(emptyList())
-    val products: LiveData<List<CartProduct>> get() = _products
+    private val _cartProducts = MutableLiveData<List<CartProduct>>(emptyList())
+    val cartProducts: LiveData<List<CartProduct>> get() = _cartProducts
 
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> get() = _pageNumber
@@ -23,14 +23,24 @@ class CartViewModel(
     var isLastPage: Boolean = false
         private set
 
+    private val _productsQuantity = mutableMapOf<Long, MutableLiveData<Int>>()
+    val productsQuantity: Map<Long, LiveData<Int>> get() = _productsQuantity
+    private val _productsTotalPrice = mutableMapOf<Long, MutableLiveData<Int>>()
+    val productsTotalPrice: Map<Long, LiveData<Int>> get() = _productsTotalPrice
+
     init {
-        update()
+        loadCartProducts()
     }
 
-    fun update() {
+    fun loadCartProducts() {
         val pageNumber = pageNumber.value ?: 1
         repository.fetchInRange(PAGE_FETCH_SIZE, (pageNumber - 1) * PAGE_SIZE) { products ->
             isLastPage = products.size != PAGE_FETCH_SIZE
+
+            products.forEach { product ->
+                _productsQuantity[product.id!!] = MutableLiveData(product.quantity)
+                _productsTotalPrice[product.id] = MutableLiveData(product.totalPrice())
+            }
 
             val visibleProductsSize = PAGE_SIZE.coerceAtMost(products.size)
             handleUpdateItems(visibleProductsSize, products)
@@ -53,9 +63,9 @@ class CartViewModel(
         }
     }
 
-    fun deleteProduct(cartProduct: CartProduct) {
-        repository.delete(cartProduct.id!!) {
-            update()
+    fun deleteProduct(cartId: Long) {
+        repository.delete(cartId) {
+            loadCartProducts()
         }
     }
 
@@ -63,13 +73,33 @@ class CartViewModel(
         visibleProductsSize: Int,
         products: List<CartProduct>
     ) {
-        if (visibleProductsSize == 0 && !isFirstPage) {
+        if (hasPages(visibleProductsSize)) {
             moveToPrevious()
             return
         }
-        
+
         val updateItems = products.take(visibleProductsSize)
-        _products.postValue(updateItems)
+        _cartProducts.postValue(updateItems)
+    }
+
+    private fun hasPages(visibleProductsSize: Int) = visibleProductsSize == 0 && !isFirstPage
+
+    fun increaseQuantity(cartId: Long) {
+        val cartProduct = cartProducts.value?.first { it.id == cartId }
+        cartProduct?.increase()
+
+        _productsQuantity[cartId]?.value = cartProduct?.quantity
+        _productsTotalPrice[cartId]?.value = cartProduct?.totalPrice()
+    }
+
+    fun decreaseQuantity(cartId: Long) {
+        if (_productsQuantity[cartId]?.value == 1) return // TODO: 토스트로 장바구니에서 제거하고 싶으면 x 누르라고 하기
+
+        val cartProduct = cartProducts.value?.first { it.id == cartId }
+        cartProduct?.decrease()
+
+        _productsQuantity[cartId]?.value = cartProduct?.quantity
+        _productsTotalPrice[cartId]?.value = cartProduct?.totalPrice()
     }
 
     companion object {

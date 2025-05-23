@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.ui.cart.CartViewModel" />
 
         <variable
             name="cartProduct"
@@ -49,7 +54,7 @@
             android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete_description"
-            android:onClick="@{() -> cartClickListener.onClick(cartProduct)}"
+            android:onClick="@{() -> cartClickListener.onClick(cartProduct.id)}"
             android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -79,16 +84,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.7"
             app:layout_constraintStart_toEndOf="@id/iv_cart_product_image"
-            app:layout_constraintTop_toBottomOf="@id/btn_close" />
+            app:layout_constraintTop_toBottomOf="@id/btn_close"
+            bind:id="@{cartProduct.id}"
+            bind:listener="@{cartClickListener}"
+            bind:quantity="@{viewModel.productsQuantity[cartProduct.id]}" />
 
         <TextView
             android:id="@+id/tv_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:text="@{@string/price(cartProduct.product.price)}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
+            app:bindLiveTotalPriceText="@{viewModel.productsTotalPrice[cartProduct.id]}"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product_image"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="999,999,999,999,900원" />

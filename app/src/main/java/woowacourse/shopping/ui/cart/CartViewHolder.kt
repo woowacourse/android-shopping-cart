@@ -11,9 +11,11 @@ import woowacourse.shopping.domain.cart.CartProduct
 class CartViewHolder private constructor(
     private val binding: CartItemBinding,
     cartClickListener: CartClickListener,
+    private val viewModel: CartViewModel
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.cartClickListener = cartClickListener
+        binding.viewModel = viewModel
     }
 
     fun bind(item: CartProduct) {
@@ -23,13 +25,15 @@ class CartViewHolder private constructor(
     companion object {
         fun create(
             parent: ViewGroup,
-            cartClickListener: CartClickListener
+            cartClickListener: CartClickListener,
+            viewModel: CartViewModel
         ): CartViewHolder {
             return CartViewHolder(
                 binding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context), R.layout.cart_item, parent, false
                 ),
-                cartClickListener = cartClickListener
+                cartClickListener = cartClickListener,
+                viewModel = viewModel
             )
         }
     }

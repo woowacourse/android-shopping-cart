@@ -57,6 +57,7 @@
             android:textColor="@color/deep_gray"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:text="@{String.valueOf(viewModel.pageNumber)}"
             app:layout_constraintBottom_toBottomOf="@id/btn_previous"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
