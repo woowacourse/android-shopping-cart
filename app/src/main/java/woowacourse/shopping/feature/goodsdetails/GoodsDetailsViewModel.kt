@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.repository.CartRepository
+import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.updateQuantity
 
 class GoodsDetailsViewModel(
-    private val repository: CartRepository,
+    private val cartRepository: CartRepository,
+    private val historyRepository: HistoryRepository,
 ) : ViewModel() {
     private val _cart = MutableLiveData<Cart>()
     val cart: LiveData<Cart> get() = _cart
@@ -21,6 +24,7 @@ class GoodsDetailsViewModel(
 
     fun setInitialCart(cart: Cart) {
         _cart.value = cart
+        insertToHistory(cart)
     }
 
     fun increaseQuantity() {
@@ -40,13 +44,18 @@ class GoodsDetailsViewModel(
     }
 
     fun commitCart() {
-        try {
+        runCatching {
             _cart.value?.let {
-                repository.insertAll(it)
-                _isSuccess.setValue(Unit)
+                cartRepository.insertAll(it)
             }
-        } catch (e: Exception) {
+        }.onSuccess {
+            _isSuccess.setValue(Unit)
+        }.onFailure {
             _isFail.setValue(Unit)
         }
+    }
+
+    private fun insertToHistory(cart: Cart) {
+        historyRepository.insert(History(cart.goods.id, cart.goods.name, cart.goods.thumbnailUrl))
     }
 }

@@ -11,6 +11,6 @@ fun Cart.toEntity(): CartEntity =
 
 fun CartEntity.toDomain(): Cart = Cart(goods = Goods(id = id, name = name, price = price, thumbnailUrl = thumbnailUrl), quantity = quantity)
 
-fun History.toEntity(): HistoryEntity = HistoryEntity(name = name)
+fun History.toEntity(): HistoryEntity = HistoryEntity(id = id, name = name, thumbnailUrl = thumbnailUrl)
 
-fun HistoryEntity.toDomain(): History = History(name = name)
+fun HistoryEntity.toDomain(): History = History(id = id, name = name, thumbnailUrl = thumbnailUrl)

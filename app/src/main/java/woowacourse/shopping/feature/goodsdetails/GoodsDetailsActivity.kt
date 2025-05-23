@@ -12,6 +12,8 @@ import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
+import woowacourse.shopping.data.history.HistoryDatabase
+import woowacourse.shopping.data.history.repository.HistoryRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.CustomCartQuantity
 import woowacourse.shopping.feature.cart.ViewModelFactory
@@ -24,7 +26,12 @@ class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
     private lateinit var cart: CartUiModel
     private val viewModel: GoodsDetailsViewModel by viewModels {
-        ViewModelFactory { GoodsDetailsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
+        ViewModelFactory {
+            GoodsDetailsViewModel(
+                CartRepositoryImpl(CartDatabase.getDatabase(this)),
+                HistoryRepositoryImpl(HistoryDatabase.getDatabase(applicationContext).historyDao()),
+            )
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

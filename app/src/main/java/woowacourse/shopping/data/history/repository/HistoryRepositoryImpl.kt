@@ -17,6 +17,14 @@ class HistoryRepositoryImpl(
     }
 
     override fun insert(history: History) {
-        dao.insert(history.toEntity())
+        thread {
+            val existing = dao.findById(history.id)
+            if (existing == null) {
+                if (dao.getAll().size >= 10) {
+                    dao.deleteOldest()
+                }
+                dao.insert(history.toEntity())
+            }
+        }
     }
 }

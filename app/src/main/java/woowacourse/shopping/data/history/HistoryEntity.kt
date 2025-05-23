@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "history")
 data class HistoryEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @PrimaryKey val id: Long,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "thumbnail_url") val thumbnailUrl: String,
+    @ColumnInfo(name = "timestamp") val timestamp: Long = System.currentTimeMillis(),
 )
