@@ -3,10 +3,9 @@ package woowacourse.shopping.feature.goods.adapter.horizontal
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.feature.goods.adapter.vertical.GoodsClickListener
 
 class HorizontalSectionAdapter(
-    private val goodsClickListener: GoodsClickListener,
+    private val recentlyViewedGoodsAdapter: RecentlyViewedGoodsAdapter,
 ) : RecyclerView.Adapter<HorizontalSelectionViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -19,7 +18,7 @@ class HorizontalSectionAdapter(
     ) {
         with(holder.binding.horizontalRecycler) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = RecentlyViewedGoodsAdapter(goodsClickListener)
+            adapter = recentlyViewedGoodsAdapter
             setHasFixedSize(true)
             isNestedScrollingEnabled = false
         }

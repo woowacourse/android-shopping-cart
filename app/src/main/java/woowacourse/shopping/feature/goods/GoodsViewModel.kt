@@ -25,8 +25,8 @@ class GoodsViewModel(
     val totalCartItemSize: LiveData<String> get() = _totalCartItemSize
     private val _navigateToCart = MutableSingleLiveData<Unit>()
     val navigateToCart: SingleLiveData<Unit> get() = _navigateToCart
-    private val _recentlyViewedGoods: MutableLiveData<Goods> = MutableLiveData()
-    val recentlyViewedGoods: LiveData<Goods> get() = _recentlyViewedGoods
+    private val _recentlyViewedGoods: MutableLiveData<List<Goods>> = MutableLiveData()
+    val recentlyViewedGoods: LiveData<List<Goods>> get() = _recentlyViewedGoods
 
     init {
         appendCartItemsWithZeroQuantity()
@@ -54,6 +54,7 @@ class GoodsViewModel(
     fun updateRecentlyViewedGoods() {
         goodsRepository.fetchRecentGoods { goods ->
             Log.d("최근본 굿즈 ID", "$goods")
+            _recentlyViewedGoods.postValue(goods)
         }
     }
 

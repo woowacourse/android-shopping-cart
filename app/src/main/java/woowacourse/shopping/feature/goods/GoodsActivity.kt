@@ -21,6 +21,7 @@ import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.feature.QuantityChangeListener
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.horizontal.HorizontalSectionAdapter
+import woowacourse.shopping.feature.goods.adapter.horizontal.RecentlyViewedGoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.vertical.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.vertical.MoreButtonAdapter
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
@@ -39,8 +40,11 @@ class GoodsActivity : AppCompatActivity() {
         )
     }
 
+    private val recentlyViewedGoodsAdapter by lazy {
+        RecentlyViewedGoodsAdapter { goods -> navigateGoodsDetails(goods) }
+    }
     private val horizontalSelectionAdapter by lazy {
-        HorizontalSectionAdapter(goodsClickListener = { goods -> navigateGoodsDetails(goods) })
+        HorizontalSectionAdapter(recentlyViewedGoodsAdapter)
     }
     private val goodsAdapter by lazy {
         GoodsAdapter(
@@ -93,6 +97,10 @@ class GoodsActivity : AppCompatActivity() {
         binding.rvCartItems.addItemDecoration(
             GoodsGridItemDecoration(concatAdapter, GRID_GOODS_ITEM_HORIZONTAL_PADDING),
         )
+
+        viewModel.recentlyViewedGoods.observe(this) { goods ->
+            recentlyViewedGoodsAdapter.setItems(goods)
+        }
     }
 
     private fun getLayoutManager(): GridLayoutManager {
@@ -113,6 +121,7 @@ class GoodsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.updateCartQuantity()
+        viewModel.updateRecentlyViewedGoods()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

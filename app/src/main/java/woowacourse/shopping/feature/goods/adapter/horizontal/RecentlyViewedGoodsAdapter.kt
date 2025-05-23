@@ -9,33 +9,14 @@ class RecentlyViewedGoodsAdapter(
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<RecentlyViewedGoodsViewHolder>() {
     val items: MutableList<Goods> =
-        mutableListOf(
-            Goods(
-                "1 임시 더미 굿즈",
-                13500,
-                "https://animate.godohosting.com/Goods/4522776264043.jpg",
-            ),
-            Goods(
-                "2 임시 더미 굿즈",
-                13500,
-                "https://animate.godohosting.com/Goods/4522776264043.jpg",
-            ),
-            Goods(
-                "3 임시 더미 굿즈",
-                13500,
-                "https://animate.godohosting.com/Goods/4522776264043.jpg",
-            ),
-            Goods(
-                "4 임시 더미 굿즈",
-                13500,
-                "https://animate.godohosting.com/Goods/4522776264043.jpg",
-            ),
-            Goods(
-                "5 임시 더미 굿즈",
-                13500,
-                "https://animate.godohosting.com/Goods/4522776264043.jpg",
-            ),
-        )
+        mutableListOf()
+
+    fun setItems(newItems: List<Goods>) {
+        items.clear()
+        items.addAll(newItems)
+        @Suppress("NotifyDataSetChanged")
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
