@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.view.catalog
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -12,7 +13,6 @@ import woowacourse.shopping.databinding.FragmentCatalogBinding
 import woowacourse.shopping.databinding.MenuItemCartBinding
 import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.ui.decorations.GridSpacingItemDecoration
-import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
@@ -21,10 +21,9 @@ import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class CatalogFragment :
     BaseFragment<FragmentCatalogBinding>(R.layout.fragment_catalog),
-    CatalogAdapter.CatalogEventListener,
-    QuantityChangeListener {
-    private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this) }
+    CatalogAdapter.CatalogEventListener {
     private val viewModel: CatalogViewModel by viewModels { CatalogViewModel.Factory }
+    private val catalogAdapter: CatalogAdapter by lazy { CatalogAdapter(eventListener = this) }
 
     private var _toolbarBinding: MenuItemCartBinding? = null
     private val toolbarBinding: MenuItemCartBinding get() = _toolbarBinding!!
@@ -41,6 +40,7 @@ class CatalogFragment :
 
     override fun onStart() {
         super.onStart()
+
         viewModel.fetchCartInfoChanged()
     }
 
@@ -92,12 +92,10 @@ class CatalogFragment :
     }
 
     private fun setupRecyclerView() {
-        val layoutManager =
-            GridLayoutManager(requireContext(), SPAN_COUNT).apply {
-                spanSizeLookup =
-                    object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int) = catalogAdapter.getSpanSizeAt(position)
-                    }
+        val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int) = catalogAdapter.getSpanSizeAt(position)
             }
 
         binding.recyclerViewProducts.apply {
@@ -109,6 +107,7 @@ class CatalogFragment :
 
     private fun observeViewModel() {
         viewModel.products.observe(viewLifecycleOwner) {
+            Log.e("TEST", it.toString())
             catalogAdapter.updateProducts(it)
         }
 

@@ -46,6 +46,8 @@ class CatalogViewModel(
     }
 
     fun fetchCartInfoChanged() {
+        if (_products.value.isNullOrEmpty()) return
+
         shoppingRepository.getAll { result ->
             result.fold(
                 onSuccess = ::updateQuantitiesWithCart,
@@ -55,8 +57,8 @@ class CatalogViewModel(
     }
 
     fun addProductToCart(productId: Long) {
-        shoppingRepository.addCartItem(productId, QUANTITY_STEP) {
-            it.fold(
+        shoppingRepository.addCartItem(productId, QUANTITY_STEP) { result ->
+            result.fold(
                 onSuccess = { refreshQuantity(productId) },
                 onFailure = { postFailureEvent(CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE) },
             )
@@ -86,7 +88,8 @@ class CatalogViewModel(
         val currentItems = getCurrentProductItems()
         val newItems = mapToProductItems(pageable.items)
         val merged = mergeProducts(currentItems, newItems)
-        _products.postValue(buildCatalogItems(merged, pageable.hasMore))
+        val built = buildCatalogItems(merged, pageable.hasMore)
+        _products.postValue(built)
 
         fetchCartItemCount()
     }
