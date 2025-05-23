@@ -72,6 +72,14 @@ class ShoppingCartRepositoryImpl(
         return shoppingProduct?.toDomain()
     }
 
+    override fun getQuantity(productId: Long): Int {
+        var quantity = 0
+        thread {
+            quantity = dao.getQuantity(productId)
+        }.join()
+        return quantity
+    }
+
     override fun delete(productId: Long) {
         thread {
             dao.delete(productId)

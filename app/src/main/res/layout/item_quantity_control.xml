@@ -9,8 +9,8 @@
             type="Long" />
 
         <variable
-            name="shoppingProduct"
-            type="woowacourse.shopping.domain.ShoppingProduct" />
+            name="quantity"
+            type="Integer" />
 
         <variable
             name="onClick"
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="@string/quantity_minus"
             android:textSize="22sp"
-            android:onClick="@{() -> onClick.onQuantityControlMinusClick(shoppingProduct.productId)}"
+            android:onClick="@{() -> onClick.onQuantityControlMinusClick(productId)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:textSize="22sp"
-            android:text="@{shoppingProduct.quantity != null ? String.valueOf(shoppingProduct.quantity) : `0`}"
+            android:text="@{quantity != null ? String.valueOf(quantity) : `0`}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toEndOf="@+id/btn_quantity_minus"
             app:layout_constraintTop_toTopOf="parent"

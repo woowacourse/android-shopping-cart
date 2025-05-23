@@ -29,7 +29,7 @@ class ProductAdapter(
         when (getItemViewType(position)) {
             PRODUCT -> {
                 val productItem = items[position] as ProductItem.CatalogProduct
-                (holder as ProductViewHolder).bind(productItem.shoppingProduct)
+                (holder as ProductViewHolder).bind(productItem)
             }
             LOAD_MORE -> {}
         }

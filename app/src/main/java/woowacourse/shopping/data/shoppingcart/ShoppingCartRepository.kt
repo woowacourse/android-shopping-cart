@@ -15,6 +15,8 @@ interface ShoppingCartRepository {
 
     fun removeProduct(productId: Long)
 
+    fun getQuantity(productId: Long): Int
+
     fun getPaged(
         limit: Int,
         offset: Int,
