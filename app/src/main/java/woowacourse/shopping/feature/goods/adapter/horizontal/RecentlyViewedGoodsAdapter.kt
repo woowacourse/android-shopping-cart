@@ -12,16 +12,27 @@ class RecentlyViewedGoodsAdapter(
         mutableListOf()
 
     fun setItems(newItems: List<Goods>) {
+        val oldItems = items.toList()
         items.clear()
         items.addAll(newItems)
-        @Suppress("NotifyDataSetChanged")
-        notifyDataSetChanged()
+        if (oldItems.isEmpty()) {
+            @Suppress("NotifyDataSetChanged")
+            notifyDataSetChanged()
+        } else if (newItems.size > oldItems.size) {
+            notifyItemRangeInserted(oldItems.size, newItems.size - oldItems.size)
+        } else if (newItems.size == oldItems.size) {
+            oldItems.zip(newItems).forEachIndexed { index, (oldItem, newItem) ->
+                if (oldItem != newItem) {
+                    notifyItemChanged(index)
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecentlyViewedGoodsViewHolder = RecentlyViewedGoodsViewHolder.from(parent)
+    ): RecentlyViewedGoodsViewHolder = RecentlyViewedGoodsViewHolder.from(parent, goodsClickListener)
 
     override fun onBindViewHolder(
         holder: RecentlyViewedGoodsViewHolder,

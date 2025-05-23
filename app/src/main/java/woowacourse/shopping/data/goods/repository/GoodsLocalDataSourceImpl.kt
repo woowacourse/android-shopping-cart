@@ -3,7 +3,6 @@ package woowacourse.shopping.data.goods.repository
 import android.os.Handler
 import android.os.Looper
 import woowacourse.shopping.data.ShoppingDatabase
-import woowacourse.shopping.data.goods.RecentSeenGoodsEntity
 import woowacourse.shopping.domain.model.Goods
 import kotlin.concurrent.thread
 
@@ -26,7 +25,7 @@ class GoodsLocalDataSourceImpl(
         thread {
             shoppingDatabase
                 .recentSeenGoodsDao()
-                .insert(RecentSeenGoodsEntity(goodsId = goods.id.toString()))
+                .addRecentGoodsWithLimit(goods.id.toString())
             Handler(Looper.getMainLooper()).post {
                 onComplete()
             }
