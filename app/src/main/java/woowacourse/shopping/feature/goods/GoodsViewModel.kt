@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.goods
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,9 +25,12 @@ class GoodsViewModel(
     val totalCartItemSize: LiveData<String> get() = _totalCartItemSize
     private val _navigateToCart = MutableSingleLiveData<Unit>()
     val navigateToCart: SingleLiveData<Unit> get() = _navigateToCart
+    private val _recentlyViewedGoods: MutableLiveData<Goods> = MutableLiveData()
+    val recentlyViewedGoods: LiveData<Goods> get() = _recentlyViewedGoods
 
     init {
         appendCartItemsWithZeroQuantity()
+        updateRecentlyViewedGoods()
     }
 
     fun onCartClicked() {
@@ -35,12 +39,21 @@ class GoodsViewModel(
 
     private fun appendCartItemsWithZeroQuantity() {
         val goodsLoadOffset = (page - 1) * PAGE_SIZE
-        goodsRepository.fetchPageGoods(limit = PAGE_SIZE, offset = goodsLoadOffset) { fetchedGoods ->
+        goodsRepository.fetchPageGoods(
+            limit = PAGE_SIZE,
+            offset = goodsLoadOffset,
+        ) { fetchedGoods ->
             goods.addAll(fetchedGoods)
             goodsRepository.fetchGoodsSize { totalSize ->
                 _isFullLoaded.postValue(page * PAGE_SIZE >= totalSize)
             }
             _cartItemsWithZeroQuantity.postValue(goods.map { CartItem(goods = it, quantity = 0) })
+        }
+    }
+
+    fun updateRecentlyViewedGoods() {
+        goodsRepository.fetchRecentGoods { goods ->
+            Log.d("최근본 굿즈 ID", "$goods")
         }
     }
 

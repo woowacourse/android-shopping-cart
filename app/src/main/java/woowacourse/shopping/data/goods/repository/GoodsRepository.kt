@@ -18,6 +18,8 @@ interface GoodsRepository {
 
     fun fetchRecentGoodsIds(onComplete: (List<String>) -> Unit)
 
+    fun fetchRecentGoods(onComplete: (List<Goods>) -> Unit)
+
     fun loggingRecentGoods(
         goods: Goods,
         onComplete: () -> Unit,
