@@ -19,6 +19,7 @@ import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.main.adapter.ProductEventHandler
 import woowacourse.shopping.view.main.adapter.ProductsAdapter
+import woowacourse.shopping.view.main.adapter.RecentProductsAdapter
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import kotlin.getValue
@@ -31,6 +32,11 @@ class MainActivity :
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter by lazy {
         ProductsAdapter(
+            ProductEventHandlerImpl(),
+        )
+    }
+    private val recentProductsAdapter: RecentProductsAdapter by lazy {
+        RecentProductsAdapter(
             ProductEventHandlerImpl(),
         )
     }
@@ -95,17 +101,26 @@ class MainActivity :
             adapter = productsAdapter
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
         }
+        binding.recentProductList.apply {
+            adapter = recentProductsAdapter
+        }
+
         viewModel.apply {
             productsLiveData.observe(this@MainActivity) { mainRecyclerViewProduct ->
                 productsAdapter.updateProducts(mainRecyclerViewProduct)
             }
+            recentProductsLiveData.observe(this@MainActivity) { items ->
+                recentProductsAdapter.updateProducts(items)
+            }
             requestProductsPage(0)
+            requestRecentProducts()
         }
     }
 
     private fun updateProductList() {
         productsAdapter.clear()
         viewModel.updateShoppingCart(productsAdapter.currentPage)
+        viewModel.requestRecentProducts()
     }
 
     private inner class ProductEventHandlerImpl : ProductEventHandler {

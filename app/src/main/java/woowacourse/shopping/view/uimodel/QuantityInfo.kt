@@ -34,7 +34,7 @@ class QuantityInfo<T>(
         }
     }
 
-    fun toList(): List<Pair<T, Int>>  {
+    fun toList(): List<Pair<T, Int>> {
         return map.map {
             (it.key to (it.value.value ?: throw IllegalStateException(ERR_CANNOT_FIND_LIVEDATA)))
         }

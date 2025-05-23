@@ -15,7 +15,9 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
+import woowacourse.shopping.data.repository.RecentProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.mapper.toProduct
 import woowacourse.shopping.mapper.toProductUiModel
@@ -27,9 +29,14 @@ import woowacourse.shopping.view.uimodel.QuantityInfo
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentProductsRepository: RecentProductsRepository,
 ) : ViewModel(), ViewRule {
     private val _productsLiveData: MutableLiveData<MainRecyclerViewProduct> = MutableLiveData()
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
+
+    private val _recentProductsLiveData: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
+    val recentProductsLiveData: LiveData<List<ProductUiModel>> get() = _recentProductsLiveData
+
     val totalSize: MutableLiveData<Int> = MutableLiveData(0)
     val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData()
 
@@ -105,6 +112,18 @@ class ProductsViewModel(
         totalShoppingCartSize.value = totalShoppingCartSize.value?.dec()
     }
 
+    fun requestRecentProducts() {
+        viewModelScope.launch {
+            val recentProducts = RecentProducts()
+            withContext(Dispatchers.IO) {
+                recentProductsRepository.findAll().forEach {
+                    recentProducts.add(it)
+                }
+            }
+            _recentProductsLiveData.value = recentProducts.items.map { it.product.toProductUiModel() }
+        }
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
         val Factory: ViewModelProvider.Factory =
@@ -114,6 +133,7 @@ class ProductsViewModel(
                     ProductsViewModel(
                         application.productsRepository,
                         application.shoppingCartRepository,
+                        application.recentProductsRepository,
                     )
                 }
             }

@@ -38,6 +38,7 @@ class ProductDetailActivity :
             handler = ProductDetailEventHandlerImpl()
             viewModel = this@ProductDetailActivity.viewModel
         }
+        viewModel.addRecentProduct()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
