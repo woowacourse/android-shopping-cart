@@ -3,9 +3,7 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.view.toProductUiModel
 import woowacourse.shopping.view.uimodel.ProductUiModel
-import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 object DummyShoppingCart {
     val productUiModels =

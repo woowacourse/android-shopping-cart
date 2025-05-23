@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.main
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,9 +13,9 @@ import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.view.toProduct
-import woowacourse.shopping.view.toProductUiModel
-import woowacourse.shopping.view.toShoppingCartItemUiModel
+import woowacourse.shopping.mapper.toProduct
+import woowacourse.shopping.mapper.toProductUiModel
+import woowacourse.shopping.mapper.toShoppingCartItemUiModel
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo
@@ -24,23 +23,11 @@ import woowacourse.shopping.view.uimodel.QuantityInfo
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
-) : ViewModel() {
+) : ViewModel(), ViewRule {
     private val _productsLiveData: MutableLiveData<MainRecyclerViewProduct> = MutableLiveData()
     val productsLiveData: LiveData<MainRecyclerViewProduct> get() = _productsLiveData
     val totalSize: Int get() = productsRepository.totalSize()
     val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData(shoppingCartRepository.totalQuantity())
-
-    val menuBadgeViewRule = { text: String ->
-        if (text.toInt() > MINIMUM_BADGE_DISPLAY_QUANTITY) View.VISIBLE else View.GONE
-    }
-
-    val onProductAddedButtonViewRule: (Int) -> Int = { quantityValue: Int ->
-        if (quantityValue < 1) View.VISIBLE else View.GONE
-    }
-
-    val onProductAddedQuantitySelectorViewRule: (Int) -> Int = { quantityValue: Int ->
-        if (quantityValue < 1) View.GONE else View.VISIBLE
-    }
 
     fun requestProductsPage(requestPage: Int) {
         val pageRequest =
@@ -84,7 +71,6 @@ class ProductsViewModel(
 
     companion object {
         private const val PAGE_SIZE = 20
-        private const val MINIMUM_BADGE_DISPLAY_QUANTITY = 0
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {

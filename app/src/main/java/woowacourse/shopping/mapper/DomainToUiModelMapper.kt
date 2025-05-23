@@ -1,4 +1,4 @@
-package woowacourse.shopping.view
+package woowacourse.shopping.mapper
 
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCartItem

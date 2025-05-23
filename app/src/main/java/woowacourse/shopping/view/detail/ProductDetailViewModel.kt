@@ -10,7 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.view.toProduct
+import woowacourse.shopping.mapper.toProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 
 class ProductDetailViewModel(

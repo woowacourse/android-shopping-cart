@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.glide)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.google.material)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
