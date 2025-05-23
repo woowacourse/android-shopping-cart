@@ -98,7 +98,7 @@ class ProductCatalogActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.productItems.observe(this) { value ->
-            productAdapter.addItems(value)
+            productAdapter.asdf(value)
         }
     }
 

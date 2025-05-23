@@ -16,26 +16,35 @@ class ProductCatalogViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val products = MutableLiveData<PagedResult<Product>>()
+
     val productItems: LiveData<List<ProductItem>> = products.map { it.toProductItems() }
 
     private var currentPage = 0
 
     init {
-        loadProducts()
+        initLoadProducts()
     }
 
-    fun loadProducts() {
+    private fun initLoadProducts() {
         val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
         products.value = result
         currentPage++
     }
 
+    fun loadProducts() {
+        val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
+        products.value = products.value?.plus(result)
+        currentPage++
+    }
+
     fun addToShoppingCart(productId: Long) {
         shoppingCartRepository.addProduct(productId)
+        products.value = products.value
     }
 
     fun removeToShoppingCart(productId: Long) {
         shoppingCartRepository.removeProduct(productId)
+        products.value = products.value
     }
 
     private fun PagedResult<Product>.toProductItems(): List<ProductItem> {

@@ -41,14 +41,19 @@ class ProductAdapter(
             is ProductItem.LoadMore -> LOAD_MORE
         }
 
-    fun addItems(newItems: List<ProductItem>) {
+    private fun addItems(newItems: List<ProductItem>) {
         removeLoadMoreIfExists()
         val startIndex = items.size
-        items.addAll(newItems)
-        notifyItemRangeInserted(startIndex, newItems.size)
+        val itemsToAdd = newItems.drop(startIndex)
+        items.addAll(itemsToAdd)
+        notifyItemRangeInserted(startIndex, itemsToAdd.size)
     }
 
-    fun setItems(newItems: List<ProductItem>) {
+    fun asdf(newItems: List<ProductItem>) {
+        change(this.items, newItems)
+    }
+
+    private fun setItems(newItems: List<ProductItem>) {
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()
@@ -59,6 +64,17 @@ class ProductAdapter(
             val removeIndex = items.lastIndex
             items.removeAt(removeIndex)
             notifyItemRemoved(removeIndex)
+        }
+    }
+
+    private fun change(
+        oldItems: List<ProductItem>,
+        newItems: List<ProductItem>,
+    ) {
+        if (oldItems.size == newItems.size) {
+            setItems(newItems)
+        } else {
+            addItems(newItems)
         }
     }
 
