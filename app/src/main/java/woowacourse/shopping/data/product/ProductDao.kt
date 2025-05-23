@@ -17,7 +17,7 @@ interface ProductDao {
     @Query("DELETE FROM $PRODUCT_TABLE_NAME")
     fun clear()
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(product: ProductEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
