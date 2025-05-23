@@ -60,7 +60,7 @@ class ShoppingCartRepositoryImpl(
             if (product.quantity > 0) {
                 dao.decreaseQuantity(product.productId)
             } else {
-                dao.deleteByProductId(product.productId)
+                dao.delete(product.productId)
             }
         }
     }
@@ -73,9 +73,9 @@ class ShoppingCartRepositoryImpl(
         return shoppingProduct?.toDomain()
     }
 
-    override fun delete(shoppingCartId: Long) {
+    override fun delete(productId: Long) {
         thread {
-            dao.delete(shoppingCartId)
+            dao.delete(productId)
         }.join()
     }
 }

@@ -20,5 +20,5 @@ interface ShoppingCartRepository {
         offset: Int,
     ): List<ShoppingProduct>
 
-    fun delete(shoppingCartId: Long)
+    fun delete(productId: Long)
 }

@@ -31,8 +31,5 @@ interface ShoppingCartDao {
     fun decreaseQuantity(productId: Long)
 
     @Query("DELETE from shopping_cart WHERE product_id == :productId")
-    fun deleteByProductId(productId: Long)
-
-    @Query("DELETE from shopping_cart WHERE id == :shoppingCartId")
-    fun delete(shoppingCartId: Long)
+    fun delete(productId: Long)
 }
