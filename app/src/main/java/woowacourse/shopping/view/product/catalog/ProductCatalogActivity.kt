@@ -101,6 +101,9 @@ class ProductCatalogActivity : AppCompatActivity() {
         viewModel.productItems.observe(this) { value ->
             productAdapter.addItems(value)
         }
+        viewModel.count.observe(this) {
+            productAdapter.resetView()
+        }
     }
 
     private fun navigateToProductDetail(product: Product) {

@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.product.catalog
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.product.OnProductListener
@@ -43,10 +44,14 @@ class ProductAdapter(
 
     fun addItems(newItems: List<ProductItem>) {
         removeLoadMoreIfExists()
-
         val startIndex = items.size
         items.addAll(newItems)
         notifyItemRangeInserted(startIndex, newItems.size)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun resetView() {
+        notifyDataSetChanged()
     }
 
     private fun removeLoadMoreIfExists() {
