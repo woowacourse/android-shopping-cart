@@ -31,10 +31,10 @@ class RecentProductsRepositoryImpl(
             RecentProduct(
                 product =
                     Product(
-                        id = it.product.id,
-                        name = it.product.name,
-                        price = it.product.price,
-                        imageUrl = it.product.imageUrl,
+                        id = it.product?.id ?: 0,
+                        name = it.product?.name ?: "a",
+                        price = it.product?.price ?: 0,
+                        imageUrl = it.product?.imageUrl ?: "d",
                     ),
                 viewTime = it.recentProduct.viewTime,
             )

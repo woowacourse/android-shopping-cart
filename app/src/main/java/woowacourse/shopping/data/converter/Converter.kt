@@ -2,16 +2,16 @@ package woowacourse.shopping.data.converter
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.time.ZoneOffset
 
 object Converter {
     @TypeConverter
-    fun toString(value: LocalDateTime): String {
-        return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(value)
+    fun toLong(value: LocalDateTime): Long {
+        return value.toInstant(ZoneOffset.UTC).toEpochMilli()
     }
 
     @TypeConverter
-    fun toLocalDate(value: String): LocalDateTime {
-        return LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    fun toLocalDate(value: Long): LocalDateTime {
+        return value.let { LocalDateTime.ofEpochSecond(it / 1000, 0, ZoneOffset.UTC) }
     }
 }

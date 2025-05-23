@@ -10,5 +10,5 @@ data class RecentProductWithProduct(
         parentColumn = "product_id",
         entityColumn = "id",
     )
-    val product: ProductEntity,
+    val product: ProductEntity?,
 )
