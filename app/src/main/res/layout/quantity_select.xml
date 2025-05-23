@@ -1,59 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:clickable="true"
-    android:paddingHorizontal="10dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/tv_decrease"
-        android:layout_width="wrap_content"
+    <data>
+
+        <variable
+            name="id"
+            type="Long" />
+        <variable
+            name="quantity"
+            type="int" />
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.common.QuantityChangeListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@color/white"
         android:clickable="true"
-        android:text="@string/decrease"
-        android:textColor="@color/deep_gray"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_quantity"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="-" />
+        android:paddingHorizontal="10dp">
 
-    <TextView
-        android:id="@+id/tv_quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="25dp"
-        android:clickable="false"
-        android:textColor="@color/deep_gray"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_increase"
-        app:layout_constraintStart_toEndOf="@id/tv_decrease"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="2000000" />
+        <TextView
+            android:id="@+id/tv_decrease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:onClick="@{()-> listener.decrease(id)}"
+            android:text="@string/decrease"
+            android:textColor="@color/deep_gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_quantity"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="-" />
 
-    <TextView
-        android:id="@+id/tv_increase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:text="@string/increase"
-        android:textColor="@color/deep_gray"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_quantity"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="+" />
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:clickable="false"
+            android:textColor="@color/deep_gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:text="@{String.valueOf(quantity)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_increase"
+            app:layout_constraintStart_toEndOf="@id/tv_decrease"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2000000" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_increase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:onClick="@{()->listener.increase(id)}"
+            android:text="@string/increase"
+            android:textColor="@color/deep_gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_quantity"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="+" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
