@@ -22,7 +22,11 @@ class InventoryActivity :
         super.onCreate(savedInstanceState)
 
         val shoppingApplication = application as ShoppingApplication
-        val factory = InventoryViewModel.createFactory(shoppingApplication.inventoryRepository)
+        val factory =
+            InventoryViewModel.createFactory(
+                shoppingApplication.inventoryRepository,
+                shoppingApplication.inventoryRepository2,
+            )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
 
         setSupportActionBar(binding.toolbar as Toolbar)
