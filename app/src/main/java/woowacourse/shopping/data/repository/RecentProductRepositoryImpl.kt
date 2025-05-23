@@ -30,7 +30,7 @@ class RecentProductRepositoryImpl(
     }
 
     override fun insertRecentProduct(
-        product: RecentlyViewedProduct,
+        product: Product,
         onResult: (Result<Unit>) -> Unit,
     ) {
         runThread(
@@ -43,11 +43,17 @@ class RecentProductRepositoryImpl(
                         recentProductDataSource.delete(oldest)
                     }
                 }
-                recentProductDataSource.insert(product)
+                recentProductDataSource.insert(product.toEntity())
             },
             onResult = onResult,
         )
     }
 
     private fun RecentlyViewedProduct.toProduct(): Product = productDataSource.getProductById(this.productId)
+
+    private fun Product.toEntity(): RecentlyViewedProduct =
+        RecentlyViewedProduct(
+            productId = this.productId,
+            viewedAt = System.currentTimeMillis(),
+        )
 }

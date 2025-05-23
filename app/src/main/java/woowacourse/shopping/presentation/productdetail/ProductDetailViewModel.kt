@@ -24,19 +24,20 @@ class ProductDetailViewModel(
     val productCount: LiveData<Int> = _productCount
     private val _recentProduct: MutableLiveData<Product?> = MutableLiveData()
     val recentProduct: LiveData<Product?> = _recentProduct
+    private val _isRecentProduct: MutableLiveData<Boolean> = MutableLiveData()
+    val isRecentProduct: LiveData<Boolean> = _isRecentProduct
     private val _insertProductResult: MutableLiveData<ResultState<Unit>> = MutableLiveData()
     val insertProductResult: LiveData<ResultState<Unit>> = _insertProductResult
     private val _toastMessage = SingleLiveData<Int>()
     val toastMessage: LiveData<Int> = _toastMessage
 
     fun fetchData(productId: Long) {
-        _product.value = productRepository.getProductById(productId)
+        val product = productRepository.getProductById(productId)
+        _product.value = product
 
-        recentProductRepository.getMostRecentProduct { result ->
-            result
-                .onSuccess { product -> _recentProduct.postValue(product) }
-                .onFailure { _toastMessage.postValue(R.string.product_detail_toast_most_recent_load_fail) }
-        }
+        insertCurrentProductToRecent(product)
+        loadRecentProduct()
+        checkIfCurrentIsMostRecent(product.productId)
     }
 
     fun addToCart(productId: Long) {
@@ -60,5 +61,32 @@ class ProductDetailViewModel(
     override fun onClickPlus(id: Long) {
         val currentCount = _productCount.value ?: return
         _productCount.value = currentCount + 1
+    }
+
+    private fun insertCurrentProductToRecent(product: Product) {
+        recentProductRepository.insertRecentProduct(product) { result ->
+            result.onFailure {
+                _toastMessage.postValue(R.string.product_detail_toast_most_recent_insert_fail)
+            }
+        }
+    }
+
+    private fun loadRecentProduct() {
+        recentProductRepository.getMostRecentProduct { result ->
+            result
+                .onSuccess { _recentProduct.postValue(it) }
+                .onFailure {
+                    _toastMessage.postValue(R.string.product_detail_toast_most_recent_load_fail)
+                }
+        }
+    }
+
+    private fun checkIfCurrentIsMostRecent(currentProductId: Long) {
+        recentProductRepository.getMostRecentProduct { result ->
+            result.onSuccess { recentProduct ->
+                val isSame = recentProduct?.productId == currentProductId
+                _isRecentProduct.postValue(isSame)
+            }
+        }
     }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.data.db.RecentlyViewedProduct
 import woowacourse.shopping.domain.model.Product
 
 interface RecentProductRepository {
@@ -9,7 +8,7 @@ interface RecentProductRepository {
     fun getMostRecentProduct(onResult: (Result<Product?>) -> Unit)
 
     fun insertRecentProduct(
-        product: RecentlyViewedProduct,
+        product: Product,
         onResult: (Result<Unit>) -> Unit,
     )
 }
