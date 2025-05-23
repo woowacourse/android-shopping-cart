@@ -41,7 +41,7 @@ class ProductAdapter(
             is ProductItem.LoadMore -> LOAD_MORE
         }
 
-    private fun addItems(newItems: List<ProductItem>) {
+    private fun appendItems(newItems: List<ProductItem>) {
         removeLoadMoreIfExists()
         val startIndex = items.size
         val itemsToAdd = newItems.drop(startIndex)
@@ -49,14 +49,16 @@ class ProductAdapter(
         notifyItemRangeInserted(startIndex, itemsToAdd.size)
     }
 
-    fun asdf(newItems: List<ProductItem>) {
-        change(this.items, newItems)
-    }
+    private fun updateItems(newItems: List<ProductItem>) {
+        val oldItems = items.toList()
 
-    private fun setItems(newItems: List<ProductItem>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
+        val commonSize = minOf(oldItems.size, newItems.size)
+        for (i in 0 until commonSize) {
+            if (oldItems[i] != newItems[i]) {
+                items[i] = newItems[i]
+                notifyItemChanged(i)
+            }
+        }
     }
 
     private fun removeLoadMoreIfExists() {
@@ -67,14 +69,11 @@ class ProductAdapter(
         }
     }
 
-    private fun change(
-        oldItems: List<ProductItem>,
-        newItems: List<ProductItem>,
-    ) {
-        if (oldItems.size == newItems.size) {
-            setItems(newItems)
+    fun updateProductItems(newItems: List<ProductItem>) {
+        if (this.items.size == newItems.size) {
+            updateItems(newItems)
         } else {
-            addItems(newItems)
+            appendItems(newItems)
         }
     }
 
