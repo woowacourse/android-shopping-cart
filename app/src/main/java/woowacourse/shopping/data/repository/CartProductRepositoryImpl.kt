@@ -26,8 +26,32 @@ class CartProductRepositoryImpl(
         }
     }
 
-    override fun updateProduct(product: CartProductEntity) {
-        thread { cartProductDao.updateProduct(product) }
+    override fun updateProductById(
+        cartProductEntity: CartProductEntity,
+        diff: Int,
+        callback: (CartProductEntity?) -> Unit,
+    ) {
+        thread {
+            val targetProduct = cartProductDao.getCartProduct(cartProductEntity.uid)
+            if (targetProduct == null) {
+                cartProductDao.insertCartProduct(cartProductEntity.copy(quantity = 1))
+            } else {
+                cartProductDao.updateProduct(cartProductEntity.uid, diff)
+            }
+
+            val updatedProduct = cartProductDao.getCartProduct(cartProductEntity.uid)
+            callback(updatedProduct)
+        }
+    }
+
+    override fun getProductQuantity(
+        id: Int,
+        callback: (Int?) -> Unit,
+    ) {
+        thread {
+            val quantity = cartProductDao.getProductQuantity(id)
+            callback(quantity)
+        }
     }
 
     override fun getAllProductsSize(callback: (Int) -> Unit) {

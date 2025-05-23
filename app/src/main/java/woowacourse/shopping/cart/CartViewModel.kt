@@ -78,6 +78,13 @@ class CartViewModel(
         }
     }
 
+    fun updateQuantity(
+        product: ProductUiModel,
+        event: Int,
+    ) {
+        // 반영하도록 수정
+    }
+
     private fun checkNextButtonEnabled(totalSize: Int) {
         val currentPage = page.value ?: INITIAL_PAGE
         val lastPage = (totalSize - 1) / PAGE_SIZE

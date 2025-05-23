@@ -45,6 +45,7 @@
             app:layout_constraintBottom_toBottomOf="@id/imageView_product"
             app:layout_constraintEnd_toEndOf="@id/imageView_product"
             app:layout_constraintStart_toStartOf="@id/imageView_product"
+            bind:product="@{product}"
             bind:quantity="@{String.valueOf(product.quantity)}" />
 
         <TextView

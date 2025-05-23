@@ -13,6 +13,10 @@
         <variable
             name="clickListener"
             type="woowacourse.shopping.cart.DeleteProductClickListener" />
+
+        <variable
+            name="productActionListener"
+            type="woowacourse.shopping.product.catalog.ProductActionListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

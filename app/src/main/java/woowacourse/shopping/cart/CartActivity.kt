@@ -13,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.product.catalog.ProductActionListener
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartActivity : AppCompatActivity() {
@@ -53,6 +54,23 @@ class CartActivity : AppCompatActivity() {
                         viewModel.deleteCartProduct(CartItem.ProductItem(product))
                     },
                 onPaginationButtonClick = viewModel::onPaginationButtonClick,
+                productActionListener =
+                    object : ProductActionListener {
+                        override fun onProductClick(product: ProductUiModel) = Unit
+
+                        override fun onLoadButtonClick() = Unit
+
+                        override fun onQuantityAddClick(product: ProductUiModel) = Unit
+
+                        override fun onQuantityControlClick(
+                            event: Int,
+                            product: ProductUiModel,
+                        ) {
+                            if (event == 1) {
+                            } else {
+                            }
+                        }
+                    },
             )
     }
 

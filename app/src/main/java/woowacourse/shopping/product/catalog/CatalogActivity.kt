@@ -36,7 +36,7 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.updateAfterCheckingDiff()
+        viewModel.loadCatalogUntilCurrentPage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -112,10 +112,13 @@ class CatalogActivity : AppCompatActivity() {
     private fun observeCatalogProducts() {
         viewModel.catalogItems.observe(this) { value ->
             Log.d("OBSERVED", "${value.size}")
-            (binding.recyclerViewProducts.adapter as ProductAdapter).addItems(value)
+            (binding.recyclerViewProducts.adapter as ProductAdapter).setItems(value)
         }
         viewModel.updatedItem.observe(this) { product ->
-            (binding.recyclerViewProducts.adapter as ProductAdapter).updateItem(product)
+            Log.d("UPDATED", "$product")
+            if (product != null) {
+                (binding.recyclerViewProducts.adapter as ProductAdapter).updateItem(product)
+            }
         }
         binding.lifecycleOwner = this
     }

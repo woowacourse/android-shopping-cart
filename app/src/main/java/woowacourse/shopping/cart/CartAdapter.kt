@@ -1,15 +1,16 @@
 package woowacourse.shopping.cart
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.cart.CartItem.ProductItem
+import woowacourse.shopping.product.catalog.ProductActionListener
 
 class CartAdapter(
     cartItems: List<CartItem>,
     private val onDeleteProductClick: DeleteProductClickListener,
     private val onPaginationButtonClick: PaginationButtonClickListener,
+    private val productActionListener: ProductActionListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val cartItems: MutableList<CartItem> = cartItems.toMutableList()
 
@@ -25,7 +26,7 @@ class CartAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == CART_PRODUCT) {
-            CartViewHolder.from(parent, onDeleteProductClick)
+            CartViewHolder.from(parent, onDeleteProductClick, productActionListener)
         } else {
             PaginationButtonViewHolder.from(parent, onPaginationButtonClick)
         }
