@@ -39,6 +39,8 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
     }
 
     override fun insert(product: Product) {
-        productDao.insert(product.toEntity())
+        thread {
+            productDao.insert(product.toEntity())
+        }
     }
 }

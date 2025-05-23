@@ -24,7 +24,7 @@ class ProductDetailActivity :
 
         val shoppingApplication = application as ShoppingApplication
         val factory =
-            ProductDetailViewModel.createFactory(shoppingApplication.shoppingCartRepository)
+            ProductDetailViewModel.createFactory(shoppingApplication.shoppingCartRepository2)
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
 
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
