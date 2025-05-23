@@ -37,6 +37,7 @@ class CatalogActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.loadCatalogUntilCurrentPage()
+        viewModel.loadCartItemSize()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

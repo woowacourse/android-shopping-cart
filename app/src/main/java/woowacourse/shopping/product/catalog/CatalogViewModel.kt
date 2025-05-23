@@ -62,6 +62,7 @@ class CatalogViewModel(
         val endIndex = minOf(startIndex + PAGE_SIZE, allProductsSize)
 
         loadCatalog(startIndex, endIndex)
+        loadCartItemSize()
     }
 
     fun loadCatalogUntilCurrentPage() {
@@ -113,14 +114,14 @@ class CatalogViewModel(
         }
     }
 
-    private fun increasePage() {
-        _page.value = _page.value?.plus(1)
-    }
-
-    private fun loadCartItemSize() {
+    fun loadCartItemSize() {
         cartProductRepository.getCartItemSize { size ->
             _cartItemSize.postValue(size)
         }
+    }
+
+    private fun increasePage() {
+        _page.value = _page.value?.plus(1)
     }
 
     companion object {
