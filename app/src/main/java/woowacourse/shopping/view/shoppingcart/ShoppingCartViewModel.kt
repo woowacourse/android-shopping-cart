@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingProduct
 
 class ShoppingCartViewModel(
-    private val repository: ShoppingCartRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private var shoppingProducts: List<ShoppingProduct> = listOf()
 
@@ -31,11 +31,19 @@ class ShoppingCartViewModel(
 
     private fun loadProducts() {
         val page = _currentPage.value ?: FIRST_PAGE_NUMBER
-        val result = repository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
+        val result = shoppingCartRepository.getPaged(SHOPPING_PRODUCT_SIZE_LIMIT, _currentPage.value ?: FIRST_PAGE_NUMBER)
         shoppingProducts = result
         loadedPages.add(page)
         cached()
         checkHasNext()
+    }
+
+    fun addToShoppingCart(productId: Long) {
+        shoppingCartRepository.addProduct(productId)
+    }
+
+    fun removeToShoppingCart(productId: Long) {
+        shoppingCartRepository.removeProduct(productId)
     }
 
     fun loadMoreShoppingProducts() {
@@ -50,7 +58,7 @@ class ShoppingCartViewModel(
         }
 
         val result =
-            repository.getPaged(
+            shoppingCartRepository.getPaged(
                 SHOPPING_PRODUCT_SIZE_LIMIT,
                 (_currentPage.value ?: FIRST_PAGE_NUMBER) * SHOPPING_PRODUCT_SIZE_LIMIT,
             )
@@ -68,14 +76,14 @@ class ShoppingCartViewModel(
     }
 
     fun deleteProduct(shoppingProduct: ShoppingProduct) {
-        repository.delete(shoppingProduct.productId)
+        shoppingCartRepository.delete(shoppingProduct.productId)
         shoppingProducts = shoppingProducts.filter { it != shoppingProduct }
         validateCurrentPage()
         checkCacheHasNext()
     }
 
     private fun checkHasNext() {
-        val resultSize = repository.getAllSize()
+        val resultSize = shoppingCartRepository.getAllSize()
 
         val remainingItems = resultSize - ((_currentPage.value?.plus(1))?.times(5) ?: FIRST_PAGE_NUMBER)
 

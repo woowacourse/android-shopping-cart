@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.view.product.OnQuantityControlListener
 
 class ShoppingCartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityShoppingCartBinding.inflate(layoutInflater) }
@@ -39,7 +40,17 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         adapter =
-            SelectedProductAdapter { product ->
+            SelectedProductAdapter(
+                object : OnQuantityControlListener {
+                    override fun onQuantityControlPlusClick(productId: Long) {
+                        viewModel.addToShoppingCart(productId)
+                    }
+
+                    override fun onQuantityControlMinusClick(productId: Long) {
+                        viewModel.removeToShoppingCart(productId)
+                    }
+                },
+            ) { product ->
                 viewModel.deleteProduct(product)
             }
         binding.rvProducts.adapter = adapter
