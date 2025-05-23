@@ -7,6 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import woowacourse.shopping.BuildConfig
+import woowacourse.shopping.data.carts.CartDao
+import woowacourse.shopping.data.carts.CartEntity
 
 @Database(entities = [CartEntity::class], version = 2)
 abstract class ShoppingDatabase : RoomDatabase() {

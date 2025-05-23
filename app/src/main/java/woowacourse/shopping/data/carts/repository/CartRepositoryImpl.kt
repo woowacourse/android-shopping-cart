@@ -3,9 +3,9 @@ package woowacourse.shopping.data.carts.repository
 import android.os.Handler
 import android.os.Looper
 import woowacourse.shopping.data.ShoppingDatabase
-import woowacourse.shopping.data.toDomainCartItem
-import woowacourse.shopping.data.toDomainGoods
-import woowacourse.shopping.data.toEntity
+import woowacourse.shopping.data.util.toDomainCartItem
+import woowacourse.shopping.data.util.toDomainGoods
+import woowacourse.shopping.data.util.toEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 import kotlin.concurrent.thread

@@ -10,9 +10,9 @@ import okhttp3.Request
 import okhttp3.Response
 import woowacourse.shopping.BuildConfig
 import woowacourse.shopping.data.goods.GoodsDto
-import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.data.util.ApiEndpoints.PRODUCTS
 import woowacourse.shopping.data.util.MockInterceptor
+import woowacourse.shopping.data.util.mapper.toDomain
 import woowacourse.shopping.domain.model.Goods
 import java.io.IOException
 

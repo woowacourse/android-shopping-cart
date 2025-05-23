@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.mapper
+package woowacourse.shopping.data.util.mapper
 
 import woowacourse.shopping.data.goods.GoodsDto
 import woowacourse.shopping.domain.model.Goods
