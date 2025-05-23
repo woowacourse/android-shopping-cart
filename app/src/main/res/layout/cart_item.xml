@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="product"
             type="woowacourse.shopping.domain.product.Product" />
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.product.CartItem" />
         <variable
             name="cartClickListener"
             type="woowacourse.shopping.ui.cart.CartClickListener" />
@@ -73,10 +75,11 @@
             tools:text="999,999,999,999,900원" />
 
         <include
-            android:id="@+id/included_cart_item_layout"
+            android:id="@+id/change_quantity"
             layout="@layout/change_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:item="@{cartItem}"
             app:layout_constraintEnd_toEndOf="@+id/tv_cart_price"
             app:layout_constraintBottom_toTopOf="@+id/tv_cart_price" />
     </androidx.constraintlayout.widget.ConstraintLayout>

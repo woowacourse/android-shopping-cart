@@ -4,22 +4,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 
-class CartViewModel: ViewModel() {
-    private val repository = CartRepository.get()
-    private val _products = MutableLiveData<List<Product>>(emptyList())
-    val products: LiveData<List<Product>> = _products
+class CartViewModel : ViewModel() {
+    private val cartRepository = CartRepository.get()
+
+    private val _cartItems = MutableLiveData<List<CartItem>>(emptyList())
+    val cartItems: LiveData<List<CartItem>> = _cartItems
 
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> = _pageNumber
+
+    private val _quantitys = MutableLiveData<List<CartItem>>(emptyList())
+    val quantitys: LiveData<List<CartItem>> = _quantitys
 
     private var size: Int = 0
 
     init {
         thread {
-            size = repository.size()
+            size = cartRepository.size()
         }
         update()
     }
@@ -33,8 +38,8 @@ class CartViewModel: ViewModel() {
     private fun update() {
         val pageNumber = pageNumber.value ?: 1
         thread {
-            val items = repository.getPagedItems(5, (pageNumber - 1) * 5)
-            _products.postValue(items)
+            val items = cartRepository.getPagedItems(5, (pageNumber - 1) * 5)
+            _cartItems.postValue(items)
         }
     }
 
@@ -54,8 +59,30 @@ class CartViewModel: ViewModel() {
 
     fun deleteProduct(product: Product) {
         thread {
-            repository.delete(product)
+            cartRepository.delete(product.id)
         }
-        _products.value = _products.value?.filter { it.id != product.id }
+        _cartItems.value = _cartItems.value?.filter { it.id != product.id }
+    }
+
+    fun increaseQuantity(cartItem: CartItem) {
+        val target = _quantitys.value?.find { it.id == cartItem.id }
+        val newCartItem = cartItem.copy(quantity = target?.quantity?.plus(1) ?: 1)
+        thread {
+            cartRepository.update(newCartItem)
+        }
+    }
+
+    fun decreaseQuantity(cartItem: CartItem) {
+        val target = _quantitys.value?.find { it.id == cartItem.id }
+        val newCartItem = cartItem.copy(quantity = target?.quantity?.minus(1)?.coerceAtLeast(1) ?: 1)
+        if (target?.quantity != 1) {
+            thread {
+                cartRepository.update(newCartItem)
+            }
+        } else {
+            thread {
+                cartRepository.delete(cartItem.product.id)
+            }
+        }
     }
 }

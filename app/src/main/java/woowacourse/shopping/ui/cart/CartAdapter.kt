@@ -7,10 +7,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.CartItemBinding
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 
 class CartAdapter(
-    private var items: List<Product>,
+    private var items: List<CartItem>,
     private val cartClickListener: CartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
@@ -34,7 +34,7 @@ class CartAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItem(it: List<Product>?) {
+    fun updateItem(it: List<CartItem>?) {
         items = it.orEmpty()
         notifyDataSetChanged()
     }

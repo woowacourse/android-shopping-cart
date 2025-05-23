@@ -60,7 +60,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initObserve() {
-        viewModel.products.observe(this) {
+        viewModel.cartItems.observe(this) {
             cartAdapter.updateItem(it)
         }
 
