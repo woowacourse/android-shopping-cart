@@ -15,7 +15,10 @@ class GoodsAdapter(
         val oldItems = items.toList()
         items.clear()
         items.addAll(newItems)
-        if (newItems.size > oldItems.size) {
+        if (oldItems.isEmpty()) {
+            @Suppress("NotifyDataSetChanged")
+            notifyDataSetChanged()
+        } else if (newItems.size > oldItems.size) {
             notifyItemRangeInserted(oldItems.size, newItems.size - oldItems.size)
         } else if (newItems.size == oldItems.size) {
             oldItems.zip(newItems).forEachIndexed { index, (oldItem, newItem) ->
