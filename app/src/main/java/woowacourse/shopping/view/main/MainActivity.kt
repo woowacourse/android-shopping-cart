@@ -31,7 +31,7 @@ class MainActivity :
     private val viewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
     private val productsAdapter: ProductsAdapter by lazy {
         ProductsAdapter(
-            ProductEventHandlerImpl(viewModel.totalShoppingCartSize),
+            ProductEventHandlerImpl(),
         )
     }
 
@@ -108,22 +108,20 @@ class MainActivity :
         viewModel.updateShoppingCart(productsAdapter.currentPage)
     }
 
-    private inner class ProductEventHandlerImpl(
-        val totalShoppingCartSize: MutableLiveData<Int>,
-    ) : ProductEventHandler {
+    private inner class ProductEventHandlerImpl : ProductEventHandler {
         override fun onBtnItemProductAddToCartSelected(quantity: MutableLiveData<Int>) {
             super.onQuantityPlusSelected(quantity)
-            totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
+            viewModel.increaseShoppingCartTotalSize()
         }
 
         override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
             super.onQuantityMinusSelected(quantity)
-            totalShoppingCartSize.value = totalShoppingCartSize.value?.dec()
+            viewModel.decreaseShoppingCartTotalSize()
         }
 
         override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
             super.onQuantityPlusSelected(quantity)
-            totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
+            viewModel.increaseShoppingCartTotalSize()
         }
 
         override fun onProductSelected(productUiModel: ProductUiModel) {

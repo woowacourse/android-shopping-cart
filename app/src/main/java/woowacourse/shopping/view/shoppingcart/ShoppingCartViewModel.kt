@@ -11,8 +11,8 @@ import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ShoppingCartRepository
-import woowacourse.shopping.view.toShoppingCartItem
-import woowacourse.shopping.view.toShoppingCartItemUiModel
+import woowacourse.shopping.mapper.toShoppingCartItem
+import woowacourse.shopping.mapper.toShoppingCartItemUiModel
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartViewModel(

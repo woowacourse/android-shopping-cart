@@ -69,6 +69,20 @@ class ProductsViewModel(
         }
     }
 
+    fun increaseItem(productUiModel: ProductUiModel) {
+    }
+
+    fun decreaseItem(productUiModel: ProductUiModel) {
+    }
+
+    fun increaseShoppingCartTotalSize() {
+        totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
+    }
+
+    fun decreaseShoppingCartTotalSize() {
+        totalShoppingCartSize.value = totalShoppingCartSize.value?.dec()
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
         val Factory: ViewModelProvider.Factory =
