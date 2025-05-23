@@ -1,21 +1,21 @@
 package woowacourse.shopping.data.inventory
 
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 
 interface InventoryRepository {
     fun getOrNull(
         id: Int,
-        onResult: (Product?) -> Unit,
+        onResult: (InventoryProduct?) -> Unit,
     )
 
-    fun getAll(onSuccess: (List<Product>) -> Unit)
+    fun getAll(onSuccess: (List<InventoryProduct>) -> Unit)
 
     fun getPage(
         pageSize: Int,
         pageIndex: Int,
-        onSuccess: (Page<Product>) -> Unit,
+        onSuccess: (Page<InventoryProduct>) -> Unit,
     )
 
-    fun insert(product: Product)
+    fun insert(product: InventoryProduct)
 }

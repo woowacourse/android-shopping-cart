@@ -7,11 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository2
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
-import woowacourse.shopping.view.inventory.item.toUiModel
 
 class InventoryViewModel(
     private val inventoryRepository: InventoryRepository,
@@ -29,10 +27,8 @@ class InventoryViewModel(
         ) { page -> updateItems(page) }
     }
 
-    private fun updateItems(newPage: Page<Product>) {
-        val newProducts: List<InventoryProduct> = newPage.items.map(Product::toUiModel)
-        val newItems =
-            products + newProducts + if (newPage.hasNext) listOf(ShowMore) else emptyList()
+    private fun updateItems(newPage: Page<InventoryProduct>) {
+        val newItems = products + newPage.items + if (newPage.hasNext) listOf(ShowMore) else emptyList()
         _items.postValue(newItems)
     }
 
