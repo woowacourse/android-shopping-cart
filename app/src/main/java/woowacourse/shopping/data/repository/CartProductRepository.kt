@@ -13,7 +13,7 @@ interface CartProductRepository {
         callback: (List<CartProductEntity>) -> Unit,
     )
 
-    fun updateProductById(
+    fun updateProduct(
         cartProduct: CartProductEntity,
         diff: Int,
         callback: (CartProductEntity?) -> Unit,

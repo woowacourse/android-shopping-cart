@@ -29,11 +29,12 @@ class ProductViewHolder(
         fun from(
             parent: ViewGroup,
             productActionListener: ProductActionListener,
+            quantityControlListener: QuantityControlListener,
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ProductItemBinding.inflate(inflater, parent, false)
             binding.productActionListener = productActionListener
-            binding.layoutQuantityControlBar.productActionListener = productActionListener
+            binding.layoutQuantityControlBar.quantityControlListener = quantityControlListener
             return ProductViewHolder(binding)
         }
     }

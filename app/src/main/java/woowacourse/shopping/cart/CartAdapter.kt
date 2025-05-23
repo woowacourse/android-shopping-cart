@@ -4,13 +4,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.cart.CartItem.ProductItem
-import woowacourse.shopping.product.catalog.ProductActionListener
+import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.product.catalog.QuantityControlListener
 
 class CartAdapter(
     cartItems: List<CartItem>,
     private val onDeleteProductClick: DeleteProductClickListener,
     private val onPaginationButtonClick: PaginationButtonClickListener,
-    private val productActionListener: ProductActionListener,
+    private val quantityControlListener: QuantityControlListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val cartItems: MutableList<CartItem> = cartItems.toMutableList()
 
@@ -21,12 +22,18 @@ class CartAdapter(
         notifyItemRangeInserted(0, cartItems.size)
     }
 
+    fun setCartItem(product: ProductUiModel) {
+        val index = cartItems.filterIsInstance<ProductItem>().indexOfFirst { it.productItem.id == product.id }
+        cartItems[index] = ProductItem(product)
+        notifyItemChanged(index)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == CART_PRODUCT) {
-            CartViewHolder.from(parent, onDeleteProductClick, productActionListener)
+            CartViewHolder.from(parent, onDeleteProductClick, quantityControlListener)
         } else {
             PaginationButtonViewHolder.from(parent, onPaginationButtonClick)
         }

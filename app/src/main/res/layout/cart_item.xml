@@ -71,6 +71,7 @@
             android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toTopOf="@id/textView_price_info"
             app:layout_constraintEnd_toEndOf="@id/textView_price_info"
+            bind:product="@{cartProduct}"
             bind:quantity="@{String.valueOf(cartProduct.quantity)}" />
 
         <TextView

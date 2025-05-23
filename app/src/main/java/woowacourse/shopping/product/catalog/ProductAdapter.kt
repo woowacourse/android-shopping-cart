@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ProductAdapter(
     products: List<ProductUiModel>,
     private val productActionListener: ProductActionListener,
+    private val quantityControlListener: QuantityControlListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val products: MutableList<CatalogItem> =
         products.map { CatalogItem.ProductItem(it) }.toMutableList()
@@ -15,7 +16,7 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         if (viewType == VIEW_TYPE_PRODUCT) {
-            ProductViewHolder.from(parent, productActionListener)
+            ProductViewHolder.from(parent, productActionListener, quantityControlListener)
         } else {
             LoadButtonViewHolder.from(parent, productActionListener)
         }

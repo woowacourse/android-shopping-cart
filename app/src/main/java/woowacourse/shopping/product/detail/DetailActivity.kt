@@ -15,8 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.product.catalog.ProductActionListener
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.product.catalog.QuantityControlListener
 import woowacourse.shopping.util.intentParcelableExtra
 
 class DetailActivity : AppCompatActivity() {
@@ -42,23 +42,12 @@ class DetailActivity : AppCompatActivity() {
         }
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        binding.layoutQuantityControlBar.productActionListener =
-            object : ProductActionListener {
-                override fun onProductClick(product: ProductUiModel) = Unit
-
-                override fun onLoadButtonClick() = Unit
-
-                override fun onQuantityAddClick(product: ProductUiModel) = Unit
-
-                override fun onQuantityControlClick(
-                    event: Int,
-                    product: ProductUiModel,
-                ) {
-                    if (event == 1) {
-                        viewModel.increaseQuantity()
-                    } else {
-                        viewModel.decreaseQuantity()
-                    }
+        binding.layoutQuantityControlBar.quantityControlListener =
+            QuantityControlListener { event, _ ->
+                if (event == 1) {
+                    viewModel.increaseQuantity()
+                } else {
+                    viewModel.decreaseQuantity()
                 }
             }
     }

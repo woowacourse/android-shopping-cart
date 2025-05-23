@@ -6,9 +6,4 @@ interface ProductActionListener {
     fun onLoadButtonClick()
 
     fun onQuantityAddClick(product: ProductUiModel)
-
-    fun onQuantityControlClick(
-        event: Int,
-        product: ProductUiModel,
-    )
 }

@@ -29,6 +29,9 @@ class CartViewModel(
     private val _page = MutableLiveData<Int>(INITIAL_PAGE)
     val page: LiveData<Int> = _page
 
+    private val _updatedItem = MutableLiveData<ProductUiModel>()
+    val updatedItem: LiveData<ProductUiModel> = _updatedItem
+
     init {
         loadCartProducts()
     }
@@ -71,18 +74,19 @@ class CartViewModel(
         }
     }
 
-    fun updateButtons() {
-        cartProductRepository.getAllProductsSize { totalSize ->
-            checkNextButtonEnabled(totalSize)
-            checkPrevButtonEnabled()
-        }
-    }
-
     fun updateQuantity(
-        product: ProductUiModel,
         event: Int,
+        product: ProductUiModel,
     ) {
-        // 반영하도록 수정
+        if (event == DECREASE_BUTTON) {
+            cartProductRepository.updateProduct(product.toEntity(), -1) { product ->
+                _updatedItem.postValue(product?.toUiModel())
+            }
+        } else if (event == INCREASE_BUTTON) {
+            cartProductRepository.updateProduct(product.toEntity(), 1) { product ->
+                _updatedItem.postValue(product?.toUiModel())
+            }
+        }
     }
 
     private fun checkNextButtonEnabled(totalSize: Int) {
@@ -131,5 +135,7 @@ class CartViewModel(
         private const val INITIAL_PAGE = 0
         private const val PREV_BUTTON = 1
         private const val NEXT_BUTTON = 2
+        private const val DECREASE_BUTTON = 0
+        private const val INCREASE_BUTTON = 1
     }
 }

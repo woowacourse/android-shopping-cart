@@ -35,7 +35,7 @@ class CatalogViewModel(
     }
 
     fun increaseQuantity(product: ProductUiModel) {
-        cartProductRepository.updateProductById(product.toEntity(), 1) { updatedProduct ->
+        cartProductRepository.updateProduct(product.toEntity(), 1) { updatedProduct ->
             _updatedItem.postValue(updatedProduct?.toUiModel())
         }
         loadCartItemSize()
@@ -47,7 +47,7 @@ class CatalogViewModel(
                 cartProductRepository.deleteCartProduct(product.toEntity().copy(quantity = 1))
                 _updatedItem.postValue(product.copy(quantity = 0))
             } else {
-                cartProductRepository.updateProductById(product.toEntity(), -1) { updatedProduct ->
+                cartProductRepository.updateProduct(product.toEntity(), -1) { updatedProduct ->
                     _updatedItem.postValue(updatedProduct?.toUiModel())
                 }
             }

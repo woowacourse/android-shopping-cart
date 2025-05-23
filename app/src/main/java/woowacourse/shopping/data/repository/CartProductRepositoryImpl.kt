@@ -26,7 +26,7 @@ class CartProductRepositoryImpl(
         }
     }
 
-    override fun updateProductById(
+    override fun updateProduct(
         cartProductEntity: CartProductEntity,
         diff: Int,
         callback: (CartProductEntity?) -> Unit,
@@ -35,6 +35,8 @@ class CartProductRepositoryImpl(
             val targetProduct = cartProductDao.getCartProduct(cartProductEntity.uid)
             if (targetProduct == null) {
                 cartProductDao.insertCartProduct(cartProductEntity.copy(quantity = 1))
+            } else if (targetProduct.quantity == 1 && diff == -1) {
+                return@thread
             } else {
                 cartProductDao.updateProduct(cartProductEntity.uid, diff)
             }

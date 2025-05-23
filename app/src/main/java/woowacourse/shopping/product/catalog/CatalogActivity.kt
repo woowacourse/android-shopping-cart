@@ -86,18 +86,14 @@ class CatalogActivity : AppCompatActivity() {
                         override fun onQuantityAddClick(product: ProductUiModel) {
                             viewModel.increaseQuantity(product)
                         }
-
-                        override fun onQuantityControlClick(
-                            event: Int,
-                            product: ProductUiModel,
-                        ) {
-                            if (event == 1) {
-                                viewModel.increaseQuantity(product)
-                            } else {
-                                viewModel.decreaseQuantity(product)
-                            }
-                        }
                     },
+                quantityControlListener = { event, product ->
+                    if (event == 1) {
+                        viewModel.increaseQuantity(product)
+                    } else {
+                        viewModel.decreaseQuantity(product)
+                    }
+                },
             )
 
         binding.recyclerViewProducts.adapter = adapter
