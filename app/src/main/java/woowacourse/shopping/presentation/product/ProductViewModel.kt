@@ -39,7 +39,7 @@ class ProductViewModel(
                     _products.postValue(ResultState.Success(cartItems))
                     this.currentPage = currentPage
                 }.onFailure {
-                    _toastMessage.value = R.string.product_toast_load_failure
+                    _toastMessage.postValue(R.string.product_toast_load_failure)
                 }
         }
     }
@@ -50,7 +50,7 @@ class ProductViewModel(
                 .onSuccess { count ->
                     _cartItemCount.postValue(count ?: 0)
                 }.onFailure {
-                    _toastMessage.value = R.string.product_toast_load_total_cart_quantity_fail
+                    _toastMessage.postValue(R.string.product_toast_load_total_cart_quantity_fail)
                 }
         }
     }

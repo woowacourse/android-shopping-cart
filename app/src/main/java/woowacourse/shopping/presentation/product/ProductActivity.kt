@@ -33,6 +33,9 @@ class ProductActivity :
     private val viewModel: ProductViewModel by viewModels {
         ProductViewModelFactory(applicationContext)
     }
+    private val recentAdapter: RecentAdapter by lazy {
+        RecentAdapter()
+    }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
             onClickLoadMore = ::handleLoadMoreClick,
@@ -58,6 +61,7 @@ class ProductActivity :
         viewModel.fetchData(0)
         viewModel.fetchCartItemCount()
         binding.rvProducts.adapter = productAdapter
+        binding.rvRecentProducts.adapter = recentAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -125,6 +129,7 @@ class ProductActivity :
                 is ResultState.Success -> {
                     val showLoadMore = viewModel.showLoadMore.value == true
                     productAdapter.setData(result.data, showLoadMore)
+                    recentAdapter.submitList(result.data.map { it.product })
                 }
 
                 is ResultState.Failure -> {
