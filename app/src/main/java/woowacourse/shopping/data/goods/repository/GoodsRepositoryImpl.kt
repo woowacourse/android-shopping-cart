@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.goods.repository
 
-import woowacourse.shopping.data.goods.GoodsDataBase
+import woowacourse.shopping.data.goods.database.GoodsDataBase
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.repository.GoodsRepository
 
