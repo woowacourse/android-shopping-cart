@@ -18,6 +18,7 @@ class SelectedProductViewHolder(
     fun bind(shoppingProduct: ShoppingProduct) {
         binding.shoppingProduct = shoppingProduct
         binding.product = shoppingProduct.productId.toProductDomain()
+        binding.initQuantityControl.shoppingProduct = shoppingProduct
     }
 
     companion object {
