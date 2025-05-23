@@ -4,47 +4,54 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.ShoppingCartRepository
 import woowacourse.shopping.data.inventory.InventoryRepository
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository2
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.domain.Product
 
 class ShoppingCartViewModel(
-    private val repository: ShoppingCartRepository,
-    private val repository2: InventoryRepository,
+    private val inventoryRepository: InventoryRepository,
+    private val shoppingCartRepository: ShoppingCartRepository2,
 ) : ViewModel() {
-    private val allProducts: Set<Product> get() = repository.getAll().toSet()
-    private val _products = MutableLiveData<Page<Product>>()
-    val products: LiveData<Page<Product>> get() = _products
+    private val _cartItems = MutableLiveData<Page<CartItem>>()
+    val cartItems: LiveData<Page<CartItem>> get() = _cartItems
 
-    fun removeProduct(product: Product) {
-        val currentProductIndex = allProducts.indexOf(product)
-        repository.remove(product)
-        val pageNumber = pageNumberAfterRemoval(currentProductIndex)
-        requestPage(pageNumber)
+    fun removeCartItem(cartItem: CartItem) {
+        shoppingCartRepository.getAll { allItems ->
+            val removedItemIndex = allItems.indexOf(cartItem)
+            val pageNumber = pageNumberAfterRemoval(allItems.size, removedItemIndex)
+            requestPage(pageNumber)
+        }
     }
 
     fun requestPage(pageIndex: Int) {
-        repository2.getPage(PAGE_SIZE, pageIndex) { page -> _products.postValue(page) }
+        shoppingCartRepository.getPage(PAGE_SIZE, pageIndex) { page ->
+            _cartItems.postValue(page)
+        }
     }
 
     fun requestPreviousPage() {
-        val currentIndex = (_products.value?.pageIndex) ?: 0
+        val currentIndex = (_cartItems.value?.pageIndex) ?: 0
         val previousIndex = (currentIndex - 1).coerceAtLeast(0)
-        repository2.getPage(PAGE_SIZE, previousIndex) { page -> _products.postValue(page) }
+        shoppingCartRepository.getPage(
+            PAGE_SIZE,
+            previousIndex,
+        ) { page -> _cartItems.postValue(page) }
     }
 
     fun requestNextPage() {
-        val currentIndex = (_products.value?.pageIndex) ?: 0
+        val currentIndex = (_cartItems.value?.pageIndex) ?: 0
         val nextIndex = currentIndex + 1
-        repository2.getPage(PAGE_SIZE, nextIndex) { page -> _products.postValue(page) }
+        shoppingCartRepository.getPage(PAGE_SIZE, nextIndex) { page -> _cartItems.postValue(page) }
     }
 
-    private fun pageNumberAfterRemoval(index: Int): Int {
-        val productsCount = allProducts.size
-        val currentPageNumber = index / PAGE_SIZE
+    private fun pageNumberAfterRemoval(
+        itemsCount: Int,
+        removedIndex: Int,
+    ): Int {
+        val currentPageNumber = removedIndex / PAGE_SIZE
         val newPageNumber =
-            if (productsCount % PAGE_SIZE == 0 && index == productsCount) {
+            if (itemsCount % PAGE_SIZE == 0 && removedIndex == itemsCount) {
                 currentPageNumber - 1
             } else {
                 currentPageNumber
@@ -57,15 +64,15 @@ class ShoppingCartViewModel(
 
         @Suppress("UNCHECKED_CAST")
         fun createFactory(
-            shoppingCartRepository: ShoppingCartRepository,
-            repository: InventoryRepository,
+            inventoryRepository: InventoryRepository,
+            shoppingCartRepository: ShoppingCartRepository2,
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return (
                         ShoppingCartViewModel(
+                            inventoryRepository,
                             shoppingCartRepository,
-                            repository,
                         ) as T
                     )
                 }

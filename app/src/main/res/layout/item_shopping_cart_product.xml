@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+            name="cartItem"
+            type="woowacourse.shopping.domain.CartItem" />
 
         <variable
             name="handler"
@@ -29,7 +29,7 @@
             android:layout_marginEnd="36dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{cartItem.name}"
             android:textColor="@color/gray"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -43,7 +43,7 @@
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
-            android:image="@{product.imageUrl}"
+            android:image="@{cartItem.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
             android:layout_height="20dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
-            android:onClick="@{() -> handler.onRemoveProduct(product)}"
+            android:onClick="@{() -> handler.onRemoveCartItem(cartItem)}"
             android:src="@drawable/icon_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -114,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:price="@{product.price}"
+            android:price="@{cartItem.price}"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_shopping_cart_image"

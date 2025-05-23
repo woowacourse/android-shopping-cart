@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.view.base.BaseActivity
 
 class ShoppingCartActivity :
@@ -22,8 +22,8 @@ class ShoppingCartActivity :
         val shoppingApplication = application as ShoppingApplication
         val factory =
             ShoppingCartViewModel.createFactory(
-                shoppingApplication.shoppingCartRepository,
                 shoppingApplication.inventoryRepository,
+                shoppingApplication.shoppingCartRepository2,
             )
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
         binding.apply {
@@ -34,16 +34,16 @@ class ShoppingCartActivity :
         }
 
         with(viewModel) {
-            products.observe(this@ShoppingCartActivity) { page ->
+            cartItems.observe(this@ShoppingCartActivity) { page ->
                 val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
-                adapter.updateProducts(page.items)
+                adapter.updateCartItems(page.items)
             }
             requestPage(0)
         }
     }
 
-    override fun onRemoveProduct(product: Product) {
-        viewModel.removeProduct(product)
+    override fun onRemoveCartItem(cartItem: CartItem) {
+        viewModel.removeCartItem(cartItem)
     }
 
     override fun onGoToPreviousPage() {

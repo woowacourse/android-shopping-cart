@@ -3,7 +3,7 @@ package woowacourse.shopping.view.shoppingcart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.view.base.BaseViewHolder
 
 class ShoppingCartViewHolder(
@@ -20,7 +20,7 @@ class ShoppingCartViewHolder(
         binding.handler = handler
     }
 
-    fun bind(item: Product) {
-        binding.product = item
+    fun bind(item: CartItem) {
+        binding.cartItem = item
     }
 }

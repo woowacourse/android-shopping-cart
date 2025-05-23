@@ -32,7 +32,7 @@ class ShoppingCartViewModelTest {
         viewModel.requestPage(0)
 
         // then
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.cartItems.getOrAwaitValue()
         val expected = repository.getPage(5, 0)
         assertThat(actual).isEqualTo(expected)
     }
@@ -40,20 +40,20 @@ class ShoppingCartViewModelTest {
     @Test
     fun 장바구니에서_상품을_삭제할_수_있다() {
         // when
-        viewModel.removeProduct(shoppingCartItem)
+        viewModel.removeCartItem(shoppingCartItem)
 
         // then
-        val result = viewModel.products.getOrAwaitValue().items
+        val result = viewModel.cartItems.getOrAwaitValue().items
         assertThat(result).doesNotContain(shoppingCartItem)
     }
 
     @Test
     fun 장바구니에서_상품을_삭제하면_해당_상품이_있었던_페이지가_로드된다() {
         // when
-        viewModel.removeProduct(shoppingCartLastPageItem)
+        viewModel.removeCartItem(shoppingCartLastPageItem)
 
         // then
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.cartItems.getOrAwaitValue()
         val expected = repository.getPage(5, 4)
         assertThat(actual).isEqualTo(expected)
     }
