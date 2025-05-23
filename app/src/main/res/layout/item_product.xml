@@ -9,6 +9,10 @@
             type="woowacourse.shopping.domain.Product" />
 
         <variable
+            name="quantity"
+            type="Integer" />
+
+        <variable
             name="onClick"
             type="woowacourse.shopping.view.product.OnProductListener" />
     </data>
@@ -75,7 +79,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
-            android:visibility="invisible"
+            app:visibility ="@{quantity > 0}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

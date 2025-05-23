@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingProduct
+import woowacourse.shopping.view.product.OnProductListener
 import woowacourse.shopping.view.product.catalog.ProductAdapter.Companion.LOAD_MORE
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
@@ -60,7 +62,24 @@ class ProductCatalogActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         productAdapter =
             ProductAdapter(
-                productsEventListener = { product -> navigateToProductDetail(product) },
+                productsEventListener =
+                    object : OnProductListener {
+                        override fun onItemClick(product: Product) {
+                            navigateToProductDetail(product)
+                        }
+
+                        override fun onInitPlusButtonClick(product: Product) {
+                            viewModel.addToShoppingCart(product)
+                        }
+
+                        override fun onQuantityControlPlusClick(product: Product) {
+                            viewModel.addToShoppingCart(product)
+                        }
+
+                        override fun onQuantityControlMinusClick(shoppingProduct: ShoppingProduct) {
+                            viewModel.removeToShoppingCart(shoppingProduct)
+                        }
+                    },
                 loadEventListener = viewModel::loadProducts,
             )
 
