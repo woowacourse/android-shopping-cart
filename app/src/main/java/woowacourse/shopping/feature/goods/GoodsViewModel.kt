@@ -20,10 +20,6 @@ class GoodsViewModel(
 ) : ViewModel() {
     private val _carts = MutableLiveData<Carts>()
     val carts: LiveData<Carts> get() = _carts
-    private val _showMoreButton = MutableLiveData(false)
-    val showMoreButton: LiveData<Boolean> get() = _showMoreButton
-    private val _isFullLoaded = MutableLiveData<Boolean>()
-    val isFullLoaded: LiveData<Boolean> get() = _isFullLoaded
     private val _isSuccess = MutableSingleLiveData<Unit>()
     val isSuccess: SingleLiveData<Unit> get() = _isSuccess
     private val _isFail = MutableSingleLiveData<Unit>()
@@ -37,10 +33,6 @@ class GoodsViewModel(
     fun addPage() {
         page++
         loadGoods()
-    }
-
-    fun updateMoreButtonVisibility(shouldShow: Boolean) {
-        _showMoreButton.value = shouldShow
     }
 
     fun insertToCart(cart: Cart) {
@@ -83,7 +75,6 @@ class GoodsViewModel(
 
             val totalQuantity = newCarts.sumOf { it.quantity }
             _carts.postValue(Carts(newCarts, totalQuantity))
-            _isFullLoaded.postValue((page + 1) * PAGE_SIZE >= dummyGoods.size)
         }
     }
 

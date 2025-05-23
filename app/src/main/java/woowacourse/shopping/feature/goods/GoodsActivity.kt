@@ -9,17 +9,18 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.feature.ScrollListener
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
+import woowacourse.shopping.feature.goods.adapter.GoodsSpanSizeLookup
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.util.toUi
@@ -40,6 +41,9 @@ class GoodsActivity :
         setContentView(binding.root)
         binding.lifecycleOwner = this
 
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup = GoodsSpanSizeLookup(adapter)
+        binding.rvGoods.layoutManager = gridLayoutManager
         binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
 
@@ -85,7 +89,7 @@ class GoodsActivity :
     }
 
     override fun loadMore() {
-        TODO("Not yet implemented")
+        viewModel.addPage()
     }
 
     private fun setupActivityResultLauncher() {
@@ -115,18 +119,6 @@ class GoodsActivity :
         }
         viewModel.isFail.observe(this) {
             Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun updateMoreButton() {
-        viewModel.isFullLoaded.observe(this) { isFullLoaded ->
-            binding.rvGoods.clearOnScrollListeners()
-            binding.rvGoods.addOnScrollListener(
-                ScrollListener(
-                    shouldShowButton = { !isFullLoaded },
-                    onVisibilityChange = viewModel::updateMoreButtonVisibility,
-                ),
-            )
         }
     }
 

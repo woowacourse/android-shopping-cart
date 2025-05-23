@@ -22,12 +22,9 @@ class GoodsAdapter(
         }
 
         if (items.size != newItems.size) {
-            val positionStart = items.size
-            val newItemCount = newItems.size
-
             items.clear()
             items.addAll(newItems)
-            notifyItemRangeInserted(positionStart, newItemCount)
+            notifyItemInserted(items.size - 1)
         }
     }
 
