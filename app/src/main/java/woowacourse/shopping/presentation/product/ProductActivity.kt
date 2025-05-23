@@ -189,7 +189,7 @@ class ProductActivity :
     }
 
     private fun navigateToProductDetail(product: Product) {
-        val intent = ProductDetailActivity.newIntent(this, product)
+        val intent = ProductDetailActivity.newIntent(this, product.productId)
         startActivity(intent)
     }
 

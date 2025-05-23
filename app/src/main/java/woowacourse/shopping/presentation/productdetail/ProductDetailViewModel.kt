@@ -6,12 +6,16 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.SingleLiveData
 import woowacourse.shopping.presentation.cart.CartCounterClickListener
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel(),
     CartCounterClickListener {
     private val _product: MutableLiveData<Product> = MutableLiveData()
@@ -23,13 +27,13 @@ class ProductDetailViewModel(
     private val _toastMessage = SingleLiveData<Int>()
     val toastMessage: LiveData<Int> = _toastMessage
 
-    fun fetchData(product: Product) {
-        _product.value = product
+    fun fetchData(productId: Long) {
+        _product.value = productRepository.getProductById(productId)
     }
 
-    fun addToCart(product: Product) {
+    fun addToCart(productId: Long) {
         val quantity: Int = _productCount.value ?: return
-        cartRepository.insertOrIncrease(product, quantity) { result ->
+        cartRepository.insertOrIncrease(productId, quantity) { result ->
             result
                 .onSuccess { _insertProductResult.postValue(ResultState.Success(Unit)) }
                 .onFailure { _insertProductResult.postValue(ResultState.Failure()) }

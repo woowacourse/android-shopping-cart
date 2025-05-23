@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.Extra
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.getSerializableExtraCompat
@@ -36,11 +35,11 @@ class ProductDetailActivity : AppCompatActivity() {
         initInsets()
         setupToolbar()
 
-        val product = intent.getSerializableExtraCompat<Product>(Extra.KEY_PRODUCT_DETAIL)
+        val productId = intent.getSerializableExtraCompat<Long>(Extra.KEY_PRODUCT_DETAIL)
 
-        initListeners(product)
+        initListeners(productId)
         observeViewModel()
-        viewModel.fetchData(product)
+        viewModel.fetchData(productId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -71,15 +70,15 @@ class ProductDetailActivity : AppCompatActivity() {
         supportActionBar?.title = null
     }
 
-    private fun initListeners(product: Product) {
+    private fun initListeners(productId: Long) {
         binding.btnProductDetailAddCart.setOnClickListener {
-            viewModel.addToCart(product)
+            viewModel.addToCart(productId)
         }
     }
 
     private fun observeViewModel() {
-        viewModel.product.observe(this) {
-            binding.product = it
+        viewModel.product.observe(this) { product ->
+            binding.product = product
         }
 
         viewModel.insertProductResult.observe(this) { result ->
@@ -104,9 +103,9 @@ class ProductDetailActivity : AppCompatActivity() {
     companion object {
         fun newIntent(
             context: Context,
-            product: Product,
+            productId: Long,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java)
-                .apply { putExtra(Extra.KEY_PRODUCT_DETAIL, product) }
+                .apply { putExtra(Extra.KEY_PRODUCT_DETAIL, productId) }
     }
 }

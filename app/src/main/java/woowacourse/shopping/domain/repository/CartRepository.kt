@@ -1,7 +1,6 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
     fun getCartItemCount(onResult: (Result<Int?>) -> Unit)
@@ -14,7 +13,7 @@ interface CartRepository {
     )
 
     fun insertOrIncrease(
-        product: Product,
+        productId: Long,
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     )

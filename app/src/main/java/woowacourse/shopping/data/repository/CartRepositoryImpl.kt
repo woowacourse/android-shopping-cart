@@ -2,9 +2,9 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.CartMapper.toEntity
 import woowacourse.shopping.data.datasource.CartDataSource
+import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
@@ -35,18 +35,25 @@ class CartRepositoryImpl(
     }
 
     override fun insertOrIncrease(
-        product: Product,
+        productId: Long,
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        if (cartDataSource.existsByProductId(product.productId)) {
+        if (cartDataSource.existsByProductId(productId)) {
             runThread(
-                block = { cartDataSource.increaseQuantity(product.productId, quantity) },
+                block = { cartDataSource.increaseQuantity(productId, quantity) },
                 onResult = onResult,
             )
         } else {
             runThread(
-                block = { cartDataSource.insertProduct(product.toEntity(quantity)) },
+                block = {
+                    cartDataSource.insertProduct(
+                        CartEntity(
+                            productId = productId,
+                            quantity = quantity,
+                        ),
+                    )
+                },
                 onResult = onResult,
             )
         }
