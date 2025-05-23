@@ -1,6 +1,7 @@
-package woowacourse.shopping.data.mapper
+package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.data.recent.RecentProductEntity
+import woowacourse.shopping.data.product.toId
+import woowacourse.shopping.data.product.toProduct
 import woowacourse.shopping.domain.model.RecentProduct
 import java.time.Instant
 import java.time.LocalDateTime

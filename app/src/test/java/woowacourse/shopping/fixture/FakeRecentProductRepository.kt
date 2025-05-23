@@ -30,8 +30,8 @@ class FakeRecentProductRepository : RecentProductRepository {
             .drop(offset)
             .take(limit)
 
-    override fun replaceRecentProduct(productId: Long) {
-        recentProducts.removeAll { it.product.id == productId }
-        insert(productId)
+    override fun replaceRecentProduct(recentProduct: RecentProduct) {
+        recentProducts.remove(recentProduct)
+        insert(recentProduct.product.id)
     }
 }

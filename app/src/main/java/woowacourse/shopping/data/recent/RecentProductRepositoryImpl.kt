@@ -1,7 +1,5 @@
 package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.data.mapper.toDomain
-import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.recent.local.RecentProductLocalDataSource
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.RecentProductRepository

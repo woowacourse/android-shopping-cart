@@ -2,7 +2,6 @@ package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.data.cart.local.CartProductLocalDataSource
-import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.repository.CartProductRepository
 import kotlin.concurrent.thread
