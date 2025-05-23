@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.goods.list.GoodsAdapter
-import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.ShoppingCartItemUiModel
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartAdapter
 import java.text.DecimalFormat
 
@@ -25,11 +25,11 @@ fun ImageView.setImage(imageUrl: String) {
 }
 
 @BindingAdapter("goodsList")
-fun RecyclerView.bindGoods(items: List<GoodsUiModel>?) {
-    (adapter as? GoodsAdapter)?.appendItems(items.orEmpty())
+fun RecyclerView.bindGoods(items: List<ShoppingCartItemUiModel>?) {
+    (adapter as? GoodsAdapter)?.updateItems(items.orEmpty())
 }
 
 @BindingAdapter("selectedGoodsList")
-fun RecyclerView.bindSelectedGoods(items: List<GoodsUiModel>?) {
+fun RecyclerView.bindSelectedGoods(items: List<ShoppingCartItemUiModel>?) {
     (adapter as? ShoppingCartAdapter)?.updateItems(items.orEmpty())
 }
