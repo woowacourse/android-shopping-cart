@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="onLoadClick"
             type="woowacourse.shopping.view.product.catalog.OnLoadEventListener" />

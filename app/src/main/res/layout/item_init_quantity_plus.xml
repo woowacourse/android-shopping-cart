@@ -9,7 +9,7 @@
 
         <variable
             name="onClick"
-            type="woowacourse.shopping.view.product.OnProductListener" />
+            type="woowacourse.shopping.view.product.OnQuantityControlListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

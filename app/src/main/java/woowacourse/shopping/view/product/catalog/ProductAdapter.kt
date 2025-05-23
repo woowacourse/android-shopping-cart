@@ -2,10 +2,11 @@ package woowacourse.shopping.view.product.catalog
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.view.product.OnProductListener
+import woowacourse.shopping.view.product.OnQuantityControlListener
 
 class ProductAdapter(
-    private val productsEventListener: OnProductListener,
+    private val categoryEventListener: OnCategoryEventListener,
+    private val onQuantityControlListener: OnQuantityControlListener,
     private val loadEventListener: OnLoadEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val items = mutableListOf<ProductItem>()
@@ -15,7 +16,7 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            PRODUCT -> ProductViewHolder.from(parent, productsEventListener)
+            PRODUCT -> ProductViewHolder.from(parent, onQuantityControlListener, categoryEventListener)
             LOAD_MORE -> LoadMoreViewHolder.from(parent, loadEventListener)
             else -> throw IllegalArgumentException()
         }

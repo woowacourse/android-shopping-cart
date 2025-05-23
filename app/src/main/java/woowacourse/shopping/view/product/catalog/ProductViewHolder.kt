@@ -4,16 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.view.product.OnProductListener
+import woowacourse.shopping.view.product.OnQuantityControlListener
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    eventListener: OnProductListener,
+    onQuantityControlListener: OnQuantityControlListener,
+    categoryEventListener: OnCategoryEventListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.onClick = eventListener
-        binding.initQuantityControl.onClick = eventListener
-        binding.initQuantityPlus.onClick = eventListener
+        binding.onClick = categoryEventListener
+        binding.initQuantityControl.onClick = onQuantityControlListener
+        binding.initQuantityPlus.onClick = onQuantityControlListener
     }
 
     fun bind(productItem: ProductItem.CatalogProduct) {
@@ -28,11 +29,12 @@ class ProductViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            eventListener: OnProductListener,
+            productListener: OnQuantityControlListener,
+            categoryEventListener: OnCategoryEventListener,
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemProductBinding.inflate(inflater, parent, false)
-            return ProductViewHolder(binding, eventListener)
+            return ProductViewHolder(binding, productListener, categoryEventListener)
         }
     }
 }
