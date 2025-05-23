@@ -1,14 +1,28 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    fun addGoods(goods: Goods)
+    fun addItem(
+        item: ShoppingCartItem,
+        onResult: (Result<Unit>) -> Unit,
+    )
 
-    fun removeGoods(goods: Goods)
+    fun addItems(
+        items: List<ShoppingCartItem>,
+        onResult: (Result<Unit>) -> Unit,
+    )
 
-    fun getGoods(
+    fun removeItem(
+        shoppingCartItem: ShoppingCartItem,
+        onResult: (Result<Unit>) -> Unit,
+    )
+
+    fun getPagedItems(
         page: Int,
         count: Int,
-    ): List<Goods>
+        onResult: (Result<List<ShoppingCartItem>>) -> Unit,
+    )
+
+    fun getTotalQuantity(onResult: (Result<Int>) -> Unit)
 }
