@@ -35,19 +35,24 @@ class RecentProductRepositoryImpl(
     ) {
         runThread(
             block = {
-                val count = recentProductDataSource.getProducts().size
+                val recentProducts = recentProductDataSource.getProducts()
+                val productId = product.productId
 
-                if (count == 10) {
-                    val oldest = recentProductDataSource.getOldestProduct()
-                    if (oldest.productId != product.productId) {
-                        recentProductDataSource.delete(oldest)
-                    }
+                if (isNewProduct(recentProducts, productId) && recentProducts.size == 10) {
+                    val oldProduct = recentProductDataSource.getOldestProduct()
+                    recentProductDataSource.delete(oldProduct)
                 }
+
                 recentProductDataSource.insert(product.toEntity())
             },
             onResult = onResult,
         )
     }
+
+    private fun isNewProduct(
+        recentProducts: List<RecentlyViewedProduct>,
+        productId: Long,
+    ): Boolean = recentProducts.none { it.productId == productId }
 
     private fun RecentlyViewedProduct.toProduct(): Product = productDataSource.getProductById(this.productId)
 
