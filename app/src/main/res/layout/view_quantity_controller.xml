@@ -6,11 +6,11 @@
     <data>
 
         <variable
-            name="quantity"
-            type="Integer" />
+            name="item"
+            type="woowacourse.shopping.presentation.model.ShoppingCartItemUiModel" />
 
         <variable
-            name="clickListener"
+            name="quantityClickListener"
             type="woowacourse.shopping.presentation.util.QuantityClickListener" />
     </data>
 
@@ -25,7 +25,7 @@
             android:layout_height="42dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:onClick="@{() -> clickListener.decrease()}"
+            android:onClick="@{() -> quantityClickListener.decrease(item)}"
             android:text="@string/sign_decrease"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -40,7 +40,7 @@
             android:layout_height="42dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="@{String.valueOf(quantity)}"
+            android:text="@{String.valueOf(item.quantity)}"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_decrease"
@@ -53,7 +53,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.increase()}"
+            android:onClick="@{() -> quantityClickListener.increase(item)}"
             android:includeFontPadding="false"
             android:text="@string/sign_increase"
             android:textSize="22sp"
