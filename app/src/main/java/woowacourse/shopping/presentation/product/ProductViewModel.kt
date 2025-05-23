@@ -8,15 +8,19 @@ import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.SingleLiveData
 
 class ProductViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
     val products: LiveData<ResultState<List<CartItem>>> = _products
+    private val _recentProducts: MutableLiveData<ResultState<List<Product>>> = MutableLiveData()
+    val recentProducts: LiveData<ResultState<List<Product>>> = _recentProducts
     private val _cartItemCount = MutableLiveData<Int>()
     val cartItemCount: LiveData<Int> = _cartItemCount
     private val _showLoadMore: MutableLiveData<Boolean> = MutableLiveData(true)
@@ -38,6 +42,15 @@ class ProductViewModel(
                 .onSuccess { cartItems ->
                     _products.postValue(ResultState.Success(cartItems))
                     this.currentPage = currentPage
+                }.onFailure {
+                    _toastMessage.postValue(R.string.product_toast_load_failure)
+                }
+        }
+
+        recentProductRepository.getRecentProducts { result ->
+            result
+                .onSuccess { products ->
+                    _recentProducts.postValue(ResultState.Success(products))
                 }.onFailure {
                     _toastMessage.postValue(R.string.product_toast_load_failure)
                 }

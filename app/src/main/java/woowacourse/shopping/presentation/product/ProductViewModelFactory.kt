@@ -11,6 +11,7 @@ class ProductViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val cartRepository = RepositoryModule.provideCartRepository(context)
         val productRepository = RepositoryModule.provideProductRepository(context)
-        return ProductViewModel(cartRepository, productRepository) as T
+        val recentProductRepository = RepositoryModule.provideRecentProductRepository(context)
+        return ProductViewModel(cartRepository, productRepository, recentProductRepository) as T
     }
 }
