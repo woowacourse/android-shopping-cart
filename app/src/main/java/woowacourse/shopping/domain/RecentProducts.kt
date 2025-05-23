@@ -7,11 +7,12 @@ class RecentProducts {
         get() = _items.sortedByDescending { it.viewTime }
 
     fun add(product: RecentProduct) {
-        if (isFull()) {
-            _items.removeAt(items.size - 1)
-        }
         if (!contains(product.product)) {
             _items.add(product)
+        }
+
+        if (items.size > MAX_RECENT_PRODUCTS) {
+            _items.remove(items.last())
         }
     }
 

@@ -14,7 +14,7 @@ interface RecentProductDao {
 
     @Query(
         "DELETE FROM recent_product " +
-            "WHERE viewTime = (SELECT MIN(viewTime) FROM recent_product);",
+            "WHERE viewTime = (SELECT MAX(viewTime) FROM recent_product LIMIT 1)",
     )
     fun deleteLast()
 
