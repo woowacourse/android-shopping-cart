@@ -3,10 +3,10 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.db.CartEntity
+import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import kotlin.concurrent.thread
 
 class ProductRepositoryImpl(
     private val cartDataSource: CartDataSource,
@@ -56,13 +56,4 @@ class ProductRepositoryImpl(
             val quantity = cartDataSource.getQuantityById(product.productId)
             CartItem(product, quantity)
         }
-
-    private inline fun <T> runThread(
-        crossinline block: () -> T,
-        crossinline onResult: (Result<T>) -> Unit,
-    ) {
-        thread {
-            onResult(runCatching { block() })
-        }
-    }
 }

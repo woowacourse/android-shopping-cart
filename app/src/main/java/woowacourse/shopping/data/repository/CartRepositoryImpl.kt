@@ -2,11 +2,10 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.CartMapper.toEntity
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.data.db.CartEntity
+import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
@@ -21,16 +20,6 @@ class CartRepositoryImpl(
     override fun getTotalQuantity(onResult: (Result<Int?>) -> Unit) {
         runThread(
             block = { cartDataSource.getTotalQuantity() },
-            onResult = onResult,
-        )
-    }
-
-    override fun getCartItemById(
-        productId: Long,
-        onResult: (Result<CartEntity?>) -> Unit,
-    ) {
-        runThread(
-            block = { cartDataSource.getCartItemById(productId) },
             onResult = onResult,
         )
     }
@@ -92,14 +81,5 @@ class CartRepositoryImpl(
             block = { cartDataSource.deleteProductById(productId) },
             onResult = onResult,
         )
-    }
-
-    private inline fun <T> runThread(
-        crossinline block: () -> T,
-        crossinline onResult: (Result<T>) -> Unit,
-    ) {
-        thread {
-            onResult(runCatching { block() })
-        }
     }
 }

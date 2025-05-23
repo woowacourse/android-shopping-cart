@@ -1,6 +1,5 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 
@@ -8,11 +7,6 @@ interface CartRepository {
     fun getCartItemCount(onResult: (Result<Int?>) -> Unit)
 
     fun getTotalQuantity(onResult: (Result<Int?>) -> Unit)
-
-    fun getCartItemById(
-        productId: Long,
-        onResult: (Result<CartEntity?>) -> Unit,
-    )
 
     fun insertProduct(
         cartItem: CartItem,
