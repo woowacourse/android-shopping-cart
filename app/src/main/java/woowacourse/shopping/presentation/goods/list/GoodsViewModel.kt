@@ -155,7 +155,7 @@ class GoodsViewModel(
         goodsId: Int,
         move: (goodsId: Int, lastId: Int?) -> Unit,
     ) {
-        val lastGoodsId = _latestGoods.value?.get(0)?.id
+        val lastGoodsId = _latestGoods.value?.firstOrNull()?.id
         updateLatestGoods(goodsId)
         move(goodsId, lastGoodsId)
     }
