@@ -13,7 +13,7 @@ interface ShoppingCartRepository {
 
     fun addProduct(productId: Long)
 
-    fun removeProduct(shoppingCart: ShoppingProduct)
+    fun removeProduct(productId: Long)
 
     fun getPaged(
         limit: Int,

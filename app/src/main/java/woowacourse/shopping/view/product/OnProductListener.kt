@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.product
 
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ShoppingProduct
 
 interface OnProductListener {
     fun onItemClick(product: Product)
@@ -10,5 +9,5 @@ interface OnProductListener {
 
     fun onQuantityControlPlusClick(product: Product)
 
-    fun onQuantityControlMinusClick(shoppingProduct: ShoppingProduct)
+    fun onQuantityControlMinusClick(productId: Long)
 }

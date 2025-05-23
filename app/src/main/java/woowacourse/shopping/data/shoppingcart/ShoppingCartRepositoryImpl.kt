@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.shoppingcart
 
 import woowacourse.shopping.data.mapper.toDomain
-import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.domain.ShoppingProduct
 import kotlin.concurrent.thread
 
@@ -54,13 +53,13 @@ class ShoppingCartRepositoryImpl(
         }
     }
 
-    override fun removeProduct(shoppingCart: ShoppingProduct) {
-        val product = shoppingCart.toEntity()
+    override fun removeProduct(productId: Long) {
         thread {
-            if (product.quantity > 0) {
-                dao.decreaseQuantity(product.productId)
+            val currentQuantity = dao.getQuantity(productId)
+            if (currentQuantity > 1) {
+                dao.decreaseQuantity(productId)
             } else {
-                dao.delete(product.productId)
+                dao.delete(productId)
             }
         }
     }

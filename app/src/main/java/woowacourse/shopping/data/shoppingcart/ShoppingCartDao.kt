@@ -32,4 +32,7 @@ interface ShoppingCartDao {
 
     @Query("DELETE from shopping_cart WHERE product_id == :productId")
     fun delete(productId: Long)
+
+    @Query("SELECT quantity FROM shopping_cart WHERE product_id = :productId")
+    fun getQuantity(productId: Long): Int
 }

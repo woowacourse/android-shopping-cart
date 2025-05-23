@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="@string/quantity_minus"
             android:textSize="22sp"
-            android:onClick="@{() -> onClick.onQuantityControlMinusClick(shoppingProduct)}"
+            android:onClick="@{() -> onClick.onQuantityControlMinusClick(shoppingProduct.productId)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"

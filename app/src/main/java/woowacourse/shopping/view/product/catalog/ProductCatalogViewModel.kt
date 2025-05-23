@@ -9,7 +9,6 @@ import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.view.PagedResult
 
 class ProductCatalogViewModel(
@@ -39,8 +38,8 @@ class ProductCatalogViewModel(
         _count.value = (_count.value?.plus(1)) ?: 0
     }
 
-    fun removeToShoppingCart(shoppingProduct: ShoppingProduct) {
-        shoppingCartRepository.removeProduct(shoppingProduct)
+    fun removeToShoppingCart(productId: Long) {
+        shoppingCartRepository.removeProduct(productId)
         _count.value = (_count.value?.minus(1)) ?: 0
     }
 
