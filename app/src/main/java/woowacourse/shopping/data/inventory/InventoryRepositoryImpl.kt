@@ -2,8 +2,8 @@ package woowacourse.shopping.data.inventory
 
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductEntity
-import woowacourse.shopping.data.product.toDomain
-import woowacourse.shopping.data.product.toEntity
+import woowacourse.shopping.data.toDomain
+import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread

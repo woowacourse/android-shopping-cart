@@ -4,15 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductEntity
 
-@Database(entities = [ProductEntity::class], version = 1)
+@Database(entities = [CartItemEntity::class], version = 1)
 abstract class ShoppingCartDatabase : RoomDatabase() {
-    abstract fun productDao(): ProductDao
+    abstract fun cartItemDao(): CartItemDao
 
     companion object {
-        private const val PRODUCT_DATABASE_NAME = "shopping_cart_database"
+        private const val CART_ITEM_DATABASE_NAME = "shopping_cart_database"
 
         @Volatile
         private var database: ShoppingCartDatabase? = null
@@ -23,7 +21,7 @@ abstract class ShoppingCartDatabase : RoomDatabase() {
                     Room.databaseBuilder(
                         context.applicationContext,
                         ShoppingCartDatabase::class.java,
-                        PRODUCT_DATABASE_NAME,
+                        CART_ITEM_DATABASE_NAME,
                     ).build()
                 database = instance
                 instance
