@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.map
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
@@ -23,7 +24,9 @@ class ProductViewModel(
     val isShowMore: LiveData<Boolean> get() = _isShowMore
 
     private val _cartItemsCount: MutableLiveData<Int> = MutableLiveData(0)
-    val cartItemCount: LiveData<Int> get() = _cartItemsCount
+    val cartItemsCount: LiveData<String>
+        get() =
+            _cartItemsCount.map { count -> if (count > 99) CART_ITEMS_COUNT_OVER_100 else count.toString() }
 
     var totalProductsCount: Int = 0
     private var currentIndex = 0
@@ -36,9 +39,7 @@ class ProductViewModel(
     fun fetchInitData() {
         totalProductsCount = productRepository.getProductsSize()
         _isShowMore.postValue(totalProductsCount > LIMIT_COUNT)
-        cartRepository.getAllProductsSize {
-            _cartItemsCount.postValue(it)
-        }
+        fetchCartItemsCount()
     }
 
     fun fetchData() {
@@ -47,12 +48,19 @@ class ProductViewModel(
         currentIndex += LIMIT_COUNT
     }
 
+    fun fetchCartItemsCount() {
+        cartRepository.getAllProductsSize {
+            _cartItemsCount.postValue(it)
+        }
+    }
+
     fun changeShowState(isShow: Boolean) {
         _isShowMore.postValue(isShow)
     }
 
     companion object {
-        private const val LIMIT_COUNT = 20
+        private const val LIMIT_COUNT: Int = 20
+        private const val CART_ITEMS_COUNT_OVER_100: String = "99+"
 
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {

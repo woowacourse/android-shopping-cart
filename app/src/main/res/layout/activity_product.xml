@@ -62,7 +62,7 @@
             android:layout_height="30dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/bg_cart_items_count"
-            android:text="@{String.valueOf(vm.cartItemCount)}"
+            android:text="@{vm.cartItemsCount}"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_toolbar_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_toolbar_title"
