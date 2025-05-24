@@ -32,17 +32,18 @@ class ProductDetailViewModel(
     val toastMessage: LiveData<Int> = _toastMessage
 
     fun fetchData(productId: Long) {
+        loadRecentProduct()
+
         productRepository.fetchProductById(productId) { result ->
             result
                 .onSuccess { product ->
                     _product.postValue(product)
-                }.onFailure { }
+                    insertCurrentProductToRecent(product)
+                    checkIfCurrentIsMostRecent(product.productId)
+                }.onFailure {
+                    _toastMessage.postValue(R.string.product_detail_toast_load_fail)
+                }
         }
-
-        val product = _product.value ?: return
-        insertCurrentProductToRecent(product)
-        loadRecentProduct()
-        checkIfCurrentIsMostRecent(product.productId)
     }
 
     fun addToCart(productId: Long) {
@@ -89,7 +90,7 @@ class ProductDetailViewModel(
     private fun checkIfCurrentIsMostRecent(currentProductId: Long) {
         recentProductRepository.getMostRecentProduct { result ->
             result.onSuccess { recentProduct ->
-                val isSame = recentProduct?.productId == currentProductId
+                val isSame = recentProduct?.productId == currentProductId || recentProduct == null
                 _isRecentProduct.postValue(isSame)
             }
         }

@@ -5,7 +5,6 @@ import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
@@ -73,7 +72,7 @@ class ProductRepositoryImpl(
         )
     }
 
-    private fun CartEntity.toCartItem(): CartItem = CartItem(Product(0, "1", Price(1), ""), 10)
+    private fun CartEntity.toCartItem(): CartItem = CartItem(productDataSource.fetchProductById(productId), quantity)
 
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map { product ->

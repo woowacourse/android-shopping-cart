@@ -111,6 +111,10 @@ class ProductActivity :
             itemAnimator = null
             adapter = productAdapter
         }
+        binding.rvRecentProducts.apply {
+            itemAnimator = null
+            adapter = recentAdapter
+        }
     }
 
     private fun createSpanSizeLookup(): GridLayoutManager.SpanSizeLookup {

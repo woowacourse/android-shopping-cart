@@ -6,20 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.domain.model.Product
 
-class RecentAdapter(
-//    private val itemClickListener: ItemClickListener,
-) : RecyclerView.Adapter<RecentAdapter.RecentProductViewHolder>() {
+class RecentAdapter : RecyclerView.Adapter<RecentAdapter.RecentProductViewHolder>() {
     private var items: List<Product> = emptyList()
 
     fun submitList(newList: List<Product>) {
-//        val oldSize = items.size
-//        val newSize = newList.size
-//
-//        val insertItemSize = newSize - oldSize
-        this.items = newList
-//        if (insertItemSize > 0) {
-//            notifyItemRangeInserted(oldSize, insertItemSize)
-//        }
+        items = newList
         notifyDataSetChanged()
     }
 
@@ -43,11 +34,9 @@ class RecentAdapter(
 
     class RecentProductViewHolder(
         private val binding: ItemRecentProductBinding,
-//        private val itemClickListener: ItemClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Product) {
             binding.product = item
-//            binding.itemClickListener = itemClickListener
             binding.executePendingBindings()
         }
     }
