@@ -5,6 +5,7 @@ import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
@@ -30,9 +31,22 @@ class ProductRepositoryImpl(
         )
     }
 
-    override fun fetchProducts(): List<Product> = productDataSource.fetchProducts()
+    override fun fetchProducts(onResult: (Result<List<Product>>) -> Unit) {
+        runThread(
+            block = { productDataSource.fetchProducts() },
+            onResult = onResult,
+        )
+    }
 
-    override fun fetchProductById(productId: Long): Product = productDataSource.fetchProductById(productId)
+    override fun fetchProductById(
+        productId: Long,
+        onResult: (Result<Product>) -> Unit,
+    ) {
+        runThread(
+            block = { productDataSource.fetchProductById(productId) },
+            onResult = onResult,
+        )
+    }
 
     override fun fetchCartItems(onResult: (Result<List<CartItem>>) -> Unit) {
         runThread(
@@ -59,7 +73,7 @@ class ProductRepositoryImpl(
         )
     }
 
-    private fun CartEntity.toCartItem(): CartItem = CartItem(fetchProductById(productId), quantity)
+    private fun CartEntity.toCartItem(): CartItem = CartItem(Product(0, "1", Price(1), ""), 10)
 
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map { product ->
