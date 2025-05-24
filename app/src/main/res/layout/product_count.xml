@@ -6,6 +6,9 @@
 
     <data>
 
+        <variable
+            name="productCountVM"
+            type="woowacourse.shopping.view.productdetail.ProductCountViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_btn_product_count_minus"
+            android:onClick="@{() -> productCountVM.decrease()}"
             android:text="@string/product_count_minus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_product_count"
-            android:text="1"
+            android:text="@{String.valueOf(productCountVM.productCount)}"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_count_minus"
             app:layout_constraintStart_toEndOf="@id/tv_product_count_minus"
             app:layout_constraintTop_toTopOf="@id/tv_product_count_minus"
@@ -44,6 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/bg_btn_product_count_plus"
+            android:onClick="@{() -> productCountVM.increase()}"
             android:text="@string/product_count_plus"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_count_minus"
             app:layout_constraintStart_toEndOf="@id/tv_product_count"

@@ -24,4 +24,5 @@
     <string name="cart_product_delete">상품이 삭제되었습니다.</string>
     <string name="product_count_minus">-</string>
     <string name="product_count_plus">+</string>
+    <string name="minimum_product_count">최소 수량은 1입니다</string>
 </resources>

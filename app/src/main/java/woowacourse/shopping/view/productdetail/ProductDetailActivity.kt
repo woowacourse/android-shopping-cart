@@ -17,19 +17,21 @@ import woowacourse.shopping.view.getSerializableExtraCompat
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailProductBinding
-    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
     private val product: Product by lazy {
         intent.getSerializableExtraCompat<Product>(KEY_PRODUCT_DETAIL)
     }
+    private val productDetailViewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
+    private val productCountViewModel: ProductCountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initDataBinding()
         initView()
+        initDataBinding()
         bindData()
     }
 
     private fun initView() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_product)
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -38,21 +40,32 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun bindData() {
-        viewModel.fetchData(product)
-        viewModel.product.observe(this) { product ->
-            binding.product = product
+    private fun initDataBinding() {
+        binding.apply {
+            lifecycleOwner = this@ProductDetailActivity
+            productDetailVM = productDetailViewModel
+            productCountVM = productCountViewModel
+            toCart = ::addCart
+            toExit = ::finish
         }
     }
 
-    private fun initDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_product)
-        binding.toCart = ::addCart
-        binding.toExit = ::finish
+    private fun bindData() {
+        productDetailViewModel.fetchData(product)
+        productCountViewModel.isMinimumProductCount.observe(this) { isMinimumProductCount ->
+            if (isMinimumProductCount) {
+                Toast
+                    .makeText(
+                        this,
+                        getString(R.string.minimum_product_count),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            }
+        }
     }
 
     private fun addCart() {
-        viewModel.addData(product)
+        productDetailViewModel.addData(product)
         Toast.makeText(this, R.string.detail_product_add_cart_success, Toast.LENGTH_SHORT).show()
     }
 
