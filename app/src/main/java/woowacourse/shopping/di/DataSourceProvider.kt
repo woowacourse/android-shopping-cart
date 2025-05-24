@@ -10,7 +10,7 @@ import woowacourse.shopping.data.datasource.RecentProductLocalDataSource
 import woowacourse.shopping.data.datasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.data.db.ShoppingDatabase
 import woowacourse.shopping.data.service.MockProductService
-import woowacourse.shopping.data.service.MockServer
+import woowacourse.shopping.mockserver.MockServer
 
 object DataSourceProvider {
     val productDataSource: ProductDataSource by lazy { initProductDataSource() }

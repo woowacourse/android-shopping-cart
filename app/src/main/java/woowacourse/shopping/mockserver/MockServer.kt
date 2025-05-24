@@ -1,8 +1,7 @@
-package woowacourse.shopping.data.service
+package woowacourse.shopping.mockserver
 
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockWebServer
-import woowacourse.shopping.data.dummyProducts
 import kotlin.concurrent.thread
 
 class MockServer {

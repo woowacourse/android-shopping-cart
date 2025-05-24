@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.service
+package woowacourse.shopping.mockserver
 
 import com.google.gson.Gson
 import okhttp3.mockwebserver.Dispatcher
