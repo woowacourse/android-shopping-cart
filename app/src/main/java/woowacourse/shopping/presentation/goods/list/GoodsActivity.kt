@@ -33,12 +33,7 @@ class GoodsActivity : BaseActivity() {
         val goodsAdapter = makeGoodsAdapter()
         setUpGoodsList(goodsAdapter)
 
-        val latestGoodsAdapter =
-            LatestGoodsAdapter { selectedGoodsID ->
-                viewModel.moveToDetail(selectedGoodsID) { goodsId, lastGoodsId ->
-                    navigateToDetail(goodsId, lastGoodsId)
-                }
-            }
+        val latestGoodsAdapter = makeLatestGoodsAdapter()
         setUpLatestGoodsList(latestGoodsAdapter)
 
         setSupportActionBar(binding.toolbar)
@@ -81,6 +76,13 @@ class GoodsActivity : BaseActivity() {
         )
     }
 
+    private fun makeLatestGoodsAdapter(): LatestGoodsAdapter =
+        LatestGoodsAdapter { selectedGoodsID ->
+            viewModel.moveToDetail(selectedGoodsID) { goodsId, lastGoodsId ->
+                navigateToDetail(goodsId, lastGoodsId)
+            }
+        }
+
     private fun setUpGoodsList(adapter: GoodsAdapter) {
         binding.rvGoodsList.apply {
             this.adapter = adapter
@@ -103,7 +105,13 @@ class GoodsActivity : BaseActivity() {
     private fun setUpLatestGoodsList(adapter: LatestGoodsAdapter) {
         binding.rvLatestGoodsList.apply {
             this.adapter = adapter
-            layoutManager = GridLayoutManager(this@GoodsActivity, LATEST_GOODS_SPAN_COUNT, GridLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                GridLayoutManager(
+                    this@GoodsActivity,
+                    LATEST_GOODS_SPAN_COUNT,
+                    GridLayoutManager.HORIZONTAL,
+                    false,
+                )
         }
     }
 
