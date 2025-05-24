@@ -12,11 +12,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.adatper.CartAdapter
 import woowacourse.shopping.view.cart.event.CartScreenEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 import woowacourse.shopping.view.main.MainActivity
+import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -24,21 +26,34 @@ class CartActivity : AppCompatActivity() {
         CartViewModelFactory()
     }
     private val cartAdapter by lazy {
-        CartAdapter { id ->
+        CartAdapter(quantitySelectorEventHandler = quantitySelectorEventHandler) { id ->
             viewModel.deleteProduct(id)
         }
     }
 
-    private val cartScreenEvent =
-        object : CartScreenEventHandler {
-            override fun onClickNextPage() {
-                viewModel.addPage()
+    private val quantitySelectorEventHandler
+        get() =
+            object : QuantitySelectorEventHandler {
+                override fun onQuantityMinus(cart: Cart) {
+                    viewModel.minusCartQuantity(cart)
+                }
+
+                override fun onQuantityPlus(cart: Cart) {
+                    viewModel.plusCartQuantity(cart)
+                }
             }
 
-            override fun onClickPreviousPage() {
-                viewModel.subPage()
+    private val cartScreenEvent
+        get() =
+            object : CartScreenEventHandler {
+                override fun onClickNextPage() {
+                    viewModel.addPage()
+                }
+
+                override fun onClickPreviousPage() {
+                    viewModel.subPage()
+                }
             }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

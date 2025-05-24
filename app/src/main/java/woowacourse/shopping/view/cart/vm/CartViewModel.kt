@@ -71,6 +71,42 @@ class CartViewModel(
         }
     }
 
+    fun plusCartQuantity(cart: Cart) {
+        val currentCarts = carts.value ?: return
+        val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
+        val updated = cart.increase()
+        cartRepository.update(updated) {
+            _carts.postValue(
+                currentCarts.toMutableList().apply {
+                    this[cartIndex] = updated
+                },
+            )
+        }
+    }
+
+    fun minusCartQuantity(cart: Cart) {
+        val currentCarts = carts.value ?: return
+        val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
+        val updated = cart.decrease()
+        cartRepository.update(updated) {
+            if (updated.quantity == 0) {
+                cartRepository.deleteById(cart.product.id) {
+                    _carts.postValue(
+                        currentCarts.toMutableList().apply {
+                            this[cartIndex] = updated
+                        },
+                    )
+                }
+                return@update
+            }
+            _carts.postValue(
+                currentCarts.toMutableList().apply {
+                    this[cartIndex] = updated
+                },
+            )
+        }
+    }
+
     companion object {
         private const val INITIAL_PAGE_NUMBER = 1
         private const val PAGE_SIZE = 5
