@@ -59,7 +59,7 @@ class GoodsDetailActivityTest {
     }
 
     @Test
-    fun `minus_버튼을_누르면_개수가_증가한다`() {
+    fun `minus_버튼을_누르면_개수가_감소한다`() {
         // given
         onView(withId(R.id.tv_plus))
             .perform(click())
