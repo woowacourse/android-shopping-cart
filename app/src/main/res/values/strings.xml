@@ -13,6 +13,7 @@
     <string name="goods_details_cart_button">장바구니 담기</string>
     <string name="goods_detail_price">가격</string>
     <string name="goods_detail_cart_insert_complete_toast_message">%d개의 상품이 장바구니에 추가되었습니다!</string>
+    <string name="recently_viewed_header">마지막으로 본 상품</string>
 
     <!--    CartActivity-->
     <string name="cart_action_bar_name">Cart</string>
