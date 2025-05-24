@@ -33,10 +33,12 @@ class ProductViewModel(
 
     init {
         productRepository.start { result ->
-            result.onFailure { _toastMessage.postValue(R.string.product_toast_start_server_fail) }
+            result
+                .onSuccess {
+                    fetchData()
+                    fetchCartItemCount()
+                }.onFailure { _toastMessage.postValue(R.string.product_toast_start_server_fail) }
         }
-        fetchData()
-        fetchCartItemCount()
     }
 
     fun fetchData(currentPage: Int = FIRST_PAGE) {
