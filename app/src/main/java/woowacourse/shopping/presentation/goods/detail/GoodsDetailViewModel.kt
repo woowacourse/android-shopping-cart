@@ -35,7 +35,7 @@ class GoodsDetailViewModel(
         get() = _onItemAddedToCart
 
     fun setGoods(id: Int) {
-        _goods.value = goodsRepository.getById(id).toUiModel()
+        _goods.value = goodsRepository.getById(id)?.toUiModel()
     }
 
     fun setLastGoods(id: Int?) {
@@ -43,7 +43,7 @@ class GoodsDetailViewModel(
             if (id == null || id == goods.value?.id) {
                 null
             } else {
-                goodsRepository.getById(id).toUiModel()
+                goodsRepository.getById(id)?.toUiModel()
             }
     }
 

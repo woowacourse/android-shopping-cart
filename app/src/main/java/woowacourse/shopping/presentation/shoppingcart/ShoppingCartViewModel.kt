@@ -97,7 +97,7 @@ class ShoppingCartViewModel(
     private fun updateState() {
         _goods.value =
             shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
-                .map { goodsRepository.getById(it.goodsId).toUiModel().copy(quantity = it.goodsQuantity) }
+                .mapNotNull { goodsRepository.getById(it.goodsId)?.toUiModel()?.copy(quantity = it.goodsQuantity) }
         updateNextPage()
         updatePreviousPage()
     }

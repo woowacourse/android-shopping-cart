@@ -52,8 +52,8 @@ class GoodsViewModel(
 
     fun setLatestGoods() {
         _latestGoods.value =
-            latestGoodsRepository.getAll().map {
-                goodsRepository.getById(it.goodsId).toUiModel()
+            latestGoodsRepository.getAll().mapNotNull {
+                goodsRepository.getById(it.goodsId)?.toUiModel()
             }
     }
 
@@ -163,8 +163,8 @@ class GoodsViewModel(
     private fun updateLatestGoods(goodsId: Int) {
         latestGoodsRepository.insertLatestGoods(goodsId)
         _latestGoods.value =
-            latestGoodsRepository.getAll().map {
-                goodsRepository.getById(it.goodsId).toUiModel()
+            latestGoodsRepository.getAll().mapNotNull {
+                goodsRepository.getById(it.goodsId)?.toUiModel()
             }
     }
 
