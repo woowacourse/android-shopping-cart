@@ -6,18 +6,21 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.loader.HistoryLoader
+import woowacourse.shopping.view.loader.ProductLoader
 import woowacourse.shopping.view.main.MainUiEvent
 import woowacourse.shopping.view.main.state.IncreaseState
+import woowacourse.shopping.view.main.state.LoadState
 import woowacourse.shopping.view.main.state.ProductState
 import woowacourse.shopping.view.main.state.ProductUiState
 
 class MainViewModel(
-    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
+    private val productLoader: ProductLoader,
+    private val historyLoader: HistoryLoader,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(ProductUiState())
     val uiState: LiveData<ProductUiState> get() = _uiState
@@ -26,26 +29,29 @@ class MainViewModel(
     val uiEvent: SingleLiveData<MainUiEvent> get() = _uiEvent
 
     init {
-        loadProducts()
+        productLoader(INITIAL_PAGE, PAGE_SIZE) { productStates, hasNextPage ->
+            historyLoader { historyStates ->
+                _uiState.postValue(
+                    ProductUiState(
+                        productItems = productStates,
+                        historyItems = historyStates,
+                        load = LoadState.of(hasNextPage),
+                    ),
+                )
+            }
+        }
     }
 
-    fun loadProducts() {
-        val newPage = _uiState.value?.itemCount()?.div(PAGE_SIZE) ?: 0
+    fun loadPage() {
+        withUiState { state ->
+            val newPage = state.productItemCount().div(PAGE_SIZE)
 
-        productRepository.loadSinglePage(newPage, PAGE_SIZE) { page ->
-            val ids = page.products.map { it.id }
-            val products = page.products
-
-            cartRepository.getCarts(ids) { carts ->
-                val result =
-                    products.mapIndexed { idx, product ->
-                        val quantity = carts[idx]?.quantity ?: Quantity(0)
-                        ProductState(product, quantity)
-                    }
-
-                _uiState.postValue(
-                    _uiState.value?.addItems(result, page.hasNextPage),
-                )
+            productLoader.invoke(
+                pageIndex = newPage,
+                pageSize = PAGE_SIZE,
+            ) { productStates, hasNext ->
+                val newState = state.addItems(productStates, hasNext)
+                _uiState.postValue(newState)
             }
         }
     }
@@ -66,16 +72,16 @@ class MainViewModel(
 
     fun syncCartQuantities() {
         withUiState { state ->
-            val products = state.items
+            val products = state.productItems
             val productIds = state.productIds
 
             cartRepository.getCarts(productIds) { carts ->
                 val synced =
-                    products.mapIndexed { index, state ->
-                        val quantity = carts[index]?.quantity ?: Quantity(0)
-                        state.copy(cartQuantity = quantity)
+                    products.mapIndexed { index, productState ->
+                        val quantity = carts.getOrNull(index)?.quantity ?: Quantity(0)
+                        productState.copy(cartQuantity = quantity)
                     }
-                _uiState.postValue(state.copy(items = synced))
+                _uiState.postValue(state.copy(productItems = synced))
             }
         }
     }
@@ -95,7 +101,7 @@ class MainViewModel(
             is IncreaseState.CanIncrease -> {
                 val newState = state.value
                 _uiState.value = uiState.modifyUiState(newState)
-                cartRepository.upsert(productId, state.value.cartQuantity)
+                cartRepository.upsert(productId, newState.cartQuantity)
             }
 
             is IncreaseState.CannotIncrease -> sendEvent(MainUiEvent.ShowCannotIncrease(state.quantity))
@@ -125,6 +131,7 @@ class MainViewModel(
     }
 
     companion object {
+        private const val INITIAL_PAGE = 0
         private const val PAGE_SIZE = 20
     }
 }

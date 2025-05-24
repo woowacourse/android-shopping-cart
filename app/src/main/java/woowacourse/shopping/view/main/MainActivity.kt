@@ -24,9 +24,10 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     private val viewModel: MainViewModel by viewModels {
         val container = (application as App).container
         MainViewModelFactory(
-            container.productRepository,
             container.cartRepository,
             container.historyRepository,
+            container.productLoader,
+            container.historyLoader,
         )
     }
     private val productsAdapter: ProductAdapter by lazy {
@@ -78,7 +79,10 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
             override fun getSpanSize(position: Int): Int {
                 return when (productsAdapter.getItemViewType(position)) {
                     ProductRvItems.ViewType.VIEW_TYPE_PRODUCT.ordinal -> 1
-                    ProductRvItems.ViewType.VIEW_TYPE_LOAD.ordinal -> 2
+                    ProductRvItems.ViewType.VIEW_TYPE_RECENT_PRODUCT.ordinal,
+                    ProductRvItems.ViewType.VIEW_TYPE_DIVIDER.ordinal,
+                    ProductRvItems.ViewType.VIEW_TYPE_LOAD.ordinal,
+                    -> 2
                     else -> throw IllegalArgumentException()
                 }
             }
@@ -118,11 +122,15 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     }
 
     override fun onLoadMoreItems() {
-        viewModel.loadProducts()
+        viewModel.loadPage()
     }
 
     override fun showQuantity(productId: Long) {
         viewModel.increaseCartQuantity(productId)
+    }
+
+    override fun onClickHistory(productId: Long) {
+        moveToDetailActivity(productId)
     }
 
     override fun onClickIncrease(productId: Long) {

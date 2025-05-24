@@ -1,24 +1,25 @@
 package woowacourse.shopping.view.main.state
 
 data class ProductUiState(
-    val items: List<ProductState> = emptyList(),
+    val productItems: List<ProductState> = emptyList(),
+    val historyItems: List<HistoryState> = emptyList(),
     val load: LoadState = LoadState.CannotLoad,
 ) {
-    val productIds = items.map { it.item.id }
+    val productIds = productItems.map { it.item.id }
 
     val sumOfCartQuantity
-        get() = items.sumOf { it.cartQuantity.value }
+        get() = productItems.sumOf { it.cartQuantity.value }
 
     fun modifyUiState(newState: ProductState): ProductUiState {
         val targetIndex = targetIndex(newState.item.id)
-        val mutableItems = items.toMutableList()
+        val mutableItems = productItems.toMutableList()
         mutableItems[targetIndex] = newState
-        return copy(items = mutableItems)
+        return copy(productItems = mutableItems)
     }
 
     fun canIncreaseCartQuantity(productId: Long): IncreaseState {
         val targetIndex = targetIndex(productId)
-        val target = items[targetIndex]
+        val target = productItems[targetIndex]
         val result = target.increaseCartQuantity()
 
         return result
@@ -26,22 +27,22 @@ data class ProductUiState(
 
     fun decreaseCartQuantity(productId: Long): ProductState {
         val targetIndex = targetIndex(productId)
-        val result = items[targetIndex].decreaseCartQuantity()
+        val result = productItems[targetIndex].decreaseCartQuantity()
 
         return result
     }
 
-    fun itemCount() = items.size
+    fun productItemCount() = productItems.size
 
     fun addItems(
         newItems: List<ProductState>,
         hasNextPage: Boolean,
     ): ProductUiState {
         return copy(
-            items = items + newItems,
+            productItems = productItems + newItems,
             load = LoadState.of(hasNextPage),
         )
     }
 
-    private fun targetIndex(productId: Long) = items.indexOfFirst { it.item.id == productId }
+    private fun targetIndex(productId: Long) = productItems.indexOfFirst { it.item.id == productId }
 }
