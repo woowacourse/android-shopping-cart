@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -112,8 +111,10 @@ class ProductDetailActivity :
     }
 
     override fun onClickProductItem(productId: Long) {
-        Log.d("meeple_log", "click")
-        val intent = newIntent(this, productId)
+        val intent =
+            newIntent(this, productId).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
         startActivity(intent)
     }
 

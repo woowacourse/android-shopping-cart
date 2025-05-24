@@ -32,14 +32,13 @@ class ProductDetailViewModel(
     val toastMessage: LiveData<Int> = _toastMessage
 
     fun fetchData(productId: Long) {
-        loadRecentProduct()
-
         productRepository.fetchProductById(productId) { result ->
             result
                 .onSuccess { product ->
                     _product.postValue(product)
-                    insertCurrentProductToRecent(product)
+                    loadRecentProduct()
                     checkIfCurrentIsMostRecent(product.productId)
+                    insertCurrentProductToRecent(product)
                 }.onFailure {
                     _toastMessage.postValue(R.string.product_detail_toast_load_fail)
                 }
