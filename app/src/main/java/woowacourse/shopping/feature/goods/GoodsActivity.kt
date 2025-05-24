@@ -41,10 +41,10 @@ class GoodsActivity : AppCompatActivity() {
     }
 
     private val recentlyViewedGoodsAdapter by lazy {
-        RecentlyViewedGoodsAdapter { goods -> navigateGoodsDetails(goods) }
+        RecentlyViewedGoodsAdapter(this) { goods -> navigateGoodsDetails(goods) }
     }
     private val horizontalSelectionAdapter by lazy {
-        HorizontalSectionAdapter(recentlyViewedGoodsAdapter)
+        HorizontalSectionAdapter(this, viewModel, recentlyViewedGoodsAdapter)
     }
     private val goodsAdapter by lazy {
         GoodsAdapter(

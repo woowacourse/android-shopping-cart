@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.goods
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -53,7 +52,6 @@ class GoodsViewModel(
 
     fun updateRecentlyViewedGoods() {
         goodsRepository.fetchRecentGoods { goods ->
-            Log.d("최근본 굿즈 ID", "$goods")
             _recentlyViewedGoods.postValue(goods)
         }
     }
