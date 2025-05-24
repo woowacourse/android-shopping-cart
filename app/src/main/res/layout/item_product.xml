@@ -31,7 +31,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="8dp"
-            android:background="@drawable/solid_button"
+            android:background="@drawable/background_white_round"
             android:contentDescription="@null"
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
