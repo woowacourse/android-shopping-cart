@@ -3,6 +3,7 @@ package woowacourse.shopping.view.product.catalog.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.product.catalog.ProductCatalogEventHandler
+import woowacourse.shopping.view.product.catalog.adapter.recent.RecentProductListViewHolder
 
 class ProductAdapter(
     items: List<ProductCatalogItem> = emptyList(),
@@ -28,9 +29,7 @@ class ProductAdapter(
     ) {
         when (val item = items[position]) {
             is ProductCatalogItem.RecentProductsItem ->
-                (holder as RecentProductListViewHolder).bind(
-                    item,
-                )
+                (holder as RecentProductListViewHolder).bind(item)
 
             is ProductCatalogItem.ProductItem -> (holder as ProductViewHolder).bind(item)
             ProductCatalogItem.LoadMoreItem -> Unit
