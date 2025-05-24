@@ -16,6 +16,9 @@ class MainViewModel(
     private val _carts = MutableLiveData(emptyList<Cart>())
     val carts: LiveData<List<Cart>> = _carts
 
+    private val _totalQuantity = MutableLiveData(0)
+    val totalQuantity: LiveData<Int> = _totalQuantity
+
     private val _loadable = MutableLiveData(false)
     val loadable: LiveData<Boolean> = _loadable
 
@@ -24,6 +27,7 @@ class MainViewModel(
         cartRepository.getPagedShopItems(page.currentPage, limit) { carts: List<Cart> ->
             _carts.postValue((this.carts.value ?: emptyList()) + carts)
             _loadable.postValue(productRepository.notHasMoreProduct(page.currentPage, limit).not())
+            _totalQuantity.postValue((totalQuantity.value ?: 0) + carts.sumOf { it.quantity })
         }
     }
 
@@ -42,6 +46,7 @@ class MainViewModel(
                     this[cartIndex] = updated
                 },
             )
+            _totalQuantity.postValue((totalQuantity.value ?: 0) + 1)
         }
     }
 
@@ -55,6 +60,7 @@ class MainViewModel(
                     this[cartIndex] = updated
                 },
             )
+            _totalQuantity.postValue((totalQuantity.value ?: 0) + 1)
         }
     }
 
@@ -70,6 +76,7 @@ class MainViewModel(
                             this[cartIndex] = updated
                         },
                     )
+                    _totalQuantity.postValue((totalQuantity.value ?: 0) - 1)
                 }
                 return@update
             }
@@ -78,6 +85,7 @@ class MainViewModel(
                     this[cartIndex] = updated
                 },
             )
+            _totalQuantity.postValue((totalQuantity.value ?: 0) - 1)
         }
     }
 

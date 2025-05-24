@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.FakeProductStorage
+import woowacourse.shopping.data.FakeProductDataSource
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ext.getOrAwaitValue
@@ -22,11 +22,11 @@ class MainViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
     private lateinit var viewModel: MainViewModel
-    private lateinit var fakeStorage: FakeProductStorage
+    private lateinit var fakeStorage: FakeProductDataSource
 
     @BeforeEach
     fun setup() {
-        fakeStorage = FakeProductStorage()
+        fakeStorage = FakeProductDataSource()
         viewModel = MainViewModel(fakeStorage)
     }
 
@@ -68,7 +68,7 @@ class MainViewModelTest {
                 ),
             )
 
-        assertThat(viewModel.products.getOrAwaitValue()).isEqualTo(expected)
+        assertThat(viewModel.carts.getOrAwaitValue()).isEqualTo(expected)
     }
 
     @Test
@@ -117,6 +117,6 @@ class MainViewModelTest {
                 ),
             )
 
-        assertThat(viewModel.products.getOrAwaitValue()).isEqualTo(expected)
+        assertThat(viewModel.carts.getOrAwaitValue()).isEqualTo(expected)
     }
 }

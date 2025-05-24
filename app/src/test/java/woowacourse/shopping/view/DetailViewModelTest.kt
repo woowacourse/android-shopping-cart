@@ -7,10 +7,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.FakeCartStorage
-import woowacourse.shopping.data.FakeProductStorage
-import woowacourse.shopping.data.storage.CartStorage
-import woowacourse.shopping.data.storage.ProductStorage
+import woowacourse.shopping.data.FakeCartLocalDataSource
+import woowacourse.shopping.data.FakeProductDataSource
+import woowacourse.shopping.data.datasource.CartLocalDataSource
+import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.detail.vm.DetailViewModel
@@ -20,14 +20,14 @@ class DetailViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
     private lateinit var viewModel: DetailViewModel
-    private lateinit var fakeStorage: ProductStorage
-    private lateinit var cartStorage: CartStorage
+    private lateinit var fakeStorage: ProductDataSource
+    private lateinit var cartLocalDataSource: CartLocalDataSource
 
     @BeforeEach
     fun setup() {
-        fakeStorage = FakeProductStorage()
-        cartStorage = FakeCartStorage()
-        viewModel = DetailViewModel(fakeStorage, cartStorage)
+        fakeStorage = FakeProductDataSource()
+        cartLocalDataSource = FakeCartLocalDataSource()
+        viewModel = DetailViewModel(fakeStorage, cartLocalDataSource)
     }
 
     @Test
@@ -35,7 +35,7 @@ class DetailViewModelTest {
         // when
         viewModel.load(1L)
         // then
-        assertThat(viewModel.product.value).isEqualTo(
+        assertThat(viewModel.cart.value).isEqualTo(
             Product(
                 1L,
                 "마리오 그린올리브 300g",
@@ -50,9 +50,9 @@ class DetailViewModelTest {
         // given
         viewModel.load(1L)
         // when
-        viewModel.addProduct()
+        viewModel.insertCart()
         // then
-        assertThat(cartStorage.getAll().last()).isEqualTo(
+        assertThat(cartLocalDataSource.getAll().last()).isEqualTo(
             Product(
                 1L,
                 "마리오 그린올리브 300g",

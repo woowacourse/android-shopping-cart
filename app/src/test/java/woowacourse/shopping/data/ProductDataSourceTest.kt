@@ -3,17 +3,17 @@ package woowacourse.shopping.data
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.storage.ProductStorage
-import woowacourse.shopping.data.storage.ProductStorageImpl
+import woowacourse.shopping.data.datasource.ProductDataSource
+import woowacourse.shopping.data.datasource.ProductDataSourceImpl
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 
-class ProductStorageTest {
-    private lateinit var storage: ProductStorage
+class ProductDataSourceTest {
+    private lateinit var storage: ProductDataSource
 
     @BeforeEach
     fun setUp() {
-        storage = ProductStorageImpl()
+        storage = ProductDataSourceImpl()
     }
 
     @Test

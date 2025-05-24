@@ -1,8 +1,6 @@
 package woowacourse.shopping.view.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -72,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        supportActionBar?.hide()
         viewModel.loadProducts()
         val scrollEndEvent =
             ScrollEndEvent(
@@ -93,28 +92,19 @@ class MainActivity : AppCompatActivity() {
             binding.buttonLoad.visibility = View.GONE
             viewModel.moveNextPage()
         }
+        binding.cartIcon.setOnClickListener {
+            val intent = CartActivity.newIntent(this)
+            startActivity(intent)
+        }
     }
 
     private fun observeViewModel() {
         viewModel.carts.observe(this) { value ->
             productsAdapter.submitList(value)
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_bar_cart -> {
-                val intent = CartActivity.newIntent(this)
-                startActivity(intent)
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+        viewModel.totalQuantity.observe(this) { value ->
+            binding.cartCountBadge.text = value.toString()
+            binding.cartCountBadge.visibility = if (value > 0) View.VISIBLE else View.GONE
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_action_bar_menu, menu)
-        return true
     }
 }
