@@ -11,7 +11,7 @@ data class PageState(
         get() = current == total
 
     val isSinglePage: Boolean
-        get() = current == INITIAL_PAGE && total == INITIAL_PAGE
+        get() = total <= INITIAL_PAGE
 
     operator fun plus(step: Int): PageState = copy(current = current + step)
 
