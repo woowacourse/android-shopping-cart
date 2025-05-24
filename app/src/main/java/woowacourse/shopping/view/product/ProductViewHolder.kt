@@ -2,7 +2,7 @@ package woowacourse.shopping.view.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
@@ -10,27 +10,34 @@ import woowacourse.shopping.domain.Product
 class ProductViewHolder(
     val binding: ItemProductBinding,
     val onSelectedProduct: (Product) -> Unit,
+    val onAddCart: (Product, Int) -> Unit,
+    val viewModel: ProductViewModel,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
+        binding.vm = viewModel
+        binding.onAddCart = onAddCart
+        binding.lifecycleOwner = binding.root.findViewTreeLifecycleOwner()
         binding.onSelectedProduct = onSelectedProduct
-        binding.tvProductPlusCart.setOnClickListener {
-            binding.tvProductPlusCart.isVisible = false
-            binding.iProductCountControl.root.isVisible = true
-        }
     }
 
-    fun bind(product: Product) {
+    fun bind(
+        product: Product,
+        position: Int,
+    ) {
         binding.product = product
+        binding.position = position
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
             onSelectedProduct: (Product) -> Unit,
+            onAddCart: (Product, Int) -> Unit,
+            viewModel: ProductViewModel,
         ): ProductViewHolder {
             val binding =
                 ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return ProductViewHolder(binding, onSelectedProduct)
+            return ProductViewHolder(binding, onSelectedProduct, onAddCart, viewModel)
         }
     }
 }

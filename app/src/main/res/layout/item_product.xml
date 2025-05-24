@@ -5,9 +5,23 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.view.product.ProductViewModel" />
+
+        <variable
+            name="position"
+            type="int" />
+
         <variable
             name="product"
             type="woowacourse.shopping.domain.Product" />
+
+        <variable
+            name="onAddCart"
+            type="kotlin.jvm.functions.Function2" />
 
         <variable
             name="onSelectedProduct"
@@ -43,7 +57,7 @@
             android:layout_height="42dp"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
+            android:visibility="@{vm.isAddCart ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="@id/iv_product"
             app:layout_constraintStart_toStartOf="@id/iv_product" />
@@ -56,7 +70,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/bg_product_plus_cart"
+            android:onClick="@{() -> onAddCart.invoke(product, position)}"
             android:text="@string/product_add_cart"
+            android:visibility="@{vm.isAddCart ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="@id/iv_product" />
 

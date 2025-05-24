@@ -28,6 +28,9 @@ class ProductViewModel(
         get() =
             _cartItemsCount.map { count -> if (count > 99) CART_ITEMS_COUNT_OVER_100 else count.toString() }
 
+    private val _isAddCart: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isAddCart: LiveData<Boolean> get() = _isAddCart
+
     var totalProductsCount: Int = 0
     private var currentIndex = 0
 
@@ -56,6 +59,12 @@ class ProductViewModel(
 
     fun changeShowState(isShow: Boolean) {
         _isShowMore.postValue(isShow)
+    }
+
+    fun addCart(product: Product) {
+        cartRepository.addProduct(product)
+        _isAddCart.postValue(true)
+        fetchCartItemsCount()
     }
 
     companion object {

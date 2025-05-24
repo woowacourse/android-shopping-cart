@@ -16,13 +16,15 @@ import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
+    private val productViewModel: ProductViewModel by viewModels { ProductViewModel.Factory }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
             ::onShowMore,
             ::navigateToProductDetail,
+            ::onAddCart,
+            productViewModel,
         )
     }
-    private val productViewModel: ProductViewModel by viewModels { ProductViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,14 @@ class ProductActivity : AppCompatActivity() {
 
     private fun navigateToCart() {
         startActivity(CartActivity.newIntent(context = this))
+    }
+
+    private fun onAddCart(
+        product: Product,
+        position: Int,
+    ) {
+        productViewModel.addCart(product)
+        productAdapter.notifyItemChanged(position)
     }
 
     private fun onShowMore(): Boolean {

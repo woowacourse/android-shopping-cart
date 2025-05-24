@@ -9,6 +9,8 @@ import woowacourse.shopping.view.product.ViewItems.ViewType
 class ProductAdapter(
     private val onShowMore: () -> Boolean,
     private val onSelectedProduct: (Product) -> Unit,
+    private val onAddCart: (Product, Int) -> Unit,
+    private val viewModel: ProductViewModel,
 ) : RecyclerView.Adapter<ViewHolder>() {
     private var products: List<Product> = emptyList()
 
@@ -25,7 +27,7 @@ class ProductAdapter(
     ): ViewHolder =
         when (ViewType.from(viewType)) {
             ViewType.PRODUCTS ->
-                ProductViewHolder.from(parent, onSelectedProduct)
+                ProductViewHolder.from(parent, onSelectedProduct, onAddCart, viewModel)
 
             ViewType.SHOW_MORE -> ShowMoreViewHolder.from(parent, onShowMore)
         }
@@ -37,7 +39,7 @@ class ProductAdapter(
         when (holder) {
             is ProductViewHolder -> {
                 if (position < products.size) {
-                    holder.bind(products[position])
+                    holder.bind(products[position], position)
                 }
             }
 
