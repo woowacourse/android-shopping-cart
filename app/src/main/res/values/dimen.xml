@@ -4,4 +4,5 @@
     <dimen name="font_size_normal">18sp</dimen>
     <dimen name="font_size_large">20sp</dimen>
     <dimen name="font_size_xlarge">24sp</dimen>
+    <dimen name="font_size_2xlarge">36sp</dimen>
 </resources>

@@ -70,8 +70,6 @@ class ProductActivity : AppCompatActivity() {
         productViewModel.products.observe(this) { products ->
             productAdapter.updateData(products)
         }
-        productViewModel.isShowMore.observe(this) {
-        }
     }
 
     private fun navigateToCart() {

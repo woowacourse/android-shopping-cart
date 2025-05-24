@@ -2,6 +2,7 @@ package woowacourse.shopping.view.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
@@ -12,6 +13,9 @@ class ProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.onSelectedProduct = onSelectedProduct
+        binding.tvProductPlusCart.setOnClickListener {
+            binding.tvProductPlusCart.isVisible = false
+        }
     }
 
     fun bind(product: Product) {
