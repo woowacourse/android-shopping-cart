@@ -4,15 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartProductRepository
 
 class ShoppingCartViewModel(
     private val repository: CartProductRepository,
 ) : ViewModel(),
     ShoppingCartEventHandler {
-    private var shoppingCart = ShoppingCart()
+    private val cartProducts = mutableListOf<CartProduct>()
 
     private val _products = MutableLiveData<List<CartProduct>>()
     val products: LiveData<List<CartProduct>> = _products
@@ -45,63 +43,60 @@ class ShoppingCartViewModel(
 
     override fun onProductRemoveClick(item: CartProduct) {
         repository.deleteByProductId(item.product.id)
-        shoppingCart -= item
-        reloadCurrentPage()
+        cartProducts.remove(item)
+
+        val currentPage = page.value ?: FIRST_PAGE_NUMBER
+        val startIndex = (currentPage - 1) * PAGE_SIZE
+
+        if (startIndex >= cartProducts.size && currentPage > FIRST_PAGE_NUMBER) {
+            loadPage(currentPage - 1)
+        } else {
+            loadPage(currentPage)
+        }
     }
 
-    override fun onQuantityIncreaseClick(item: Product) {
-        val currentQuantity = shoppingCart.getQuantity(item)
-        val newQuantity = currentQuantity + 1
-        repository.updateQuantity(item.id, currentQuantity, newQuantity)
-        shoppingCart += item
-        reloadCurrentPage()
+    override fun onQuantityIncreaseClick(item: CartProduct) {
+        updateQuantity(item, item.quantity + 1)
+        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
     }
 
-    override fun onQuantityDecreaseClick(item: Product) {
-        if (shoppingCart.getQuantity(item) == 1) return
-        val currentQuantity = shoppingCart.getQuantity(item)
-        val newQuantity = currentQuantity - 1
-        repository.updateQuantity(item.id, currentQuantity, newQuantity)
-        shoppingCart -= item
-        reloadCurrentPage()
+    override fun onQuantityDecreaseClick(item: CartProduct) {
+        if (item.quantity == 1) return
+        updateQuantity(item, item.quantity - 1)
+        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
     }
 
     private fun loadPage(page: Int) {
         val offset = (page - 1) * PAGE_SIZE
         val end = offset + PAGE_SIZE
 
-        if (shoppingCart.cartProducts.size < end) {
+        if (cartProducts.size < end) {
             val result =
-                repository.getPagedProducts(
-                    end - shoppingCart.cartProducts.size,
-                    shoppingCart.cartProducts.size,
-                )
-            shoppingCart += result.items
+                repository.getPagedProducts(end - cartProducts.size, cartProducts.size)
+            cartProducts.addAll(result.items)
             _hasNext.value = result.hasNext
         } else {
-            _hasNext.value = shoppingCart.cartProducts.size > end || checkHasNext(end)
+            _hasNext.value = cartProducts.size > end || checkHasNext(end)
         }
 
-        _products.value =
-            shoppingCart.cartProducts
-                .toList()
-                .sortedBy { it.id }
-                .subList(offset, shoppingCart.cartProducts.size.coerceAtMost(end))
+        _products.value = cartProducts.subList(offset, cartProducts.size.coerceAtMost(end))
 
-        _hasPrevious.value = page > FIRST_PAGE_NUMBER
         _page.value = page
+        _hasPrevious.value = page > FIRST_PAGE_NUMBER
         _isSinglePage.value =
             page == FIRST_PAGE_NUMBER &&
             hasNext.value == false &&
-            shoppingCart.cartProducts.size <= PAGE_SIZE
+            cartProducts.size <= PAGE_SIZE
     }
 
-    private fun reloadCurrentPage() {
-        val currentPage = page.value ?: FIRST_PAGE_NUMBER
-        loadPage(currentPage)
-
-        if (products.value.isNullOrEmpty() && currentPage > FIRST_PAGE_NUMBER) {
-            loadPage(currentPage - 1)
+    private fun updateQuantity(
+        item: CartProduct,
+        newQuantity: Int,
+    ) {
+        repository.updateQuantity(item.product.id, item.quantity, newQuantity)
+        val index = cartProducts.indexOf(item)
+        if (index != -1) {
+            cartProducts[index] = cartProducts[index].copy(quantity = newQuantity)
         }
     }
 
