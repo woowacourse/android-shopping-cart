@@ -41,7 +41,12 @@ class ShoppingRepositoryImpl(
         cartDataSource.findCartItemByProductId(productId).toCartItem()
     }
 
-    override fun findProductInfoById(id: Long): Result<Product> = runCatching { productDataSource.findProductById(id) }
+    override fun findProductInfoById(
+        id: Long,
+        onResult: (Result<Product>) -> Unit,
+    ) = runCatchingInThread(onResult) {
+        productDataSource.findProductById(id)
+    }
 
     override fun loadCartItems(
         offset: Int,
@@ -79,7 +84,11 @@ class ShoppingRepositoryImpl(
         cartDataSource.deleteCartItem(productId)
     }
 
-    private fun CartEntity.toCartItem() = CartItem(findProductInfoById(productId).getOrThrow(), quantity)
+    private fun CartEntity.toCartItem() =
+        CartItem(
+            productDataSource.findProductById(productId),
+            quantity,
+        )
 
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map { product ->

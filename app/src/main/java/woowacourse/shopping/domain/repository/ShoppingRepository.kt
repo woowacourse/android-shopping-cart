@@ -9,7 +9,10 @@ interface ShoppingRepository {
 
     fun getTotalQuantity(onResult: (Result<Int>) -> Unit)
 
-    fun findProductInfoById(id: Long): Result<Product>
+    fun findProductInfoById(
+        id: Long,
+        onResult: (Result<Product>) -> Unit,
+    )
 
     fun loadProducts(
         offset: Int,
