@@ -2,13 +2,15 @@ package woowacourse.shopping.presentation.view.catalog.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.ProductUiModel
-import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem.CatalogType
+import woowacourse.shopping.presentation.model.CatalogItem
+import woowacourse.shopping.presentation.model.CatalogItem.CatalogType
+import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 
 class CatalogAdapter(
     products: List<CatalogItem> = emptyList(),
     private val eventListener: CatalogEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val recentProductAdapter = RecentProductAdapter(emptyList(), eventListener)
     private val products = products.toMutableList()
 
     override fun getItemCount(): Int = products.size
@@ -20,6 +22,12 @@ class CatalogAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (CatalogType.entries[viewType]) {
+            CatalogType.RECENT_PRODUCT ->
+                RecentProductContainerViewHolder.from(
+                    parent,
+                    recentProductAdapter,
+                )
+
             CatalogType.PRODUCT -> ProductViewHolder.from(parent, eventListener)
             CatalogType.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventListener)
         }
@@ -28,23 +36,36 @@ class CatalogAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
+        val item = products[position]
         when (holder) {
-            is ProductViewHolder -> holder.bind(products[position] as CatalogItem.ProductItem)
+            is ProductViewHolder -> holder.bind(item as CatalogItem.ProductItem)
+            is RecentProductContainerViewHolder -> holder.bind(item as CatalogItem.RecentProducts)
             is LoadMoreViewHolder -> Unit
         }
     }
 
-    fun appendProducts(products: List<CatalogItem>) {
-        val previousSize = itemCount
-        this.products.clear()
-        this.products.addAll(products)
+    fun submitList(newItems: List<CatalogItem>) {
+        newItems.forEachIndexed { index, newProduct ->
+            val oldProduct = products.getOrNull(index)
 
-        notifyItemRangeInserted(previousSize, products.size)
+            if (oldProduct == null) {
+                products.add(index, newProduct)
+                notifyItemInserted(index)
+                return@forEachIndexed
+            }
+
+            if (oldProduct != newProduct) {
+                products[index] = newProduct
+                notifyItemChanged(index)
+            }
+        }
     }
 
-    interface CatalogEventListener {
-        fun onProductClicked(product: ProductUiModel)
+    interface CatalogEventListener : QuantityChangeListener {
+        fun onProductClicked(productId: Long)
 
         fun onLoadMoreClicked()
+
+        fun onQuantitySelectorOpenButtonClicked(productId: Long)
     }
 }

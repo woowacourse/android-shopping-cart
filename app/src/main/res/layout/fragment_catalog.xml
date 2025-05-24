@@ -20,25 +20,12 @@
             android:background="@color/gray_55"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/toolbar_catalog_title"
-            app:titleTextColor="@color/white">
-
-            <ImageButton
-                android:id="@+id/btn_navigate_cart"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_marginEnd="20dp"
-                android:background="@color/transparent"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_cart" />
-
-        </androidx.appcompat.widget.Toolbar>
+            app:titleTextColor="@color/white"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_products"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:paddingHorizontal="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_catalog"
             tools:listitem="@layout/item_product" />

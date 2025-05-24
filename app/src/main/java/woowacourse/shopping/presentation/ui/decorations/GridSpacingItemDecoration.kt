@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 class GridSpacingItemDecoration(
     private val spanCount: Int,
     spacingDp: Float,
+    edgeItemSpacingDp: Float,
+    private val productViewType: Int,
 ) : RecyclerView.ItemDecoration() {
     private val spacingPx = dpToPx(spacingDp)
-    private val lastColumnIndex get() = spanCount - 1
+    private val edgeItemSpacingPx = dpToPx(edgeItemSpacingDp)
+    private val lastColumnIndex = spanCount - 1
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -24,7 +27,22 @@ class GridSpacingItemDecoration(
             return
         }
 
-        val column = position % spanCount
+        val adapter = parent.adapter ?: return
+        val viewType = adapter.getItemViewType(position)
+
+        if (viewType != productViewType) {
+            outRect.set(ZERO, ZERO, ZERO, ZERO)
+            return
+        }
+
+        var productIndex = 0
+        for (i in 0 until position) {
+            if (adapter.getItemViewType(i) == productViewType) {
+                productIndex++
+            }
+        }
+
+        val column = productIndex % spanCount
         outRect.set(
             getLeftPadding(column),
             ZERO,
@@ -35,7 +53,7 @@ class GridSpacingItemDecoration(
 
     private fun getLeftPadding(column: Int): Int =
         when (column) {
-            FIRST_COLUMN -> ZERO
+            FIRST_COLUMN -> edgeItemSpacingPx
             lastColumnIndex -> spacingPx
             else -> spacingPx / DIVIDE_VALUE
         }
@@ -43,7 +61,7 @@ class GridSpacingItemDecoration(
     private fun getRightPadding(column: Int): Int =
         when (column) {
             FIRST_COLUMN -> spacingPx
-            lastColumnIndex -> ZERO
+            lastColumnIndex -> edgeItemSpacingPx
             else -> spacingPx / DIVIDE_VALUE
         }
 

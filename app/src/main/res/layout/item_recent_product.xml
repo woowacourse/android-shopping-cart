@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.presentation.model.ProductUiModel" />
+
+        <variable
+            name="eventListener"
+            type="woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter.CatalogEventListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:onClick="@{() -> eventListener.onProductClicked(recentProduct.id)}">
+
+        <ImageView
+            android:id="@+id/image_view_recent_product"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/gray_81"
+            android:contentDescription="@null"
+            app:imageUrl="@{recentProduct.imageUrl}"
+            app:layout_constraintBottom_toTopOf="@id/text_view_recent_product_name"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@color/gray_81" />
+
+        <TextView
+            android:id="@+id/text_view_recent_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@{recentProduct.name}"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/image_view_recent_product"
+            tools:text="최근 본 상품" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
