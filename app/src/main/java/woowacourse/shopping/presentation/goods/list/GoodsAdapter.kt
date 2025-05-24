@@ -25,9 +25,8 @@ class GoodsAdapter(
         holder.bind(items[position])
     }
 
-    fun loadMoreItems(goods: List<GoodsUiModel>) {
-        val fromIndex = items.size
+    fun changeGoods(goods: List<GoodsUiModel>) {
         items = goods
-        notifyItemRangeChanged(fromIndex, items.size)
+        notifyItemRangeChanged(0, items.size)
     }
 }

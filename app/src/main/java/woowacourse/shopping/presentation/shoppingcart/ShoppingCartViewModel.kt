@@ -17,8 +17,6 @@ class ShoppingCartViewModel(
     private val goodsRepository: GoodsRepository,
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val changedIds: MutableList<Int> = mutableListOf()
-
     private val _goods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
     val goods: LiveData<List<GoodsUiModel>>
         get() = _goods
@@ -41,10 +39,6 @@ class ShoppingCartViewModel(
 
     init {
         updateState()
-    }
-
-    fun moveToGoods(move: (List<Int>) -> Unit) {
-        move(changedIds)
     }
 
     fun increaseGoodsCount(position: Int) {
@@ -70,7 +64,6 @@ class ShoppingCartViewModel(
 
     fun deleteGoods(goods: GoodsUiModel) {
         shoppingRepository.removeItem(goods.id)
-        changedIds.add(goods.id)
         updateState()
     }
 
@@ -88,7 +81,6 @@ class ShoppingCartViewModel(
 
         _goods.value = updatedList
         _onQuantityChanged.setValue(position)
-        changedIds.add(updatedItem.id)
         return updatedItem
     }
 
