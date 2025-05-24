@@ -3,7 +3,8 @@ package woowacourse.shopping.presentation.view.catalog.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
-import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem.CatalogType
+import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem
+import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem.CatalogType
 
 class CatalogAdapter(
     products: List<CatalogItem> = emptyList(),
@@ -20,6 +21,12 @@ class CatalogAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (CatalogType.entries[viewType]) {
+            CatalogType.RECENT_PRODUCT ->
+                RecentProductContainerViewHolder.from(
+                    parent,
+                    eventListener,
+                )
+
             CatalogType.PRODUCT -> ProductViewHolder.from(parent, eventListener)
             CatalogType.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventListener)
         }
@@ -28,52 +35,92 @@ class CatalogAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
+        val item = products[position]
         when (holder) {
-            is ProductViewHolder -> holder.bind(products[position] as CatalogItem.ProductItem)
+            is ProductViewHolder -> holder.bind(item as CatalogItem.ProductItem)
+            is RecentProductContainerViewHolder -> holder.bind(item as CatalogItem.RecentProducts)
             is LoadMoreViewHolder -> Unit
         }
     }
 
-    fun updateProducts(newItems: List<CatalogItem>) {
-        val newProductItems = newItems.filterIsInstance<CatalogItem.ProductItem>()
-        val hasLoadMoreItem = newItems.lastOrNull() is CatalogItem.LoadMoreItem
+    fun submitList(newItems: List<CatalogItem>) {
+        val recentProduct = newItems.filterIsInstance<CatalogItem.RecentProducts>().firstOrNull()
+        val productItems = newItems.filterIsInstance<CatalogItem.ProductItem>()
+        val shouldShowLoadMore = newItems.lastOrNull() is CatalogItem.LoadMoreItem
 
-        updateProductItems(newProductItems)
-        updateLoadMoreItem(hasLoadMoreItem)
+        updateRecentProductItem(recentProduct)
+        updateList(productItems)
+        updateLoadMoreItem(shouldShowLoadMore)
     }
 
-    private fun updateProductItems(newItems: List<CatalogItem.ProductItem>) {
-        newItems.forEach { newItem ->
-            val index = products.indexOfFirst { it is CatalogItem.ProductItem && it.productId == newItem.productId }
+    private fun updateRecentProductItem(newItem: CatalogItem.RecentProducts?) {
+        if (newItem == null) return
 
-            if (index != -1) {
-                val oldItem = products[index] as CatalogItem.ProductItem
-                if (oldItem != newItem) {
-                    products[index] = newItem
-                    notifyItemChanged(index)
-                }
-            } else {
-                val insertPosition = products.indexOfLast { it is CatalogItem.ProductItem } + 1
-                products.add(insertPosition, newItem)
-                notifyItemInserted(insertPosition)
+        val index = products.indexOfFirst { it is CatalogItem.RecentProducts }
+        if (index == INDEX_NOT_FOUND) {
+            products.add(FIRST_POSITION, newItem)
+            notifyItemInserted(FIRST_POSITION)
+            return
+        }
+
+        val currentItem = products[index] as CatalogItem.RecentProducts
+        if (currentItem.products != newItem.products) {
+            products[index] = newItem
+            notifyItemChanged(index)
+        }
+    }
+
+    private fun filteredProductItems(): List<CatalogItem.ProductItem> = products.filterIsInstance<CatalogItem.ProductItem>()
+
+    private fun updateList(newList: List<CatalogItem.ProductItem>) {
+        val oldItemsMap = filteredProductItems().associateBy { it.productId }
+        val newItemsMap = newList.associateBy { it.productId }
+
+        oldItemsMap.forEach { (oldItemProductId, oldItem) ->
+            val newItem = newItemsMap[oldItemProductId]
+            val index =
+                products.indexOfFirst { (it as? CatalogItem.ProductItem)?.productId == oldItemProductId }
+
+            if (newItem == null && index != INDEX_NOT_FOUND) {
+                products.removeAt(index)
+                notifyItemRemoved(index)
+                return@forEach
+            }
+
+            if (newItem != oldItem && index != INDEX_NOT_FOUND) {
+                products[index] = (newItem as CatalogItem.ProductItem)
+                notifyItemChanged(index)
+            }
+        }
+
+        newList.forEach { newItem ->
+            if (!oldItemsMap.containsKey(newItem.productId)) {
+                val insertIndex = products.size
+                products.add(insertIndex, newItem)
+                notifyItemInserted(insertIndex)
             }
         }
     }
 
     private fun updateLoadMoreItem(shouldShow: Boolean) {
-        val lastIndex = products.lastIndex
-        val lastItem = products.lastOrNull()
+        val loadMoreIndex = products.indexOfFirst { it is CatalogItem.LoadMoreItem }
+        if (loadMoreIndex != INDEX_NOT_FOUND && loadMoreIndex != products.lastIndex) {
+            products.removeAt(loadMoreIndex)
+            notifyItemRemoved(loadMoreIndex)
+        }
 
-        if (shouldShow) {
-            if (lastItem !is CatalogItem.LoadMoreItem) {
-                products.add(CatalogItem.LoadMoreItem)
-                notifyItemInserted(products.lastIndex)
-            }
-        } else {
-            if (lastItem is CatalogItem.LoadMoreItem) {
-                products.removeAt(lastIndex)
-                notifyItemRemoved(lastIndex)
-            }
+        val hasLoadMoreItem = products.lastOrNull() is CatalogItem.LoadMoreItem
+
+        if (shouldShow && !hasLoadMoreItem) {
+            products.add(CatalogItem.LoadMoreItem)
+            notifyItemInserted(products.lastIndex)
+            return
+        }
+
+        if (!shouldShow && hasLoadMoreItem) {
+            val lastIndex = products.lastIndex
+            products.removeAt(lastIndex)
+            notifyItemRemoved(lastIndex)
         }
     }
 
@@ -83,5 +130,10 @@ class CatalogAdapter(
         fun onLoadMoreClicked()
 
         fun onQuantitySelectorOpenButtonClicked(productId: Long)
+    }
+
+    companion object {
+        private const val INDEX_NOT_FOUND = -1
+        private const val FIRST_POSITION = 0
     }
 }

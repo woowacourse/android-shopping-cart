@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.view.catalog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -15,7 +14,7 @@ import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.ui.decorations.GridSpacingItemDecoration
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter
-import woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem
+import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem
 import woowacourse.shopping.presentation.view.catalog.event.CatalogMessageEvent
 import woowacourse.shopping.presentation.view.detail.DetailFragment
 
@@ -41,7 +40,7 @@ class CatalogFragment :
     override fun onStart() {
         super.onStart()
 
-        viewModel.fetchCartInfoChanged()
+        viewModel.fetchRecentProductsAndUpdateCatalog()
     }
 
     override fun onDestroyView() {
@@ -100,15 +99,21 @@ class CatalogFragment :
 
         binding.recyclerViewProducts.apply {
             this.layoutManager = layoutManager
-            addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, ITEM_SPACING_DP))
+            addItemDecoration(
+                GridSpacingItemDecoration(
+                    SPAN_COUNT,
+                    ITEM_SPACING_DP,
+                    EDGE_SPACING_DP,
+                    CatalogItem.CatalogType.PRODUCT.ordinal,
+                ),
+            )
             adapter = catalogAdapter
         }
     }
 
     private fun observeViewModel() {
         viewModel.products.observe(viewLifecycleOwner) {
-            Log.e("TEST", it.toString())
-            catalogAdapter.updateProducts(it)
+            catalogAdapter.submitList(it)
         }
 
         viewModel.toastEvent.observe(viewLifecycleOwner) {
@@ -143,17 +148,22 @@ class CatalogFragment :
 
             CatalogMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE ->
                 R.string.catalog_screen_event_message_find_quantity_failure
+
+            CatalogMessageEvent.FETCH_RECENT_PRODUCT_FAILURE ->
+                R.string.catalog_screen_event_message_fetch_recent_product_failure
         }
 
     private fun CatalogAdapter.getSpanSizeAt(position: Int): Int =
         when (CatalogItem.CatalogType.entries[getItemViewType(position)]) {
             CatalogItem.CatalogType.PRODUCT -> SINGLE_SPAN
+            CatalogItem.CatalogType.RECENT_PRODUCT -> SPAN_COUNT
             CatalogItem.CatalogType.LOAD_MORE -> SPAN_COUNT
         }
 
     companion object {
         private const val SPAN_COUNT = 2
         private const val SINGLE_SPAN = 1
-        private const val ITEM_SPACING_DP = 12f
+        private const val ITEM_SPACING_DP = 8f
+        private const val EDGE_SPACING_DP = 20f
     }
 }
