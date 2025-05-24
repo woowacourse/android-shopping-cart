@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.products
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
@@ -12,15 +13,14 @@ class ProductViewHolder(
     private val openQuantitySelectListener: () -> Boolean,
     private val quantitySelectButtonListener: QuantitySelectButtonListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(
-        item: CartItem,
-        isQuantitySelectorOpened: Boolean,
-    ) {
+    fun bind(item: CartItem) {
         binding.cartItem = item
         binding.btnSelectedProduct.setOnClickListener {
             productClickListener(item)
         }
-        binding.visible = !openQuantitySelectListener() || isQuantitySelectorOpened
+        binding.visible = openQuantitySelectListener()
+        binding.viewQuantitySelect.root.visibility = View.VISIBLE
+
         binding.btnQuantitySelect.setOnClickListener {
             binding.visible = openQuantitySelectListener()
         }

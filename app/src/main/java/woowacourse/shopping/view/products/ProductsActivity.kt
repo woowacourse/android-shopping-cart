@@ -37,6 +37,11 @@ class ProductsActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        productsViewModel.loadPage()
+    }
+
     private fun setupScrollListenerForMoreButton() {
         binding.rvProducts.addOnScrollListener(
             ProductsScrollListener(binding.rvProducts.layoutManager as GridLayoutManager) { canLoadMore ->
@@ -49,7 +54,9 @@ class ProductsActivity : AppCompatActivity() {
         adapter =
             ProductsAdapter(
                 productClickListener = { cartItem -> navigateToProductDetail(cartItem) },
-                openQuantitySelectListener = { true },
+                openQuantitySelectListener = {
+                    true
+                },
                 quantitySelectButtonListener =
                     object : QuantitySelectButtonListener {
                         override fun increase(productId: Long) {
@@ -73,11 +80,6 @@ class ProductsActivity : AppCompatActivity() {
                 adapter.updateQuantityView(it.product.id)
             }
         }
-//        productsViewModel.quantities.observe(this) { quantities ->
-//            quantities.forEach { (id, _) ->
-//                adapter.updateQuantityView(id)
-//            }
-//        }
     }
 
     private fun observeCartButton() {

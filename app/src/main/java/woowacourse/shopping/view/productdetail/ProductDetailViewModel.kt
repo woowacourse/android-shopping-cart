@@ -11,16 +11,45 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
+import woowacourse.shopping.view.QuantityController
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(),
+    QuantityController {
     private val _addToCart = MutableLiveData<Event<Unit>>()
     val addToCart: LiveData<Event<Unit>> = _addToCart
 
-    fun onAddToCartClicked(cartItem: CartItem) {
-        cartRepository.add(cartItem)
+    private val _cartItem = MutableLiveData<CartItem>()
+    val cartItem: LiveData<CartItem> = _cartItem
+
+    override fun increaseQuantity(productId: Long) {
+        val current = _cartItem.value?.quantity ?: 1
+        val newQuantity = current + 1
+        _cartItem.value = _cartItem.value?.copy(quantity = newQuantity)
+    }
+
+    override fun decreaseQuantity(productId: Long) {
+        val current = _cartItem.value?.quantity ?: 1
+        if (current > 1) {
+            val newQuantity = current - 1
+            _cartItem.value = _cartItem.value?.copy(quantity = newQuantity)
+        }
+    }
+
+    override fun updateQuantity() {
+        val productId = _cartItem.value?.product?.id ?: 1
+        val quantity = _cartItem.value?.quantity ?: 1
+        cartRepository.update(productId, quantity)
+    }
+
+    fun onAddToCartClicked() {
         _addToCart.value = Event(Unit)
+        cartRepository.add(_cartItem.value!!)
+    }
+
+    fun setCartItem(cartItem: CartItem) {
+        _cartItem.value = cartItem
     }
 
     companion object {

@@ -11,15 +11,17 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
+import woowacourse.shopping.view.QuantityController
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(),
+    QuantityController {
     private val _currentPageNumber = MutableLiveData(INITIAL_PAGE)
     val currentPageNumber: LiveData<Int> = _currentPageNumber
 
-    private val _loadedProducts = MutableLiveData<List<CartItem>>()
-    val loadedProducts: LiveData<List<CartItem>> = _loadedProducts
+    private val _cartItems = MutableLiveData<List<CartItem>>()
+    val cartItems: LiveData<List<CartItem>> = _cartItems
 
     private val _isOnlyOnePage = MutableLiveData<Boolean>()
     val isOnlyOnePage: LiveData<Boolean> = _isOnlyOnePage
@@ -37,9 +39,37 @@ class CartViewModel(
         loadPage(INITIAL_PAGE)
     }
 
+    override fun increaseQuantity(productId: Long) {
+        _cartItems.value =
+            _cartItems.value?.map {
+                if (it.product.id == productId) {
+                    it.copy(quantity = it.quantity + 1)
+                } else {
+                    it
+                }
+            }
+    }
+
+    override fun decreaseQuantity(productId: Long) {
+        _cartItems.value =
+            _cartItems.value?.map {
+                if (it.product.id == productId && it.quantity > 1) {
+                    it.copy(quantity = it.quantity - 1)
+                } else {
+                    it
+                }
+            }
+    }
+
+    override fun updateQuantity() {
+        _cartItems.value?.forEach {
+            cartRepository.update(it.product.id, it.quantity)
+        }
+    }
+
     fun removeFromCart(cartItem: CartItem) {
-        cartRepository.remove(cartItem)
-        _loadedProducts.value = cartRepository.getAll()
+        cartRepository.remove(cartItem.product.id)
+        _cartItems.value = cartRepository.getAll()
         if (!existPage()) _currentPageNumber.value = minusPageNumber()
 
         loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
@@ -89,7 +119,7 @@ class CartViewModel(
         val end = minOf(start + PAGE_SIZE, cartRepository.getAll().size)
 
         val items = cartRepository.fetchProducts(start, end)
-        _loadedProducts.postValue(items)
+        _cartItems.postValue(items)
         _currentPageNumber.value = page
         _isOnlyOnePage.value = checkOnlyOnePage()
         _isFirstPage.value = checkFirstPage()
@@ -99,8 +129,8 @@ class CartViewModel(
     companion object {
         private const val PAGE_SIZE = 5
         private const val INITIAL_PAGE = 1
-        private const val ONE_PAGE_COUNT = 1
 
+        private const val ONE_PAGE_COUNT = 1
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

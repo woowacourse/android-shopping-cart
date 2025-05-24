@@ -14,6 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.intent.getSerializableExtraData
+import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
@@ -27,8 +28,23 @@ class ProductDetailActivity : AppCompatActivity() {
 
         val intentCartItemData =
             intent.getSerializableExtraData<CartItem>(CART_ITEM_DATA_KEY) ?: return
-        binding.cartItem = intentCartItemData
+        productDetailViewModel.setCartItem(intentCartItemData)
+        binding.quantitySelector.productId = intentCartItemData.product.id
         binding.quantitySelector.tvProductQuantity.text = intentCartItemData.quantity.toString()
+
+        productDetailViewModel.cartItem.observe(this) {
+            binding.quantitySelector.tvProductQuantity.text = it.quantity.toString()
+        }
+        binding.quantitySelector.quantitySelectButtonListener =
+            object : QuantitySelectButtonListener {
+                override fun increase(productId: Long) {
+                    productDetailViewModel.increaseQuantity(productId)
+                }
+
+                override fun decrease(productId: Long) {
+                    productDetailViewModel.decreaseQuantity(productId)
+                }
+            }
 
         setCloseButtonClickListener()
         observeAddToCart()

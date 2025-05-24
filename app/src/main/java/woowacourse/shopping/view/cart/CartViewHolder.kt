@@ -5,22 +5,32 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductInCartBinding
 import woowacourse.shopping.model.cart.CartItem
+import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class CartViewHolder(
     private val binding: ItemProductInCartBinding,
+    private val quantitySelectButtonListener: QuantitySelectButtonListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     val removeProductButton = binding.removeProductBtn
 
     fun bind(item: CartItem) {
         binding.cartItem = item
-        binding.quantitySelector.tvProductQuantity.text = item.quantity.toString()
+        binding.viewQuantitySelect.tvProductQuantity.text = item.quantity.toString()
+
+        val quantityBinding = binding.viewQuantitySelect
+        quantityBinding.productId = item.product.id
+        quantityBinding.tvProductQuantity.text = item.quantity.toString()
+        quantityBinding.quantitySelectButtonListener = quantitySelectButtonListener
     }
 
     companion object {
-        fun from(parent: ViewGroup): CartViewHolder {
+        fun from(
+            parent: ViewGroup,
+            quantitySelectButtonListener: QuantitySelectButtonListener,
+        ): CartViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemProductInCartBinding.inflate(inflater, parent, false)
-            return CartViewHolder(binding)
+            return CartViewHolder(binding, quantitySelectButtonListener)
         }
     }
 }

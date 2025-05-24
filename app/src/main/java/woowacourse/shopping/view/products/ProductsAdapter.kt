@@ -10,8 +10,6 @@ class ProductsAdapter(
     private val openQuantitySelectListener: () -> Boolean,
     private val quantitySelectButtonListener: QuantitySelectButtonListener,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
-    private val openedQuantitySelectors = mutableSetOf<Long>()
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -29,9 +27,7 @@ class ProductsAdapter(
         holder: ProductViewHolder,
         position: Int,
     ) {
-        val cartItem = cartItems[position]
-        val isQuantitySelectorOpened = openedQuantitySelectors.contains(cartItem.product.id)
-        holder.bind(cartItems[position], isQuantitySelectorOpened)
+        holder.bind(cartItems[position])
     }
 
     fun updateProductsView(list: List<CartItem>) {
@@ -42,7 +38,6 @@ class ProductsAdapter(
 
     fun updateQuantityView(productId: Long) {
         val position = cartItems.indexOfFirst { it.product.id == productId }
-        openedQuantitySelectors.add(productId)
         notifyItemChanged(position)
     }
 }

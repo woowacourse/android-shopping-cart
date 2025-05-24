@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -32,13 +33,30 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        cartViewModel.updateQuantity()
+    }
+
     private fun initRecyclerView() {
         adapter =
-            CartAdapter(onProductRemoveClickListener = { cartItem ->
-                cartViewModel.removeFromCart(
-                    cartItem,
-                )
-            })
+            CartAdapter(
+                onProductRemoveClickListener = { cartItem ->
+                    cartViewModel.removeFromCart(
+                        cartItem,
+                    )
+                },
+                quantitySelectButtonListener =
+                    object : QuantitySelectButtonListener {
+                        override fun increase(productId: Long) {
+                            cartViewModel.increaseQuantity(productId)
+                        }
+
+                        override fun decrease(productId: Long) {
+                            cartViewModel.decreaseQuantity(productId)
+                        }
+                    },
+            )
         binding.rvProductsInCart.adapter = adapter
     }
 
@@ -49,7 +67,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun observeLoadedProducts() {
-        cartViewModel.loadedProducts.observe(this) {
+        cartViewModel.cartItems.observe(this) {
             adapter.updateProductsView(it)
         }
     }
