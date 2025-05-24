@@ -25,7 +25,7 @@ abstract class ShoppingDatabase : RoomDatabase() {
                     Room.databaseBuilder(
                         context.applicationContext,
                         ShoppingDatabase::class.java,
-                        "movie",
+                        "shoppingCart",
                     )
                         .build()
                 Companion.instance = instance
