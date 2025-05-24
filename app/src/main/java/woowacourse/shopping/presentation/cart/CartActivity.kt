@@ -52,7 +52,10 @@ class CartActivity :
     }
 
     private fun initAdapter() {
-        binding.rvCartProduct.adapter = cartAdapter
+        binding.rvCartProduct.apply {
+            adapter = cartAdapter
+            itemAnimator = null
+        }
     }
 
     private fun setupToolbar() {
