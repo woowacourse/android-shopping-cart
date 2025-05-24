@@ -10,25 +10,28 @@ import woowacourse.shopping.Fixture
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.presentation.product.ProductViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductViewModelTest {
     private lateinit var cartRepository: CartRepository
     private lateinit var productRepository: ProductRepository
+    private lateinit var recentProductRepository: RecentProductRepository
     private lateinit var viewModel: ProductViewModel
 
     @BeforeEach
     fun setUp() {
-        cartRepository = mockk<CartRepository>(relaxed = true)
-        productRepository = mockk<ProductRepository>(relaxed = true)
+        cartRepository = mockk(relaxed = true)
+        productRepository = mockk(relaxed = true)
+        recentProductRepository = mockk(relaxed = true)
 
-        every { productRepository.getPagedProducts(any(), any(), any()) } answers {
+        every { productRepository.fetchPagingProducts(any(), any(), any()) } answers {
             val callback = thirdArg<(Result<List<CartItem>>) -> Unit>()
             callback(Result.success(Fixture.mockedCartItems))
         }
 
-        viewModel = ProductViewModel(cartRepository, productRepository)
+        viewModel = ProductViewModel(cartRepository, productRepository, recentProductRepository)
     }
 
     @Test
