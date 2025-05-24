@@ -26,10 +26,11 @@ class ShoppingCartRepository2Impl(private val cartItemDao: CartItemDao) : Shoppi
 
     override fun getPage(
         pageSize: Int,
-        pageIndex: Int,
+        requestedIndex: Int,
         onSuccess: (Page<CartItem>) -> Unit,
     ) {
         getAll { allItems ->
+            val pageIndex = requestedIndex.coerceAtLeast(0)
             val from = pageSize * pageIndex
             val to = (from + pageSize).coerceAtMost(allItems.size)
             val items = allItems.subList(from, to)

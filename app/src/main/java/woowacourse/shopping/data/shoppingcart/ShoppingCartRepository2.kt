@@ -13,7 +13,7 @@ interface ShoppingCartRepository2 {
 
     fun getPage(
         pageSize: Int,
-        pageIndex: Int,
+        requestedIndex: Int,
         onSuccess: (Page<CartItem>) -> Unit,
     )
 

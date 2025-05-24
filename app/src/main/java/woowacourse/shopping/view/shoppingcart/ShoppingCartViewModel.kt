@@ -17,49 +17,34 @@ class ShoppingCartViewModel(
     private val _cartItems = MutableLiveData<Page<CartItem>>()
     val cartItems: LiveData<Page<CartItem>> get() = _cartItems
 
-    fun removeCartItem(cartItem: CartItem) {
-        shoppingCartRepository.delete(cartItem)
-        inventoryRepository.insert(cartItem.toInventoryProduct().copy(quantity = 0))
-        shoppingCartRepository.getAll { allItems ->
-            val removedItemIndex = allItems.indexOf(cartItem)
-            val pageNumber = pageNumberAfterRemoval(allItems.size, removedItemIndex)
-            requestPage(pageNumber)
-        }
-    }
-
     fun requestPage(pageIndex: Int) {
         shoppingCartRepository.getPage(PAGE_SIZE, pageIndex) { page ->
-            _cartItems.postValue(page)
+            if (page.items.isEmpty()) {
+                requestPreviousPage()
+            } else {
+                _cartItems.postValue(page)
+            }
         }
     }
 
     fun requestPreviousPage() {
         val currentIndex = (_cartItems.value?.pageIndex) ?: 0
-        val previousIndex = (currentIndex - 1).coerceAtLeast(0)
-        shoppingCartRepository.getPage(
-            PAGE_SIZE,
-            previousIndex,
-        ) { page -> _cartItems.postValue(page) }
+        shoppingCartRepository.getPage(PAGE_SIZE, currentIndex - 1) { page ->
+            _cartItems.postValue(page)
+        }
     }
 
     fun requestNextPage() {
         val currentIndex = (_cartItems.value?.pageIndex) ?: 0
-        val nextIndex = currentIndex + 1
-        shoppingCartRepository.getPage(PAGE_SIZE, nextIndex) { page -> _cartItems.postValue(page) }
+        shoppingCartRepository.getPage(PAGE_SIZE, currentIndex + 1) { page ->
+            _cartItems.postValue(page)
+        }
     }
 
-    private fun pageNumberAfterRemoval(
-        itemsCount: Int,
-        removedIndex: Int,
-    ): Int {
-        val currentPageNumber = removedIndex / PAGE_SIZE
-        val newPageNumber =
-            if (itemsCount % PAGE_SIZE == 0 && removedIndex == itemsCount) {
-                currentPageNumber - 1
-            } else {
-                currentPageNumber
-            }
-        return newPageNumber.coerceAtLeast(0)
+    fun removeCartItem(cartItem: CartItem) {
+        shoppingCartRepository.delete(cartItem)
+        inventoryRepository.insert(cartItem.toInventoryProduct().copy(quantity = 0))
+        requestPage(_cartItems.value?.pageIndex ?: 0)
     }
 
     companion object {
