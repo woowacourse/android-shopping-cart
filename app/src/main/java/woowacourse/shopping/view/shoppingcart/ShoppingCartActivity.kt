@@ -58,7 +58,7 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.cacheShoppingCartProduct.observe(this) { value ->
-            adapter.updateItems(value)
+            adapter.updateShoppingProductItems(value)
         }
 
         viewModel.hasNext.observe(this) { value ->
