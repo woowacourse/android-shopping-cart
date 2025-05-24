@@ -3,7 +3,6 @@ package woowacourse.shopping.view.cart.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.cart.CartUiEvent
@@ -12,7 +11,6 @@ import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
-import woowacourse.shopping.view.main.state.CartSavingState
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.ProductState
 
@@ -30,53 +28,20 @@ class CartViewModel(
 
     fun decreaseCartQuantity(productId: Long) {
         val currentUiState = _uiState.value ?: return
-        val decreasedCartQuantity = currentUiState.decreaseCartQuantity(productId)
+        val result = currentUiState.decreaseCartQuantity(productId)
 
-        _uiState.value = currentUiState.modifyUiState(decreasedCartQuantity)
+        _uiState.value = currentUiState.modifyUiState(result)
+        cartRepository.upsert(productId, result.cartQuantity)
     }
 
     fun increaseCartQuantity(productId: Long) {
         val currentUiState = _uiState.value ?: return
 
-        when (currentUiState.isAddedProduct(productId)) {
-            CartSavingState.SAVED -> {
-                whenProductSavedInCart(productId, currentUiState)
-            }
-
-            CartSavingState.NOT_SAVED -> {
-                whenProductNotSavedInCart(productId, currentUiState)
-            }
-        }
-    }
-
-    private fun whenProductSavedInCart(
-        productId: Long,
-        currentUiState: CartUiState,
-    ) {
-        handleIncreaseCartQuantity(productId, currentUiState) { quantity ->
-            cartRepository.modifyQuantity(productId, quantity)
-        }
-    }
-
-    private fun whenProductNotSavedInCart(
-        productId: Long,
-        currentUiState: CartUiState,
-    ) {
-        handleIncreaseCartQuantity(productId, currentUiState) {
-            cartRepository.insert(productId)
-        }
-    }
-
-    private fun handleIncreaseCartQuantity(
-        productId: Long,
-        currentUiState: CartUiState,
-        onCartUpdate: (Quantity) -> Unit,
-    ) {
         when (val result = currentUiState.canIncreaseCartQuantity(productId)) {
             is IncreaseState.CanIncrease -> {
                 val newState = result.value
                 _uiState.value = currentUiState.modifyUiState(newState)
-                onCartUpdate(newState.cartQuantity)
+                cartRepository.upsert(productId, newState.cartQuantity)
             }
 
             is IncreaseState.CannotIncrease -> sendEvent(CartUiEvent.ShowCannotIncrease(result.quantity))
@@ -84,28 +49,15 @@ class CartViewModel(
     }
 
     fun loadCarts() {
-        val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
-        val carts = mutableListOf<ProductState>()
-        result.carts
-            .map { cart ->
-                productRepository[
-                    cart.productId, {
-                        carts.add(ProductState(it, cart.quantity))
-                    },
-                ]
-            }
-
-        val pageState = paging.createPageState(result.hasNextPage)
-        _uiState.value = CartUiState(items = carts, pageState = pageState)
-    }
-
-    fun deleteProduct(cardId: Long) {
-        cartRepository.delete(cardId)
-        loadCarts()
-
-        val currentCarts = _uiState.value?.items
-        if (paging.resetToLastPageIfEmpty(currentCarts)) {
-            loadCarts()
+        val nextPage = paging.getPageNo() - 1
+        cartRepository.singlePage(nextPage, PAGE_SIZE) { page ->
+            val products =
+                page.carts.map { cart ->
+                    val product = productRepository[cart.productId]
+                    ProductState(product, cart.quantity)
+                }
+            val pageState = paging.createPageState(page.hasNextPage)
+            _uiState.postValue(CartUiState(items = products, pageState = pageState))
         }
     }
 
@@ -117,6 +69,30 @@ class CartViewModel(
     fun subPage() {
         paging.moveToPreviousPage()
         loadCarts()
+    }
+
+    fun deleteProduct(productId: Long) {
+        cartRepository.delete(productId) {
+            refresh()
+        }
+    }
+
+    private fun refresh() {
+        cartRepository.singlePage(paging.getPageNo() - 1, PAGE_SIZE) { page ->
+            val products =
+                page.carts.map { cart ->
+                    val product = productRepository[cart.productId]
+                    ProductState(product, cart.quantity)
+                }
+
+            if (paging.resetToLastPageIfEmpty(products)) {
+                refresh()
+                return@singlePage
+            }
+
+            val pageState = paging.createPageState(page.hasNextPage)
+            _uiState.postValue(CartUiState(items = products, pageState = pageState))
+        }
     }
 
     private fun sendEvent(event: CartUiEvent) {

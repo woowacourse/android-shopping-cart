@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.cart.state
 
 import woowacourse.shopping.domain.Quantity
-import woowacourse.shopping.view.main.state.CartSavingState
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.ProductState
 
@@ -15,14 +14,6 @@ data class CartUiState(
         mutableItems[targetIndex] = newState
 
         return copy(items = mutableItems)
-    }
-
-    fun isAddedProduct(productId: Long): CartSavingState {
-        val targetIndex = targetIndex(productId)
-        val target = items[targetIndex]
-        val result = target.isSaveInCart()
-
-        return result
     }
 
     fun canIncreaseCartQuantity(productId: Long): IncreaseState {
