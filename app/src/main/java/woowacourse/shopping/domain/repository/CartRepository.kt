@@ -1,11 +1,17 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartEntry
 
 interface CartRepository {
     fun insert(
-        item: CartEntry,
-        onResult: (Unit) -> Unit = {},
+        item: Cart,
+        onResult: () -> Unit = {},
+    )
+
+    fun getById(
+        id: Long,
+        onResult: (CartEntry?) -> Unit,
     )
 
     fun getByIds(
@@ -16,6 +22,11 @@ interface CartRepository {
     fun getAll(onResult: (List<CartEntry>) -> Unit)
 
     fun totalSize(onResult: (Int) -> Unit)
+
+    fun update(
+        item: Cart,
+        onResult: () -> Unit,
+    )
 
     fun deleteById(
         id: Long,

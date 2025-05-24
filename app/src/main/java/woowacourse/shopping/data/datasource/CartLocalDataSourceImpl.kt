@@ -8,11 +8,17 @@ class CartLocalDataSourceImpl(private val cartDao: CartDao) : CartLocalDataSourc
         cartDao.insert(item)
     }
 
+    override fun getById(id: Long): CartEntity? = cartDao.getById(id)
+
     override fun getAll() = cartDao.getAll()
 
     override fun getByIds(ids: List<Long>): List<CartEntity?> = ids.map { cartDao.getById(it) }
 
     override fun totalSize() = cartDao.totalSize()
+
+    override fun update(cartEntity: CartEntity) {
+        cartDao.update(cartEntity)
+    }
 
     override fun deleteById(id: Long) {
         cartDao.deleteById(id)

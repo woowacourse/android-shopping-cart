@@ -14,8 +14,15 @@ class ProductAdapter(
     fun submitList(newItems: List<Cart>) {
         val lastPosition = items.size
         val subList = newItems.subList(lastPosition, newItems.size)
-        items = items + subList
-        notifyItemRangeInserted(lastPosition, newItems.size)
+        val updatedItems = newItems.subtract(items.toSet()).toList()
+        if (updatedItems.size == 1) {
+            val updateItemIndex = newItems.indexOf(updatedItems[0])
+            items = newItems
+            notifyItemChanged(updateItemIndex)
+        } else {
+            items = items + subList
+            notifyItemRangeInserted(lastPosition, subList.size)
+        }
     }
 
     override fun onCreateViewHolder(
@@ -24,7 +31,6 @@ class ProductAdapter(
     ): ProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val bind = ItemProductBinding.inflate(inflater, parent, false)
-
         return ProductViewHolder(bind, handler)
     }
 

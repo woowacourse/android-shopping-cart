@@ -26,7 +26,10 @@ class MainViewModel(
             _carts.postValue(
                 (carts.value ?: emptyList()) +
                     products.map { product ->
-                        Cart(product, cartEntries.find { product.id == it.productId }?.quantity ?: 0)
+                        Cart(
+                            product,
+                            cartEntries.find { product.id == it.productId }?.quantity ?: 0,
+                        )
                     },
             )
             _loadable.postValue(productRepository.notHasMoreProduct(page.currentPage, limit).not())
@@ -36,6 +39,55 @@ class MainViewModel(
     fun moveNextPage() {
         page.moveToNextPage()
         loadProducts()
+    }
+
+    fun addCart(cart: Cart) {
+        val currentCarts = carts.value ?: return
+        val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
+        val updated = cart.increase()
+        cartRepository.insert(updated) {
+            _carts.postValue(
+                currentCarts.toMutableList().apply {
+                    this[cartIndex] = updated
+                },
+            )
+        }
+    }
+
+    fun plusCartQuantity(cart: Cart) {
+        val currentCarts = carts.value ?: return
+        val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
+        val updated = cart.increase()
+        cartRepository.update(updated) {
+            _carts.postValue(
+                currentCarts.toMutableList().apply {
+                    this[cartIndex] = updated
+                },
+            )
+        }
+    }
+
+    fun minusCartQuantity(cart: Cart) {
+        val currentCarts = carts.value ?: return
+        val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
+        val updated = cart.decrease()
+        cartRepository.update(updated) {
+            if (updated.quantity == 0) {
+                cartRepository.deleteById(cart.product.id) {
+                    _carts.postValue(
+                        currentCarts.toMutableList().apply {
+                            this[cartIndex] = updated
+                        },
+                    )
+                }
+                return@update
+            }
+            _carts.postValue(
+                currentCarts.toMutableList().apply {
+                    this[cartIndex] = updated
+                },
+            )
+        }
     }
 
     companion object {

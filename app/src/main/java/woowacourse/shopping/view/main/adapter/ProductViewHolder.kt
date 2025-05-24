@@ -11,7 +11,7 @@ class ProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Cart) {
         with(binding) {
-            model = item.product
+            model = item
             eventHandler = handler
         }
     }
