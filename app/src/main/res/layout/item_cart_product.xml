@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="productCountVM"
+            type="woowacourse.shopping.view.component.ProductCountViewModel" />
+
+        <variable
             name="position"
             type="int" />
 
@@ -64,12 +68,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_cart_product_name" />
 
+        <include
+            android:id="@+id/i_cart_count_control"
+            style="@style/ProductDetailPriceStyle"
+            layout="@layout/product_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_cart_product"
+            app:layout_constraintWidth_percent="0.36"
+            app:productCountVM="@{productCountVM}" />
+
         <TextView
             android:id="@+id/tv_cart_product_price"
             style="@style/CartPriceStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/cart_price(cartItem.product.price)}"
+            android:text="@{@string/cart_price(cartItem.product.price * productCountVM.productCount)}"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
             app:layout_constraintEnd_toEndOf="@id/ib_cart_product_delete"
             tools:text="100,000원" />
