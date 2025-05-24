@@ -6,8 +6,4 @@ interface ProductsAdapterEventHandler {
     fun onSelectProduct(productId: Long)
 
     fun onAddCart(cart: Cart)
-
-    fun onQuantityMinus(cart: Cart)
-
-    fun onQuantityPlus(cart: Cart)
 }

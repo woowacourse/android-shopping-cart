@@ -2,13 +2,14 @@ package woowacourse.shopping.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import woowacourse.shopping.data.entity.CartEntity
 
 @Dao
 interface CartDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: CartEntity)
 
     @Query("SELECT * FROM cart where productId = :id")

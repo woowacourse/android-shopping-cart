@@ -4,27 +4,42 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 
 class DetailViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
 ) : ViewModel() {
-    private val _product = MutableLiveData<Product>()
-    val product: LiveData<Product> = _product
-
-    private val _quantity = MutableLiveData<Int>()
-    val quantity: LiveData<Int> = _quantity
+    private val _cart = MutableLiveData<Cart>()
+    val cart: LiveData<Cart> = _cart
 
     fun load(productId: Long) {
-        _product.value = productRepository.getById(productId)
+        cartRepository.getById(productId) { cart ->
+            _cart.postValue(cart ?: return@getById)
+        }
     }
 
-    fun addProduct() {
-        val product = product.value ?: return
-        val quantity = quantity.value ?: return
-        cartRepository.insert(Cart(product, quantity))
+    fun insertCart() {
+        cartRepository.insert(cart.value ?: return) {
+        }
+    }
+
+    fun plusCartQuantity(cart: Cart) {
+        val updated = cart.increase()
+        cartRepository.update(updated) {
+            _cart.postValue(updated)
+        }
+    }
+
+    fun minusCartQuantity(cart: Cart) {
+        val updated = cart.decrease()
+        cartRepository.update(updated) {
+            if (updated.quantity == 0) {
+                cartRepository.deleteById(cart.product.id) {
+                    _cart.postValue(updated)
+                }
+                return@update
+            }
+            _cart.postValue(updated)
+        }
     }
 }

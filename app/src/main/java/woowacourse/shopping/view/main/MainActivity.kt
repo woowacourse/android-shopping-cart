@@ -19,13 +19,17 @@ import woowacourse.shopping.view.main.adapter.ProductAdapter
 import woowacourse.shopping.view.main.event.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
+import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 import woowacourse.shopping.view.util.scroll.ScrollEndEvent
 import kotlin.getValue
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels { MainViewModelFactory() }
     private val productsAdapter: ProductAdapter by lazy {
-        ProductAdapter(handler = productsAdapterEventHandler)
+        ProductAdapter(
+            quantitySelectorEventHandler = quantitySelectorEventHandler,
+            handler = productsAdapterEventHandler,
+        )
     }
     private lateinit var binding: ActivityMainBinding
 
@@ -39,7 +43,10 @@ class MainActivity : AppCompatActivity() {
             override fun onAddCart(cart: Cart) {
                 viewModel.addCart(cart)
             }
+        }
 
+    private val quantitySelectorEventHandler =
+        object : QuantitySelectorEventHandler {
             override fun onQuantityMinus(cart: Cart) {
                 viewModel.minusCartQuantity(cart)
             }
