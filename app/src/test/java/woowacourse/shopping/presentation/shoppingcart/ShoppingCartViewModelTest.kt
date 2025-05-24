@@ -102,7 +102,7 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 3
 
         verify {
-            shoppingRepository.increaseItemQuantity(1)
+            shoppingRepository.increaseGoodsQuantity(1)
         }
     }
 
@@ -115,7 +115,7 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 1
 
         verify {
-            shoppingRepository.decreaseItemQuantity(1)
+            shoppingRepository.decreaseGoodsQuantity(1)
         }
     }
 }

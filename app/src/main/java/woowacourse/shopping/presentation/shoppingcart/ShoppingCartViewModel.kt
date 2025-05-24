@@ -66,7 +66,7 @@ class ShoppingCartViewModel(
             updateGoods(position) {
                 it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
-        shoppingRepository.increaseItemQuantity(updatedItem.id)
+        shoppingRepository.increaseGoodsQuantity(updatedItem.id)
     }
 
     fun decreaseGoodsCount(position: Int) {
@@ -78,12 +78,12 @@ class ShoppingCartViewModel(
         if (updatedItem.quantity <= MINIMUM_QUANTITY) {
             deleteGoods(updatedItem)
         } else {
-            shoppingRepository.decreaseItemQuantity(updatedItem.id)
+            shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
         }
     }
 
     fun deleteGoods(goods: GoodsUiModel) {
-        shoppingRepository.removeItem(goods.id)
+        shoppingRepository.removeGoods(goods.id)
         updateState()
     }
 

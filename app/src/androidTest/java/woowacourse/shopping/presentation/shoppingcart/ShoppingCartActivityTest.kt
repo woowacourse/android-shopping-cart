@@ -239,13 +239,13 @@ class ShoppingCartActivityTest {
 
     private fun addItems(count: Int) {
         repeat(count) {
-            shoppingRepository.increaseItemQuantity(it + 1)
+            shoppingRepository.increaseGoodsQuantity(it + 1)
         }
     }
 
     private fun removeItems(count: Int) {
         repeat(count) {
-            shoppingRepository.decreaseItemQuantity(it + 1)
+            shoppingRepository.decreaseGoodsQuantity(it + 1)
         }
     }
 

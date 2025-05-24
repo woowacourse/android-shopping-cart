@@ -5,17 +5,17 @@ import woowacourse.shopping.domain.model.ShoppingGoods
 interface ShoppingRepository {
     fun getAllGoods(): Set<ShoppingGoods>
 
-    fun increaseItemQuantity(
+    fun increaseGoodsQuantity(
         id: Int,
         quantity: Int = QUANTITY_CHANGE_AMOUNT,
     )
 
-    fun decreaseItemQuantity(
+    fun decreaseGoodsQuantity(
         id: Int,
         quantity: Int = -QUANTITY_CHANGE_AMOUNT,
     )
 
-    fun removeItem(id: Int)
+    fun removeGoods(id: Int)
 
     fun getPagedGoods(
         page: Int,
@@ -28,7 +28,7 @@ interface ShoppingRepository {
 
     fun getGoodsById(id: Int): ShoppingGoods?
 
-    fun insertItem(
+    fun insertGoods(
         id: Int,
         quantity: Int,
     )

@@ -20,21 +20,30 @@ class ShoppingRepositoryImpl(
         return result
     }
 
-    override fun increaseItemQuantity(
+    override fun insertGoods(
         id: Int,
         quantity: Int,
     ) {
-        adjustItemQuantity(id, quantity)
+        thread {
+            shoppingDao.insert(ShoppingGoods(id, quantity).toShoppingEntity())
+        }.join()
     }
 
-    override fun decreaseItemQuantity(
+    override fun increaseGoodsQuantity(
         id: Int,
         quantity: Int,
     ) {
-        adjustItemQuantity(id, quantity)
+        adjustGoodsQuantity(id, quantity)
     }
 
-    override fun removeItem(id: Int) {
+    override fun decreaseGoodsQuantity(
+        id: Int,
+        quantity: Int,
+    ) {
+        adjustGoodsQuantity(id, quantity)
+    }
+
+    override fun removeGoods(id: Int) {
         thread {
             shoppingDao.delete(id)
         }.join()
@@ -63,7 +72,7 @@ class ShoppingRepositoryImpl(
         return result
     }
 
-    private fun adjustItemQuantity(
+    private fun adjustGoodsQuantity(
         id: Int,
         quantity: Int,
     ) {

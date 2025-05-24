@@ -81,7 +81,7 @@ class GoodsViewModel(
             updateGoodsQuantity(position) {
                 it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
-        shoppingRepository.insertItem(updatedItem.id, QUANTITY_CHANGE_AMOUNT)
+        shoppingRepository.insertGoods(updatedItem.id, QUANTITY_CHANGE_AMOUNT)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
     }
 
@@ -90,7 +90,7 @@ class GoodsViewModel(
             updateGoodsQuantity(position) {
                 it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
-        shoppingRepository.increaseItemQuantity(updatedItem.id)
+        shoppingRepository.increaseGoodsQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
     }
 
@@ -99,7 +99,7 @@ class GoodsViewModel(
             updateGoodsQuantity(position) {
                 it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
-        shoppingRepository.decreaseItemQuantity(updatedItem.id)
+        shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT)
     }
 
