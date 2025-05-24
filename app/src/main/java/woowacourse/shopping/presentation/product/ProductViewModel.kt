@@ -30,18 +30,17 @@ class ProductViewModel(
     val toastMessage: LiveData<Int> = _toastMessage
 
     private var currentPage = FIRST_PAGE
-    private val pageSize = 10
 
     init {
         productRepository.start { result ->
             result.onFailure { _toastMessage.postValue(R.string.product_toast_start_server_fail) }
         }
-        fetchData(currentPage)
+        fetchData()
         fetchCartItemCount()
     }
 
-    fun fetchData(currentPage: Int) {
-        productRepository.fetchPagingProducts(currentPage, pageSize) { result ->
+    fun fetchData(currentPage: Int = FIRST_PAGE) {
+        productRepository.fetchPagingProducts(currentPage, PAGE_SIZE) { result ->
             result
                 .onSuccess { cartItems ->
                     _products.postValue(ResultState.Success(cartItems))
@@ -74,7 +73,7 @@ class ProductViewModel(
 
     fun loadMore() {
         this.currentPage++
-        productRepository.fetchPagingProducts(currentPage, pageSize) { result ->
+        productRepository.fetchPagingProducts(currentPage, PAGE_SIZE) { result ->
             result.fold(
                 onSuccess = { newItems ->
                     val currentList = (_products.value as? ResultState.Success)?.data.orEmpty()
@@ -161,5 +160,6 @@ class ProductViewModel(
 
     companion object {
         private const val FIRST_PAGE = 0
+        private const val PAGE_SIZE = 10
     }
 }

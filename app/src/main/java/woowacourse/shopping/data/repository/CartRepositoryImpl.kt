@@ -38,24 +38,19 @@ class CartRepositoryImpl(
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        if (cartDataSource.existsByProductId(productId)) {
-            runThread(
-                block = { cartDataSource.increaseQuantity(productId, quantity) },
-                onResult = onResult,
-            )
-        } else {
-            runThread(
-                block = {
+        runThread(
+            block = {
+                val exists = cartDataSource.existsByProductId(productId)
+                if (exists) {
+                    cartDataSource.increaseQuantity(productId, quantity)
+                } else {
                     cartDataSource.insertProduct(
-                        CartEntity(
-                            productId = productId,
-                            quantity = quantity,
-                        ),
+                        CartEntity(productId = productId, quantity = quantity),
                     )
-                },
-                onResult = onResult,
-            )
-        }
+                }
+            },
+            onResult = onResult,
+        )
     }
 
     override fun increaseQuantity(

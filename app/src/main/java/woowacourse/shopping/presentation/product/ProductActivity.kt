@@ -58,10 +58,8 @@ class ProductActivity :
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchData(0)
+        viewModel.fetchData()
         viewModel.fetchCartItemCount()
-        binding.rvProducts.adapter = productAdapter
-        binding.rvRecentProducts.adapter = recentAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
