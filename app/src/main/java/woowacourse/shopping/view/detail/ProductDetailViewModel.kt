@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.detail
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
@@ -11,20 +13,30 @@ class ProductDetailViewModel(
     private val inventoryRepository: InventoryRepository,
     private val shoppingCartRepository: ShoppingCartRepository2,
 ) : ViewModel() {
-    fun addProduct(product: InventoryProduct) {
+    private val _quantity = MutableLiveData(PRODUCT_MINIMUM_QUANTITY)
+    val quantity: LiveData<Int> get() = _quantity
+
+    fun addToCart(product: InventoryProduct) {
         shoppingCartRepository.getOrNull(product.id) { cartItem ->
-            val item =
-                if (cartItem == null) {
-                    product.copy(quantity = 1)
-                } else {
-                    product.copy(quantity = cartItem.quantity + 1)
-                }
+            val currentQuantity = cartItem?.quantity ?: 0
+            val item = product.copy(quantity = currentQuantity + (quantity.value ?: 0))
             inventoryRepository.insert(item)
             shoppingCartRepository.insert(item.toCartItem())
         }
     }
 
+    fun decreaseQuantity() {
+        if (_quantity.value == PRODUCT_MINIMUM_QUANTITY) return
+        _quantity.value = _quantity.value?.minus(1)
+    }
+
+    fun increaseQuantity() {
+        _quantity.value = _quantity.value?.plus(1)
+    }
+
     companion object {
+        private const val PRODUCT_MINIMUM_QUANTITY = 1
+
         @Suppress("UNCHECKED_CAST")
         fun createFactory(
             inventoryRepository: InventoryRepository,

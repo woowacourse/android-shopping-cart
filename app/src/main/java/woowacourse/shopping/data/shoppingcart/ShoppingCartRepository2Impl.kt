@@ -48,12 +48,8 @@ class ShoppingCartRepository2Impl(private val cartItemDao: CartItemDao) : Shoppi
     }
 
     override fun insert(cartItem: CartItem) {
-        getOrNull(cartItem.id) { retrievedItem ->
-            if (retrievedItem == null) {
-                cartItemDao.insert(cartItem.copy(quantity = 1).toEntity())
-            } else {
-                cartItemDao.insert(cartItem.toEntity())
-            }
+        thread {
+            cartItemDao.insert(cartItem.toEntity())
         }
     }
 

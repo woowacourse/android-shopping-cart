@@ -21,16 +21,9 @@ class ProductDetailActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val shoppingApplication = application as ShoppingApplication
-        val factory =
-            ProductDetailViewModel.createFactory(
-                shoppingApplication.inventoryRepository,
-                shoppingApplication.shoppingCartRepository2,
-            )
-        viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
-
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
+
+        initializeViewModel()
         val product: InventoryProduct =
             intent.getParcelableCompat<InventoryProduct>(KEY_PRODUCT) ?: run {
                 onUnexpectedError(getString(R.string.error_product_is_null))
@@ -42,14 +35,35 @@ class ProductDetailActivity :
         }
     }
 
+    private fun initializeViewModel() {
+        val shoppingApplication = application as ShoppingApplication
+        val factory =
+            ProductDetailViewModel.createFactory(
+                shoppingApplication.inventoryRepository,
+                shoppingApplication.shoppingCartRepository2,
+            )
+        viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
+        viewModel.quantity.observe(this) { quantity ->
+            binding.tvQuantity.text = quantity.toString()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
         return true
     }
 
-    override fun onAddToCartSelected(product: InventoryProduct) {
-        viewModel.addProduct(product)
+    override fun onAddToCart(product: InventoryProduct) {
+        viewModel.addToCart(product)
         startActivity(ShoppingCartActivity.newIntent(this))
+    }
+
+    override fun onDecreaseQuantity() {
+        viewModel.decreaseQuantity()
+    }
+
+    override fun onIncreaseQuantity() {
+        viewModel.increaseQuantity()
     }
 
     companion object {

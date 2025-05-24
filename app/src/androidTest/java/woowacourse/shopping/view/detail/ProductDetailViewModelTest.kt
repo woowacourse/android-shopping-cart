@@ -27,7 +27,7 @@ class ProductDetailViewModelTest {
     @Test
     fun 상품을_추가할_수_있다() {
         // when
-        viewModel.addProduct(inventoryItem.toUiModel())
+        viewModel.addToCart(inventoryItem.toUiModel())
 
         // then
         val result = repository.getAll()
