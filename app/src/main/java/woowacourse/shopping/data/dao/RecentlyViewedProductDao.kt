@@ -11,6 +11,6 @@ interface RecentlyViewedProductDao {
     @Insert(onConflict = REPLACE)
     fun insertRecentlyViewedProductUid(recentlyViewedProductEntity: RecentlyViewedProductEntity)
 
-    @Query("SELECT * FROM RecentlyViewedProducts")
+    @Query("SELECT productUid FROM RecentlyViewedProducts ORDER BY timestamp DESC")
     fun getRecentlyViewedProductUids(): List<Int>
 }

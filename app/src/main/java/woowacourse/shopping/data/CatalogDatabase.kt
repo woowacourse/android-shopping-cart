@@ -27,7 +27,9 @@ object CatalogDatabase : CatalogDataSource {
     }
 
     override fun getCartProductsByUids(uids: List<Int>): List<ProductUiModel> =
-        dummyProducts.filter { product -> uids.contains(product.id) }
+        uids.mapNotNull { uid ->
+            dummyProducts.find { product -> product.id == uid }
+        }
 
     var count = 1
 
