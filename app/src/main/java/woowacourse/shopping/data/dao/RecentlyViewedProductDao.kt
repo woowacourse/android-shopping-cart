@@ -13,4 +13,7 @@ interface RecentlyViewedProductDao {
 
     @Query("SELECT productUid FROM RecentlyViewedProducts ORDER BY timestamp DESC")
     fun getRecentlyViewedProductUids(): List<Int>
+
+    @Query("SELECT productUid FROM RecentlyViewedProducts ORDER BY timestamp DESC LIMIT 1")
+    fun getLatestViewedProductUid(): Int
 }

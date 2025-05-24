@@ -29,7 +29,6 @@
             android:layout_height="154dp"
             android:contentDescription="@string/text_product_image"
             android:scaleType="centerCrop"
-            android:visibility="@{product.quantity}"
             android:src="@drawable/iced_americano"
             app:imageUrl="@{product}"
             app:layout_constraintEnd_toEndOf="parent"

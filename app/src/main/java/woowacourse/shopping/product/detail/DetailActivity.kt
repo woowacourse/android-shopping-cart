@@ -50,6 +50,7 @@ class DetailActivity : AppCompatActivity() {
                     viewModel.decreaseQuantity()
                 }
             }
+        viewModel.setLatestViewedProduct()
     }
 
     private fun setViewModel(product: ProductUiModel) {
@@ -72,6 +73,10 @@ class DetailActivity : AppCompatActivity() {
 
         viewModel.quantity.observe(this) {
             viewModel.setPriceSum()
+        }
+
+        viewModel.latestViewedProduct.observe(this) { product ->
+            binding.layoutLatestViewedProduct.product = product
         }
     }
 

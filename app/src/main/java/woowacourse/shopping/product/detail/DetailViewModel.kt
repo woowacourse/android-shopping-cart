@@ -22,6 +22,9 @@ class DetailViewModel(
     private val _price = MutableLiveData<Int>(0)
     val price: LiveData<Int> = _price
 
+    private val _latestViewedProduct = MutableLiveData<ProductUiModel>()
+    val latestViewedProduct: LiveData<ProductUiModel> = _latestViewedProduct
+
     fun increaseQuantity() {
         _quantity.value = _quantity.value?.plus(1)
         setPriceSum()
@@ -48,5 +51,11 @@ class DetailViewModel(
     fun addToRecentlyViewedProduct() {
         val uid = product.value?.id ?: return
         recentlyViewedProductRepository.insertRecentlyViewedProductUid(uid)
+    }
+
+    fun setLatestViewedProduct() {
+        recentlyViewedProductRepository.getLatestViewedProduct { product ->
+            _latestViewedProduct.postValue(product)
+        }
     }
 }

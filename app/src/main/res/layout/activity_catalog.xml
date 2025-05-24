@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <!-- ViewModel이나 변수 바인딩이 필요하면 여기에 정의 -->
     </data>
 
     <androidx.core.widget.NestedScrollView

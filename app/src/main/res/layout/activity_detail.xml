@@ -94,6 +94,18 @@
                     app:layout_constraintTop_toTopOf="@id/textView_price_info"
                     bind:quantity="@{vm.quantity.toString()}" />
 
+                <include
+                    android:id="@+id/layout_latest_viewed_product"
+                    layout="@layout/latest_viewed_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintEnd_toEndOf="@id/layout_quantity_control_bar"
+                    app:layout_constraintStart_toStartOf="@id/textView_price_info"
+                    app:layout_constraintTop_toBottomOf="@id/textView_price_info"
+                    bind:parentUid="@{product.id}" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
