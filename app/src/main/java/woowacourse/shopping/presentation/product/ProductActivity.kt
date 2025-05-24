@@ -57,12 +57,6 @@ class ProductActivity :
         observeViewModel()
     }
 
-    override fun onResume() {
-        super.onResume()
-//        viewModel.fetchData()
-//        viewModel.fetchCartItemCount()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product, menu)
 
