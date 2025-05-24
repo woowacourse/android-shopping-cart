@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,13 +14,21 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.ResultState
 
-class CartActivity : AppCompatActivity() {
+class CartActivity :
+    AppCompatActivity(),
+    CartPageClickListener,
+    CartCounterClickListener {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels { CartViewModelFactory(applicationContext) }
-    private val cartProductAdapter by lazy { CartProductAdapter(::deleteProduct) }
+    private val cartAdapter by lazy {
+        CartAdapter(
+            cartCounterClickListener = this,
+            cartPageClickListener = this,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +36,6 @@ class CartActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.vm = viewModel
-        binding.clickHandler = viewModel
         binding.lifecycleOwner = this
 
         initInsets()
@@ -45,56 +53,69 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        binding.rvCartProduct.adapter = cartProductAdapter
+        binding.rvCartProduct.apply {
+            adapter = cartAdapter
+            itemAnimator = null
+        }
     }
 
     private fun setupToolbar() {
         setSupportActionBar(binding.tbCart)
         binding.tbCart.apply {
             setNavigationIcon(R.drawable.ic_back)
-            setNavigationOnClickListener { finish() }
+            setNavigationOnClickListener {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         }
     }
 
     private fun observeViewModel() {
-        viewModel.toastMessage.observe(this) { resId ->
-            showToast(resId)
-        }
-
         viewModel.products.observe(this) { result ->
             when (result) {
                 is ResultState.Success -> {
-                    cartProductAdapter.submitList(result.data)
+                    cartAdapter.submitList(result.data)
                 }
 
                 is ResultState.Failure -> {
-                    showToast(R.string.cart_toast_load_failure)
+                    showToast(R.string.cart_toast_load_fail)
                 }
             }
         }
 
-        viewModel.deleteProduct.observe(this) { result ->
-            when (result) {
-                is ResultState.Success -> {
-                    cartProductAdapter.removeItem(result.data)
-                    showToast(R.string.cart_toast_delete_success)
-                }
-
-                is ResultState.Failure -> {
-                    showToast(R.string.cart_toast_delete_failure)
-                }
-            }
+        viewModel.currentPage.observe(this) { currentPage ->
+            viewModel.loadItems(currentPage)
         }
-    }
 
-    private fun deleteProduct(product: Product) {
-        viewModel.deleteProduct(product)
+        viewModel.toastMessage.observe(this) { resId ->
+            showToast(resId)
+        }
     }
 
     private fun showToast(
         @StringRes messageResId: Int,
     ) {
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onClickMinus(id: Long) {
+        viewModel.decreaseQuantity(id)
+    }
+
+    override fun onClickPlus(id: Long) {
+        viewModel.increaseQuantity(id)
+    }
+
+    override fun onClickPrevious() {
+        viewModel.changePreviousPage()
+    }
+
+    override fun onClickNext() {
+        viewModel.changeNextPage()
+    }
+
+    override fun onClickDelete(cartItem: CartItem) {
+        viewModel.deleteProduct(cartItem)
     }
 
     companion object {

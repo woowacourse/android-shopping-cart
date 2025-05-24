@@ -8,9 +8,10 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.FIXTURE
+import woowacourse.shopping.Fixture
 import woowacourse.shopping.R
 import woowacourse.shopping.checkIsDisplayed
+import woowacourse.shopping.presentation.Extra
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 
 class ProductDetailActivityTest {
@@ -24,7 +25,7 @@ class ProductDetailActivityTest {
                 fakeContext,
                 ProductDetailActivity::class.java,
             ).apply {
-                putExtra("product_data", FIXTURE.DUMMY_PRODUCT)
+                putExtra(Extra.KEY_PRODUCT_DETAIL, Fixture.dummyProduct)
             }
         scenario = ActivityScenario.launch(intent)
     }
@@ -46,7 +47,7 @@ class ProductDetailActivityTest {
 
     @Test
     fun 상품_가격이_표시된다() {
-        onView(withId(R.id.tv_product_detail_price)).checkIsDisplayed()
+        onView(withId(R.id.tv_product_detail_price_text)).checkIsDisplayed()
     }
 
     @Test

@@ -9,7 +9,9 @@ class ProductViewModelFactory(
     private val context: Context,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val repository = RepositoryModule.provideProductRepository(context)
-        return ProductViewModel(repository) as T
+        val cartRepository = RepositoryModule.provideCartRepository(context)
+        val productRepository = RepositoryModule.provideProductRepository(context)
+        val recentProductRepository = RepositoryModule.provideRecentProductRepository(context)
+        return ProductViewModel(cartRepository, productRepository, recentProductRepository) as T
     }
 }

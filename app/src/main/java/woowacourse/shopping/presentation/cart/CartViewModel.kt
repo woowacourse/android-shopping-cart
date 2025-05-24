@@ -4,19 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.SingleLiveData
 
 class CartViewModel(
+    private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-) : ViewModel(),
-    CartClickHandler {
-    private val _products: MutableLiveData<ResultState<List<Product>>> = MutableLiveData()
-    val products: LiveData<ResultState<List<Product>>> = _products
-    private val _deleteProduct: MutableLiveData<ResultState<Long>> = MutableLiveData()
-    val deleteProduct: LiveData<ResultState<Long>> = _deleteProduct
+) : ViewModel() {
+    private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
+    val products: LiveData<ResultState<List<CartItem>>> = _products
     private val _totalPages: MutableLiveData<Int> = MutableLiveData(0)
     val totalPages: LiveData<Int> = _totalPages
     private val _currentPage: MutableLiveData<Int> = MutableLiveData(0)
@@ -25,58 +24,60 @@ class CartViewModel(
     val toastMessage: LiveData<Int> = _toastMessage
 
     init {
-        loadItems()
+        loadItems(FIRST_PAGE)
     }
 
-    private fun loadItems() {
-        val page = _currentPage.value ?: 0
-        productRepository.getPagedCartProducts(PAGE_SIZE, page) { result ->
+    fun loadItems(currentPage: Int) {
+        productRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
             result
                 .onSuccess { pagedProducts -> _products.postValue(ResultState.Success(pagedProducts)) }
                 .onFailure { _products.postValue(ResultState.Failure()) }
         }
-
-        productRepository.getCartProductCount { result ->
+        cartRepository.getCartItemCount { result ->
             result
                 .onSuccess { count -> updateTotalPage(count) }
                 .onFailure { _products.postValue(ResultState.Failure()) }
         }
     }
 
-    fun changePage(next: Boolean) {
+    fun changeNextPage() {
         val currentPage = _currentPage.value ?: 0
         val totalPages = _totalPages.value ?: 0
 
-        if (!next && currentPage == 0) {
-            _toastMessage.value = R.string.cart_first_page_toast
+        if (currentPage >= totalPages - 1) {
+            _toastMessage.value = R.string.cart_toast_last_page
             return
         }
 
-        if (next && currentPage >= totalPages - 1) {
-            _toastMessage.value = R.string.cart_last_page_toast
-            return
-        }
-
-        _currentPage.value = if (next) currentPage + 1 else currentPage - 1
-        loadItems()
+        _currentPage.value = currentPage + 1
     }
 
-    fun deleteProduct(product: Product) {
+    fun changePreviousPage() {
         val currentPage = _currentPage.value ?: 0
 
-        productRepository.deleteProduct(product.productId) { result ->
+        if (currentPage == 0) {
+            _toastMessage.value = R.string.cart_toast_first_page
+            return
+        }
+
+        _currentPage.value = currentPage - 1
+    }
+
+    fun deleteProduct(cartItem: CartItem) {
+        val currentPage = _currentPage.value ?: 0
+
+        cartRepository.deleteProduct(cartItem.product.productId) { result ->
             result
-                .onSuccess { productId ->
+                .onSuccess {
                     reloadProductsByPage(currentPage)
-                    _deleteProduct.postValue(ResultState.Success(productId))
                 }.onFailure {
-                    _deleteProduct.postValue(ResultState.Failure())
+                    _toastMessage.value = R.string.cart_toast_delete_fail
                 }
         }
     }
 
     private fun reloadProductsByPage(currentPage: Int) {
-        productRepository.getPagedCartProducts(PAGE_SIZE, currentPage) { result ->
+        productRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
             result
                 .onSuccess { pagedProducts ->
                     if (pagedProducts.isEmpty()) {
@@ -99,16 +100,50 @@ class CartViewModel(
         }
     }
 
-    override fun onClickPrevious() {
-        changePage(next = false)
+    fun increaseQuantity(productId: Long) {
+        cartRepository.increaseQuantity(productId, 1) { result ->
+            result
+                .onSuccess {
+                    updateQuantity(productId, 1)
+                }.onFailure {
+                    _toastMessage.value = R.string.cart_toast_increase_fail
+                }
+        }
     }
 
-    override fun onClickNext() {
-        changePage(next = true)
+    fun decreaseQuantity(productId: Long) {
+        val currentItems = (_products.value as? ResultState.Success)?.data ?: return
+        val item = currentItems.find { it.product.productId == productId } ?: return
+
+        if (item.quantity == 1) {
+            _toastMessage.value = R.string.cart_toast_invalid_quantity
+            return
+        }
+
+        cartRepository.decreaseQuantity(productId) { result ->
+            result
+                .onSuccess {
+                    updateQuantity(productId, -1)
+                }.onFailure {
+                    _toastMessage.value = R.string.cart_toast_decrease_fail
+                }
+        }
+    }
+
+    private fun updateQuantity(
+        productId: Long,
+        amount: Int,
+    ) {
+        val currentItems = (_products.value as? ResultState.Success)?.data ?: return
+        val updatedItem =
+            currentItems.map {
+                if (it.product.productId == productId) it.copy(quantity = it.quantity + amount) else it
+            }
+        _products.postValue(ResultState.Success(updatedItem))
     }
 
     private fun updateTotalPageAsync(onComplete: (() -> Unit)? = null) {
-        productRepository.getCartProductCount { result ->
+        cartRepository.getCartItemCount { result ->
             result
                 .onSuccess { count ->
                     updateTotalPage(count)
@@ -117,11 +152,13 @@ class CartViewModel(
         }
     }
 
-    private fun updateTotalPage(totalSize: Int) {
+    private fun updateTotalPage(totalSize: Int?) {
+        if (totalSize == null) return
         _totalPages.postValue((totalSize + PAGE_SIZE - 1) / PAGE_SIZE)
     }
 
     companion object {
+        private const val FIRST_PAGE = 1
         private const val PAGE_SIZE = 5
     }
 }

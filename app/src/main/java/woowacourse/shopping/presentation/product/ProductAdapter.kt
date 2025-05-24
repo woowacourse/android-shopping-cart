@@ -6,28 +6,24 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.presentation.cart.CartCounterClickListener
 
 class ProductAdapter(
-    private val onClick: (Product) -> Unit,
     private val onClickLoadMore: () -> Unit,
+    private val cartCounterClickListener: CartCounterClickListener,
+    private val itemClickListener: ItemClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: List<Product> = emptyList()
+    private var items: List<CartItem> = emptyList()
     private var showLoadMore: Boolean = false
 
     fun setData(
-        newList: List<Product>,
+        newList: List<CartItem>,
         showLoadMore: Boolean,
     ) {
-        val oldSize = items.size
-        val newSize = newList.size
-
-        val insertItemSize = newSize - oldSize
         this.items = newList
         this.showLoadMore = showLoadMore
-        if (insertItemSize > 0) {
-            notifyItemRangeInserted(oldSize, insertItemSize)
-        }
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
@@ -39,15 +35,15 @@ class ProductAdapter(
         return when (viewType) {
             R.layout.item_product -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ProductViewHolder(binding, onClick)
+                ProductViewHolder(binding, cartCounterClickListener, itemClickListener)
             }
 
             R.layout.item_load_more -> {
                 val binding = ItemLoadMoreBinding.inflate(inflater, parent, false)
-                LoadMoreViewHolder(binding, onClickLoadMore)
+                LoadMoreViewHolder(binding)
             }
 
-            else -> throw IllegalArgumentException("Invalid view type")
+            else -> throw IllegalArgumentException(ERROR_INVALID_VIEW_TYPE)
         }
     }
 
@@ -57,7 +53,7 @@ class ProductAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> holder.bind(items[position])
-            is LoadMoreViewHolder -> Unit
+            is LoadMoreViewHolder -> holder.bind(onClickLoadMore)
         }
     }
 
@@ -67,21 +63,27 @@ class ProductAdapter(
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        private val onClick: (Product) -> Unit,
+        private val cartCounterClickListener: CartCounterClickListener,
+        private val itemClickListener: ItemClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Product) {
-            binding.product = item
-            binding.clProductItem.setOnClickListener { onClick(item) }
+        fun bind(item: CartItem) {
+            binding.cartItem = item
+            binding.itemClickListener = itemClickListener
+            binding.counterClickListener = cartCounterClickListener
             binding.executePendingBindings()
         }
     }
 
     class LoadMoreViewHolder(
-        binding: ItemLoadMoreBinding,
-        onClickLoadMore: () -> Unit,
+        private val binding: ItemLoadMoreBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.btnLoadMore.setOnClickListener { onClickLoadMore() }
+        fun bind(onClickLoadMore: () -> Unit) {
+            binding.onClickLoadMore = onClickLoadMore
+            binding.executePendingBindings()
         }
+    }
+
+    companion object {
+        private const val ERROR_INVALID_VIEW_TYPE = "Invalid view type"
     }
 }

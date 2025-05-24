@@ -8,6 +8,8 @@
     <color name="gray1">#AAAAAA</color>
     <color name="gray5">#555555</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="cyan">#04C09E</color>
+    <color name="red">#E60202</color>
+    <color name="baemin">#2AC1BC</color>
 </resources>

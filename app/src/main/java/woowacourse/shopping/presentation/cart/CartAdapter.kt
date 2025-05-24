@@ -4,28 +4,29 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.CartItem
 
-class CartProductAdapter(
-    private val onDeleteClick: (Product) -> Unit,
-) : RecyclerView.Adapter<CartProductAdapter.CartProductViewHolder>() {
-    private var products: MutableList<Product> = mutableListOf()
+class CartAdapter(
+    private val cartCounterClickListener: CartCounterClickListener,
+    private val cartPageClickListener: CartPageClickListener,
+) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+    private var products: MutableList<CartItem> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): CartProductViewHolder {
+    ): CartViewHolder {
         val binding =
             ItemCartProductBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
             )
-        return CartProductViewHolder(binding, onDeleteClick)
+        return CartViewHolder(binding, cartCounterClickListener, cartPageClickListener)
     }
 
     override fun onBindViewHolder(
-        holder: CartProductViewHolder,
+        holder: CartViewHolder,
         position: Int,
     ) {
         holder.bind(products[position])
@@ -33,7 +34,7 @@ class CartProductAdapter(
 
     override fun getItemCount(): Int = products.size
 
-    fun submitList(newProducts: List<Product>) {
+    fun submitList(newProducts: List<CartItem>) {
         val oldSize = products.size
         val newSize = newProducts.size
 
@@ -46,29 +47,16 @@ class CartProductAdapter(
         notifyItemRangeInserted(0, newSize)
     }
 
-    fun removeItem(id: Long) {
-        val index = products.indexOfFirst { it.productId == id }
-        if (index != -1) {
-            products.removeAt(index)
-            notifyItemRemoved(index)
-        }
-    }
-
-    class CartProductViewHolder(
+    class CartViewHolder(
         val binding: ItemCartProductBinding,
-        private val onDeleteClick: (Product) -> Unit,
+        private val cartCounterClickListener: CartCounterClickListener,
+        private val cartPageClickListener: CartPageClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private lateinit var product: Product
-
-        init {
-            binding.ibCartProductDelete.setOnClickListener {
-                onDeleteClick(product)
-            }
-        }
-
-        fun bind(product: Product) {
-            binding.product = product
-            this.product = product
+        fun bind(cartItem: CartItem) {
+            binding.cartItem = cartItem
+            binding.cartPageClickListener = cartPageClickListener
+            binding.counterClickListener = cartCounterClickListener
+            binding.executePendingBindings()
         }
     }
 }
