@@ -73,6 +73,7 @@ class CartProductRepositoryImpl(
             insert(productId, newQuantity)
             return
         }
+        thread { localDataSource.updateQuantity(productId, newQuantity) }.join()
     }
 
     override fun deleteByProductId(productId: Long) {

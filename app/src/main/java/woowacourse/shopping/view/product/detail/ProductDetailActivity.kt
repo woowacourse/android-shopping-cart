@@ -51,8 +51,14 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         binding.product = product
-        binding.lastProduct = viewModel.lastProduct
+        binding.lastProduct = viewModel.lastViewedProduct
         binding.handler = viewModel
+        binding.itemQuantityControl.tvIncrease.setOnClickListener {
+            viewModel.onQuantityIncreaseClick(product)
+        }
+        binding.itemQuantityControl.tvDecrease.setOnClickListener {
+            viewModel.onQuantityDecreaseClick(product)
+        }
     }
 
     private fun initObservers() {
@@ -62,7 +68,7 @@ class ProductDetailActivity : AppCompatActivity() {
         }
 
         viewModel.lastProductClickEvent.observe(this) {
-            val intent = newIntent(this, viewModel.lastProduct?.product ?: return@observe)
+            val intent = newIntent(this, viewModel.lastViewedProduct?.product ?: return@observe)
             startActivity(intent)
         }
     }

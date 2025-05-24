@@ -7,6 +7,8 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.view.common.MutableSingleLiveData
+import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
     private val product: Product,
@@ -15,56 +17,62 @@ class ProductDetailViewModel(
 ) : ViewModel(),
     ProductDetailEventHandler {
     private var shoppingCartQuantity = 0
-    var lastProduct: RecentProduct? = null
+    var lastViewedProduct: RecentProduct? = null
         private set
 
-    private val _navigateEvent = MutableLiveData<Unit>()
-    val navigateEvent: LiveData<Unit> = _navigateEvent
+    private val _navigateEvent = MutableSingleLiveData<Unit>()
+    val navigateEvent: SingleLiveData<Unit> get() = _navigateEvent
 
-    private val _lastProductClickEvent = MutableLiveData<Unit>()
-    val lastProductClickEvent: LiveData<Unit> = _lastProductClickEvent
+    private val _lastProductClickEvent = MutableSingleLiveData<Unit>()
+    val lastProductClickEvent: SingleLiveData<Unit> get() = _lastProductClickEvent
 
     private val _quantity = MutableLiveData(1)
-    val quantity: LiveData<Int> = _quantity
+    val quantity: LiveData<Int> get() = _quantity
 
     init {
         loadQuantity()
-        loadLastProduct()
-        val recentProduct = RecentProduct(product = product)
-        recentProductRepository.replaceRecentProduct(recentProduct)
+        loadLastViewedProduct()
+        updateRecentProduct()
     }
 
-    override fun onProductAddClick() {
-        val currentQuantity = quantity.value ?: 1
-        if (shoppingCartQuantity == 0) {
-            cartProductRepository.insert(product.id, currentQuantity)
-        } else {
-            cartProductRepository.updateQuantity(product.id, currentQuantity, shoppingCartQuantity + currentQuantity)
-        }
-        _navigateEvent.value = Unit
+    override fun onAddToShoppingCartClick() {
+        val addQuantity = quantity.value ?: 1
+        cartProductRepository.updateQuantity(
+            product.id,
+            shoppingCartQuantity,
+            shoppingCartQuantity + addQuantity,
+        )
+        _navigateEvent.setValue(Unit)
     }
 
     override fun onQuantityIncreaseClick(item: Product) {
-        _quantity.value = quantity.value?.plus(1)
+        _quantity.value = (quantity.value ?: 1) + 1
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
-        if ((quantity.value ?: 0) <= 1) return
-        _quantity.value = quantity.value?.minus(1)
+        val current = quantity.value ?: 1
+        if (current > 1) {
+            _quantity.value = current - 1
+        }
     }
 
     override fun onLastProductClick() {
-        _lastProductClickEvent.value = Unit
+        _lastProductClickEvent.setValue(Unit)
     }
 
     private fun loadQuantity() {
         shoppingCartQuantity = cartProductRepository.getQuantityByProductId(product.id) ?: 0
     }
 
-    private fun loadLastProduct() {
-        lastProduct = recentProductRepository.getLastProduct()
-        if (lastProduct?.product?.id == product.id) {
-            lastProduct = null
+    private fun loadLastViewedProduct() {
+        lastViewedProduct = recentProductRepository.getLastProduct()
+        if (lastViewedProduct?.product?.id == product.id) {
+            lastViewedProduct = null
         }
+    }
+
+    private fun updateRecentProduct() {
+        val recentProduct = RecentProduct(product = product)
+        recentProductRepository.replaceRecentProduct(recentProduct)
     }
 }
