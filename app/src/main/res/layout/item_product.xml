@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:onClick="@{() -> handler.onProductClick(productItem.product)}">
+        android:onClick="@{() -> handler.onProductClick(productItem)}">
 
         <ImageView
             android:id="@+id/iv_product_image"
@@ -76,7 +76,7 @@
             android:layout_height="42dp"
             android:layout_margin="8dp"
             android:background="@drawable/style_round_white"
-            android:onClick="@{() -> handler.onAddClick(productItem.product)}"
+            android:onClick="@{() -> handler.onAddClick(productItem)}"
             android:padding="4dp"
             android:src="@drawable/ic_add"
             android:text="@string/plus"

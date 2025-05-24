@@ -39,22 +39,20 @@ class ProductCatalogViewModel(
         _selectedProduct.value = item.product
     }
 
-    override fun onProductClick(item: Product) {
-        _selectedProduct.value = item
+    override fun onProductClick(item: ProductCatalogItem.ProductItem) {
+        _selectedProduct.value = item.product
     }
 
-    override fun onAddClick(item: Product) {
-        updateQuantity(item, 0, 1)
+    override fun onAddClick(item: ProductCatalogItem.ProductItem) {
+        updateQuantity(item, 1)
     }
 
     override fun onQuantityIncreaseClick(item: ProductCatalogItem.ProductItem) {
-        val current = item.quantity
-        updateQuantity(item.product, current, current + 1)
+        updateQuantity(item, item.quantity + 1)
     }
 
     override fun onQuantityDecreaseClick(item: ProductCatalogItem.ProductItem) {
-        val current = item.quantity
-        updateQuantity(item.product, current, current - 1)
+        updateQuantity(item, item.quantity - 1)
     }
 
     override fun onMoreClick() {
@@ -79,17 +77,16 @@ class ProductCatalogViewModel(
     }
 
     private fun updateQuantity(
-        product: Product,
-        current: Int,
-        new: Int,
+        item: ProductCatalogItem.ProductItem,
+        newQuantity: Int,
     ) {
-        cartProductRepository.updateQuantity(product.id, current, new)
-        val updatedItems =
-            productItems.map { if (it.product.id == product.id) it.copy(quantity = new) else it }
-        productItems.clear()
-        productItems.addAll(updatedItems)
+        cartProductRepository.updateQuantity(item.product.id, item.quantity, newQuantity)
+        val index = productItems.indexOf(item)
+        if (index != -1) {
+            productItems[index] = productItems[index].copy(quantity = newQuantity)
+        }
 
-        _totalQuantity.value = (totalQuantity.value ?: 0) + (new - current)
+        _totalQuantity.value = (totalQuantity.value ?: 0) + (newQuantity - item.quantity)
         _productCatalogItems.value = buildCatalogItems()
     }
 

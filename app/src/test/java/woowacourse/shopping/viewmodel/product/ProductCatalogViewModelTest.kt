@@ -87,7 +87,7 @@ class ProductCatalogViewModelTest {
         val product = productRepository.getAll().first()
 
         // when
-        viewModel.onProductClick(product)
+        viewModel.onProductClick(ProductCatalogItem.ProductItem(product, 0))
 
         // then
         assertEquals(product, viewModel.selectedProduct.value)

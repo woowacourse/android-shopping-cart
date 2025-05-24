@@ -57,13 +57,11 @@ class ShoppingCartViewModel(
 
     override fun onQuantityIncreaseClick(item: CartProduct) {
         updateQuantity(item, item.quantity + 1)
-        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
     }
 
     override fun onQuantityDecreaseClick(item: CartProduct) {
         if (item.quantity == 1) return
         updateQuantity(item, item.quantity - 1)
-        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
     }
 
     private fun loadPage(page: Int) {
@@ -98,6 +96,7 @@ class ShoppingCartViewModel(
         if (index != -1) {
             cartProducts[index] = cartProducts[index].copy(quantity = newQuantity)
         }
+        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
     }
 
     private fun checkHasNext(offset: Int): Boolean = repository.getPagedProducts(1, offset).items.isNotEmpty()

@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.common.QuantityControlEventHandler
 
 class ProductViewHolder(
@@ -29,9 +28,9 @@ class ProductViewHolder(
     }
 
     interface EventHandler : QuantityControlEventHandler<ProductCatalogItem.ProductItem> {
-        fun onProductClick(item: Product)
+        fun onProductClick(item: ProductCatalogItem.ProductItem)
 
-        fun onAddClick(item: Product)
+        fun onAddClick(item: ProductCatalogItem.ProductItem)
     }
 
     companion object {
