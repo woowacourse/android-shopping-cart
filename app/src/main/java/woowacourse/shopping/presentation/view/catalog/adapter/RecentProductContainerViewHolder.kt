@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.view.catalog.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,23 +10,22 @@ import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem
 
 class RecentProductContainerViewHolder private constructor(
     binding: ItemRecentProductContainerBinding,
-    eventListener: CatalogAdapter.CatalogEventListener,
+    private val adapter: RecentProductAdapter,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val adapter = RecentProductAdapter(emptyList(), eventListener)
-
     init {
         binding.recyclerViewRecentProduct.adapter = adapter
         binding.recyclerViewRecentProduct.addItemDecoration(HorizontalEdgeSpacingDecoration())
     }
 
     fun bind(recentProducts: CatalogItem.RecentProducts) {
-        adapter.updateList(recentProducts.products)
+        Log.i("TEST", "bind: $recentProducts")
+        adapter.submitList(recentProducts.products)
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            eventListener: CatalogAdapter.CatalogEventListener,
+            recentProductAdapter: RecentProductAdapter,
         ): RecentProductContainerViewHolder {
             val binding =
                 ItemRecentProductContainerBinding.inflate(
@@ -33,7 +33,7 @@ class RecentProductContainerViewHolder private constructor(
                     parent,
                     false,
                 )
-            return RecentProductContainerViewHolder(binding, eventListener)
+            return RecentProductContainerViewHolder(binding, recentProductAdapter)
         }
     }
 }

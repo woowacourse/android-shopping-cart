@@ -40,7 +40,7 @@ class CatalogFragment :
     override fun onStart() {
         super.onStart()
 
-        viewModel.fetchRecentProductsAndUpdateCatalog()
+        viewModel.refreshProducts()
     }
 
     override fun onDestroyView() {
@@ -98,7 +98,9 @@ class CatalogFragment :
             }
 
         binding.recyclerViewProducts.apply {
+            itemAnimator = null
             this.layoutManager = layoutManager
+
             addItemDecoration(
                 GridSpacingItemDecoration(
                     SPAN_COUNT,

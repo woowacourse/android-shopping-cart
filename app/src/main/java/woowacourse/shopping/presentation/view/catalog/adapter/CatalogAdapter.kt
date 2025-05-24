@@ -10,6 +10,7 @@ class CatalogAdapter(
     products: List<CatalogItem> = emptyList(),
     private val eventListener: CatalogEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val recentProductAdapter = RecentProductAdapter(emptyList(), eventListener)
     private val products = products.toMutableList()
 
     override fun getItemCount(): Int = products.size
@@ -24,7 +25,7 @@ class CatalogAdapter(
             CatalogType.RECENT_PRODUCT ->
                 RecentProductContainerViewHolder.from(
                     parent,
-                    eventListener,
+                    recentProductAdapter,
                 )
 
             CatalogType.PRODUCT -> ProductViewHolder.from(parent, eventListener)
@@ -44,83 +45,19 @@ class CatalogAdapter(
     }
 
     fun submitList(newItems: List<CatalogItem>) {
-        val recentProduct = newItems.filterIsInstance<CatalogItem.RecentProducts>().firstOrNull()
-        val productItems = newItems.filterIsInstance<CatalogItem.ProductItem>()
-        val shouldShowLoadMore = newItems.lastOrNull() is CatalogItem.LoadMoreItem
+        newItems.forEachIndexed { index, newProduct ->
+            val oldProduct = products.getOrNull(index)
 
-        updateRecentProductItem(recentProduct)
-        updateList(productItems)
-        updateLoadMoreItem(shouldShowLoadMore)
-    }
-
-    private fun updateRecentProductItem(newItem: CatalogItem.RecentProducts?) {
-        if (newItem == null) return
-
-        val index = products.indexOfFirst { it is CatalogItem.RecentProducts }
-        if (index == INDEX_NOT_FOUND) {
-            products.add(FIRST_POSITION, newItem)
-            notifyItemInserted(FIRST_POSITION)
-            return
-        }
-
-        val currentItem = products[index] as CatalogItem.RecentProducts
-        if (currentItem.products != newItem.products) {
-            products[index] = newItem
-            notifyItemChanged(index)
-        }
-    }
-
-    private fun filteredProductItems(): List<CatalogItem.ProductItem> = products.filterIsInstance<CatalogItem.ProductItem>()
-
-    private fun updateList(newList: List<CatalogItem.ProductItem>) {
-        val oldItemsMap = filteredProductItems().associateBy { it.productId }
-        val newItemsMap = newList.associateBy { it.productId }
-
-        oldItemsMap.forEach { (oldItemProductId, oldItem) ->
-            val newItem = newItemsMap[oldItemProductId]
-            val index =
-                products.indexOfFirst { (it as? CatalogItem.ProductItem)?.productId == oldItemProductId }
-
-            if (newItem == null && index != INDEX_NOT_FOUND) {
-                products.removeAt(index)
-                notifyItemRemoved(index)
-                return@forEach
+            if (oldProduct == null) {
+                products.add(index, newProduct)
+                notifyItemInserted(index)
+                return@forEachIndexed
             }
 
-            if (newItem != oldItem && index != INDEX_NOT_FOUND) {
-                products[index] = (newItem as CatalogItem.ProductItem)
+            if (oldProduct != newProduct) {
+                products[index] = newProduct
                 notifyItemChanged(index)
             }
-        }
-
-        newList.forEach { newItem ->
-            if (!oldItemsMap.containsKey(newItem.productId)) {
-                val insertIndex = products.size
-                products.add(insertIndex, newItem)
-                notifyItemInserted(insertIndex)
-            }
-        }
-    }
-
-    private fun updateLoadMoreItem(shouldShow: Boolean) {
-        val loadMoreIndex = products.indexOfFirst { it is CatalogItem.LoadMoreItem }
-        if (loadMoreIndex != INDEX_NOT_FOUND && loadMoreIndex != products.lastIndex) {
-            products.removeAt(loadMoreIndex)
-            notifyItemRemoved(loadMoreIndex)
-        }
-
-        val hasLoadMoreItem = products.lastOrNull() is CatalogItem.LoadMoreItem
-
-        if (shouldShow && !hasLoadMoreItem) {
-            products.add(CatalogItem.LoadMoreItem)
-            notifyItemInserted(products.lastIndex)
-            return
-        }
-
-        if (!shouldShow && hasLoadMoreItem) {
-            val lastIndex = products.lastIndex
-            products.removeAt(lastIndex)
-            notifyItemRemoved(lastIndex)
         }
     }
 
@@ -130,10 +67,5 @@ class CatalogAdapter(
         fun onLoadMoreClicked()
 
         fun onQuantitySelectorOpenButtonClicked(productId: Long)
-    }
-
-    companion object {
-        private const val INDEX_NOT_FOUND = -1
-        private const val FIRST_POSITION = 0
     }
 }

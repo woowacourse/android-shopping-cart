@@ -40,10 +40,11 @@ class DetailViewModel(
     fun fetchProduct(productId: Long) {
         updateRecentProduct(productId)
 
-        shoppingRepository
-            .findProductInfoById(productId)
-            .onSuccess { _product.postValue(it.toUiModel()) }
-            .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
+        shoppingRepository.findProductInfoById(productId) { result ->
+            result
+                .onSuccess { _product.postValue(it.toUiModel()) }
+                .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
+        }
     }
 
     fun increaseQuantity() {
@@ -77,10 +78,9 @@ class DetailViewModel(
 
     private fun fetchRecentProduct() {
         recentProductRepository.getRecentProducts(1) { result ->
-            result.fold(
-                onSuccess = { _recentProduct.postValue(it.firstOrNull()?.toUiModel()) },
-                onFailure = { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) },
-            )
+            result
+                .onSuccess { _recentProduct.postValue(it.firstOrNull()?.toUiModel()) }
+                .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
         }
     }
 
