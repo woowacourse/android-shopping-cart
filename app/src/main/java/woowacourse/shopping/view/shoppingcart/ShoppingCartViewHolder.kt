@@ -8,7 +8,7 @@ import woowacourse.shopping.view.base.BaseViewHolder
 
 class ShoppingCartViewHolder(
     parent: ViewGroup,
-    handler: ShoppingCartEventHandler,
+    private val handler: ShoppingCartEventHandler,
 ) : BaseViewHolder<ItemShoppingCartProductBinding>(
         ItemShoppingCartProductBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -20,7 +20,10 @@ class ShoppingCartViewHolder(
         binding.handler = handler
     }
 
-    fun bind(item: CartItem) {
-        binding.cartItem = item
+    fun bind(cartItem: CartItem) {
+        binding.cartItem = cartItem
+        binding.ivRemoveItemProductIcon.setOnClickListener {
+            handler.onRemoveCartItem(cartItem)
+        }
     }
 }

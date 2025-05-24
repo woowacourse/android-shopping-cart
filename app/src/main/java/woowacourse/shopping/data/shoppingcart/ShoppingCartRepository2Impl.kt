@@ -57,6 +57,8 @@ class ShoppingCartRepository2Impl(private val cartItemDao: CartItemDao) : Shoppi
     }
 
     override fun delete(cartItem: CartItem) {
-        cartItemDao.delete(cartItem.toEntity())
+        thread {
+            cartItemDao.delete(cartItem.toEntity())
+        }
     }
 }

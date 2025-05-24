@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository2
+import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Page
 
@@ -17,6 +18,8 @@ class ShoppingCartViewModel(
     val cartItems: LiveData<Page<CartItem>> get() = _cartItems
 
     fun removeCartItem(cartItem: CartItem) {
+        shoppingCartRepository.delete(cartItem)
+        inventoryRepository.insert(cartItem.toInventoryProduct().copy(quantity = 0))
         shoppingCartRepository.getAll { allItems ->
             val removedItemIndex = allItems.indexOf(cartItem)
             val pageNumber = pageNumberAfterRemoval(allItems.size, removedItemIndex)
