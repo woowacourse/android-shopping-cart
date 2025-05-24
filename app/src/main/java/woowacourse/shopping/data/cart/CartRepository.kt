@@ -53,17 +53,12 @@ class CartRepository private constructor(context: Context) {
     fun size(): Int = cartDao.size()
 
     fun update(newCartItem: CartItem) {
-        val existingItem = findByIdOrNull(newCartItem.id)
         val existingProduct = getProduct(newCartItem.id)
-        if (existingItem != null) {
-            val updated = CartItem(newCartItem.id, existingProduct, existingItem.quantity + newCartItem.quantity)
-            update(updated)
-        } else {
-            insert(newCartItem)
-        }
+        val updated = CartItem(newCartItem.id, existingProduct, newCartItem.quantity)
+        cartItemDao.update(CartItemEntity(updated.id, updated.quantity))
     }
 
-    fun getCartItemWithProduct(id: Long): CartItem {
+    private fun getCartItemWithProduct(id: Long): CartItem {
         val product = cartDao.findById(id)
         val cartItem = cartItemDao.findById(id)
 
