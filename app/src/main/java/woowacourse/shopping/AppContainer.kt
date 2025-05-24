@@ -2,7 +2,7 @@ package woowacourse.shopping
 
 import android.content.Context
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.data.datasource.ProductDataSource
+import woowacourse.shopping.data.datasource.ProductsDataSource
 import woowacourse.shopping.data.db.PetoMarketDatabase
 import woowacourse.shopping.data.network.MockingServer
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -14,7 +14,7 @@ import kotlin.getValue
 class AppContainer(
     context: Context,
 ) {
-    val productRepository: ProductRepository by lazy { ProductRepositoryImpl(productDatasource) }
+    val productRepository: ProductRepository by lazy { ProductRepositoryImpl(productDataSource) }
 
     val cartRepository: CartRepository by lazy { CartRepositoryImpl(cartDataSource) }
 
@@ -26,5 +26,5 @@ class AppContainer(
 
     private val productService = MockingServer()
 
-    private val productDatasource = ProductDataSource(productService)
+    private val productDataSource = ProductsDataSource(productService)
 }
