@@ -26,6 +26,10 @@ class ShoppingCartActivity :
                 shoppingApplication.shoppingCartRepository2,
             )
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
         binding.apply {
             rvShoppingCartList.adapter = ShoppingCartAdapter(this@ShoppingCartActivity)
             rvShoppingCartList.itemAnimator = null

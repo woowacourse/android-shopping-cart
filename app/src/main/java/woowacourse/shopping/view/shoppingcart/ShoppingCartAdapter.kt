@@ -30,6 +30,6 @@ class ShoppingCartAdapter(
         val oldCount = itemCount
         cartItems.clear()
         cartItems.addAll(newItems)
-        notifyItemRangeChanged(0, oldCount)
+        notifyItemRangeChanged(0, newItems.size.coerceAtLeast(oldCount))
     }
 }
