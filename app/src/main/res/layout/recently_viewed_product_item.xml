@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -10,13 +9,17 @@
             name="product"
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.product.catalog.RecentlyViewedProductClickListener" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="98dp"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp">
+        android:layout_margin="6dp"
+        android:onClick="@{() -> clickListener.onClick(product)}">
 
         <ImageView
             android:id="@+id/imageView_product"

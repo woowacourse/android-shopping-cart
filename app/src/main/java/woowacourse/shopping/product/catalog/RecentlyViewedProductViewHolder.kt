@@ -13,9 +13,13 @@ class RecentlyViewedProductViewHolder(
     }
 
     companion object {
-        fun from(parent: ViewGroup): RecentlyViewedProductViewHolder {
+        fun from(
+            parent: ViewGroup,
+            recentlyViewedProductClickListener: RecentlyViewedProductClickListener,
+        ): RecentlyViewedProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = RecentlyViewedProductItemBinding.inflate(inflater, parent, false)
+            binding.clickListener = recentlyViewedProductClickListener
             return RecentlyViewedProductViewHolder(binding)
         }
     }

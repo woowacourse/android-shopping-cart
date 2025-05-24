@@ -1,7 +1,6 @@
 package woowacourse.shopping.product.catalog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
@@ -112,7 +111,10 @@ class CatalogActivity : AppCompatActivity() {
         val adapter =
             RecentlyViewedProductAdapter(
                 products = emptyList(),
-            )
+            ) {
+                val intent = DetailActivity.newIntent(this@CatalogActivity, it)
+                startActivity(intent)
+            }
         binding.recyclerViewRecentlyViewedProducts.adapter = adapter
     }
 
@@ -126,8 +128,9 @@ class CatalogActivity : AppCompatActivity() {
             }
         }
         viewModel.recentlyViewedProducts.observe(this) { products ->
-            Log.d("LOADED", "$products")
-            (binding.recyclerViewRecentlyViewedProducts.adapter as RecentlyViewedProductAdapter).setItems(products)
+            (binding.recyclerViewRecentlyViewedProducts.adapter as RecentlyViewedProductAdapter).setItems(
+                products,
+            )
         }
         binding.lifecycleOwner = this
     }

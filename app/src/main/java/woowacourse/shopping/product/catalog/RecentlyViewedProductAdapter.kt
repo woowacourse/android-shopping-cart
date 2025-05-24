@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecentlyViewedProductAdapter(
     products: List<ProductUiModel>,
+    private val recentlyViewedProductClickListener: RecentlyViewedProductClickListener,
 ) : RecyclerView.Adapter<RecentlyViewedProductViewHolder>() {
     private val products: MutableList<ProductUiModel> = products.toMutableList()
 
@@ -17,7 +18,7 @@ class RecentlyViewedProductAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecentlyViewedProductViewHolder = RecentlyViewedProductViewHolder.from(parent)
+    ): RecentlyViewedProductViewHolder = RecentlyViewedProductViewHolder.from(parent, recentlyViewedProductClickListener)
 
     override fun onBindViewHolder(
         holder: RecentlyViewedProductViewHolder,
