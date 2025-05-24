@@ -15,7 +15,7 @@ class CartRepositoryImpl(
 ) : CartRepository {
     override fun getAll(onResult: (Result<List<CartItem>>) -> Unit) =
         runCatchingInThread(onResult) {
-            cartDataSource.getAll().map { it.toCartItem() }
+            cartDataSource.getAll().toCartItems()
         }
 
     override fun getTotalQuantity(onResult: (Result<Int>) -> Unit) =
@@ -29,8 +29,8 @@ class CartRepositoryImpl(
         onResult: (Result<PageableItem<CartItem>>) -> Unit,
     ) = runCatchingInThread(onResult) {
         val entities = cartDataSource.loadCartItems(offset, limit)
-        val hasMore = entities.isHasMore()
-        val cartItems = entities.map { it.toCartItem() }
+        val cartItems = entities.toCartItems()
+        val hasMore = entities.hasMore()
         PageableItem(cartItems, hasMore)
     }
 
@@ -44,13 +44,17 @@ class CartRepositoryImpl(
     override fun findQuantityByProductId(
         productId: Long,
         onResult: (Result<Int>) -> Unit,
-    ) = runCatchingInThread(onResult) { findQuantityById(productId) }
+    ) = runCatchingInThread(onResult) {
+        cartDataSource.findCartItemByProductId(productId).quantity
+    }
 
     override fun addCartItem(
         productId: Long,
         increaseQuantity: Int,
         onResult: (Result<Unit>) -> Unit,
-    ) = runCatchingInThread(onResult) { cartDataSource.addCartItem(productId, increaseQuantity) }
+    ) = runCatchingInThread(onResult) {
+        cartDataSource.addCartItem(productId, increaseQuantity)
+    }
 
     override fun decreaseCartItemQuantity(
         productId: Long,
@@ -66,16 +70,22 @@ class CartRepositoryImpl(
         cartDataSource.deleteCartItem(productId)
     }
 
-    private fun CartEntity.toCartItem() =
-        CartItem(
-            productDataSource.findProductById(productId).toProduct(),
-            quantity,
-        )
+    private fun CartEntity.toCartItem(): CartItem {
+        val product = productDataSource.findProductById(productId).toProduct()
+        return CartItem(product, quantity)
+    }
 
-    private fun findQuantityById(productId: Long): Int =
-        runCatching { cartDataSource.findCartItemByProductId(productId).quantity }.getOrDefault(0)
+    private fun List<CartEntity>.toCartItems(): List<CartItem> {
+        val productIds = this.map { it.productId }
+        val productMap = productDataSource.findProductsByIds(productIds).associateBy { it.id }
 
-    private fun List<CartEntity>.isHasMore(): Boolean {
+        return this.mapNotNull { entity ->
+            val product = productMap[entity.productId]?.toProduct() ?: return@mapNotNull null
+            CartItem(product, entity.quantity)
+        }
+    }
+
+    private fun List<CartEntity>.hasMore(): Boolean {
         val lastCreatedAt = this.lastOrNull()?.createdAt
         return lastCreatedAt != null && cartDataSource.existsItemCreatedAfter(lastCreatedAt)
     }
