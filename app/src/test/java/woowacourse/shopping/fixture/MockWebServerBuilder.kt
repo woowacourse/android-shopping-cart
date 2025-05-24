@@ -38,7 +38,6 @@ object MockWebServerBuilder {
 
     fun build(): MockWebServer {
         INSTANCE.dispatcher = dispatcher
-        INSTANCE.start()
         return INSTANCE
     }
 }

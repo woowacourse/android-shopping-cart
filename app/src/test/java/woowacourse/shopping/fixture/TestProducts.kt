@@ -3,6 +3,7 @@
 package woowacourse.shopping.fixture
 
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.mapper.toProductUiModel
 
 object TestProducts {
     val products =
@@ -374,5 +375,5 @@ object TestProducts {
                 price = 39700,
                 imageUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/c1ea8fff-29d9-4e12-b2f1-667d76e2bdc9.jpeg",
             ),
-        )
+        ).map { it.toProductUiModel() }
 }
