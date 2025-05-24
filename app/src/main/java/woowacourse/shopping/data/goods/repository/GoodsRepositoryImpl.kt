@@ -58,6 +58,17 @@ class GoodsRepositoryImpl(
         }
     }
 
+    override fun fetchMostRecentGoods(onComplete: (Goods?) -> Unit) {
+        fetchRecentGoodsIds { recentIds ->
+            if (recentIds.isEmpty()) {
+                onComplete(null)
+                return@fetchRecentGoodsIds
+            }
+            val id = recentIds[0].toInt()
+            fetchGoodsById(id) { onComplete(it) }
+        }
+    }
+
     override fun loggingRecentGoods(
         goods: Goods,
         onComplete: () -> Unit,

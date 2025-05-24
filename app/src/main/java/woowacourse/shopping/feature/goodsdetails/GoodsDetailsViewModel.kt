@@ -23,6 +23,17 @@ class GoodsDetailsViewModel(
     val cartItem: LiveData<CartItem> get() = _cartItem
     private val _alertEvent = MutableSingleLiveData<GoodsDetailsAlertMessage>()
     val alertEvent: SingleLiveData<GoodsDetailsAlertMessage> = _alertEvent
+    private val _mostRecentlyViewedGoods: MutableLiveData<Goods> = MutableLiveData()
+    val mostRecentlyViewedGoods: LiveData<Goods> get() = _mostRecentlyViewedGoods
+
+    init {
+        goodsRepository.fetchMostRecentGoods { goods ->
+            goods?.let {
+                if (goodsUiModel.id != goods.id) _mostRecentlyViewedGoods.postValue(it)
+            }
+            loggingRecentViewedGoods(goodsUiModel.toDomain())
+        }
+    }
 
     fun increaseSelectorQuantity() {
         _cartItem.value?.let { currentItem ->

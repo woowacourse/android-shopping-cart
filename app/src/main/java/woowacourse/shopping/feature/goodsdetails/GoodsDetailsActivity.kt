@@ -18,7 +18,6 @@ import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.feature.QuantityChangeListener
-import woowacourse.shopping.util.toDomain
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
@@ -62,7 +61,6 @@ class GoodsDetailsActivity : AppCompatActivity() {
                 ),
             )
         }
-        viewModel.loggingRecentViewedGoods(goodsUiModel.toDomain())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
