@@ -10,8 +10,16 @@
             type="woowacourse.shopping.ui.productdetail.DetailClickListener" />
 
         <variable
+            name="quantityClickListener"
+            type="woowacourse.shopping.ui.QuantityClickListener" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.domain.product.Product" />
+
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.product.CartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,6 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="14dp"
+            app:quantityClickListener="@{quantityClickListener}"
+            app:item="@{cartItem}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_detail_product_price" />
 
@@ -92,7 +102,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button_active"
-            android:onClick="@{() -> detailClickListener.onAddToCartClick(product)}"
+            android:onClick="@{() -> detailClickListener.onAddToCartClick(cartItem)}"
             android:text="@string/add_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

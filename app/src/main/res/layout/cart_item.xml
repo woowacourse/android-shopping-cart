@@ -79,6 +79,7 @@
             layout="@layout/change_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:quantityClickListener="@{cartClickListener}"
             app:item="@{cartItem}"
             app:layout_constraintEnd_toEndOf="@+id/tv_cart_price"
             app:layout_constraintBottom_toTopOf="@+id/tv_cart_price" />

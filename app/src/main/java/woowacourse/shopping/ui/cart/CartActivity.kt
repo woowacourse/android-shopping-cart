@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
 import woowacourse.shopping.ui.viewmodel.CartViewModel
@@ -50,6 +51,14 @@ class CartActivity : AppCompatActivity() {
                     object : CartClickListener {
                         override fun onClick(product: Product) {
                             viewModel.deleteProduct(product)
+                        }
+
+                        override fun onIncreaseClick(cartItem: CartItem) {
+                            viewModel.increaseQuantity(cartItem)
+                        }
+
+                        override fun onDecreaseClick(cartItem: CartItem) {
+                            viewModel.decreaseQuantity(cartItem)
                         }
                     },
             )

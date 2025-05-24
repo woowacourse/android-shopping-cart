@@ -17,9 +17,6 @@ class CartViewModel : ViewModel() {
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> = _pageNumber
 
-    private val _quantitys = MutableLiveData<List<CartItem>>(emptyList())
-    val quantitys: LiveData<List<CartItem>> = _quantitys
-
     private var size: Int = 0
 
     init {
@@ -65,21 +62,37 @@ class CartViewModel : ViewModel() {
     }
 
     fun increaseQuantity(cartItem: CartItem) {
-        val target = _quantitys.value?.find { it.id == cartItem.id }
-        val newCartItem = cartItem.copy(quantity = target?.quantity?.plus(1) ?: 1)
+        val newItem = cartItem.copy(quantity = cartItem.quantity + 1)
+        val updatedList = _cartItems.value?.map {
+            if (it.id == cartItem.id) newItem
+            else it
+        } ?: return
+
+        _cartItems.value = updatedList
+
         thread {
-            cartRepository.update(newCartItem)
+            cartRepository.update(newItem)
         }
     }
 
     fun decreaseQuantity(cartItem: CartItem) {
-        val target = _quantitys.value?.find { it.id == cartItem.id }
-        val newCartItem = cartItem.copy(quantity = target?.quantity?.minus(1)?.coerceAtLeast(1) ?: 1)
-        if (target?.quantity != 1) {
+        val target = _cartItems.value?.find { it.id == cartItem.id } ?: return
+        val newCartItem = cartItem.copy(quantity = target.quantity.minus(1).coerceAtLeast(1))
+        if (target.quantity > 1) {
+            val newCartItem = cartItem.copy(quantity = target.quantity - 1)
+            val updatedList = _cartItems.value?.map {
+                if (it.id == cartItem.id) newCartItem else it
+            } ?: return
+
+            _cartItems.value = updatedList
+
             thread {
                 cartRepository.update(newCartItem)
             }
         } else {
+            val updatedList = _cartItems.value?.filter { it.id != cartItem.id } ?: return
+            _cartItems.value = updatedList
+
             thread {
                 cartRepository.delete(cartItem.product.id)
             }
