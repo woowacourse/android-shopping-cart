@@ -9,7 +9,7 @@
 
                 <variable
                     name="handler"
-                    type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
+                    type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
         </data>
 
         <FrameLayout

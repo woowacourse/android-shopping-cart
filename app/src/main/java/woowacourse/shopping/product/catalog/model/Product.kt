@@ -1,4 +1,4 @@
-package woowacourse.shopping.product.catalog
+package woowacourse.shopping.product.catalog.model
 
 data class Product(
     val id: Long = 0,

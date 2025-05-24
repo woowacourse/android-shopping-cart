@@ -12,7 +12,7 @@
 
         <variable
             name="catalogHandler"
-            type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
+            type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
 
         <variable
             name="handler"

@@ -1,8 +1,8 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.mapper.toUiModel
-import woowacourse.shopping.product.catalog.Product
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.product.catalog.model.Product
 
 object MockProducts : ProductsDataSource {
     override fun getProducts(): List<ProductUiModel> = mockProducts.map { it.toUiModel() }

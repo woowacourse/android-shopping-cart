@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.cart.CartEventHandler
+import woowacourse.shopping.cart.event.CartEventHandler
 
 @BindingAdapter("loadImage")
 fun loadImage(

@@ -15,7 +15,7 @@
 
         <variable
             name="detailHandler"
-            type="woowacourse.shopping.product.detail.DetailEventHandler" />
+            type="woowacourse.shopping.product.detail.event.DetailEventHandler" />
 
     </data>
 

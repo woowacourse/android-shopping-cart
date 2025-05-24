@@ -1,9 +1,10 @@
-package woowacourse.shopping.product.catalog
+package woowacourse.shopping.product.catalog.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.LoadMoreButtonItemBinding
+import woowacourse.shopping.product.catalog.event.CatalogEventHandler
 
 class LoadButtonViewHolder(
     binding: LoadMoreButtonItemBinding,

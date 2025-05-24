@@ -1,5 +1,6 @@
-package woowacourse.shopping.cart
+package woowacourse.shopping.cart.event
 
+import woowacourse.shopping.cart.CartViewModel
 import woowacourse.shopping.product.ProductQuantityHandler
 import woowacourse.shopping.product.catalog.ProductUiModel
 

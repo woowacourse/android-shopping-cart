@@ -1,6 +1,8 @@
-package woowacourse.shopping.product.catalog
+package woowacourse.shopping.product.catalog.event
 
 import woowacourse.shopping.product.ProductQuantityHandler
+import woowacourse.shopping.product.catalog.CatalogViewModel
+import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CatalogEventHandlerImpl(
     private val viewModel: CatalogViewModel,

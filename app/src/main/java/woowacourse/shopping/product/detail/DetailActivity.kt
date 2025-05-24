@@ -13,11 +13,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.cart.CartItemRepositoryImpl
 import woowacourse.shopping.data.CartItemDatabase
+import woowacourse.shopping.data.CartItemRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.product.detail.DetailViewModel.Companion.factory
+import woowacourse.shopping.product.detail.event.DetailEventHandlerImpl
 import woowacourse.shopping.util.IntentCompat
 
 class DetailActivity : AppCompatActivity() {

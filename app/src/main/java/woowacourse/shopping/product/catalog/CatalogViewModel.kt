@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.cart.CartItemRepository
 import woowacourse.shopping.data.CartItem
+import woowacourse.shopping.data.CartItemRepository
 import woowacourse.shopping.data.ProductsDataSource
+import woowacourse.shopping.product.catalog.model.PagingData
 
 class CatalogViewModel(
     private val dataSource: ProductsDataSource,

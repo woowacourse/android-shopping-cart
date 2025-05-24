@@ -9,7 +9,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartViewModel.Companion.factory
+import woowacourse.shopping.cart.event.CartEventHandlerImpl
 import woowacourse.shopping.data.CartItemDatabase
+import woowacourse.shopping.data.CartItemRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {

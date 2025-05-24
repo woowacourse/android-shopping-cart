@@ -1,7 +1,5 @@
-package woowacourse.shopping.cart
+package woowacourse.shopping.data
 
-import woowacourse.shopping.data.CartItem
-import woowacourse.shopping.data.CartItemDao
 import woowacourse.shopping.mapper.toCartItem
 import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.ProductUiModel

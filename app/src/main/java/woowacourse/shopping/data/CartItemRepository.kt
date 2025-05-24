@@ -1,6 +1,5 @@
-package woowacourse.shopping.cart
+package woowacourse.shopping.data
 
-import woowacourse.shopping.data.CartItem
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 interface CartItemRepository {

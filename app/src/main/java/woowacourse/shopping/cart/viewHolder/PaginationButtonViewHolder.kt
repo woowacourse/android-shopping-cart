@@ -1,8 +1,9 @@
-package woowacourse.shopping.cart
+package woowacourse.shopping.cart.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.cart.event.CartEventHandler
 import woowacourse.shopping.databinding.PaginationButtonItemBinding
 
 class PaginationButtonViewHolder(
