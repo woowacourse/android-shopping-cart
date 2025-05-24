@@ -124,7 +124,7 @@ class GoodsViewModel(
     }
 
     private fun canLoadMore(): Boolean {
-        return goodsRepository.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
+        return goodsRepository.getPagedGoods(page + 1, ITEM_COUNT).isNotEmpty()
     }
 
     fun updateShouldNavigateToShoppingCart() {
