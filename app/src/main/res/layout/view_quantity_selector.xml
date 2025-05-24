@@ -22,7 +22,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_quantity_selector_bg">
+        android:background="@drawable/shape_quantity_selector_bg"
+        android:elevation="1dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_quantity_minus"

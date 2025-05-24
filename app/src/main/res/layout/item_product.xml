@@ -9,7 +9,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.presentation.view.catalog.adapter.CatalogItem.ProductItem" />
+            type="woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem.ProductItem" />
 
         <variable
             name="adapterPosition"
@@ -57,6 +57,7 @@
             android:layout_margin="12dp"
             android:background="@drawable/shape_circle_bg"
             android:backgroundTint="@color/white"
+            android:elevation="1dp"
             android:onClick="@{() -> eventListener.onQuantitySelectorOpenButtonClicked(product.productId)}"
             android:src="@drawable/ic_add"
             android:tint="@color/gray_55"
