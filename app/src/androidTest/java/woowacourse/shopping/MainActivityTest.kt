@@ -29,8 +29,8 @@ class MainActivityTest {
     fun `전달받은_상품_목록을_출력한다`() {
         onView(withText("마리오 그린올리브 300g")).isDisplayed()
         onView(withText("3,980원")).isDisplayed()
-        onView(withText("비비고 통새우 만두 200g")).isDisplayed()
-        onView(withText("81,980원")).isDisplayed()
+        onView(withText("[태우한우] 1+ 한우 안심 스테이크 200g (냉장)")).isDisplayed()
+        onView(withText("2,000원")).isDisplayed()
     }
 
     @Test

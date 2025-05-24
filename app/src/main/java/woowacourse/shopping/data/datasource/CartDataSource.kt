@@ -15,11 +15,10 @@ class CartDataSource(
     fun upsert(entity: CartEntity) = dao.upsert(entity)
 
     fun modify(entity: CartEntity) {
-        val existing = dao.cartByProductId(entity.productId)
-        if (existing != null) {
-            val updated = existing.copy(quantity = existing.quantity + entity.quantity)
+        dao.cartByProductId(entity.productId)?.let {
+            val updated = it.copy(quantity = it.quantity + entity.quantity)
             dao.update(updated)
-        } else {
+        } ?: run {
             dao.insert(entity)
         }
     }

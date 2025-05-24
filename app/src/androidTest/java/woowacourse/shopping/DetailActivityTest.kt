@@ -21,7 +21,7 @@ class DetailActivityTest {
 
     @Test
     fun `상품_상세_화면이_정상적으로_표시된다`() {
-        onView(withId(R.id.text_view_product_name)).isTextMatches("비비고 통새우 만두 200g")
+        onView(withId(R.id.text_view_product_name)).isTextMatches("[태우한우] 1+ 한우 안심 스테이크 200g (냉장)")
         onView(withId(R.id.text_view_product_price)).isTextMatches("2,000원")
     }
 
