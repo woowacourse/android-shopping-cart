@@ -8,8 +8,12 @@ import woowacourse.shopping.domain.repository.ProductRepository
 class FakeProductRepositoryImpl(
     private val datasource: ProductsDataSource,
 ) : ProductRepository {
-    override fun get(productId: Long): Product {
-        return datasource.getProduct(productId).toDomain()
+    override fun getProduct(
+        productId: Long,
+        onResult: (Product) -> Unit,
+    ) {
+        val result = datasource.getProduct(productId).toDomain()
+        onResult(result)
     }
 
     override fun getProducts(

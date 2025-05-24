@@ -51,12 +51,13 @@ class CartViewModel(
 
     fun loadCarts() {
         val nextPage = paging.getPageNo() - 1
+        val products = mutableListOf<ProductState>()
         cartRepository.singlePage(nextPage, PAGE_SIZE) { page ->
-            val products =
-                page.carts.map { cart ->
-                    val product = productRepository[cart.productId]
-                    ProductState(product, cart.quantity)
+            page.carts.map { cart ->
+                productRepository.getProduct(cart.productId) {
+                    products.add(ProductState(it, cart.quantity))
                 }
+            }
             val pageState = paging.createPageState(page.hasNextPage)
             _uiState.postValue(CartUiState(items = products, pageState = pageState))
         }
@@ -80,11 +81,12 @@ class CartViewModel(
 
     private fun refresh() {
         cartRepository.singlePage(paging.getPageNo() - 1, PAGE_SIZE) { page ->
-            val products =
-                page.carts.map { cart ->
-                    val product = productRepository[cart.productId]
-                    ProductState(product, cart.quantity)
+            val products = mutableListOf<ProductState>()
+            page.carts.map { cart ->
+                productRepository.getProduct(cart.productId) {
+                    products.add(ProductState(it, cart.quantity))
                 }
+            }
 
             if (paging.resetToLastPageIfEmpty(products)) {
                 refresh()

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
@@ -32,7 +33,10 @@ class DetailViewModelTest {
         cartRepository = mockk(relaxed = true)
         productRepository = mockk()
 
-        every { productRepository[1L] } returns productFixture1
+        every { productRepository.getProducts(any(), any()) } answers {
+            val callback = secondArg<(List<Product>) -> Unit>()
+            callback(listOf(productFixture1))
+        }
         viewModel = DetailViewModel(productRepository, cartRepository)
         viewModel.load(1L)
     }

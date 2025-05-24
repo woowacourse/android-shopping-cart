@@ -1,14 +1,21 @@
 package woowacourse.shopping.view
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import io.mockk.every
 import io.mockk.mockk
+import net.bytebuddy.matcher.ElementMatchers.any
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
-import org.junit.Test
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.domain.Quantity
+import woowacourse.shopping.domain.cart.Cart
+import woowacourse.shopping.domain.cart.CartSinglePage
+import woowacourse.shopping.domain.product.Price
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
@@ -26,6 +33,41 @@ class CartViewModelTest {
     @BeforeEach
     fun setUp() {
         cartRepository = mockk()
+        val dummyPages =
+            listOf(
+                (1L..5L).map { Cart(Quantity(1), it) },
+                (6L..10L).map { Cart(Quantity(1), it) },
+                (11L..11L).map { Cart(Quantity(1), it) },
+            )
+
+        every {
+            cartRepository.singlePage(any(), any(), any())
+        } answers {
+            val page = firstArg<Int>()
+            val callback = thirdArg<(CartSinglePage) -> Unit>()
+            val hasNext = page + 1 < dummyPages.size
+            callback(CartSinglePage(dummyPages.getOrElse(page) { emptyList() }, hasNext))
+        }
+
+        every { cartRepository.delete(any(), any()) } answers {
+            val productId = firstArg<Long>()
+            val callback = secondArg<(() -> Unit)>()
+            dummyPages.forEach { page ->
+                page.filter { it.productId != productId }
+            }
+            // 비어있는 페이지 제거
+            dummyPages.filter { it.isNotEmpty() }
+            callback()
+        }
+
+        every {
+            productRepository.getProduct(any(), any())
+        } answers {
+            val id = firstArg<Long>()
+            val callback = secondArg<(Product) -> Unit>()
+            callback(Product(id, "상품", "", Price(1000), Quantity(1)))
+        }
+
         viewModel = CartViewModel(cartRepository, productRepository)
     }
 
@@ -86,7 +128,7 @@ class CartViewModelTest {
         val state = viewModel.uiState.getOrAwaitValue()
 
         assertAll(
-            { assertThat(state.pageState.page).isEqualTo(2) },
+            { assertThat(state.pageState.page).isEqualTo(3) },
             { assertThat(state.items.map { it.item.id }).containsExactly(6L, 7L, 8L, 9L) },
         )
     }

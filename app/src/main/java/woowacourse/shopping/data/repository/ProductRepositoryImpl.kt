@@ -9,8 +9,13 @@ import kotlin.concurrent.thread
 class ProductRepositoryImpl(
     private val datasource: ProductsDataSource,
 ) : ProductRepository {
-    override fun get(productId: Long): Product {
-        return datasource.getProduct(productId).toDomain()
+    override fun getProduct(
+        productId: Long,
+        onResult: (Product) -> Unit,
+    ) {
+        thread {
+            onResult(datasource.getProduct(productId).toDomain())
+        }
     }
 
     override fun getProducts(

@@ -11,7 +11,6 @@ import woowacourse.shopping.view.core.event.SingleLiveData
 import woowacourse.shopping.view.detail.DetailUiEvent
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.ProductState
-import kotlin.concurrent.thread
 
 class DetailViewModel(
     private val productRepository: ProductRepository,
@@ -24,9 +23,8 @@ class DetailViewModel(
     val event: SingleLiveData<DetailUiEvent> get() = _event
 
     fun load(productId: Long) {
-        thread {
-            val result = productRepository[productId]
-            _uiState.postValue((ProductState(result, Quantity(1))))
+        productRepository.getProduct(productId) {
+            _uiState.postValue((ProductState(it, Quantity(1))))
         }
     }
 

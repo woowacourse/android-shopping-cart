@@ -35,7 +35,7 @@ class ProductRepositoryImplTest {
         every { productEntity.toDomain() } returns productDomain
 
         // When
-        val product = repository.get(productId)
+        val product = repository.getProduct(productId) {}
 
         // Then
         assertNotNull(product)
