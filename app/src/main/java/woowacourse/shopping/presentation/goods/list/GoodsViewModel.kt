@@ -76,6 +76,15 @@ class GoodsViewModel(
             }
     }
 
+    fun addToShoppingCart(position: Int) {
+        val updatedItem =
+            updateGoodsQuantity(position) {
+                it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
+            }
+        shoppingRepository.insertItem(updatedItem.id, QUANTITY_CHANGE_AMOUNT)
+        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
+    }
+
     fun increaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoodsQuantity(position) {

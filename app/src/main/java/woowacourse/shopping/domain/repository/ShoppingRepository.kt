@@ -27,4 +27,9 @@ interface ShoppingRepository {
     }
 
     fun getGoodsById(id: Int): ShoppingGoods?
+
+    fun insertItem(
+        id: Int,
+        quantity: Int,
+    )
 }
