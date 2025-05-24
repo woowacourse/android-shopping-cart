@@ -62,11 +62,16 @@ class InventoryViewModel(
             _items.postValue(newList)
         }
         inventoryRepository.insert(updatedProduct)
+        if (updatedProduct.quantity == 0) {
+            shoppingCartRepository.delete(product.toCartItem())
+            return
+        }
         shoppingCartRepository.insert(updatedProduct.toCartItem())
     }
 
     private fun updateItems(newPage: Page<InventoryProduct>) {
-        val newItems = products + newPage.items + if (newPage.hasNext) listOf(ShowMore) else emptyList()
+        val newItems =
+            products + newPage.items + if (newPage.hasNext) listOf(ShowMore) else emptyList()
         _items.postValue(newItems)
     }
 
