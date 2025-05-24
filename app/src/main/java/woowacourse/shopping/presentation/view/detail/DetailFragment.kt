@@ -26,6 +26,8 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
         val product = arguments.getParcelableCompat<ProductUiModel>(EXTRA_PRODUCT)
         binding.product = product
+
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
         binding.detailItemCounter.listener =
             object : ItemCounterListener {

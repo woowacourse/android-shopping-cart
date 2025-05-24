@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="@{String.format(@string/product_price_format, product.price)}"
+            android:text='@{String.format(@string/product_price_format, product.price * vm.amount)}'
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -90,12 +90,50 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="120dp"
+            app:amount="@{vm.amount}"
             app:layout_constraintBottom_toBottomOf="@id/text_view_detail_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
             app:layout_constraintTop_toTopOf="@id/text_view_detail_price"
-            app:amount="@{vm.amount}"
             app:productId="@{product.id}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/shape_cart_item"
+            android:paddingBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_detail_price">
+
+            <TextView
+                android:id="@+id/text_view_detail_last_viewed_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/detail_last_viewed_text"
+                android:textColor="@color/mint"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_view_detail_last_viewed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/gray_55"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@id/text_view_detail_last_viewed_title"
+                app:layout_constraintStart_toStartOf="@id/text_view_detail_last_viewed_title"
+                app:layout_constraintTop_toBottomOf="@id/text_view_detail_last_viewed_title"
+                tools:text="잉어킹" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"

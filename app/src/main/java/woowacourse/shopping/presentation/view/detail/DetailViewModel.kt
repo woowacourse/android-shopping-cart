@@ -19,9 +19,6 @@ class DetailViewModel(
     private val _amount = MutableLiveData<Int>(1)
     val amount: LiveData<Int> = _amount
 
-    private val _totalPrice = MutableLiveData<Int>()
-    val totalPrice: LiveData<Int> = _totalPrice
-
     fun decreaseAmount() {
         val current = _amount.value ?: 1
         if (current > 1) {
