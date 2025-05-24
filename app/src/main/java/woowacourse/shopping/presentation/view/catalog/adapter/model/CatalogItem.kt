@@ -1,6 +1,7 @@
-package woowacourse.shopping.presentation.view.catalog.adapter
+package woowacourse.shopping.presentation.view.catalog.adapter.model
 
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.presentation.model.ProductUiModel
 
 sealed class CatalogItem(
     val viewType: CatalogType,
@@ -13,9 +14,14 @@ sealed class CatalogItem(
         var quantity: Int,
     ) : CatalogItem(CatalogType.PRODUCT)
 
+    data class RecentProducts(
+        val products: List<ProductUiModel>,
+    ) : CatalogItem(CatalogType.RECENT_PRODUCT)
+
     data object LoadMoreItem : CatalogItem(CatalogType.LOAD_MORE)
 
     enum class CatalogType {
+        RECENT_PRODUCT,
         PRODUCT,
         LOAD_MORE,
     }
