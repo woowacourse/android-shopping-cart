@@ -20,7 +20,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_detail_product"
@@ -85,23 +86,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@string/detail_product_price_text"
+            android:text="@{@string/detail_product_price(product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="99,800원" />
 
-        <TextView
-            android:id="@+id/tv_product_detail_price"
+        <include
+            android:id="@+id/i_product_count_control"
             style="@style/ProductDetailPriceStyle"
-            android:layout_width="wrap_content"
+            layout="@layout/product_count"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
-            android:text="@{@string/detail_product_price(product.price)}"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_detail_price_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_product_detail_price_text"
-            tools:text="99,800원" />
+            app:layout_constraintWidth_percent="0.36" />
 
         <Button
             android:id="@+id/btn_product_detail_add_cart"

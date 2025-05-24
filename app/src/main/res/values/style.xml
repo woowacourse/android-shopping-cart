@@ -98,8 +98,7 @@
     <!--  앱에서 상품 카운드 스타일  -->
     <style name="ProductCountStyle" parent="BaseTextStyle">
         <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/font_size_xlarge</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
         <item name="android:textColor">@color/gray5</item>
     </style>
 
