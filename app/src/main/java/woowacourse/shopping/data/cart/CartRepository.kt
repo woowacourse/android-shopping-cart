@@ -7,7 +7,12 @@ interface CartRepository {
 
     fun add(cartItem: CartItem)
 
-    fun remove(cartItem: CartItem)
+    fun remove(productId: Long)
+
+    fun update(
+        productId: Long,
+        quantity: Int,
+    )
 
     fun fetchProducts(
         offset: Int,
@@ -15,4 +20,6 @@ interface CartRepository {
     ): List<CartItem>
 
     fun clear()
+
+    fun findQuantityById(productId: Long): Int
 }

@@ -15,4 +15,11 @@ class ProductRepositoryImpl : ProductRepository {
         val end = (offset + limit).coerceAtMost(dummyProducts.size)
         return dummyProducts.map { CartItem(it) }.subList(offset, end)
     }
+
+    override fun update(
+        productId: Long,
+        quantity: Int,
+    ) {
+        TODO("Not yet implemented")
+    }
 }
