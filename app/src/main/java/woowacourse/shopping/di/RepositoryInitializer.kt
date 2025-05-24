@@ -18,20 +18,20 @@ class RepositoryInitializer(
     }
 
     private fun initProductRepository() {
-        val productDataSource = dataSourceProvider.productDataSource
+        val productDataSource = dataSourceProvider.productRemoteDataSource
         val repository = ProductRepositoryImpl(productDataSource)
         repositoryProvider.initProductRepository(repository)
     }
 
     private fun initCartRepository() {
-        val cartDataSource = dataSourceProvider.cartDataSource
-        val productDataSource = dataSourceProvider.productDataSource
+        val cartDataSource = dataSourceProvider.cartLocalDataSource
+        val productDataSource = dataSourceProvider.productRemoteDataSource
         val repository = CartRepositoryImpl(cartDataSource, productDataSource)
         repositoryProvider.initCartRepository(repository)
     }
 
     private fun initRecentProductRepository() {
-        val productDataSource = dataSourceProvider.productDataSource
+        val productDataSource = dataSourceProvider.productRemoteDataSource
         val recentProductLocalDataSource = dataSourceProvider.recentProductLocalDataSource
         val repository =
             RecentProductRepositoryImpl(productDataSource, recentProductLocalDataSource)

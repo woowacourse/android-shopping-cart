@@ -4,9 +4,9 @@ import woowacourse.shopping.data.model.PageableResponse
 import woowacourse.shopping.data.model.ProductResponse
 import woowacourse.shopping.data.service.ProductService
 
-class ProductDataSourceImpl(
+class ProductRemoteDataSourceImpl(
     private val mockProductService: ProductService,
-) : ProductDataSource {
+) : ProductRemoteDataSource {
     override fun findProductById(id: Long): ProductResponse = mockProductService.findProductById(id)
 
     override fun findProductsByIds(ids: List<Long>): List<ProductResponse> = mockProductService.findProductsByIds(ids)

@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.datasource.ProductDataSource
+import woowacourse.shopping.data.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.model.toProduct
 import woowacourse.shopping.data.util.runCatchingInThread
 import woowacourse.shopping.domain.model.PageableItem
@@ -8,13 +8,13 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(
-    private val productDataSource: ProductDataSource,
+    private val productRemoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
     override fun findProductInfoById(
         id: Long,
         onResult: (Result<Product>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        productDataSource.findProductById(id).toProduct()
+        productRemoteDataSource.findProductById(id).toProduct()
     }
 
     override fun loadProducts(
@@ -22,7 +22,7 @@ class ProductRepositoryImpl(
         limit: Int,
         onResult: (Result<PageableItem<Product>>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        productDataSource.loadProducts(offset, limit).let { pageableResponse ->
+        productRemoteDataSource.loadProducts(offset, limit).let { pageableResponse ->
             PageableItem(
                 items = pageableResponse.items.map { it.toProduct() },
                 hasMore = pageableResponse.hasMore,

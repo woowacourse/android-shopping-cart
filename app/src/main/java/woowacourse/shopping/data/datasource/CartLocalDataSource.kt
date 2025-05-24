@@ -2,7 +2,7 @@ package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.db.CartEntity
 
-interface CartDataSource {
+interface CartLocalDataSource {
     fun getAll(): List<CartEntity>
 
     fun getTotalQuantity(): Int

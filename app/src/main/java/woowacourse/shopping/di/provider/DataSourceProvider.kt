@@ -2,10 +2,10 @@ package woowacourse.shopping.di.provider
 
 import okhttp3.OkHttpClient
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.data.datasource.CartDataSourceImpl
-import woowacourse.shopping.data.datasource.ProductDataSource
-import woowacourse.shopping.data.datasource.ProductDataSourceImpl
+import woowacourse.shopping.data.datasource.CartLocalDataSource
+import woowacourse.shopping.data.datasource.CartLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.ProductRemoteDataSource
+import woowacourse.shopping.data.datasource.ProductRemoteDataSourceImpl
 import woowacourse.shopping.data.datasource.RecentProductLocalDataSource
 import woowacourse.shopping.data.datasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.data.db.ShoppingDatabase
@@ -13,21 +13,21 @@ import woowacourse.shopping.data.service.MockProductService
 import woowacourse.shopping.mockserver.MockServer
 
 object DataSourceProvider {
-    val productDataSource: ProductDataSource by lazy { initProductDataSource() }
-    val cartDataSource: CartDataSource by lazy { initCartDataSource() }
+    val productRemoteDataSource: ProductRemoteDataSource by lazy { initProductDataSource() }
+    val cartLocalDataSource: CartLocalDataSource by lazy { initCartDataSource() }
     val recentProductLocalDataSource: RecentProductLocalDataSource by lazy { initRecentProductLocalDataSource() }
 
-    private fun initProductDataSource(): ProductDataSource {
+    private fun initProductDataSource(): ProductRemoteDataSource {
         val client = OkHttpClient()
         val mockServer = MockServer()
         val productService = MockProductService(client, mockServer)
-        return ProductDataSourceImpl(productService)
+        return ProductRemoteDataSourceImpl(productService)
     }
 
-    private fun initCartDataSource(): CartDataSource {
+    private fun initCartDataSource(): CartLocalDataSource {
         val database = ShoppingDatabase.getDatabase(ShoppingApplication.instance)
         val cartDao = database.cartDao()
-        return CartDataSourceImpl(cartDao)
+        return CartLocalDataSourceImpl(cartDao)
     }
 
     private fun initRecentProductLocalDataSource(): RecentProductLocalDataSource {

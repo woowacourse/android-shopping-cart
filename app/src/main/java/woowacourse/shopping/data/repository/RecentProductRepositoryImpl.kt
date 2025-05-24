@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.datasource.ProductDataSource
+import woowacourse.shopping.data.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.datasource.RecentProductLocalDataSource
 import woowacourse.shopping.data.db.RecentProductEntity
 import woowacourse.shopping.data.model.toProduct
@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class RecentProductRepositoryImpl(
-    private val productDataSource: ProductDataSource,
+    private val productRemoteDataSource: ProductRemoteDataSource,
     private val recentProductLocalDataSource: RecentProductLocalDataSource,
 ) : RecentProductRepository {
     override fun getRecentProducts(
@@ -18,7 +18,7 @@ class RecentProductRepositoryImpl(
     ) = runCatchingInThread(onResult) {
         recentProductLocalDataSource
             .getRecentProducts(limit)
-            .map { productDataSource.findProductById(it.productId).toProduct() }
+            .map { productRemoteDataSource.findProductById(it.productId).toProduct() }
     }
 
     override fun insertAndTrimToLimit(

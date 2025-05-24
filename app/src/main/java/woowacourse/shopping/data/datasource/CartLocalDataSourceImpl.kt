@@ -3,9 +3,9 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.data.db.CartDao
 import woowacourse.shopping.data.db.CartEntity
 
-class CartDataSourceImpl(
+class CartLocalDataSourceImpl(
     private val cartDao: CartDao,
-) : CartDataSource {
+) : CartLocalDataSource {
     override fun getAll(): List<CartEntity> = cartDao.getAll()
 
     override fun getTotalQuantity(): Int = cartDao.getTotalQuantity()
