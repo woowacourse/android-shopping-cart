@@ -39,7 +39,7 @@ class ProductDetailViewModel(
         if (shoppingCartQuantity == 0) {
             cartProductRepository.insert(product.id, currentQuantity)
         } else {
-            cartProductRepository.updateQuantity(product.id, shoppingCartQuantity + currentQuantity)
+            cartProductRepository.updateQuantity(product.id, currentQuantity, shoppingCartQuantity + currentQuantity)
         }
         _navigateEvent.value = Unit
     }

@@ -50,15 +50,19 @@ class ShoppingCartViewModel(
     }
 
     override fun onQuantityIncreaseClick(item: Product) {
+        val currentQuantity = shoppingCart.getQuantity(item)
+        val newQuantity = currentQuantity + 1
+        repository.updateQuantity(item.id, currentQuantity, newQuantity)
         shoppingCart += item
-        repository.updateQuantity(item.id, shoppingCart.getQuantity(item))
         reloadCurrentPage()
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
         if (shoppingCart.getQuantity(item) == 1) return
+        val currentQuantity = shoppingCart.getQuantity(item)
+        val newQuantity = currentQuantity - 1
+        repository.updateQuantity(item.id, currentQuantity, newQuantity)
         shoppingCart -= item
-        repository.updateQuantity(item.id, shoppingCart.getQuantity(item))
         reloadCurrentPage()
     }
 

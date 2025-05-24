@@ -26,10 +26,11 @@ class FakeCartProductRepository : CartProductRepository {
 
     override fun updateQuantity(
         productId: Long,
-        quantity: Int,
+        currentQuantity: Int,
+        newQuantity: Int,
     ) {
         cartProducts.replaceAll {
-            if (it.product.id == productId) it.copy(quantity = quantity) else it
+            if (it.product.id == productId) it.copy(quantity = newQuantity) else it
         }
     }
 

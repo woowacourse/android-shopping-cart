@@ -61,9 +61,18 @@ class CartProductRepositoryImpl(
 
     override fun updateQuantity(
         productId: Long,
-        quantity: Int,
+        currentQuantity: Int,
+        newQuantity: Int,
     ) {
-        thread { localDataSource.updateQuantity(productId, quantity) }.join()
+        if (currentQuantity == newQuantity) return
+        if (newQuantity == 0) {
+            deleteByProductId(productId)
+            return
+        }
+        if (currentQuantity == 0) {
+            insert(productId, newQuantity)
+            return
+        }
     }
 
     override fun deleteByProductId(productId: Long) {

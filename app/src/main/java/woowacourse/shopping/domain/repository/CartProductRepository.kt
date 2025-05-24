@@ -22,7 +22,8 @@ interface CartProductRepository {
 
     fun updateQuantity(
         productId: Long,
-        quantity: Int,
+        currentQuantity: Int,
+        newQuantity: Int,
     )
 
     fun deleteByProductId(productId: Long)
