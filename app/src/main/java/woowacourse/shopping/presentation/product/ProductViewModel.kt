@@ -33,6 +33,9 @@ class ProductViewModel(
     private val pageSize = 10
 
     init {
+        productRepository.start { result ->
+            result.onFailure { _toastMessage.postValue(R.string.product_toast_start_server_fail) }
+        }
         fetchData(currentPage)
         fetchCartItemCount()
     }
@@ -147,6 +150,13 @@ class ProductViewModel(
                 if (it.product.productId == productId) it.copy(quantity = it.quantity + delta) else it
             }
         _products.postValue(ResultState.Success(updatedItem))
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        productRepository.shutdown { result ->
+            result.onFailure { _toastMessage.postValue(R.string.product_toast_terminate_server_fail) }
+        }
     }
 
     companion object {

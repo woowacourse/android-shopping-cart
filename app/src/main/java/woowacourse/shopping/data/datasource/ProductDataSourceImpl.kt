@@ -1,10 +1,12 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.data.DummyProducts
+import woowacourse.shopping.data.remote.ProductService
 import woowacourse.shopping.domain.model.Product
 
-class ProductDataSourceImpl : ProductDataSource {
-    override fun getProducts(): List<Product> = DummyProducts.values
+class ProductDataSourceImpl(
+    private val productService: ProductService,
+) : ProductDataSource {
+    override fun start() = productService.start()
 
     override fun fetchProducts(): List<Product> = productService.fetchProducts()
 
@@ -17,4 +19,6 @@ class ProductDataSourceImpl : ProductDataSource {
         val offset = page * pageSize
         return productService.fetchPagingProducts(offset, pageSize)
     }
+
+    override fun shutdown() = productService.shutdown()
 }
