@@ -1,4 +1,4 @@
-package woowacourse.shopping.di
+package woowacourse.shopping.di.provider
 
 import okhttp3.OkHttpClient
 import woowacourse.shopping.ShoppingApplication

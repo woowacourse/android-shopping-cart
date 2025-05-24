@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.di.provider.RepositoryProvider
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.model.CartItemUiModel
 import woowacourse.shopping.presentation.model.FetchPageDirection
 import woowacourse.shopping.presentation.model.toCartItemUiModel
@@ -18,7 +18,7 @@ import woowacourse.shopping.presentation.view.cart.event.CartMessageEvent
 import kotlin.math.max
 
 class CartViewModel(
-    private val shoppingRepository: ShoppingRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _toastEvent = MutableSingleLiveData<CartMessageEvent>()
     val toastEvent: SingleLiveData<CartMessageEvent> = _toastEvent
@@ -42,55 +42,49 @@ class CartViewModel(
         val newPage = calculatePage(direction)
         val offset = (newPage - DEFAULT_PAGE) * limit
 
-        shoppingRepository.loadCartItems(offset, limit) { result ->
-            result.fold(
-                onSuccess = { handleFetchCartItemsSuccess(it, newPage) },
-                onFailure = { postFailureEvent(CartMessageEvent.FETCH_CART_ITEMS_FAILURE) },
-            )
+        cartRepository.loadCartItems(offset, limit) { result ->
+            result
+                .onSuccess { handleFetchCartItemsSuccess(it, newPage) }
+                .onFailure { postFailureEvent(CartMessageEvent.FETCH_CART_ITEMS_FAILURE) }
         }
     }
 
     fun deleteCartItem(item: CartItemUiModel) {
-        shoppingRepository.deleteCartItem(item.productId) { result ->
-            result.fold(
-                onSuccess = { handleFetchCartItemDeleted(item.productId) },
-                onFailure = { postFailureEvent(CartMessageEvent.DELETE_CART_ITEM_FAILURE) },
-            )
+        cartRepository.deleteCartItem(item.productId) { result ->
+            result
+                .onSuccess { handleFetchCartItemDeleted(item.productId) }
+                .onFailure { postFailureEvent(CartMessageEvent.DELETE_CART_ITEM_FAILURE) }
         }
     }
 
     fun addProductToCart(productId: Long) {
-        shoppingRepository.addCartItem(productId, QUANTITY_STEP) { result ->
-            result.fold(
-                onSuccess = { refreshProductQuantity(productId) },
-                onFailure = { postFailureEvent(CartMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE) },
-            )
+        cartRepository.addCartItem(productId, QUANTITY_STEP) { result ->
+            result
+                .onSuccess { refreshProductQuantity(productId) }
+                .onFailure { postFailureEvent(CartMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE) }
         }
     }
 
     fun removeProductFromCart(productId: Long) {
-        shoppingRepository.decreaseCartItemQuantity(productId) { result ->
-            result.fold(
-                onSuccess = { refreshProductQuantity(productId) },
-                onFailure = { postFailureEvent(CartMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE) },
-            )
+        cartRepository.decreaseCartItemQuantity(productId) { result ->
+            result
+                .onSuccess { refreshProductQuantity(productId) }
+                .onFailure { postFailureEvent(CartMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE) }
         }
     }
 
     private fun refreshProductQuantity(productId: Long) {
-        shoppingRepository.findCartItemByProductId(productId) { result ->
-            result.fold(
-                onSuccess = { cartItem ->
+        cartRepository.findCartItemByProductId(productId) { result ->
+            result
+                .onSuccess { cartItem ->
                     updateItemQuantityInList(cartItem)
-                },
-                onFailure = {
+                }.onFailure {
                     if (it is NoSuchElementException) {
                         handleFetchCartItemDeleted(productId)
-                        return@fold
+                        return@onFailure
                     }
                     postFailureEvent(CartMessageEvent.FIND_PRODUCT_QUANTITY_FAILURE)
-                },
-            )
+                }
         }
     }
 
@@ -143,10 +137,7 @@ class CartViewModel(
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    val repository = RepositoryProvider.shoppingRepository
-                    return CartViewModel(repository) as T
-                }
+                ): T = CartViewModel(RepositoryProvider.cartRepository) as T
             }
     }
 }

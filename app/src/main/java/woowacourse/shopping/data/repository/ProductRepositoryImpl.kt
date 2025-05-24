@@ -1,0 +1,28 @@
+package woowacourse.shopping.data.repository
+
+import woowacourse.shopping.data.datasource.ProductDataSource
+import woowacourse.shopping.data.util.runCatchingInThread
+import woowacourse.shopping.domain.model.PageableItem
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductRepository
+
+class ProductRepositoryImpl(
+    private val productDataSource: ProductDataSource,
+) : ProductRepository {
+    override fun findProductInfoById(
+        id: Long,
+        onResult: (Result<Product>) -> Unit,
+    ) = runCatchingInThread(onResult) {
+        productDataSource.findProductById(id)
+    }
+
+    override fun loadProducts(
+        offset: Int,
+        limit: Int,
+        onResult: (Result<PageableItem<Product>>) -> Unit,
+    ) = runCatchingInThread(onResult) {
+        val products = productDataSource.loadProducts(offset, limit)
+        val hasMore = productDataSource.calculateHasMore(offset, limit)
+        PageableItem(products, hasMore)
+    }
+}

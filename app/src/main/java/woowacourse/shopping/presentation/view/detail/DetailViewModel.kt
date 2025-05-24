@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import woowacourse.shopping.di.RepositoryProvider
+import woowacourse.shopping.di.provider.RepositoryProvider
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
-import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
@@ -15,7 +16,8 @@ import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailViewModel(
-    private val shoppingRepository: ShoppingRepository,
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _toastEvent = MutableSingleLiveData<DetailMessageEvent>()
@@ -40,7 +42,7 @@ class DetailViewModel(
     fun fetchProduct(productId: Long) {
         updateRecentProduct(productId)
 
-        shoppingRepository.findProductInfoById(productId) { result ->
+        productRepository.findProductInfoById(productId) { result ->
             result
                 .onSuccess { _product.postValue(it.toUiModel()) }
                 .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
@@ -63,7 +65,7 @@ class DetailViewModel(
         val product = _product.value ?: return
         val quantity = _quantity.value ?: DEFAULT_QUANTITY
 
-        shoppingRepository.addCartItem(product.id, quantity) { result ->
+        cartRepository.addCartItem(product.id, quantity) { result ->
             result
                 .onSuccess { _addToCartSuccessEvent.postValue(Unit) }
                 .onFailure { _toastEvent.postValue(DetailMessageEvent.ADD_PRODUCT_FAILURE) }
@@ -93,11 +95,12 @@ class DetailViewModel(
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    val shoppingRepository = RepositoryProvider.shoppingRepository
-                    val recentProductRepository = RepositoryProvider.recentProductRepository
-                    return DetailViewModel(shoppingRepository, recentProductRepository) as T
-                }
+                ): T =
+                    DetailViewModel(
+                        RepositoryProvider.productRepository,
+                        RepositoryProvider.cartRepository,
+                        RepositoryProvider.recentProductRepository,
+                    ) as T
             }
     }
 }

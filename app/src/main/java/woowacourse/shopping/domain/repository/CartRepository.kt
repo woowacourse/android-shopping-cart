@@ -2,23 +2,11 @@ package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.model.Product
 
-interface ShoppingRepository {
+interface CartRepository {
     fun getAll(onResult: (Result<List<CartItem>>) -> Unit)
 
     fun getTotalQuantity(onResult: (Result<Int>) -> Unit)
-
-    fun findProductInfoById(
-        id: Long,
-        onResult: (Result<Product>) -> Unit,
-    )
-
-    fun loadProducts(
-        offset: Int,
-        limit: Int,
-        onResult: (Result<PageableItem<CartItem>>) -> Unit,
-    )
 
     fun loadCartItems(
         offset: Int,

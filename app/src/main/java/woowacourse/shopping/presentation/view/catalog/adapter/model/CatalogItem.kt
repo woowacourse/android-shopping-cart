@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.view.catalog.adapter.model
 
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.model.ProductUiModel
 
 sealed class CatalogItem(
@@ -11,7 +11,7 @@ sealed class CatalogItem(
         val imageUrl: String,
         val productName: String,
         val price: Int,
-        var quantity: Int,
+        var quantity: Int = 0,
     ) : CatalogItem(CatalogType.PRODUCT)
 
     data class RecentProducts(
@@ -27,11 +27,10 @@ sealed class CatalogItem(
     }
 }
 
-fun CartItem.toCatalogProductItem() =
+fun Product.toCatalogProductItem() =
     CatalogItem.ProductItem(
-        productId = product.id,
-        productName = product.name,
-        imageUrl = product.imageUrl,
-        price = product.price.value,
-        quantity = quantity,
+        productId = this.id,
+        productName = this.name,
+        imageUrl = this.imageUrl,
+        price = this.price.value,
     )

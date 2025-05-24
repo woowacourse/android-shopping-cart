@@ -6,13 +6,12 @@ import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.data.util.runCatchingInThread
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.domain.repository.CartRepository
 
-class ShoppingRepositoryImpl(
-    private val productDataSource: ProductDataSource,
+class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
-) : ShoppingRepository {
+    private val productDataSource: ProductDataSource,
+) : CartRepository {
     override fun getAll(onResult: (Result<List<CartItem>>) -> Unit) =
         runCatchingInThread(onResult) {
             cartDataSource.getAll().map { it.toCartItem() }
@@ -23,31 +22,6 @@ class ShoppingRepositoryImpl(
             cartDataSource.getTotalQuantity()
         }
 
-    override fun loadProducts(
-        offset: Int,
-        limit: Int,
-        onResult: (Result<PageableItem<CartItem>>) -> Unit,
-    ) = runCatchingInThread(onResult) {
-        val products = productDataSource.loadProducts(offset, limit)
-        val hasMore = productDataSource.calculateHasMore(offset, limit)
-        val cartItems = products.toCartItems()
-        PageableItem(cartItems, hasMore)
-    }
-
-    override fun findCartItemByProductId(
-        productId: Long,
-        onResult: (Result<CartItem>) -> Unit,
-    ) = runCatchingInThread(onResult) {
-        cartDataSource.findCartItemByProductId(productId).toCartItem()
-    }
-
-    override fun findProductInfoById(
-        id: Long,
-        onResult: (Result<Product>) -> Unit,
-    ) = runCatchingInThread(onResult) {
-        productDataSource.findProductById(id)
-    }
-
     override fun loadCartItems(
         offset: Int,
         limit: Int,
@@ -57,6 +31,13 @@ class ShoppingRepositoryImpl(
         val hasMore = entities.isHasMore()
         val cartItems = entities.map { it.toCartItem() }
         PageableItem(cartItems, hasMore)
+    }
+
+    override fun findCartItemByProductId(
+        productId: Long,
+        onResult: (Result<CartItem>) -> Unit,
+    ) = runCatchingInThread(onResult) {
+        cartDataSource.findCartItemByProductId(productId).toCartItem()
     }
 
     override fun findQuantityByProductId(
@@ -89,12 +70,6 @@ class ShoppingRepositoryImpl(
             productDataSource.findProductById(productId),
             quantity,
         )
-
-    private fun List<Product>.toCartItems(): List<CartItem> =
-        this.map { product ->
-            val quantity = findQuantityById(product.id)
-            CartItem(product, quantity)
-        }
 
     private fun findQuantityById(productId: Long): Int =
         runCatching { cartDataSource.findCartItemByProductId(productId).quantity }.getOrDefault(0)
