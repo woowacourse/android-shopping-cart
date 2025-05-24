@@ -1,11 +1,12 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.data.entity.GoodsEntity
+import woowacourse.shopping.data.entity.toEntity
 import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.domain.repository.GoodsRepository
 
-object GoodsRepositoryImpl : GoodsRepository {
+class GoodsStorage {
     @Suppress("ktlint:standard:max-line-length")
-    override fun getAllGoods(): List<Goods> =
+    val dummyData: List<Goods> =
         listOf(
             Goods.of(
                 1,
@@ -189,19 +190,16 @@ object GoodsRepositoryImpl : GoodsRepository {
             ),
         )
 
-    override fun getById(id: Int): Goods {
-        return getAllGoods().find { it.id == id } ?: throw IllegalArgumentException()
+    fun getGoodsById(id: Int?): GoodsEntity? {
+        return dummyData.find { it.id == id }?.toEntity()
     }
 
-    override fun getPagedGoods(
-        page: Int,
-        count: Int,
-    ): List<Goods> {
-        val fromIndex = page * count
-        val toIndex = minOf(fromIndex + count, getAllGoods().size)
-
+    fun getPage(
+        fromIndex: Int,
+        toIndex: Int,
+    ): List<GoodsEntity> {
         return if (fromIndex in 0 until toIndex) {
-            getAllGoods().subList(fromIndex, toIndex).toList()
+            dummyData.subList(fromIndex, toIndex).toList().map { it.toEntity() }
         } else {
             emptyList()
         }
