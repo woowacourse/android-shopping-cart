@@ -18,6 +18,6 @@ class ProductRepositoryImpl private constructor(
     companion object {
         private var instance: ProductRepositoryImpl? = null
 
-        fun initialize(storage: ProductStorage): ProductRepositoryImpl = instance ?: ProductRepositoryImpl(storage).also { instance = it }
+        fun initialize(storage: ProductStorage): ProductRepository = instance ?: ProductRepositoryImpl(storage).also { instance = it }
     }
 }

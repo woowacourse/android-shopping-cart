@@ -58,7 +58,7 @@ class CartViewModel(
     }
 
     fun deleteProduct(cartItem: CartItem) {
-        cartRepository.deleteProduct(cartItem.cartItemId)
+        cartRepository.deleteProduct(cartItem.product.id)
         val currentProducts =
             _products.value
                 ?.filterNot { it == cartItem } ?: emptyList()

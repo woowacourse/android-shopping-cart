@@ -62,7 +62,7 @@ class ProductViewModel(
     }
 
     fun addCart(product: Product) {
-        cartRepository.addProduct(product)
+        cartRepository.addProduct(product, 1)
         _isAddCart.postValue(true)
         fetchCartItemsCount()
     }

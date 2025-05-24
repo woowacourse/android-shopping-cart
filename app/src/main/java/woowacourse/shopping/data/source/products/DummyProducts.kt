@@ -198,4 +198,7 @@ object DummyProducts : ProductStorage {
     }
 
     override fun getProductsSize(): Int = value.size
+
+    override fun getProduct(productId: Long): Product =
+        value.find { it.id == productId } ?: throw IllegalArgumentException("제품을 찾을 수 없습니다.")
 }

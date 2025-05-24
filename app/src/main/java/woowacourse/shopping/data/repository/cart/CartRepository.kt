@@ -12,7 +12,10 @@ interface CartRepository {
         onResult: (List<CartItem>) -> Unit,
     )
 
-    fun addProduct(product: Product)
+    fun addProduct(
+        product: Product,
+        count: Int,
+    )
 
-    fun deleteProduct(cartItemId: Long)
+    fun deleteProduct(productId: Long)
 }

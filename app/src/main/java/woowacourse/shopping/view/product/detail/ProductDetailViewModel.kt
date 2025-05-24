@@ -21,8 +21,11 @@ class ProductDetailViewModel(
         _product.value = product
     }
 
-    fun addData(product: Product) {
-        cartRepositoryImpl.addProduct(product)
+    fun addData(
+        product: Product,
+        count: Int,
+    ) {
+        cartRepositoryImpl.addProduct(product, count)
     }
 
     companion object {

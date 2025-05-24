@@ -1,9 +1,7 @@
 package woowacourse.shopping.data.source.cart
 
-import woowacourse.shopping.data.source.cart.CartMapper.toEntity
-import woowacourse.shopping.data.source.cart.CartMapper.toUiModel
-import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.TableCartItem
 import kotlin.concurrent.thread
 
 class CartStorageImpl private constructor(
@@ -18,17 +16,33 @@ class CartStorageImpl private constructor(
     override fun getProducts(
         limit: Int,
         offset: Int,
-        onResult: (List<CartItem>) -> Unit,
+        onResult: (List<TableCartItem>) -> Unit,
     ) {
         thread {
-            val cartItem = cartDao.getLimitProducts(limit, offset).map { it.toUiModel() }
+            val cartItem =
+                cartDao
+                    .getLimitProducts(limit, offset)
+                    .map { TableCartItem(it.productId, it.count) }
             onResult(cartItem)
         }
     }
 
-    override fun addProduct(product: Product) {
+    override fun addProduct(
+        product: Product,
+        count: Int,
+    ) {
         thread {
-            cartDao.insert(product.toEntity())
+            val productTableId: Long? = cartDao.getProductTableId(product.id)
+            if (productTableId == null) {
+                cartDao.insert(
+                    CartEntity(
+                        productId = product.id,
+                        count = count,
+                    ),
+                )
+            } else {
+                cartDao.updateCount(productId = product.id, count = count)
+            }
         }
     }
 

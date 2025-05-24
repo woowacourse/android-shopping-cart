@@ -11,4 +11,6 @@ interface ProductStorage {
     ): List<Product>
 
     fun getProductsSize(): Int
+
+    fun getProduct(productId: Long): Product
 }

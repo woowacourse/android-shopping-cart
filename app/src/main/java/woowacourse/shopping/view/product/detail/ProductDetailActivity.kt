@@ -66,7 +66,7 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun addCart() {
-        productDetailViewModel.addData(product)
+        productDetailViewModel.addData(product, productCountViewModel.productCount.value ?: 1)
         Toast.makeText(this, R.string.detail_product_add_cart_success, Toast.LENGTH_SHORT).show()
     }
 
