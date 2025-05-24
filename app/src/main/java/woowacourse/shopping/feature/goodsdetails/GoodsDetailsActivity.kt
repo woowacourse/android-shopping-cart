@@ -42,6 +42,12 @@ class GoodsDetailsActivity : AppCompatActivity() {
                     GoodsLocalDataSourceImpl(ShoppingDatabase.getDatabase(this)),
                 ),
             )
+
+        val source = intent.getStringExtra(EXTRA_SOURCE)
+        if (source != SOURCE_RECENTLY_VIEWED) {
+            viewModel.initMostRecentlyViewedGoods()
+        }
+
         binding.viewModel = viewModel
         binding.quantityChangeListener =
             object : QuantityChangeListener {
@@ -64,6 +70,8 @@ class GoodsDetailsActivity : AppCompatActivity() {
         }
         viewModel.clickMostRecentlyGoodsEvent.observe(this) { mostRecentGoods ->
             val intent = newIntent(this, mostRecentGoods.toUi())
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            intent.putExtra(EXTRA_SOURCE, SOURCE_RECENTLY_VIEWED)
             startActivity(intent)
         }
     }
@@ -101,5 +109,9 @@ class GoodsDetailsActivity : AppCompatActivity() {
             Intent(context, GoodsDetailsActivity::class.java).apply {
                 putExtra(GOODS_KEY, goods)
             }
+
+        const val EXTRA_SOURCE = "extra_source"
+        const val SOURCE_RECENTLY_VIEWED = "recently_viewed"
+        const val SOURCE_GOODS_LIST = "goods_list"
     }
 }

@@ -14,7 +14,7 @@ import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.toDomain
 
 class GoodsDetailsViewModel(
-    goodsUiModel: GoodsUiModel,
+    private val goodsUiModel: GoodsUiModel,
     private val cartRepository: CartRepository,
     private val goodsRepository: GoodsRepository,
 ) : ViewModel() {
@@ -28,7 +28,7 @@ class GoodsDetailsViewModel(
     private val _clickMostRecentlyGoodsEvent = MutableSingleLiveData<Goods>()
     val clickMostRecentlyGoodsEvent: SingleLiveData<Goods> get() = _clickMostRecentlyGoodsEvent
 
-    init {
+    fun initMostRecentlyViewedGoods() {
         goodsRepository.fetchMostRecentGoods { goods ->
             goods?.let {
                 if (goodsUiModel.id != goods.id) _mostRecentlyViewedGoods.postValue(it)
