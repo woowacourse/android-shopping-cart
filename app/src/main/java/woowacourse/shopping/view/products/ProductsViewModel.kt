@@ -29,6 +29,9 @@ class ProductsViewModel(
     private val _navigateToCart = MutableLiveData<Event<Unit>>()
     val navigateToCart: LiveData<Event<Unit>> = _navigateToCart
 
+    private val _cartItemCount = MutableLiveData(0)
+    val cartItemCount: LiveData<Int> = _cartItemCount
+
     private var isAllProductsFetched = false
     private var currentPage = INITIAL_PAGE
     private val loadedItems = mutableListOf<CartItem>()
@@ -95,6 +98,7 @@ class ProductsViewModel(
 
     fun onOpenQuantitySelectClick(cartItem: CartItem) {
         cartRepository.add(cartItem)
+        _cartItemCount.value = cartRepository.getAll().size
     }
 
     private fun setUpdatedProducts() {
