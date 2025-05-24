@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -62,7 +63,10 @@ class CartActivity :
         setSupportActionBar(binding.tbCart)
         binding.tbCart.apply {
             setNavigationIcon(R.drawable.ic_back)
-            setNavigationOnClickListener { finish() }
+            setNavigationOnClickListener {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.productdetail
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -55,6 +56,7 @@ class ProductDetailActivity :
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.action_product_detail_close -> {
+                setResult(Activity.RESULT_OK)
                 finish()
                 true
             }
