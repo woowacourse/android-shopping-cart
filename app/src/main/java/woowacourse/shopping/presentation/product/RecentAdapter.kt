@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.domain.model.Product
 
-class RecentAdapter : RecyclerView.Adapter<RecentAdapter.RecentProductViewHolder>() {
+class RecentAdapter(
+    private val itemClickListener: ItemClickListener,
+) : RecyclerView.Adapter<RecentAdapter.RecentProductViewHolder>() {
     private var items: List<Product> = emptyList()
 
     fun submitList(newList: List<Product>) {
@@ -20,7 +22,7 @@ class RecentAdapter : RecyclerView.Adapter<RecentAdapter.RecentProductViewHolder
     ): RecentProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemRecentProductBinding.inflate(inflater, parent, false)
-        return RecentProductViewHolder(binding)
+        return RecentProductViewHolder(binding, itemClickListener)
     }
 
     override fun onBindViewHolder(
@@ -34,9 +36,11 @@ class RecentAdapter : RecyclerView.Adapter<RecentAdapter.RecentProductViewHolder
 
     class RecentProductViewHolder(
         private val binding: ItemRecentProductBinding,
+        private val itemClickListener: ItemClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Product) {
             binding.product = item
+            binding.itemClickListener = itemClickListener
             binding.executePendingBindings()
         }
     }

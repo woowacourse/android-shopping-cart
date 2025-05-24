@@ -21,15 +21,8 @@ class ProductAdapter(
         newList: List<CartItem>,
         showLoadMore: Boolean,
     ) {
-//        val oldSize = items.size
-//        val newSize = newList.size
-//
-//        val insertItemSize = newSize - oldSize
         this.items = newList
         this.showLoadMore = showLoadMore
-//        if (insertItemSize > 0) {
-//            notifyItemRangeInserted(oldSize, insertItemSize)
-//        }
         notifyDataSetChanged()
     }
 
@@ -50,7 +43,7 @@ class ProductAdapter(
                 LoadMoreViewHolder(binding)
             }
 
-            else -> throw IllegalArgumentException("Invalid view type")
+            else -> throw IllegalArgumentException(ERROR_INVALID_VIEW_TYPE)
         }
     }
 
@@ -88,5 +81,9 @@ class ProductAdapter(
             binding.onClickLoadMore = onClickLoadMore
             binding.executePendingBindings()
         }
+    }
+
+    companion object {
+        private const val ERROR_INVALID_VIEW_TYPE = "Invalid view type"
     }
 }

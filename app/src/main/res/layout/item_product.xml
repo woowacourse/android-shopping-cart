@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:onClick="@{() -> itemClickListener.onClickProductItem(cartItem)}">
+        android:onClick="@{() -> itemClickListener.onClickProductItem(cartItem.product.productId)}">
 
         <ImageView
             android:id="@+id/iv_product"

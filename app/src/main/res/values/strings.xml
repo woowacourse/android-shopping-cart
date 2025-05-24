@@ -41,4 +41,5 @@
 
     <string name="layout_cart_box_minus">−</string>
     <string name="layout_cart_box_plus">+</string>
+    <string name="layout_recent_product_text">마지막으로 본 상품</string>
 </resources>

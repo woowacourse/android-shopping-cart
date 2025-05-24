@@ -17,7 +17,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.databinding.ViewCartActionBinding
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.cart.CartCounterClickListener
@@ -34,7 +33,7 @@ class ProductActivity :
         ProductViewModelFactory(applicationContext)
     }
     private val recentAdapter: RecentAdapter by lazy {
-        RecentAdapter()
+        RecentAdapter(this)
     }
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
@@ -180,18 +179,14 @@ class ProductActivity :
         viewModel.loadMore()
     }
 
-    private fun navigateToProductDetail(product: Product) {
-        val intent = ProductDetailActivity.newIntent(this, product.productId)
-        startActivity(intent)
-    }
-
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
         startActivity(intent)
     }
 
-    override fun onClickProductItem(cartItem: CartItem) {
-        navigateToProductDetail(cartItem.product)
+    override fun onClickProductItem(productId: Long) {
+        val intent = ProductDetailActivity.newIntent(this, productId)
+        startActivity(intent)
     }
 
     override fun onClickAddToCart(cartItem: CartItem) {

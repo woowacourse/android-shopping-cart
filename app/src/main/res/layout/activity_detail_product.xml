@@ -10,6 +10,10 @@
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.productdetail.ProductDetailViewModel" />
+
+        <variable
+            name="itemClickListener"
+            type="woowacourse.shopping.presentation.product.ItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,6 +98,7 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="40dp"
             android:visibility="@{vm.isRecentProduct ? View.GONE : View.VISIBLE}"
+            app:clickListener="@{itemClickListener}"
             app:id="@{vm.recentProduct.productId}"
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_price_text"
             app:name="@{vm.recentProduct.name}" />

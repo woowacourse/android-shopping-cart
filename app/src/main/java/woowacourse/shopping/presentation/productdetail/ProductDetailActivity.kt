@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -15,11 +16,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.Extra
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.getSerializableExtraCompat
+import woowacourse.shopping.presentation.product.ItemClickListener
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity :
+    AppCompatActivity(),
+    ItemClickListener {
     private lateinit var binding: ActivityDetailProductBinding
     private val viewModel: ProductDetailViewModel by viewModels {
         ProductDetailViewModelFactory(applicationContext)
@@ -31,6 +36,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_product)
         binding.lifecycleOwner = this
         binding.vm = viewModel
+        binding.itemClickListener = this
 
         initInsets()
         setupToolbar()
@@ -103,5 +109,14 @@ class ProductDetailActivity : AppCompatActivity() {
         ): Intent =
             Intent(context, ProductDetailActivity::class.java)
                 .apply { putExtra(Extra.KEY_PRODUCT_DETAIL, productId) }
+    }
+
+    override fun onClickProductItem(productId: Long) {
+        Log.d("meeple_log", "click")
+        val intent = newIntent(this, productId)
+        startActivity(intent)
+    }
+
+    override fun onClickAddToCart(cartItem: CartItem) {
     }
 }

@@ -90,7 +90,7 @@ class ProductDetailViewModel(
     private fun checkIfCurrentIsMostRecent(currentProductId: Long) {
         recentProductRepository.getMostRecentProduct { result ->
             result.onSuccess { recentProduct ->
-                val isSame = recentProduct?.productId == currentProductId || recentProduct == null
+                val isSame = recentProduct == null || recentProduct.productId == currentProductId
                 _isRecentProduct.postValue(isSame)
             }
         }

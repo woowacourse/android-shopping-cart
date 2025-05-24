@@ -19,7 +19,8 @@
         android:id="@+id/cl_recent_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_margin="16dp"
+        android:onClick="@{() -> itemClickListener.onClickProductItem(product.productId)}">
 
         <ImageView
             android:id="@+id/iv_product"

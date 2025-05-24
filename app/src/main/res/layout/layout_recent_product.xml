@@ -21,7 +21,8 @@
         android:id="@+id/layout_cart_quantity_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_cart_item">
+        android:background="@drawable/bg_cart_item"
+        android:onClick="@{() -> clickListener.onClickProductItem(id)}">
 
         <TextView
             android:id="@+id/tv_recent_product_text"
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:text="마지막으로 본 상품"
+            android:text="@string/layout_recent_product_text"
             android:textColor="@color/cyan"
             android:textSize="14sp"
             android:textStyle="bold"
