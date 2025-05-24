@@ -6,6 +6,4 @@ interface CatalogEventHandler {
     fun onLoadButtonClick()
 
     fun onOpenProductQuantitySelector(product: ProductUiModel)
-
-    fun isProductInCart(product: ProductUiModel): Boolean
 }

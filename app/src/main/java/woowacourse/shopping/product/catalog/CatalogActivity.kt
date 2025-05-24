@@ -1,12 +1,7 @@
 package woowacourse.shopping.product.catalog
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.cart.CartItemRepository
 import woowacourse.shopping.data.CartItemDatabase
 import woowacourse.shopping.data.MockProducts
@@ -26,12 +20,7 @@ import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
     private val viewModel: CatalogViewModel by lazy {
-        val db = CartItemDatabase.getInstance(this)
-        val repository = CartItemRepository(db.cartItemDao())
-        ViewModelProvider(
-            this,
-            factory(MockProducts, repository),
-        )[CatalogViewModel::class.java]
+        provideViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,72 +30,49 @@ class CatalogActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
-        setProductAdapter()
+        initRecyclerView()
         observePagingData()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.cart_menu_item, menu)
-
-        val menuItem = menu?.findItem(R.id.menu_cart)
-        val actionView = menuItem?.actionView
-
-        val cartIcon = actionView?.findViewById<ImageView>(R.id.imageView_cart)
-        val badgeView = actionView?.findViewById<TextView>(R.id.textView_cart_badge)
-
-        cartIcon?.setOnClickListener {
-            startActivity(Intent(this, CartActivity::class.java))
+    private fun applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
-
-        fun updateBadge(count: Int) {
-            badgeView?.apply {
-                text = count.toString()
-                visibility = if (count > 0) View.VISIBLE else View.GONE
-            }
-        }
-
-        viewModel.cartCount.observe(this) { products ->
-            updateBadge(products)
-        }
-
-        return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.menu_cart -> {
-                startActivity(Intent(this, CartActivity::class.java))
-                true
-            }
+    private fun provideViewModel(): CatalogViewModel {
+        val db = CartItemDatabase.getInstance(this)
+        val repository = CartItemRepository(db.cartItemDao())
+        return ViewModelProvider(
+            this,
+            factory(MockProducts, repository),
+        )[CatalogViewModel::class.java]
+    }
 
-            else -> super.onOptionsItemSelected(item)
+    private fun initRecyclerView() {
+        binding.recyclerViewProducts.apply {
+            adapter = createAdapter()
+            layoutManager = createGridLayoutManager(adapter as ProductAdapter)
         }
+    }
 
-    private fun setProductAdapter() {
+    private fun createAdapter(): ProductAdapter {
         val handler =
-            CatalogEventHandlerImpl(
-                viewModel = viewModel,
-                onNavigateToDetail = { product ->
-                    startActivity(newIntent(this, product))
-                },
-            )
-
-        val adapter =
-            ProductAdapter(
-                emptyList(),
-                catalogHandler = handler,
-                quantityHandler = handler,
-            )
-
-        binding.recyclerViewProducts.adapter = adapter
-
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int = if (adapter.isLoadMoreButtonPosition(position)) 2 else 1
+            CatalogEventHandlerImpl(viewModel) { product ->
+                startActivity(newIntent(this, product))
             }
-        binding.recyclerViewProducts.layoutManager = gridLayoutManager
+        return ProductAdapter(emptyList(), handler, handler)
     }
+
+    private fun createGridLayoutManager(adapter: ProductAdapter): GridLayoutManager =
+        GridLayoutManager(this, 2).apply {
+            spanSizeLookup =
+                object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int = if (adapter.isLoadMoreButtonPosition(position)) 2 else 1
+                }
+        }
 
     private fun observePagingData() {
         viewModel.pagingData.observe(this) { paging ->
@@ -117,11 +83,15 @@ class CatalogActivity : AppCompatActivity() {
         }
     }
 
-    private fun applyWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.cart_menu_item, menu)
+        setupCartActionView(menu)
+        return true
+    }
+
+    private fun setupCartActionView(menu: Menu?) {
+        val menuItem = menu?.findItem(R.id.menu_cart) ?: return
+        val holder = CartActionViewHolder(this, this, viewModel)
+        menuItem.actionView = holder.rootView
     }
 }

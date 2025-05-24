@@ -44,19 +44,13 @@ class CatalogViewModel(
                         it
                     }
                 }
+            if (cartItem == null) repository.insertCartItem(product.copy(quantity = 1, isExpanded = true))
             updatePaging()
             updateCartCount()
-            if (cartItem == null) repository.insertCartItem(product.copy(quantity = 1, isExpanded = true))
         }
     }
 
-    fun isProductInCart(product: ProductUiModel): Boolean {
-        var isInCart = false
-        thread {
-            isInCart = repository.findCartItem(product) != null
-        }
-        return isInCart
-    }
+    val isBadgeEnable: Boolean get() = (cartCount.value ?: 0) > 0
 
     fun loadNextCatalogProducts(pageSize: Int = PAGE_SIZE) {
         currentPage += 1

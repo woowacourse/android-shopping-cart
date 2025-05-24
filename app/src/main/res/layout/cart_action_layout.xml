@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-<!--        <variable-->
-<!--            name="handler"-->
-<!--            type="" />-->
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.product.catalog.CatalogViewModel" />
+        <variable
+            name="handler"
+            type="woowacourse.shopping.product.catalog.CatalogEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +20,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -25,6 +32,7 @@
             android:contentDescription="@string/text_cart" />
 
         <TextView
+            android:text='@{String.valueOf(viewModel.cartCount)}'
             android:textAlignment="center"
             app:layout_constraintStart_toEndOf="@id/imageView_cart"
             app:layout_constraintBottom_toBottomOf="@id/imageView_cart"
@@ -38,7 +46,7 @@
             android:textColor="@android:color/white"
             android:textSize="12sp"
             android:gravity="center"
-            android:visibility="gone" />
+            android:visibility="@{viewModel.isBadgeEnable? View.VISIBLE : View.GONE}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

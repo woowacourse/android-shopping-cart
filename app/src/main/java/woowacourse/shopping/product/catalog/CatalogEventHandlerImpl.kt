@@ -19,8 +19,6 @@ class CatalogEventHandlerImpl(
         viewModel.onQuantitySelectorToggled(product)
     }
 
-    override fun isProductInCart(product: ProductUiModel): Boolean = viewModel.isProductInCart(product)
-
     override fun onPlusQuantity(product: ProductUiModel) {
         viewModel.increaseQuantity(product)
     }
