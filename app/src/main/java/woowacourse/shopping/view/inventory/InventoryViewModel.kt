@@ -22,24 +22,20 @@ class InventoryViewModel(
     val items: LiveData<List<InventoryItem>> get() = _items
 
     fun requestPage() {
-        loadCartInfo()
-        inventoryRepository.getPage(
-            PAGE_SIZE,
-            products.size / PAGE_SIZE,
-        ) { page -> updateItems(page) }
+        shoppingCartRepository.getAll { allItems ->
+            allItems.forEach { item ->
+                inventoryRepository.insert(item.toInventoryProduct())
+            }
+            inventoryRepository.getPage(
+                PAGE_SIZE,
+                products.size / PAGE_SIZE,
+            ) { page -> updateItems(page) }
+        }
     }
 
     private fun updateItems(newPage: Page<InventoryProduct>) {
         val newItems = products + newPage.items + if (newPage.hasNext) listOf(ShowMore) else emptyList()
         _items.postValue(newItems)
-    }
-
-    private fun loadCartInfo() {
-        shoppingCartRepository.getAll { allItems ->
-            allItems.forEach { item ->
-                inventoryRepository.insert(item.toInventoryProduct())
-            }
-        }
     }
 
     companion object {

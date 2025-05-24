@@ -35,20 +35,20 @@
 
         <ImageView
             android:id="@+id/iv_add_product_icon"
+            isGone="@{product.quantity > 0}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_margin="10dp"
             android:clickable="true"
             android:src="@drawable/icon_plus"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 
         <LinearLayout
+            isGone="@{product.quantity == 0}"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_marginBottom="10dp"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image"
             app:layout_constraintStart_toStartOf="@id/iv_product_image">
@@ -70,6 +70,7 @@
                 android:layout_height="42dp"
                 android:background="@color/white"
                 android:gravity="center"
+                android:text="@{String.valueOf(product.quantity)}"
                 android:textColor="@color/gray"
                 android:textSize="22sp"
                 android:textStyle="bold"

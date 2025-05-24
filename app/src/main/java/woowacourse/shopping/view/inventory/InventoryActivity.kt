@@ -51,13 +51,14 @@ class InventoryActivity :
                 }
             }
 
+        viewModel.requestPage()
+
         binding.rvProductList.apply {
             adapter = InventoryAdapter(this@InventoryActivity)
             layoutManager = gridLayoutManager
         }
 
         with(viewModel) {
-            requestPage()
             items.observe(this@InventoryActivity) { items ->
                 (binding.rvProductList.adapter as InventoryAdapter).updateProducts(items)
             }

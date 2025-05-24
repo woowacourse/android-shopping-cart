@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.util
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -23,4 +24,12 @@ fun setImage(
         .load(url)
         .placeholder(R.drawable.placeholder_product)
         .into(view)
+}
+
+@BindingAdapter("isGone")
+fun setVisibilityGone(
+    view: View,
+    isGone: Boolean,
+) {
+    view.visibility = if (isGone) View.GONE else View.VISIBLE
 }
