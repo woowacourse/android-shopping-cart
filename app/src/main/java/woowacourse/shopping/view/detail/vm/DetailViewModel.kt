@@ -11,6 +11,7 @@ import woowacourse.shopping.view.core.event.SingleLiveData
 import woowacourse.shopping.view.detail.DetailUiEvent
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.ProductState
+import kotlin.concurrent.thread
 
 class DetailViewModel(
     private val productRepository: ProductRepository,
@@ -23,12 +24,10 @@ class DetailViewModel(
     val event: SingleLiveData<DetailUiEvent> get() = _event
 
     fun load(productId: Long) {
-        productRepository[
-            productId,
-            { result ->
-                _uiState.postValue(ProductState(result, Quantity(1)))
-            },
-        ]
+        thread {
+            val result = productRepository[productId]
+            _uiState.postValue((ProductState(result, Quantity(1))))
+        }
     }
 
     fun increaseCartQuantity() {
@@ -62,10 +61,12 @@ class DetailViewModel(
 
     fun saveCart() {
         val state = _uiState.value ?: return
-        cartRepository[state.item.id]?.let {
-            cartRepository.modifyQuantity(state.item.id, state.cartQuantity)
-        } ?: run {
-            cartRepository.insert(state.item.id, state.cartQuantity.value)
+        cartRepository.getCart(state.item.id) { cart ->
+            cart?.let {
+                cartRepository.upsert(state.item.id, state.cartQuantity)
+            } ?: run {
+                cartRepository.modify(state.item.id, state.cartQuantity)
+            }
         }
         sendEvent(DetailUiEvent.MoveToCart)
     }

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
@@ -30,14 +29,10 @@ class DetailViewModelTest {
 
     @BeforeEach
     fun setup() {
-        cartRepository = mockk()
+        cartRepository = mockk(relaxed = true)
         productRepository = mockk()
 
-        every { productRepository[1L, any()] } answers {
-            val callback = secondArg<(Product) -> Unit>()
-            callback(productFixture1)
-        }
-
+        every { productRepository[1L] } returns productFixture1
         viewModel = DetailViewModel(productRepository, cartRepository)
         viewModel.load(1L)
     }
@@ -80,23 +75,29 @@ class DetailViewModelTest {
 
     @Test
     fun `상품이_이미_장바구니에_있다면_수량을_수정한다`() {
-        every { cartRepository[1L] } returns Cart(productFixture1.quantity, productFixture1.id)
+        every { cartRepository.getCart(any(), any()) } answers {
+            val callback = secondArg<(Cart?) -> Unit>()
+            callback(Cart(Quantity(2), 1L))
+        }
 
         viewModel.saveCart()
 
         verify {
-            cartRepository.modifyQuantity(productFixture1.id, Quantity(1))
+            cartRepository.upsert(productFixture1.id, Quantity(1))
         }
     }
 
     @Test
     fun `상품이_장바구니에_없다면_추가한다`() {
-        every { cartRepository[1L] } returns null
+        every { cartRepository.getCarts(any(), any()) } answers {
+            val callback = secondArg<(Cart?) -> Unit>()
+            callback(null)
+        }
 
         viewModel.saveCart()
 
         verify {
-            cartRepository.insert(productFixture1.id, 1)
+            cartRepository.upsert(productFixture1.id, Quantity(1))
         }
     }
 }
