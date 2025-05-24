@@ -3,9 +3,7 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.domain.model.Goods
 
 interface GoodsRepository {
-    fun getAllGoods(): List<Goods>
-
-    fun getById(id: Int): Goods
+    fun getById(id: Int): Goods?
 
     fun getPagedGoods(
         page: Int,
