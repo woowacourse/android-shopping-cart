@@ -1,7 +1,10 @@
 package woowacourse.shopping.ui.fashionlist
 
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.ui.QuantityClickListener
 
-interface ProductClickListener {
+interface ProductClickListener: QuantityClickListener {
     fun onClick(product: Product)
+
+    fun onFloatingClick(product: Product)
 }

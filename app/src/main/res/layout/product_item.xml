@@ -74,6 +74,7 @@
             android:background="@drawable/floating_button_background"
             android:contentDescription="@string/add_cart"
             android:src="@drawable/ic_add"
+            android:onClick="@{() -> productClickListener.onFloatingClick(product)}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 

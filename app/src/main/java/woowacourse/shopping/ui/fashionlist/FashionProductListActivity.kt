@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
@@ -75,6 +76,19 @@ class FashionProductListActivity : AppCompatActivity() {
                             val intent =
                                 ProductDetailActivity.newIntent(this@FashionProductListActivity, product)
                             startActivity(intent)
+                        }
+
+                        override fun onFloatingClick(product: Product) {
+                            viewModel.add(product)
+                            viewModel.onButtonClicked()
+                        }
+
+                        override fun onIncreaseClick(cartItem: CartItem) {
+                            TODO("Not yet implemented")
+                        }
+
+                        override fun onDecreaseClick(cartItem: CartItem) {
+                            TODO("Not yet implemented")
                         }
                     },
                 loadMoreClickListener = {

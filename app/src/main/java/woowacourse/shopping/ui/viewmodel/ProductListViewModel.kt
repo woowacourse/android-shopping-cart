@@ -3,12 +3,16 @@ package woowacourse.shopping.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductRepository
 import woowacourse.shopping.ui.fashionlist.ProductListViewType
+import kotlin.concurrent.thread
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
+    private val cartRepository = CartRepository.get()
     private val _products = MutableLiveData<List<ProductListViewType>>(emptyList())
     val products: LiveData<List<ProductListViewType>> = _products
     private var pageNumber = 0
@@ -25,6 +29,16 @@ class ProductListViewModel(
             _products.value = originProducts + newProducts + ProductListViewType.LoadMoreType
         } else {
             _products.value = originProducts + newProducts
+        }
+    }
+
+    fun onButtonClicked() {
+        _isButtonVisible.value = false
+    }
+
+    fun add(product: Product) {
+        thread {
+            cartRepository.insert(product)
         }
     }
 }
