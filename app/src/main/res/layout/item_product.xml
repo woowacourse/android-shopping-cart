@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="10dp"
     android:padding="10dp">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="model"
-            type="woowacourse.shopping.view.main.adapter.ProductRvItems.ProductItem" />
+            type="woowacourse.shopping.view.main.state.ProductState" />
+
         <variable
-            name="eventHandler"
-            type="woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler" />
+            name="adapterEventHandler"
+            type="woowacourse.shopping.view.main.adapter.ProductViewHolder.Handler" />
+
+        <variable
+            name="cartQuantityEventHandler"
+            type="woowacourse.shopping.view.core.handler.CartQuantityHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> eventHandler.onSelectProduct(model.item.id)}">
+        android:background="@drawable/product_item_background"
+        android:onClick="@{() -> adapterEventHandler.onSelectProduct(model.item.id)}">
 
         <ImageView
             android:id="@+id/image_view_product"
@@ -39,30 +50,55 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{model.item.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@{model.item.name}"
-            app:layout_constraintTop_toBottomOf="@id/image_view_product"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view_product"
             tools:text="PET보틀-정사각..." />
 
         <TextView
             android:id="@+id/textView_product_price"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@{@string/format_thousand_won(model.item.priceValue)}"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@{@string/format_thousand_won(model.item.priceValue)}"
-            app:layout_constraintTop_toBottomOf="@id/textView_product_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView_product_name"
             tools:text="10,000원" />
+
+        <ImageView
+            android:id="@+id/button_quantity"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:layout_marginEnd="196dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/product_fab_background"
+            android:onClick="@{() -> adapterEventHandler.showQuantity(model.item.id)}"
+            android:scaleType="center"
+            android:src="@drawable/ic_add"
+            android:visibility="@{model.cartQuantityValue > 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_product"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+            <include
+                layout="@layout/item_quantity_changer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/image_view_product"
+                app:layout_constraintEnd_toEndOf="@id/image_view_product"
+                app:layout_constraintStart_toStartOf="@id/image_view_product"
+                bind:eventHandler="@{cartQuantityEventHandler}"
+                bind:model="@{model}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

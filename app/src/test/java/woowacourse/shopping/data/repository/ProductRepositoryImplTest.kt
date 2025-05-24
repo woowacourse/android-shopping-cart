@@ -4,74 +4,86 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.storage.ProductStorage
-import woowacourse.shopping.domain.product.ProductResult
-import woowacourse.shopping.fixture.productFixture1
-import woowacourse.shopping.fixture.productFixture2
+import woowacourse.shopping.data.datasource.ProductsDataSource
+import woowacourse.shopping.data.fake.FakeProductRepositoryImpl
+import woowacourse.shopping.data.network.entitiy.ProductEntity
+import woowacourse.shopping.data.network.entitiy.ProductPageEntity
+import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.ProductSinglePage
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImplTest {
-    private val storage: ProductStorage = mockk()
-    private val productRepository = ProductRepositoryImpl(storage)
+    private lateinit var dataSource: ProductsDataSource
+    private lateinit var repository: ProductRepository
 
-    @Test
-    fun `Id에_해당하는_상품을_가져온다`() {
-        // given
-        val productId = 1L
-        val expectedProduct = productFixture1
-        every { storage[productId] } returns expectedProduct
-
-        // when
-        val actualProduct = productRepository[productId]
-
-        // then
-        assertEquals(expectedProduct, actualProduct)
-        verify(exactly = 1) { storage[productId] }
+    @BeforeEach
+    fun setUp() {
+        dataSource = mockk()
+        repository = FakeProductRepositoryImpl(dataSource)
     }
 
     @Test
-    fun `첫_번째_페이지의_상품을_가져온다`() {
-        // given
-        val page = 0
-        val pageSize = 10
-        val fromIndex = 0
-        val toIndex = fromIndex + pageSize
-        val excepted =
-            ProductResult(
-                listOf(
-                    productFixture1,
-                    productFixture2,
-                ),
-                false,
-            )
+    fun `주어진_productId로_제품을_조회하면_해당_제품을_반환한다`() {
+        // Given
+        val productId = 1L
+        val productEntity = mockk<ProductEntity>()
+        val productDomain = mockk<Product>()
+        every { dataSource.getProduct(productId) } returns productEntity
+        every { productEntity.toDomain() } returns productDomain
 
-        every { storage.singlePage(fromIndex, toIndex) } returns excepted
-
-        // when
-        val actualProducts = productRepository.loadSinglePage(page, pageSize)
+        // When
+        val product = repository.getProduct(productId) {}
 
         // Then
-        assertEquals(excepted, actualProducts)
-        verify(exactly = 1) { storage.singlePage(fromIndex, toIndex) }
+        assertNotNull(product)
+        assertEquals(productDomain, product)
+        verify(exactly = 1) { dataSource.getProduct(productId) }
+        verify(exactly = 1) { productEntity.toDomain() }
     }
 
     @Test
-    fun `빈_페이지를_요청하면_빈_리스트를_반환한다`() {
-        // given
-        val page = 10
-        val pageSize = 20
-        val fromIndex = page * pageSize
-        val toIndex = fromIndex + pageSize
+    fun `상품_id_리스트를_전달하면_해당_제품_목록을_반환한다`() {
+        // Given
+        val productIds = listOf(1L, 2L)
+        val productEntities = listOf(mockk<ProductEntity>(), mockk())
+        val productDomains = listOf(mockk<Product>(), mockk<Product>())
+        every { dataSource.getProducts(productIds) } returns productEntities
+        every { productEntities[0].toDomain() } returns productDomains[0]
+        every { productEntities[1].toDomain() } returns productDomains[1]
 
-        every { storage.singlePage(fromIndex, toIndex) } returns ProductResult(emptyList(), true)
+        // When
+        repository.getProducts(productIds) { products ->
+            // Then
+            assertEquals(2, products.size)
+            assertEquals(productDomains, products)
+            verify(exactly = 1) { dataSource.getProducts(productIds) }
+            verify(exactly = 1) { productEntities[0].toDomain() }
+            verify(exactly = 1) { productEntities[1].toDomain() }
+        }
+    }
 
-        // when
-        val actual = productRepository.loadSinglePage(page, pageSize)
+    @Test
+    fun `페이지_번호와_페이지_크기를_전달하면_해당_페이지의_제품_데이터를_반환한다`() {
+        // Given
+        val page = 0
+        val pageSize = 2
+        val fromIndex = 0
+        val toIndex = 2
+        val productPageEntity = mockk<ProductPageEntity>()
+        val productSinglePageDomain = mockk<ProductSinglePage>()
 
-        // then
-        assertTrue(actual.products.isEmpty())
-        assertTrue(actual.hasNextPage)
-        verify(exactly = 1) { storage.singlePage(fromIndex, toIndex) }
+        every { dataSource.singlePage(fromIndex, toIndex) } returns productPageEntity
+        every { productPageEntity.toDomain() } returns productSinglePageDomain
+
+        // When
+        repository.loadSinglePage(page, pageSize) { productSinglePage ->
+            // Then
+            assertEquals(productSinglePageDomain, productSinglePage)
+            verify(exactly = 1) { dataSource.singlePage(fromIndex, toIndex) }
+            verify(exactly = 1) { productPageEntity.toDomain() }
+        }
     }
 }

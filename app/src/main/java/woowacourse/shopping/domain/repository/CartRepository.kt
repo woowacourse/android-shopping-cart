@@ -1,17 +1,38 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartResult
+import woowacourse.shopping.domain.cart.CartSinglePage
 
 interface CartRepository {
-    operator fun get(id: Long): Cart
+    fun getCart(
+        id: Long,
+        onResult: (cart: Cart?) -> Unit,
+    )
 
-    fun insert(productId: Long)
+    fun getCarts(
+        productIds: List<Long>,
+        onResult: (carts: List<Cart?>) -> Unit,
+    )
 
-    fun delete(id: Long)
+    fun upsert(
+        productId: Long,
+        quantity: Quantity,
+    )
 
-    fun loadSinglePage(
+    fun modify(
+        id: Long,
+        quantity: Quantity,
+    )
+
+    fun delete(
+        id: Long,
+        onResult: (() -> Unit)? = null,
+    )
+
+    fun singlePage(
         page: Int,
         pageSize: Int,
-    ): CartResult
+        onResult: (CartSinglePage) -> Unit,
+    )
 }

@@ -2,17 +2,22 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="model"
-            type="woowacourse.shopping.view.cart.vm.CartState" />
+            type="woowacourse.shopping.view.main.state.ProductState" />
 
         <variable
             name="eventHandler"
-            type="woowacourse.shopping.view.cart.adapter.CartAdapterEventHandler" />
+            type="woowacourse.shopping.view.cart.adapter.CartViewHolder.Handler" />
+
+        <variable
+            name="cartQuantityEventHandler"
+            type="woowacourse.shopping.view.core.handler.CartQuantityHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="18dp"
-            android:text="@{model.product.name}"
+            android:text="@{model.item.name}"
             android:textColor="@color/gray"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -43,14 +48,14 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:padding="12dp"
-            android:onClick="@{() -> eventHandler.onClickDeleteItem(model.cartId)}"
+            android:onClick="@{() -> eventHandler.onClickDeleteItem(model.item.id)}"
             android:src="@drawable/ic_close_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/image_view_product"
-            setImage="@{model.product.imgUrl}"
+            setImage="@{model.item.imgUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
@@ -60,13 +65,25 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <include
+            layout="@layout/item_quantity_changer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toEndOf="@id/image_view_product"
+            app:layout_constraintTop_toBottomOf="@id/image_view_delete"
+            bind:eventHandler="@{cartQuantityEventHandler}"
+            bind:model="@{model}"
+            />
+
         <TextView
             android:id="@+id/text_view_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="18dp"
-            android:text="@{@string/format_thousand_won(model.product.priceValue)}"
+            android:text="@{@string/format_thousand_won(model.item.priceValue * model.cartQuantityValue)}"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

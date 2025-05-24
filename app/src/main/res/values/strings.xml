@@ -5,6 +5,8 @@
     <string name="text_exit">종료</string>
     <string name="text_price">가격</string>
     <string name="text_add_to_cart">장바구니 담기</string>
+    <string name="text_over_quantity">상품의 재고 수량은 %d개입니다.</string>
+    <string name="text_minimum_quantity">상품의 최소 수량은 1개 입니다.</string>
 
     <string name="action_bar_title_cart_screen">Cart</string>
 </resources>

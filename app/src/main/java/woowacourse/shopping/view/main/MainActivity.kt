@@ -1,8 +1,6 @@
 package woowacourse.shopping.view.main
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,17 +12,21 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.core.ext.showToast
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
+import woowacourse.shopping.view.main.adapter.ProductAdapterEventHandler
 import woowacourse.shopping.view.main.adapter.ProductRvItems
-import woowacourse.shopping.view.main.adapter.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
-import kotlin.getValue
 
-class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
+class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory((application as App).container.productRepository)
+        val container = (application as App).container
+        MainViewModelFactory(
+            container.productRepository,
+            container.cartRepository,
+        )
     }
     private val productsAdapter: ProductAdapter by lazy {
         ProductAdapter(emptyList(), this)
@@ -34,13 +36,20 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        with(binding) {
-            lifecycleOwner = this@MainActivity
-            adapter = productsAdapter
-        }
+
+        setUpBinding()
         setUpSystemBar()
         setupRecyclerView()
         observeViewModel()
+        setUpListener()
+    }
+
+    private fun setUpBinding() {
+        with(binding) {
+            lifecycleOwner = this@MainActivity
+            adapter = productsAdapter
+            vm = viewModel
+        }
     }
 
     private fun setUpSystemBar() {
@@ -78,6 +87,22 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         viewModel.uiState.observe(this) { value ->
             productsAdapter.submitList(value)
         }
+
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is MainUiEvent.ShowCannotIncrease -> {
+                    showToast(
+                        getString(R.string.text_over_quantity).format(event.quantity),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setUpListener() {
+        binding.cartContainer.setOnClickListener {
+            startActivity(CartActivity.newIntent(this))
+        }
     }
 
     override fun onSelectProduct(productId: Long) {
@@ -89,20 +114,20 @@ class MainActivity : AppCompatActivity(), ProductsAdapterEventHandler {
         viewModel.loadProducts()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_bar_cart -> {
-                val intent = CartActivity.newIntent(this)
-                startActivity(intent)
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun showQuantity(productId: Long) {
+        viewModel.increaseCartQuantity(productId)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_action_bar_menu, menu)
-        return true
+    override fun onClickIncrease(productId: Long) {
+        viewModel.increaseCartQuantity(productId)
+    }
+
+    override fun onClickDecrease(productId: Long) {
+        viewModel.decreaseCartQuantity(productId)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.syncCartQuantities()
     }
 }

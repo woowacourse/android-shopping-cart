@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.product
 
-data class ProductResult(
+data class ProductSinglePage(
     val products: List<Product>,
     val hasNextPage: Boolean,
 )

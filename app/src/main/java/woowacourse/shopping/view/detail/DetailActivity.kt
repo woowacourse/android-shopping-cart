@@ -15,10 +15,12 @@ import woowacourse.shopping.App
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.core.ext.showToast
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), CartQuantityHandler {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
@@ -30,14 +32,20 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        binding.lifecycleOwner = this@DetailActivity
-        binding.vm = viewModel
-
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
 
+        setUpBinding()
         setUpSystemBars()
         observeViewModel()
+    }
+
+    private fun setUpBinding() {
+        with(binding) {
+            lifecycleOwner = this@DetailActivity
+            vm = viewModel
+            cartQuantityEventHandler = this@DetailActivity
+        }
     }
 
     private fun setUpSystemBars() {
@@ -51,13 +59,20 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.product.observe(this) {
-            binding.model = it
-        }
-
         viewModel.event.observe(this) {
             when (it) {
-                DetailScreenEvent.MoveToCart -> navigateToCart()
+                DetailUiEvent.MoveToCart -> navigateToCart()
+                is DetailUiEvent.ShowCannotIncrease -> {
+                    showToast(
+                        getString(R.string.text_over_quantity).format(it.quantity),
+                    )
+                }
+
+                DetailUiEvent.ShowCannotDecrease -> {
+                    showToast(
+                        getString(R.string.text_minimum_quantity),
+                    )
+                }
             }
         }
     }
@@ -80,6 +95,14 @@ class DetailActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onClickIncrease(productId: Long) {
+        viewModel.increaseCartQuantity()
+    }
+
+    override fun onClickDecrease(productId: Long) {
+        viewModel.decreaseCartQuantity()
     }
 
     companion object {

@@ -71,4 +71,9 @@ dependencies {
     androidTestImplementation(libs.kotest.runner.junit5)
     androidTestImplementation(libs.mannodermaus.junit5.core)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
+    implementation(libs.okhttp)
+    implementation(libs.converter.gson)
+    implementation(libs.mock.web.server)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
 }

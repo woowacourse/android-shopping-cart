@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="model"
+            type="woowacourse.shopping.view.main.state.ProductState" />
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.view.core.handler.CartQuantityHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/product_quantity_background"
+        android:visibility="@{model.cartQuantityValue > 0 ? View.VISIBLE : View.GONE}">
+
+        <ImageView
+            android:id="@+id/image_view_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_minus"
+            android:onClick="@{() -> eventHandler.onClickDecrease(model.item.id)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_cart_count"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:text="@{String.valueOf(model.cartQuantityValue)}"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_minus"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_view_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_add"
+            android:onClick="@{() -> eventHandler.onClickIncrease(model.item.id)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_cart_count"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

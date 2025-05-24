@@ -5,8 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.cart.CartUiEvent
+import woowacourse.shopping.view.cart.state.CartUiState
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
+import woowacourse.shopping.view.core.event.MutableSingleLiveData
+import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.main.state.IncreaseState
+import woowacourse.shopping.view.main.state.ProductState
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -15,15 +21,45 @@ class CartViewModel(
     private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
 
     private val _uiState = MutableLiveData<CartUiState>()
-    val uiState: LiveData<CartUiState> = _uiState
+    val uiState: LiveData<CartUiState> get() = _uiState
 
-    fun deleteProduct(cardId: Long) {
-        cartRepository.delete(cardId)
-        loadCarts()
+    private val _event = MutableSingleLiveData<CartUiEvent>()
+    val event: SingleLiveData<CartUiEvent> get() = _event
 
-        val currentCarts = _uiState.value?.carts
-        if (paging.resetToLastPageIfEmpty(currentCarts)) {
-            loadCarts()
+    fun decreaseCartQuantity(productId: Long) {
+        withUiState { state ->
+            val result = state.decreaseCartQuantity(productId)
+
+            _uiState.value = state.modifyUiState(result)
+            cartRepository.upsert(productId, result.cartQuantity)
+        }
+    }
+
+    fun increaseCartQuantity(productId: Long) {
+        withUiState { state ->
+            when (val result = state.canIncreaseCartQuantity(productId)) {
+                is IncreaseState.CanIncrease -> {
+                    val newState = result.value
+                    _uiState.value = state.modifyUiState(newState)
+                    cartRepository.upsert(productId, newState.cartQuantity)
+                }
+
+                is IncreaseState.CannotIncrease -> sendEvent(CartUiEvent.ShowCannotIncrease(result.quantity))
+            }
+        }
+    }
+
+    fun loadCarts() {
+        val nextPage = paging.getPageNo() - 1
+        val products = mutableListOf<ProductState>()
+        cartRepository.singlePage(nextPage, PAGE_SIZE) { page ->
+            page.carts.map { cart ->
+                productRepository.getProduct(cart.productId) {
+                    products.add(ProductState(it, cart.quantity))
+                }
+            }
+            val pageState = paging.createPageState(page.hasNextPage)
+            _uiState.postValue(CartUiState(items = products, pageState = pageState))
         }
     }
 
@@ -37,18 +73,36 @@ class CartViewModel(
         loadCarts()
     }
 
-    fun loadCarts() {
-        val result = cartRepository.loadSinglePage(paging.getPageNo() - 1, PAGE_SIZE)
+    fun deleteProduct(productId: Long) {
+        cartRepository.delete(productId) {
+            refresh()
+        }
+    }
 
-        val carts =
-            result
-                .carts
-                .map {
-                    val product = productRepository[it.productId]
-                    CartState(it.id, product)
+    private fun refresh() {
+        cartRepository.singlePage(paging.getPageNo() - 1, PAGE_SIZE) { page ->
+            val products = mutableListOf<ProductState>()
+            page.carts.map { cart ->
+                productRepository.getProduct(cart.productId) {
+                    products.add(ProductState(it, cart.quantity))
                 }
-        val pageState = paging.createPageState(result.hasNextPage)
+            }
 
-        _uiState.value = CartUiState(carts = carts, pageState = pageState)
+            if (paging.resetToLastPageIfEmpty(products)) {
+                refresh()
+                return@singlePage
+            }
+
+            val pageState = paging.createPageState(page.hasNextPage)
+            _uiState.postValue(CartUiState(items = products, pageState = pageState))
+        }
+    }
+
+    private fun withUiState(block: (CartUiState) -> Unit) {
+        _uiState.value?.let { block }
+    }
+
+    private fun sendEvent(event: CartUiEvent) {
+        _event.setValue(event)
     }
 }

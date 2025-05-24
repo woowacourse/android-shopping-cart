@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.cart
 
-data class CartResult(
+data class CartSinglePage(
     val carts: List<Cart>,
     val hasNextPage: Boolean,
 )
