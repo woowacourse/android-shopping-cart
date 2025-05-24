@@ -22,4 +22,6 @@
     <string name="cart_page">%d</string>
     <string name="product_ic_back_explain">상품 목록으로 이동하는 버튼입니다.</string>
     <string name="cart_product_delete">상품이 삭제되었습니다.</string>
+    <string name="product_count_minus">-</string>
+    <string name="product_count_plus">+</string>
 </resources>

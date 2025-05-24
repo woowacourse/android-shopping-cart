@@ -15,6 +15,7 @@ class ProductViewHolder(
         binding.onSelectedProduct = onSelectedProduct
         binding.tvProductPlusCart.setOnClickListener {
             binding.tvProductPlusCart.isVisible = false
+            binding.iProductCountControl.root.isVisible = true
         }
     }
 
