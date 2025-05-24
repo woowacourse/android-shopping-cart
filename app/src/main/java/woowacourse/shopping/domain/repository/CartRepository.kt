@@ -5,22 +5,34 @@ import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.cart.CartSinglePage
 
 interface CartRepository {
-    operator fun get(id: Long): Cart?
-
-    fun insert(
-        productId: Long,
-        quantity: Int = 1,
+    fun getCart(
+        id: Long,
+        onResult: (cart: Cart?) -> Unit,
     )
 
-    fun delete(id: Long)
+    fun getCarts(
+        productIds: List<Long>,
+        onResult: (carts: List<Cart?>) -> Unit,
+    )
 
-    fun modifyQuantity(
+    fun upsert(
         productId: Long,
         quantity: Quantity,
     )
 
-    fun loadSinglePage(
+    fun modify(
+        id: Long,
+        quantity: Quantity,
+    )
+
+    fun delete(
+        id: Long,
+        onResult: () -> Unit,
+    )
+
+    fun singlePage(
         page: Int,
         pageSize: Int,
-    ): CartSinglePage
+        onResult: (CartSinglePage) -> Unit,
+    )
 }

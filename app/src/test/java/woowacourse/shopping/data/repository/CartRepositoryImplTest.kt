@@ -1,98 +1,125 @@
 package woowacourse.shopping.data.repository
 
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.storage.CartStorage
+import org.junit.jupiter.api.assertNotNull
+import woowacourse.shopping.data.datasource.CartDataSource
+import woowacourse.shopping.data.db.entity.CartEntity
+import woowacourse.shopping.data.fake.FakeCartRepositoryImpl
 import woowacourse.shopping.domain.Quantity
-import woowacourse.shopping.domain.cart.Cart
-import woowacourse.shopping.domain.cart.CartSinglePage
-import woowacourse.shopping.fixture.cartFixture1
-import woowacourse.shopping.fixture.cartFixture2
-import woowacourse.shopping.fixture.cartFixture3
+import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImplTest {
-    private val mockStorage: CartStorage = mockk()
-    private val repository = CartRepositoryImpl(mockStorage)
+    private lateinit var dataSource: CartDataSource
+    private lateinit var repository: CartRepository
 
-    @Test
-    fun `insert()는 수량 1로 Cart를 생성하여 저장한다`() {
-        // given
-        val productId = 10L
-        val expectedCart = Cart(productId = productId, quantity = Quantity(1))
-
-        every { mockStorage.insert(expectedCart) } just Runs
-
-        // when
-        repository.insert(productId)
-
-        // then
-        verify(exactly = 1) { mockStorage.insert(expectedCart) }
+    @BeforeEach
+    fun setUp() {
+        dataSource = mockk()
+        repository = FakeCartRepositoryImpl(dataSource)
     }
 
     @Test
-    fun `첫_번째_페이지의_장바구니_상품을_반환한다`() {
-        // given
+    fun `주어진_productId로_장바구니_항목을_조회하면_해당_항목을_반환한다`() {
+        // Given
+        val productId = 1L
+        val cartEntity = CartEntity(productId, 5)
+        every { dataSource.getCartByProductId(productId) } returns cartEntity
+
+        // When
+        repository.getCart(productId) { cart ->
+            // Then
+            assertNotNull(cart)
+            assertEquals(productId, cart.productId)
+            assertEquals(5, cart.quantity.value)
+
+            verify(exactly = 1) { dataSource.getCartByProductId(productId) }
+        }
+    }
+
+    @Test
+    fun `상품_id_리스트를_전달하면_해당하는_장바구니_항목들을_반환한다`() {
+        // Given
+        val productIds = listOf(1L, 2L)
+        val entities = listOf(CartEntity(1L, 3), CartEntity(2L, 7))
+        every { dataSource.getCartsByProductIds(productIds) } returns entities
+
+        // When
+        repository.getCarts(productIds) { carts ->
+            // Then
+            assertEquals(2, carts.size)
+            assertEquals(3, carts[0]?.quantity?.value)
+            assertEquals(7, carts[1]?.quantity?.value)
+
+            verify(exactly = 1) { dataSource.getCartsByProductIds(productIds) }
+        }
+    }
+
+    @Test
+    fun `upsert_호출시_datasource의_upsert가_호출된다`() {
+        // Given
+        val productId = 1L
+        val quantity = Quantity(10)
+        every { dataSource.upsert(any()) } returns Unit
+
+        // When
+        repository.upsert(productId, quantity)
+
+        // Then
+        verify(exactly = 1) { dataSource.upsert(CartEntity(productId, quantity.value)) }
+    }
+
+    @Test
+    fun `modify_호출시_datasource의_modify가_호출된다`() {
+        // Given
+        val productId = 1L
+        val quantity = Quantity(15)
+        every { dataSource.modify(any()) } returns Unit
+
+        // When
+        repository.modify(productId, quantity)
+
+        // Then
+        verify(exactly = 1) { dataSource.modify(CartEntity(productId, quantity.value)) }
+    }
+
+    @Test
+    fun `delete_호출시_datasource의_delete가_호출된다`() {
+        // Given
+        val productId = 1L
+        every { dataSource.deleteCartByProductId(productId) } returns Unit
+
+        // When
+        repository.delete(productId) {
+            // Then
+            verify(exactly = 1) { dataSource.deleteCartByProductId(productId) }
+        }
+    }
+
+    @Test
+    fun `singlePage_호출시_정확한_CartSinglePage_데이터를_반환한다`() {
+        // Given
         val page = 0
-        val pageSize = 3
-        val fromIndex = 0
-        val toIndex = 3
+        val pageSize = 2
+        val entities = listOf(CartEntity(1L, 3), CartEntity(2L, 5))
+        every { dataSource.singlePage(page, pageSize) } returns entities
+        every { dataSource.pageCount(pageSize) } returns 2
 
-        val expected =
-            CartSinglePage(
-                carts = listOf(cartFixture1, cartFixture2, cartFixture3),
-                hasNextPage = true,
-            )
-        every { mockStorage.singlePage(fromIndex, toIndex) } returns expected
+        // When
+        repository.singlePage(page, pageSize) { pageResult ->
+            // Then
+            assertNotNull(pageResult)
+            assertEquals(2, pageResult.carts.size)
+            assertEquals(3, pageResult.carts.first().quantity.value)
+            assertTrue(pageResult.hasNextPage)
 
-        // when
-        val result = repository.loadSinglePage(page, pageSize)
-
-        // then
-        assertEquals(expected, result)
-        verify { mockStorage.singlePage(fromIndex, toIndex) }
-    }
-
-    @Test
-    fun `다음_페이지의_상품이_없으면_hasNextPage는_false를_반환한다`() {
-        // given
-        val page = 2
-        val pageSize = 5
-        val fromIndex = 10
-        val toIndex = 15
-
-        val expected =
-            CartSinglePage(
-                carts = listOf(cartFixture1),
-                hasNextPage = false,
-            )
-        every { mockStorage.singlePage(fromIndex, toIndex) } returns expected
-
-        // when
-        val result = repository.loadSinglePage(page, pageSize)
-
-        // then
-        assertFalse(result.hasNextPage)
-        assertEquals(expected.carts, result.carts)
-        verify { mockStorage.singlePage(fromIndex, toIndex) }
-    }
-
-    @Test
-    fun `modifyQuantity()는 해당 상품의 수량을 변경한다`() {
-        // given
-        val productId = 5L
-        val quantity = Quantity(3)
-        every { mockStorage.modifyQuantity(productId, quantity) } just Runs
-
-        // when
-        repository.modifyQuantity(productId, quantity)
-
-        // then
-        verify(exactly = 1) { mockStorage.modifyQuantity(productId, quantity) }
+            verify(exactly = 1) { dataSource.singlePage(page, pageSize) }
+            verify(exactly = 1) { dataSource.pageCount(pageSize) }
+        }
     }
 }
