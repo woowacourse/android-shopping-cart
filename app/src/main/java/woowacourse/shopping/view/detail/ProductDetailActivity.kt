@@ -13,6 +13,7 @@ import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.util.getParcelableCompat
+import woowacourse.shopping.view.util.setPrice
 
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
@@ -23,19 +24,20 @@ class ProductDetailActivity :
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
 
-        initializeViewModel()
         val product: InventoryProduct =
             intent.getParcelableCompat<InventoryProduct>(KEY_PRODUCT) ?: run {
                 onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
+        initializeViewModel(product)
         binding.apply {
             this.product = product
+            quantity = viewModel.quantity.value
             handler = this@ProductDetailActivity
         }
     }
 
-    private fun initializeViewModel() {
+    private fun initializeViewModel(product: InventoryProduct) {
         val shoppingApplication = application as ShoppingApplication
         val factory =
             ProductDetailViewModel.createFactory(
@@ -45,6 +47,7 @@ class ProductDetailActivity :
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         viewModel.quantity.observe(this) { quantity ->
             binding.tvQuantity.text = quantity.toString()
+            setPrice(binding.tvProductPrice, product.price * quantity)
         }
     }
 

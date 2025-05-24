@@ -115,7 +115,7 @@
 
         <TextView
             android:id="@+id/tv_price"
-            priceWithFormat="@{cartItem.price}"
+            priceWithFormat="@{cartItem.price * cartItem.quantity}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
