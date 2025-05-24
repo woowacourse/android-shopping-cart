@@ -73,9 +73,11 @@ class ProductDetailActivity :
 
     private inner class ProductDetailEventHandlerImpl : ProductDetailEventHandler {
         override fun onQuantityMinusSelected(uiModel: QuantityObservable) {
+            viewModel.increaseCount()
         }
 
         override fun onQuantityPlusSelected(uiModel: QuantityObservable) {
+            viewModel.decreaseCount()
         }
 
         override fun onAddToCartSelected(productUiModel: ProductUiModel) {

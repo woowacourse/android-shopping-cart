@@ -38,9 +38,18 @@ fun ShoppingCartItemUiModel.toShoppingCartItem(): ShoppingCartItem {
     )
 }
 
-fun Page<Product>.toPageUiModel(): Page<ProductUiModel> {
+fun Page<Product>.toProductPageUiModel(): Page<ProductUiModel> {
     return Page(
         items = items.map { it.toProductUiModel() },
+        totalCounts = totalCounts,
+        currentPage = currentPage,
+        pageSize = pageSize,
+    )
+}
+
+fun Page<ShoppingCartItem>.toShoppingCartItemPageUiModel(): Page<ShoppingCartItemUiModel> {
+    return Page(
+        items = items.map { it.toShoppingCartItemUiModel() },
         totalCounts = totalCounts,
         currentPage = currentPage,
         pageSize = pageSize,

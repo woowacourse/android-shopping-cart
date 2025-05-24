@@ -89,7 +89,9 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             >
+
             <include
+                app:quantityObservable="@{product}"
                 app:quantity="@{quantity}"
                 app:handler="@{handler}"
                 layout="@layout/button_quantity_selector" />

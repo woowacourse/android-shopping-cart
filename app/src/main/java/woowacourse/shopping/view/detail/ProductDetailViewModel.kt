@@ -92,6 +92,20 @@ class ProductDetailViewModel(
         return recentProducts.items.first().product.name
     }
 
+    fun increaseCount() {
+        quantityLiveData.value?.let {
+            quantityLiveData.value = it + 1
+        }
+    }
+
+    fun decreaseCount() {
+        quantityLiveData.value?.let {
+            if (it > 1) {
+                quantityLiveData.value = it - 1
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {

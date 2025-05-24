@@ -18,8 +18,8 @@ import woowacourse.shopping.data.repository.RecentProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.mapper.toPageUiModel
 import woowacourse.shopping.mapper.toProduct
+import woowacourse.shopping.mapper.toProductPageUiModel
 import woowacourse.shopping.mapper.toProductUiModel
 import woowacourse.shopping.mapper.toShoppingCartItemUiModel
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
@@ -78,14 +78,14 @@ class ProductsViewModel(
 
             quantityInfo +=
                 QuantityInfo(
-                    page.toPageUiModel().items.quantityMap(
+                    page.toProductPageUiModel().items.quantityMap(
                         shoppingCartItems,
                     ),
                 )
 
             _productsLiveData.value =
                 MainRecyclerViewProduct(
-                    page = page.toPageUiModel(),
+                    page = page.toProductPageUiModel(),
                     shoppingCartItemUiModels = shoppingCartItems,
                     quantityInfo,
                 )

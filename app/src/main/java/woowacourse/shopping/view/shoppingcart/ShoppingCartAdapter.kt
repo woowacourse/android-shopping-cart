@@ -2,12 +2,11 @@ package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.view.uimodel.QuantityInfo
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import woowacourse.shopping.view.uimodel.ShoppingCartRecyclerViewItems
 
 class ShoppingCartAdapter(
     private val handler: ShoppingCartEventHandler,
@@ -36,14 +35,11 @@ class ShoppingCartAdapter(
         return ShoppingCartViewHolder(binding, handler)
     }
 
-    fun updateProducts(page: Page<ShoppingCartItemUiModel>) {
+    fun updateProducts(items: ShoppingCartRecyclerViewItems) {
         val previousCount = itemCount
-        products = page.items
-        currentPage = page.currentPage
-        quantityInfo =
-            QuantityInfo(
-                page.items.associateWith { MutableLiveData(it.quantity) },
-            )
+        products = items.page.items
+        currentPage = items.page.currentPage
+        quantityInfo = items.quantityInfo
         notifyItemRangeChanged(0, previousCount)
         notifyItemRangeRemoved(previousCount - itemCount, previousCount - itemCount)
     }

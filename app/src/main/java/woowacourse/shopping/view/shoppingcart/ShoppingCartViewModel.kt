@@ -13,20 +13,24 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import woowacourse.shopping.ShoppingCartApplication
-import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.mapper.toShoppingCartItem
-import woowacourse.shopping.mapper.toShoppingCartItemUiModel
+import woowacourse.shopping.mapper.toShoppingCartItemPageUiModel
+import woowacourse.shopping.view.uimodel.QuantityInfo
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import woowacourse.shopping.view.uimodel.ShoppingCartRecyclerViewItems
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _productsLiveData: MutableLiveData<Page<ShoppingCartItemUiModel>> =
+    private val _productsLiveData: MutableLiveData<ShoppingCartRecyclerViewItems> =
         MutableLiveData()
 
-    val productsLiveData: LiveData<Page<ShoppingCartItemUiModel>> get() = _productsLiveData
+    val productsLiveData: LiveData<ShoppingCartRecyclerViewItems> get() = _productsLiveData
+
+    var quantityInfo: QuantityInfo<ShoppingCartItemUiModel> = QuantityInfo()
+        private set
 
     fun removeProduct(
         shoppingCartItemUiModel: ShoppingCartItemUiModel,
@@ -51,12 +55,17 @@ class ShoppingCartViewModel(
                 withContext(Dispatchers.IO) {
                     shoppingCartRepository.findAll(pageRequest)
                 }
+            quantityInfo =
+                QuantityInfo(
+                    item.toShoppingCartItemPageUiModel().items.associateWith {
+                        MutableLiveData(it.quantity)
+                    },
+                )
+
             _productsLiveData.value =
-                Page(
-                    items = item.items.map { it.toShoppingCartItemUiModel() },
-                    totalCounts = item.totalCounts,
-                    currentPage = item.currentPage,
-                    pageSize = item.pageSize,
+                ShoppingCartRecyclerViewItems(
+                    item.toShoppingCartItemPageUiModel(),
+                    quantityInfo,
                 )
         }
     }
@@ -65,6 +74,22 @@ class ShoppingCartViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             shoppingCartItemUiModels.forEach {
                 shoppingCartRepository.update(it.toShoppingCartItem())
+            }
+        }
+    }
+
+    fun increaseCount(shoppingCartItemUiModel: ShoppingCartItemUiModel) {
+        quantityInfo[shoppingCartItemUiModel].value?.let {
+            quantityInfo[shoppingCartItemUiModel].value = it + 1
+        }
+    }
+
+    fun decreaseCount(shoppingCartItemUiModel: ShoppingCartItemUiModel) {
+        quantityInfo[shoppingCartItemUiModel].value?.let {
+            if (it > 1) {
+                quantityInfo[shoppingCartItemUiModel].value = it - 1
+            } else {
+                removeProduct(shoppingCartItemUiModel, 0)
             }
         }
     }

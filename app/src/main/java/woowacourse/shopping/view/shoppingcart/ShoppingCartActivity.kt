@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
@@ -99,22 +98,12 @@ class ShoppingCartActivity :
             viewModel.removeProduct(product, page)
         }
 
-        override fun whenQuantityChangedSelectView(
-            quantity: MutableLiveData<Int>,
-            item: ShoppingCartItemUiModel?,
-            page: Int,
-        ) {
-            item?.let {
-                if (quantity.value == 0) {
-                    onProductRemove(item, page)
-                }
-            }
-        }
-
         override fun onQuantityMinusSelected(uiModel: QuantityObservable) {
+            viewModel.decreaseCount(uiModel as ShoppingCartItemUiModel)
         }
 
         override fun onQuantityPlusSelected(uiModel: QuantityObservable) {
+            viewModel.increaseCount(uiModel as ShoppingCartItemUiModel)
         }
     }
 }
@@ -124,12 +113,6 @@ interface ShoppingCartEventHandler : QuantitySelectorEventHandler {
 
     fun onProductRemove(
         product: ShoppingCartItemUiModel,
-        page: Int,
-    )
-
-    fun whenQuantityChangedSelectView(
-        quantity: MutableLiveData<Int>,
-        item: ShoppingCartItemUiModel?,
         page: Int,
     )
 }

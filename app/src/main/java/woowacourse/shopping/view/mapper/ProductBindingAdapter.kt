@@ -11,9 +11,7 @@ import com.google.android.material.card.MaterialCardView
 import woowacourse.shopping.R
 import woowacourse.shopping.view.detail.ProductDetailViewModel
 import woowacourse.shopping.view.main.adapter.ProductEventHandler
-import woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler
 import woowacourse.shopping.view.uimodel.ProductUiModel
-import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 @BindingAdapter("android:price")
 fun setPrice(
@@ -62,32 +60,6 @@ fun setQuantity(
     view.findViewTreeLifecycleOwner()?.let {
         quantity.observe(it) {
             view.text = quantity.value.toString()
-        }
-    }
-}
-
-@BindingAdapter(
-    "shoppingCart:observe",
-    "shoppingCart:observe_action",
-    "shoppingCart:observe_argument_item",
-    "shoppingCart:observe_argument_page",
-    requireAll = true,
-)
-fun setObservable(
-    view: ViewGroup,
-    quantity: MutableLiveData<Int>,
-    action: ShoppingCartEventHandler,
-    item: ShoppingCartItemUiModel,
-    page: Int,
-) {
-    view.findViewTreeLifecycleOwner()?.let {
-        quantity.removeObservers(it)
-        quantity.observe(it) {
-            action.whenQuantityChangedSelectView(
-                quantity,
-                item,
-                page,
-            )
         }
     }
 }
