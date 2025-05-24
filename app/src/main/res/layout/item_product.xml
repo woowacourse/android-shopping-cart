@@ -9,7 +9,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem.ProductItem" />
+            type="woowacourse.shopping.presentation.model.CatalogItem.ProductItem" />
 
         <variable
             name="adapterPosition"

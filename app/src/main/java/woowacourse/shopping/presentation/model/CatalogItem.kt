@@ -1,7 +1,6 @@
-package woowacourse.shopping.presentation.view.catalog.adapter.model
+package woowacourse.shopping.presentation.model
 
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.model.ProductUiModel
 
 sealed class CatalogItem(
     val viewType: CatalogType,

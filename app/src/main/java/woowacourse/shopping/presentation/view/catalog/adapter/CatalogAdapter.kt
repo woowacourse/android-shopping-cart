@@ -2,9 +2,9 @@ package woowacourse.shopping.presentation.view.catalog.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.presentation.model.CatalogItem
+import woowacourse.shopping.presentation.model.CatalogItem.CatalogType
 import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
-import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem
-import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem.CatalogType
 
 class CatalogAdapter(
     products: List<CatalogItem> = emptyList(),

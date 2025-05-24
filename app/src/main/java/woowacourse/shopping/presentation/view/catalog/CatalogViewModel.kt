@@ -12,11 +12,11 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.presentation.model.CatalogItem
+import woowacourse.shopping.presentation.model.toCatalogProductItem
 import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.SingleLiveData
-import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem
-import woowacourse.shopping.presentation.view.catalog.adapter.model.toCatalogProductItem
 import woowacourse.shopping.presentation.view.catalog.event.CatalogMessageEvent
 
 class CatalogViewModel(

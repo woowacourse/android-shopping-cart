@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductContainerBinding
+import woowacourse.shopping.presentation.model.CatalogItem
 import woowacourse.shopping.presentation.ui.decorations.HorizontalEdgeSpacingDecoration
-import woowacourse.shopping.presentation.view.catalog.adapter.model.CatalogItem
 
 class RecentProductContainerViewHolder private constructor(
     binding: ItemRecentProductContainerBinding,
