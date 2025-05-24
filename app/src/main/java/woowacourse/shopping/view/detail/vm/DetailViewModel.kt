@@ -31,44 +31,50 @@ class DetailViewModel(
     }
 
     fun increaseCartQuantity() {
-        val currentUiState = _uiState.value ?: return
+        withUiState { state ->
+            when (val result = state.increaseCartQuantity()) {
+                is IncreaseState.CanIncrease -> {
+                    _uiState.value = result.value
+                }
 
-        when (val result = currentUiState.increaseCartQuantity()) {
-            is IncreaseState.CanIncrease -> {
-                _uiState.value = result.value
-            }
-
-            is IncreaseState.CannotIncrease -> {
-                sendEvent(DetailUiEvent.ShowCannotIncrease(result.quantity))
+                is IncreaseState.CannotIncrease -> {
+                    sendEvent(DetailUiEvent.ShowCannotIncrease(result.quantity))
+                }
             }
         }
     }
 
     fun decreaseCartQuantity() {
-        val currentUiState = _uiState.value ?: return
-        val decreasedCartQuantity = (currentUiState.cartQuantity - 1)
+        withUiState { state ->
+            val decreasedCartQuantity = (state.cartQuantity - 1)
 
-        val quantity =
-            if (!decreasedCartQuantity.hasQuantity()) {
-                _event.setValue(DetailUiEvent.ShowCannotDecrease)
-                Quantity(1)
-            } else {
-                decreasedCartQuantity
-            }
+            val quantity =
+                if (!decreasedCartQuantity.hasQuantity()) {
+                    _event.setValue(DetailUiEvent.ShowCannotDecrease)
+                    Quantity(1)
+                } else {
+                    decreasedCartQuantity
+                }
 
-        _uiState.value = currentUiState.copy(cartQuantity = quantity)
+            _uiState.value = state.copy(cartQuantity = quantity)
+        }
     }
 
     fun saveCart() {
-        val state = _uiState.value ?: return
-        cartRepository.getCart(state.item.id) { cart ->
-            cart?.let {
-                cartRepository.upsert(state.item.id, state.cartQuantity)
-            } ?: run {
-                cartRepository.modify(state.item.id, state.cartQuantity)
+        withUiState { state ->
+            cartRepository.getCart(state.item.id) { cart ->
+                cart?.let {
+                    cartRepository.upsert(state.item.id, state.cartQuantity)
+                } ?: run {
+                    cartRepository.modify(state.item.id, state.cartQuantity)
+                }
             }
+            sendEvent(DetailUiEvent.MoveToCart)
         }
-        sendEvent(DetailUiEvent.MoveToCart)
+    }
+
+    private inline fun withUiState(block: (ProductState) -> Unit) {
+        _uiState.value?.let(block)
     }
 
     private fun sendEvent(event: DetailUiEvent) {

@@ -27,24 +27,25 @@ class CartViewModel(
     val event: SingleLiveData<CartUiEvent> get() = _event
 
     fun decreaseCartQuantity(productId: Long) {
-        val currentUiState = _uiState.value ?: return
-        val result = currentUiState.decreaseCartQuantity(productId)
+        withUiState { state ->
+            val result = state.decreaseCartQuantity(productId)
 
-        _uiState.value = currentUiState.modifyUiState(result)
-        cartRepository.upsert(productId, result.cartQuantity)
+            _uiState.value = state.modifyUiState(result)
+            cartRepository.upsert(productId, result.cartQuantity)
+        }
     }
 
     fun increaseCartQuantity(productId: Long) {
-        val currentUiState = _uiState.value ?: return
+        withUiState { state ->
+            when (val result = state.canIncreaseCartQuantity(productId)) {
+                is IncreaseState.CanIncrease -> {
+                    val newState = result.value
+                    _uiState.value = state.modifyUiState(newState)
+                    cartRepository.upsert(productId, newState.cartQuantity)
+                }
 
-        when (val result = currentUiState.canIncreaseCartQuantity(productId)) {
-            is IncreaseState.CanIncrease -> {
-                val newState = result.value
-                _uiState.value = currentUiState.modifyUiState(newState)
-                cartRepository.upsert(productId, newState.cartQuantity)
+                is IncreaseState.CannotIncrease -> sendEvent(CartUiEvent.ShowCannotIncrease(result.quantity))
             }
-
-            is IncreaseState.CannotIncrease -> sendEvent(CartUiEvent.ShowCannotIncrease(result.quantity))
         }
     }
 
@@ -93,6 +94,10 @@ class CartViewModel(
             val pageState = paging.createPageState(page.hasNextPage)
             _uiState.postValue(CartUiState(items = products, pageState = pageState))
         }
+    }
+
+    private fun withUiState(block: (CartUiState) -> Unit) {
+        _uiState.value?.let { block }
     }
 
     private fun sendEvent(event: CartUiEvent) {
