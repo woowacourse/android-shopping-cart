@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.productdetail
 
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.product.CartItem
 
-interface DetailClickListener {
-    fun onAddToCartClick(product: Product)
+interface DetailClickListener{
+    fun onAddToCartClick(cartItem: CartItem)
 }

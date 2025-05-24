@@ -11,11 +11,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.ui.QuantityClickListener
 import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
+import woowacourse.shopping.ui.viewmodel.DetailViewModel
+import woowacourse.shopping.ui.viewmodel.DetailViewModelFactory
 import woowacourse.shopping.utils.intentSerializable
 import kotlin.concurrent.thread
 
@@ -23,22 +28,36 @@ class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
     val cartRepository = CartRepository.get()
 
+    private lateinit var viewModel: DetailViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        applyWindowInsets()
         val product = intent?.intentSerializable(EXTRA_PRODUCT, Product::class.java) ?: throw IllegalArgumentException("알 수 없는 값입니다.")
+        viewModel = ViewModelProvider(this, DetailViewModelFactory(product))[DetailViewModel::class.java]
+        applyWindowInsets()
+        initObserver()
         setSupportActionBar(binding.toolbarProductDetail)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.product = product
         binding.detailClickListener =
             object : DetailClickListener {
-                override fun onAddToCartClick(product: Product) {
+                override fun onAddToCartClick(cartItem: CartItem) {
                     thread {
-                        cartRepository.insert(product)
+                        cartRepository.insert(cartItem)
                     }
                     Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
+                }
+            }
+        binding.quantityClickListener =
+            object : QuantityClickListener {
+                override fun onIncreaseClick(cartItem: CartItem) {
+                    viewModel.increaseQuantity()
+                }
+
+                override fun onDecreaseClick(cartItem: CartItem) {
+                    viewModel.decreaseQuantity()
                 }
             }
     }
@@ -56,6 +75,12 @@ class ProductDetailActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun initObserver() {
+        viewModel.cartItem.observe(this) {
+            binding.cartItem = it
+        }
     }
 
     private fun applyWindowInsets() {
