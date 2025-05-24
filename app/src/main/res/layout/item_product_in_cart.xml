@@ -52,7 +52,7 @@
             app:layout_constraintTop_toBottomOf="@id/product_in_cart_title" />
 
         <include
-            android:id="@+id/quantity_selector"
+            android:id="@+id/view_quantity_select"
             layout="@layout/item_product_quantity_selector"
             android:layout_width="126dp"
             android:layout_height="42dp"

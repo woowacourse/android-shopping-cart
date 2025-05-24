@@ -48,8 +48,8 @@ class CartViewModelTest {
 
         // then
         viewModel.currentPageNumber.value shouldBe 2
-        viewModel.loadedProducts.value shouldNotBe null
-        viewModel.loadedProducts.value?.size shouldBe 1
+        viewModel.cartItems.value shouldNotBe null
+        viewModel.cartItems.value?.size shouldBe 1
         viewModel.isLastPage.value shouldBe true
     }
 
@@ -63,8 +63,8 @@ class CartViewModelTest {
 
         // then
         viewModel.currentPageNumber.value shouldBe 1
-        viewModel.loadedProducts.value shouldNotBe null
-        viewModel.loadedProducts.value?.size shouldBe 5
+        viewModel.cartItems.value shouldNotBe null
+        viewModel.cartItems.value?.size shouldBe 5
         viewModel.isFirstPage.value shouldBe true
     }
 }
