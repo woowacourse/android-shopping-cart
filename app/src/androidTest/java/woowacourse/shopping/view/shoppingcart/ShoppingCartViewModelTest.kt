@@ -70,7 +70,7 @@ class ShoppingCartViewModelTest {
             )
 
         viewModel.removeProduct(productUiModel, 4)
-        
+
         assertThat(viewModel.productsLiveData.getOrAwaitValue().page.currentPage).isEqualTo(4)
     }
 
