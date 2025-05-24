@@ -40,14 +40,37 @@ class GoodsViewModel(
     val shouldNavigateToShoppingCart: SingleLiveData<Unit>
         get() = _shouldNavigateToShoppingCart
 
-    private val _onQuantityChanged: MutableSingleLiveData<List<Int>> = MutableSingleLiveData()
-    val onQuantityChanged: SingleLiveData<List<Int>>
+    private val _onQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
+    val onQuantityChanged: SingleLiveData<Int>
         get() = _onQuantityChanged
 
     private var page: Int = DEFAULT_PAGE
 
     init {
-        _goods.value = goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        initGoods()
+    }
+
+    fun initGoods() {
+        val currentGoods = goodsRepository.getPagedGoods(page++, ITEM_COUNT).map { it.toUiModel() }
+        val selectedItems = shoppingRepository.getAllGoods()
+
+        val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
+
+        _goods.value = updatedGoods
+        _shoppingGoodsCount.value = selectedItems.sumOf { it.goodsQuantity }
+    }
+
+    private fun getUpdatedGoods(
+        currentGoods: List<GoodsUiModel>,
+        selectedItems: Set<ShoppingGoods>,
+    ): List<GoodsUiModel> {
+        val updatedList =
+            currentGoods.map { goods ->
+                val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
+                goods.copy(quantity = selected?.goodsQuantity ?: MINIMUM_QUANTITY)
+            }
+
+        return updatedList
     }
 
     fun setLatestGoods() {
@@ -57,47 +80,23 @@ class GoodsViewModel(
             }
     }
 
-    fun restoreGoods() {
-        val currentGoods = goods.value.orEmpty()
-        val selectedItems = shoppingRepository.getAllGoods()
+    fun updateQuantity(changedIds: List<Int>?) {
+        if (changedIds == null) return
+        val updatedList = _goods.value?.toMutableList() ?: return
 
-        val (updatedGoods, changedPositions) = getUpdatedGoods(currentGoods, selectedItems)
+        changedIds.forEach { id ->
+            val index = updatedList.indexOfFirst { it.id == id }
+            if (index == -1) return@forEach
 
-        _goods.value = updatedGoods
-        _onQuantityChanged.setValue(changedPositions)
-        _shoppingGoodsCount.value = selectedItems.sumOf { it.goodsQuantity }
-    }
-
-    private fun getUpdatedGoods(
-        currentGoods: List<GoodsUiModel>,
-        selectedItems: Set<ShoppingGoods>,
-    ): Pair<List<GoodsUiModel>, List<Int>> {
-        val changedPositions = mutableListOf<Int>()
-
-        val updatedList =
-            currentGoods.mapIndexed { index, goods ->
-                val updated = updateGoodsFromSelected(goods, selectedItems)
-                if (updated != goods) {
-                    changedPositions.add(index)
-                }
-
-                updated
-            }
-
-        return updatedList to changedPositions
-    }
-
-    private fun updateGoodsFromSelected(
-        goods: GoodsUiModel,
-        selectedItems: Set<ShoppingGoods>,
-    ): GoodsUiModel {
-        val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
-
-        return when {
-            selected != null -> goods.copy(quantity = selected.goodsQuantity)
-            goods.quantity != MINIMUM_QUANTITY -> goods.copy(quantity = MINIMUM_QUANTITY)
-            else -> goods
+            val item = updatedList[index]
+            val shoppingGoods = shoppingRepository.getGoodsById(id)
+            updatedList[index] =
+                item.copy(quantity = shoppingGoods?.goodsQuantity ?: MINIMUM_QUANTITY)
+            _onQuantityChanged.setValue(index)
         }
+
+        _goods.value = updatedList.toList()
+        _shoppingGoodsCount.value = goods.value?.sumOf { it.quantity }
     }
 
     fun increaseGoodsCount(position: Int) {
@@ -131,7 +130,7 @@ class GoodsViewModel(
             }
 
         _goods.value = updatedList
-        _onQuantityChanged.setValue(listOf(position))
+        _onQuantityChanged.setValue(position)
         return updatedItem
     }
 

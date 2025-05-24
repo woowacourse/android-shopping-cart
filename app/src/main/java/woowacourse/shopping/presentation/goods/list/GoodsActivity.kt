@@ -1,9 +1,12 @@
 package woowacourse.shopping.presentation.goods.list
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +28,8 @@ class GoodsActivity : BaseActivity() {
         )
     }
 
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
@@ -43,13 +48,25 @@ class GoodsActivity : BaseActivity() {
 
         setSupportActionBar(binding.toolbar)
         setUpObserver(goodsAdapter, latestGoodsAdapter)
+        setUpLauncher()
     }
 
     override fun onStart() {
         super.onStart()
 
         viewModel.setLatestGoods()
-        viewModel.restoreGoods()
+    }
+
+    private fun setUpLauncher() {
+        activityResultLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult(),
+            ) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val changedIds = result.data?.getIntegerArrayListExtra("ids")?.toList()
+                    viewModel.updateQuantity(changedIds)
+                }
+            }
     }
 
     private fun setUpBinding() {
@@ -115,13 +132,13 @@ class GoodsActivity : BaseActivity() {
             goodsAdapter.loadMoreItems(goods)
         }
 
-        viewModel.onQuantityChanged.observe(this) { goods ->
-            goods.forEach { goodsAdapter.notifyItemChanged(it) }
+        viewModel.onQuantityChanged.observe(this) { position ->
+            goodsAdapter.notifyItemChanged(position)
         }
 
         viewModel.shouldNavigateToShoppingCart.observe(this) {
             val intent = ShoppingCartActivity.newIntent(this)
-            startActivity(intent)
+            activityResultLauncher.launch(intent)
         }
 
         viewModel.latestGoods.observe(this) {

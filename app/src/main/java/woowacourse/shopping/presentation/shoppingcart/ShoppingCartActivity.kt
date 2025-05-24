@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.shoppingcart
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.goods.list.GoodsActivity
 import woowacourse.shopping.presentation.model.GoodsUiModel
 
 class ShoppingCartActivity : BaseActivity() {
@@ -79,7 +81,12 @@ class ShoppingCartActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
+                viewModel.moveToGoods { ids ->
+                    val intent = GoodsActivity.newIntent(this)
+                    intent.putExtra("ids", ArrayList(ids))
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
                 true
             }
 
