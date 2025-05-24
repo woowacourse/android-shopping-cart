@@ -18,7 +18,7 @@ class CartAdapter(
         if (viewType == VIEW_TYPE_CART_PRODUCT) {
             CartViewHolder.from(parent, cartHandler, handler)
         } else {
-            PaginationButtonViewHolder.from(parent, cartHandler)
+            PaginationButtonViewHolder.from(parent)
         }
 
     override fun onBindViewHolder(
@@ -28,11 +28,7 @@ class CartAdapter(
         when (holder) {
             is CartViewHolder -> holder.bind(cartProducts[position])
             is PaginationButtonViewHolder ->
-                holder.bind(
-                    page = cartHandler.getPage(),
-                    isNextButtonEnabled = cartHandler.isNextButtonEnabled(),
-                    isPrevButtonEnabled = cartHandler.isPrevButtonEnabled(),
-                )
+                holder.bind(cartHandler)
         }
     }
 

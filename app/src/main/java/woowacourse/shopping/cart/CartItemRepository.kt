@@ -33,4 +33,9 @@ interface CartItemRepository {
         product: ProductUiModel,
         callback: (CartItem?) -> Unit,
     )
+
+    fun updateOrInsertItem(
+        product: ProductUiModel,
+        callback: () -> Unit,
+    )
 }

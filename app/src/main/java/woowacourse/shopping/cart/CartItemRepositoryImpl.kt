@@ -73,4 +73,19 @@ class CartItemRepositoryImpl(
             callback(result)
         }
     }
+
+    override fun updateOrInsertItem(
+        product: ProductUiModel,
+        callback: () -> Unit,
+    ) {
+        thread {
+            val exist = dao.getCartItemById(product.id)
+            if (exist != null) {
+                dao.updateQuantity(product.id, product.quantity)
+            } else {
+                dao.insertCartItem(product.toCartItem())
+            }
+            callback
+        }
+    }
 }
