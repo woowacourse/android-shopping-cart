@@ -1,12 +1,10 @@
 package woowacourse.shopping.view.main.adapter
 
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo
-import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductsAdapter(
     private val handler: ProductEventHandler,
@@ -70,19 +68,7 @@ class ProductsAdapter(
         notifyItemRangeRemoved(0, previousItemCount)
     }
 
-    private fun List<ProductUiModel>.quantityMap(
-        newShoppingCartItemUiModels: List<ShoppingCartItemUiModel>,
-    ): Map<ProductUiModel, MutableLiveData<Int>> {
-        return associateWith { product ->
-            MutableLiveData(
-                newShoppingCartItemUiModels.find { it.productUiModel.id == product.id }
-                    ?.quantity ?: DEFAULT_QUANTITY,
-            )
-        }
-    }
-
     companion object {
-        private const val DEFAULT_QUANTITY = 0
         private const val UNLOADED_PAGE = -1
     }
 

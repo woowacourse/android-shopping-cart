@@ -66,30 +66,21 @@ class ProductsViewModel(
                 requestPage = requestPage,
             )
 
-        viewModelScope.launch {
-            val page =
-                withContext(Dispatchers.IO) {
-                    productsRepository.findAll(pageRequest)
-                }
-            val shoppingCartItems =
-                withContext(Dispatchers.IO) {
-                    shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
-                }
+        val page = productsRepository.findAll(pageRequest)
+        val shoppingCartItems = shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
 
-            quantityInfo +=
-                QuantityInfo(
-                    page.toProductPageUiModel().items.quantityMap(
-                        shoppingCartItems,
-                    ),
-                )
+        quantityInfo +=
+            QuantityInfo(
+                page.toProductPageUiModel().items.quantityMap(
+                    shoppingCartItems,
+                ),
+            )
 
-            _productsLiveData.value =
-                MainRecyclerViewProduct(
-                    page = page.toProductPageUiModel(),
-                    shoppingCartItemUiModels = shoppingCartItems,
-                    quantityInfo,
-                )
-        }
+        _productsLiveData.value =
+            MainRecyclerViewProduct(
+                page = page.toProductPageUiModel(),
+                quantityInfo,
+            )
     }
 
     fun saveCurrentShoppingCart(quantityInfo: QuantityInfo<ProductUiModel>) {
