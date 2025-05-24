@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.detail
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,7 @@ import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.mapper.toProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import java.time.LocalDateTime
+import kotlin.collections.get
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -28,12 +30,14 @@ class ProductDetailViewModel(
     val productUiModelLiveData: LiveData<ProductUiModel> get() = _productUiModelLiveData
     val quantityLiveData: MutableLiveData<Int> = MutableLiveData(1)
     val recentProducts = RecentProducts()
+    val allLoaded = MutableLiveData(false)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             recentProductsRepository.findAll().forEach {
                 recentProducts.add(it)
             }
+            allLoaded.postValue(true)
         }
     }
 
@@ -72,10 +76,20 @@ class ProductDetailViewModel(
         }
     }
 
-    fun isInRecentProducts() {
-        recentProducts.contains(
-            productUiModelLiveData.value?.toProduct() ?: return,
-        )
+    fun isInRecentProducts(): Int {
+        return if (recentProducts.contains(
+                productUiModelLiveData.value?.toProduct() ?: return View.GONE,
+            ) || recentProducts.items.isEmpty()
+        ) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+    }
+
+    fun lastViewedProductName(): String {
+        if (recentProducts.items.isEmpty()) return ""
+        return recentProducts.items.first().product.name
     }
 
     companion object {

@@ -7,7 +7,9 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.bumptech.glide.Glide
+import com.google.android.material.card.MaterialCardView
 import woowacourse.shopping.R
+import woowacourse.shopping.view.detail.ProductDetailViewModel
 import woowacourse.shopping.view.main.adapter.ProductEventHandler
 import woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
@@ -79,6 +81,30 @@ fun setObservable(
                 item,
                 page,
             )
+        }
+    }
+}
+
+@BindingAdapter("shoppingCart:allLoaded")
+fun setWhenAllLoaded(
+    view: TextView,
+    viewModel: ProductDetailViewModel,
+) {
+    view.findViewTreeLifecycleOwner()?.let {
+        viewModel.allLoaded.observe(it) {
+            view.text = viewModel.lastViewedProductName()
+        }
+    }
+}
+
+@BindingAdapter("shoppingCart:allLoaded")
+fun setWhenAllLoaded(
+    view: MaterialCardView,
+    viewModel: ProductDetailViewModel,
+) {
+    view.findViewTreeLifecycleOwner()?.let {
+        viewModel.allLoaded.observe(it) {
+            view.visibility = viewModel.isInRecentProducts()
         }
     }
 }

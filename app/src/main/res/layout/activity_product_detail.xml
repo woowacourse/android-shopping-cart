@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:shppingCart="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:shoppingCart = "http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
         <variable
@@ -95,7 +97,8 @@
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
-
+            shoppingCart:allLoaded="@{viewModel}"
+            android:visibility="@{viewModel.isInRecentProducts()}"
             app:layout_constraintTop_toBottomOf="@id/layout_product_quantity_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -122,6 +125,7 @@
 
                 <TextView
                     android:id="@+id/text_product_name"
+                    shoppingCart:allLoaded="@{viewModel}"
                     android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_marginTop="8dp" tools:text="PET보틀-정사각형(500ml)"
                     android:textColor="#555555" android:textSize="18sp"

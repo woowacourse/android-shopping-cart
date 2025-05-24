@@ -38,6 +38,10 @@ class ProductDetailActivity :
             handler = ProductDetailEventHandlerImpl()
             viewModel = this@ProductDetailActivity.viewModel
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
         viewModel.addRecentProduct()
     }
 
