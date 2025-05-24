@@ -80,6 +80,12 @@ class MainViewModel(
         }
     }
 
+    fun saveHistory(productId: Long) {
+        historyRepository.saveHistory(productId) {
+            _uiEvent.postValue(MainUiEvent.NavigateToDetail(productId))
+        }
+    }
+
     private fun handleIncreaseQuantity(
         uiState: ProductUiState,
         state: IncreaseState,

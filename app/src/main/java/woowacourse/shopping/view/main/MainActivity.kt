@@ -96,6 +96,8 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
                         getString(R.string.text_over_quantity).format(event.quantity),
                     )
                 }
+
+                is MainUiEvent.NavigateToDetail -> moveToDetailActivity(event.productId)
             }
         }
     }
@@ -106,9 +108,13 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
         }
     }
 
-    override fun onSelectProduct(productId: Long) {
+    private fun moveToDetailActivity(productId: Long) {
         val intent = DetailActivity.newIntent(this, productId)
         startActivity(intent)
+    }
+
+    override fun onSelectProduct(productId: Long) {
+        viewModel.saveHistory(productId)
     }
 
     override fun onLoadMoreItems() {
