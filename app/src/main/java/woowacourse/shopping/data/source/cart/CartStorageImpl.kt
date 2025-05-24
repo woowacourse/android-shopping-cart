@@ -1,8 +1,7 @@
-package woowacourse.shopping.data.storage
+package woowacourse.shopping.data.source.cart
 
-import woowacourse.shopping.data.cartRepository.CartDao
-import woowacourse.shopping.data.cartRepository.CartMapper.toEntity
-import woowacourse.shopping.data.cartRepository.CartMapper.toUiModel
+import woowacourse.shopping.data.source.cart.CartMapper.toEntity
+import woowacourse.shopping.data.source.cart.CartMapper.toUiModel
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread

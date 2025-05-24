@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.cartRepository
+package woowacourse.shopping.data.repository.cart
 
-import woowacourse.shopping.data.storage.CartStorage
+import woowacourse.shopping.data.source.cart.CartStorage
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 

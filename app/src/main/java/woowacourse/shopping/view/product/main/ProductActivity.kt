@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.product
+package woowacourse.shopping.view.product.main
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -12,7 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.cart.CartActivity
-import woowacourse.shopping.view.productdetail.ProductDetailActivity
+import woowacourse.shopping.view.product.detail.ProductDetailActivity
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding

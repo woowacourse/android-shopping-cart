@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.view.product.ProductViewModel" />
+            type="woowacourse.shopping.view.product.main.ProductViewModel" />
 
         <variable
             name="position"

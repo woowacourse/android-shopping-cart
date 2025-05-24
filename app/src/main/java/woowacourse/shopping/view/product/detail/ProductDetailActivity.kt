@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.productdetail
+package woowacourse.shopping.view.product.detail
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,8 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailProductBinding
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.getSerializableExtraCompat
+import woowacourse.shopping.utils.getSerializableExtraCompat
+import woowacourse.shopping.view.component.ProductCountViewModel
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailProductBinding

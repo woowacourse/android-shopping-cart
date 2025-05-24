@@ -1,7 +1,7 @@
-package woowacourse.shopping.view.product
+package woowacourse.shopping.view.product.main
 
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.ViewItems.ViewType.entries
+import woowacourse.shopping.view.product.main.ViewItems.ViewType.entries
 
 sealed interface ViewItems {
     val viewType: ViewType

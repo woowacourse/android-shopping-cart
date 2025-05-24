@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.FIXTURE
-import woowacourse.shopping.view.productdetail.ProductDetailViewModel
+import woowacourse.shopping.view.product.detail.ProductDetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {

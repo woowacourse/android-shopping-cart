@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.storage
+package woowacourse.shopping.data.repository.products
 
 import woowacourse.shopping.domain.Product
 
-interface ProductStorage {
+interface ProductRepository {
     fun getProducts(): List<Product>
 
     fun getProducts(

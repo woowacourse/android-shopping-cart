@@ -8,7 +8,7 @@
 
         <variable
             name="productCountVM"
-            type="woowacourse.shopping.view.productdetail.ProductCountViewModel" />
+            type="woowacourse.shopping.view.component.ProductCountViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

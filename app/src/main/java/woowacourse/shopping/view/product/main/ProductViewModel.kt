@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.product
+package woowacourse.shopping.view.product.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,8 +9,8 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.cartRepository.CartRepository
-import woowacourse.shopping.data.productsRepository.ProductRepository
+import woowacourse.shopping.data.repository.cart.CartRepository
+import woowacourse.shopping.data.repository.products.ProductRepository
 import woowacourse.shopping.domain.Product
 
 class ProductViewModel(

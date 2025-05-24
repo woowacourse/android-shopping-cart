@@ -1,17 +1,9 @@
-package woowacourse.shopping.data.cartRepository
+package woowacourse.shopping.data.source.cart
 
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 
 object CartMapper {
-    fun CartEntity.toDomain(): Product =
-        Product(
-            id = this.productId,
-            name = this.name,
-            imageUrl = this.imageUrl,
-            price = this.price,
-        )
-
     fun Product.toEntity(): CartEntity =
         CartEntity(
             productId = this.id,

@@ -1,10 +1,9 @@
-package woowacourse.shopping.view.product
+package woowacourse.shopping.view.product.main
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.product.ViewItems.ViewType
 
 class ProductAdapter(
     private val onShowMore: () -> Boolean,
@@ -16,20 +15,20 @@ class ProductAdapter(
 
     override fun getItemViewType(position: Int): Int =
         if (position < products.size) {
-            ViewType.PRODUCTS.ordinal
+            ViewItems.ViewType.PRODUCTS.ordinal
         } else {
-            ViewType.SHOW_MORE.ordinal
+            ViewItems.ViewType.SHOW_MORE.ordinal
         }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder =
-        when (ViewType.from(viewType)) {
-            ViewType.PRODUCTS ->
+        when (ViewItems.ViewType.Companion.from(viewType)) {
+            ViewItems.ViewType.PRODUCTS ->
                 ProductViewHolder.from(parent, onSelectedProduct, onAddCart, viewModel)
 
-            ViewType.SHOW_MORE -> ShowMoreViewHolder.from(parent, onShowMore)
+            ViewItems.ViewType.SHOW_MORE -> ShowMoreViewHolder.from(parent, onShowMore)
         }
 
     override fun onBindViewHolder(

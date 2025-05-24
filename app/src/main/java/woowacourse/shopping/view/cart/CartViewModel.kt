@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.cartRepository.CartRepository
+import woowacourse.shopping.data.repository.cart.CartRepository
 import woowacourse.shopping.domain.CartItem
 
 class CartViewModel(

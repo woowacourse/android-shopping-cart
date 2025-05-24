@@ -7,11 +7,11 @@
 
         <variable
             name="productCountVM"
-            type="woowacourse.shopping.view.productdetail.ProductCountViewModel" />
+            type="woowacourse.shopping.view.component.ProductCountViewModel" />
 
         <variable
             name="productDetailVM"
-            type="woowacourse.shopping.view.productdetail.ProductDetailViewModel" />
+            type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
 
         <variable
             name="toExit"
