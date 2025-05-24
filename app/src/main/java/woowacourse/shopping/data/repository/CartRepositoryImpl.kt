@@ -45,7 +45,7 @@ class CartRepositoryImpl(
         productId: Long,
         onResult: (Result<Int>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        cartDataSource.findCartItemByProductId(productId).quantity
+        runCatching { cartDataSource.findCartItemByProductId(productId).quantity }.getOrDefault(0)
     }
 
     override fun addCartItem(
