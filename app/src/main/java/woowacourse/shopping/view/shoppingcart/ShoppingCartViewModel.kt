@@ -40,10 +40,30 @@ class ShoppingCartViewModel(
 
     fun addToShoppingCart(productId: Long) {
         shoppingCartRepository.addProduct(productId)
+
+        shoppingProducts =
+            shoppingProducts.map {
+                if (it.productId == productId) it.copy(quantity = it.quantity?.plus(1)) else it
+            }
+
+        cached()
+        checkCacheHasNext()
     }
 
     fun removeToShoppingCart(productId: Long) {
         shoppingCartRepository.removeProduct(productId)
+
+        shoppingProducts =
+            shoppingProducts.mapNotNull {
+                when {
+                    it.productId == productId && it.quantity!! > 1 -> it.copy(quantity = it.quantity!! - 1)
+                    it.productId == productId && it.quantity == 1 -> null
+                    else -> it
+                }
+            }
+
+        cached()
+        checkCacheHasNext()
     }
 
     fun loadMoreShoppingProducts() {
