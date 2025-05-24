@@ -1,15 +1,19 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.GoodsRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.network.GoodsDaoImpl
+import woowacourse.shopping.data.network.MockServer
+import woowacourse.shopping.data.repository.GoodsRepositoryImpl
 import woowacourse.shopping.data.repository.LatestGoodsRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
+import kotlin.concurrent.thread
 
 class ShoppingApplication : Application() {
-    val goodsRepository by lazy { GoodsRepositoryImpl }
+    val goodsRepository: GoodsRepository by lazy { GoodsRepositoryImpl(GoodsDaoImpl()) }
     lateinit var shoppingRepository: ShoppingRepository
     lateinit var latestGoodsRepository: LatestGoodsRepository
 
@@ -27,6 +31,10 @@ class ShoppingApplication : Application() {
                 ShoppingDatabase.getDatabase(this).latestGoodsDao(),
             )
         initLatestGoodsRepository(latestGoodsRepo)
+
+        thread {
+            MockServer().startMockWebServer()
+        }
     }
 
     fun initShoppingRepository(repo: ShoppingRepositoryImpl) {
