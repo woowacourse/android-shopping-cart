@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import woowacourse.shopping.data.dto.CartProductDetailDto
 import woowacourse.shopping.data.entity.CartProductEntity
 
@@ -16,7 +15,6 @@ interface CartDao {
     @Query("DELETE FROM cart_products WHERE productId = :productId")
     fun deleteCartProduct(productId: Int)
 
-    @Transaction
     @Query("SELECT * FROM cart_products ORDER BY productId ASC LIMIT :size OFFSET (:page - 1) * :size")
     fun getCartProductDetails(
         page: Int,
@@ -32,7 +30,6 @@ interface CartDao {
     @Query("SELECT * FROM cart_products WHERE productId = :productId")
     fun getCartProductById(productId: Int): CartProductEntity?
 
-    @Transaction
     @Query("SELECT * FROM cart_products WHERE productId = :productId")
     fun getCartProductDetailById(productId: Int): CartProductDetailDto?
 }
