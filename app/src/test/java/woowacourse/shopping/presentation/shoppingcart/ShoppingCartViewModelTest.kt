@@ -8,21 +8,27 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.GoodsRepositoryImpl
 import woowacourse.shopping.domain.model.ShoppingGoods
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.GOODS_SUNDAE
 import woowacourse.shopping.fixture.SHOPPING_GOODS_SUNDAE
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var shoppingCartViewModel: ShoppingCartViewModel
+    private val goodsRepository: GoodsRepository = mockk(relaxed = true)
     private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
-        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf(SHOPPING_GOODS_SUNDAE)
-        shoppingCartViewModel = ShoppingCartViewModel(GoodsRepositoryImpl, shoppingRepository)
+        every { shoppingRepository.getPagedGoods(any(), any()) } returns
+            listOf(
+                SHOPPING_GOODS_SUNDAE,
+            )
+        every { goodsRepository.getById(1) } returns GOODS_SUNDAE
+        shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
     }
 
     @Test
@@ -56,7 +62,7 @@ class ShoppingCartViewModelTest {
     fun `다음 상품 목록이 존재하면 다음 페이지는 존재한다`() {
         // given
         every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf(ShoppingGoods(1, 2))
-        shoppingCartViewModel = ShoppingCartViewModel(GoodsRepositoryImpl, shoppingRepository)
+        shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe true
@@ -66,7 +72,7 @@ class ShoppingCartViewModelTest {
     fun `다음 상품 목록이 존재하지 않으면 다음 페이지는 존재하지 않는다`() {
         // given
         every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf()
-        shoppingCartViewModel = ShoppingCartViewModel(GoodsRepositoryImpl, shoppingRepository)
+        shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe false

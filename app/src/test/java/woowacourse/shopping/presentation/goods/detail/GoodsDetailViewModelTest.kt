@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.GoodsRepositoryImpl
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.GOODS_SUNDAE
@@ -21,14 +21,16 @@ import woowacourse.shopping.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsDetailViewModelTest {
     private lateinit var goodsDetailViewModel: GoodsDetailViewModel
+    private val goodsRepository: GoodsRepository = mockk(relaxed = true)
     private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
     private val latestGoodsRepository: LatestGoodsRepository = mockk(relaxed = true)
     private val goods = GOODS_SUNDAE
 
     @BeforeEach
     fun setUp() {
+        every { goodsRepository.getById(1) } returns GOODS_SUNDAE
         goodsDetailViewModel =
-            GoodsDetailViewModel(GoodsRepositoryImpl, shoppingRepository, latestGoodsRepository)
+            GoodsDetailViewModel(goodsRepository, shoppingRepository, latestGoodsRepository)
         goodsDetailViewModel.setGoods(1)
     }
 

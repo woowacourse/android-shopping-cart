@@ -6,17 +6,14 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.slot
-import io.mockk.unmockkObject
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.GoodsRepositoryImpl
 import woowacourse.shopping.domain.model.LatestGoods
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.createGoods
@@ -26,19 +23,16 @@ import woowacourse.shopping.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class GoodsViewModelTest {
     private lateinit var goodsViewModel: GoodsViewModel
+    private val goodsRepository: GoodsRepository = mockk(relaxed = true)
     private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
     private val latestGoodsRepository: LatestGoodsRepository = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
-        mockkObject(GoodsRepositoryImpl)
+        every { goodsRepository.getPagedGoods(any(), any()) } returns List(20) { createGoods() }
         goodsViewModel =
-            GoodsViewModel(GoodsRepositoryImpl, shoppingRepository, latestGoodsRepository)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkObject(GoodsRepositoryImpl)
+            GoodsViewModel(goodsRepository, shoppingRepository, latestGoodsRepository)
+        goodsViewModel.initGoods()
     }
 
     @Test
@@ -63,7 +57,7 @@ class GoodsViewModelTest {
     @Test
     fun `데이터가 존재할 경우 로딩이 가능하다`() {
         // given
-        every { GoodsRepositoryImpl.getPagedGoods(any(), any()) } returns listOf(createGoods())
+        every { goodsRepository.getPagedGoods(any(), any()) } returns listOf(createGoods())
 
         // when
         goodsViewModel.updateShouldShowLoadMore()
@@ -76,7 +70,7 @@ class GoodsViewModelTest {
     @Test
     fun `데이터가 존재하지 않을 경우 로딩이 불가능하다`() {
         // given
-        every { GoodsRepositoryImpl.getPagedGoods(any(), any()) } returns emptyList()
+        every { goodsRepository.getPagedGoods(any(), any()) } returns emptyList()
 
         // when
         goodsViewModel.updateShouldShowLoadMore()
@@ -115,7 +109,7 @@ class GoodsViewModelTest {
         every { shoppingRepository.getAllGoods() } returns setOf(createShoppingGoods(1, 2))
 
         // when
-        goodsViewModel.restoreGoods()
+        goodsViewModel.initGoods()
         val actual = goodsViewModel.goods.getOrAwaitValue()[0].quantity
 
         // then
