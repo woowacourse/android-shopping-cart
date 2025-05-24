@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.network
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockResponse
@@ -22,6 +23,17 @@ class MockingServer : ProductService {
         enqueueResponse(json)
         val responseBody = executeRequest(path)
         return parseProduct(responseBody)
+    }
+
+    override fun getProducts(productIds: List<Long>): List<ProductDto> {
+        val products = ProductStorage.getProductsById(productIds)
+
+        val json = gson.toJson(products)
+        val path = "$BASE_PATH$productIds"
+
+        enqueueResponse(json)
+        val responseBody = executeRequest(path)
+        return parseProductList(responseBody)
     }
 
     override fun singlePage(
@@ -57,6 +69,11 @@ class MockingServer : ProductService {
     private fun parseProduct(json: String) = gson.fromJson(json, ProductDto::class.java)
 
     private fun parseProductSinglePage(json: String) = gson.fromJson(json, ProductPageDto::class.java)
+
+    private fun parseProductList(json: String): List<ProductDto> {
+        val type = object : TypeToken<List<ProductDto>>() {}.type
+        return gson.fromJson(json, type)
+    }
 
     companion object {
         private const val BASE_PATH = "/products/"

@@ -18,6 +18,15 @@ class MockProductServiceTest {
     }
 
     @Test
+    fun `상품_ID_리스트에_해당하는_상품_목록_가져온다`() {
+        val actual = server.getProducts(listOf(1L, 2L, 3L))
+
+        val expected = listOf(1L, 2L, 3L)
+
+        assertThat(actual.map { it.id }).isEqualTo(expected)
+    }
+
+    @Test
     fun `첫_번째_페이지의_상품_목록을_가져온다`() {
         val actual = server.singlePage(0, 10)
         val expected = datasource.singlePage(0, 10)

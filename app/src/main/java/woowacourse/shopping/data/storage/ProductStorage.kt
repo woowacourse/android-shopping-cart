@@ -22,11 +22,11 @@ object ProductStorage {
                 1,
             ),
             ProductDto(
-                2L,
-                "비비고 통새우 만두 200g",
-                "https://images.emarteveryday.co.kr/images/product/8801392067167/vSYMPCA3qqbLJjhv.png",
-                2000,
-                5,
+                id = 38,
+                name = "[태우한우] 1+ 한우 안심 스테이크 200g (냉장)",
+                imgUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/c1ea8fff-29d9-4e12-b2f1-667d76e2bdc9.jpeg",
+                price = 3970,
+                quantity = 10,
             ),
             ProductDto(
                 3L,
@@ -273,19 +273,16 @@ object ProductStorage {
                 price = 1298,
                 quantity = 10,
             ),
-            ProductDto(
-                id = 38,
-                name = "[태우한우] 1+ 한우 안심 스테이크 200g (냉장)",
-                imgUrl = "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/c1ea8fff-29d9-4e12-b2f1-667d76e2bdc9.jpeg",
-                price = 3970,
-                quantity = 10,
-            ),
         ).forEach {
             ProductDto[it.id] = it
         }
     }
 
     operator fun get(id: Long): ProductDto = ProductDto[id] ?: throw IllegalArgumentException()
+
+    fun getProductsById(productIds: List<Long>): List<ProductDto> {
+        return productIds.mapNotNull { ProductDto[it] }
+    }
 
     fun singlePage(
         fromIndex: Int,
