@@ -3,7 +3,6 @@ package woowacourse.shopping.view
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -51,8 +50,16 @@ class MainViewModelTest {
             callback(ProductSinglePage(products, true))
         }
 
-        products.forEach {
-            every { cartRepository[it.id] } returns Cart(Quantity(1), it.id)
+        every { cartRepository.getCarts(any(), any()) } answers {
+            val callback = secondArg<(List<Cart?>) -> Unit>()
+            val carts =
+                listOf(
+                    Cart(Quantity(1), 1L),
+                    Cart(Quantity(1), 2L),
+                    Cart(Quantity(1), 3L),
+                    Cart(Quantity(1), 4L),
+                )
+            callback(carts)
         }
 
         viewModel = MainViewModel(productRepository, cartRepository)
@@ -74,10 +81,10 @@ class MainViewModelTest {
         val result = viewModel.uiState.getOrAwaitValue()
 
         assertAll(
-            { Assertions.assertThat(result.items).hasSize(4) },
-            { Assertions.assertThat(result.load).isInstanceOf(LoadState.CanLoad::class.java) },
+            { assertThat(result.items).hasSize(4) },
+            { assertThat(result.load).isInstanceOf(LoadState.CanLoad::class.java) },
             {
-                Assertions.assertThat(result.items.map { it.item.id })
+                assertThat(result.items.map { it.item.id })
                     .containsExactly(1L, 2L, 3L, 4L)
             },
         )
@@ -90,6 +97,6 @@ class MainViewModelTest {
         viewModel.increaseCartQuantity(product.item.id)
 
         val updated = viewModel.uiState.getOrAwaitValue().items.first()
-        Assertions.assertThat(updated.cartQuantity.value).isEqualTo(product.cartQuantity.value + 1)
+        assertThat(updated.cartQuantity.value).isEqualTo(product.cartQuantity.value + 1)
     }
 }

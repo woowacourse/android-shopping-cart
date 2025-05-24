@@ -9,7 +9,6 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
 import woowacourse.shopping.view.main.MainUiEvent
-import woowacourse.shopping.view.main.state.CartSavingState
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.ProductState
 import woowacourse.shopping.view.main.state.ProductUiState
@@ -31,19 +30,21 @@ class MainViewModel(
     fun loadProducts() {
         val newPage = _uiState.value?.itemCount()?.div(PAGE_SIZE) ?: 0
 
-        productRepository.loadSinglePage(newPage, PAGE_SIZE) {
-            val result =
-                it.products
-                    .map { product ->
-                        val cart = cartRepository[product.id]
-                        val quantity = cart?.quantity ?: Quantity(0)
+        productRepository.loadSinglePage(newPage, PAGE_SIZE) { page ->
+            val ids = page.products.map { it.id }
+            val products = page.products
 
+            cartRepository.getCarts(ids) { carts ->
+                val result =
+                    products.mapIndexed { idx, product ->
+                        val quantity = carts[idx]?.quantity ?: Quantity(0)
                         ProductState(product, quantity)
                     }
 
-            _uiState.postValue(
-                _uiState.value?.addItems(result, it.hasNextPage),
-            )
+                _uiState.postValue(
+                    _uiState.value?.addItems(result, page.hasNextPage),
+                )
+            }
         }
     }
 
@@ -52,50 +53,23 @@ class MainViewModel(
         val result = currentUiState.decreaseCartQuantity(productId)
 
         _uiState.value = currentUiState.modifyUiState(result)
+
+        if (!result.cartQuantity.hasQuantity()) {
+            cartRepository.delete(productId) {
+            }
+        } else {
+            cartRepository.upsert(productId, result.cartQuantity)
+        }
     }
 
     fun increaseCartQuantity(productId: Long) {
         val currentUiState = _uiState.value ?: return
 
-        when (currentUiState.isAddedProduct(productId)) {
-            CartSavingState.SAVED -> {
-                whenProductSavedInCart(productId, currentUiState)
-            }
-
-            CartSavingState.NOT_SAVED -> {
-                whenProductNotSavedInCart(productId, currentUiState)
-            }
-        }
-    }
-
-    private fun whenProductSavedInCart(
-        productId: Long,
-        currentUiState: ProductUiState,
-    ) {
-        handleIncreaseCartQuantity(productId, currentUiState) { quantity ->
-            cartRepository.modifyQuantity(productId, quantity)
-        }
-    }
-
-    private fun whenProductNotSavedInCart(
-        productId: Long,
-        currentUiState: ProductUiState,
-    ) {
-        handleIncreaseCartQuantity(productId, currentUiState) {
-            cartRepository.insert(productId)
-        }
-    }
-
-    private fun handleIncreaseCartQuantity(
-        productId: Long,
-        currentUiState: ProductUiState,
-        onCartUpdate: (Quantity) -> Unit,
-    ) {
         when (val result = currentUiState.canIncreaseCartQuantity(productId)) {
             is IncreaseState.CanIncrease -> {
                 val newState = result.value
                 _uiState.value = currentUiState.modifyUiState(newState)
-                onCartUpdate(newState.cartQuantity)
+                cartRepository.upsert(productId, result.value.cartQuantity)
             }
 
             is IncreaseState.CannotIncrease -> sendEvent(MainUiEvent.ShowCannotIncrease(result.quantity))
