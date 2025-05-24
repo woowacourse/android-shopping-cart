@@ -107,7 +107,7 @@ class GoodsViewModel(
         shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT)
 
-        if (_shoppingGoodsCount.value == 0) shoppingRepository.removeGoods(updatedItem.id)
+        if (updatedItem.quantity == 0) shoppingRepository.removeGoods(updatedItem.id)
     }
 
     private fun updateGoodsQuantity(
