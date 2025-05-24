@@ -17,10 +17,11 @@ class ProductCountViewModel : ViewModel() {
 
     fun decrease() {
         val currentProductCount = _productCount.value ?: 1
-        if (currentProductCount > 1) {
+        if (currentProductCount == 1) {
+            _isMinimumProductCount.value = true
+        } else {
+            _isMinimumProductCount.value = false
             _productCount.let { it.postValue(it.value?.minus(1)) }
-            return
         }
-        _isMinimumProductCount.value = true
     }
 }
