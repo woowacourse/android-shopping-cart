@@ -9,11 +9,15 @@
         <import type="android.view.View" />
 
         <variable
-            name="model"
+            name="cart"
             type="woowacourse.shopping.domain.Cart" />
 
         <variable
-            name="eventHandler"
+            name="quantitySelectorEventHandler"
+            type="woowacourse.shopping.view.util.QuantitySelectorEventHandler" />
+
+        <variable
+            name="productsAdapterEventHandler"
             type="woowacourse.shopping.view.main.event.ProductsAdapterEventHandler" />
     </data>
 
@@ -21,11 +25,11 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> eventHandler.onSelectProduct(model.product.id)}">
+        android:onClick="@{() -> productsAdapterEventHandler.onSelectProduct(cart.product.id)}">
 
         <ImageView
             android:id="@+id/image_view_product"
-            setImage="@{model.product.imgUrl}"
+            setImage="@{cart.product.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="154dp"
             android:scaleType="centerCrop"
@@ -40,9 +44,9 @@
             layout="@layout/view_quantity_selector"
             android:layout_width="126dp"
             android:layout_height="42dp"
-            android:visibility="@{model.quantity &gt; 0 ? View.VISIBLE : View.GONE}"
-            app:cart="@{model}"
-            app:eventHandler="@{eventHandler}"
+            android:visibility="@{cart.quantity &gt; 0 ? View.VISIBLE : View.GONE}"
+            app:cart="@{cart}"
+            app:quantitySelectorEvent="@{quantitySelectorEventHandler}"
             app:layout_constraintBottom_toTopOf="@id/textView_product_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -51,9 +55,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:onClick="@{()->eventHandler.onAddCart(model)}"
+            android:onClick="@{()->productsAdapterEventHandler.onAddCart(cart)}"
             android:src="@drawable/floating_plus"
-            android:visibility="@{model.quantity == 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{cart.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/textView_product_name"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -66,7 +70,7 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{model.product.name}"
+            android:text="@{cart.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -83,7 +87,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@{@string/format_thousand_won(model.product.priceValue)}"
+            android:text="@{@string/format_thousand_won(cart.product.priceValue)}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
