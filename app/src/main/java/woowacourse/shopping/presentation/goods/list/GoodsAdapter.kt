@@ -26,7 +26,14 @@ class GoodsAdapter(
     }
 
     fun changeGoods(goods: List<GoodsUiModel>) {
-        items = goods
-        notifyItemRangeChanged(0, items.size)
+        if (goods.size > items.size) {
+            val fromIndex = items.size
+            val itemCount = goods.size - items.size
+            items = goods
+            notifyItemRangeInserted(fromIndex, itemCount)
+        } else {
+            items = goods
+            notifyItemRangeChanged(0, items.size)
+        }
     }
 }
