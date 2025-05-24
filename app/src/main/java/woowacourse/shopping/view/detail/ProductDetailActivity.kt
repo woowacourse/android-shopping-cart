@@ -8,12 +8,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
-import woowacourse.shopping.view.inventory.item.toDomain
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.util.getParcelableCompat
 
@@ -27,17 +24,20 @@ class ProductDetailActivity :
 
         val shoppingApplication = application as ShoppingApplication
         val factory =
-            ProductDetailViewModel.createFactory(shoppingApplication.shoppingCartRepository2)
+            ProductDetailViewModel.createFactory(
+                shoppingApplication.inventoryRepository,
+                shoppingApplication.shoppingCartRepository2,
+            )
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
 
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
-        val cartItem: CartItem =
-            intent.getParcelableCompat<InventoryProduct>(KEY_PRODUCT)?.toDomain()?.toCartItem() ?: run {
+        val product: InventoryProduct =
+            intent.getParcelableCompat<InventoryProduct>(KEY_PRODUCT) ?: run {
                 onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
         binding.apply {
-            this.cartItem = cartItem
+            this.product = product
             handler = this@ProductDetailActivity
         }
     }
@@ -47,8 +47,8 @@ class ProductDetailActivity :
         return true
     }
 
-    override fun onAddToCartSelected(cartItem: CartItem) {
-        viewModel.addProduct(cartItem)
+    override fun onAddToCartSelected(product: InventoryProduct) {
+        viewModel.addProduct(product)
         startActivity(ShoppingCartActivity.newIntent(this))
     }
 

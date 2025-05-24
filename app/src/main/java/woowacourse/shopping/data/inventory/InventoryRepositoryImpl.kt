@@ -50,7 +50,13 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
 
     override fun insert(product: InventoryProduct) {
         thread {
-            productDao.insert(product.toEntity())
+            getOrNull(product.id) { retrievedItem ->
+                if (retrievedItem == null) {
+                    productDao.insert(product.copy(quantity = 1).toEntity())
+                } else {
+                    productDao.insert(retrievedItem.copy(quantity = retrievedItem.quantity + 1).toEntity())
+                }
+            }
         }
     }
 }

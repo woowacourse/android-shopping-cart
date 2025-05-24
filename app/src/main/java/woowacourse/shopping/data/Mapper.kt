@@ -19,3 +19,5 @@ fun CartItemEntity.toDomain(): CartItem = CartItem(id, name, price, quantity, im
 fun Product.toCartItem(): CartItem = CartItem(id, name, price, 0, imageUrl)
 
 fun CartItem.toInventoryProduct(): InventoryProduct = InventoryProduct(id, name, price, quantity, imageUrl)
+
+fun InventoryProduct.toCartItem(): CartItem = CartItem(id, name, price, quantity, imageUrl)
