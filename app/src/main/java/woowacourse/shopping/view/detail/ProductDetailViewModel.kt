@@ -59,20 +59,24 @@ class ProductDetailViewModel(
     }
 
     fun addRecentProduct() {
-        recentProducts.add(
-            RecentProduct(
-                product = _productUiModelLiveData.value?.toProduct() ?: return,
-                viewTime = LocalDateTime.now(),
-            ),
-        )
         thread {
-            recentProducts.items.forEach {
-                if (recentProducts.isFull()) {
-                    recentProductsRepository.update(it)
-                } else {
-                    recentProductsRepository.insert(it)
-                }
+            if (recentProducts.isFull()) {
+                recentProducts.add(
+                    RecentProduct(
+                        product = _productUiModelLiveData.value?.toProduct() ?: return@thread,
+                        viewTime = LocalDateTime.now(),
+                    ),
+                )
+                recentProductsRepository.update(recentProducts.items.first())
+                return@thread
             }
+            recentProducts.add(
+                RecentProduct(
+                    product = _productUiModelLiveData.value?.toProduct() ?: return@thread,
+                    viewTime = LocalDateTime.now(),
+                ),
+            )
+            recentProductsRepository.insert(recentProducts.items.first())
         }
     }
 
