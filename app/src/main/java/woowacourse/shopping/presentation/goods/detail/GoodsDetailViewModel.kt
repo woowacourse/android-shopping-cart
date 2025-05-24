@@ -49,7 +49,13 @@ class GoodsDetailViewModel(
 
     fun addToShoppingCart() {
         val count = _count.value ?: MIN_PURCHASE_QUANTITY
-        _goods.value?.let { goods -> shoppingRepository.increaseGoodsQuantity(goods.id, count) }
+        _goods.value?.let { goods ->
+            if (shoppingRepository.getGoodsById(goods.id) != null) {
+                shoppingRepository.increaseGoodsQuantity(goods.id, count)
+            } else {
+                shoppingRepository.insertGoods(goods.id, count)
+            }
+        }
         _onItemAddedToCart.setValue(count)
     }
 
