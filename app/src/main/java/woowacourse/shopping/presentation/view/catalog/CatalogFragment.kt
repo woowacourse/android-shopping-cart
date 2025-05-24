@@ -40,7 +40,7 @@ class CatalogFragment :
     override fun onStart() {
         super.onStart()
 
-        viewModel.refreshProducts()
+        viewModel.refreshCatalog()
     }
 
     override fun onDestroyView() {
@@ -53,7 +53,7 @@ class CatalogFragment :
     }
 
     override fun onLoadMoreClicked() {
-        viewModel.loadProducts()
+        viewModel.fetchProducts()
     }
 
     override fun onQuantitySelectorOpenButtonClicked(productId: Long) {
