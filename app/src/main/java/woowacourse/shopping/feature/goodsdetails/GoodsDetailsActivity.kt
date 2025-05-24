@@ -18,6 +18,7 @@ import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.feature.GoodsUiModel
 import woowacourse.shopping.feature.QuantityChangeListener
+import woowacourse.shopping.util.toUi
 
 class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
@@ -60,6 +61,10 @@ class GoodsDetailsActivity : AppCompatActivity() {
                     goodsDetailsAlertMessage.quantity,
                 ),
             )
+        }
+        viewModel.clickMostRecentlyGoodsEvent.observe(this) { mostRecentGoods ->
+            val intent = newIntent(this, mostRecentGoods.toUi())
+            startActivity(intent)
         }
     }
 

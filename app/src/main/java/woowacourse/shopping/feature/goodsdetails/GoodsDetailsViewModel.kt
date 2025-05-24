@@ -23,8 +23,10 @@ class GoodsDetailsViewModel(
     val cartItem: LiveData<CartItem> get() = _cartItem
     private val _alertEvent = MutableSingleLiveData<GoodsDetailsAlertMessage>()
     val alertEvent: SingleLiveData<GoodsDetailsAlertMessage> = _alertEvent
-    private val _mostRecentlyViewedGoods: MutableLiveData<Goods> = MutableLiveData()
-    val mostRecentlyViewedGoods: LiveData<Goods> get() = _mostRecentlyViewedGoods
+    private val _mostRecentlyViewedGoods: MutableLiveData<Goods?> = MutableLiveData(null)
+    val mostRecentlyViewedGoods: LiveData<Goods?> get() = _mostRecentlyViewedGoods
+    private val _clickMostRecentlyGoodsEvent = MutableSingleLiveData<Goods>()
+    val clickMostRecentlyGoodsEvent: SingleLiveData<Goods> get() = _clickMostRecentlyGoodsEvent
 
     init {
         goodsRepository.fetchMostRecentGoods { goods ->
@@ -60,6 +62,12 @@ class GoodsDetailsViewModel(
                 )
                 _cartItem.value = _cartItem.value?.copy(quantity = 1)
             }
+        }
+    }
+
+    fun onClickMostRecentlyGoodsSection() {
+        _mostRecentlyViewedGoods.value?.let {
+            _clickMostRecentlyGoodsEvent.setValue(it)
         }
     }
 
