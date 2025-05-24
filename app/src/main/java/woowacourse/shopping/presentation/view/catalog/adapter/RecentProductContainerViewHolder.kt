@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.view.catalog.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,6 @@ class RecentProductContainerViewHolder private constructor(
     }
 
     fun bind(recentProducts: CatalogItem.RecentProducts) {
-        Log.i("TEST", "bind: $recentProducts")
         adapter.submitList(recentProducts.products)
     }
 
