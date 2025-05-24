@@ -4,6 +4,8 @@ data class ProductUiState(
     val items: List<ProductState> = emptyList(),
     val load: LoadState = LoadState.CannotLoad,
 ) {
+    val productIds = items.map { it.item.id }
+
     val sumOfCartQuantity
         get() = items.sumOf { it.cartQuantity.value }
 
@@ -12,14 +14,6 @@ data class ProductUiState(
         val mutableItems = items.toMutableList()
         mutableItems[targetIndex] = newState
         return copy(items = mutableItems)
-    }
-
-    fun isAddedProduct(productId: Long): CartSavingState {
-        val targetIndex = targetIndex(productId)
-        val target = items[targetIndex]
-        val result = target.isSaveInCart()
-
-        return result
     }
 
     fun canIncreaseCartQuantity(productId: Long): IncreaseState {

@@ -49,35 +49,71 @@ class MainViewModel(
     }
 
     fun decreaseCartQuantity(productId: Long) {
-        val currentUiState = _uiState.value ?: return
-        val result = currentUiState.decreaseCartQuantity(productId)
-
-        _uiState.value = currentUiState.modifyUiState(result)
-
-        if (!result.cartQuantity.hasQuantity()) {
-            cartRepository.delete(productId) {
-            }
-        } else {
-            cartRepository.upsert(productId, result.cartQuantity)
+        withUiState { state ->
+            val result = state.decreaseCartQuantity(productId)
+            handleDecreaseQuantity(state, result, productId)
         }
     }
 
     fun increaseCartQuantity(productId: Long) {
-        val currentUiState = _uiState.value ?: return
+        withUiState { state ->
+            val result = state.canIncreaseCartQuantity(productId)
+            handleIncreaseQuantity(state, result, productId)
+        }
+    }
 
-        when (val result = currentUiState.canIncreaseCartQuantity(productId)) {
+    fun syncCartQuantities() {
+        withUiState { state ->
+            val products = state.items
+            val productIds = state.productIds
+
+            cartRepository.getCarts(productIds) { carts ->
+                val synced =
+                    products.mapIndexed { index, state ->
+                        val quantity = carts[index]?.quantity ?: Quantity(0)
+                        state.copy(cartQuantity = quantity)
+                    }
+                _uiState.postValue(state.copy(items = synced))
+            }
+        }
+    }
+
+    private fun handleIncreaseQuantity(
+        uiState: ProductUiState,
+        state: IncreaseState,
+        productId: Long,
+    ) {
+        when (state) {
             is IncreaseState.CanIncrease -> {
-                val newState = result.value
-                _uiState.value = currentUiState.modifyUiState(newState)
-                cartRepository.upsert(productId, result.value.cartQuantity)
+                val newState = state.value
+                _uiState.value = uiState.modifyUiState(newState)
+                cartRepository.upsert(productId, state.value.cartQuantity)
             }
 
-            is IncreaseState.CannotIncrease -> sendEvent(MainUiEvent.ShowCannotIncrease(result.quantity))
+            is IncreaseState.CannotIncrease -> sendEvent(MainUiEvent.ShowCannotIncrease(state.quantity))
+        }
+    }
+
+    private fun handleDecreaseQuantity(
+        uiState: ProductUiState,
+        decreaseResult: ProductState,
+        productId: Long,
+    ) {
+        _uiState.value = uiState.modifyUiState(decreaseResult)
+
+        if (!decreaseResult.cartQuantity.hasQuantity()) {
+            cartRepository.delete(productId)
+        } else {
+            cartRepository.upsert(productId, decreaseResult.cartQuantity)
         }
     }
 
     private fun sendEvent(event: MainUiEvent) {
         _uiEvent.setValue(event)
+    }
+
+    private inline fun withUiState(block: (ProductUiState) -> Unit) {
+        _uiState.value?.let(block)
     }
 
     companion object {

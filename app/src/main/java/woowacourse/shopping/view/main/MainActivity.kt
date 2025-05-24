@@ -125,4 +125,9 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     override fun onClickDecrease(productId: Long) {
         viewModel.decreaseCartQuantity(productId)
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.syncCartQuantities()
+    }
 }
