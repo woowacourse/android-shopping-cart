@@ -11,6 +11,7 @@ import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentItemsList
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 
 class InventoryViewModel(
@@ -72,7 +73,7 @@ class InventoryViewModel(
     private fun updateItems(newPage: Page<InventoryProduct>) {
         val newItems =
             buildList {
-                add(InventoryItem.RecentItemsList)
+                add(RecentItemsList)
                 addAll(products)
                 addAll(newPage.items)
                 if (newPage.hasNext) add(ShowMore)

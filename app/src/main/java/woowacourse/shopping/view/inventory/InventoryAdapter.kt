@@ -21,17 +21,6 @@ class InventoryAdapter(
         return items[position].type.id
     }
 
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-    ) {
-        val item = items[position]
-        when (holder) {
-            is ProductViewHolder -> holder.bind(item as InventoryProduct)
-            is ShowMoreViewHolder -> holder.bind(item as ShowMore)
-        }
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -41,6 +30,18 @@ class InventoryAdapter(
             InventoryItemType.SHOW_MORE.id -> ShowMoreViewHolder(parent, handler)
             InventoryItemType.RECENT_ITEMS_LIST.id -> RecentItemsListViewHolder(parent)
             else -> throw IllegalStateException()
+        }
+    }
+
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
+        val item = items[position]
+        when (holder) {
+            is ProductViewHolder -> holder.bind(item as InventoryProduct)
+            is ShowMoreViewHolder -> holder.bind(item as ShowMore)
+            is RecentItemsListViewHolder -> holder.bind()
         }
     }
 
