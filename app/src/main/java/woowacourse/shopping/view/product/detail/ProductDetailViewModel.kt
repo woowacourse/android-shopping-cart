@@ -11,7 +11,7 @@ import woowacourse.shopping.view.common.MutableSingleLiveData
 import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
-    private val product: Product,
+    val product: Product,
     private val cartProductRepository: CartProductRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel(),
@@ -66,9 +66,6 @@ class ProductDetailViewModel(
 
     private fun loadLastViewedProduct() {
         lastViewedProduct = recentProductRepository.getLastProduct()
-        if (lastViewedProduct?.product?.id == product.id) {
-            lastViewedProduct = null
-        }
     }
 
     private fun updateRecentProduct() {

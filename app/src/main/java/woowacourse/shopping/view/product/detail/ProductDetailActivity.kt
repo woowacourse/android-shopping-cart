@@ -50,8 +50,6 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initBindings(product: Product) {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
-        binding.product = product
-        binding.lastProduct = viewModel.lastViewedProduct
         binding.handler = viewModel
         binding.itemQuantityControl.tvIncrease.setOnClickListener {
             viewModel.onQuantityIncreaseClick(product)

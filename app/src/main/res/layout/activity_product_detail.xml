@@ -12,14 +12,6 @@
             type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
-
-        <variable
-            name="lastProduct"
-            type="woowacourse.shopping.domain.model.RecentProduct" />
-
-        <variable
             name="handler"
             type="woowacourse.shopping.view.product.detail.ProductDetailEventHandler" />
     </data>
@@ -42,7 +34,7 @@
                     android:id="@+id/iv_detail_product_image"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    app:imageUrl="@{product.imageUrl}"
+                    app:imageUrl="@{viewmodel.product.imageUrl}"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/ic_launcher_foreground" />
@@ -53,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@{product.name}"
+                    android:text="@{viewmodel.product.name}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -74,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@{String.format(@string/product_price, product.price * viewmodel.quantity)}"
+                    android:text="@{String.format(@string/product_price, viewmodel.product.price * viewmodel.quantity)}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +93,7 @@
                     android:background="@drawable/style_product_edge"
                     android:paddingHorizontal="18dp"
                     android:paddingVertical="16dp"
-                    android:visibility="@{lastProduct == null ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewmodel.lastViewedProduct.product.id == viewmodel.product.id ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toBottomOf="@id/item_quantity_control">
 
                     <TextView
@@ -119,7 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="@{lastProduct.product.name}"
+                        android:text="@{viewmodel.lastViewedProduct.product.name}"
                         android:textColor="@color/dark_gray"
                         android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="parent"
