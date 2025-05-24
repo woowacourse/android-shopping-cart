@@ -14,6 +14,6 @@ fun setVisibilityGone(
         when (isGone) {
             true -> GONE
             false -> VISIBLE
-            null -> VISIBLE
+            null -> return
         }
 }

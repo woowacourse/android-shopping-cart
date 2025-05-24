@@ -11,93 +11,137 @@
             type="woowacourse.shopping.ui.productdetail.ProductDetailViewModel" />
 
         <variable
-            name="onAddCartProductClick"
-            type="kotlin.jvm.functions.Function0" />
+            name="onClickHandler"
+            type="woowacourse.shopping.ui.productdetail.ProductDetailActivity.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/productDetailImage"
-            android:layout_width="0dp"
+        <ScrollView
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            app:imageUrl="@{viewModel.product.imageUrl}"
-            app:layout_constraintDimensionRatio="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@color/black" />
+            app:layout_constraintBottom_toTopOf="@id/productDetailCartAddButton"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/productDetailImage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    app:imageUrl="@{viewModel.catalogProduct.product.imageUrl}"
+                    app:layout_constraintDimensionRatio="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@color/black" />
+
+                <TextView
+                    android:id="@+id/productDetailNameText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginVertical="16dp"
+                    android:text="@{viewModel.catalogProduct.product.name}"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDetailImage"
+                    tools:text="[든든] 동원 스위트콘" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/productDividerBetweenNameAndPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    app:dividerColor="@color/gray_4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDetailNameText" />
+
+
+                <TextView
+                    android:id="@+id/productDetailPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@{@string/catalog_price(viewModel.catalogProduct.totalPrice)}"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDividerBetweenNameAndPrice"
+                    tools:text="99,800원" />
+
+                <woowacourse.shopping.ui.custom.CartCountView
+                    android:id="@+id/productDetailCartProductCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/productDetailPrice" />
+
+                <LinearLayout
+                    android:id="@+id/productDetailLastHistoryProduct"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginVertical="30dp"
+                    android:background="@drawable/bg_products_gray_4_radius_right_4dp"
+                    android:onClick="@{()->onClickHandler.onLastHistoryProductClick(viewModel.lastHistoryProduct.productId)}"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="18dp"
+                    app:isGone="@{viewModel.lastHistoryProduct == null}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDetailPrice">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/product_detail_last_history_title"
+                        android:textColor="@color/mint_1"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@{viewModel.lastHistoryProduct.name}"
+                        android:textColor="@color/gray_5"
+                        android:textSize="18sp"
+                        tools:text="마지막으로 본 상품 대충 나올 수 있지" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
         <TextView
-            android:id="@+id/productDetailNameText"
-            android:layout_width="0dp"
+            android:id="@+id/productDetailCartAddButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginVertical="16dp"
-            android:text="@{viewModel.product.name}"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productDetailImage"
-            tools:text="[든든] 동원 스위트콘" />
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/productDividerBetweenNameAndPrice"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            app:dividerColor="@color/gray_4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productDetailNameText" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingHorizontal="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productDividerBetweenNameAndPrice">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/product_detail_price"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{@string/products_price(viewModel.product.price)}"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                tools:text="99,800원" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/mint_1"
-            android:onClick="@{()->onAddCartProductClick.invoke()}"
+            android:background="@drawable/selector_cart_add"
+            android:enabled="@{viewModel.catalogProduct.quantity > 0}"
+            android:onClick="@{()->onClickHandler.onAddCartProductClick()}"
             android:paddingVertical="12dp"
             android:text="@string/product_detail_cart_add"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

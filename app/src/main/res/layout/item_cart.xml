@@ -6,12 +6,12 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            name="cartProduct"
+            type="woowacourse.shopping.domain.model.CartProduct" />
 
         <variable
             name="onClickHandler"
-            type="woowacourse.shopping.ui.cart.CartViewHolder.OnClickHandler" />
+            type="woowacourse.shopping.ui.cart.adapter.CartViewHolder.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
             android:layout_marginTop="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{cartProduct.product.name}"
             android:textColor="@color/gray_5"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -39,12 +39,13 @@
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
+            android:id="@+id/cartProductImage"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="20dp"
             android:scaleType="centerCrop"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{cartProduct.product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cartProductNameText"
             tools:src="@color/black" />
@@ -54,18 +55,26 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"
-            android:onClick="@{() -> onClickHandler.onRemoveCartProductClick(product.id)}"
+            android:onClick="@{() -> onClickHandler.onRemoveCartProductClick(cartProduct.product.id)}"
             android:padding="12dp"
             android:src="@drawable/ic_cart_remove"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <woowacourse.shopping.ui.custom.CartCountView
+            android:id="@+id/cartProductCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cartProductImage" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="18dp"
-            android:text="@{@string/products_price(product.price)}"
+            android:text="@{@string/catalog_price(cartProduct.totalPrice)}"
             android:textColor="@color/gray_5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

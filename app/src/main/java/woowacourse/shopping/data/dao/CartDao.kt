@@ -1,0 +1,35 @@
+package woowacourse.shopping.data.dao
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import woowacourse.shopping.data.dto.CartProductDetailDto
+import woowacourse.shopping.data.entity.CartProductEntity
+
+@Dao
+interface CartDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCartProduct(cartProductEntity: CartProductEntity)
+
+    @Query("DELETE FROM cart_products WHERE productId = :productId")
+    fun deleteCartProduct(productId: Int)
+
+    @Query("SELECT * FROM cart_products ORDER BY productId ASC LIMIT :size OFFSET (:page - 1) * :size")
+    fun getCartProductDetails(
+        page: Int,
+        size: Int,
+    ): List<CartProductDetailDto>
+
+    @Query("SELECT COUNT(*) FROM cart_products")
+    fun getCartItemCount(): Int
+
+    @Query("SELECT (COUNT(*) + :size - 1) / :size FROM cart_products")
+    fun getTotalPageCount(size: Int): Int
+
+    @Query("SELECT * FROM cart_products WHERE productId = :productId")
+    fun getCartProductById(productId: Int): CartProductEntity?
+
+    @Query("SELECT * FROM cart_products WHERE productId = :productId")
+    fun getCartProductDetailById(productId: Int): CartProductDetailDto?
+}
