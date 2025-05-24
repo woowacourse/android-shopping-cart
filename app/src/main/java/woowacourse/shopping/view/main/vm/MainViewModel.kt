@@ -21,17 +21,8 @@ class MainViewModel(
 
     fun loadProducts() {
         val (offset, limit) = page.targetRange()
-        val products = productRepository.getProducts(page.currentPage, limit)
-        cartRepository.getByIds(products.map { it.id }) { cartEntries ->
-            _carts.postValue(
-                (carts.value ?: emptyList()) +
-                    products.map { product ->
-                        Cart(
-                            product,
-                            cartEntries.find { product.id == it.productId }?.quantity ?: 0,
-                        )
-                    },
-            )
+        cartRepository.getPagedShopItems(page.currentPage, limit) { carts: List<Cart> ->
+            _carts.postValue((this.carts.value ?: emptyList()) + carts)
             _loadable.postValue(productRepository.notHasMoreProduct(page.currentPage, limit).not())
         }
     }

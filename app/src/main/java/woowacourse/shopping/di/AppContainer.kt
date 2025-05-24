@@ -16,7 +16,7 @@ class AppContainer(applicationContext: Context) {
     private val productDataSource: ProductDataSource by lazy { ProductDataSourceImpl() }
     private val cartLocalDataSource: CartLocalDataSource by lazy { CartLocalDataSourceImpl(database.cartDao()) }
 
-    val cartRepository: CartRepository = CartRepositoryImpl(cartLocalDataSource)
-
     val productRepository: ProductRepository = ProductRepositoryImpl(productDataSource)
+
+    val cartRepository: CartRepository = CartRepositoryImpl(cartLocalDataSource, productRepository)
 }
