@@ -53,6 +53,16 @@ class ShoppingRepositoryImpl(
         return result
     }
 
+    override fun getGoodsById(id: Int): ShoppingGoods? {
+        var result: ShoppingGoods? = null
+
+        thread {
+            result = shoppingDao.findGoodsById(id)?.toShoppingGoods()
+        }.join()
+
+        return result
+    }
+
     private fun adjustItemQuantity(
         id: Int,
         quantity: Int,

@@ -25,4 +25,6 @@ interface ShoppingRepository {
     companion object {
         private const val QUANTITY_CHANGE_AMOUNT: Int = 1
     }
+
+    fun getGoodsById(id: Int): ShoppingGoods?
 }
