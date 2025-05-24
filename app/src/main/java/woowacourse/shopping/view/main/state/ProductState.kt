@@ -10,10 +10,6 @@ data class ProductState(
     val cartQuantityValue: Int
         get() = cartQuantity.value
 
-    fun isSaveInCart(): CartSavingState {
-        return CartSavingState.of(cartQuantity.hasQuantity())
-    }
-
     fun increaseCartQuantity(): IncreaseState {
         val increasedQuantity = cartQuantity + 1
         val canIncrease = item.canIncrease(increasedQuantity)
