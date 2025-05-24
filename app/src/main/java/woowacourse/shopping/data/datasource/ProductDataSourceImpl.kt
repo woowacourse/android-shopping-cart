@@ -1,22 +1,18 @@
 package woowacourse.shopping.data.datasource
 
+import woowacourse.shopping.data.model.PageableResponse
+import woowacourse.shopping.data.model.ProductResponse
 import woowacourse.shopping.data.service.ProductService
-import woowacourse.shopping.domain.model.Product
 
 class ProductDataSourceImpl(
     private val mockProductService: ProductService,
 ) : ProductDataSource {
-    override fun findProductById(id: Long): Product = mockProductService.findProductById(id)
+    override fun findProductById(id: Long): ProductResponse = mockProductService.findProductById(id)
 
-    override fun findProductsByIds(ids: List<Long>): List<Product> = mockProductService.findProductsByIds(ids)
+    override fun findProductsByIds(ids: List<Long>): List<ProductResponse> = mockProductService.findProductsByIds(ids)
 
     override fun loadProducts(
         offset: Int,
         limit: Int,
-    ): List<Product> = mockProductService.loadProducts(offset, limit)
-
-    override fun calculateHasMore(
-        offset: Int,
-        limit: Int,
-    ): Boolean = mockProductService.calculateHasMore(offset, limit)
+    ): PageableResponse<ProductResponse> = mockProductService.loadProducts(offset, limit)
 }

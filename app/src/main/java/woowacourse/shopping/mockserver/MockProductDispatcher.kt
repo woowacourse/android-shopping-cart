@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
+import woowacourse.shopping.data.model.PageableResponse
 import woowacourse.shopping.domain.model.Product
 
 class MockProductDispatcher(
@@ -37,19 +38,13 @@ class MockProductDispatcher(
                 MockResponse().setResponseCode(200).setBody(gson.toJson(foundProducts))
             }
 
-            path.startsWith("/products/hasMore") -> {
-                val offset = path.substringAfter("offset=").substringBefore("&").toIntOrNull() ?: 0
-                val limit = path.substringAfter("limit=").toIntOrNull() ?: 10
-
-                val hasMore = offset + limit < products.size
-                MockResponse().setResponseCode(200).setBody(gson.toJson(hasMore))
-            }
-
             path.startsWith("/products/") -> {
                 val offset = path.substringAfter("offset=").substringBefore("&").toIntOrNull() ?: 0
                 val limit = path.substringAfter("limit=").toIntOrNull() ?: 10
                 val paged = products.drop(offset).take(limit)
-                MockResponse().setResponseCode(200).setBody(gson.toJson(paged))
+                val hasMore = offset + limit < products.size
+                val pagedWithHasMore = PageableResponse(paged, hasMore)
+                MockResponse().setResponseCode(200).setBody(gson.toJson(pagedWithHasMore))
             }
 
             else -> MockResponse().setResponseCode(404).setBody("Not found")

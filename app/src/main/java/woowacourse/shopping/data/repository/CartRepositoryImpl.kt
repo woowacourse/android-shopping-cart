@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.db.CartEntity
+import woowacourse.shopping.data.model.toProduct
 import woowacourse.shopping.data.util.runCatchingInThread
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.PageableItem
@@ -67,7 +68,7 @@ class CartRepositoryImpl(
 
     private fun CartEntity.toCartItem() =
         CartItem(
-            productDataSource.findProductById(productId),
+            productDataSource.findProductById(productId).toProduct(),
             quantity,
         )
 

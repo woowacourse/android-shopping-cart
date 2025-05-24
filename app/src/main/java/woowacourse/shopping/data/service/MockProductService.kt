@@ -4,7 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.data.model.PageableResponse
+import woowacourse.shopping.data.model.ProductResponse
 import woowacourse.shopping.mockserver.MockServer
 
 class MockProductService(
@@ -13,30 +14,22 @@ class MockProductService(
 ) : ProductService {
     private val gson = Gson()
 
-    override fun findProductById(id: Long): Product {
+    override fun findProductById(id: Long): ProductResponse {
         val url = "/product/$id"
-        return executeRequest(url, object : TypeToken<Product>() {})
+        return executeRequest(url, object : TypeToken<ProductResponse>() {})
     }
 
-    override fun findProductsByIds(ids: List<Long>): List<Product> {
+    override fun findProductsByIds(ids: List<Long>): List<ProductResponse> {
         val url = "/product?ids=${gson.toJson(ids)}"
-        return executeRequest(url, object : TypeToken<List<Product>>() {})
+        return executeRequest(url, object : TypeToken<List<ProductResponse>>() {})
     }
 
     override fun loadProducts(
         offset: Int,
         limit: Int,
-    ): List<Product> {
+    ): PageableResponse<ProductResponse> {
         val url = "/products/?offset=$offset&limit=$limit"
-        return executeRequest(url, object : TypeToken<List<Product>>() {})
-    }
-
-    override fun calculateHasMore(
-        offset: Int,
-        limit: Int,
-    ): Boolean {
-        val url = "/products/hasMore?offset=$offset&limit=$limit"
-        return executeRequest(url, object : TypeToken<Boolean>() {})
+        return executeRequest(url, object : TypeToken<PageableResponse<ProductResponse>>() {})
     }
 
     private inline fun <reified T> executeRequest(

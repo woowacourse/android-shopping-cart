@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.datasource.RecentProductLocalDataSource
 import woowacourse.shopping.data.db.RecentProductEntity
+import woowacourse.shopping.data.model.toProduct
 import woowacourse.shopping.data.util.runCatchingInThread
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.RecentProductRepository
@@ -17,7 +18,7 @@ class RecentProductRepositoryImpl(
     ) = runCatchingInThread(onResult) {
         recentProductLocalDataSource
             .getRecentProducts(limit)
-            .map { productDataSource.findProductById(it.productId) }
+            .map { productDataSource.findProductById(it.productId).toProduct() }
     }
 
     override fun insertAndTrimToLimit(
