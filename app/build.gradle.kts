@@ -50,6 +50,12 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+        force("org.hamcrest:hamcrest-core:2.2")
+    }
+}
+
 dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
