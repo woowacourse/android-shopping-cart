@@ -58,12 +58,10 @@ class GoodsDetailViewModel(
     }
 
     fun tryDecreaseCount() {
-        if (canDecreaseCount()) {
+        if ((_count.value ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY) {
             _count.value = _count.value?.minus(QUANTITY_STEP)
         }
     }
-
-    private fun canDecreaseCount(): Boolean = (_count.value ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY
 
     fun updateLatestGoods(goodsId: Int) {
         latestGoodsRepository.insertLatestGoods(goodsId)

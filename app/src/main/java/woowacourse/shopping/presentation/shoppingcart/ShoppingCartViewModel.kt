@@ -41,6 +41,26 @@ class ShoppingCartViewModel(
         updateState()
     }
 
+    private fun updateState() {
+        _goods.value =
+            shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
+                .mapNotNull { goodsRepository.getById(it.goodsId)?.toUiModel()?.copy(quantity = it.goodsQuantity) }
+        updateNextPage()
+        updatePreviousPage()
+    }
+
+    private fun updatePreviousPage() {
+        _hasPreviousPage.value = _page.value != DEFAULT_PAGE_VALUE
+    }
+
+    private fun updateNextPage() {
+        _hasNextPage.value =
+            shoppingRepository.getPagedGoods(
+                _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
+                ITEM_COUNT,
+            ).isNotEmpty()
+    }
+
     fun increaseGoodsCount(position: Int) {
         val updatedItem =
             updateGoods(position) {
@@ -92,26 +112,6 @@ class ShoppingCartViewModel(
     fun decreasePage() {
         _page.value = _page.value?.minus(PAGE_CHANGE_AMOUNT)
         updateState()
-    }
-
-    private fun updateState() {
-        _goods.value =
-            shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
-                .mapNotNull { goodsRepository.getById(it.goodsId)?.toUiModel()?.copy(quantity = it.goodsQuantity) }
-        updateNextPage()
-        updatePreviousPage()
-    }
-
-    private fun updatePreviousPage() {
-        _hasPreviousPage.value = _page.value != DEFAULT_PAGE_VALUE
-    }
-
-    private fun updateNextPage() {
-        _hasNextPage.value =
-            shoppingRepository.getPagedGoods(
-                _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
-                ITEM_COUNT,
-            ).isNotEmpty()
     }
 
     companion object {

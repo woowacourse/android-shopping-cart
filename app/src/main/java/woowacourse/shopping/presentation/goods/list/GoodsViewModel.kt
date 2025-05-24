@@ -123,6 +123,10 @@ class GoodsViewModel(
         _shouldShowLoadMore.value = canLoadMore()
     }
 
+    private fun canLoadMore(): Boolean {
+        return goodsRepository.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
+    }
+
     fun updateShouldNavigateToShoppingCart() {
         _shouldNavigateToShoppingCart.setValue(Unit)
     }
@@ -142,10 +146,6 @@ class GoodsViewModel(
             latestGoodsRepository.getAll().mapNotNull {
                 goodsRepository.getById(it.goodsId)?.toUiModel()
             }
-    }
-
-    private fun canLoadMore(): Boolean {
-        return goodsRepository.getPagedGoods(page, ITEM_COUNT).isNotEmpty()
     }
 
     companion object {
