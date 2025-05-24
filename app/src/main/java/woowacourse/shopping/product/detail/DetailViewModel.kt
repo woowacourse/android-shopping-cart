@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.cart.CartItemRepository
-import woowacourse.shopping.data.CartItem
 import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.ProductUiModel
-import kotlin.concurrent.thread
 
 class DetailViewModel(
     private val repository: CartItemRepository,
@@ -20,19 +18,20 @@ class DetailViewModel(
     val uiState: LiveData<CartUiState> = _uiState
 
     fun addToCart() {
-        thread {
-            val currentProduct = _product.value ?: return@thread
-            if (currentProduct.quantity <= 0) return@thread
+        val currentProduct = _product.value ?: return
+        if (currentProduct.quantity <= 0) return
 
-            val existItem = repository.findCartItem(currentProduct)
+        repository.findCartItem(currentProduct) { existItem ->
             if (existItem != null) {
-                val updated: CartItem = existItem.copy(quantity = currentProduct.quantity)
-                repository.updateCartItem(updated.toUiModel())
+                val updated = existItem.copy(quantity = currentProduct.quantity)
+                repository.updateCartItem(updated.toUiModel()) {
+                    _uiState.postValue(CartUiState.SUCCESS)
+                }
             } else {
-                repository.insertCartItem(currentProduct)
+                repository.insertCartItem(currentProduct) {
+                    _uiState.postValue(CartUiState.SUCCESS)
+                }
             }
-
-            _uiState.postValue(CartUiState.SUCCESS)
         }
     }
 
@@ -41,25 +40,16 @@ class DetailViewModel(
     }
 
     fun increaseQuantity() {
-        thread {
-            _product.value?.let { currentProduct ->
-                val newProduct = currentProduct.copy(quantity = currentProduct.quantity + 1)
-                _product.postValue(newProduct)
-            }
-        }
+        val currentProduct = _product.value ?: return
+        val newProduct = currentProduct.copy(quantity = currentProduct.quantity + 1)
+        _product.postValue(newProduct)
     }
 
     fun decreaseQuantity() {
-        thread {
-            _product.value?.let { currentProduct ->
-                if (currentProduct.quantity > 1) {
-                    val newProduct = currentProduct.copy(quantity = currentProduct.quantity - 1)
-                    _product.postValue(newProduct)
-                } else if (currentProduct.quantity == 1) {
-                    _product.postValue(currentProduct.copy(quantity = 0))
-                }
-            }
-        }
+        val currentProduct = _product.value ?: return
+        val newQuantity = if (currentProduct.quantity > 1) currentProduct.quantity - 1 else 0
+        val newProduct = currentProduct.copy(quantity = newQuantity)
+        _product.postValue(newProduct)
     }
 
     companion object {

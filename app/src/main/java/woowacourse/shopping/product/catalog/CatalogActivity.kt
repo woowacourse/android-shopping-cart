@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.cart.CartItemRepository
+import woowacourse.shopping.cart.CartItemRepositoryImpl
 import woowacourse.shopping.data.CartItemDatabase
 import woowacourse.shopping.data.MockProducts
 import woowacourse.shopping.databinding.ActivityCatalogBinding
@@ -44,7 +44,7 @@ class CatalogActivity : AppCompatActivity() {
 
     private fun provideViewModel(): CatalogViewModel {
         val db = CartItemDatabase.getInstance(this)
-        val repository = CartItemRepository(db.cartItemDao())
+        val repository = CartItemRepositoryImpl(db.cartItemDao())
         return ViewModelProvider(
             this,
             factory(MockProducts, repository),

@@ -1,34 +1,36 @@
 package woowacourse.shopping.cart
 
 import woowacourse.shopping.data.CartItem
-import woowacourse.shopping.data.CartItemDao
-import woowacourse.shopping.mapper.toCartItem
-import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-class CartItemRepository(
-    private val dao: CartItemDao,
-) {
-    val allCartItemSize get() = dao.getAll().size
+interface CartItemRepository {
+    fun getAllCartItemSize(callback: (Int) -> Unit)
 
-    fun getAllCartItem(): List<ProductUiModel> = dao.getAll().map { it.toUiModel() }
+    fun getAllCartItem(callback: (List<ProductUiModel>) -> Unit)
 
     fun subListCartItems(
         startIndex: Int,
         endIndex: Int,
-    ): List<ProductUiModel> = getAllCartItem().subList(startIndex, endIndex)
+        callback: (List<ProductUiModel>) -> Unit,
+    )
 
-    fun insertCartItem(product: ProductUiModel) {
-        dao.insertCartItem(product.toCartItem())
-    }
+    fun insertCartItem(
+        product: ProductUiModel,
+        onComplete: () -> Unit,
+    )
 
-    fun updateCartItem(product: ProductUiModel) {
-        dao.updateQuantity(product.id, product.quantity)
-    }
+    fun updateCartItem(
+        product: ProductUiModel,
+        onComplete: () -> Unit,
+    )
 
-    fun deleteCartItemById(productId: Long) {
-        dao.deleteByProductId(productId)
-    }
+    fun deleteCartItemById(
+        productId: Long,
+        onComplete: () -> Unit,
+    )
 
-    fun findCartItem(product: ProductUiModel): CartItem? = dao.getCartItemById(product.id)
+    fun findCartItem(
+        product: ProductUiModel,
+        callback: (CartItem?) -> Unit,
+    )
 }

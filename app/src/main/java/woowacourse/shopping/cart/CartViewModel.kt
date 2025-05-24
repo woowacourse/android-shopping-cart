@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.product.catalog.ProductUiModel
-import kotlin.concurrent.thread
 
 class CartViewModel(
     private val repository: CartItemRepository,
@@ -20,28 +19,27 @@ class CartViewModel(
     private val _isPrevButtonEnabled = MutableLiveData<Boolean>(false)
     val isPrevButtonEnabled: LiveData<Boolean> = _isPrevButtonEnabled
 
-    private var currentPage: Int = INITIAL_PAGE
-
     private val _pageEvent = SingleLiveEvent<Int>()
     val pageEvent: LiveData<Int> = _pageEvent
 
     private val _product = MutableLiveData<ProductUiModel>()
     val product: LiveData<ProductUiModel> = _product
 
+    private var currentPage: Int = INITIAL_PAGE
+
     init {
         loadCartProducts()
     }
 
     override fun onDeleteProduct(cartProduct: ProductUiModel) {
-        thread {
-            repository.deleteCartItemById(cartProduct.id)
+        repository.deleteCartItemById(cartProduct.id) {
             loadCartProducts()
         }
     }
 
     override fun onNextPage() {
-        thread {
-            val lastPage = (repository.allCartItemSize - 1) / PAGE_SIZE
+        repository.getAllCartItemSize { size ->
+            val lastPage = (size - 1) / PAGE_SIZE
             if (currentPage < lastPage) {
                 currentPage++
                 _pageEvent.postValue(currentPage)
@@ -51,33 +49,25 @@ class CartViewModel(
     }
 
     override fun onPrevPage() {
-        thread {
-            if (currentPage > 0) {
-                currentPage--
-                _pageEvent.postValue(currentPage)
-                loadCartProducts()
-            }
+        if (currentPage > 0) {
+            currentPage--
+            _pageEvent.postValue(currentPage)
+            loadCartProducts()
         }
     }
 
     fun increaseQuantity(product: ProductUiModel) {
-        thread {
-            val newProduct = product.copy(quantity = product.quantity + 1)
+        val newProduct = product.copy(quantity = product.quantity + 1)
+        repository.updateCartItem(newProduct) {
             _product.postValue(newProduct)
-            repository.updateCartItem(newProduct)
         }
     }
 
     fun decreaseQuantity(product: ProductUiModel) {
-        thread {
-            val newProduct =
-                if (product.quantity > 1) {
-                    product.copy(quantity = product.quantity - 1)
-                } else {
-                    product.copy(quantity = 1)
-                }
+        val newQuantity = if (product.quantity > 1) product.quantity - 1 else 1
+        val newProduct = product.copy(quantity = newQuantity)
+        repository.updateCartItem(newProduct) {
             _product.postValue(newProduct)
-            repository.updateCartItem(newProduct)
         }
     }
 
@@ -90,23 +80,22 @@ class CartViewModel(
     override fun getPage(): Int = currentPage
 
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
-        thread {
+        repository.getAllCartItemSize { totalSize ->
             var current = currentPage
-            val totalSize = repository.allCartItemSize
-
             while (current > 0 && current * pageSize >= totalSize) {
                 current--
             }
-
             currentPage = current
             _pageEvent.postValue(current)
 
             val startIndex = current * pageSize
             val endIndex = minOf(startIndex + pageSize, totalSize)
 
-            _cartProducts.postValue(repository.subListCartItems(startIndex, endIndex))
-            _isNextButtonEnabled.postValue(current < (totalSize - 1) / pageSize)
-            _isPrevButtonEnabled.postValue(current > 0)
+            repository.subListCartItems(startIndex, endIndex) { products ->
+                _cartProducts.postValue(products)
+                _isNextButtonEnabled.postValue(current < (totalSize - 1) / pageSize)
+                _isPrevButtonEnabled.postValue(current > 0)
+            }
         }
     }
 

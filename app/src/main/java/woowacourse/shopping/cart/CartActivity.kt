@@ -16,7 +16,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel by lazy {
         val db = CartItemDatabase.getInstance(this)
-        val repository = CartItemRepository(db.cartItemDao())
+        val repository = CartItemRepositoryImpl(db.cartItemDao())
         ViewModelProvider(
             this,
             factory(repository),
