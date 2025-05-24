@@ -2,6 +2,7 @@ package woowacourse.shopping.view.detail
 
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -9,29 +10,30 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
-import woowacourse.shopping.di.RepositoryProvider
-import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.fixture.FakeShoppingRepository
-import woowacourse.shopping.fixture.dummyProductsFixture
+import woowacourse.shopping.di.provider.RepositoryProvider
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.fixture.FakeCartRepository
+import woowacourse.shopping.fixture.FakeProductRepository
+import woowacourse.shopping.fixture.FakeRecentProductRepository
+import woowacourse.shopping.fixture.productsFixture
 import woowacourse.shopping.presentation.view.detail.DetailFragment
 
 class DetailFragmentTest {
-    private lateinit var fakeRepository: ShoppingRepository
-
     @BeforeEach
     fun setup() {
-        fakeRepository =
-            FakeShoppingRepository(
-                dummyProductsFixture,
-                mutableMapOf(
-                    dummyProductsFixture[0].id to 1,
-                ),
+        val fakeProductRepository = FakeProductRepository()
+        val fakeCartRepository =
+            FakeCartRepository(
+                initialCartItems = productsFixture.take(1).map { CartItem(it, 1) },
             )
+        val fakeRecentProductRepository = FakeRecentProductRepository()
 
-        RepositoryProvider.initShoppingRepository(fakeRepository)
+        RepositoryProvider.initProductRepository(fakeProductRepository)
+        RepositoryProvider.initCartRepository(fakeCartRepository)
+        RepositoryProvider.initRecentProductRepository(fakeRecentProductRepository)
 
         launchFragmentInContainer(
-            DetailFragment.newBundle(dummyProductsFixture[0].id),
+            DetailFragment.newBundle(productsFixture[0].id),
             themeResId = R.style.Theme_Shopping,
         ) { DetailFragment() }
     }
@@ -41,14 +43,51 @@ class DetailFragmentTest {
         onView(withId(R.id.text_view_detail_product_name)).check(
             matches(
                 withText(
-                    dummyProductsFixture[0].name,
+                    productsFixture[0].name,
                 ),
             ),
         )
 
-        val expectedPrice = "%,d원".format(dummyProductsFixture[0].price.value)
+        val expectedPrice = "%,d원".format(productsFixture[0].price.value)
 
         onView(withId(R.id.text_view_detail_price)).check(matches(withText(expectedPrice)))
         onView(withId(R.id.image_view_detail_product)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun `장바구니에_추가할_상품_개수를_증가시킬_수_있다`() {
+        onView(withId(R.id.btn_quantity_plus)).perform(click())
+        onView(withId(R.id.textview_quantity)).check(matches(withText("2")))
+
+        val expectedPrice = "%,d원".format(productsFixture[0].price.value * 2)
+        onView(withId(R.id.text_view_detail_price)).check(matches(withText(expectedPrice)))
+    }
+
+    @Test
+    fun `장바구니에_추가할_상품_개수를_감소시킬_수_있다`() {
+        // Give
+        onView(withId(R.id.btn_quantity_plus)).perform(click())
+        onView(withId(R.id.btn_quantity_plus)).perform(click())
+        onView(withId(R.id.textview_quantity)).check(matches(withText("3")))
+
+        // When
+        onView(withId(R.id.btn_quantity_minus)).perform(click())
+
+        // Then
+        onView(withId(R.id.textview_quantity)).check(matches(withText("2")))
+        val expectedPrice = "%,d원".format(productsFixture[0].price.value * 2)
+        onView(withId(R.id.text_view_detail_price)).check(matches(withText(expectedPrice)))
+    }
+
+    @Test
+    fun `장바구니에_추가할_상품_개수가_1개인_경우_감소시킬_수_없다`() {
+        // Give
+        onView(withId(R.id.textview_quantity)).check(matches(withText("1")))
+
+        // When
+        onView(withId(R.id.btn_quantity_minus)).perform(click())
+
+        // Then
+        onView(withId(R.id.textview_quantity)).check(matches(withText("1")))
     }
 }
