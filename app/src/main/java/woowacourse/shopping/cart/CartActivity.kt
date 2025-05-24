@@ -3,7 +3,6 @@ package woowacourse.shopping.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -54,10 +53,7 @@ class CartActivity : AppCompatActivity() {
                         viewModel.deleteCartProduct(CartItem.ProductItem(product))
                     },
                 onPaginationButtonClick = viewModel::onPaginationButtonClick,
-                quantityControlListener = { event, product ->
-                    Log.d("PRODUCT", "$product")
-                    viewModel.updateQuantity(event, product)
-                },
+                quantityControlListener = viewModel::updateQuantity,
             )
     }
 
