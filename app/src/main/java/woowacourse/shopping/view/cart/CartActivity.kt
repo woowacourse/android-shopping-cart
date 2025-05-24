@@ -16,6 +16,7 @@ import woowacourse.shopping.view.cart.adatper.CartAdapter
 import woowacourse.shopping.view.cart.event.CartScreenEventHandler
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
+import woowacourse.shopping.view.main.MainActivity
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -80,12 +81,21 @@ class CartActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                navigateToMain()
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun navigateToMain() {
+        val intent =
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        startActivity(intent)
+        finish()
     }
 
     companion object {

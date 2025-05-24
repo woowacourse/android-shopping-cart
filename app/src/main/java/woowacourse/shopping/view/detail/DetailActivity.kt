@@ -13,31 +13,42 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.event.DetailScreenEventHandler
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
+import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels { DetailViewModelFactory() }
+    private val quantitySelectorEventHandler
+        get() =
+            object : QuantitySelectorEventHandler {
+                override fun onQuantityMinus(cart: Cart) {
+                    viewModel.minusCartQuantity(cart)
+                }
+
+                override fun onQuantityPlus(cart: Cart) {
+                    viewModel.plusCartQuantity(cart)
+                }
+            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        with(binding) {
-            lifecycleOwner = this@DetailActivity
-            eventHandler =
-                DetailScreenEventHandler {
-                    viewModel.addProduct()
-                    startActivity(CartActivity.newIntent(this@DetailActivity))
-                }
-            vm = viewModel
-        }
+        binding.lifecycleOwner = this
+        binding.detailScreenEventHandler =
+            DetailScreenEventHandler {
+                viewModel.insertCart()
+                startActivity(CartActivity.newIntent(this))
+            }
+        binding.quantitySelectorEventHandler = quantitySelectorEventHandler
+        binding.vm = viewModel
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
-
         initView()
     }
 
