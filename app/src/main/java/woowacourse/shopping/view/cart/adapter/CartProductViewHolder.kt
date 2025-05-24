@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.common.QuantityControlEventHandler
 
 class CartProductViewHolder(
@@ -19,7 +20,7 @@ class CartProductViewHolder(
         binding.cartProduct = product
     }
 
-    interface EventHandler : QuantityControlEventHandler {
+    interface EventHandler : QuantityControlEventHandler<Product> {
         fun onProductRemoveClick(item: CartProduct)
     }
 

@@ -15,6 +15,16 @@ class CartProductRepositoryImpl(
         thread { totalCount = localDataSource.count() }.join()
     }
 
+    override fun insert(
+        productId: Long,
+        quantity: Int,
+    ) {
+        thread {
+            localDataSource.insert(CartProductEntity(productId = productId, quantity = quantity))
+        }.join()
+        totalCount++
+    }
+
     override fun getAll(): List<CartProduct> {
         var result = listOf<CartProduct>()
         thread { result = localDataSource.getAll().map { it.toDomain() } }.join()
@@ -54,16 +64,6 @@ class CartProductRepositoryImpl(
         quantity: Int,
     ) {
         thread { localDataSource.updateQuantity(productId, quantity) }.join()
-    }
-
-    override fun insert(
-        productId: Long,
-        quantity: Int,
-    ) {
-        thread {
-            localDataSource.insert(CartProductEntity(productId = productId, quantity = quantity))
-        }.join()
-        totalCount++
     }
 
     override fun deleteByProductId(productId: Long) {

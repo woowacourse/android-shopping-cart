@@ -6,16 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
-
-        <variable
             name="quantity"
             type="java.lang.Integer" />
-
-        <variable
-            name="handler"
-            type="woowacourse.shopping.view.common.QuantityControlEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +20,6 @@
             android:layout_height="42dp"
             android:background="@drawable/style_left_button"
             android:gravity="center"
-            android:onClick="@{() -> handler.onQuantityDecreaseClick(product)}"
             android:text="@string/minus"
             android:textColor="@color/dark_gray"
             android:textSize="22sp"
@@ -59,7 +50,6 @@
             android:layout_height="42dp"
             android:background="@drawable/style_right_button"
             android:gravity="center"
-            android:onClick="@{() -> handler.onQuantityIncreaseClick(product)}"
             android:text="@string/plus"
             android:textColor="@color/dark_gray"
             android:textSize="22sp"

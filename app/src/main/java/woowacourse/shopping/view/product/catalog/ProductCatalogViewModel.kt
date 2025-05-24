@@ -16,11 +16,12 @@ class ProductCatalogViewModel(
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel(),
     ProductCatalogEventHandler {
-    private val products = mutableMapOf<Product, Int>()
+    private val products = mutableListOf<ProductCatalogItem.ProductItem>()
+    private var recentProducts = emptyList<RecentProduct>()
     private var offset = FIRST_OFFSET
 
-    private val _productItems = MutableLiveData<List<ProductCatalogItem>>()
-    val productItems: LiveData<List<ProductCatalogItem>> = _productItems
+    private val _productCatalogItems = MutableLiveData<List<ProductCatalogItem>>()
+    val productCatalogItems: LiveData<List<ProductCatalogItem>> = _productCatalogItems
 
     private val _selectedProduct = MutableLiveData<Product>()
     val selectedProduct: LiveData<Product> = _selectedProduct
@@ -29,7 +30,8 @@ class ProductCatalogViewModel(
     val totalQuantity: LiveData<Int> = _totalQuantity
 
     init {
-        loadMoreProducts()
+        loadRecentProducts()
+        loadProducts()
         _totalQuantity.value = cartProductRepository.getTotalQuantity()
     }
 
@@ -44,85 +46,82 @@ class ProductCatalogViewModel(
     override fun onAddClick(item: Product) {
         cartProductRepository.insert(item.id)
         updateProductQuantity(item, 1)
-        _totalQuantity.value = totalQuantity.value?.plus(1)
+        increaseTotalQuantity(1)
     }
 
-    override fun onQuantityIncreaseClick(item: Product) {
-        val currentQuantity = products[item] ?: 0
-        val newQuantity = currentQuantity + 1
-        if (currentQuantity == 0) {
-            cartProductRepository.insert(item.id)
+    override fun onQuantityIncreaseClick(item: ProductCatalogItem.ProductItem) {
+        val newQuantity = item.quantity + 1
+        if (item.quantity == 0) {
+            cartProductRepository.insert(item.product.id)
         } else {
-            cartProductRepository.updateQuantity(item.id, newQuantity)
+            cartProductRepository.updateQuantity(item.product.id, newQuantity)
         }
-        updateProductQuantity(item, newQuantity)
-        _totalQuantity.value = totalQuantity.value?.plus(1)
+        updateProductQuantity(item.product, newQuantity)
+        increaseTotalQuantity(1)
     }
 
-    override fun onQuantityDecreaseClick(item: Product) {
-        val currentQuantity = products[item] ?: 0
-        val newQuantity = currentQuantity - 1
-        if (currentQuantity == 1) {
-            cartProductRepository.deleteByProductId(item.id)
+    override fun onQuantityDecreaseClick(item: ProductCatalogItem.ProductItem) {
+        val newQuantity = item.quantity - 1
+        if (item.quantity == 1) {
+            cartProductRepository.deleteByProductId(item.product.id)
         } else {
-            cartProductRepository.updateQuantity(item.id, newQuantity)
+            cartProductRepository.updateQuantity(item.product.id, newQuantity)
         }
-        updateProductQuantity(item, newQuantity)
-        _totalQuantity.value = totalQuantity.value?.minus(1)
+        updateProductQuantity(item.product, newQuantity)
+        increaseTotalQuantity(-1)
     }
 
     override fun onMoreClick() {
-        loadMoreProducts()
+        loadProducts()
     }
 
-    private fun loadMoreProducts() {
-        val recentProducts = recentProductRepository.getPagedProducts(RECENT_PRODUCT_SIZE_LIMIT)
+    private fun loadRecentProducts() {
+        recentProducts = recentProductRepository.getPagedProducts(RECENT_PRODUCT_SIZE_LIMIT)
+    }
 
+    private fun loadProducts() {
         val result = productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset)
-        result.items.forEach { product ->
-            val quantity = cartProductRepository.getQuantityByProductId(product.id)
-            products[product] = quantity ?: 0
-        }
+        _productCatalogItems.value = buildProductCatalogItems(result.items, result.hasNext)
         offset += result.items.size
-        _productItems.value = createProductItems(recentProducts, result.hasNext)
+    }
+
+    private fun buildProductCatalogItems(
+        newProducts: List<Product>,
+        hasNext: Boolean,
+    ): List<ProductCatalogItem> =
+        buildList {
+            if (recentProducts.isNotEmpty()) {
+                add(ProductCatalogItem.RecentProductsItem(recentProducts))
+            }
+            addAll(products)
+            addAll(
+                newProducts.map { product ->
+                    val quantity = cartProductRepository.getQuantityByProductId(product.id) ?: 0
+                    val productItem = ProductCatalogItem.ProductItem(product, quantity)
+                    products.add(productItem)
+                    productItem
+                },
+            )
+            if (hasNext) add(ProductCatalogItem.LoadMoreItem)
+        }
+
+    private fun increaseTotalQuantity(delta: Int) {
+        _totalQuantity.value = (_totalQuantity.value ?: 0) + delta
     }
 
     private fun updateProductQuantity(
         product: Product,
         quantity: Int,
     ) {
-        products[product] = quantity
-        _productItems.value =
-            productItems.value?.map {
+        _productCatalogItems.value =
+            productCatalogItems.value?.map {
                 when (it) {
-                    is ProductCatalogItem.RecentProductsItem -> it
                     is ProductCatalogItem.ProductItem ->
                         if (it.product.id == product.id) it.copy(quantity = quantity) else it
 
-                    ProductCatalogItem.LoadMoreItem -> it
+                    else -> it
                 }
             }
-    }
-
-    private fun createProductItems(
-        recentProducts: List<RecentProduct>,
-        hasNext: Boolean,
-    ): List<ProductCatalogItem> {
-        val items =
-            products.map { (product, quantity) ->
-                ProductCatalogItem.ProductItem(product, quantity)
-            }
-        return buildList {
-            if (recentProducts.isNotEmpty()) {
-                add(
-                    ProductCatalogItem.RecentProductsItem(
-                        recentProducts,
-                    ),
-                )
-            }
-            addAll(items)
-            if (hasNext) add(ProductCatalogItem.LoadMoreItem)
-        }
     }
 
     companion object {

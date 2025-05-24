@@ -9,18 +9,26 @@ import woowacourse.shopping.view.common.QuantityControlEventHandler
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    eventHandler: EventHandler,
+    private val eventHandler: EventHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
+    private lateinit var currentItem: ProductCatalogItem.ProductItem
+
     init {
         binding.handler = eventHandler
+        binding.itemQuantityControl.tvIncrease.setOnClickListener {
+            eventHandler.onQuantityIncreaseClick(currentItem)
+        }
+        binding.itemQuantityControl.tvDecrease.setOnClickListener {
+            eventHandler.onQuantityDecreaseClick(currentItem)
+        }
     }
 
     fun bind(productItem: ProductCatalogItem.ProductItem) {
-        binding.product = productItem.product
-        binding.quantity = productItem.quantity
+        currentItem = productItem
+        binding.productItem = productItem
     }
 
-    interface EventHandler : QuantityControlEventHandler {
+    interface EventHandler : QuantityControlEventHandler<ProductCatalogItem.ProductItem> {
         fun onProductClick(item: Product)
 
         fun onAddClick(item: Product)

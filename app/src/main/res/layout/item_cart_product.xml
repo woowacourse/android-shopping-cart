@@ -57,11 +57,9 @@
             layout="@layout/item_quantity_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:handler="@{handler}"
             app:layout_constraintBottom_toTopOf="@id/tv_product_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_product_image"
-            app:product="@{cartProduct.product}"
             app:quantity="@{cartProduct.quantity}" />
 
         <TextView

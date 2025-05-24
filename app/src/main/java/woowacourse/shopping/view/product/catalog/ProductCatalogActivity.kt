@@ -99,7 +99,7 @@ class ProductCatalogActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel.productItems.observe(this) { value ->
+        viewModel.productCatalogItems.observe(this) { value ->
             productAdapter.updateItems(value)
         }
 
