@@ -69,6 +69,7 @@ dependencies {
     // remote
     implementation(libs.converter.gson)
     implementation(libs.mockwebserver)
+    implementation(libs.logging.interceptor)
 
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)

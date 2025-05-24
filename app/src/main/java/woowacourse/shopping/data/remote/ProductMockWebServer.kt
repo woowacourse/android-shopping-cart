@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 
 class ProductMockWebServer : ProductService {
     private val mockWebServer = MockWebServer()
-    private val client: OkHttpClient = OkHttpClient.Builder().build()
+    private val client: OkHttpClient = OkHttpClientProvider.provideClient()
     private val gson = Gson()
 
     override fun start() {
