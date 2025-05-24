@@ -13,6 +13,7 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.base.QuantitySelectorEventHandler
+import woowacourse.shopping.view.uimodel.QuantityObservable
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartActivity :
@@ -108,6 +109,12 @@ class ShoppingCartActivity :
                     onProductRemove(item, page)
                 }
             }
+        }
+
+        override fun onQuantityMinusSelected(uiModel: QuantityObservable) {
+        }
+
+        override fun onQuantityPlusSelected(uiModel: QuantityObservable) {
         }
     }
 }

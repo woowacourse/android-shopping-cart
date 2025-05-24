@@ -9,4 +9,4 @@ data class ProductUiModel(
     val name: String,
     val price: Int,
     val imageUrl: String,
-) : Parcelable
+) : Parcelable, QuantityObservable

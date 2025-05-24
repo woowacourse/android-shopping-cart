@@ -9,6 +9,10 @@
             name="handler"
             type="woowacourse.shopping.view.base.QuantitySelectorEventHandler" />
 
+        <variable
+            name="quantityObservable"
+            type="woowacourse.shopping.view.uimodel.QuantityObservable" />
+
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:shoppingCart="http://schemas.android.com/apk/res-auto"
@@ -23,7 +27,7 @@
         android:padding="0dp">
 
         <Button
-            android:onClick="@{()->handler.onQuantityMinusSelected(quantity)}"
+            android:onClick="@{()->handler.onQuantityMinusSelected(quantityObservable)}"
             android:id="@+id/button_minus"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -51,7 +55,7 @@
             tools:text="2" />
 
         <Button
-            android:onClick="@{()->handler.onQuantityPlusSelected(quantity)}"
+            android:onClick="@{()->handler.onQuantityPlusSelected(quantityObservable)}"
             android:id="@+id/button_plus"
             android:layout_width="48dp"
             android:layout_height="48dp"

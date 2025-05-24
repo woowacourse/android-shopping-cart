@@ -12,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.view.detail.ProductDetailViewModel
 import woowacourse.shopping.view.main.adapter.ProductEventHandler
 import woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler
+import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 @BindingAdapter("android:price")
@@ -33,16 +34,22 @@ fun setImage(
         .into(view)
 }
 
-@BindingAdapter("shoppingCart:observe", "shoppingCart:observe_action", requireAll = true)
+@BindingAdapter(
+    "shoppingCart:observe",
+    "shoppingCart:observe_action",
+    "shoppingCart:observe_argument_item",
+    requireAll = true,
+)
 fun setMutableVisibility(
     view: ViewGroup,
     quantity: MutableLiveData<Int>,
     handler: ProductEventHandler,
+    item: ProductUiModel,
 ) {
     view.findViewTreeLifecycleOwner()?.let {
         quantity.removeObservers(it)
         quantity.observe(it) {
-            handler.whenQuantityChangedSelectView(view, quantity)
+            handler.whenQuantityChangedSelectView(view, item)
         }
     }
 }

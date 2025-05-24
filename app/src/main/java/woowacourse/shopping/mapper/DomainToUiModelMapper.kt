@@ -1,5 +1,6 @@
 package woowacourse.shopping.mapper
 
+import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.ProductUiModel
@@ -34,5 +35,14 @@ fun ShoppingCartItemUiModel.toShoppingCartItem(): ShoppingCartItem {
     return ShoppingCartItem(
         product = productUiModel.toProduct(),
         quantity = quantity,
+    )
+}
+
+fun Page<Product>.toPageUiModel(): Page<ProductUiModel> {
+    return Page(
+        items = items.map { it.toProductUiModel() },
+        totalCounts = totalCounts,
+        currentPage = currentPage,
+        pageSize = pageSize,
     )
 }

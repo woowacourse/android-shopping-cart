@@ -22,6 +22,7 @@
         android:onClick="@{() -> handler.onProductSelected(product)}"
         shoppingCart:observe="@{quantity}"
         shoppingCart:observe_action="@{handler}"
+        shoppingCart:observe_argument_item="@{product}"
         android:padding="10dp">
 
         <ImageView
@@ -52,12 +53,13 @@
             <include
                 app:quantity="@{quantity}"
                 app:handler="@{handler}"
+                app:quantityObservable="@{product}"
                 layout="@layout/button_quantity_selector" />
 
         </LinearLayout>
 
         <Button
-            android:onClick="@{()->handler.onBtnItemProductAddToCartSelected(quantity)}"
+            android:onClick="@{()->handler.onBtnItemProductAddToCartSelected(product)}"
             android:id="@+id/btn_item_product_add_to_cart"
             android:layout_width="48dp"
             android:layout_height="48dp"

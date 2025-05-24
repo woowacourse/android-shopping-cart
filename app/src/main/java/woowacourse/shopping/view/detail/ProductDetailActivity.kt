@@ -16,6 +16,7 @@ import woowacourse.shopping.view.base.QuantitySelectorEventHandler
 import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.uimodel.ProductUiModel
+import woowacourse.shopping.view.uimodel.QuantityObservable
 
 class ProductDetailActivity :
     AppCompatActivity(),
@@ -71,6 +72,12 @@ class ProductDetailActivity :
     }
 
     private inner class ProductDetailEventHandlerImpl : ProductDetailEventHandler {
+        override fun onQuantityMinusSelected(uiModel: QuantityObservable) {
+        }
+
+        override fun onQuantityPlusSelected(uiModel: QuantityObservable) {
+        }
+
         override fun onAddToCartSelected(productUiModel: ProductUiModel) {
             viewModel.addProduct(productUiModel)
             startActivity(ShoppingCartActivity.newIntent(this@ProductDetailActivity))

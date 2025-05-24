@@ -59,8 +59,8 @@ class ProductsAdapter(
 
         currentPage = mainRecyclerViewProduct.page.currentPage
         productUiModels += newProducts
+        quantityInfo = mainRecyclerViewProduct.quantityInfo
 
-        quantityInfo = quantityInfo + QuantityInfo(newProducts.quantityMap(newShoppingCartItems))
         notifyItemInserted(itemCount)
     }
 

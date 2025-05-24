@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +22,7 @@ import woowacourse.shopping.view.main.adapter.ProductsAdapter
 import woowacourse.shopping.view.main.adapter.RecentProductsAdapter
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.uimodel.ProductUiModel
+import woowacourse.shopping.view.uimodel.QuantityObservable
 import kotlin.getValue
 
 class MainActivity :
@@ -129,19 +129,16 @@ class MainActivity :
     }
 
     private inner class ProductEventHandlerImpl : ProductEventHandler {
-        override fun onBtnItemProductAddToCartSelected(quantity: MutableLiveData<Int>) {
-            super.onQuantityPlusSelected(quantity)
-            viewModel.increaseShoppingCartTotalSize()
+        override fun onBtnItemProductAddToCartSelected(productUiModel: ProductUiModel) {
+            viewModel.increaseCount(productUiModel)
         }
 
-        override fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
-            super.onQuantityMinusSelected(quantity)
-            viewModel.decreaseShoppingCartTotalSize()
+        override fun onQuantityMinusSelected(uiModel: QuantityObservable) {
+            viewModel.decreaseCount(uiModel as ProductUiModel)
         }
 
-        override fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
-            super.onQuantityPlusSelected(quantity)
-            viewModel.increaseShoppingCartTotalSize()
+        override fun onQuantityPlusSelected(uiModel: QuantityObservable) {
+            viewModel.increaseCount(uiModel as ProductUiModel)
         }
 
         override fun onProductSelected(productUiModel: ProductUiModel) {
@@ -156,12 +153,13 @@ class MainActivity :
 
         override fun whenQuantityChangedSelectView(
             view: ViewGroup,
-            quantity: MutableLiveData<Int>,
+            productUiModel: ProductUiModel,
         ) {
             val btnItemProductAddToCart = view.findViewById<View>(R.id.btn_item_product_add_to_cart)
             val layoutProductQuantitySelector =
                 view.findViewById<View>(R.id.layout_product_quantity_selector)
 
+            val quantity = viewModel.quantityInfo[productUiModel]
             quantity.value?.let { quantityValue ->
                 btnItemProductAddToCart.visibility =
                     viewModel.onProductAddedButtonViewRule(quantityValue)

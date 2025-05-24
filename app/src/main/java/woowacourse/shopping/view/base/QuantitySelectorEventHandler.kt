@@ -1,13 +1,9 @@
 package woowacourse.shopping.view.base
 
-import androidx.lifecycle.MutableLiveData
+import woowacourse.shopping.view.uimodel.QuantityObservable
 
 interface QuantitySelectorEventHandler {
-    fun onQuantityMinusSelected(quantity: MutableLiveData<Int>) {
-        quantity.value = quantity.value?.minus(1)
-    }
+    fun onQuantityMinusSelected(uiModel: QuantityObservable)
 
-    fun onQuantityPlusSelected(quantity: MutableLiveData<Int>) {
-        quantity.value = quantity.value?.plus(1)
-    }
+    fun onQuantityPlusSelected(uiModel: QuantityObservable)
 }

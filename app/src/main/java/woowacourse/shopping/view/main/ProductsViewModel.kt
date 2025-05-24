@@ -12,19 +12,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import woowacourse.shopping.ShoppingCartApplication
-import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.ProductsRepository
 import woowacourse.shopping.data.repository.RecentProductsRepository
 import woowacourse.shopping.data.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.mapper.toPageUiModel
 import woowacourse.shopping.mapper.toProduct
 import woowacourse.shopping.mapper.toProductUiModel
 import woowacourse.shopping.mapper.toShoppingCartItemUiModel
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
@@ -39,6 +40,9 @@ class ProductsViewModel(
 
     val totalSize: MutableLiveData<Int> = MutableLiveData(0)
     val totalShoppingCartSize: MutableLiveData<Int> = MutableLiveData()
+
+    var quantityInfo: QuantityInfo<ProductUiModel> = QuantityInfo()
+        private set
 
     init {
         viewModelScope.launch {
@@ -72,16 +76,18 @@ class ProductsViewModel(
                     shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
                 }
 
+            quantityInfo +=
+                QuantityInfo(
+                    page.toPageUiModel().items.quantityMap(
+                        shoppingCartItems,
+                    ),
+                )
+
             _productsLiveData.value =
                 MainRecyclerViewProduct(
-                    page =
-                        Page(
-                            items = page.items.map { it.toProductUiModel() },
-                            totalCounts = page.totalCounts,
-                            currentPage = page.currentPage,
-                            pageSize = page.pageSize,
-                        ),
+                    page = page.toPageUiModel(),
                     shoppingCartItemUiModels = shoppingCartItems,
+                    quantityInfo,
                 )
         }
     }
@@ -112,14 +118,6 @@ class ProductsViewModel(
         }
     }
 
-    fun increaseShoppingCartTotalSize() {
-        totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
-    }
-
-    fun decreaseShoppingCartTotalSize() {
-        totalShoppingCartSize.value = totalShoppingCartSize.value?.dec()
-    }
-
     fun requestRecentProducts() {
         viewModelScope.launch {
             val recentProducts = RecentProducts()
@@ -128,12 +126,38 @@ class ProductsViewModel(
                     recentProducts.add(it)
                 }
             }
-            _recentProductsLiveData.value = recentProducts.items.map { it.product.toProductUiModel() }
+            _recentProductsLiveData.value =
+                recentProducts.items.map { it.product.toProductUiModel() }
+        }
+    }
+
+    fun increaseCount(uiModel: ProductUiModel) {
+        quantityInfo[uiModel].value =
+            quantityInfo[uiModel].value?.inc()
+        totalShoppingCartSize.value = totalShoppingCartSize.value?.inc()
+    }
+
+    fun decreaseCount(uiModel: ProductUiModel) {
+        quantityInfo[uiModel].value =
+            quantityInfo[uiModel].value?.dec()
+        totalShoppingCartSize.value = totalShoppingCartSize.value?.dec()
+    }
+
+    private fun List<ProductUiModel>.quantityMap(
+        newShoppingCartItemUiModels: List<ShoppingCartItemUiModel>,
+    ): Map<ProductUiModel, MutableLiveData<Int>> {
+        return associateWith { product ->
+            MutableLiveData(
+                newShoppingCartItemUiModels.find { it.productUiModel.id == product.id }
+                    ?.quantity ?: DEFAULT_QUANTITY,
+            )
         }
     }
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val DEFAULT_QUANTITY = 0
+
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
