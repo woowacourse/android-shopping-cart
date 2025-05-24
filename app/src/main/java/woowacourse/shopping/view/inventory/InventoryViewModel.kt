@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository2
+import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.view.inventory.item.InventoryItem
@@ -31,6 +32,32 @@ class InventoryViewModel(
                 products.size / PAGE_SIZE,
             ) { page -> updateItems(page) }
         }
+    }
+
+    fun increaseQuantity(
+        position: Int,
+        product: InventoryProduct,
+    ) {
+        val updatedProduct = product.copy(quantity = product.quantity + 1)
+        (_items.value ?: emptyList()).toMutableList().let { newList ->
+            newList[position] = updatedProduct
+            _items.postValue(newList)
+        }
+        inventoryRepository.insert(updatedProduct)
+        shoppingCartRepository.insert(updatedProduct.toCartItem())
+    }
+
+    fun decreaseQuantity(
+        position: Int,
+        product: InventoryProduct,
+    ) {
+        val updatedProduct = product.copy(quantity = product.quantity - 1)
+        (_items.value ?: emptyList()).toMutableList().let { newList ->
+            newList[position] = updatedProduct
+            _items.postValue(newList)
+        }
+        inventoryRepository.insert(updatedProduct)
+        shoppingCartRepository.insert(updatedProduct.toCartItem())
     }
 
     private fun updateItems(newPage: Page<InventoryProduct>) {

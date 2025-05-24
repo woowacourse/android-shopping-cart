@@ -9,7 +9,7 @@ import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 
 class ProductViewHolder(
     parent: ViewGroup,
-    handler: InventoryEventHandler,
+    private val handler: InventoryEventHandler,
 ) : BaseViewHolder<ItemInventoryProductBinding>(
         ItemInventoryProductBinding.inflate(
             LayoutInflater.from(parent.context),
@@ -23,5 +23,14 @@ class ProductViewHolder(
 
     fun bind(item: InventoryProduct) {
         binding.product = item
+        binding.tvDecreaseQuantity.setOnClickListener {
+            handler.onDecreaseQuantity(adapterPosition, item)
+        }
+        binding.tvIncreaseQuantity.setOnClickListener {
+            handler.onIncreaseQuantity(adapterPosition, item)
+        }
+        binding.ivAddProductIcon.setOnClickListener {
+            handler.onIncreaseQuantity(adapterPosition, item)
+        }
     }
 }

@@ -51,7 +51,7 @@ class ShoppingCartRepository2Impl(private val cartItemDao: CartItemDao) : Shoppi
             if (retrievedItem == null) {
                 cartItemDao.insert(cartItem.copy(quantity = 1).toEntity())
             } else {
-                cartItemDao.insert(retrievedItem.copy(quantity = retrievedItem.quantity + 1).toEntity())
+                cartItemDao.insert(cartItem.toEntity())
             }
         }
     }

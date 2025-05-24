@@ -69,6 +69,20 @@ class InventoryActivity :
         startActivity(ProductDetailActivity.newIntent(this, product))
     }
 
+    override fun onIncreaseQuantity(
+        position: Int,
+        product: InventoryProduct,
+    ) {
+        viewModel.increaseQuantity(position, product)
+    }
+
+    override fun onDecreaseQuantity(
+        position: Int,
+        product: InventoryProduct,
+    ) {
+        viewModel.decreaseQuantity(position, product)
+    }
+
     override fun onLoadMoreProducts() {
         viewModel.requestPage()
     }
