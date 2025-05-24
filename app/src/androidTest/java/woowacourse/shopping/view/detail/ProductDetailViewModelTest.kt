@@ -5,8 +5,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.data.DummyShoppingCartRepository
-import woowacourse.shopping.data.ShoppingCartRepository
+import woowacourse.shopping.data.DummyShoppingCartRepositoryOld
+import woowacourse.shopping.data.ShoppingCartRepositoryOld
 import woowacourse.shopping.inventoryItem
 import woowacourse.shopping.view.inventory.item.toUiModel
 
@@ -15,12 +15,12 @@ class ProductDetailViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var repository: ShoppingCartRepository
+    private lateinit var repository: ShoppingCartRepositoryOld
     private lateinit var viewModel: ProductDetailViewModel
 
     @Before
     fun setUp() {
-        repository = DummyShoppingCartRepository()
+        repository = DummyShoppingCartRepositoryOld()
         viewModel = ProductDetailViewModel(repository)
     }
 

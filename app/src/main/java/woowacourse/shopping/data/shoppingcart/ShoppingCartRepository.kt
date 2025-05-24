@@ -3,7 +3,7 @@ package woowacourse.shopping.data.shoppingcart
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Page
 
-interface ShoppingCartRepository2 {
+interface ShoppingCartRepository {
     fun getOrNull(
         id: Int,
         onResult: (CartItem?) -> Unit,

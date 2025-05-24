@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Page
 import kotlin.concurrent.thread
 
-class ShoppingCartRepository2Impl(private val cartItemDao: CartItemDao) : ShoppingCartRepository2 {
+class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : ShoppingCartRepository {
     override fun getOrNull(
         id: Int,
         onResult: (CartItem?) -> Unit,

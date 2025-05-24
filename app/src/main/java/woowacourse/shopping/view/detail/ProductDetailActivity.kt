@@ -40,7 +40,7 @@ class ProductDetailActivity :
         val factory =
             ProductDetailViewModel.createFactory(
                 shoppingApplication.inventoryRepository,
-                shoppingApplication.shoppingCartRepository2,
+                shoppingApplication.shoppingCartRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         viewModel.quantity.observe(this) { quantity ->

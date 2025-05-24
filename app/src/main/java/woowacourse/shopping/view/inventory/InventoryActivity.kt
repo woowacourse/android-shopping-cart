@@ -25,7 +25,7 @@ class InventoryActivity :
         val factory =
             InventoryViewModel.createFactory(
                 shoppingApplication.inventoryRepository,
-                shoppingApplication.shoppingCartRepository2,
+                shoppingApplication.shoppingCartRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
 

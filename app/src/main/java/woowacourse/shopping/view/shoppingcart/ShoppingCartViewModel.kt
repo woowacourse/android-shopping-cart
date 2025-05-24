@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
-import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository2
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Page
 
 class ShoppingCartViewModel(
     private val inventoryRepository: InventoryRepository,
-    private val shoppingCartRepository: ShoppingCartRepository2,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _cartItems = MutableLiveData<Page<CartItem>>()
     val cartItems: LiveData<Page<CartItem>> get() = _cartItems
@@ -84,7 +84,7 @@ class ShoppingCartViewModel(
         @Suppress("UNCHECKED_CAST")
         fun createFactory(
             inventoryRepository: InventoryRepository,
-            shoppingCartRepository: ShoppingCartRepository2,
+            shoppingCartRepository: ShoppingCartRepository,
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {

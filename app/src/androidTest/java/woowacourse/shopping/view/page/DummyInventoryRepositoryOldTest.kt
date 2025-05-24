@@ -5,15 +5,15 @@ package woowacourse.shopping.view.page
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.DummyInventoryRepository
-import woowacourse.shopping.data.InventoryRepository
+import woowacourse.shopping.data.DummyInventoryRepositoryOld
+import woowacourse.shopping.data.InventoryRepositoryOld
 
-class DummyInventoryRepositoryTest {
-    private lateinit var repository: InventoryRepository
+class DummyInventoryRepositoryOldTest {
+    private lateinit var repository: InventoryRepositoryOld
 
     @Before
     fun setUp() {
-        repository = DummyInventoryRepository()
+        repository = DummyInventoryRepositoryOld()
     }
 
     @Test

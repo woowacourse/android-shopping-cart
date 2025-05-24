@@ -4,9 +4,8 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Page
-import kotlin.math.min
 
-class DummyInventoryRepository : InventoryRepository {
+class DummyInventoryRepositoryOld : InventoryRepositoryOld {
     private val products =
         listOf(
             Product(

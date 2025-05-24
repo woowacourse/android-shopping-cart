@@ -23,7 +23,7 @@ class ShoppingCartActivity :
         val factory =
             ShoppingCartViewModel.createFactory(
                 shoppingApplication.inventoryRepository,
-                shoppingApplication.shoppingCartRepository2,
+                shoppingApplication.shoppingCartRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
         initRecyclerView()

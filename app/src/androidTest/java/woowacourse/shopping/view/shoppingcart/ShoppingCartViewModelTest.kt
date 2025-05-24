@@ -7,8 +7,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.data.DummyShoppingCartRepository
-import woowacourse.shopping.data.ShoppingCartRepository
+import woowacourse.shopping.data.DummyShoppingCartRepositoryOld
+import woowacourse.shopping.data.ShoppingCartRepositoryOld
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.shoppingCartItem
 import woowacourse.shopping.shoppingCartLastPageItem
@@ -17,12 +17,12 @@ class ShoppingCartViewModelTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var repository: ShoppingCartRepository
+    private lateinit var repository: ShoppingCartRepositoryOld
     private lateinit var viewModel: ShoppingCartViewModel
 
     @Before
     fun setUp() {
-        repository = DummyShoppingCartRepository()
+        repository = DummyShoppingCartRepositoryOld()
         viewModel = ShoppingCartViewModel(repository)
     }
 

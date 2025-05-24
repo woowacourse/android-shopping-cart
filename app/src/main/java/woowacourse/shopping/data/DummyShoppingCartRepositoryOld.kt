@@ -4,9 +4,8 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Page
-import kotlin.math.min
 
-class DummyShoppingCartRepository : ShoppingCartRepository {
+class DummyShoppingCartRepositoryOld : ShoppingCartRepositoryOld {
     private val shoppingCart =
         mutableListOf(
             Product(
