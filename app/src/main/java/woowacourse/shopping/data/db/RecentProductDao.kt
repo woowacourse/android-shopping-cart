@@ -22,4 +22,14 @@ interface RecentProductDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: RecentProductEntity)
+
+    @Query(
+        """
+    SELECT * FROM RecentProductEntity
+    WHERE productId != :currentProductId
+    ORDER BY viewedAt DESC
+    LIMIT 1
+    """,
+    )
+    fun getLastViewedProduct(currentProductId: Long): RecentProductEntity?
 }

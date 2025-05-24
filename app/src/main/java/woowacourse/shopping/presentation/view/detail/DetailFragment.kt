@@ -29,6 +29,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
+
+        viewModel.fetchLastViewedProduct(product.id)
+
         binding.detailItemCounter.listener =
             object : ItemCounterListener {
                 override fun increase(productId: Long) {
@@ -48,6 +51,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
         viewModel.amount.observe(viewLifecycleOwner) {
             binding.detailItemCounter.textViewDetailAmount.text = it.toString()
+        }
+
+        viewModel.lastViewedProduct.observe(viewLifecycleOwner) {
         }
     }
 
