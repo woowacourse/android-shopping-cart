@@ -27,7 +27,7 @@ interface CartRepository {
 
     fun delete(
         id: Long,
-        onResult: () -> Unit,
+        onResult: (() -> Unit)? = null,
     )
 
     fun singlePage(

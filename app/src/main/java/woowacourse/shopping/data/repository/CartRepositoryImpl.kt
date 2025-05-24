@@ -53,11 +53,11 @@ class CartRepositoryImpl(
 
     override fun delete(
         id: Long,
-        onResult: () -> Unit,
+        onResult: (() -> Unit)?,
     ) {
         thread {
             dataSource.deleteCartByProductId(id)
-            onResult()
+            onResult?.invoke()
         }
     }
 

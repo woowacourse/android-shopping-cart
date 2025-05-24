@@ -44,10 +44,10 @@ class FakeCartRepositoryImpl(
 
     override fun delete(
         id: Long,
-        onResult: () -> Unit,
+        onResult: (() -> Unit)?,
     ) {
         dataSource.deleteCartByProductId(id)
-        onResult()
+        onResult?.invoke()
     }
 
     override fun singlePage(
