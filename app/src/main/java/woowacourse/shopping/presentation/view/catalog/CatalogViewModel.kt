@@ -43,40 +43,52 @@ class CatalogViewModel(
                     { it.toUiModel() },
                 )
 
-            productRepository.loadProducts(lastId, loadSize) { fetchedProducts, hasMore ->
+            productRepository.loadRecentProducts(limit = 10) { recentProducts ->
+                val recentUiModels = recentProducts.map { it.toUiModel() }
+                val recentItem = CatalogItem.RecentProductItem(recentUiModels)
 
-                val fetchedUiModels =
-                    fetchedProducts.map { product ->
-                        cartItemState?.get(product.id) ?: product.toUiModel()
+                productRepository.loadProducts(lastId, loadSize) { fetchedProducts, hasMore ->
+
+                    val fetchedUiModels =
+                        fetchedProducts.map { product ->
+                            cartItemState?.get(product.id) ?: product.toUiModel()
+                        }
+
+                    lastId = fetchedUiModels.lastOrNull()?.id ?: DEFAULT_ID
+
+                    val currentUiModels =
+                        _items.value
+                            .orEmpty()
+                            .filterIsInstance<CatalogItem.ProductItem>()
+                            .map { it.product }
+
+                    val combinedUiModels =
+                        (currentUiModels + fetchedUiModels)
+                            .distinctBy { it.id }
+
+                    val updatedItems = mutableListOf<CatalogItem>()
+
+                    if (recentUiModels.isNotEmpty()) {
+                        updatedItems.add(recentItem)
                     }
 
-                lastId = fetchedUiModels.lastOrNull()?.id ?: DEFAULT_ID
+                    updatedItems.addAll(
+                        combinedUiModels.map { CatalogItem.ProductItem(it) },
+                    )
 
-                val currentUiModels =
-                    _items.value
-                        .orEmpty()
-                        .filterIsInstance<CatalogItem.ProductItem>()
-                        .map { it.product }
+                    if (hasMore && updatedItems.none { it is CatalogItem.LoadMoreItem }) {
+                        updatedItems.add(CatalogItem.LoadMoreItem)
+                    }
 
-                val combinedUiModels =
-                    (currentUiModels + fetchedUiModels)
-                        .distinctBy { it.id }
-
-                val updatedItems =
-                    combinedUiModels
-                        .map { CatalogItem.ProductItem(it) }
-                        .toMutableList<CatalogItem>()
-
-                if (hasMore && updatedItems.none { it is CatalogItem.LoadMoreItem }) {
-                    updatedItems.add(CatalogItem.LoadMoreItem)
+                    _items.postValue(updatedItems)
                 }
-
-                _items.postValue(updatedItems)
             }
         }
     }
 
     fun refreshCartState() {
+        if (_items.value.isNullOrEmpty()) return
+
         productRepository.loadCartItems { cartItems ->
             val updatedCartState =
                 cartItems?.associateBy(
@@ -92,7 +104,9 @@ class CatalogViewModel(
                     ?.map {
                         if (it is CatalogItem.ProductItem) {
                             val updatedProduct = updatedCartState?.get(it.product.id)
-                            CatalogItem.ProductItem(updatedProduct ?: it.product.copy(amount = 0))
+                            CatalogItem.ProductItem(
+                                updatedProduct ?: it.product.copy(amount = 0),
+                            )
                         } else {
                             it
                         }
@@ -130,12 +144,35 @@ class CatalogViewModel(
 
     fun addRecentProduct(product: ProductUiModel) {
         productRepository.addRecentProduct(product.toProduct())
+        updateRecentProducts()
     }
 
     private fun calculateTotalCartCount() {
         productRepository.loadCartItems { cartItems ->
             val totalCount = cartItems?.sumOf { it.amount } ?: 0
             _totalCartCount.postValue(totalCount)
+        }
+    }
+
+    private fun updateRecentProducts() {
+        productRepository.loadRecentProducts(limit = 10) { recentProducts ->
+            val recentUiModels = recentProducts.map { it.toUiModel() }
+            val recentItem = CatalogItem.RecentProductItem(recentUiModels)
+
+            val currentItems = _items.value.orEmpty()
+
+            val updatedItems =
+                buildList {
+                    if (recentUiModels.isNotEmpty()) {
+                        add(recentItem)
+                    }
+
+                    addAll(
+                        currentItems.filter { it !is CatalogItem.RecentProductItem },
+                    )
+                }
+
+            _items.postValue(updatedItems)
         }
     }
 

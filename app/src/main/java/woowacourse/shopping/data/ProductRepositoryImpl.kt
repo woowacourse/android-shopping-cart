@@ -39,4 +39,20 @@ class ProductRepositoryImpl(
             recentProductDao.insert(product.toRecentEntity())
         }
     }
+
+    override fun loadRecentProducts(
+        limit: Int,
+        callback: (List<Product>) -> Unit,
+    ) {
+        thread {
+            val recentEntities = recentProductDao.getRecentProducts(limit)
+
+            val recentProducts =
+                recentEntities.mapNotNull { entity ->
+                    products.find { it.id == entity.productId }
+                }
+
+            callback(recentProducts)
+        }
+    }
 }

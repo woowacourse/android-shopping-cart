@@ -2,24 +2,24 @@ package woowacourse.shopping.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface RecentProductDao {
     @Query(
         """
-        SELECT * FROM RecentProductEntity
-        WHERE id IN (
-            SELECT MAX(id)
-            FROM RecentProductEntity
-            GROUP BY productId
-        )
-        ORDER BY viewedAt DESC
-        LIMIT :limit
+    SELECT * FROM (
+        SELECT *, ROW_NUMBER() OVER (PARTITION BY productId ORDER BY viewedAt DESC) as rn
+        FROM RecentProductEntity
+    )
+    WHERE rn = 1
+    ORDER BY viewedAt DESC
+    LIMIT :limit
     """,
     )
-    fun getLatestUniqueRecentProducts(limit: Int): List<RecentProductEntity>
+    fun getRecentProducts(limit: Int): List<RecentProductEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: RecentProductEntity)
 }

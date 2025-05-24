@@ -63,14 +63,15 @@ class CatalogFragment :
 
     private fun setCatalogAdapter() {
         binding.recyclerViewProducts.layoutManager =
-            GridLayoutManager(requireContext(), DEFAULT_SPAN_COUNT).apply {
+            GridLayoutManager(requireContext(), SPAN_COUNT).apply {
                 spanSizeLookup =
                     object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int {
                             val viewType = catalogAdapter.getItemViewType(position)
                             return when (CatalogItem.CatalogType.entries[viewType]) {
-                                CatalogItem.CatalogType.PRODUCT -> 1
-                                CatalogItem.CatalogType.LOAD_MORE -> LOAD_MORE_SPAN_COUNT
+                                CatalogItem.CatalogType.RECENT -> SPAN_COUNT
+                                CatalogItem.CatalogType.PRODUCT -> SINGLE_SPAN_COUNT
+                                CatalogItem.CatalogType.LOAD_MORE -> SPAN_COUNT
                             }
                         }
                     }
@@ -78,7 +79,7 @@ class CatalogFragment :
 
         binding.recyclerViewProducts.addItemDecoration(
             GridSpacingItemDecoration(
-                DEFAULT_SPAN_COUNT,
+                SPAN_COUNT,
                 ITEM_SPACING,
             ),
         )
@@ -120,8 +121,8 @@ class CatalogFragment :
     }
 
     companion object {
-        private const val LOAD_MORE_SPAN_COUNT = 2
-        private const val DEFAULT_SPAN_COUNT = 2
+        private const val SPAN_COUNT = 2
+        private const val SINGLE_SPAN_COUNT = 1
         private const val ITEM_SPACING = 12f
     }
 }

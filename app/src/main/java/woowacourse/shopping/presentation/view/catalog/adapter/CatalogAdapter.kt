@@ -6,7 +6,6 @@ import woowacourse.shopping.presentation.model.ProductUiModel
 import woowacourse.shopping.presentation.view.ItemCounterListener
 
 class CatalogAdapter(
-    items: List<CatalogItem> = emptyList(),
     private val eventListener: CatalogEventListener,
     private val itemCounterListener: ItemCounterListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -21,6 +20,9 @@ class CatalogAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (CatalogItem.CatalogType.entries[viewType]) {
+            CatalogItem.CatalogType.RECENT ->
+                RecentProductViewHolder.from(parent)
+
             CatalogItem.CatalogType.PRODUCT ->
                 ProductViewHolder.from(
                     parent,
@@ -35,6 +37,10 @@ class CatalogAdapter(
         position: Int,
     ) {
         when (holder) {
+            is RecentProductViewHolder -> {
+                val item = items[position] as CatalogItem.RecentProductItem
+                holder.bind(item.products)
+            }
             is ProductViewHolder -> holder.bind(items[position] as CatalogItem.ProductItem)
             is LoadMoreViewHolder -> {}
         }

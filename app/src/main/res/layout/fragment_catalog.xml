@@ -33,10 +33,10 @@
                 android:layout_gravity="end"
                 android:background="@drawable/shape_bg_circle"
                 android:backgroundTint="@color/mint"
+                android:gravity="center"
                 android:padding="4dp"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                android:gravity="center"
                 android:textStyle="bold"
                 tools:text="10" />
 
@@ -52,14 +52,15 @@
 
         </Toolbar>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_products"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:padding="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_catalog"
-            tools:listitem="@layout/item_product" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_products"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar_catalog"
+                tools:listitem="@layout/item_product" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
