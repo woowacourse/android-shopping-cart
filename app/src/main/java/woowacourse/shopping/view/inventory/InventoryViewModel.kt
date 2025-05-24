@@ -34,6 +34,11 @@ class InventoryViewModel(
         }
     }
 
+    fun reloadPage() {
+        _items.value = emptyList()
+        requestPage()
+    }
+
     fun increaseQuantity(
         position: Int,
         product: InventoryProduct,

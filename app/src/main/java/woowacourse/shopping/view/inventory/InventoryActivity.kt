@@ -20,6 +20,7 @@ class InventoryActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(binding.toolbar as Toolbar)
 
         val shoppingApplication = application as ShoppingApplication
         val factory =
@@ -28,9 +29,12 @@ class InventoryActivity :
                 shoppingApplication.shoppingCartRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
-
-        setSupportActionBar(binding.toolbar as Toolbar)
         initRecyclerview()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.reloadPage()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
