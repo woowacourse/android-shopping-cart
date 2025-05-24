@@ -19,7 +19,7 @@ class InventoryViewModel(
 ) : ViewModel() {
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
     private val products: List<InventoryItem>
-        get() = _items.value?.filterNot { item -> item == ShowMore } ?: emptyList()
+        get() = _items.value?.filterIsInstance<InventoryProduct>() ?: emptyList()
     val items: LiveData<List<InventoryItem>> get() = _items
 
     fun requestPage() {
@@ -71,7 +71,12 @@ class InventoryViewModel(
 
     private fun updateItems(newPage: Page<InventoryProduct>) {
         val newItems =
-            products + newPage.items + if (newPage.hasNext) listOf(ShowMore) else emptyList()
+            buildList {
+                add(InventoryItem.RecentItemsList)
+                addAll(products)
+                addAll(newPage.items)
+                if (newPage.hasNext) add(ShowMore)
+            }
         _items.postValue(newItems)
     }
 

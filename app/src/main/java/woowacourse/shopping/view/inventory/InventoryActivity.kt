@@ -49,7 +49,7 @@ class InventoryActivity :
                 override fun getSpanSize(position: Int): Int {
                     return when (binding.rvProductList.adapter?.getItemViewType(position)) {
                         InventoryItemType.PRODUCT.id -> PRODUCT_SPAN_SIZE
-                        InventoryItemType.SHOW_MORE.id -> MAX_SPAN_SIZE
+                        InventoryItemType.SHOW_MORE.id, InventoryItemType.RECENT_ITEMS_LIST.id -> MAX_SPAN_SIZE
                         else -> throw IllegalStateException()
                     }
                 }

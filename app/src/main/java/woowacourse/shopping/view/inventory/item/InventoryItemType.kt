@@ -8,4 +8,5 @@ enum class InventoryItemType(
 ) {
     PRODUCT(R.layout.item_inventory_product),
     SHOW_MORE(R.layout.item_inventory_show_more),
+    RECENT_ITEMS_LIST(R.layout.item_inventory_recent_list),
 }

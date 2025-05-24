@@ -22,4 +22,8 @@ sealed interface InventoryItem {
     data object ShowMore : InventoryItem {
         override val type = InventoryItemType.SHOW_MORE
     }
+
+    data object RecentItemsList : InventoryItem {
+        override val type = InventoryItemType.RECENT_ITEMS_LIST
+    }
 }

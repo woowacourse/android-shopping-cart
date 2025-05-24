@@ -7,6 +7,7 @@ import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 import woowacourse.shopping.view.inventory.item.InventoryItemType
 import woowacourse.shopping.view.inventory.viewholder.ProductViewHolder
+import woowacourse.shopping.view.inventory.viewholder.RecentItemsListViewHolder
 import woowacourse.shopping.view.inventory.viewholder.ShowMoreViewHolder
 
 class InventoryAdapter(
@@ -38,6 +39,7 @@ class InventoryAdapter(
         return when (viewType) {
             InventoryItemType.PRODUCT.id -> ProductViewHolder(parent, handler)
             InventoryItemType.SHOW_MORE.id -> ShowMoreViewHolder(parent, handler)
+            InventoryItemType.RECENT_ITEMS_LIST.id -> RecentItemsListViewHolder(parent)
             else -> throw IllegalStateException()
         }
     }
