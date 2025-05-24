@@ -3,7 +3,7 @@ package woowacourse.shopping.fixture
 import woowacourse.shopping.data.ext.subList
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
-import woowacourse.shopping.data.repository.ProductsRepository
+import woowacourse.shopping.data.repository.product.ProductsRepository
 import woowacourse.shopping.view.uimodel.ProductUiModel
 
 class FakeProductsRepository : ProductsRepository {

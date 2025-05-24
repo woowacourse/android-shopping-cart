@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.shoppingcart
 
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.ext.subList
@@ -7,7 +7,7 @@ import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.domain.ShoppingCartItem
 
 class ShoppingCartRepositoryImpl : ShoppingCartRepository {
-    override suspend fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
+    override fun findAll(pageRequest: PageRequest): Page<ShoppingCartItem> {
         val items =
             DummyShoppingCart.items
                 .distinct()
@@ -16,18 +16,19 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         return pageRequest.toPage(items, totalSize())
     }
 
-    override suspend fun findAll(): List<ShoppingCartItem> {
+    override fun findAll(): List<ShoppingCartItem> {
         return DummyShoppingCart.items
     }
 
-    override suspend fun totalSize(): Int = DummyShoppingCart.items.size
+    override fun totalSize(): Int = DummyShoppingCart.items.size
 
-    override suspend fun remove(item: ShoppingCartItem) {
+    override fun remove(item: ShoppingCartItem) {
         DummyShoppingCart.items.remove(item)
     }
 
-    override suspend fun save(item: ShoppingCartItem) {
-        val existingItemIndex = DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
+    override fun save(item: ShoppingCartItem) {
+        val existingItemIndex =
+            DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
 
         if (existingItemIndex != -1) {
             val existingItem = DummyShoppingCart.items[existingItemIndex]
@@ -38,8 +39,9 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         }
     }
 
-    override suspend fun update(item: ShoppingCartItem) {
-        val existingItemIndex = DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
+    override fun update(item: ShoppingCartItem) {
+        val existingItemIndex =
+            DummyShoppingCart.items.indexOfFirst { it.product.id == item.product.id }
         if (item.quantity <= 0) return
 
         if (existingItemIndex != -1) {
@@ -51,7 +53,7 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepository {
         }
     }
 
-    override suspend fun totalQuantity(): Int {
+    override fun totalQuantity(): Int {
         return DummyShoppingCart.items.sumOf { it.quantity }
     }
 }

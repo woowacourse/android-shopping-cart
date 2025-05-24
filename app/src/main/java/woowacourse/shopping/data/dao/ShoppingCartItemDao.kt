@@ -12,22 +12,22 @@ import woowacourse.shopping.data.entity.ShoppingCartItemWithProduct
 @Dao
 interface ShoppingCartItemDao {
     @Query("SELECT * FROM shopping_cart_item")
-    suspend fun findAll(): List<ShoppingCartItemWithProduct>
+    fun findAll(): List<ShoppingCartItemWithProduct>
 
     @Query("SELECT * FROM shopping_cart_item LIMIT :limit OFFSET :offset")
-    suspend fun findAll(
+    fun findAll(
         offset: Int,
         limit: Int,
     ): List<ShoppingCartItemWithProduct>
 
     @Query("SELECT COUNT(*) FROM shopping_cart_item")
-    suspend fun count(): Int
+    fun count(): Int
 
     @Query("DELETE FROM shopping_cart_item WHERE product_id = :id")
-    suspend fun delete(id: Long)
+    fun delete(id: Long)
 
     @Transaction
-    suspend fun saveOrInsert(item: ShoppingCartItemEntity) {
+    fun saveOrInsert(item: ShoppingCartItemEntity) {
         val existingItem = getShoppingCartItemByProductId(item.productId.toString())
         existingItem?.let {
             val updatedQuantity = it.quantity + item.quantity
@@ -39,14 +39,14 @@ interface ShoppingCartItemDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(item: ShoppingCartItemEntity)
+    fun insert(item: ShoppingCartItemEntity)
 
     @Upsert
-    suspend fun update(item: ShoppingCartItemEntity)
+    fun update(item: ShoppingCartItemEntity)
 
     @Query("SELECT SUM(quantity) FROM shopping_cart_item")
-    suspend fun totalQuantity(): Int?
+    fun totalQuantity(): Int?
 
     @Query("SELECT * FROM shopping_cart_item WHERE product_id = :productId LIMIT 1")
-    suspend fun getShoppingCartItemByProductId(productId: String): ShoppingCartItemEntity?
+    fun getShoppingCartItemByProductId(productId: String): ShoppingCartItemEntity?
 }

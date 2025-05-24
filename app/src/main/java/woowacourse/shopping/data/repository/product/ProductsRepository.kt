@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.product
 
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest

@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.PageRequest
-import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.mapper.toShoppingCartItem
 import woowacourse.shopping.mapper.toShoppingCartItemPageUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo

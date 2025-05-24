@@ -10,12 +10,12 @@ import kotlinx.coroutines.launch
 import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.ShoppingCartDatabase
-import woowacourse.shopping.data.repository.ProductsRepository
-import woowacourse.shopping.data.repository.RecentProductsRepository
-import woowacourse.shopping.data.repository.RecentProductsRepositoryImpl
-import woowacourse.shopping.data.repository.RoomProductsRepositoryImpl
-import woowacourse.shopping.data.repository.RoomShoppingCartRepositoryImpl
-import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.data.repository.product.ProductsRepository
+import woowacourse.shopping.data.repository.product.RoomProductsRepositoryImpl
+import woowacourse.shopping.data.repository.recent.RecentProductsRepository
+import woowacourse.shopping.data.repository.recent.RecentProductsRepositoryImpl
+import woowacourse.shopping.data.repository.shoppingcart.RoomShoppingCartRepositoryImpl
+import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.mapper.toEntity
 
 class ShoppingCartApplication : Application() {

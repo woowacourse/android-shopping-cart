@@ -17,6 +17,7 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.base.ActivityBoilerPlateCode
 import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
 import woowacourse.shopping.view.detail.ProductDetailActivity
+import woowacourse.shopping.view.main.adapter.GridLayoutSpanSizeRule
 import woowacourse.shopping.view.main.adapter.ProductEventHandler
 import woowacourse.shopping.view.main.adapter.ProductsAdapter
 import woowacourse.shopping.view.main.adapter.RecentProductsAdapter
@@ -102,12 +103,7 @@ class MainActivity :
         binding.productList.apply {
             adapter = productsAdapter
             addOnScrollListener(ProductsOnScrollListener(binding, viewModel))
-            (layoutManager as GridLayoutManager).spanSizeLookup =
-                object : GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return if (position == 0) 2 else 1
-                    }
-                }
+            (layoutManager as GridLayoutManager).spanSizeLookup = GridLayoutSpanSizeRule
         }
 
         viewModel.apply {

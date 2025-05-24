@@ -4,7 +4,7 @@ import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.ext.subList
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
-import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.view.uimodel.ProductUiModel
 
 class FakeShoppingCartRepository(

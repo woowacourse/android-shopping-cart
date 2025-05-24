@@ -13,9 +13,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.PageRequest
-import woowacourse.shopping.data.repository.ProductsRepository
-import woowacourse.shopping.data.repository.RecentProductsRepository
-import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.data.repository.product.ProductsRepository
+import woowacourse.shopping.data.repository.recent.RecentProductsRepository
+import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.mapper.toProduct

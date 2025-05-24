@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.product
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

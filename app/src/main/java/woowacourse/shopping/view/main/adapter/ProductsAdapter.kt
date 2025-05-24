@@ -55,7 +55,6 @@ class ProductsAdapter(
 
     fun updateProducts(mainRecyclerViewProduct: MainRecyclerViewProduct) {
         val newProducts = mainRecyclerViewProduct.page.items
-        val newShoppingCartItems = mainRecyclerViewProduct.shoppingCartItemUiModels
 
         currentPage = mainRecyclerViewProduct.page.currentPage
         productUiModels += newProducts

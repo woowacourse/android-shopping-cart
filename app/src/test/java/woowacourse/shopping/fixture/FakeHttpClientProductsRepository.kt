@@ -1,7 +1,7 @@
 package woowacourse.shopping.fixture
 
 import okhttp3.mockwebserver.MockWebServer
-import woowacourse.shopping.data.repository.HttpClientProductRepository
+import woowacourse.shopping.data.repository.product.HttpClientProductRepository
 
 class FakeHttpClientProductsRepository(
     mockWebServer: MockWebServer,

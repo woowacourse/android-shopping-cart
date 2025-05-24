@@ -12,15 +12,14 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingCartApplication
-import woowacourse.shopping.data.repository.RecentProductsRepository
-import woowacourse.shopping.data.repository.ShoppingCartRepository
+import woowacourse.shopping.data.repository.recent.RecentProductsRepository
+import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.mapper.toProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import java.time.LocalDateTime
-import kotlin.collections.get
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
