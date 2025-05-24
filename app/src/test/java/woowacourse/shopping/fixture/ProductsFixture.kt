@@ -3,7 +3,7 @@ package woowacourse.shopping.fixture
 import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
 
-val dummyProductsFixture =
+val productsFixture =
     listOf(
         Product(
             id = 1,
