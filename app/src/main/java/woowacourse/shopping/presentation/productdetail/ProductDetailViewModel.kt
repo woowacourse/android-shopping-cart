@@ -32,7 +32,7 @@ class ProductDetailViewModel(
     val toastMessage: LiveData<Int> = _toastMessage
 
     fun fetchData(productId: Long) {
-        val product = productRepository.getProductById(productId)
+        val product = productRepository.fetchProductById(productId)
         _product.value = product
 
         insertCurrentProductToRecent(product)

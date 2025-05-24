@@ -6,17 +6,19 @@ import woowacourse.shopping.domain.model.Product
 interface ProductRepository {
     fun getProducts(): List<Product>
 
-    fun getProductById(productId: Long): Product
-
-    fun getPagedProducts(
+    fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
         onResult: (Result<List<CartItem>>) -> Unit,
     )
 
-    fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit)
+    fun fetchProducts(): List<Product>
 
-    fun getPagedCartItems(
+    fun fetchProductById(productId: Long): Product
+    
+    fun fetchCartItems(onResult: (Result<List<CartItem>>) -> Unit)
+
+    fun fetchPagedCartItems(
         page: Int,
         pageSize: Int,
         onResult: (Result<List<CartItem>>) -> Unit,

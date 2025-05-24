@@ -38,7 +38,7 @@ class ProductViewModel(
     }
 
     fun fetchData(currentPage: Int) {
-        productRepository.getPagedProducts(currentPage, pageSize) { result ->
+        productRepository.fetchPagingProducts(currentPage, pageSize) { result ->
             result
                 .onSuccess { cartItems ->
                     _products.postValue(ResultState.Success(cartItems))
@@ -71,7 +71,7 @@ class ProductViewModel(
 
     fun loadMore() {
         this.currentPage++
-        productRepository.getPagedProducts(currentPage, pageSize) { result ->
+        productRepository.fetchPagingProducts(currentPage, pageSize) { result ->
             result.fold(
                 onSuccess = { newItems ->
                     val currentList = (_products.value as? ResultState.Success)?.data.orEmpty()

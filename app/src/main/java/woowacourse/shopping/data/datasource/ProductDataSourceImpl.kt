@@ -6,15 +6,15 @@ import woowacourse.shopping.domain.model.Product
 class ProductDataSourceImpl : ProductDataSource {
     override fun getProducts(): List<Product> = DummyProducts.values
 
-    override fun getProductById(id: Long): Product = DummyProducts.values.find { it.productId == id } ?: throw NoSuchElementException()
+    override fun fetchProducts(): List<Product> = productService.fetchProducts()
 
-    override fun getPagedProducts(
+    override fun fetchProductById(id: Long): Product = productService.fetchProductById(id)
+
+    override fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
     ): List<Product> {
-        val fromIndex = page * pageSize
-        val toIndex = minOf(fromIndex + pageSize, DummyProducts.values.size)
-        if (fromIndex >= DummyProducts.values.size) return emptyList()
-        return DummyProducts.values.subList(fromIndex, toIndex)
+        val offset = page * pageSize
+        return productService.fetchPagingProducts(offset, pageSize)
     }
 }

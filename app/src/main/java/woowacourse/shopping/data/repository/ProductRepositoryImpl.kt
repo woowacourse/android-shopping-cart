@@ -14,31 +14,29 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
     override fun getProducts(): List<Product> = productDataSource.getProducts()
 
-    override fun getProductById(productId: Long): Product = productDataSource.getProductById(productId)
-
-    override fun getPagedProducts(
+    override fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
         onResult: (Result<List<CartItem>>) -> Unit,
     ) {
         runThread(
-            block = {
-                val productPage = productDataSource.getPagedProducts(page, pageSize)
-                val cartItems = productPage.toCartItems()
-                cartItems
-            },
+            block = { productDataSource.fetchPagingProducts(page, pageSize).toCartItems() },
             onResult = onResult,
         )
     }
 
-    override fun getCartItems(onResult: (Result<List<CartItem>>) -> Unit) {
+    override fun fetchProducts(): List<Product> = productDataSource.fetchProducts()
+
+    override fun fetchProductById(productId: Long): Product = productDataSource.fetchProductById(productId)
+
+    override fun fetchCartItems(onResult: (Result<List<CartItem>>) -> Unit) {
         runThread(
             block = { cartDataSource.getCartProducts().map { it.toCartItem() } },
             onResult = onResult,
         )
     }
 
-    override fun getPagedCartItems(
+    override fun fetchPagedCartItems(
         page: Int,
         pageSize: Int,
         onResult: (Result<List<CartItem>>) -> Unit,

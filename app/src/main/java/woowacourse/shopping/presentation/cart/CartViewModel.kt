@@ -28,7 +28,7 @@ class CartViewModel(
     }
 
     fun loadItems(currentPage: Int) {
-        productRepository.getPagedCartItems(PAGE_SIZE, currentPage) { result ->
+        productRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
             result
                 .onSuccess { pagedProducts -> _products.postValue(ResultState.Success(pagedProducts)) }
                 .onFailure { _products.postValue(ResultState.Failure()) }
@@ -77,7 +77,7 @@ class CartViewModel(
     }
 
     private fun reloadProductsByPage(currentPage: Int) {
-        productRepository.getPagedCartItems(PAGE_SIZE, currentPage) { result ->
+        productRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
             result
                 .onSuccess { pagedProducts ->
                     if (pagedProducts.isEmpty()) {

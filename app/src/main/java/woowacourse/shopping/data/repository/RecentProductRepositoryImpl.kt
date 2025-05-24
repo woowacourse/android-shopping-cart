@@ -16,7 +16,7 @@ class RecentProductRepositoryImpl(
             block = {
                 recentProductDataSource
                     .getProducts()
-                    .map { productDataSource.getProductById(it.productId) }
+                    .map { productDataSource.fetchProductById(it.productId) }
             },
             onResult = onResult,
         )
@@ -54,7 +54,7 @@ class RecentProductRepositoryImpl(
         productId: Long,
     ): Boolean = recentProducts.none { it.productId == productId }
 
-    private fun RecentlyViewedProduct.toProduct(): Product = productDataSource.getProductById(this.productId)
+    private fun RecentlyViewedProduct.toProduct(): Product = productDataSource.fetchProductById(this.productId)
 
     private fun Product.toEntity(): RecentlyViewedProduct =
         RecentlyViewedProduct(
