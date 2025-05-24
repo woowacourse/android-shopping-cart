@@ -33,14 +33,20 @@ class ShoppingRepositoryImpl(
         id: Int,
         quantity: Int,
     ) {
-        adjustGoodsQuantity(id, quantity)
+        thread {
+            val itemInCart = shoppingDao.findGoodsById(id)
+            shoppingDao.updateQuantity(id, itemInCart?.quantity?.plus(quantity) ?: quantity)
+        }
     }
 
     override fun decreaseGoodsQuantity(
         id: Int,
         quantity: Int,
     ) {
-        adjustGoodsQuantity(id, quantity)
+        thread {
+            val itemInCart = shoppingDao.findGoodsById(id)
+            shoppingDao.updateQuantity(id, itemInCart?.quantity?.minus(quantity) ?: quantity)
+        }
     }
 
     override fun removeGoods(id: Int) {
@@ -70,26 +76,5 @@ class ShoppingRepositoryImpl(
         }.join()
 
         return result
-    }
-
-    private fun adjustGoodsQuantity(
-        id: Int,
-        quantity: Int,
-    ) {
-        thread {
-            val itemInCart = shoppingDao.findGoodsById(id)
-
-            if (itemInCart == null && quantity > 0) {
-                shoppingDao.insert(ShoppingGoods(id, quantity).toShoppingEntity())
-            } else if (itemInCart != null) {
-                val updatedCount = itemInCart.quantity + quantity
-
-                if (updatedCount <= 0) {
-                    shoppingDao.delete(id)
-                } else {
-                    shoppingDao.updateQuantity(id, updatedCount)
-                }
-            }
-        }.join()
     }
 }

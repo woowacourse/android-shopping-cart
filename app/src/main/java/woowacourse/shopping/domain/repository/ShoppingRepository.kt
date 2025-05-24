@@ -12,7 +12,7 @@ interface ShoppingRepository {
 
     fun decreaseGoodsQuantity(
         id: Int,
-        quantity: Int = -QUANTITY_CHANGE_AMOUNT,
+        quantity: Int = QUANTITY_CHANGE_AMOUNT,
     )
 
     fun removeGoods(id: Int)
