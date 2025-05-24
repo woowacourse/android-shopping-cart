@@ -13,7 +13,7 @@ interface CartItemDao {
     fun deleteByProductId(id: Long)
 
     @Query("SELECT * FROM CartItemEntity WHERE id = :id")
-    fun getCartItemById(id: Long): CartItem
+    fun getCartItemById(id: Long): CartItem?
 
     @Query("SELECT * FROM CartItemEntity")
     fun getAll(): List<CartItem>

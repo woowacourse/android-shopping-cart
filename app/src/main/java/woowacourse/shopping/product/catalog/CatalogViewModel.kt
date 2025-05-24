@@ -25,7 +25,6 @@ class CatalogViewModel(
     val cartCount: LiveData<Int> = _cartCount
 
     val page: Int get() = currentPage
-    val isBadgeEnable: Boolean get() = (cartCount.value ?: 0) > 0
 
     private var currentPage = INITIAL_PAGE
 
@@ -69,6 +68,7 @@ class CatalogViewModel(
             val updated = findAndUpdateProduct(product.id) { it.copy(quantity = it.quantity + 1) }
             updatePaging()
             upsertCartItem(updated, cartItem)
+            updateCartCount()
         }
     }
 

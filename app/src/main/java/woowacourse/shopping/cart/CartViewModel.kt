@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.util.SingleLiveEvent
 
 class CartViewModel(
     private val repository: CartItemRepository,
