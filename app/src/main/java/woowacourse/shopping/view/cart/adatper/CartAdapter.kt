@@ -6,16 +6,22 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.event.CartAdapterEventHandler
+import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 
 class CartAdapter(
-    private val items: MutableList<Cart> = mutableListOf(),
+    private var items: List<Cart> = listOf(),
+    private val quantitySelectorEventHandler: QuantitySelectorEventHandler,
     private val handler: CartAdapterEventHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     fun submitList(newItems: List<Cart>) {
         val oldSize = items.size
-        items.clear()
-        items.addAll(newItems)
-
+        val updatedItems = newItems.subtract(items.toSet()).toList()
+        items = newItems
+        if (updatedItems.size == 1) {
+            val updateItemIndex = newItems.indexOf(updatedItems[0])
+            notifyItemChanged(updateItemIndex)
+            return
+        }
         if (newItems.size == oldSize) {
             notifyItemRangeChanged(0, newItems.size)
         } else {
@@ -29,7 +35,7 @@ class CartAdapter(
         viewType: Int,
     ): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding, handler)
+        return CartViewHolder(binding, quantitySelectorEventHandler, handler)
     }
 
     override fun getItemCount(): Int = items.size
