@@ -42,8 +42,16 @@ class ProductsViewModel(
 
     init {
         viewModelScope.launch {
-            totalSize.value = productsRepository.totalSize()
-            totalShoppingCartSize.value = shoppingCartRepository.totalQuantity()
+            val value =
+                withContext(Dispatchers.IO) {
+                    productsRepository.totalSize()
+                }
+            val quantity =
+                withContext(Dispatchers.IO) {
+                    shoppingCartRepository.totalQuantity()
+                }
+            totalSize.value = value
+            totalShoppingCartSize.value = quantity
         }
     }
 

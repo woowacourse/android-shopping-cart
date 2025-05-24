@@ -16,7 +16,7 @@ class ProductsAdapter(
     var quantityInfo = QuantityInfo<ProductUiModel>()
         private set
 
-    var currentPage: Int = -1
+    var currentPage: Int = UNLOADED_PAGE
         private set
 
     override fun getItemCount(): Int = productUiModels.size + 1
@@ -25,10 +25,7 @@ class ProductsAdapter(
         holder: MainViewHolder,
         position: Int,
     ) {
-        if (position == 0) {
-            return
-        }
-
+        if (position == 0) return
         val item = productUiModels[position - 1]
         val quantityLiveData = quantityInfo[item]
         when (holder) {
@@ -41,11 +38,8 @@ class ProductsAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): MainViewHolder {
-        return if (viewType == 0) {
-            MainViewHolder.RecentProductsViewHolder(
-                recentProductsAdapter,
-                parent,
-            )
+        return if (viewType == ViewType.RECENT_PRODUCTS.ordinal) {
+            MainViewHolder.RecentProductsViewHolder(recentProductsAdapter, parent)
         } else {
             MainViewHolder.ProductsViewHolder(parent, handler)
         }
@@ -53,9 +47,9 @@ class ProductsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) {
-            0
+            ViewType.RECENT_PRODUCTS.ordinal
         } else {
-            1
+            ViewType.PRODUCTS.ordinal
         }
     }
 
@@ -65,6 +59,7 @@ class ProductsAdapter(
 
         currentPage = mainRecyclerViewProduct.page.currentPage
         productUiModels += newProducts
+
         quantityInfo = quantityInfo + QuantityInfo(newProducts.quantityMap(newShoppingCartItems))
         notifyItemInserted(itemCount)
     }
@@ -89,5 +84,11 @@ class ProductsAdapter(
 
     companion object {
         private const val DEFAULT_QUANTITY = 0
+        private const val UNLOADED_PAGE = -1
+    }
+
+    private enum class ViewType {
+        RECENT_PRODUCTS,
+        PRODUCTS,
     }
 }
