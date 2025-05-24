@@ -12,17 +12,13 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.loader.HistoryLoader
+import woowacourse.shopping.view.loader.ProductLoader
 import kotlin.getValue
 
 class AppContainer(
     context: Context,
 ) {
-    val productRepository: ProductRepository by lazy { ProductRepositoryImpl(productDataSource) }
-
-    val cartRepository: CartRepository by lazy { CartRepositoryImpl(cartDataSource) }
-
-    val historyRepository: HistoryRepository by lazy { HistoryRepositoryImpl(historyDataSource) }
-
     private val db = PetoMarketDatabase.getInstance(context)
 
     private val cartDao = db.cartDao()
@@ -36,4 +32,14 @@ class AppContainer(
     private val productDataSource = ProductsDataSource(productService)
 
     private val historyDataSource = HistoryDataSource(historyDao)
+
+    val productRepository: ProductRepository by lazy { ProductRepositoryImpl(productDataSource) }
+
+    val cartRepository: CartRepository by lazy { CartRepositoryImpl(cartDataSource) }
+
+    val historyRepository: HistoryRepository by lazy { HistoryRepositoryImpl(historyDataSource) }
+
+    val productLoader = ProductLoader(productRepository, cartRepository)
+
+    val historyLoader = HistoryLoader(productRepository, historyRepository)
 }
