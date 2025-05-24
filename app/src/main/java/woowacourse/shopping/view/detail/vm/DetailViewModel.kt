@@ -3,7 +3,7 @@ package woowacourse.shopping.view.detail.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.CartEntry
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -25,6 +25,6 @@ class DetailViewModel(
     fun addProduct() {
         val product = product.value ?: return
         val quantity = quantity.value ?: return
-        cartRepository.insert(CartEntry(product.id, quantity))
+        cartRepository.insert(Cart(product, quantity))
     }
 }

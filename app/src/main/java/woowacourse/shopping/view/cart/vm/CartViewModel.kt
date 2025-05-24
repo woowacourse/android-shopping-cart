@@ -4,14 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartEntry
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val page = Page(initialPage = INITIAL_PAGE_NUMBER, pageSize = PAGE_SIZE)
     private val _carts = MutableLiveData<List<Cart>>()
@@ -45,12 +42,7 @@ class CartViewModel(
 
     fun loadCarts() {
         val (offset, limit) = page.targetRange()
-        cartRepository.getPaged(offset, limit) { cartEntries: List<CartEntry> ->
-            val carts = mutableListOf<Cart>()
-            cartEntries.forEach { cartEntry ->
-                val product = productRepository.getById(cartEntry.productId)
-                carts.add(Cart(product, cartEntry.quantity))
-            }
+        cartRepository.getPaged(offset, limit) { carts: List<Cart> ->
             _carts.postValue(carts)
         }
         setPageState(offset, limit)

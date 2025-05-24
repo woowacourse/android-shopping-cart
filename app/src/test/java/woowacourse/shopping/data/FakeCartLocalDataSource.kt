@@ -1,11 +1,11 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.data.storage.CartStorage
+import woowacourse.shopping.data.datasource.CartLocalDataSource
 import woowacourse.shopping.domain.Product
 
-class FakeCartStorage(
+class FakeCartLocalDataSource(
     private val products: MutableList<Product> = mutableListOf(),
-) : CartStorage {
+) : CartLocalDataSource {
     override fun insert(item: Product) {
         products.add(item)
     }
@@ -14,7 +14,7 @@ class FakeCartStorage(
 
     override fun totalSize(): Int = products.size
 
-    override fun deleteProduct(id: Long) {
+    override fun deleteById(id: Long) {
         products.removeIf { it.id == id }
     }
 

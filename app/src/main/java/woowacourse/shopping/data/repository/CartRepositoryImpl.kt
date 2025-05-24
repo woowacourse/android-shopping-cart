@@ -3,12 +3,14 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.datasource.CartLocalDataSource
 import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartEntry
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartLocalDataSource: CartLocalDataSource,
+    private val productRepository: ProductRepository,
 ) : CartRepository {
     override fun insert(
         item: Cart,
@@ -22,25 +24,34 @@ class CartRepositoryImpl(
 
     override fun getById(
         id: Long,
-        onResult: (CartEntry?) -> Unit,
+        onResult: (Cart?) -> Unit,
     ) {
         thread {
-            onResult(cartLocalDataSource.getById(id)?.toEntry())
+            val product = productRepository.getById(id)
+            onResult(cartLocalDataSource.getById(id)?.toModel(product))
         }
     }
 
-    override fun getByIds(
-        ids: List<Long>,
-        onResult: (List<CartEntry>) -> Unit,
+    override fun getPagedShopItems(
+        offset: Int,
+        limit: Int,
+        onResult: (List<Cart>) -> Unit,
     ) {
         thread {
-            onResult(cartLocalDataSource.getByIds(ids).filterNotNull().map { it.toEntry() })
+            val shopItems =
+                productRepository.getProducts(offset, limit).map {
+                    cartLocalDataSource.getById(it.id)?.toModel(it) ?: Cart(it, 0)
+                }
+            onResult(shopItems)
         }
     }
 
-    override fun getAll(onResult: (List<CartEntry>) -> Unit) {
+    override fun getAll(onResult: (List<Cart>) -> Unit) {
         thread {
-            onResult(cartLocalDataSource.getAll().map { it.toEntry() })
+            onResult(
+                cartLocalDataSource.getAll()
+                    .map { it.toModel(productRepository.getById(it.productId)) },
+            )
         }
     }
 
@@ -72,10 +83,13 @@ class CartRepositoryImpl(
     override fun getPaged(
         offset: Int,
         limit: Int,
-        onResult: (List<CartEntry>) -> Unit,
+        onResult: (List<Cart>) -> Unit,
     ) {
         thread {
-            onResult(cartLocalDataSource.getPaged(offset, limit).map { it.toEntry() })
+            onResult(
+                cartLocalDataSource.getPaged(offset, limit)
+                    .map { it.toModel(productRepository.getById(it.productId)) },
+            )
         }
     }
 
@@ -98,7 +112,7 @@ class CartRepositoryImpl(
         }
     }
 
-    private fun CartEntity.toEntry() = CartEntry(productId, quantity)
+    private fun CartEntity.toModel(product: Product) = Cart(product, quantity)
 
     private fun Cart.toEntity() = CartEntity(product.id, quantity)
 }

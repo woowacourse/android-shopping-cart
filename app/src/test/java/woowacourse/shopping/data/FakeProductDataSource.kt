@@ -1,10 +1,10 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.data.storage.ProductStorage
+import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.fixture.productFixture1
 
-class FakeProductStorage : ProductStorage {
+class FakeProductDataSource : ProductDataSource {
     private val products = mutableListOf<Product>()
 
     fun setProducts(newList: List<Product>) {

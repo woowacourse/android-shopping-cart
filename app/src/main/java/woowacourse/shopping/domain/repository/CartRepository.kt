@@ -1,7 +1,6 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartEntry
 
 interface CartRepository {
     fun insert(
@@ -11,15 +10,16 @@ interface CartRepository {
 
     fun getById(
         id: Long,
-        onResult: (CartEntry?) -> Unit,
+        onResult: (Cart?) -> Unit,
     )
 
-    fun getByIds(
-        ids: List<Long>,
-        onResult: (List<CartEntry>) -> Unit,
+    fun getPagedShopItems(
+        offset: Int,
+        limit: Int,
+        onResult: (List<Cart>) -> Unit,
     )
 
-    fun getAll(onResult: (List<CartEntry>) -> Unit)
+    fun getAll(onResult: (List<Cart>) -> Unit)
 
     fun totalSize(onResult: (Int) -> Unit)
 
@@ -36,7 +36,7 @@ interface CartRepository {
     fun getPaged(
         offset: Int,
         limit: Int,
-        onResult: (List<CartEntry>) -> Unit,
+        onResult: (List<Cart>) -> Unit,
     )
 
     fun hasOnlyPage(
