@@ -10,9 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartItemDatabase
-import woowacourse.shopping.data.CartItemRepositoryImpl
-import woowacourse.shopping.data.MockProducts
+import woowacourse.shopping.data.cart.CartItemDatabase
+import woowacourse.shopping.data.cart.CartItemRepositoryImpl
+import woowacourse.shopping.data.product.MockProducts
 import woowacourse.shopping.databinding.ActivityCatalogBinding
 import woowacourse.shopping.product.catalog.CatalogViewModel.Companion.factory
 import woowacourse.shopping.product.catalog.event.CatalogEventHandlerImpl

@@ -1,6 +1,6 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.data.CartItem
+import woowacourse.shopping.data.cart.CartItem
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 fun ProductUiModel.toCartItem() =

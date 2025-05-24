@@ -1,6 +1,6 @@
 package woowacourse.shopping.cart.fixture
 
-import woowacourse.shopping.data.CartProductDataSource
+import woowacourse.shopping.data.cart.CartProductDataSource
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.product.detail.CartUiState
 

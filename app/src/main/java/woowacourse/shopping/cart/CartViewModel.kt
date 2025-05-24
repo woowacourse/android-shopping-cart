@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.cart.event.CartEventHandler
-import woowacourse.shopping.data.CartItemRepository
+import woowacourse.shopping.data.cart.CartItemRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.util.SingleLiveEvent
 

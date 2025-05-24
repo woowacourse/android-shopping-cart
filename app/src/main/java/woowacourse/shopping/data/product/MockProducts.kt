@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.product
 
 import woowacourse.shopping.mapper.toUiModel
 import woowacourse.shopping.product.catalog.ProductUiModel

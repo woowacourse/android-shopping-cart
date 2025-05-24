@@ -1,6 +1,6 @@
 package woowacourse.shopping.product.catalog.fixture
 
-import woowacourse.shopping.data.ProductsDataSource
+import woowacourse.shopping.data.product.ProductsDataSource
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class FakeMockProducts(
