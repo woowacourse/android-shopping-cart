@@ -12,10 +12,12 @@ import kotlin.concurrent.thread
 class CartRepositoryImpl(
     private val cartDatabase: CartDatabase,
 ) : CartRepository {
-    override suspend fun getAll(): Carts {
-        val cartList = cartDatabase.cartDao().getAll().map { it.toDomain() }
-        val totalQuantity = cartList.sumOf { it.quantity }
-        return Carts(carts = cartList, totalQuantity = totalQuantity)
+    override fun getAll(callback: (Carts) -> Unit) {
+        thread {
+            val cartList = cartDatabase.cartDao().getAll().map { it.toDomain() }
+            val totalQuantity = cartList.sumOf { it.quantity }
+            callback(Carts(carts = cartList, totalQuantity = totalQuantity))
+        }
     }
 
     override fun insert(cart: Cart) {

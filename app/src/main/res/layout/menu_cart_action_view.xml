@@ -29,7 +29,7 @@
             android:layout_gravity="end|top"
             android:layout_marginTop="3dp"
             android:layout_marginEnd="3dp"
-            android:text="@{String.valueOf(viewModel.carts.totalQuantity)}"
+            android:text="@{String.valueOf(viewModel.totalQuantity)}"
             android:background="@drawable/menu_cart_action_view_background"
             android:gravity="center"
             android:textColor="@color/white"

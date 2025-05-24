@@ -7,8 +7,9 @@ class GoodsSpanSizeLookup(
     private val adapter: RecyclerView.Adapter<*>,
 ) : GridLayoutManager.SpanSizeLookup() {
     override fun getSpanSize(position: Int): Int =
-        when (adapter.getItemViewType(position)) {
-            1 -> 2
-            else -> 1
+        when (ItemViewType.from(adapter.getItemViewType(position))) {
+            ItemViewType.HISTORY -> 2
+            ItemViewType.GOODS -> 1
+            ItemViewType.LOAD_MORE -> 2
         }
 }

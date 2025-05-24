@@ -4,18 +4,26 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemGoodsBinding
+import woowacourse.shopping.databinding.ItemHistoryContainerBinding
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.History
+import woowacourse.shopping.feature.goods.adapter.history.HistoryContainerViewHolder
 
 class GoodsAdapter(
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val items: MutableList<Cart> = mutableListOf()
+    private val items: MutableList<Any> = mutableListOf()
 
-    fun setItems(newItems: List<Cart>) {
+    fun setItems(newItems: List<Any>) {
         newItems.forEachIndexed { index, newItem ->
             val oldItem = items.getOrNull(index)
-            if (oldItem != null && oldItem.goods.id == newItem.goods.id && oldItem.quantity != newItem.quantity) {
+            if (
+                oldItem is Cart &&
+                newItem is Cart &&
+                oldItem.goods.id == newItem.goods.id &&
+                oldItem.quantity != newItem.quantity
+            ) {
                 items[index] = newItem
                 notifyItemChanged(index)
             }
@@ -32,23 +40,37 @@ class GoodsAdapter(
         id: Long,
         quantity: Int,
     ) {
-        val index = items.indexOfFirst { it.goods.id == id }
+        val index = items.indexOfFirst { it is Cart && it.goods.id == id }
         if (index != -1) {
-            val oldItem = items[index]
+            val oldItem = items[index] as Cart
             items[index] = oldItem.copy(quantity = quantity)
             notifyItemChanged(index)
         }
     }
 
-    override fun getItemViewType(position: Int): Int =
-        if (position < items.size) ItemViewType.GOODS.ordinal else ItemViewType.LOAD_MORE.ordinal
+    override fun getItemViewType(position: Int): Int {
+        if (position < 0 || position >= items.size) {
+            return ItemViewType.LOAD_MORE.type
+        }
+
+        val item = items[position]
+        return when {
+            item is List<*> && item.all { it is History } -> ItemViewType.HISTORY.type
+            item is Cart -> ItemViewType.GOODS.type
+            else -> ItemViewType.LOAD_MORE.type
+        }
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (ItemViewType.entries[viewType]) {
+        return when (ItemViewType.from(viewType)) {
+            ItemViewType.HISTORY -> {
+                val binding = ItemHistoryContainerBinding.inflate(inflater, parent, false)
+                HistoryContainerViewHolder(binding)
+            }
             ItemViewType.GOODS -> {
                 val binding = ItemGoodsBinding.inflate(inflater, parent, false)
                 GoodsViewHolder(binding, goodsClickListener)
@@ -65,8 +87,17 @@ class GoodsAdapter(
         position: Int,
     ) {
         when (holder) {
+            is HistoryContainerViewHolder -> {
+                val item = items[position]
+                if (item is List<*> && item.all { it is History }) {
+                    holder.bind(item as List<History>)
+                }
+            }
             is GoodsViewHolder -> {
-                holder.bind(items[position])
+                val item = items[position]
+                if (item is Cart) {
+                    holder.bind(item)
+                }
             }
             is LoadMoreViewHolder -> {
                 holder.bind()

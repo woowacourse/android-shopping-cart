@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Carts
 
 interface CartRepository {
-    suspend fun getAll(): Carts
+    fun getAll(callback: (Carts) -> Unit)
 
     fun insert(cart: Cart)
 

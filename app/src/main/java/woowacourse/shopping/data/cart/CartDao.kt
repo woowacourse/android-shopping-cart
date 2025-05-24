@@ -11,7 +11,7 @@ import androidx.room.Update
 @Dao
 interface CartDao {
     @Query("SELECT * FROM cart")
-    suspend fun getAll(): List<CartEntity>
+    fun getAll(): List<CartEntity>
 
     @Insert
     fun insertAll(vararg cartEntities: CartEntity)

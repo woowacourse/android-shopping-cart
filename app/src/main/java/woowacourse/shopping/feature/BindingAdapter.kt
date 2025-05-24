@@ -14,7 +14,7 @@ fun ImageView.loadImageFromUrl(url: String) {
     Glide.with(this.context).load(url).into(this)
 }
 
-@BindingAdapter("items")
+@BindingAdapter("cartItems")
 fun RecyclerView.bindItems(items: List<Cart>?) {
     if (adapter is GoodsAdapter && items != null) {
         (adapter as GoodsAdapter).setItems(items)

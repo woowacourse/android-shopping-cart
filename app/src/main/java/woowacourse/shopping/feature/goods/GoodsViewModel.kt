@@ -6,20 +6,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import woowacourse.shopping.data.cart.repository.CartRepository
+import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.domain.model.Carts
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
-import woowacourse.shopping.util.updateQuantity
+import woowacourse.shopping.util.updateCartQuantity
 import kotlin.math.min
 
 class GoodsViewModel(
-    private val repository: CartRepository,
+    private val cartRepository: CartRepository,
+    private val historyRepository: HistoryRepository,
 ) : ViewModel() {
-    private val _carts = MutableLiveData<Carts>()
-    val carts: LiveData<Carts> get() = _carts
+    private val _items = MutableLiveData<List<Any>>()
+    val items: LiveData<List<Any>> get() = _items
+    private val _totalQuantity = MutableLiveData(0)
+    val totalQuantity: LiveData<Int> get() = _totalQuantity
     private val _isSuccess = MutableSingleLiveData<Unit>()
     val isSuccess: SingleLiveData<Unit> get() = _isSuccess
     private val _isFail = MutableSingleLiveData<Unit>()
@@ -27,27 +30,41 @@ class GoodsViewModel(
     private var page: Int = 0
 
     init {
-        loadGoods()
+        loadItems()
     }
 
     fun addPage() {
         page++
-        loadGoods()
+        loadItems()
     }
 
     fun insertToCart(cart: Cart) {
-        try {
-            repository.insert(cart)
-            _carts.value = _carts.value?.updateQuantity(cart.goods.id, cart.quantity + 1)
-            _isSuccess.setValue(Unit)
-        } catch (e: Exception) {
-            _isFail.setValue(Unit)
+        viewModelScope.launch {
+            try {
+                cartRepository.insert(cart)
+                updateItemsAndTotalQuantity(cart, cart.quantity + 1)
+                _isSuccess.setValue(Unit)
+            } catch (e: Exception) {
+                _isFail.setValue(Unit)
+            }
         }
     }
 
     fun removeFromCart(cart: Cart) {
-        repository.delete(cart)
-        _carts.value = _carts.value?.updateQuantity(cart.goods.id, cart.quantity - 1)
+        viewModelScope.launch {
+            cartRepository.delete(cart)
+            updateItemsAndTotalQuantity(cart, cart.quantity - 1)
+        }
+    }
+
+    private fun updateItemsAndTotalQuantity(
+        updatedCart: Cart,
+        newQuantity: Int,
+    ) {
+        val updatedItems = _items.value?.updateCartQuantity(updatedCart.goods.id, newQuantity) ?: listOf(updatedCart)
+        _items.value = updatedItems
+        val total = updatedItems.filterIsInstance<Cart>().sumOf { it.quantity }
+        _totalQuantity.value = total
     }
 
     private fun getProducts(
@@ -59,22 +76,27 @@ class GoodsViewModel(
         return dummyGoods.subList(fromIndex, toIndex)
     }
 
-    private fun loadGoods() {
-        viewModelScope.launch {
-            val newGoods = getProducts(page)
+    private fun loadItems() {
+        val currentItems = _items.value.orEmpty()
 
-            val existingCarts = repository.getAll()
+        historyRepository.getAll { histories ->
+            cartRepository.getAll { cartsResult ->
+                val newGoods = getProducts(page)
+                val updatedCarts =
+                    newGoods.map { goods ->
+                        val quantity = cartsResult.carts.find { it.goods.id == goods.id }?.quantity ?: 0
+                        Cart(goods = goods, quantity = quantity)
+                    }
 
-            val updatedCarts =
-                newGoods.map { goods ->
-                    val quantity = existingCarts.carts.find { it.goods.id == goods.id }?.quantity ?: 0
-                    Cart(goods = goods, quantity = quantity)
-                }
+                val combinedItems: MutableList<Any> = mutableListOf()
+                if (page == 0) combinedItems.add(histories)
+                combinedItems.addAll(updatedCarts)
 
-            val newCarts = (carts.value?.carts ?: emptyList()) + updatedCarts
+                _items.postValue(currentItems + combinedItems)
 
-            val totalQuantity = newCarts.sumOf { it.quantity }
-            _carts.postValue(Carts(newCarts, totalQuantity))
+                val total = combinedItems.filterIsInstance<Cart>().sumOf { it.quantity }
+                _totalQuantity.postValue(total)
+            }
         }
     }
 

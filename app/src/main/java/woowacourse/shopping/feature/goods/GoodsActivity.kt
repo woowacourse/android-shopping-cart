@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDatabase
 import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
+import woowacourse.shopping.data.history.HistoryDatabase
+import woowacourse.shopping.data.history.repository.HistoryRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart
@@ -31,7 +33,12 @@ class GoodsActivity :
     private lateinit var binding: ActivityGoodsBinding
     private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
     private val viewModel: GoodsViewModel by viewModels {
-        ViewModelFactory { GoodsViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
+        ViewModelFactory {
+            GoodsViewModel(
+                CartRepositoryImpl(CartDatabase.getDatabase(this)),
+                HistoryRepositoryImpl(HistoryDatabase.getDatabase(applicationContext).historyDao()),
+            )
+        }
     }
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
@@ -46,6 +53,10 @@ class GoodsActivity :
         binding.rvGoods.layoutManager = gridLayoutManager
         binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
+
+        viewModel.items.observe(this) { itemList ->
+            adapter.setItems(itemList)
+        }
 
         observeCartInsertResult()
         setupActivityResultLauncher()
