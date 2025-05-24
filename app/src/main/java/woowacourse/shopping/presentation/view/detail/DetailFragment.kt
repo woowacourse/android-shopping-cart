@@ -36,10 +36,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
                 DetailMessageEvent.ADD_PRODUCT_FAILURE -> showToast(R.string.detail_screen_event_message_add_product_failure)
             }
         }
-
-        viewModel.quantity.observe(viewLifecycleOwner) {
-            binding.viewQuantitySelector.quantity = it
-        }
     }
 
     private fun initListener() {

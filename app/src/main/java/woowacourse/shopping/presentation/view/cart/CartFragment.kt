@@ -2,7 +2,6 @@ package woowacourse.shopping.presentation.view.cart
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartBinding
@@ -42,8 +41,6 @@ class CartFragment :
     }
 
     private fun initActionBar() {
-        (requireActivity() as? AppCompatActivity)?.setSupportActionBar(binding.toolbarCart)
-
         binding.toolbarCart.setNavigationIcon(R.drawable.ic_arrow)
         binding.toolbarCart.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
