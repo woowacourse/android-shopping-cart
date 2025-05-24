@@ -1,12 +1,11 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.fake
 
 import woowacourse.shopping.data.datasource.ProductsDataSource
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductSinglePage
 import woowacourse.shopping.domain.repository.ProductRepository
-import kotlin.concurrent.thread
 
-class ProductRepositoryImpl(
+class FakeProductRepositoryImpl(
     private val datasource: ProductsDataSource,
 ) : ProductRepository {
     override fun get(productId: Long): Product {
@@ -17,10 +16,8 @@ class ProductRepositoryImpl(
         productIds: List<Long>,
         onResult: (List<Product>) -> Unit,
     ) {
-        thread {
-            val products = datasource.getProducts(productIds).map { it.toDomain() }
-            onResult(products)
-        }
+        val products = datasource.getProducts(productIds).map { it.toDomain() }
+        onResult(products)
     }
 
     override fun loadSinglePage(
@@ -30,10 +27,7 @@ class ProductRepositoryImpl(
     ) {
         val fromIndex = page * pageSize
         val toIndex = fromIndex + pageSize
-
-        thread {
-            val productSinglePage = datasource.singlePage(fromIndex, toIndex).toDomain()
-            onResult(productSinglePage)
-        }
+        val productSinglePage = datasource.singlePage(fromIndex, toIndex).toDomain()
+        onResult(productSinglePage)
     }
 }
