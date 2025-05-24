@@ -67,6 +67,7 @@ class DetailActivity : AppCompatActivity() {
         viewModel.product.observe(this) {
             viewModel.setQuantity()
             viewModel.setPriceSum()
+            viewModel.addToRecentlyViewedProduct()
         }
 
         viewModel.quantity.observe(this) {

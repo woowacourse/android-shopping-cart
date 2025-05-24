@@ -1,6 +1,7 @@
 package woowacourse.shopping.product.catalog
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
@@ -113,6 +114,9 @@ class CatalogActivity : AppCompatActivity() {
             if (product != null) {
                 (binding.recyclerViewProducts.adapter as ProductAdapter).updateItem(product)
             }
+        }
+        viewModel.recentlyViewedProducts.observe(this) { products ->
+            Log.d("RECENT", "$products")
         }
         binding.lifecycleOwner = this
     }

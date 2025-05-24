@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyViewedProductRepositoryImpl
 
 class CatalogViewModelFactory(
     private val application: ShoppingApplication,
@@ -15,6 +16,11 @@ class CatalogViewModelFactory(
             return CatalogViewModel(
                 cartProductRepository =
                     CartProductRepositoryImpl(
+                        ShoppingDatabase.getInstance(application).cartProductDao(),
+                    ),
+                recentlyViewedProductRepository =
+                    RecentlyViewedProductRepositoryImpl(
+                        ShoppingDatabase.getInstance(application).recentlyViewedProductDao(),
                         ShoppingDatabase.getInstance(application).cartProductDao(),
                     ),
             ) as T

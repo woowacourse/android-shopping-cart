@@ -9,11 +9,13 @@ import woowacourse.shopping.data.CatalogDatabase
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.mapper.toUiModel
 import woowacourse.shopping.data.repository.CartProductRepository
+import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.product.catalog.CatalogItem.ProductItem
 
 class CatalogViewModel(
     private val catalogDataSource: CatalogDataSource = CatalogDatabase,
     private val cartProductRepository: CartProductRepository,
+    private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ViewModel() {
     val allProductsSize get() = catalogDataSource.getAllProductsSize()
 
@@ -29,6 +31,10 @@ class CatalogViewModel(
 
     private val _cartItemSize = MutableLiveData<Int>(0)
     val cartItemSize: LiveData<Int> = _cartItemSize
+
+    private val _recentlyViewedProducts =
+        MutableLiveData<List<ProductUiModel>>(emptyList<ProductUiModel>())
+    val recentlyViewedProducts: LiveData<List<ProductUiModel>> = _recentlyViewedProducts
 
     init {
         loadCatalog(0, PAGE_SIZE)
@@ -117,6 +123,12 @@ class CatalogViewModel(
     fun loadCartItemSize() {
         cartProductRepository.getCartItemSize { size ->
             _cartItemSize.postValue(size)
+        }
+    }
+
+    fun loadRecentlyViewedProducts() {
+        recentlyViewedProductRepository.getRecentlyViewedProducts { products ->
+            _recentlyViewedProducts.postValue(products.map { it.toUiModel() })
         }
     }
 

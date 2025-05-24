@@ -24,6 +24,9 @@ interface CartProductDao {
         endIndex: Int,
     ): List<CartProductEntity>
 
+    @Query("SELECT * FROM CartProducts WHERE uid IN (:uids)")
+    fun getCartProductsByUids(uids: List<Int>): List<CartProductEntity>
+
     @Query("UPDATE CartProducts SET quantity = quantity + :diff WHERE uid = :id")
     fun updateProduct(
         id: Int,

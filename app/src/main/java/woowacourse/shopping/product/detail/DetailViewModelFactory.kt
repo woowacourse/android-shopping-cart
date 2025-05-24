@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class DetailViewModelFactory(
@@ -17,6 +18,10 @@ class DetailViewModelFactory(
             return DetailViewModel(
                 product,
                 CartProductRepositoryImpl(
+                    ShoppingDatabase.getInstance(application).cartProductDao(),
+                ),
+                RecentlyViewedProductRepositoryImpl(
+                    ShoppingDatabase.getInstance(application).recentlyViewedProductDao(),
                     ShoppingDatabase.getInstance(application).cartProductDao(),
                 ),
             ) as T
