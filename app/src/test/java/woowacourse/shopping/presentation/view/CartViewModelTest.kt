@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.fixture.FakeShoppingRepository
-import woowacourse.shopping.fixture.dummyProductsFixture
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.fixture.FakeCartRepository
+import woowacourse.shopping.fixture.productsFixture
 import woowacourse.shopping.presentation.model.FetchPageDirection
 import woowacourse.shopping.presentation.view.cart.CartViewModel
 import woowacourse.shopping.presentation.view.util.InstantTaskExecutorExtension
@@ -16,21 +16,16 @@ import woowacourse.shopping.presentation.view.util.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
-    private lateinit var fakeRepository: ShoppingRepository
     private val dummyCartItems =
-        dummyProductsFixture
-            .take(15)
-            .associate { it.id to 1 }
-            .toMutableMap()
+        productsFixture.take(10).map {
+            CartItem(it, 2)
+        }
 
     @BeforeEach
     fun setUp() {
-        fakeRepository =
-            FakeShoppingRepository(
-                dummyProductsFixture,
-                dummyCartItems,
-            )
-        viewModel = CartViewModel(fakeRepository)
+        val fakeCartRepository = FakeCartRepository(dummyCartItems)
+        viewModel =
+            CartViewModel(fakeCartRepository)
     }
 
     @Test
@@ -75,7 +70,7 @@ class CartViewModelTest {
         assertAll(
             { assertThat(newItems).doesNotContain(target) },
             { assertThat(newItems.size).isEqualTo(items.size) },
-            { assertThat(newItems.last().product.id).isNotEqualTo(target.product.id) },
+            { assertThat(newItems.last().productId).isNotEqualTo(target.productId) },
         )
     }
 
@@ -86,5 +81,44 @@ class CartViewModelTest {
 
         // Then
         assertThat(hasMore).isTrue()
+    }
+
+    @Test
+    fun `특정_상품의_구매_수량을_증가시킬_수_있다`() {
+        // When
+        val before = viewModel.cartItems.getOrAwaitValue()
+        val target = before.first()
+        viewModel.addProductToCart(target.productId)
+
+        // Then
+        val after = viewModel.cartItems.getOrAwaitValue()
+        assertThat(after.first().quantity).isGreaterThan(target.quantity)
+    }
+
+    @Test
+    fun `특정_상품의_구매_수량을_감소시킬_수_있다`() {
+        // Give
+        val before = viewModel.cartItems.getOrAwaitValue()
+        val target = before.first()
+
+        // When
+        viewModel.removeProductFromCart(target.productId)
+
+        // Then
+        val after = viewModel.cartItems.getOrAwaitValue()
+        assertThat(after.first().quantity).isLessThan(target.quantity)
+    }
+
+    @Test
+    fun `구매_수량이_1인_특정_상품의_구매_수량을_감소시키면_삭제된다`() {
+        // When
+        val before = viewModel.cartItems.getOrAwaitValue()
+        val target = before.first()
+        viewModel.removeProductFromCart(target.productId)
+        viewModel.removeProductFromCart(target.productId)
+
+        // Then
+        val after = viewModel.cartItems.getOrAwaitValue()
+        assertThat(after).doesNotContain(target)
     }
 }
