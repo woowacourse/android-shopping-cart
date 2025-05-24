@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
         MainViewModelFactory(
             container.productRepository,
             container.cartRepository,
+            container.historyRepository,
         )
     }
     private val productsAdapter: ProductAdapter by lazy {

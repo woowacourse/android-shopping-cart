@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
@@ -16,6 +17,7 @@ import woowacourse.shopping.view.main.state.ProductUiState
 class MainViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val historyRepository: HistoryRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(ProductUiState())
     val uiState: LiveData<ProductUiState> get() = _uiState
