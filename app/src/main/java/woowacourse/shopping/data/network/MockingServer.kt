@@ -6,8 +6,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import woowacourse.shopping.data.network.dto.ProductDto
-import woowacourse.shopping.data.network.dto.ProductPageDto
+import woowacourse.shopping.data.network.entitiy.ProductEntity
+import woowacourse.shopping.data.network.entitiy.ProductPageEntity
 import woowacourse.shopping.data.storage.ProductStorage
 
 class MockingServer : ProductService {
@@ -15,7 +15,7 @@ class MockingServer : ProductService {
     private val client = OkHttpClient()
     private val gson = Gson()
 
-    override fun getProduct(productId: Long): ProductDto {
+    override fun getProduct(productId: Long): ProductEntity {
         val product = ProductStorage[productId]
         val json = gson.toJson(product)
         val path = "$BASE_PATH$productId"
@@ -25,7 +25,7 @@ class MockingServer : ProductService {
         return parseProduct(responseBody)
     }
 
-    override fun getProducts(productIds: List<Long>): List<ProductDto> {
+    override fun getProducts(productIds: List<Long>): List<ProductEntity> {
         val products = ProductStorage.getProductsById(productIds)
 
         val json = gson.toJson(products)
@@ -39,7 +39,7 @@ class MockingServer : ProductService {
     override fun singlePage(
         fromIndex: Int,
         toIndex: Int,
-    ): ProductPageDto {
+    ): ProductPageEntity {
         val page = ProductStorage.singlePage(fromIndex, toIndex)
         val json = gson.toJson(page)
         val path = "$BASE_PATH?page=$fromIndex-$toIndex"
@@ -66,12 +66,12 @@ class MockingServer : ProductService {
             ?: throw IllegalStateException("MockWebServer returned no body")
     }
 
-    private fun parseProduct(json: String) = gson.fromJson(json, ProductDto::class.java)
+    private fun parseProduct(json: String) = gson.fromJson(json, ProductEntity::class.java)
 
-    private fun parseProductSinglePage(json: String) = gson.fromJson(json, ProductPageDto::class.java)
+    private fun parseProductSinglePage(json: String) = gson.fromJson(json, ProductPageEntity::class.java)
 
-    private fun parseProductList(json: String): List<ProductDto> {
-        val type = object : TypeToken<List<ProductDto>>() {}.type
+    private fun parseProductList(json: String): List<ProductEntity> {
+        val type = object : TypeToken<List<ProductEntity>>() {}.type
         return gson.fromJson(json, type)
     }
 

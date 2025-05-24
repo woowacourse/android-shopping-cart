@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.datasource.ProductsDataSource
 import woowacourse.shopping.data.fake.FakeProductRepositoryImpl
-import woowacourse.shopping.data.network.dto.ProductDto
-import woowacourse.shopping.data.network.dto.ProductPageDto
+import woowacourse.shopping.data.network.entitiy.ProductEntity
+import woowacourse.shopping.data.network.entitiy.ProductPageEntity
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductSinglePage
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -29,10 +29,10 @@ class ProductRepositoryImplTest {
     fun `주어진_productId로_제품을_조회하면_해당_제품을_반환한다`() {
         // Given
         val productId = 1L
-        val productDto = mockk<ProductDto>()
+        val productEntity = mockk<ProductEntity>()
         val productDomain = mockk<Product>()
-        every { dataSource.getProduct(productId) } returns productDto
-        every { productDto.toDomain() } returns productDomain
+        every { dataSource.getProduct(productId) } returns productEntity
+        every { productEntity.toDomain() } returns productDomain
 
         // When
         val product = repository.get(productId)
@@ -41,18 +41,18 @@ class ProductRepositoryImplTest {
         assertNotNull(product)
         assertEquals(productDomain, product)
         verify(exactly = 1) { dataSource.getProduct(productId) }
-        verify(exactly = 1) { productDto.toDomain() }
+        verify(exactly = 1) { productEntity.toDomain() }
     }
 
     @Test
     fun `상품_id_리스트를_전달하면_해당_제품_목록을_반환한다`() {
         // Given
         val productIds = listOf(1L, 2L)
-        val productDtos = listOf(mockk<ProductDto>(), mockk())
+        val productEntities = listOf(mockk<ProductEntity>(), mockk())
         val productDomains = listOf(mockk<Product>(), mockk<Product>())
-        every { dataSource.getProducts(productIds) } returns productDtos
-        every { productDtos[0].toDomain() } returns productDomains[0]
-        every { productDtos[1].toDomain() } returns productDomains[1]
+        every { dataSource.getProducts(productIds) } returns productEntities
+        every { productEntities[0].toDomain() } returns productDomains[0]
+        every { productEntities[1].toDomain() } returns productDomains[1]
 
         // When
         repository.getProducts(productIds) { products ->
@@ -60,8 +60,8 @@ class ProductRepositoryImplTest {
             assertEquals(2, products.size)
             assertEquals(productDomains, products)
             verify(exactly = 1) { dataSource.getProducts(productIds) }
-            verify(exactly = 1) { productDtos[0].toDomain() }
-            verify(exactly = 1) { productDtos[1].toDomain() }
+            verify(exactly = 1) { productEntities[0].toDomain() }
+            verify(exactly = 1) { productEntities[1].toDomain() }
         }
     }
 
@@ -72,18 +72,18 @@ class ProductRepositoryImplTest {
         val pageSize = 2
         val fromIndex = 0
         val toIndex = 2
-        val productPageDto = mockk<ProductPageDto>()
+        val productPageEntity = mockk<ProductPageEntity>()
         val productSinglePageDomain = mockk<ProductSinglePage>()
 
-        every { dataSource.singlePage(fromIndex, toIndex) } returns productPageDto
-        every { productPageDto.toDomain() } returns productSinglePageDomain
+        every { dataSource.singlePage(fromIndex, toIndex) } returns productPageEntity
+        every { productPageEntity.toDomain() } returns productSinglePageDomain
 
         // When
         repository.loadSinglePage(page, pageSize) { productSinglePage ->
             // Then
             assertEquals(productSinglePageDomain, productSinglePage)
             verify(exactly = 1) { dataSource.singlePage(fromIndex, toIndex) }
-            verify(exactly = 1) { productPageDto.toDomain() }
+            verify(exactly = 1) { productPageEntity.toDomain() }
         }
     }
 }

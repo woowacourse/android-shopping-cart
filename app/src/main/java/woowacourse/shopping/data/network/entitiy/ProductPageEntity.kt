@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.network.dto
+package woowacourse.shopping.data.network.entitiy
 
 import woowacourse.shopping.domain.product.ProductSinglePage
 
-data class ProductPageDto(
-    val products: List<ProductDto>,
+data class ProductPageEntity(
+    val products: List<ProductEntity>,
     val hasNext: Boolean,
 ) {
     fun toDomain(): ProductSinglePage {

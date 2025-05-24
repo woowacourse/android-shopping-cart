@@ -1,15 +1,15 @@
 package woowacourse.shopping.data.network
 
-import woowacourse.shopping.data.network.dto.ProductDto
-import woowacourse.shopping.data.network.dto.ProductPageDto
+import woowacourse.shopping.data.network.entitiy.ProductEntity
+import woowacourse.shopping.data.network.entitiy.ProductPageEntity
 
 interface ProductService {
-    fun getProduct(productId: Long): ProductDto
+    fun getProduct(productId: Long): ProductEntity
 
-    fun getProducts(productIds: List<Long>): List<ProductDto>
+    fun getProducts(productIds: List<Long>): List<ProductEntity>
 
     fun singlePage(
         fromIndex: Int,
         toIndex: Int,
-    ): ProductPageDto
+    ): ProductPageEntity
 }
