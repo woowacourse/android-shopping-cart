@@ -41,6 +41,36 @@ class ShoppingCartViewModel(
         }
     }
 
+    fun increaseQuantity(
+        position: Int,
+        cartItem: CartItem,
+    ) {
+        val updatedItem = cartItem.copy(quantity = cartItem.quantity + 1)
+        (_cartItems.value?.items ?: emptyList()).toMutableList().let { newList ->
+            newList[position] = updatedItem
+            _cartItems.postValue(_cartItems.value?.copy(items = newList))
+        }
+        inventoryRepository.insert(updatedItem.toInventoryProduct())
+        shoppingCartRepository.insert(updatedItem)
+    }
+
+    fun decreaseQuantity(
+        position: Int,
+        cartItem: CartItem,
+    ) {
+        if (cartItem.quantity == MINIMUM_CART_ITEM_QUANTITY) {
+            removeCartItem(cartItem)
+            return
+        }
+        val updatedItem = cartItem.copy(quantity = cartItem.quantity - 1)
+        (_cartItems.value?.items ?: emptyList()).toMutableList().let { newList ->
+            newList[position] = updatedItem
+            _cartItems.postValue(_cartItems.value?.copy(items = newList))
+        }
+        inventoryRepository.insert(updatedItem.toInventoryProduct())
+        shoppingCartRepository.insert(updatedItem)
+    }
+
     fun removeCartItem(cartItem: CartItem) {
         shoppingCartRepository.delete(cartItem)
         inventoryRepository.insert(cartItem.toInventoryProduct().copy(quantity = 0))
@@ -49,6 +79,7 @@ class ShoppingCartViewModel(
 
     companion object {
         private const val PAGE_SIZE = 5
+        private const val MINIMUM_CART_ITEM_QUANTITY = 1
 
         @Suppress("UNCHECKED_CAST")
         fun createFactory(

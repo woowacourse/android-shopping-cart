@@ -46,16 +46,30 @@ class ShoppingCartActivity :
         }
     }
 
-    override fun onRemoveCartItem(cartItem: CartItem) {
-        viewModel.removeCartItem(cartItem)
-    }
-
     override fun onGoToPreviousPage() {
         viewModel.requestPreviousPage()
     }
 
     override fun onGoToNextPage() {
         viewModel.requestNextPage()
+    }
+
+    override fun onIncreaseQuantity(
+        position: Int,
+        cartItem: CartItem,
+    ) {
+        viewModel.increaseQuantity(position, cartItem)
+    }
+
+    override fun onDecreaseQuantity(
+        position: Int,
+        cartItem: CartItem,
+    ) {
+        viewModel.decreaseQuantity(position, cartItem)
+    }
+
+    override fun onRemoveCartItem(cartItem: CartItem) {
+        viewModel.removeCartItem(cartItem)
     }
 
     companion object {

@@ -22,6 +22,12 @@ class ShoppingCartViewHolder(
 
     fun bind(cartItem: CartItem) {
         binding.cartItem = cartItem
+        binding.tvIncreaseQuantity.setOnClickListener {
+            handler.onIncreaseQuantity(adapterPosition, cartItem)
+        }
+        binding.tvDecreaseQuantity.setOnClickListener {
+            handler.onDecreaseQuantity(adapterPosition, cartItem)
+        }
         binding.ivRemoveItemProductIcon.setOnClickListener {
             handler.onRemoveCartItem(cartItem)
         }
