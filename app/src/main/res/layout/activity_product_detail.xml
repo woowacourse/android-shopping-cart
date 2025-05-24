@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
@@ -68,6 +67,7 @@
                     tools:text="2,500원" />
 
                 <include
+                    android:id="@+id/init_quantity_control"
                     layout="@layout/item_quantity_control"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

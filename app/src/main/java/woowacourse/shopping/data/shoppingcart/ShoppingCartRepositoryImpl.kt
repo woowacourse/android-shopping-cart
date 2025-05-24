@@ -36,9 +36,12 @@ class ShoppingCartRepositoryImpl(
         return items
     }
 
-    override fun insert(productId: Long) {
+    override fun insert(
+        productId: Long,
+        quantity: Int,
+    ) {
         thread {
-            dao.insert(ShoppingCartEntity(productId = productId, quantity = 1))
+            dao.insert(ShoppingCartEntity(productId = productId, quantity = quantity))
         }.join()
     }
 

@@ -41,11 +41,10 @@ class ShoppingCartActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         adapter =
             SelectedProductAdapter(
-                onQuantityControlListener =
-                    DefaultQuantityControlListener(
-                        onPlus = viewModel::addToShoppingCart,
-                        onMinus = viewModel::removeToShoppingCart,
-                    ),
+                DefaultQuantityControlListener(
+                    onPlus = viewModel::addToShoppingCart,
+                    onMinus = viewModel::removeToShoppingCart,
+                ),
             ) { product ->
                 viewModel.deleteProduct(product)
             }

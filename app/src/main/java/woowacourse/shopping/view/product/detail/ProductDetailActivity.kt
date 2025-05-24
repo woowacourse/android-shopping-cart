@@ -13,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.utils.getSerializableExtraCompat
+import woowacourse.shopping.view.DefaultQuantityControlListener
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -40,6 +41,7 @@ class ProductDetailActivity : AppCompatActivity() {
         val product = intent.getSerializableExtraCompat<Product>(KEY_PRODUCT) ?: return
         initViewModel(product)
         initObservers()
+        initBindingQuantityController()
     }
 
     private fun initViewModel(product: Product) {
@@ -60,6 +62,18 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel.errorEvent.observe(this) {
             dialog.show()
         }
+        viewModel.quantity.observe(this) { value ->
+            binding.initQuantityControl.quantity = value
+        }
+    }
+
+    private fun initBindingQuantityController() {
+        binding.initQuantityControl.onClick =
+            DefaultQuantityControlListener(
+                onPlus = viewModel::increaseItemQuantity,
+                onMinus = viewModel::decreaseItemQuantity,
+            )
+        binding.initQuantityControl.productId = 0L
     }
 
     companion object {

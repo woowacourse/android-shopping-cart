@@ -3,7 +3,10 @@ package woowacourse.shopping.data.shoppingcart
 import woowacourse.shopping.domain.ShoppingProduct
 
 interface ShoppingCartRepository {
-    fun insert(productId: Long)
+    fun insert(
+        productId: Long,
+        quantity: Int,
+    )
 
     fun get(productId: Long): ShoppingProduct?
 
