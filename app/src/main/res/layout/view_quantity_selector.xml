@@ -6,6 +6,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="cart"
+            type="woowacourse.shopping.domain.Cart" />
+
+        <variable
+            name="eventHandler"
+            type="woowacourse.shopping.view.main.event.ProductsAdapterEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:onClick="@{() -> eventHandler.onQuantityMinus(cart)}"
             android:text="@string/minus"
             android:textColor="@color/gray"
             android:textSize="22sp"
@@ -30,6 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:text="@{String.valueOf(cart.quantity)}"
             android:textColor="@color/gray"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -42,6 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:onClick="@{() -> eventHandler.onQuantityPlus(cart)}"
             android:text="@string/plus"
             android:textColor="@color/gray"
             android:textSize="22sp"

@@ -12,9 +12,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
+import woowacourse.shopping.view.main.event.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 import woowacourse.shopping.view.util.scroll.ScrollEndEvent
@@ -23,12 +25,29 @@ import kotlin.getValue
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels { MainViewModelFactory() }
     private val productsAdapter: ProductAdapter by lazy {
-        ProductAdapter { productId ->
-            val intent = DetailActivity.newIntent(this, productId)
-            startActivity(intent)
-        }
+        ProductAdapter(handler = productsAdapterEventHandler)
     }
     private lateinit var binding: ActivityMainBinding
+
+    private val productsAdapterEventHandler =
+        object : ProductsAdapterEventHandler {
+            override fun onSelectProduct(productId: Long) {
+                val intent = DetailActivity.newIntent(this@MainActivity, productId)
+                startActivity(intent)
+            }
+
+            override fun onAddCart(cart: Cart) {
+                viewModel.addCart(cart)
+            }
+
+            override fun onQuantityMinus(cart: Cart) {
+                viewModel.minusCartQuantity(cart)
+            }
+
+            override fun onQuantityPlus(cart: Cart) {
+                viewModel.plusCartQuantity(cart)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +70,7 @@ class MainActivity : AppCompatActivity() {
             ScrollEndEvent(
                 onScrollEnd = {
                     if (viewModel.loadable.value == true) {
-                        binding.buttonLoad.visibility =
-                            View.VISIBLE
+                        binding.buttonLoad.visibility = View.VISIBLE
                     }
                 },
                 onScrollReset = { binding.buttonLoad.visibility = View.GONE },

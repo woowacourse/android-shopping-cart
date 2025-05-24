@@ -7,9 +7,13 @@ interface CartLocalDataSource {
 
     fun getAll(): List<CartEntity>
 
+    fun getById(id: Long): CartEntity?
+
     fun getByIds(ids: List<Long>): List<CartEntity?>
 
     fun totalSize(): Int
+
+    fun update(cartEntity: CartEntity)
 
     fun deleteById(id: Long)
 

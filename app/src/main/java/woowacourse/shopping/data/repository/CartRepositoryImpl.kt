@@ -2,6 +2,7 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.CartLocalDataSource
 import woowacourse.shopping.data.entity.CartEntity
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartEntry
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
@@ -10,11 +11,21 @@ class CartRepositoryImpl(
     private val cartLocalDataSource: CartLocalDataSource,
 ) : CartRepository {
     override fun insert(
-        item: CartEntry,
-        onResult: (Unit) -> Unit,
+        item: Cart,
+        onResult: () -> Unit,
     ) {
         thread {
-            onResult(cartLocalDataSource.insert(item.toEntity()))
+            cartLocalDataSource.insert(item.toEntity())
+            onResult()
+        }
+    }
+
+    override fun getById(
+        id: Long,
+        onResult: (CartEntry?) -> Unit,
+    ) {
+        thread {
+            onResult(cartLocalDataSource.getById(id)?.toEntry())
         }
     }
 
@@ -29,13 +40,23 @@ class CartRepositoryImpl(
 
     override fun getAll(onResult: (List<CartEntry>) -> Unit) {
         thread {
-            cartLocalDataSource.getAll().map { it.toEntry() }
+            onResult(cartLocalDataSource.getAll().map { it.toEntry() })
         }
     }
 
     override fun totalSize(onResult: (Int) -> Unit) {
         thread {
             onResult(cartLocalDataSource.totalSize())
+        }
+    }
+
+    override fun update(
+        item: Cart,
+        onResult: () -> Unit,
+    ) {
+        thread {
+            cartLocalDataSource.update(item.toEntity())
+            onResult()
         }
     }
 
@@ -77,7 +98,7 @@ class CartRepositoryImpl(
         }
     }
 
-    private fun CartEntry.toEntity() = CartEntity(productId, quantity)
-
     private fun CartEntity.toEntry() = CartEntry(productId, quantity)
+
+    private fun Cart.toEntity() = CartEntity(product.id, quantity)
 }
