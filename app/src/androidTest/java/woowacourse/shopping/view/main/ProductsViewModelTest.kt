@@ -4,11 +4,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.fixture.FakeProductsRepository
+import woowacourse.shopping.fixture.FakeRecentProductRepository
+import woowacourse.shopping.fixture.FakeShoppingCartRepository
 import woowacourse.shopping.fixture.TestProducts
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.mapper.toProductUiModel
 
 @Suppress("FunctionName")
 class ProductsViewModelTest {
@@ -16,23 +18,29 @@ class ProductsViewModelTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     val viewModel =
-        ProductsViewModel(FakeProductsRepository())
+        ProductsViewModel(
+            FakeProductsRepository(),
+            FakeShoppingCartRepository(),
+            FakeRecentProductRepository(),
+        )
 
     @Test
     fun 한_페이지에_상품이_20개씩_로드된다() {
         val page =
             Page(
-                TestProducts.productUiModels.subList(0, 20),
+                TestProducts.productUiModels.subList(0, 20).map { it.toProductUiModel() },
                 TestProducts.productUiModels.size,
                 0,
                 20,
             )
         viewModel.requestProductsPage(0)
-        assertThat(viewModel.productsLiveData.getOrAwaitValue()).isEqualTo(page)
+        assertThat(viewModel.productsLiveData.getOrAwaitValue().page).isEqualTo(
+            page,
+        )
     }
 
     @Test
     fun 상품의_총_개수를_반환한다() {
-        assertThat(viewModel.totalSize).isEqualTo(DummyProducts.productUiModels.size)
+        assertThat(viewModel.totalSize.getOrAwaitValue()).isEqualTo(TestProducts.productUiModels.size)
     }
 }

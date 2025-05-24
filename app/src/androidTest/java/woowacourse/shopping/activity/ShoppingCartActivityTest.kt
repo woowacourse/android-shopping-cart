@@ -3,13 +3,17 @@
 package woowacourse.shopping.activity
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.CoreMatchers.not
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.data.DummyShoppingCart
+import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.matcher.isDisplayed
@@ -17,6 +21,9 @@ import woowacourse.shopping.matcher.matchSize
 import woowacourse.shopping.matcher.matchText
 import woowacourse.shopping.matcher.performClick
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import woowacourse.shopping.fixture.TestShoppingCart
+import woowacourse.shopping.mapper.toProductUiModel
 
 @Suppress("FunctionName")
 class ShoppingCartActivityTest {
@@ -30,11 +37,11 @@ class ShoppingCartActivityTest {
         onView(
             withRecyclerView(R.id.shopping_cart_list)
                 .atPositionOnView(0, R.id.tv_shopping_cart_item),
-        ).matchText("[런던베이글뮤지엄] 베이글 6개 & 크림치즈 3개 세트")
+        ).matchText("[병천아우내] 모듬순대")
         onView(
             withRecyclerView(R.id.shopping_cart_list)
                 .atPositionOnView(0, R.id.tv_price),
-        ).matchText("42,000원")
+        ).matchText("11,900원")
     }
 
     @Test
@@ -44,17 +51,14 @@ class ShoppingCartActivityTest {
 
     @Test
     fun 장바구니에서_원하는_상품을_삭제할_수_있다() {
-        val expectedDeleteProductUiModel =
-            ProductUiModel(
-                "[런던베이글뮤지엄] 베이글 6개 & 크림치즈 3개 세트",
-                42000,
-                "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/3c68d05b-d392-4a38-8637-a25068220fa4.jpg",
-            )
         onView(
             withRecyclerView(R.id.shopping_cart_list)
                 .atPositionOnView(0, R.id.iv_remove_item_product_icon),
         ).performClick()
 
-        assertThat(DummyShoppingCart.productUiModels).doesNotContain(expectedDeleteProductUiModel)
+        onView(withRecyclerView(R.id.shopping_cart_list)
+            .atPositionOnView(0, R.id.tv_shopping_cart_item),
+        ).check(matches(not(withText("[병천아우내] 모듬순대"))))
+
     }
 }

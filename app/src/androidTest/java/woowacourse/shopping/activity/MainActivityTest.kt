@@ -25,19 +25,19 @@ class MainActivityTest {
     fun 상품의_목록이_표시된다() {
         onView(
             withRecyclerView(R.id.product_list).atPositionOnView(
-                0,
+                1,
                 R.id.tv_product_name,
             ),
         ).matchText("[병천아우내] 모듬순대")
         onView(
             withRecyclerView(R.id.product_list).atPositionOnView(
-                0,
+                1,
                 R.id.tv_product_price,
             ),
         ).matchText("11,900원")
         onView(
             withRecyclerView(R.id.product_list).atPositionOnView(
-                0,
+                1,
                 R.id.iv_product_image,
             ),
         ).isDisplayed()
@@ -45,7 +45,7 @@ class MainActivityTest {
 
     @Test
     fun 상품의_목록은_20개_단위로_표시된다() {
-        onView(withId(R.id.product_list)).check(matchSize(20))
+        onView(withId(R.id.product_list)).check(matchSize(21))
     }
 
     @Test
@@ -60,7 +60,7 @@ class MainActivityTest {
     fun 상품의_이름이_너무_길_경우_말줄임표로_표시된다() {
         onView(
             withRecyclerView(R.id.product_list).atPositionOnView(
-                1,
+                2,
                 R.id.tv_product_name,
             ),
         ).check(isEllipsized())
@@ -70,7 +70,7 @@ class MainActivityTest {
     fun 상품을_클릭하면_상품_상세_화면으로_이동된다() {
         onView(
             withRecyclerView(R.id.product_list).atPositionOnView(
-                0,
+                1,
                 R.id.tv_product_name,
             ),
         ).performClick()

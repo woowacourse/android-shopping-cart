@@ -4,10 +4,10 @@ import woowacourse.shopping.data.ext.subList
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.product.ProductsRepository
-import woowacourse.shopping.view.uimodel.ProductUiModel
+import woowacourse.shopping.domain.Product
 
 class FakeProductsRepository : ProductsRepository {
-    override fun findAll(pageRequest: PageRequest): Page<ProductUiModel> {
+    override fun findAll(pageRequest: PageRequest): Page<Product> {
         val items =
             TestProducts.productUiModels
                 .distinct()

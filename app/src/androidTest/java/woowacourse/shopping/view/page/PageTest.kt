@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.fixture.TestProducts
-import woowacourse.shopping.productUiModels
 
 class PageTest {
     @Test
@@ -18,7 +17,7 @@ class PageTest {
                 0,
                 5,
             )
-        assertThat(page.items).isEqualTo(productUiModels.subList(0, 5))
+        assertThat(page.items).isEqualTo(TestProducts.productUiModels.subList(0, 5))
         assertThat(page.items.size).isEqualTo(5)
     }
 
