@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.products
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
@@ -40,7 +39,6 @@ class ProductsAdapter(
     }
 
     fun updateProductsView(list: List<ProductListViewType>?) {
-        Log.d("TAG", "updateProductsView: $list")
         product = list.orEmpty()
         notifyDataSetChanged()
     }
