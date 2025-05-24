@@ -8,12 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.LoadMoreItemBinding
 import woowacourse.shopping.databinding.ProductItemBinding
+import woowacourse.shopping.domain.product.CartItem
 
 class FashionProductListAdapter(
     private var items: List<ProductListViewType>,
     private val productClickListener: ProductClickListener,
     private val loadMoreClickListener: LoadMoreClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var cartItemsMap: Map<Long, CartItem> = emptyMap()
+
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is ProductListViewType.FashionProductItemType -> R.layout.product_item
@@ -48,7 +52,11 @@ class FashionProductListAdapter(
         position: Int,
     ) {
         when (holder) {
-            is FashionProductItemViewHolder -> holder.bind(items[position] as ProductListViewType.FashionProductItemType)
+            is FashionProductItemViewHolder -> {
+                val item = items[position] as ProductListViewType.FashionProductItemType
+                val cartItem = cartItemsMap[item.product.id]
+                holder.bind(item, cartItem)
+            }
         }
     }
 

@@ -5,14 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
+        <variable
+            name="isButtonVisible"
+            type="boolean" />
         <variable
             name="productClickListener"
             type="woowacourse.shopping.ui.fashionlist.ProductClickListener" />
-
         <variable
             name="product"
             type="woowacourse.shopping.domain.product.Product" />
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.product.CartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,6 +80,7 @@
             android:contentDescription="@string/add_cart"
             android:src="@drawable/ic_add"
             android:onClick="@{() -> productClickListener.onFloatingClick(product)}"
+            android:visibility="@{isButtonVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 
@@ -84,8 +90,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:visibility="gone"
-            android:background="@drawable/quantity_selector_background"
+            android:visibility="@{isButtonVisible ? View.GONE : View.VISIBLE}"
+            app:quantityClickListener="@{productClickListener}"
+            app:item="@{cartItem}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image"
             app:layout_constraintStart_toStartOf="@id/iv_product_image" />

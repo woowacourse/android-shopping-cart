@@ -79,16 +79,16 @@ class FashionProductListActivity : AppCompatActivity() {
                         }
 
                         override fun onFloatingClick(product: Product) {
+                            viewModel.onFloatingButtonClick(product.id)
                             viewModel.add(product)
-                            viewModel.onButtonClicked()
                         }
 
                         override fun onIncreaseClick(cartItem: CartItem) {
-                            TODO("Not yet implemented")
+                            viewModel.increaseQuantity(cartItem.id)
                         }
 
                         override fun onDecreaseClick(cartItem: CartItem) {
-                            TODO("Not yet implemented")
+                            viewModel.decreaseQuantity(cartItem.id)
                         }
                     },
                 loadMoreClickListener = {

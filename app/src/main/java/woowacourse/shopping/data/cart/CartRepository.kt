@@ -21,11 +21,25 @@ class CartRepository private constructor(context: Context) {
     private val cartDao = cartDatabase.cartDao()
     private val cartItemDao = cartDatabase.cartItemDao()
 
-    fun getProducts(): List<ProductEntity> = cartDao.findAll()
+    fun getProducts(): List<Product> = cartDao.findAll().map { it.toProduct() }
 
     fun getProduct(id: Long): Product = cartDao.findById(id).toProduct()
 
+    fun getCartItems(): List<CartItem> {
+        val cartItems = cartItemDao.findAll()
+        val carts = cartDao.findAll().map { it.toProduct() }
+        return cartItems.map { getCartItemWithProduct(it.id) }
+    }
+
     fun findByIdOrNull(id: Long): CartItemEntity = cartItemDao.findById(id)
+
+    fun findById(id: Long): CartItem? {
+        val cartItemEntity = cartItemDao.findById(id) ?: return null
+        val product = cartDao.findById(id) ?: return null
+        return CartItem(
+            id, product.toProduct(), cartItemEntity.quantity
+        )
+    }
 
     fun getPagedItems(limit: Int, offset: Int): List<CartItem> {
         return cartDao.findPagedItems(limit, offset).map { getCartItemWithProduct(it.id) }
@@ -56,6 +70,21 @@ class CartRepository private constructor(context: Context) {
         val existingProduct = getProduct(newCartItem.id)
         val updated = CartItem(newCartItem.id, existingProduct, newCartItem.quantity)
         cartItemDao.update(CartItemEntity(updated.id, updated.quantity))
+    }
+
+    fun increaseQuantity(id: Long) {
+        val cartItem = cartItemDao.findById(id)
+        cartItemDao.update(cartItem.copy(quantity = cartItem.quantity + 1))
+    }
+
+    fun decreaseQuantity(id: Long) {
+        val cartItem = cartItemDao.findById(id)
+        if (cartItem.quantity > 1) {
+            cartItemDao.update(cartItem.copy(quantity = (cartItem.quantity - 1)))
+        } else {
+            cartDao.deleteById(id)
+            cartItemDao.deleteById(id)
+        }
     }
 
     private fun getCartItemWithProduct(id: Long): CartItem {
