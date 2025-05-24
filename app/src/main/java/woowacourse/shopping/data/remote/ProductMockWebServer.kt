@@ -20,44 +20,28 @@ class ProductMockWebServer : ProductService {
     override fun fetchPagingProducts(
         offset: Int,
         pageSize: Int,
-    ): List<Product> {
-        val request =
-            Request
-                .Builder()
-                .url(PAGING_PRODUCTS.format(offset, pageSize))
-                .build()
+    ): List<Product> =
+        executeRequest(
+            PAGING_PRODUCTS.format(offset, pageSize),
+            object : TypeToken<List<Product>>() {}.type,
+        )
 
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string()
-        return gson.fromJson(responseBody, object : TypeToken<List<Product>>() {}.type)
-    }
+    override fun fetchProductById(id: Long): Product = executeRequest(FIND_PRODUCT.format(id), object : TypeToken<Product>() {}.type)
 
-    override fun fetchProductById(id: Long): Product {
-        val request =
-            Request
-                .Builder()
-                .url(FIND_PRODUCT.format(id))
-                .build()
+    override fun fetchProducts(): List<Product> = executeRequest(ALL_PRODUCTS, object : TypeToken<List<Product>>() {}.type)
 
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string()
-        return gson.fromJson(responseBody, object : TypeToken<Product>() {}.type)
-    }
+    override fun shutdown() = mockWebServer.shutdown()
 
-    override fun fetchProducts(): List<Product> {
-        val request =
-            Request
-                .Builder()
-                .url(ALL_PRODUCTS)
-                .build()
-
-        val response = client.newCall(request).execute()
-        val responseBody = response.body?.string()
-        return gson.fromJson(responseBody, object : TypeToken<List<Product>>() {}.type)
-    }
-
-    override fun shutdown() {
-        mockWebServer.shutdown()
+    private fun <T> executeRequest(
+        url: String,
+        typeToken: java.lang.reflect.Type,
+    ): T {
+        val request = Request.Builder().url(url).build()
+        client.newCall(request).execute().use { response ->
+            val body =
+                response.body?.string() ?: throw IllegalStateException(ERROR_RESPONSE_BODY_NULL)
+            return gson.fromJson(body, typeToken)
+        }
     }
 
     companion object {
@@ -66,5 +50,6 @@ class ProductMockWebServer : ProductService {
         private const val FIND_PRODUCT = "$BASE_URL/products/find/%d"
         private const val ALL_PRODUCTS = "$BASE_URL/products"
         private const val PAGING_PRODUCTS = "$BASE_URL/products/paging?offset=%d&pageSize=%d"
+        private const val ERROR_RESPONSE_BODY_NULL = "Response body is null"
     }
 }
