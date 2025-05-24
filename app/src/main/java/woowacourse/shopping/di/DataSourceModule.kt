@@ -15,7 +15,8 @@ object DataSourceModule {
 
     fun provideProductDataSource(): ProductDataSource =
         productDataSource ?: run {
-            ProductDataSourceImpl().also { productDataSource = it }
+            val productService = NetworkModule.provideProductService()
+            ProductDataSourceImpl(productService).also { productDataSource = it }
         }
 
     fun provideCartDataSource(context: Context): CartDataSource =
