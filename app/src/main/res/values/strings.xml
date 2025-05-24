@@ -25,6 +25,7 @@
     <!-- Catalog Screen -->
     <string name="toolbar_catalog_title">Shopping</string>
     <string name="load_more_text">더보기</string>
+    <string name="recent_product_title">최근 본 상품</string>
     <string name="catalog_screen_event_message_fetch_product_failure">상품 목록을 불러오는데 실패했습니다</string>
     <string name="catalog_screen_event_message_fetch_cart_item_count_failure">장바구니에 담긴 상품 개수를 불러오는데 실패했습니다</string>
     <string name="catalog_screen_event_message_increase_cart_item_count_failure">장바구니에 담기 실패</string>
