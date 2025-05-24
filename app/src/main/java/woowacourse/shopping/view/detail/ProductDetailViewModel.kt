@@ -6,11 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.repository.recent.RecentProductsRepository
 import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
@@ -18,8 +15,10 @@ import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.mapper.toProduct
+import woowacourse.shopping.view.mainThread
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import java.time.LocalDateTime
+import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -32,17 +31,19 @@ class ProductDetailViewModel(
     val allLoaded = MutableLiveData(false)
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        thread {
             recentProductsRepository.findAll().forEach {
                 recentProducts.add(it)
             }
-            allLoaded.postValue(true)
+            mainThread {
+                allLoaded.value = true
+            }
         }
     }
 
     fun addProduct(productUiModel: ProductUiModel) {
         quantityLiveData.value?.let {
-            viewModelScope.launch(Dispatchers.IO) {
+            thread {
                 shoppingCartRepository.save(
                     ShoppingCartItem(
                         product = productUiModel.toProduct(),
@@ -64,7 +65,7 @@ class ProductDetailViewModel(
                 viewTime = LocalDateTime.now(),
             ),
         )
-        viewModelScope.launch(Dispatchers.IO) {
+        thread {
             recentProducts.items.forEach {
                 if (recentProducts.isFull()) {
                     recentProductsRepository.update(it)

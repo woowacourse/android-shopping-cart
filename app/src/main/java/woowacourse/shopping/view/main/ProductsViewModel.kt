@@ -5,12 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import woowacourse.shopping.ShoppingCartApplication
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.data.repository.product.ProductsRepository
@@ -22,10 +18,12 @@ import woowacourse.shopping.mapper.toProduct
 import woowacourse.shopping.mapper.toProductPageUiModel
 import woowacourse.shopping.mapper.toProductUiModel
 import woowacourse.shopping.mapper.toShoppingCartItemUiModel
+import woowacourse.shopping.view.mainThread
 import woowacourse.shopping.view.uimodel.MainRecyclerViewProduct
 import woowacourse.shopping.view.uimodel.ProductUiModel
 import woowacourse.shopping.view.uimodel.QuantityInfo
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import kotlin.concurrent.thread
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository,
@@ -45,17 +43,15 @@ class ProductsViewModel(
         private set
 
     init {
-        viewModelScope.launch {
-            val value =
-                withContext(Dispatchers.IO) {
-                    productsRepository.totalSize()
-                }
-            val quantity =
-                withContext(Dispatchers.IO) {
-                    shoppingCartRepository.totalQuantity()
-                }
-            totalSize.value = value
-            totalShoppingCartSize.value = quantity
+        thread {
+            val value = productsRepository.totalSize()
+
+            val quantity = shoppingCartRepository.totalQuantity()
+
+            mainThread {
+                totalSize.value = value
+                totalShoppingCartSize.value = quantity
+            }
         }
     }
 
@@ -66,25 +62,30 @@ class ProductsViewModel(
                 requestPage = requestPage,
             )
 
-        val page = productsRepository.findAll(pageRequest)
-        val shoppingCartItems = shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
+        thread {
+            val page = productsRepository.findAll(pageRequest)
+            val shoppingCartItems =
+                shoppingCartRepository.findAll().map { it.toShoppingCartItemUiModel() }
 
-        quantityInfo +=
-            QuantityInfo(
-                page.toProductPageUiModel().items.quantityMap(
-                    shoppingCartItems,
-                ),
-            )
+            quantityInfo +=
+                QuantityInfo(
+                    page.toProductPageUiModel().items.quantityMap(
+                        shoppingCartItems,
+                    ),
+                )
 
-        _productsLiveData.value =
-            MainRecyclerViewProduct(
-                page = page.toProductPageUiModel(),
-                quantityInfo,
-            )
+            mainThread {
+                _productsLiveData.value =
+                    MainRecyclerViewProduct(
+                        page = page.toProductPageUiModel(),
+                        quantityInfo,
+                    )
+            }
+        }
     }
 
     fun saveCurrentShoppingCart(quantityInfo: QuantityInfo<ProductUiModel>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        thread {
             quantityInfo.toList().forEach {
                 shoppingCartRepository.update(
                     ShoppingCartItem(
@@ -97,28 +98,28 @@ class ProductsViewModel(
     }
 
     fun updateShoppingCart(currentPage: Int) {
-        viewModelScope.launch {
-            val totalQuantity =
-                withContext(Dispatchers.IO) {
-                    shoppingCartRepository.totalQuantity()
+        thread {
+            val totalQuantity = shoppingCartRepository.totalQuantity()
+            mainThread {
+                totalShoppingCartSize.value = totalQuantity
+                (0..currentPage).forEach {
+                    requestProductsPage(it)
                 }
-            totalShoppingCartSize.value = totalQuantity
-            (0..currentPage).forEach {
-                requestProductsPage(it)
             }
         }
     }
 
     fun requestRecentProducts() {
-        viewModelScope.launch {
-            val recentProducts = RecentProducts()
-            withContext(Dispatchers.IO) {
-                recentProductsRepository.findAll().forEach {
-                    recentProducts.add(it)
-                }
+        val recentProducts = RecentProducts()
+
+        thread {
+            recentProductsRepository.findAll().forEach {
+                recentProducts.add(it)
             }
-            _recentProductsLiveData.value =
-                recentProducts.items.map { it.product.toProductUiModel() }
+            mainThread {
+                _recentProductsLiveData.value =
+                    recentProducts.items.map { it.product.toProductUiModel() }
+            }
         }
     }
 
