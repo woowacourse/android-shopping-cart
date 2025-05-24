@@ -32,8 +32,8 @@ class CartStorageImpl private constructor(
         count: Int,
     ) {
         thread {
-            val productTableId: Long? = cartDao.getProductTableId(product.id)
-            if (productTableId == null) {
+            val cartItem = cartDao.getCartItem(product.id)
+            if (cartItem == null) {
                 cartDao.insert(
                     CartEntity(
                         productId = product.id,
@@ -41,7 +41,8 @@ class CartStorageImpl private constructor(
                     ),
                 )
             } else {
-                cartDao.updateCount(productId = product.id, count = count)
+                val newCount = count + cartItem.count
+                cartDao.updateCount(productId = product.id, count = newCount)
             }
         }
     }
