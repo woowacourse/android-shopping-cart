@@ -25,6 +25,46 @@
         android:paddingTop="20dp"
         tools:context=".view.main.MainActivity">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_top_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:background="#555555"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/cart_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/cart_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cart_count_badge"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/cart_count_badge"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/cart_badge_quantity_background"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_product"
             android:layout_width="match_parent"
@@ -32,7 +72,7 @@
             android:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/button_load"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_top_app_bar"
             app:spanCount="2" />
 
         <Button

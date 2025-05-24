@@ -3,17 +3,17 @@ package woowacourse.shopping.domain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.FakeCartStorage
+import woowacourse.shopping.data.FakeCartLocalDataSource
 
 class PageTest {
     private lateinit var page: Page
-    private lateinit var fakeCartStorage: FakeCartStorage
+    private lateinit var fakeCartStorage: FakeCartLocalDataSource
 
     @BeforeEach
     fun setUp() {
         page = Page(initialPage = 1, pageSize = 5)
         fakeCartStorage =
-            FakeCartStorage(
+            FakeCartLocalDataSource(
                 products =
                     mutableListOf(
                         Product(1L, "맥북", Price(1000), ""),
