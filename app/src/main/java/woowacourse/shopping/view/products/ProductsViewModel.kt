@@ -41,7 +41,8 @@ class ProductsViewModel(
         _productsInShop.value =
             _productsInShop.value?.map {
                 if (it.product.id == productId) {
-                    it.copy(quantity = it.quantity + 1)
+                    val newQuantity = it.quantity + 1
+                    it.copy(quantity = newQuantity)
                 } else {
                     it
                 }
@@ -52,7 +53,8 @@ class ProductsViewModel(
         _productsInShop.value =
             _productsInShop.value?.map {
                 if (it.product.id == productId && it.quantity > 1) {
-                    it.copy(quantity = it.quantity - 1)
+                    val newQuantity = it.quantity - 1
+                    it.copy(quantity = newQuantity)
                 } else {
                     it
                 }
@@ -60,16 +62,13 @@ class ProductsViewModel(
     }
 
     override fun updateQuantity() {
-        val updated =
-            loadedItems.map { cartItem ->
-                val quantityInRepo = cartRepository.findQuantityById(cartItem.product.id)
-                cartItem.copy(quantity = quantityInRepo)
-            }
-        _productsInShop.value = updated
+        _productsInShop.value?.forEach {
+            cartRepository.update(it.product.id, it.quantity)
+        }
     }
 
     fun loadPage() {
-        updateQuantity()
+        setUpdatedProducts()
         val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
         val nextEnd = minOf(nextStart + pageSize, productRepository.getAll().size)
@@ -89,6 +88,15 @@ class ProductsViewModel(
 
     fun onNavigateToCartClicked() {
         _navigateToCart.value = Event(Unit)
+    }
+
+    private fun setUpdatedProducts() {
+        val updatedProducts =
+            loadedItems.map { cartItem ->
+                val quantityInRepo = cartRepository.findQuantityById(cartItem.product.id)
+                cartItem.copy(quantity = quantityInRepo)
+            }
+        _productsInShop.value = updatedProducts
     }
 
     companion object {

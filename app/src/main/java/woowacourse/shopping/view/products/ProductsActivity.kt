@@ -42,6 +42,11 @@ class ProductsActivity : AppCompatActivity() {
         productsViewModel.loadPage()
     }
 
+    override fun onPause() {
+        super.onPause()
+        productsViewModel.updateQuantity()
+    }
+
     private fun setupScrollListenerForMoreButton() {
         binding.rvProducts.addOnScrollListener(
             ProductsScrollListener(binding.rvProducts.layoutManager as GridLayoutManager) { canLoadMore ->
