@@ -4,10 +4,6 @@
     <data>
 
         <variable
-            name="cartItem"
-            type="woowacourse.shopping.model.cart.CartItem" />
-
-        <variable
             name="viewModel"
             type="woowacourse.shopping.view.productdetail.ProductDetailViewModel" />
     </data>
@@ -41,13 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            app:imageUrl="@{cartItem.product.imageUrl}" />
+            app:imageUrl="@{viewModel.cartItem.product.imageUrl}" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="@{cartItem.product.title}"
+            android:text="@{viewModel.cartItem.product.title}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -66,7 +62,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{String.format(@string/product_price_format,cartItem.product.price)}"
+                android:text="@{String.format(@string/product_price_format,viewModel.cartItem.product.price)}"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -96,7 +92,7 @@
             android:background="@color/mint_green"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="@{()-> viewModel.onAddToCartClicked(cartItem)}"
+            android:onClick="@{()-> viewModel.onAddToCartClicked()}"
             android:text="@string/button_add_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
