@@ -16,104 +16,105 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="152dp"
-        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:background="@drawable/background_item_shopping_cart">
 
-        <TextView
-            android:id="@+id/tv_shopping_cart_item"
+        <LinearLayout
+            android:id="@+id/ll_item_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="36dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{cartItem.name}"
-            android:textColor="@color/gray"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/iv_remove_item_product_icon"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="10dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="[든든] 동원 스위트콘" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_shopping_cart_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{cartItem.name}"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <ImageView
+                android:id="@+id/iv_remove_item_product_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:onClick="@{() -> handler.onRemoveCartItem(cartItem)}"
+                android:src="@drawable/icon_close"
+                app:tint="#AAAAAA" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_shopping_cart_image"
-            android:layout_width="136dp"
-            android:layout_height="72dp"
-            android:layout_marginStart="12dp"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginVertical="20dp"
+            android:layout_marginStart="15dp"
             android:image="@{cartItem.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_shopping_cart_item"
+            app:layout_constraintTop_toBottomOf="@id/ll_item_header"
             tools:src="@drawable/sample_product_detail_image" />
 
-        <ImageView
-            android:id="@+id/iv_remove_item_product_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
-            android:onClick="@{() -> handler.onRemoveCartItem(cartItem)}"
-            android:src="@drawable/icon_close"
+        <LinearLayout
+            android:id="@+id/ll_quantity_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="#AAAAAA" />
+            app:layout_constraintTop_toTopOf="@id/iv_shopping_cart_image">
 
+            <TextView
+                android:id="@+id/tv_decrease_quantity"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/background_layout_product_counter_decrease"
+                android:gravity="center"
+                android:text="@string/button_minus"
+                android:textColor="@color/gray"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/btn_decrease_quantity"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:backgroundTint="@color/white"
-            android:gravity="center"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/button_minus"
-            android:textColor="@color/gray"
-            android:textSize="15sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_quantity"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@id/tv_product_quantity" />
+            <TextView
+                android:id="@+id/tv_quantity"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:textColor="@color/gray"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                tools:text="1" />
 
-        <TextView
-            android:id="@+id/tv_product_quantity"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textColor="@color/gray"
-            android:textSize="15sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/tv_price"
-            app:layout_constraintEnd_toStartOf="@id/btn_increase_quantity"
-            tools:text="1" />
-
-        <TextView
-            android:id="@+id/btn_increase_quantity"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:backgroundTint="@color/white"
-            android:gravity="center"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/button_plus"
-            android:textColor="@color/gray"
-            android:textSize="15sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_quantity"
-            app:layout_constraintEnd_toEndOf="@id/tv_price" />
+            <TextView
+                android:id="@+id/tv_increase_quantity"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/background_layout_product_counter_increase"
+                android:gravity="center"
+                android:text="@string/button_plus"
+                android:textColor="@color/gray"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="15dp"
             android:price="@{cartItem.price}"
             android:textColor="@color/gray"
             android:textSize="16sp"
