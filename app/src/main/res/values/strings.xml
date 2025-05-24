@@ -2,16 +2,21 @@
     <string name="app_name">Shopping</string>
 
     <string name="text_price">%s원</string>
-    <string name="text_save_goods">장바구니에 상품이 담겼습니다</string>
+    <string name="text_save_goods">%d개의 상품이 장바구니에 담겼습니다</string>
+    <string name="text_latest_goods_label">최근 본 상품</string>
+    <string name="text_last_goods_label">마지막으로 본 상품</string>
 
-    <string name="label_price">가격</string>
     <string name="label_shopping_cart_title">Cart</string>
 
     <string name="btn_shopping_cart">장바구니 담기</string>
     <string name="btn_next_page"><![CDATA[>]]></string>
     <string name="btn_previous_page"><![CDATA[<]]></string>
     <string name="btn_load_more">Load More</string>
+    <string name="btn_plus">+</string>
+    <string name="btn_minus">-</string>
 
     <string name="action_cart">장바구니</string>
     <string name="action_cancel">취소</string>
+
+    <string name="error_no_goods">상품 정보를 불러올 수 없습니다</string>
 </resources>

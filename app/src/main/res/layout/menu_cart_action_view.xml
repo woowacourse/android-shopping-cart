@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.goods.list.GoodsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> vm.updateShouldNavigateToShoppingCart()}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/cart_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:src="@drawable/action_shopping_cart"
+            app:layout_constraintEnd_toStartOf="@id/cart_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cart_count"
+            android:layout_width="24dp"
+            android:text="@{vm.shoppingGoodsCount.toString()}"
+            android:visibility="@{vm.shoppingGoodsCount &lt;= 0 ? View.GONE : View.VISIBLE}"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_cart_count"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@id/cart_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cart_icon"
+            app:layout_constraintTop_toTopOf="@id/cart_icon"
+            tools:text="2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

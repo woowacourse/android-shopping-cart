@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemSelectedGoodsBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.model.GoodsUiModel
 
 class ShoppingCartViewHolder(
     parent: ViewGroup,
@@ -15,9 +15,12 @@ class ShoppingCartViewHolder(
 
     init {
         binding.clickListener = clickListener
+        binding.clGoodsCount.clickListener = clickListener
     }
 
-    fun bind(goods: Goods) {
+    fun bind(goods: GoodsUiModel) {
         binding.goods = goods
+        binding.clGoodsCount.quantity = goods.quantity
+        binding.clGoodsCount.position = adapterPosition
     }
 }

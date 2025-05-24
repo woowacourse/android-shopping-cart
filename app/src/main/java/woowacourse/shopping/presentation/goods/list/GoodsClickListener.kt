@@ -1,7 +1,9 @@
 package woowacourse.shopping.presentation.goods.list
 
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
-fun interface GoodsClickListener {
-    fun onGoodsClick(goods: Goods)
+interface GoodsClickListener : QuantitySelectorListener {
+    fun onGoodsClick(selectedGoodsId: Int)
+
+    fun onPlusClick(position: Int)
 }

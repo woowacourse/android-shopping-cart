@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.goods.detail.LastGoodsClickListener" />
+
+        <variable
+            name="goods"
+            type="woowacourse.shopping.presentation.model.GoodsUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> clickListener.onLastGoodsClick(goods.id)}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_last_goods"
+        android:paddingHorizontal="18dp"
+        android:paddingVertical="16dp">
+
+        <TextView
+            android:id="@+id/tv_last_goods_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_last_goods_label"
+            android:textColor="@color/primary_color"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_last_goods_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_last_goods_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxWidth="344dp"
+            android:maxLines="1"
+            android:text="@{goods.name}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_last_goods_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_last_goods_label"
+            tools:text="PET보틀-정사각형(50asdfasdfasdfasdfasdfasdfadsf0ml)" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

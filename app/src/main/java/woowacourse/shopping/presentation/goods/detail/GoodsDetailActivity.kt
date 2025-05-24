@@ -6,31 +6,86 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
-import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
-import woowacourse.shopping.presentation.util.getSerializableCompat
+import woowacourse.shopping.presentation.goods.list.GoodsActivity
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
     private val viewModel: GoodsDetailViewModel by viewModels {
-        GoodsDetailViewModel.provideFactory((application as ShoppingApplication).shoppingRepository)
+        GoodsDetailViewModel.provideFactory(
+            (application as ShoppingApplication).goodsRepository,
+            (application as ShoppingApplication).shoppingRepository,
+            (application as ShoppingApplication).latestGoodsRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
+        viewModel.setGoods(getGoodsId())
+        viewModel.setLastGoods(getLastGoodsId())
+
+        setUpBinding()
+
+        viewModel.onItemAddedToCart.observe(this) { count ->
+            Toast.makeText(this, getString(R.string.text_save_goods, count), Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            navigateToGoodsList()
+        }
+    }
+
+    private fun setUpBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
+        binding.selectorClickListener =
+            object : QuantitySelectorListener {
+                override fun onIncreaseQuantity(position: Int) {
+                    viewModel.increaseCount()
+                }
 
-        viewModel.setGoods(intent.getSerializableCompat<Goods>(EXTRA_GOODS))
+                override fun onDecreaseQuantity(position: Int) {
+                    viewModel.tryDecreaseCount()
+                }
+            }
 
-        viewModel.isItemAddedToCart.observe(this) {
-            Toast.makeText(this, R.string.text_save_goods, Toast.LENGTH_SHORT).show()
+        binding.lastGoodsClickListener =
+            LastGoodsClickListener { lastGoodsId ->
+                viewModel.updateLatestGoods(lastGoodsId)
+                navigateToLastGoodsDetail(lastGoodsId)
+            }
+    }
+
+    private fun getGoodsId(): Int {
+        val id = intent.getIntExtra(EXTRA_GOODS, -1)
+        if (id == -1) {
+            Toast.makeText(this, R.string.error_no_goods, Toast.LENGTH_SHORT).show()
+            finish()
         }
+        return id
+    }
+
+    private fun getLastGoodsId(): Int? {
+        return intent.getSerializableExtra(EXTRA_LAST_GOODS) as? Int?
+    }
+
+    private fun navigateToLastGoodsDetail(lastGoodsId: Int) {
+        val intent = newIntent(this, lastGoodsId, null)
+        startActivity(intent)
+    }
+
+    private fun navigateToGoodsList() {
+        val intent = GoodsActivity.newIntent(this)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -41,7 +96,7 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cancel -> {
-                onBackPressedDispatcher.onBackPressed()
+                navigateToGoodsList()
                 true
             }
 
@@ -51,13 +106,16 @@ class GoodsDetailActivity : BaseActivity() {
 
     companion object {
         private const val EXTRA_GOODS = "goods"
+        private const val EXTRA_LAST_GOODS = "last_goods"
 
         fun newIntent(
             context: Context,
-            goods: Goods,
+            goodsId: Int,
+            lastGoodsId: Int?,
         ): Intent =
             Intent(context, GoodsDetailActivity::class.java).apply {
-                putExtra(EXTRA_GOODS, goods)
+                putExtra(EXTRA_GOODS, goodsId)
+                putExtra(EXTRA_LAST_GOODS, lastGoodsId)
             }
     }
 }

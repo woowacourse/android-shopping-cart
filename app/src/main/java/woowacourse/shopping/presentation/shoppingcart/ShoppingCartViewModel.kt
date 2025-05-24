@@ -6,17 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import woowacourse.shopping.data.ShoppingRepository
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.presentation.model.toUiModel
+import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
+import woowacourse.shopping.presentation.util.event.SingleLiveData
 
 class ShoppingCartViewModel(
+    private val goodsRepository: GoodsRepository,
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
-    val goods: LiveData<List<Goods>>
+    private val _goods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
+    val goods: LiveData<List<GoodsUiModel>>
         get() = _goods
 
-    private val _page: MutableLiveData<Int> = MutableLiveData(DEFAULT_VALUE)
+    private val _page: MutableLiveData<Int> = MutableLiveData(DEFAULT_PAGE_VALUE)
     val page: LiveData<Int>
         get() = _page
 
@@ -28,13 +33,75 @@ class ShoppingCartViewModel(
     val hasPreviousPage: LiveData<Boolean>
         get() = _hasPreviousPage
 
+    private val _onQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
+    val onQuantityChanged: SingleLiveData<Int>
+        get() = _onQuantityChanged
+
     init {
         updateState()
     }
 
-    fun deleteGoods(goods: Goods) {
-        shoppingRepository.removeItem(goods)
+    private fun updateState() {
+        _goods.value =
+            shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
+                .mapNotNull { goodsRepository.getById(it.goodsId)?.toUiModel()?.copy(quantity = it.goodsQuantity) }
+        updateNextPage()
+        updatePreviousPage()
+    }
+
+    private fun updatePreviousPage() {
+        _hasPreviousPage.value = _page.value != DEFAULT_PAGE_VALUE
+    }
+
+    private fun updateNextPage() {
+        _hasNextPage.value =
+            shoppingRepository.getPagedGoods(
+                _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
+                ITEM_COUNT,
+            ).isNotEmpty()
+    }
+
+    fun increaseGoodsCount(position: Int) {
+        val updatedItem =
+            updateGoods(position) {
+                it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
+            }
+        shoppingRepository.increaseGoodsQuantity(updatedItem.id)
+    }
+
+    fun decreaseGoodsCount(position: Int) {
+        val updatedItem =
+            updateGoods(position) {
+                it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
+            }
+
+        if (updatedItem.quantity <= MINIMUM_QUANTITY) {
+            deleteGoods(updatedItem)
+        } else {
+            shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
+        }
+    }
+
+    fun deleteGoods(goods: GoodsUiModel) {
+        shoppingRepository.removeGoods(goods.id)
         updateState()
+    }
+
+    private fun updateGoods(
+        position: Int,
+        transform: (GoodsUiModel) -> GoodsUiModel,
+    ): GoodsUiModel {
+        val currentList = goods.value.orEmpty()
+
+        val updatedItem = transform(currentList[position])
+        val updatedList =
+            currentList.toMutableList().apply {
+                this[position] = updatedItem
+            }
+
+        _goods.value = updatedList
+        _onQuantityChanged.setValue(position)
+        return updatedItem
     }
 
     fun increasePage() {
@@ -47,33 +114,20 @@ class ShoppingCartViewModel(
         updateState()
     }
 
-    private fun updateState() {
-        _goods.value = shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_VALUE, ITEM_COUNT)
-        updateNextPage()
-        updatePreviousPage()
-    }
-
-    private fun updatePreviousPage() {
-        _hasPreviousPage.value = _page.value != DEFAULT_VALUE
-    }
-
-    private fun updateNextPage() {
-        _hasNextPage.value =
-            shoppingRepository.getPagedGoods(
-                _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_VALUE,
-                ITEM_COUNT,
-            ).isNotEmpty()
-    }
-
     companion object {
         private const val ITEM_COUNT: Int = 5
-        private const val DEFAULT_VALUE: Int = 1
+        private const val DEFAULT_PAGE_VALUE: Int = 0
         private const val PAGE_CHANGE_AMOUNT: Int = 1
+        private const val QUANTITY_CHANGE_AMOUNT: Int = 1
+        private const val MINIMUM_QUANTITY: Int = 0
 
-        fun provideFactory(shoppingRepository: ShoppingRepository): ViewModelProvider.Factory =
+        fun provideFactory(
+            goodsRepository: GoodsRepository,
+            shoppingRepository: ShoppingRepository,
+        ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    ShoppingCartViewModel(shoppingRepository)
+                    ShoppingCartViewModel(goodsRepository, shoppingRepository)
                 }
             }
     }

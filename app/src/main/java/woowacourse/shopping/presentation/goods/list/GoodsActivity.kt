@@ -1,15 +1,16 @@
 package woowacourse.shopping.presentation.goods.list
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsBinding
-import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
@@ -17,28 +18,75 @@ import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
 class GoodsActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsBinding>(R.layout.activity_goods)
     private val viewModel: GoodsViewModel by viewModels {
-        GoodsViewModel.provideFactory((application as ShoppingApplication).goodsRepository)
+        GoodsViewModel.provideFactory(
+            (application as ShoppingApplication).goodsRepository,
+            (application as ShoppingApplication).shoppingRepository,
+            (application as ShoppingApplication).latestGoodsRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
+        setUpBinding()
 
+        val goodsAdapter = makeGoodsAdapter()
+        setUpGoodsList(goodsAdapter)
+
+        val latestGoodsAdapter = makeLatestGoodsAdapter()
+        setUpLatestGoodsList(latestGoodsAdapter)
+
+        setSupportActionBar(binding.toolbar)
+        setUpObserver(goodsAdapter, latestGoodsAdapter)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.initGoods()
+        viewModel.setLatestGoods()
+    }
+
+    private fun setUpBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
-
-        val adapter = GoodsAdapter { goods -> navigateToDetail(goods) }
-        setUpGoodsList(adapter)
-
-        viewModel.goods.observe(this) { goods ->
-            adapter.updateItems(goods)
-        }
     }
+
+    private fun makeGoodsAdapter(): GoodsAdapter {
+        return GoodsAdapter(
+            object : GoodsClickListener {
+                override fun onGoodsClick(selectedGoodsId: Int) {
+                    viewModel.moveToDetail(selectedGoodsId) { goodsId, lastGoodsId ->
+                        navigateToDetail(goodsId, lastGoodsId)
+                    }
+                }
+
+                override fun onPlusClick(position: Int) {
+                    viewModel.addToShoppingCart(position)
+                }
+
+                override fun onIncreaseQuantity(position: Int) {
+                    viewModel.increaseGoodsCount(position)
+                }
+
+                override fun onDecreaseQuantity(position: Int) {
+                    viewModel.decreaseGoodsCount(position)
+                }
+            },
+        )
+    }
+
+    private fun makeLatestGoodsAdapter(): LatestGoodsAdapter =
+        LatestGoodsAdapter { selectedGoodsID ->
+            viewModel.moveToDetail(selectedGoodsID) { goodsId, lastGoodsId ->
+                navigateToDetail(goodsId, lastGoodsId)
+            }
+        }
 
     private fun setUpGoodsList(adapter: GoodsAdapter) {
         binding.rvGoodsList.apply {
             this.adapter = adapter
-            layoutManager = GridLayoutManager(this@GoodsActivity, SPAN_COUNT)
+            layoutManager = GridLayoutManager(this@GoodsActivity, GOODS_SPAN_COUNT)
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(
@@ -54,30 +102,70 @@ class GoodsActivity : BaseActivity() {
         }
     }
 
-    private fun navigateToDetail(goods: Goods) {
-        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods)
+    private fun setUpLatestGoodsList(adapter: LatestGoodsAdapter) {
+        binding.rvLatestGoodsList.apply {
+            this.adapter = adapter
+            layoutManager =
+                GridLayoutManager(
+                    this@GoodsActivity,
+                    LATEST_GOODS_SPAN_COUNT,
+                    GridLayoutManager.HORIZONTAL,
+                    false,
+                )
+        }
+    }
+
+    private fun setUpObserver(
+        goodsAdapter: GoodsAdapter,
+        latestGoodsAdapter: LatestGoodsAdapter,
+    ) {
+        viewModel.goods.observe(this) { goods ->
+            goodsAdapter.changeGoods(goods)
+        }
+
+        viewModel.onQuantityChanged.observe(this) { position ->
+            goodsAdapter.notifyItemChanged(position)
+        }
+
+        viewModel.shouldNavigateToShoppingCart.observe(this) {
+            val intent = ShoppingCartActivity.newIntent(this)
+            startActivity(intent)
+        }
+
+        viewModel.latestGoods.observe(this) {
+            latestGoodsAdapter.addLatestGoods(it)
+        }
+    }
+
+    private fun navigateToDetail(
+        goodsId: Int,
+        lastGoodsId: Int?,
+    ) {
+        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goodsId, lastGoodsId)
         startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.goods_list_action_bar, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+        val cartItem = menu?.findItem(R.id.action_cart)
+        val menuBinding = MenuCartActionViewBinding.inflate(layoutInflater)
+        cartItem?.actionView = menuBinding.root
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_cart -> {
-                val intent = ShoppingCartActivity.newIntent(this)
-                startActivity(intent)
-                true
-            }
+        menuBinding.vm = viewModel
+        menuBinding.lifecycleOwner = this
 
-            else -> super.onOptionsItemSelected(item)
-        }
+        return true
     }
 
     companion object {
-        private const val SPAN_COUNT: Int = 2
+        private const val GOODS_SPAN_COUNT: Int = 2
+        private const val LATEST_GOODS_SPAN_COUNT: Int = 1
         private const val SCROLL_DIRECTION: Int = 1
+
+        fun newIntent(context: Context): Intent =
+            Intent(
+                context,
+                GoodsActivity::class.java,
+            )
     }
 }

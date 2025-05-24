@@ -1,57 +1,40 @@
 package woowacourse.shopping.presentation.shoppingcart
 
-import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import io.mockk.every
-import io.mockk.mockkObject
-import io.mockk.unmockkObject
-import org.junit.jupiter.api.AfterEach
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.ShoppingDataBase
-import woowacourse.shopping.fixture.ICE_CREAM
-import woowacourse.shopping.fixture.SUNDAE
-import woowacourse.shopping.fixture.createGoods
+import woowacourse.shopping.domain.model.ShoppingGoods
+import woowacourse.shopping.domain.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.ShoppingRepository
+import woowacourse.shopping.fixture.GOODS_SUNDAE
+import woowacourse.shopping.fixture.SHOPPING_GOODS_SUNDAE
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var shoppingCartViewModel: ShoppingCartViewModel
-    private val goods =
-        listOf(
-            SUNDAE,
-            ICE_CREAM,
-        )
+    private val goodsRepository: GoodsRepository = mockk(relaxed = true)
+    private val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
-        mockkObject(ShoppingDataBase)
-        shoppingCartViewModel = ShoppingCartViewModel(ShoppingDataBase)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkObject(ShoppingDataBase)
-    }
-
-    @Test
-    fun `장바구니의 물품을 삭제한다`() {
-        // given
-        goods.forEach { ShoppingDataBase.addItem(it) }
-
-        // when
-        shoppingCartViewModel.deleteGoods(SUNDAE)
-
-        // then
-        shoppingCartViewModel.goods.getOrAwaitValue().shouldNotContain(SUNDAE)
+        every { shoppingRepository.getPagedGoods(any(), any()) } returns
+            listOf(
+                SHOPPING_GOODS_SUNDAE,
+            )
+        every { goodsRepository.getById(1) } returns GOODS_SUNDAE
+        shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
     }
 
     @Test
-    fun `페이지의 초기값은 1이다`() {
+    fun `페이지의 초기값은 0이다`() {
         // then
-        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 1
+        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 0
     }
 
     @Test
@@ -60,7 +43,7 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.increasePage()
 
         // then
-        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 2
+        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 1
     }
 
     @Test
@@ -72,14 +55,14 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.decreasePage()
 
         // then
-        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 1
+        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 0
     }
 
     @Test
     fun `다음 상품 목록이 존재하면 다음 페이지는 존재한다`() {
         // given
-        every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf(createGoods())
-        shoppingCartViewModel = ShoppingCartViewModel(ShoppingDataBase)
+        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf(ShoppingGoods(1, 2))
+        shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe true
@@ -88,25 +71,51 @@ class ShoppingCartViewModelTest {
     @Test
     fun `다음 상품 목록이 존재하지 않으면 다음 페이지는 존재하지 않는다`() {
         // given
-        every { ShoppingDataBase.getPagedGoods(any(), any()) } returns listOf()
-        shoppingCartViewModel = ShoppingCartViewModel(ShoppingDataBase)
+        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf()
+        shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe false
     }
 
     @Test
-    fun `현재 페이지가 1페이지일 경우 이전 페이지가 존재하지 않는다`() {
+    fun `현재 페이지가 0페이지일 경우 이전 페이지가 존재하지 않는다`() {
         // then
         shoppingCartViewModel.hasPreviousPage.getOrAwaitValue() shouldBe false
     }
 
     @Test
-    fun `현재 페이지가 1페이지가 아닐 경우 이전 페이지가 존재한다`() {
+    fun `현재 페이지가 0페이지가 아닐 경우 이전 페이지가 존재한다`() {
         // when
         shoppingCartViewModel.increasePage()
 
         // then
         shoppingCartViewModel.hasPreviousPage.getOrAwaitValue() shouldBe true
+    }
+
+    @Test
+    fun `구매할 물품 수량을 증가할 수 있다`() {
+        // when
+        shoppingCartViewModel.increaseGoodsCount(0)
+
+        // then
+        shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 3
+
+        verify {
+            shoppingRepository.increaseGoodsQuantity(1)
+        }
+    }
+
+    @Test
+    fun `구매할 물품 수량을 감소할 수 있다`() {
+        // when
+        shoppingCartViewModel.decreaseGoodsCount(0)
+
+        // then
+        shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 1
+
+        verify {
+            shoppingRepository.decreaseGoodsQuantity(1)
+        }
     }
 }

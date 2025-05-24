@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="latestGoodsClickListener"
+            type="woowacourse.shopping.presentation.goods.list.LatestGoodsClickListener" />
+
+        <variable
+            name="goods"
+            type="woowacourse.shopping.presentation.model.GoodsUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> latestGoodsClickListener.onLatestGoodsClick(goods.id)}"
+        android:padding="6dp">
+
+        <ImageView
+            android:id="@+id/iv_goods"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:scaleType="centerCrop"
+            app:goodsImage="@{goods.imageUrl}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_latest_goods_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="98dp"
+            android:maxLines="1"
+            android:text="@{goods.name}"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_goods"
+            tools:text="PET보틀-정사각형뭐시기뭐시기" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
