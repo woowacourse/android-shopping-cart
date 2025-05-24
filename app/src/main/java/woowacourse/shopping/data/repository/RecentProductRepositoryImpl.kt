@@ -36,9 +36,10 @@ class RecentProductRepositoryImpl(
         runThread(
             block = {
                 val recentProducts = recentProductDataSource.getProducts()
+                val recentProductSize = recentProductDataSource.getCount()
                 val productId = product.productId
 
-                if (isNewProduct(recentProducts, productId) && recentProducts.size == 10) {
+                if (isNewProduct(recentProducts, productId) && recentProductSize == 10) {
                     val oldProduct = recentProductDataSource.getOldestProduct()
                     recentProductDataSource.delete(oldProduct)
                 }

@@ -1,6 +1,7 @@
 package woowacourse.shopping
 
 import woowacourse.shopping.data.db.CartEntity
+import woowacourse.shopping.data.db.RecentlyViewedProduct
 import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
 
@@ -10,6 +11,28 @@ object Fixture {
             0,
             0,
             10,
+        )
+
+    val dummyRecentlyViewedProduct =
+        RecentlyViewedProduct(
+            0,
+            1111,
+        )
+
+    val dummyRecentlyViewedProductList =
+        listOf(
+            RecentlyViewedProduct(
+                0,
+                1111,
+            ),
+            RecentlyViewedProduct(
+                1,
+                5555,
+            ),
+            RecentlyViewedProduct(
+                2,
+                9999,
+            ),
         )
 
     val dummyProduct =
