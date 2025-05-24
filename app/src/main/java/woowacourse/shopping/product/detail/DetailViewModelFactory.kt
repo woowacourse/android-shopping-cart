@@ -3,6 +3,7 @@ package woowacourse.shopping.product.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.data.CatalogDatabase
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentlyViewedProductRepositoryImpl
@@ -22,7 +23,7 @@ class DetailViewModelFactory(
                 ),
                 RecentlyViewedProductRepositoryImpl(
                     ShoppingDatabase.getInstance(application).recentlyViewedProductDao(),
-                    ShoppingDatabase.getInstance(application).cartProductDao(),
+                    CatalogDatabase,
                 ),
             ) as T
         }

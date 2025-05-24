@@ -31,6 +31,7 @@ class CatalogActivity : AppCompatActivity() {
 
         setViewModel()
         setProductAdapter()
+        setRecentlyViewedProductAdapter()
         observeCatalogProducts()
     }
 
@@ -38,6 +39,7 @@ class CatalogActivity : AppCompatActivity() {
         super.onResume()
         viewModel.loadCatalogUntilCurrentPage()
         viewModel.loadCartItemSize()
+        viewModel.loadRecentlyViewedProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -106,6 +108,14 @@ class CatalogActivity : AppCompatActivity() {
         binding.recyclerViewProducts.layoutManager = gridLayoutManager
     }
 
+    private fun setRecentlyViewedProductAdapter() {
+        val adapter =
+            RecentlyViewedProductAdapter(
+                products = emptyList(),
+            )
+        binding.recyclerViewRecentlyViewedProducts.adapter = adapter
+    }
+
     private fun observeCatalogProducts() {
         viewModel.catalogItems.observe(this) { value ->
             (binding.recyclerViewProducts.adapter as ProductAdapter).setItems(value)
@@ -116,7 +126,8 @@ class CatalogActivity : AppCompatActivity() {
             }
         }
         viewModel.recentlyViewedProducts.observe(this) { products ->
-            Log.d("RECENT", "$products")
+            Log.d("LOADED", "$products")
+            (binding.recyclerViewRecentlyViewedProducts.adapter as RecentlyViewedProductAdapter).setItems(products)
         }
         binding.lifecycleOwner = this
     }

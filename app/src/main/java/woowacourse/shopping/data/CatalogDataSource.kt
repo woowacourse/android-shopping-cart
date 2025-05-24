@@ -16,4 +16,6 @@ interface CatalogDataSource {
     ): ProductUiModel
 
     fun initQuantity(product: ProductUiModel)
+
+    fun getCartProductsByUids(uids: List<Int>): List<ProductUiModel>
 }

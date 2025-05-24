@@ -26,6 +26,9 @@ object CatalogDatabase : CatalogDataSource {
         dummyProducts[index] = dummyProducts[index].copy(quantity = 0)
     }
 
+    override fun getCartProductsByUids(uids: List<Int>): List<ProductUiModel> =
+        dummyProducts.filter { product -> uids.contains(product.id) }
+
     var count = 1
 
     val dummyProducts =
