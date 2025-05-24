@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.cart.CartItem
@@ -18,7 +18,16 @@ import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    private val productDetailViewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
+    private val intentCartItemData by lazy {
+        intent.getSerializableExtraData<CartItem>(CART_ITEM_DATA_KEY)
+            ?: throw IllegalArgumentException()
+    }
+    private val productDetailViewModel: ProductDetailViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ProductDetailViewModel.Companion.Factory(intentCartItemData),
+        )[ProductDetailViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,14 +35,11 @@ class ProductDetailActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         binding.viewModel = productDetailViewModel
 
-        val intentCartItemData =
-            intent.getSerializableExtraData<CartItem>(CART_ITEM_DATA_KEY) ?: return
-        productDetailViewModel.setCartItem(intentCartItemData)
         binding.quantitySelector.productId = intentCartItemData.product.id
         binding.quantitySelector.tvProductQuantity.text = intentCartItemData.quantity.toString()
 
-        productDetailViewModel.cartItem.observe(this) {
-            binding.quantitySelector.tvProductQuantity.text = it.quantity.toString()
+        productDetailViewModel.quantity.observe(this) {
+            binding.quantitySelector.tvProductQuantity.text = it.toString()
         }
         binding.quantitySelector.quantitySelectButtonListener =
             object : QuantitySelectButtonListener {

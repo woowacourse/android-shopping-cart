@@ -4,9 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
@@ -15,21 +12,22 @@ import woowacourse.shopping.view.QuantityController
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
+    val cartItem: CartItem,
 ) : ViewModel(),
     QuantityController {
     private val _addToCart = MutableLiveData<Event<Unit>>()
     val addToCart: LiveData<Event<Unit>> = _addToCart
 
-    private val _cartItem = MutableLiveData<CartItem>()
-    val cartItem: LiveData<CartItem> = _cartItem
+    private val _quantity = MutableLiveData(cartItem.quantity)
+    val quantity: LiveData<Int> = _quantity
 
     override fun increaseQuantity(
         productId: Long,
         quantityIncrease: Int,
     ) {
-        val current = _cartItem.value?.quantity ?: INIT_QUANTITY
+        val current = _quantity.value ?: INIT_QUANTITY
         val newQuantity = current + quantityIncrease
-        _cartItem.value = _cartItem.value?.copy(quantity = newQuantity)
+        _quantity.value = newQuantity
     }
 
     override fun decreaseQuantity(
@@ -37,45 +35,37 @@ class ProductDetailViewModel(
         quantityDecrease: Int,
         minQuantity: Int,
     ) {
-        val current = _cartItem.value?.quantity ?: INIT_QUANTITY
+        val current = _quantity.value ?: INIT_QUANTITY
         if (current > minQuantity) {
             val newQuantity = current - quantityDecrease
-            _cartItem.value = _cartItem.value?.copy(quantity = newQuantity)
+            _quantity.value = newQuantity
         }
     }
 
     override fun updateQuantity() {
-        val productId = _cartItem.value?.product?.id ?: 1
-        val quantity = _cartItem.value?.quantity ?: INIT_QUANTITY
+        val productId = cartItem.product.id
+        val quantity = _quantity.value ?: INIT_QUANTITY
         cartRepository.update(productId, quantity)
     }
 
     fun onAddToCartClicked() {
         _addToCart.value = Event(Unit)
-        cartRepository.add(_cartItem.value!!)
-    }
-
-    fun setCartItem(cartItem: CartItem) {
-        _cartItem.value = cartItem
+        val newCartItem = cartItem.copy(quantity = _quantity.value ?: INIT_QUANTITY)
+        cartRepository.add(newCartItem)
     }
 
     companion object {
         private const val INIT_QUANTITY = 1
 
-        val Factory: ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(
-                    modelClass: Class<T>,
-                    extras: CreationExtras,
-                ): T {
-                    checkNotNull(extras[APPLICATION_KEY])
-                    extras.createSavedStateHandle()
-
-                    return ProductDetailViewModel(
-                        CartRepositoryImpl,
-                    ) as T
-                }
-            }
+        class Factory(
+            private val cartItem: CartItem,
+        ) : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                ProductDetailViewModel(
+                    CartRepositoryImpl,
+                    cartItem,
+                ) as T
+        }
     }
 }
