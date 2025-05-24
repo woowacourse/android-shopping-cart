@@ -39,22 +39,31 @@ class CartViewModel(
         loadPage(INITIAL_PAGE)
     }
 
-    override fun increaseQuantity(productId: Long) {
+    override fun increaseQuantity(
+        productId: Long,
+        quantityIncrease: Int,
+    ) {
         _cartItems.value =
             _cartItems.value?.map {
                 if (it.product.id == productId) {
-                    it.copy(quantity = it.quantity + 1)
+                    val newQuantity = it.quantity + quantityIncrease
+                    it.copy(quantity = newQuantity)
                 } else {
                     it
                 }
             }
     }
 
-    override fun decreaseQuantity(productId: Long) {
+    override fun decreaseQuantity(
+        productId: Long,
+        quantityDecrease: Int,
+        minQuantity: Int,
+    ) {
         _cartItems.value =
             _cartItems.value?.map {
-                if (it.product.id == productId && it.quantity > 1) {
-                    it.copy(quantity = it.quantity - 1)
+                if (it.product.id == productId && it.quantity > minQuantity) {
+                    val newQuantity = it.quantity - quantityDecrease
+                    it.copy(quantity = newQuantity)
                 } else {
                     it
                 }

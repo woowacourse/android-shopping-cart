@@ -23,23 +23,30 @@ class ProductDetailViewModel(
     private val _cartItem = MutableLiveData<CartItem>()
     val cartItem: LiveData<CartItem> = _cartItem
 
-    override fun increaseQuantity(productId: Long) {
-        val current = _cartItem.value?.quantity ?: 1
-        val newQuantity = current + 1
+    override fun increaseQuantity(
+        productId: Long,
+        quantityIncrease: Int,
+    ) {
+        val current = _cartItem.value?.quantity ?: INIT_QUANTITY
+        val newQuantity = current + quantityIncrease
         _cartItem.value = _cartItem.value?.copy(quantity = newQuantity)
     }
 
-    override fun decreaseQuantity(productId: Long) {
-        val current = _cartItem.value?.quantity ?: 1
-        if (current > 1) {
-            val newQuantity = current - 1
+    override fun decreaseQuantity(
+        productId: Long,
+        quantityDecrease: Int,
+        minQuantity: Int,
+    ) {
+        val current = _cartItem.value?.quantity ?: INIT_QUANTITY
+        if (current > minQuantity) {
+            val newQuantity = current - quantityDecrease
             _cartItem.value = _cartItem.value?.copy(quantity = newQuantity)
         }
     }
 
     override fun updateQuantity() {
         val productId = _cartItem.value?.product?.id ?: 1
-        val quantity = _cartItem.value?.quantity ?: 1
+        val quantity = _cartItem.value?.quantity ?: INIT_QUANTITY
         cartRepository.update(productId, quantity)
     }
 
@@ -53,6 +60,8 @@ class ProductDetailViewModel(
     }
 
     companion object {
+        private const val INIT_QUANTITY = 1
+
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

@@ -37,11 +37,14 @@ class ProductsViewModel(
         loadPage()
     }
 
-    override fun increaseQuantity(productId: Long) {
+    override fun increaseQuantity(
+        productId: Long,
+        quantityIncrease: Int,
+    ) {
         _productsInShop.value =
             _productsInShop.value?.map {
                 if (it.product.id == productId) {
-                    val newQuantity = it.quantity + 1
+                    val newQuantity = it.quantity + quantityIncrease
                     it.copy(quantity = newQuantity)
                 } else {
                     it
@@ -49,11 +52,15 @@ class ProductsViewModel(
             }
     }
 
-    override fun decreaseQuantity(productId: Long) {
+    override fun decreaseQuantity(
+        productId: Long,
+        quantityDecrease: Int,
+        minQuantity: Int,
+    ) {
         _productsInShop.value =
             _productsInShop.value?.map {
-                if (it.product.id == productId && it.quantity > 1) {
-                    val newQuantity = it.quantity - 1
+                if (it.product.id == productId && it.quantity > minQuantity) {
+                    val newQuantity = it.quantity - quantityDecrease
                     it.copy(quantity = newQuantity)
                 } else {
                     it
@@ -101,8 +108,8 @@ class ProductsViewModel(
 
     companion object {
         private const val INITIAL_PAGE = 0
-
         private const val PAGE_SIZE = 20
+
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
