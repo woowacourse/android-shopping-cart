@@ -35,9 +35,10 @@
 
         <ImageView
             android:id="@+id/iv_add_product_icon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="20dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_margin="10dp"
+            android:clickable="true"
             android:src="@drawable/icon_plus"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
