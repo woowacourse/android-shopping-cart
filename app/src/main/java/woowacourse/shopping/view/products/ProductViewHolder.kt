@@ -10,32 +10,49 @@ import woowacourse.shopping.model.cart.CartItem
 class ProductViewHolder(
     private val binding: ItemProductBinding,
     private val productClickListener: (CartItem) -> Unit,
-    private val openQuantitySelectListener: () -> Boolean,
+    private val openQuantitySelectListener: (CartItem) -> Unit,
     private val quantitySelectButtonListener: QuantitySelectButtonListener,
+    private val openedSelectorItems: MutableList<Long>,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: CartItem) {
         binding.cartItem = item
         binding.btnSelectedProduct.setOnClickListener {
             productClickListener(item)
         }
-        binding.visible = openQuantitySelectListener()
-        binding.viewQuantitySelect.root.visibility = View.VISIBLE
+        bindOpenQuantitySelectorButton(item)
+        bindQuantitySelector(item)
+    }
 
-        binding.btnQuantitySelect.setOnClickListener {
-            binding.visible = openQuantitySelectListener()
-        }
+    private fun bindQuantitySelector(item: CartItem) {
         val quantityBinding = binding.viewQuantitySelect
         quantityBinding.productId = item.product.id
         quantityBinding.tvProductQuantity.text = item.quantity.toString()
         quantityBinding.quantitySelectButtonListener = quantitySelectButtonListener
     }
 
+    private fun bindOpenQuantitySelectorButton(item: CartItem) {
+        val isOpened = openedSelectorItems.contains(item.product.id)
+        val quantitySelector = binding.viewQuantitySelect.root
+        val openQuantitySelectorButton = binding.btnQuantitySelect
+
+        quantitySelector.visibility = if (!isOpened) View.GONE else View.VISIBLE
+        openQuantitySelectorButton.visibility = if (!isOpened) View.VISIBLE else View.GONE
+
+        openQuantitySelectorButton.setOnClickListener {
+            openQuantitySelectListener(item)
+            openQuantitySelectorButton.visibility = View.GONE
+            quantitySelector.visibility = View.VISIBLE
+            openedSelectorItems.add(item.product.id)
+        }
+    }
+
     companion object {
         fun from(
             parent: ViewGroup,
             productClickListener: (CartItem) -> Unit,
-            openQuantitySelectListener: () -> Boolean,
+            openQuantitySelectListener: (CartItem) -> Unit,
             quantitySelectButtonListener: QuantitySelectButtonListener,
+            openedSelectorItems: MutableList<Long>,
         ): ProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemProductBinding.inflate(inflater, parent, false)
@@ -44,6 +61,7 @@ class ProductViewHolder(
                 productClickListener,
                 openQuantitySelectListener,
                 quantitySelectButtonListener,
+                openedSelectorItems,
             )
         }
     }

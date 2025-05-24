@@ -7,9 +7,11 @@ import woowacourse.shopping.model.cart.CartItem
 class ProductsAdapter(
     private val cartItems: MutableList<CartItem> = mutableListOf(),
     private val productClickListener: (CartItem) -> Unit,
-    private val openQuantitySelectListener: () -> Boolean,
+    private val openQuantitySelectListener: (CartItem) -> Unit,
     private val quantitySelectButtonListener: QuantitySelectButtonListener,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
+    private val openedSelectorItems = mutableListOf<Long>()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -19,6 +21,7 @@ class ProductsAdapter(
             productClickListener,
             openQuantitySelectListener,
             quantitySelectButtonListener,
+            openedSelectorItems,
         )
 
     override fun getItemCount(): Int = cartItems.size

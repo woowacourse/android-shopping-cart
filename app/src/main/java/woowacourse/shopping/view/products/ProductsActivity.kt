@@ -59,8 +59,8 @@ class ProductsActivity : AppCompatActivity() {
         adapter =
             ProductsAdapter(
                 productClickListener = { cartItem -> navigateToProductDetail(cartItem) },
-                openQuantitySelectListener = {
-                    true
+                openQuantitySelectListener = { cartItem ->
+                    productsViewModel.onOpenQuantitySelectClick(cartItem)
                 },
                 quantitySelectButtonListener =
                     object : QuantitySelectButtonListener {

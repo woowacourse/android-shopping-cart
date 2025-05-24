@@ -33,10 +33,6 @@ class ProductsViewModel(
     private var currentPage = INITIAL_PAGE
     private val loadedItems = mutableListOf<CartItem>()
 
-    init {
-        loadPage()
-    }
-
     override fun increaseQuantity(
         productId: Long,
         quantityIncrease: Int,
@@ -95,6 +91,10 @@ class ProductsViewModel(
 
     fun onNavigateToCartClicked() {
         _navigateToCart.value = Event(Unit)
+    }
+
+    fun onOpenQuantitySelectClick(cartItem: CartItem) {
+        cartRepository.add(cartItem)
     }
 
     private fun setUpdatedProducts() {
