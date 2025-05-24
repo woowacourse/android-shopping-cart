@@ -4,7 +4,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.view.core.base.BaseViewHolder
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
+import woowacourse.shopping.view.main.adapter.recent.RecentProductViewHolder
+import woowacourse.shopping.view.main.state.HistoryState
 import woowacourse.shopping.view.main.state.LoadState
+import woowacourse.shopping.view.main.state.ProductState
 import woowacourse.shopping.view.main.state.ProductUiState
 
 class ProductAdapter(
@@ -12,6 +16,7 @@ class ProductAdapter(
     private val handler: ProductAdapterEventHandler,
 ) : RecyclerView.Adapter<BaseViewHolder<ViewBinding>>() {
     private val items: MutableList<ProductRvItems> = items.toMutableList()
+    private var historyItemsCache: List<HistoryState> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,15 +26,18 @@ class ProductAdapter(
             ProductRvItems.ViewType.VIEW_TYPE_PRODUCT ->
                 ProductViewHolder(
                     parent,
-                    handler,
-                    handler,
+                    handler as ProductViewHolder.Handler,
+                    handler as CartQuantityHandler,
                 )
 
             ProductRvItems.ViewType.VIEW_TYPE_LOAD ->
-                LoadViewHolder(
-                    parent,
-                    handler,
-                )
+                LoadViewHolder(parent, handler)
+
+            ProductRvItems.ViewType.VIEW_TYPE_RECENT_PRODUCT ->
+                RecentProductViewHolder(parent, handler)
+
+            ProductRvItems.ViewType.VIEW_TYPE_DIVIDER ->
+                DividerViewHolder(parent)
         }
     }
 
@@ -40,6 +48,8 @@ class ProductAdapter(
         when (val item = items[position]) {
             is ProductRvItems.ProductItem -> (holder as ProductViewHolder).bind(item)
             is ProductRvItems.LoadItem -> (holder as LoadViewHolder).bind(item)
+            is ProductRvItems.RecentProductItem -> (holder as RecentProductViewHolder).bind(item)
+            ProductRvItems.DividerItem -> Unit
         }
     }
 
@@ -49,26 +59,46 @@ class ProductAdapter(
 
     fun submitList(newUiState: ProductUiState) {
         removeLoadItem()
-
-        newUiState
-            .items
-            .forEachIndexed { index, newState ->
-                val existingItem = items.getOrNull(index) as? ProductRvItems.ProductItem
-                val newItem = ProductRvItems.ProductItem(newState)
-                applyItemChange(existingItem, newItem, index)
-            }
-
+        updateHistorySection(newUiState.historyItems)
+        updateProductItems(newUiState.productItems)
         generateLoad(newUiState.load)
     }
 
-    fun applyItemChange(
+    private fun updateHistorySection(newHistories: List<HistoryState>) {
+        if (newHistories == historyItemsCache) return
+
+        val recentIndex = items.indexOfFirst { it is ProductRvItems.RecentProductItem }
+        if (recentIndex != -1) {
+            items[recentIndex] = ProductRvItems.RecentProductItem(newHistories)
+            notifyItemChanged(recentIndex)
+        } else {
+            items.add(HISTORY_INSERT_POSITION, ProductRvItems.RecentProductItem(newHistories))
+            items.add(DIVIDER_INSERT_POSITION, ProductRvItems.DividerItem)
+            notifyItemRangeInserted(HISTORY_INSERT_POSITION, WHEN_HAS_HISTORY_PRODUCT_POSITION)
+        }
+
+        historyItemsCache = newHistories
+    }
+
+    private fun updateProductItems(newProducts: List<ProductState>) {
+        newProducts.forEachIndexed { index, newState ->
+            val offset = getProductItemOffset()
+            val actualIndex = offset + index
+            val existingItem = items.getOrNull(actualIndex) as? ProductRvItems.ProductItem
+            val newItem = ProductRvItems.ProductItem(newState)
+
+            applyItemChange(existingItem, newItem, actualIndex)
+        }
+    }
+
+    private fun applyItemChange(
         existingItem: ProductRvItems.ProductItem?,
         newItem: ProductRvItems.ProductItem,
         index: Int,
     ) {
         when {
             existingItem == null -> {
-                items.add(newItem)
+                items.add(index, newItem)
                 notifyItemInserted(index)
             }
 
@@ -90,12 +120,10 @@ class ProductAdapter(
     }
 
     private fun generateLoad(load: LoadState) {
-        if (load is LoadState.CanLoad) addLoadItem()
-    }
-
-    private fun addLoadItem() {
-        items.add(ProductRvItems.LoadItem)
-        notifyItemInserted(items.size - 1)
+        if (load is LoadState.CanLoad) {
+            items.add(ProductRvItems.LoadItem)
+            notifyItemInserted(items.size - 1)
+        }
     }
 
     private fun removeLoadItem() {
@@ -106,5 +134,20 @@ class ProductAdapter(
         }
     }
 
-    interface Handler : LoadViewHolder.Handler, ProductViewHolder.Handler
+    private fun getProductItemOffset(): Int {
+        val hasHistory = items.any { it is ProductRvItems.RecentProductItem }
+        return if (hasHistory) WHEN_HAS_HISTORY_PRODUCT_POSITION else DEFAULT_PRODUCT_POSITION
+    }
+
+    interface Handler :
+        LoadViewHolder.Handler,
+        ProductViewHolder.Handler,
+        HistoryViewHolder.Handler
+
+    companion object {
+        private const val HISTORY_INSERT_POSITION = 0
+        private const val DIVIDER_INSERT_POSITION = 1
+        private const val DEFAULT_PRODUCT_POSITION = 0
+        private const val WHEN_HAS_HISTORY_PRODUCT_POSITION = 2
+    }
 }
