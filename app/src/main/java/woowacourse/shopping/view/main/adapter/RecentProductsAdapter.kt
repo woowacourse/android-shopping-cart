@@ -27,7 +27,8 @@ class RecentProductsAdapter(
     }
 
     fun updateProducts(productUiModels: List<ProductUiModel>) {
+        val previousSize = itemCount
         this.productUiModels = productUiModels
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, previousSize)
     }
 }
