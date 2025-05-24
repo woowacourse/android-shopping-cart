@@ -13,8 +13,8 @@
             type="woowacourse.shopping.domain.Cart" />
 
         <variable
-            name="eventHandler"
-            type="woowacourse.shopping.view.main.event.ProductsAdapterEventHandler" />
+            name="quantitySelectorEvent"
+            type="woowacourse.shopping.view.util.QuantitySelectorEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:onClick="@{() -> eventHandler.onQuantityMinus(cart)}"
+            android:onClick="@{() -> quantitySelectorEvent.onQuantityMinus(cart)}"
             android:text="@string/minus"
             android:textColor="@color/gray"
             android:textSize="22sp"
@@ -53,7 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:onClick="@{() -> eventHandler.onQuantityPlus(cart)}"
+            android:onClick="@{() -> quantitySelectorEvent.onQuantityPlus(cart)}"
             android:text="@string/plus"
             android:textColor="@color/gray"
             android:textSize="22sp"
