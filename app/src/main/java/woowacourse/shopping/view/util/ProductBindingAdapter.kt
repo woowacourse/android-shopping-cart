@@ -6,7 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 
-@BindingAdapter("android:price")
+@BindingAdapter("priceWithFormat")
 fun setPrice(
     view: TextView,
     price: Int,
@@ -14,7 +14,7 @@ fun setPrice(
     view.text = view.context.getString(R.string.template_price, price)
 }
 
-@BindingAdapter("android:image")
+@BindingAdapter("productImage")
 fun setImage(
     view: ImageView,
     url: String,

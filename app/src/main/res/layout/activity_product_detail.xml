@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
-            android:image="@{product.imageUrl}"
+            productImage="@{product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"

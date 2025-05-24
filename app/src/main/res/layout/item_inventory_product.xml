@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct" />
+
         <variable
             name="handler"
             type="woowacourse.shopping.view.inventory.InventoryEventHandler" />
@@ -20,16 +22,26 @@
 
         <ImageView
             android:id="@+id/iv_product_image"
+            productImage="@{product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
-            android:image="@{product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/sample_product_image" />
+
+        <ImageView
+            android:id="@+id/iv_add_product_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/icon_plus"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -92,25 +104,15 @@
 
         <TextView
             android:id="@+id/tv_product_price"
+            priceWithFormat="@{product.price}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:price="@{product.price}"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10,000원" />
-
-        <ImageView
-            android:id="@+id/iv_add_product_icon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/icon_plus"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
-            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
