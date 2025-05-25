@@ -43,7 +43,7 @@ class ShoppingCartViewModel(
     private fun updateState() {
         _goods.value =
             shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
-                .mapNotNull { goodsRepository.getById(it.goodsId)?.copy(quantity = it.goodsQuantity) }
+                .mapNotNull { goodsRepository.getById(it.goodsId)?.updateQuantity(it.goodsQuantity) }
         updateNextPage()
         updatePreviousPage()
     }
@@ -63,7 +63,7 @@ class ShoppingCartViewModel(
     fun increaseGoodsCount(goodsId: Int) {
         val updatedItem =
             updateGoods(goodsId) {
-                it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
+                it.updateQuantity(it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.increaseGoodsQuantity(updatedItem.id)
     }
@@ -71,7 +71,7 @@ class ShoppingCartViewModel(
     fun decreaseGoodsCount(goodsId: Int) {
         val updatedItem =
             updateGoods(goodsId) {
-                it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
+                it.updateQuantity(it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
 
         if (updatedItem.quantity <= MINIMUM_QUANTITY) {

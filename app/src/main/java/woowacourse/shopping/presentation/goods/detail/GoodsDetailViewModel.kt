@@ -30,7 +30,7 @@ class GoodsDetailViewModel(
         get() = _onItemAddedToCart
 
     fun setGoods(id: Int) {
-        _goods.value = goodsRepository.getById(id)?.copy(quantity = MIN_PURCHASE_QUANTITY)
+        _goods.value = goodsRepository.getById(id)?.updateQuantity(MIN_PURCHASE_QUANTITY)
     }
 
     fun setLastGoods(id: Int?) {
@@ -54,12 +54,12 @@ class GoodsDetailViewModel(
     }
 
     fun increaseCount() {
-        _goods.value = goods.value?.copy(quantity = goods.value?.quantity?.plus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
+        _goods.value = goods.value?.updateQuantity(goods.value?.quantity?.plus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
     }
 
     fun tryDecreaseCount() {
         if ((_goods.value?.quantity ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY) {
-            _goods.value = goods.value?.copy(quantity = goods.value?.quantity?.minus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
+            _goods.value = goods.value?.updateQuantity(goods.value?.quantity?.minus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
         }
     }
 

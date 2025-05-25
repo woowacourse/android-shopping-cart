@@ -62,7 +62,7 @@ class GoodsViewModel(
         val updatedList =
             currentGoods.map { goods ->
                 val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
-                goods.copy(quantity = selected?.goodsQuantity ?: MINIMUM_QUANTITY)
+                goods.updateQuantity(selected?.goodsQuantity ?: MINIMUM_QUANTITY)
             }
 
         return updatedList
@@ -78,7 +78,7 @@ class GoodsViewModel(
     fun addToShoppingCart(goodsId: Int) {
         val updatedItem =
             updateGoodsQuantity(goodsId) {
-                it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
+                it.updateQuantity(it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.insertGoods(updatedItem.id, QUANTITY_CHANGE_AMOUNT)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
@@ -87,7 +87,7 @@ class GoodsViewModel(
     fun increaseGoodsCount(goodsId: Int) {
         val updatedItem =
             updateGoodsQuantity(goodsId) {
-                it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
+                it.updateQuantity(it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.increaseGoodsQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
@@ -96,7 +96,7 @@ class GoodsViewModel(
     fun decreaseGoodsCount(goodsId: Int) {
         val updatedItem =
             updateGoodsQuantity(goodsId) {
-                it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
+                it.updateQuantity(it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT)
