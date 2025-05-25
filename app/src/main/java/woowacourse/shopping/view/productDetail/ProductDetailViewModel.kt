@@ -31,10 +31,23 @@ class ProductDetailViewModel(
     private val _recentWatchingProduct: MutableLiveData<Product> = MutableLiveData()
     val recentWatchingProduct: LiveData<Product> get() = _recentWatchingProduct
 
-    private val _recentProductBoxVisible: MutableLiveData<Boolean> = MutableLiveData()
+    private val _recentProductBoxVisible: MutableLiveData<Boolean> = MutableLiveData(false)
     val recentProductBoxVisible: LiveData<Boolean> get() = _recentProductBoxVisible
 
-    init {
+    fun updateProduct(
+        product: Product,
+        isLastWatching: Boolean,
+    ) {
+        _product.value = product
+        _price.value = product.price
+
+        productsRepository.updateRecentWatchingProduct(product) { result ->
+            result.onFailure {
+                _event.postValue(ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE)
+            }
+        }
+
+        if (isLastWatching) return
         updateRecentWatchingProduct()
     }
 
@@ -52,17 +65,6 @@ class ProductDetailViewModel(
                 }.onFailure {
                     _event.postValue(ProductDetailEvent.GET_RECENT_WATCHING_FAILURE)
                 }
-        }
-    }
-
-    fun updateProduct(product: Product) {
-        _product.value = product
-        _price.value = product.price
-
-        productsRepository.updateRecentWatchingProduct(product) { result ->
-            result.onFailure {
-                _event.postValue(ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE)
-            }
         }
     }
 
