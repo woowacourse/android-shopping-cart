@@ -16,7 +16,7 @@ import woowacourse.shopping.view.product.ProductsItem.ProductItem
 
 class ProductsViewModel(
     private val productsRepository: ProductsRepository = DefaultProductsRepository(),
-    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
+    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
 ) : ViewModel() {
     private val _products: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
     val products: LiveData<List<ProductsItem>> get() = _products

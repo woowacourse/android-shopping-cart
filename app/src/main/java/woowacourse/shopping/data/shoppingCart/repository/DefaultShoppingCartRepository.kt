@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.shoppingCart.repository
 
 import woowacourse.shopping.data.product.entity.toEntity
+import woowacourse.shopping.data.shoppingCart.dao.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
 import woowacourse.shopping.data.shoppingCart.entity.toEntity
 import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartStorage
@@ -11,6 +12,7 @@ import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(
     private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage,
+    private val shoppingCartDao: ShoppingCartDao,
 ) : ShoppingCartRepository {
     override fun load(
         offset: Int,
@@ -19,8 +21,8 @@ class DefaultShoppingCartRepository(
     ) {
         thread {
             runCatching {
-                shoppingCartStorage
-                    .load(offset, offset + limit)
+                shoppingCartDao
+                    .getShoppingCartProducts(offset, offset + limit)
                     .map(ShoppingCartProductEntity::toDomain)
             }.onSuccess { productList ->
                 onResult(Result.success(productList))
@@ -38,7 +40,7 @@ class DefaultShoppingCartRepository(
         val shoppingCartProduct = ShoppingCartProduct(product, quantity)
         thread {
             runCatching {
-                shoppingCartStorage.add(shoppingCartProduct.toEntity())
+                shoppingCartDao.insertShoppingCart(shoppingCartProduct.toEntity())
             }.onSuccess {
                 onResult(Result.success(Unit))
             }.onFailure { exception ->
@@ -122,5 +124,17 @@ class DefaultShoppingCartRepository(
                 onResult(Result.failure(exception))
             }
         }
+    }
+
+    companion object {
+        private var INSTANCE: ShoppingCartRepository? = null
+
+        fun initialize(shoppingCartDao: ShoppingCartDao) {
+            if (INSTANCE == null) {
+                INSTANCE = DefaultShoppingCartRepository(shoppingCartDao = shoppingCartDao)
+            }
+        }
+
+        fun get(): ShoppingCartRepository = INSTANCE ?: throw IllegalStateException("초기화 되지 않았습니다.")
     }
 }

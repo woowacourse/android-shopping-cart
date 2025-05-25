@@ -10,7 +10,7 @@ import woowacourse.shopping.view.common.MutableSingleLiveData
 import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
-    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
+    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product

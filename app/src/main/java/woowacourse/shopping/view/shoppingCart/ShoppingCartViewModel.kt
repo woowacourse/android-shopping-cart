@@ -13,7 +13,7 @@ import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 
 class ShoppingCartViewModel(
-    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
+    private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
 ) : ViewModel() {
     private val _shoppingCart: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
     val shoppingCart: LiveData<List<ShoppingCartItem>> get() = _shoppingCart
