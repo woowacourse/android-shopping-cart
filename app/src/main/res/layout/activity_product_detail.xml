@@ -90,6 +90,7 @@
             android:visibility="visible"
             >
             <include
+                app:quantityObservable="@{viewModel.productUiModelLiveData}"
                 app:quantity="@{viewModel.quantityLiveData}"
                 app:handler="@{handler}"
                 layout="@layout/button_quantity_selector" />
