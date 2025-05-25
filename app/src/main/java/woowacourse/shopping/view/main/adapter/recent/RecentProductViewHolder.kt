@@ -20,6 +20,8 @@ class RecentProductViewHolder(
 
         with(binding) {
             this.adapter = adapter
+            recyclerViewRecentProduct.setHasFixedSize(true)
+            recyclerViewRecentProduct.itemAnimator = null
             recyclerViewRecentProduct.layoutManager = layoutManager
         }
     }
