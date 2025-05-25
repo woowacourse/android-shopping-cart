@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/product_quantity_background"
-        android:visibility="@{model.cartQuantityValue > 0 ? View.VISIBLE : View.GONE}">
+        android:visibility="@{model.hasCartQuantity ? View.VISIBLE : View.GONE}">
 
         <ImageView
             android:id="@+id/image_view_minus"

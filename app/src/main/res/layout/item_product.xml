@@ -87,7 +87,7 @@
             android:onClick="@{() -> adapterEventHandler.showQuantity(model.item.id)}"
             android:scaleType="center"
             android:src="@drawable/ic_add"
-            android:visibility="@{model.cartQuantityValue > 0 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.hasCartQuantity ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/image_view_product"
             app:layout_constraintEnd_toEndOf="parent" />
 

@@ -7,6 +7,12 @@ data class ProductState(
     val item: Product,
     val cartQuantity: Quantity,
 ) {
+    val productPrice: Int
+        get() = item.priceValue * cartQuantityValue
+
+    val hasCartQuantity: Boolean
+        get() = cartQuantity.hasQuantity()
+
     val cartQuantityValue: Int
         get() = cartQuantity.value
 
