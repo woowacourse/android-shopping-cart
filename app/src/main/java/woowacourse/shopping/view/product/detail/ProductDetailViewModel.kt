@@ -29,13 +29,13 @@ class ProductDetailViewModel(
     val recentlyViewedProduct: LiveData<Product> get() = _recentlyViewedProduct
 
     fun fetchData(product: Product) {
-        _product.value = product
-        recentlyViewedRepository.insert(product)
         recentlyViewedRepository.getLatestViewed { recentlyViewed ->
             if (recentlyViewed != null && recentlyViewed != product) {
                 _recentlyViewedProduct.postValue(recentlyViewed)
             }
         }
+        _product.value = product
+        recentlyViewedRepository.insert(product)
     }
 
     fun onAddCartClicked(count: Int) {
