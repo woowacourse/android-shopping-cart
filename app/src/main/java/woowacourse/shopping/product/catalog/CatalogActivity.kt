@@ -67,11 +67,19 @@ class CatalogActivity : AppCompatActivity() {
             layoutManager = createGridLayoutManager(adapter as ProductAdapter)
         }
 
-        recentAdapter = ViewedItemAdapter()
+        recentAdapter = createViewedAdapter()
         binding.recyclerViewRecentView.apply {
             layoutManager = LinearLayoutManager(this@CatalogActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = recentAdapter
         }
+    }
+
+    private fun createViewedAdapter(): ViewedItemAdapter {
+        val handler =
+            CatalogEventHandlerImpl(viewModel) { product ->
+                startActivity(newIntent(this, product))
+            }
+        return ViewedItemAdapter(handler)
     }
 
     private fun createAdapter(): ProductAdapter {

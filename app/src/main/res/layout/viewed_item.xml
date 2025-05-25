@@ -9,9 +9,13 @@
             name="product"
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
 
+        <variable
+            name="handler"
+            type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{()-> handler.onProductClick(product)}"
         android:layout_width="wrap_content"
         android:paddingHorizontal="4dp"
         android:layout_height="wrap_content">
