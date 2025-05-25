@@ -12,6 +12,7 @@ class RecentItemsListViewHolder(parent: ViewGroup) : BaseViewHolder<ItemInventor
 ) {
     fun bind(item: RecentProducts) {
         RecentListAdapter().let { adapter ->
+            binding.item = item
             binding.rvRecentList.adapter = adapter
             adapter.submitList(item.recentProducts)
         }
