@@ -93,7 +93,7 @@
                     android:background="@drawable/style_product_edge"
                     android:paddingHorizontal="18dp"
                     android:paddingVertical="16dp"
-                    android:visibility="@{viewmodel.lastViewedProduct.product.id == viewmodel.product.id ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewmodel.lastViewedProduct == null || viewmodel.lastViewedProduct.product.id == viewmodel.product.id ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toBottomOf="@id/item_quantity_control">
 
                     <TextView
