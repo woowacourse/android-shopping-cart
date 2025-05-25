@@ -83,9 +83,43 @@ class MainActivityTest {
     }
 
     @Test
-    fun 장바구니_아이콘을_클릭하면_장바구니_화면으로_이동된다() {
+    fun 장바구니_아이콘을_클릭하면_현재_수량_정보가_장바구니에_반영된다() {
+        // given
+        onView(
+            withRecyclerView(R.id.product_list).atPositionOnView(
+                1,
+                R.id.button_plus,
+            ),
+        )
+            .performClick()
+            .performClick()
+
+        onView(
+            withRecyclerView(R.id.product_list).atPositionOnView(
+                2,
+                R.id.button_plus,
+            ),
+        )
+            .performClick()
+
+        // when
         onView(withId(R.id.menu_item_shopping_cart)).performClick()
         onView(withId(R.id.shopping_cart_list)).isDisplayed()
+
+        // then
+        onView(
+            withRecyclerView(R.id.shopping_cart_list).atPositionOnView(
+                0,
+                R.id.text_quantity,
+            ),
+        ).matchText("3")
+
+        onView(
+            withRecyclerView(R.id.shopping_cart_list).atPositionOnView(
+                0,
+                R.id.text_quantity,
+            ),
+        ).matchText("3")
     }
 
     @Test
