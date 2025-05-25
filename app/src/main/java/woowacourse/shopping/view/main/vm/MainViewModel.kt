@@ -11,7 +11,7 @@ import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
 import woowacourse.shopping.view.loader.HistoryLoader
-import woowacourse.shopping.view.loader.ProductLoader
+import woowacourse.shopping.view.loader.ProductWithCartLoader
 import woowacourse.shopping.view.main.MainUiEvent
 import woowacourse.shopping.view.main.state.HistoryState
 import woowacourse.shopping.view.main.state.IncreaseState
@@ -22,7 +22,7 @@ import woowacourse.shopping.view.main.state.ProductUiState
 class MainViewModel(
     private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
-    private val productLoader: ProductLoader,
+    private val productWithCartLoader: ProductWithCartLoader,
     private val historyLoader: HistoryLoader,
 ) : ViewModel() {
     private val productItems = MutableLiveData<List<ProductState>>(emptyList())
@@ -48,7 +48,7 @@ class MainViewModel(
 
     private fun loadInitial() {
         historyLoader { historyStates ->
-            productLoader(INITIAL_PAGE, PAGE_SIZE) { productStates, hasNextPage ->
+            productWithCartLoader(INITIAL_PAGE, PAGE_SIZE) { productStates, hasNextPage ->
                 historyItems.postValue(historyStates)
                 productItems.postValue(productStates)
                 loadState.postValue(LoadState.of(hasNextPage))
@@ -59,7 +59,7 @@ class MainViewModel(
     fun loadPage() {
         withState(productItems.value) { state ->
             val pageIndex = state.size / PAGE_SIZE
-            productLoader(pageIndex, PAGE_SIZE) { newProducts, hasNext ->
+            productWithCartLoader(pageIndex, PAGE_SIZE) { newProducts, hasNext ->
                 productItems.postValue(state + newProducts)
                 loadState.postValue(LoadState.of(hasNext))
             }

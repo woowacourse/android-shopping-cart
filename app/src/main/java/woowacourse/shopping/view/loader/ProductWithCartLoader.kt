@@ -5,7 +5,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.main.state.ProductState
 
-class ProductLoader(
+class ProductWithCartLoader(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) {

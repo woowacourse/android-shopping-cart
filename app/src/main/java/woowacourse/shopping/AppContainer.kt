@@ -13,7 +13,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.loader.HistoryLoader
-import woowacourse.shopping.view.loader.ProductLoader
+import woowacourse.shopping.view.loader.ProductWithCartLoader
 import kotlin.getValue
 
 class AppContainer(
@@ -39,7 +39,7 @@ class AppContainer(
 
     val historyRepository: HistoryRepository by lazy { HistoryRepositoryImpl(historyDataSource) }
 
-    val productLoader = ProductLoader(productRepository, cartRepository)
+    val productWithCartLoader = ProductWithCartLoader(productRepository, cartRepository)
 
     val historyLoader = HistoryLoader(productRepository, historyRepository)
 }

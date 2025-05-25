@@ -6,7 +6,6 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -27,7 +26,7 @@ import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3
 import woowacourse.shopping.fixture.productFixture4
 import woowacourse.shopping.view.loader.HistoryLoader
-import woowacourse.shopping.view.loader.ProductLoader
+import woowacourse.shopping.view.loader.ProductWithCartLoader
 import woowacourse.shopping.view.main.MainUiEvent
 import woowacourse.shopping.view.main.state.LoadState
 import woowacourse.shopping.view.main.vm.MainViewModel
@@ -42,7 +41,7 @@ class MainViewModelTest {
     private lateinit var cartRepository: CartRepository
     private lateinit var historyRepository: HistoryRepository
 
-    private lateinit var productLoader: ProductLoader
+    private lateinit var productWithCartLoader: ProductWithCartLoader
     private lateinit var historyLoader: HistoryLoader
 
     private val products =
@@ -85,10 +84,10 @@ class MainViewModelTest {
         every { cartRepository.upsert(any(), any()) } just Runs
         every { cartRepository.delete(any()) } just Runs
 
-        productLoader = ProductLoader(productRepository, cartRepository)
+        productWithCartLoader = ProductWithCartLoader(productRepository, cartRepository)
         historyLoader = HistoryLoader(productRepository, historyRepository)
 
-        viewModel = MainViewModel(cartRepository, historyRepository, productLoader, historyLoader)
+        viewModel = MainViewModel(cartRepository, historyRepository, productWithCartLoader, historyLoader)
     }
 
     @Test
