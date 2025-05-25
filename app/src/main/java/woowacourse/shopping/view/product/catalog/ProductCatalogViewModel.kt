@@ -54,7 +54,6 @@ class ProductCatalogViewModel(
 
     override fun onMoreClick() {
         loadProducts()
-        _productCatalogItems.value = buildCatalogItems()
     }
 
     fun loadCatalog() {
@@ -65,7 +64,6 @@ class ProductCatalogViewModel(
             syncProductQuantities()
         }
         _totalQuantity.value = cartProductRepository.getTotalQuantity()
-        _productCatalogItems.value = buildCatalogItems()
     }
 
     private fun loadRecentProducts() {
@@ -74,16 +72,18 @@ class ProductCatalogViewModel(
     }
 
     private fun loadProducts() {
-        val result = productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset)
-        offset += result.items.size
+        productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset) { result ->
+            offset += result.items.size
 
-        val newItems =
-            result.items.map {
-                val quantity = cartProductRepository.getQuantityByProductId(it.id) ?: 0
-                ProductCatalogItem.ProductItem(it, quantity)
-            }
-        productItems.addAll(newItems)
-        hasNext = result.hasNext
+            val newItems =
+                result.items.map {
+                    val quantity = cartProductRepository.getQuantityByProductId(it.id) ?: 0
+                    ProductCatalogItem.ProductItem(it, quantity)
+                }
+            productItems.addAll(newItems)
+            hasNext = result.hasNext
+            _productCatalogItems.postValue(buildCatalogItems())
+        }
     }
 
     private fun syncProductQuantities() {
@@ -91,6 +91,7 @@ class ProductCatalogViewModel(
             val quantity = cartProductRepository.getQuantityByProductId(item.product.id) ?: 0
             item.copy(quantity = quantity)
         }
+        _productCatalogItems.value = buildCatalogItems()
     }
 
     private fun updateQuantity(

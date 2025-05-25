@@ -6,8 +6,6 @@ import woowacourse.shopping.domain.model.Product
 class ProductRemoteDataSource(
     private val service: ProductService,
 ) {
-    fun getAll(): List<Product> = service.getAll()
-
     fun getProductById(id: Long): Product? = service.getProductById(id)
 
     fun getPagedProducts(

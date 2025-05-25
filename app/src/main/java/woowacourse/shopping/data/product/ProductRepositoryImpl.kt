@@ -9,22 +9,24 @@ import kotlin.concurrent.thread
 class ProductRepositoryImpl(
     private val remoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    override fun getAll(): List<Product> {
-        var result = emptyList<Product>()
-        thread { result = remoteDataSource.getAll() }.join()
-        return result
+    override fun getProductById(
+        id: Long,
+        onSuccess: (Product?) -> Unit,
+    ) {
+        thread {
+            onSuccess(remoteDataSource.getProductById(id))
+        }
     }
-
-    override fun getProductById(id: Long): Product? = remoteDataSource.getProductById(id)
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product> {
+        onSuccess: (PagedResult<Product>) -> Unit,
+    ) {
         require(offset >= 0)
         require(limit > 0)
-        var result = PagedResult<Product>(emptyList(), false)
-        thread { result = remoteDataSource.getPagedProducts(limit, offset) }.join()
-        return result
+        thread {
+            onSuccess(remoteDataSource.getPagedProducts(limit, offset))
+        }
     }
 }

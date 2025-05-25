@@ -15,16 +15,20 @@ class FakeProductRepository : ProductRepository {
             )
         }
 
-    override fun getAll(): List<Product> = fakeProducts
-
-    override fun getProductById(id: Long): Product? = fakeProducts.find { it.id == id }
+    override fun getProductById(
+        id: Long,
+        onSuccess: (Product?) -> Unit,
+    ) {
+        onSuccess(fakeProducts.find { it.id == id })
+    }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product> {
+        onSuccess: (PagedResult<Product>) -> Unit,
+    ) {
         val pagedItems = fakeProducts.drop(offset).take(limit)
         val hasNext = offset + pagedItems.size < fakeProducts.size
-        return PagedResult(pagedItems, hasNext)
+        onSuccess(PagedResult(pagedItems, hasNext))
     }
 }

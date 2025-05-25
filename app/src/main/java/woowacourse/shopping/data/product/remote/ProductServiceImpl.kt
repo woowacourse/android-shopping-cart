@@ -17,15 +17,6 @@ class ProductServiceImpl : ProductService {
     private val client = OkHttpClient()
     private val gson = Gson()
 
-    override fun getAll(): List<Product> {
-        val products = ProductData.products
-        val jsonBody = gson.toJson(products)
-        val response = enqueueAndExecute(jsonBody, "/")
-        val responseBody = response.body?.string() ?: throw IOException()
-        val type = object : TypeToken<List<Product>>() {}.type
-        return gson.fromJson(responseBody, type)
-    }
-
     override fun getProductById(id: Long): Product? {
         val product = ProductData.getProductById(id) ?: return null
         val jsonBody = gson.toJson(product)
