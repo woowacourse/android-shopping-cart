@@ -108,6 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginBottom="30dp"
+            android:onClick="@{() -> detailClickListener.onRecentProductClick()}"
             app:item="@{recentProduct}"
             app:layout_constraintBottom_toTopOf="@id/btn_detail_add_cart"
             app:layout_constraintStart_toStartOf="parent"

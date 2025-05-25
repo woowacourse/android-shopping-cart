@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -45,10 +46,15 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.detailClickListener =
             object : DetailClickListener {
                 override fun onAddToCartClick(cartItem: CartItem) {
-                    thread {
-                        cartRepository.insert(cartItem)
-                    }
+                    viewModel.insertCartItem(cartItem)
                     Toast.makeText(this@ProductDetailActivity, R.string.message_add_cart, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onRecentProductClick() {
+                    val intent =
+                        newIntent(this@ProductDetailActivity, viewModel.lastItem.value ?: product)
+                    startActivity(intent)
+                    finish()
                 }
             }
         binding.quantityClickListener =

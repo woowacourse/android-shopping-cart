@@ -30,6 +30,12 @@ class DetailViewModel(item: Product) : ViewModel() {
         }
     }
 
+    fun insertCartItem(cartItem: CartItem) {
+        thread {
+            cartRepository.insert(cartItem)
+        }
+    }
+
     fun increaseQuantity() {
         _cartItem.value = _cartItem.value?.copy(quantity = _cartItem.value?.quantity?.plus(1) ?: 1)
     }
