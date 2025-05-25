@@ -74,6 +74,23 @@ class ProductsViewModelTest {
     }
 
     @Test
+    fun 최신_장바구니의_상황을_fetch_할_수있다() {
+        // given
+        shoppingCartRepository.update(
+            ShoppingCartItem(
+                id = 1,
+                product = TestProducts.productUiModels[0],
+                quantity = 2,
+            ),
+        )
+        viewModel.updateShoppingCart(0)
+        Thread.sleep(500)
+        assertThat(viewModel.totalShoppingCartSize.getOrAwaitValue()).isEqualTo(
+            shoppingCartRepository.totalQuantity(),
+        )
+    }
+
+    @Test
     fun 최근_본_상품을_가져올_수_있다() {
         viewModel.requestRecentProducts()
         assertThat(viewModel.recentProductsLiveData.getOrAwaitValue())
@@ -87,5 +104,33 @@ class ProductsViewModelTest {
                     )
                 },
             )
+    }
+
+    @Test
+    fun 상품_수량을_증가시킬_수_있다() {
+        // given
+        viewModel.requestProductsPage(0)
+        Thread.sleep(500)
+        val product = TestProducts.productUiModels[0].toProductUiModel()
+
+        // when
+        viewModel.increaseCount(product)
+
+        // then
+        assertThat(viewModel.quantityInfo[product].value).isEqualTo(2)
+    }
+
+    @Test
+    fun 상품_수량을_감소시킬_수_있다() {
+        // given
+        viewModel.requestProductsPage(0)
+        Thread.sleep(500)
+        val product = TestProducts.productUiModels[0].toProductUiModel()
+
+        // when
+        viewModel.decreaseCount(product)
+
+        // then
+        assertThat(viewModel.quantityInfo[product].value).isEqualTo(0)
     }
 }
