@@ -7,5 +7,7 @@ sealed class ProductListViewType {
                                       val isButtonVisible: Boolean = true,
                                       val quantity: Int = 0) : ProductListViewType()
 
+    data class RecentProducts(val products: List<Product>) : ProductListViewType()
+
     data object LoadMoreType : ProductListViewType()
 }

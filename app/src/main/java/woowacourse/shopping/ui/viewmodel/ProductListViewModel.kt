@@ -27,9 +27,13 @@ class ProductListViewModel(
     private val _isButtonVisible = MutableLiveData(true)
     val isButtonVisible: LiveData<Boolean> = _isButtonVisible
 
+    private val _recentProducts = MutableLiveData<List<Product>>(emptyList())
+    val recentProducts: LiveData<List<Product>> = _recentProducts
+
     init {
         loadProducts()
         loadCartItems()
+        loadRecentProducts()
     }
 
     fun loadProducts() {
@@ -48,11 +52,17 @@ class ProductListViewModel(
                 )
             }
 
-        _products.value = if (productRepository.canMoreLoad(pageNumber, 20)) {
+        val productList = if (productRepository.canMoreLoad(pageNumber, 20)) {
             currentProducts + newProducts + ProductListViewType.LoadMoreType
         } else {
             currentProducts + newProducts
         }
+
+        val recent = _recentProducts.value?.takeIf { it.isNotEmpty() }?.let {
+            listOf(ProductListViewType.RecentProducts(it))
+        } ?: emptyList()
+
+        _products.value = recent + currentProducts + productList
     }
 
     fun loadCartItems() {
@@ -71,6 +81,24 @@ class ProductListViewModel(
                 } else it
             }
             _products.postValue(updatedProducts)
+        }
+    }
+
+    fun loadRecentProducts() {
+        thread {
+            val items = cartRepository.getRecentTenProducts()
+            _recentProducts.postValue(items)
+
+            val rest = _products.value.orEmpty()
+
+            val updated = listOf(ProductListViewType.RecentProducts(items)) + rest
+            _products.postValue(updated)
+        }
+    }
+
+    fun addRecentProduct(id: Long) {
+        thread {
+            cartRepository.insertRecentProduct(id)
         }
     }
 

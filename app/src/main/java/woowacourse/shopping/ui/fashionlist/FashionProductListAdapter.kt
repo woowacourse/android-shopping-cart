@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.databinding.ItemRecentLayoutBinding
 import woowacourse.shopping.databinding.LoadMoreItemBinding
 import woowacourse.shopping.databinding.ProductItemBinding
 import woowacourse.shopping.domain.product.CartItem
@@ -22,6 +23,7 @@ class FashionProductListAdapter(
         return when (items[position]) {
             is ProductListViewType.FashionProductItemType -> R.layout.product_item
             is ProductListViewType.LoadMoreType -> R.layout.load_more_item
+            is ProductListViewType.RecentProducts -> R.layout.item_recent_layout
         }
     }
 
@@ -43,6 +45,11 @@ class FashionProductListAdapter(
                 LoadMoreViewHolder(binding, loadMoreClickListener)
             }
 
+            R.layout.item_recent_layout -> {
+                val binding: ItemRecentLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.item_recent_layout, parent, false)
+                RecentProductLayoutViewHolder(binding)
+            }
+
             else -> throw IllegalArgumentException("지원하지 않는 타입입니다.")
         }
     }
@@ -57,6 +64,7 @@ class FashionProductListAdapter(
                 val cartItem = cartItemsMap[item.product.id]
                 holder.bind(item, cartItem)
             }
+            is RecentProductLayoutViewHolder -> holder.bind((items[position] as ProductListViewType.RecentProducts).products)
         }
     }
 

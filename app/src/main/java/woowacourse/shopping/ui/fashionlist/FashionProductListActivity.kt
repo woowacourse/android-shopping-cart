@@ -37,7 +37,7 @@ class FashionProductListActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         applyWindowInsets()
-
+        viewModel.loadRecentProducts()
         initViews()
         initObserver()
     }
@@ -73,6 +73,7 @@ class FashionProductListActivity : AppCompatActivity() {
                 productClickListener =
                     object : ProductClickListener {
                         override fun onClick(product: Product) {
+                            viewModel.addRecentProduct(product.id)
                             val intent =
                                 ProductDetailActivity.newIntent(this@FashionProductListActivity, product)
                             startActivity(intent)
