@@ -8,6 +8,7 @@ import woowacourse.shopping.data.recent.RecentProductEntity.Companion.RECENT_PRO
 data class RecentProductEntity(
     @PrimaryKey val id: Int,
     val name: String,
+    val imageUrl: String,
     val timestamp: Long,
 ) {
     companion object {

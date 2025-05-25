@@ -5,6 +5,9 @@ import woowacourse.shopping.data.inventory.DummyProducts
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.inventory.InventoryRepositoryImpl
 import woowacourse.shopping.data.product.ProductDatabase
+import woowacourse.shopping.data.recent.RecentProductDatabase
+import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
 import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
@@ -26,5 +29,20 @@ class ShoppingApplication : Application() {
     private val shoppingCartDatabase: ShoppingCartDatabase by lazy {
         ShoppingCartDatabase.database(this)
     }
-    val shoppingCartRepository: ShoppingCartRepository by lazy { ShoppingCartRepositoryImpl(shoppingCartDatabase.cartItemDao()) }
+    val shoppingCartRepository: ShoppingCartRepository by lazy {
+        ShoppingCartRepositoryImpl(
+            shoppingCartDatabase.cartItemDao(),
+        )
+    }
+
+    private val recentProductDatabase: RecentProductDatabase by lazy {
+        RecentProductDatabase.database(
+            this,
+        )
+    }
+    val recentProductRepository: RecentProductRepository by lazy {
+        RecentProductRepositoryImpl(
+            recentProductDatabase.recentProductDao(),
+        )
+    }
 }

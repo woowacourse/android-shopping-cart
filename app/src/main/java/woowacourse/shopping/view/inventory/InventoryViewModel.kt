@@ -5,18 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentItemsList
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
+import woowacourse.shopping.view.inventory.item.RecentProduct
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class InventoryViewModel(
     private val inventoryRepository: InventoryRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
     private val products: List<InventoryItem>
@@ -71,23 +76,33 @@ class InventoryViewModel(
     }
 
     private fun updateItems(newPage: Page<InventoryProduct>) {
-        val newItems =
-            buildList {
-                add(RecentItemsList)
-                addAll(products)
-                addAll(newPage.items)
-                if (newPage.hasNext) add(ShowMore)
-            }
-        _items.postValue(newItems)
+        recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
+            val newList =
+                buildList {
+                    add(RecentProducts(recentProducts))
+                    addAll(products)
+                    addAll(newPage.items)
+                    if (newPage.hasNext) add(ShowMore)
+                }
+            _items.postValue(newList)
+        }
+    }
+
+    fun updateRecentProducts(product: InventoryProduct) {
+        val time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val recentProduct = RecentProduct(product.id, product.name, product.imageUrl, time)
+        recentProductRepository.insert(recentProduct)
     }
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val RECENT_PRODUCTS_MAX_COUNT = 10
 
         @Suppress("UNCHECKED_CAST")
         fun createFactory(
             inventoryRepository: InventoryRepository,
             shoppingCartRepository: ShoppingCartRepository,
+            recentProductRepository: RecentProductRepository,
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -95,6 +110,7 @@ class InventoryViewModel(
                         InventoryViewModel(
                             inventoryRepository,
                             shoppingCartRepository,
+                            recentProductRepository,
                         ) as T
                     )
                 }

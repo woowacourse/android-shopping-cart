@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 import woowacourse.shopping.view.inventory.item.InventoryItemType
 import woowacourse.shopping.view.inventory.viewholder.ProductViewHolder
@@ -28,7 +29,9 @@ class InventoryAdapter(
         return when (viewType) {
             InventoryItemType.PRODUCT.id -> ProductViewHolder(parent, handler)
             InventoryItemType.SHOW_MORE.id -> ShowMoreViewHolder(parent, handler)
-            InventoryItemType.RECENT_ITEMS_LIST.id -> RecentItemsListViewHolder(parent)
+            InventoryItemType.RECENT_PRODUCTS.id -> {
+                RecentItemsListViewHolder(parent)
+            }
             else -> throw IllegalStateException()
         }
     }
@@ -41,7 +44,7 @@ class InventoryAdapter(
         when (holder) {
             is ProductViewHolder -> holder.bind(item as InventoryProduct)
             is ShowMoreViewHolder -> holder.bind(item as ShowMore)
-            is RecentItemsListViewHolder -> holder.bind()
+            is RecentItemsListViewHolder -> holder.bind(item as RecentProducts)
         }
     }
 

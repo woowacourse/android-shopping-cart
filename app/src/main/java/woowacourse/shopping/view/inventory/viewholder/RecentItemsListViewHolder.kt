@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemInventoryRecentListBinding
 import woowacourse.shopping.view.base.BaseViewHolder
 import woowacourse.shopping.view.inventory.RecentListAdapter
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
 
-class RecentItemsListViewHolder(
-    parent: ViewGroup,
-) : BaseViewHolder<ItemInventoryRecentListBinding>(
-        ItemInventoryRecentListBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-    ) {
-    fun bind() {
-        binding.rvRecentList.adapter = RecentListAdapter()
+class RecentItemsListViewHolder(parent: ViewGroup) : BaseViewHolder<ItemInventoryRecentListBinding>(
+    ItemInventoryRecentListBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+) {
+    fun bind(item: RecentProducts) {
+        RecentListAdapter().let { adapter ->
+            binding.rvRecentList.adapter = adapter
+            adapter.submitList(item.recentProducts)
+        }
     }
 }

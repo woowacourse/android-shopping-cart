@@ -1,10 +1,12 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.data.product.ProductEntity
+import woowacourse.shopping.data.recent.RecentProductEntity
 import woowacourse.shopping.data.shoppingcart.CartItemEntity
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.RecentProduct
 
 fun Product.toEntity(): ProductEntity = ProductEntity(id, name, price, 0, imageUrl)
 
@@ -16,8 +18,8 @@ fun CartItem.toEntity(): CartItemEntity = CartItemEntity(id, name, price, quanti
 
 fun CartItemEntity.toDomain(): CartItem = CartItem(id, name, price, quantity, imageUrl)
 
-fun Product.toCartItem(): CartItem = CartItem(id, name, price, 0, imageUrl)
-
 fun CartItem.toInventoryProduct(): InventoryProduct = InventoryProduct(id, name, price, quantity, imageUrl)
 
 fun InventoryProduct.toCartItem(): CartItem = CartItem(id, name, price, quantity, imageUrl)
+
+fun RecentProduct.toEntity(): RecentProductEntity = RecentProductEntity(id, name, imageUrl, timestamp)

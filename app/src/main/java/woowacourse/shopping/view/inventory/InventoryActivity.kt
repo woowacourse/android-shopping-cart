@@ -27,6 +27,7 @@ class InventoryActivity :
             InventoryViewModel.createFactory(
                 shoppingApplication.inventoryRepository,
                 shoppingApplication.shoppingCartRepository,
+                shoppingApplication.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
         initRecyclerview()
@@ -44,32 +45,31 @@ class InventoryActivity :
 
     private fun initRecyclerview() {
         val gridLayoutManager = GridLayoutManager(this@InventoryActivity, MAX_SPAN_SIZE)
+        binding.rvProductList.apply {
+            adapter = InventoryAdapter(this@InventoryActivity)
+            layoutManager = gridLayoutManager
+        }
         gridLayoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (binding.rvProductList.adapter?.getItemViewType(position)) {
                         InventoryItemType.PRODUCT.id -> PRODUCT_SPAN_SIZE
-                        InventoryItemType.SHOW_MORE.id, InventoryItemType.RECENT_ITEMS_LIST.id -> MAX_SPAN_SIZE
+                        InventoryItemType.SHOW_MORE.id, InventoryItemType.RECENT_PRODUCTS.id -> MAX_SPAN_SIZE
                         else -> throw IllegalStateException()
                     }
                 }
             }
-
-        viewModel.requestPage()
-
-        binding.rvProductList.apply {
-            adapter = InventoryAdapter(this@InventoryActivity)
-            layoutManager = gridLayoutManager
-        }
-
         with(viewModel) {
+            val adapter = binding.rvProductList.adapter as InventoryAdapter
             items.observe(this@InventoryActivity) { items ->
-                (binding.rvProductList.adapter as InventoryAdapter).updateProducts(items)
+                adapter.updateProducts(items)
             }
+            requestPage()
         }
     }
 
     override fun onProductSelected(product: InventoryProduct) {
+        viewModel.updateRecentProducts(product)
         startActivity(ProductDetailActivity.newIntent(this, product))
     }
 
