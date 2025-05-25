@@ -74,7 +74,8 @@ class GoodsDetailActivity : BaseActivity() {
     }
 
     private fun getLastGoodsId(): Int? {
-        return intent.getSerializableExtra(EXTRA_LAST_GOODS) as? Int?
+        return intent.getIntExtra(EXTRA_LAST_GOODS, -1)
+            .takeIf { it != -1 }
     }
 
     private fun navigateToLastGoodsDetail(lastGoodsId: Int) {
