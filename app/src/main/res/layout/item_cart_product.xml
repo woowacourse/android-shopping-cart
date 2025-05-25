@@ -79,7 +79,7 @@
         <include
             android:id="@+id/i_cart_count_control"
             style="@style/ProductDetailPriceStyle"
-            layout="@layout/product_count_no_vm"
+            layout="@layout/component_product_count_no_vm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:decrease="@{decrease}"

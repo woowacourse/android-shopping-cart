@@ -100,7 +100,7 @@
         <include
             android:id="@+id/i_product_count_control"
             style="@style/ProductDetailPriceStyle"
-            layout="@layout/product_count"
+            layout="@layout/component_product_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
@@ -112,7 +112,7 @@
 
         <include
             android:id="@+id/i_product_recently_viewed"
-            layout="@layout/recently_view_item"
+            layout="@layout/component_recently_view_item"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginHorizontal="18dp"

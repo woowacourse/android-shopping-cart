@@ -39,6 +39,13 @@
         <item name="android:textColor">@color/gray5</item>
     </style>
 
+    <!--  프로덕트 페이지 최근 본 상품 글자 스타일  -->
+    <style name="ProductRecentlyViewedNameStyle" parent="BaseTextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">@dimen/font_size_xsmall</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!--  프로덕트 페이지 상품 카드에 더하기 스타일  -->
     <style name="ProductAddCartStyle" parent="BaseTextStyle">
         <item name="android:gravity">center</item>
