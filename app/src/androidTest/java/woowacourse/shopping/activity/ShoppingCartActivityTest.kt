@@ -2,6 +2,7 @@
 
 package woowacourse.shopping.activity
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -9,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.not
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.R
@@ -24,11 +26,12 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 import woowacourse.shopping.fixture.TestShoppingCart
 import woowacourse.shopping.mapper.toProductUiModel
+import woowacourse.shopping.view.main.MainActivity
 
 @Suppress("FunctionName")
 class ShoppingCartActivityTest {
-    @get:Rule
-    val shoppingCartActivityScenarioRule = ActivityScenarioRule(ShoppingCartActivity::class.java)
+    val shoppingCartActivityScenario = ActivityScenario.launch(ShoppingCartActivity::class.java)
+
 
     @Test
     fun 장바구니에_담긴_상품의_목록이_표시된다() {
@@ -56,9 +59,32 @@ class ShoppingCartActivityTest {
                 .atPositionOnView(0, R.id.iv_remove_item_product_icon),
         ).performClick()
 
-        onView(withRecyclerView(R.id.shopping_cart_list)
-            .atPositionOnView(0, R.id.tv_shopping_cart_item),
+        onView(
+            withRecyclerView(R.id.shopping_cart_list)
+                .atPositionOnView(0, R.id.tv_shopping_cart_item),
         ).check(matches(not(withText("[병천아우내] 모듬순대"))))
+
+    }
+
+    @Test
+    fun 장바구니에서_수량을_조절하면_메인_화면에서도_반영된다() {
+
+        //given
+        onView(
+            withRecyclerView(R.id.shopping_cart_list)
+                .atPositionOnView(0, R.id.button_plus),
+        ).performClick()
+
+        //when
+        shoppingCartActivityScenario.close()
+        ActivityScenario.launch(MainActivity::class.java)
+
+        //then
+        onView(
+            withRecyclerView(R.id.product_list)
+                .atPositionOnView(1, R.id.text_quantity),
+        ).matchText("2")
+
 
     }
 }
