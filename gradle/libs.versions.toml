@@ -9,6 +9,7 @@ androidx-espresso-core = "3.6.1"
 androidx-test-ext-junit = "1.2.1"
 androidx-test-runner = "1.6.2"
 assertj-core = "3.27.3"
+converter-gson = "latest.version"
 google-material = "1.12.0"
 junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
@@ -35,6 +36,7 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj-core" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converter-gson" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest-runner-junit5" }
@@ -43,6 +45,7 @@ mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 androidx-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "androidx-espresso-contrib" }
 mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "mockwebserver" }
 
 
 [plugins]
