@@ -18,6 +18,10 @@
             type="woowacourse.shopping.domain.product.Product" />
 
         <variable
+            name="recentProduct"
+            type="woowacourse.shopping.domain.product.Product" />
+
+        <variable
             name="cartItem"
             type="woowacourse.shopping.domain.product.CartItem" />
     </data>
@@ -104,6 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginBottom="30dp"
+            app:item="@{recentProduct}"
             app:layout_constraintBottom_toTopOf="@id/btn_detail_add_cart"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

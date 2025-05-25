@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -80,6 +81,9 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initObserver() {
         viewModel.cartItem.observe(this) {
             binding.cartItem = it
+        }
+        viewModel.lastItem.observe(this) {
+            binding.recentProduct = it
         }
     }
 

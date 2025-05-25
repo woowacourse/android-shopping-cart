@@ -6,7 +6,7 @@ import woowacourse.shopping.data.history.HistoryDao
 import woowacourse.shopping.data.history.HistoryEntity
 import woowacourse.shopping.data.product.ProductEntity
 
-@Database(entities = [ProductEntity::class, CartItemEntity::class, HistoryEntity::class], version = 4)
+@Database(entities = [ProductEntity::class, CartItemEntity::class, HistoryEntity::class], version = 4, exportSchema = false)
 abstract class CartDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
 

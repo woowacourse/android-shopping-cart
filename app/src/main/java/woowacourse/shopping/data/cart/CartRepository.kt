@@ -35,7 +35,7 @@ class CartRepository private constructor(context: Context, private val productRe
 
     fun getLastRecentProduct(): Product? {
         val target = historyDao.findLast() ?: return null
-        return cartDao.findById(target.id).toProduct()
+        return productRepository.fetchById(target.id)
     }
 
     fun getRecentTenProducts(): List<Product> {
