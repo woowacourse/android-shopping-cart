@@ -8,12 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
+import woowacourse.shopping.view.main.adapter.RecentProductAdapter
 import woowacourse.shopping.view.main.event.ProductsAdapterEventHandler
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
@@ -29,12 +32,18 @@ class MainActivity : AppCompatActivity() {
             handler = productsAdapterEventHandler,
         )
     }
+
+    private val recentProductAdapter: RecentProductAdapter by lazy {
+        RecentProductAdapter()
+    }
+
     private lateinit var binding: ActivityMainBinding
 
     private val productsAdapterEventHandler =
         object : ProductsAdapterEventHandler {
-            override fun onSelectProduct(productId: Long) {
-                val intent = DetailActivity.newIntent(this@MainActivity, productId)
+            override fun onSelectProduct(cart: Cart) {
+                viewModel.addRecentProduct(cart)
+                val intent = DetailActivity.newIntent(this@MainActivity, cart.product.id)
                 startActivity(intent)
             }
 
@@ -58,7 +67,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
-        binding.adapter = productsAdapter
+        binding.productAdapter = productsAdapter
+        binding.recentProductAdapter = recentProductAdapter
+        binding.vm = viewModel
         initView()
         observeViewModel()
     }
@@ -72,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
         supportActionBar?.hide()
         viewModel.loadProducts()
+        viewModel.loadRecentProducts()
         val scrollEndEvent =
             ScrollEndEvent(
                 onScrollEnd = {
@@ -102,9 +114,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.carts.observe(this) { value ->
             productsAdapter.submitList(value)
         }
-        viewModel.totalQuantity.observe(this) { value ->
-            binding.cartCountBadge.text = value.toString()
-            binding.cartCountBadge.visibility = if (value > 0) View.VISIBLE else View.GONE
+        viewModel.recentProducts.observe(this) { value ->
+            recentProductAdapter.submitList(value)
         }
     }
 }
