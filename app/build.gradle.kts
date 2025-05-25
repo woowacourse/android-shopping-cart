@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.google.material)
     implementation(libs.androidx.activity)
+    implementation(libs.okhttp)
+    implementation(libs.gson)
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
