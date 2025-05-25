@@ -2,7 +2,6 @@ package woowacourse.shopping.matcher
 
 import android.content.res.Resources
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -77,14 +76,8 @@ fun scrollToPosition(position: Int): ViewAction {
         ) {
             if (view is RecyclerView) {
                 val layoutManager = view.layoutManager
-                if (layoutManager is LinearLayoutManager) {
-                    layoutManager.scrollToPositionWithOffset(position, 0)
-                    uiController?.loopMainThreadUntilIdle()
-                } else {
-                    throw IllegalStateException(
-                        "RecyclerView's LayoutManager is not LinearLayoutManager. Cannot use scrollToPositionWithOffset.",
-                    )
-                }
+                layoutManager?.scrollToPosition(position)
+                uiController?.loopMainThreadUntilIdle()
             } else {
                 throw IllegalStateException("View is not a RecyclerView")
             }

@@ -12,4 +12,8 @@
     <string name="pagination_left"><![CDATA[<]]></string>
     <string name="pagination_right"><![CDATA[>]]></string>
     <string name="button_text_load_more">더보기</string>
+    <string name="quantity_minus">-</string>
+    <string name="quantity_plus">+</string>
+    <string name="text_recent_item">최근 본 상품</string>
+    <string name="text_last_view">마지막으로 본 상품</string>
 </resources>

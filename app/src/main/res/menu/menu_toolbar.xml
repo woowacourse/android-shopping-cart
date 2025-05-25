@@ -6,5 +6,8 @@
         android:icon="@drawable/icon_shopping_cart"
         android:theme="@style/Theme.Shopping"
         android:title="@string/menu_item_shopping_cart"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        app:actionLayout="@layout/menu_shopping_cart"
+        />
+
 </menu>

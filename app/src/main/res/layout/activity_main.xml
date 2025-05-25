@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <data>
-
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.main.ProductsViewModel" />
         <variable
-            name="handler"
-            type="woowacourse.shopping.view.main.ProductsEventHandler" />
+            name="onLoadMoreProducts"
+            type="kotlin.jvm.functions.Function1&lt;java.lang.Integer, kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,10 +24,13 @@
             android:id="@+id/product_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintBottom_toTopOf="@id/btn_load_more_products"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
             tools:listitem="@layout/item_product" />
 
         <Button
@@ -40,7 +41,7 @@
             android:backgroundTint="@color/pagination_enabled"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{()->handler.onLoadMoreProducts(viewModel.productsLiveData.currentPage + 1)}"
+            android:onClick="@{()->onLoadMoreProducts.invoke(viewModel.productsLiveData.page.currentPage + 1)}"
             android:text="@string/button_text_load_more"
             android:textSize="20sp"
             android:textStyle="bold"

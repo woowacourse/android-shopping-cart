@@ -5,46 +5,54 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
-import woowacourse.shopping.view.page.Page
+import woowacourse.shopping.view.base.ActivityBoilerPlateCode
+import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
+import woowacourse.shopping.view.base.QuantitySelectorEventHandler
+import woowacourse.shopping.view.uimodel.QuantityObservable
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
 
 class ShoppingCartActivity :
-    ShoppingCartActivityTemplate<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart) {
-    private val viewModel: ShoppingCartViewModel by viewModels()
-    private val handler: ShoppingCartEventHandler by lazy {
-        object : ShoppingCartEventHandler {
-            override fun onProductRemove(product: Product) {
-                viewModel.removeProduct(product)
-            }
-
-            override fun onPagination(page: Int) {
-                viewModel.requestProductsPage(page)
-            }
-        }
-    }
+    AppCompatActivity(),
+    ActivityBoilerPlateCode<ActivityShoppingCartBinding> by ActivityBoilerPlateCodeImpl(
+        R.layout.activity_shopping_cart,
+    ) {
+    private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.Factory }
     private val shoppingCartAdapter: ShoppingCartAdapter by lazy {
-        ShoppingCartAdapter(this@ShoppingCartActivity.handler)
+        ShoppingCartAdapter(ShoppingCartEventHandlerImpl())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initialize()
+
         setMenubar(binding.toolbar as Toolbar)
         viewModel.apply {
             requestProductsPage(0)
-            productsLiveData.observe(this@ShoppingCartActivity) {
-                    page ->
-                updateRecyclerView(page)
+            productsLiveData.observe(this@ShoppingCartActivity) { page ->
+                shoppingCartAdapter.updateProducts(page)
             }
         }
         binding.apply {
             shoppingCartList.adapter = shoppingCartAdapter
             viewModel = this@ShoppingCartActivity.viewModel
-            handler = this@ShoppingCartActivity.handler
+            handler = ShoppingCartEventHandlerImpl()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.saveCurrentShoppingCart(
+            shoppingCartAdapter.quantityInfo.map { shoppingCartItem, quantity ->
+                ShoppingCartItemUiModel(
+                    productUiModel = shoppingCartItem.productUiModel,
+                    quantity = quantity,
+                )
+            },
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -62,15 +70,6 @@ class ShoppingCartActivity :
         }
     }
 
-    private fun updateRecyclerView(page: Page<Product>) {
-        shoppingCartAdapter.apply {
-            val previousCount = itemCount
-            updateProducts(page.items)
-            notifyItemRangeChanged(0, previousCount)
-            notifyItemRangeRemoved(previousCount - itemCount, previousCount)
-        }
-    }
-
     companion object {
         private const val MENU_BAR_TAG = "Cart"
 
@@ -78,4 +77,42 @@ class ShoppingCartActivity :
             return Intent(context, ShoppingCartActivity::class.java)
         }
     }
+
+    private inner class ShoppingCartEventHandlerImpl : ShoppingCartEventHandler {
+        override fun onPagination(page: Int) {
+            viewModel.saveCurrentShoppingCart(
+                shoppingCartAdapter.quantityInfo.map { shoppingCartItem, quantity ->
+                    ShoppingCartItemUiModel(
+                        productUiModel = shoppingCartItem.productUiModel,
+                        quantity = quantity,
+                    )
+                },
+            )
+            viewModel.requestProductsPage(page)
+        }
+
+        override fun onProductRemove(
+            product: ShoppingCartItemUiModel,
+            page: Int,
+        ) {
+            viewModel.removeProduct(product, page)
+        }
+
+        override fun onQuantityMinusSelected(uiModel: QuantityObservable) {
+            viewModel.decreaseCount(uiModel as ShoppingCartItemUiModel)
+        }
+
+        override fun onQuantityPlusSelected(uiModel: QuantityObservable) {
+            viewModel.increaseCount(uiModel as ShoppingCartItemUiModel)
+        }
+    }
+}
+
+interface ShoppingCartEventHandler : QuantitySelectorEventHandler {
+    fun onPagination(page: Int)
+
+    fun onProductRemove(
+        product: ShoppingCartItemUiModel,
+        page: Int,
+    )
 }

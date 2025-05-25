@@ -3,46 +3,121 @@ package woowacourse.shopping.view.shoppingcart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.DummyShoppingCart
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.page.Page
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.ShoppingCartApplication
+import woowacourse.shopping.data.page.PageRequest
+import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.mapper.toShoppingCartItem
+import woowacourse.shopping.mapper.toShoppingCartItemPageUiModel
+import woowacourse.shopping.view.mainThread
+import woowacourse.shopping.view.uimodel.QuantityInfo
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import woowacourse.shopping.view.uimodel.ShoppingCartRecyclerViewItems
+import kotlin.concurrent.thread
 
-class ShoppingCartViewModel : ViewModel() {
-    private val allProducts: Set<Product> get() = DummyShoppingCart.products.toSet()
-    private val _productsLiveData: MutableLiveData<Page<Product>> = MutableLiveData()
+class ShoppingCartViewModel(
+    private val shoppingCartRepository: ShoppingCartRepository,
+) : ViewModel() {
+    private val _productsLiveData: MutableLiveData<ShoppingCartRecyclerViewItems> =
+        MutableLiveData()
 
-    val productsLiveData: LiveData<Page<Product>> get() = _productsLiveData
+    val productsLiveData: LiveData<ShoppingCartRecyclerViewItems> get() = _productsLiveData
 
-    fun removeProduct(product: Product) {
-        val currentProductIndex = allProducts.indexOf(product)
-        DummyShoppingCart.products.remove(product)
-        val pageNumber = pageNumberAfterRemoval(currentProductIndex)
-        requestProductsPage(pageNumber)
+    var quantityInfo: QuantityInfo<ShoppingCartItemUiModel> = QuantityInfo()
+        private set
+
+    fun removeProduct(
+        shoppingCartItemUiModel: ShoppingCartItemUiModel,
+        currentPage: Int,
+    ) {
+        thread {
+            shoppingCartRepository.remove(shoppingCartItemUiModel.toShoppingCartItem())
+            val productsCount = shoppingCartRepository.totalSize()
+
+            mainThread {
+                requestProductsPage(pageNumberAfterRemoval(currentPage, productsCount))
+            }
+        }
     }
 
     fun requestProductsPage(requestPage: Int) {
-        val page =
-            Page.from(
-                allProducts.toList(),
-                requestPage,
-                PAGE_SIZE,
+        val pageRequest =
+            PageRequest(
+                pageSize = PAGE_SIZE,
+                requestPage = requestPage,
             )
-        _productsLiveData.value = page
+
+        thread {
+            val item = shoppingCartRepository.findAll(pageRequest)
+
+            quantityInfo =
+                QuantityInfo(
+                    item.toShoppingCartItemPageUiModel().items.associateWith {
+                        MutableLiveData(it.quantity)
+                    },
+                )
+
+            mainThread {
+                _productsLiveData.value =
+                    ShoppingCartRecyclerViewItems(
+                        item.toShoppingCartItemPageUiModel(),
+                        quantityInfo,
+                    )
+            }
+        }
     }
 
-    private fun pageNumberAfterRemoval(index: Int): Int {
-        val productsCount = allProducts.size
-        val currentPageNumber = index / PAGE_SIZE
-        val newPageNumber =
-            if (productsCount % PAGE_SIZE == 0 && index == productsCount) {
-                currentPageNumber - 1
+    fun saveCurrentShoppingCart(shoppingCartItemUiModels: List<ShoppingCartItemUiModel>) {
+        thread {
+            shoppingCartItemUiModels.forEach {
+                shoppingCartRepository.update(it.toShoppingCartItem())
+            }
+        }
+    }
+
+    fun increaseCount(shoppingCartItemUiModel: ShoppingCartItemUiModel) {
+        quantityInfo[shoppingCartItemUiModel].value?.let {
+            quantityInfo[shoppingCartItemUiModel].value = it + 1
+        }
+    }
+
+    fun decreaseCount(shoppingCartItemUiModel: ShoppingCartItemUiModel) {
+        quantityInfo[shoppingCartItemUiModel].value?.let {
+            if (it > 1) {
+                quantityInfo[shoppingCartItemUiModel].value = it - 1
             } else {
-                currentPageNumber
+                removeProduct(shoppingCartItemUiModel, 0)
+            }
+        }
+    }
+
+    private fun pageNumberAfterRemoval(
+        currentPage: Int,
+        productsCount: Int,
+    ): Int {
+        val newPageNumber =
+            if (productsCount % PAGE_SIZE == 0 && currentPage * PAGE_SIZE == productsCount) {
+                currentPage - 1
+            } else {
+                currentPage
             }
         return newPageNumber.coerceAtLeast(0)
     }
 
     companion object {
         private const val PAGE_SIZE = 5
+        val Factory: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    val shoppingCartRepository =
+                        (this[APPLICATION_KEY] as ShoppingCartApplication).shoppingCartRepository
+                    ShoppingCartViewModel(
+                        shoppingCartRepository,
+                    )
+                }
+            }
     }
 }

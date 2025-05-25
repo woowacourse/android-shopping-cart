@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingEnd="16dp">
+
+        <ImageView
+            android:id="@+id/icon_shopping_cart"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/icon_shopping_cart"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/shopping_cart_alarm_badge"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/shopping_cart_badge"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/icon_shopping_cart"
+            app:layout_constraintStart_toEndOf="@id/icon_shopping_cart"
+            app:layout_constraintTop_toTopOf="@id/icon_shopping_cart"
+            tools:text="2">
+
+        </TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

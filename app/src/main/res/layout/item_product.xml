@@ -2,24 +2,27 @@
 <layout>
 
     <data>
-
-        <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
-
         <variable
             name="handler"
-            type="woowacourse.shopping.view.main.ProductsEventHandler" />
-
+            type="woowacourse.shopping.view.main.adapter.ProductEventHandler" />
+        <variable
+            name="quantity"
+            type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />
+        <variable
+            name="product"
+            type="woowacourse.shopping.view.uimodel.ProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:shoppingCart="http://schemas.android.com/apk/res/auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="154dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{() -> handler.onProductSelected(product)}"
+        shoppingCart:observe="@{quantity}"
+        shoppingCart:observe_action="@{handler}"
+        shoppingCart:observe_argument_item="@{product}"
         android:padding="10dp">
 
         <ImageView
@@ -36,6 +39,38 @@
             tools:src="@drawable/sample_product_image">
 
         </ImageView>
+
+        <LinearLayout
+            android:id="@+id/layout_product_quantity_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            >
+            <include
+                app:quantity="@{quantity}"
+                app:handler="@{handler}"
+                app:quantityObservable="@{product}"
+                layout="@layout/button_quantity_selector" />
+
+        </LinearLayout>
+
+        <Button
+            android:onClick="@{()->handler.onBtnItemProductAddToCartSelected(product)}"
+            android:id="@+id/btn_item_product_add_to_cart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="#00ff0000"
+            android:foreground="@drawable/btn_item_product_add_to_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            >
+
+        </Button>
 
         <TextView
             android:id="@+id/tv_product_name"

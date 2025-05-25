@@ -1,20 +1,125 @@
 package woowacourse.shopping.view.detail
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.DummyShoppingCart
-import woowacourse.shopping.domain.Product
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.ShoppingCartApplication
+import woowacourse.shopping.data.repository.recent.RecentProductsRepository
+import woowacourse.shopping.data.repository.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentProducts
+import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.mapper.toProduct
+import woowacourse.shopping.view.mainThread
+import woowacourse.shopping.view.uimodel.ProductUiModel
+import java.time.LocalDateTime
+import kotlin.concurrent.thread
 
-class ProductDetailViewModel : ViewModel() {
-    private val _productLiveData: MutableLiveData<Product> = MutableLiveData()
-    val productLiveData: LiveData<Product> get() = _productLiveData
+class ProductDetailViewModel(
+    private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentProductsRepository: RecentProductsRepository,
+) : ViewModel() {
+    private val _productUiModelLiveData: MutableLiveData<ProductUiModel> = MutableLiveData()
+    val productUiModelLiveData: LiveData<ProductUiModel> get() = _productUiModelLiveData
+    val quantityLiveData: MutableLiveData<Int> = MutableLiveData(1)
+    val recentProducts = RecentProducts()
+    val allLoaded = MutableLiveData(false)
 
-    fun addProduct(product: Product) {
-        DummyShoppingCart.products.add(0, product)
+    init {
+        thread {
+            recentProductsRepository.findAll().forEach {
+                recentProducts.add(it)
+            }
+            mainThread {
+                allLoaded.value = true
+            }
+        }
     }
 
-    fun setProduct(product: Product) {
-        _productLiveData.value = product
+    fun addProduct(productUiModel: ProductUiModel) {
+        quantityLiveData.value?.let {
+            thread {
+                shoppingCartRepository.save(
+                    ShoppingCartItem(
+                        product = productUiModel.toProduct(),
+                        quantity = it,
+                    ),
+                )
+            }
+        }
+    }
+
+    fun setProduct(productUiModel: ProductUiModel) {
+        _productUiModelLiveData.value = productUiModel
+    }
+
+    fun addRecentProduct() {
+        thread {
+            if (recentProducts.isFull()) {
+                recentProducts.add(
+                    RecentProduct(
+                        product = _productUiModelLiveData.value?.toProduct() ?: return@thread,
+                        viewTime = LocalDateTime.now(),
+                    ),
+                )
+                recentProductsRepository.update(recentProducts.items.first())
+                return@thread
+            }
+            recentProducts.add(
+                RecentProduct(
+                    product = _productUiModelLiveData.value?.toProduct() ?: return@thread,
+                    viewTime = LocalDateTime.now(),
+                ),
+            )
+            recentProductsRepository.insert(recentProducts.items.first())
+        }
+    }
+
+    fun isInRecentProducts(): Int {
+        return if (recentProducts.contains(
+                productUiModelLiveData.value?.toProduct() ?: return View.GONE,
+            ) || recentProducts.items.isEmpty()
+        ) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+    }
+
+    fun lastViewedProductName(): String {
+        if (recentProducts.items.isEmpty()) return ""
+        return recentProducts.items.first().product.name
+    }
+
+    fun increaseCount() {
+        quantityLiveData.value?.let {
+            quantityLiveData.value = it + 1
+        }
+    }
+
+    fun decreaseCount() {
+        quantityLiveData.value?.let {
+            if (it > 1) {
+                quantityLiveData.value = it - 1
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    val application = (this[APPLICATION_KEY] as ShoppingCartApplication)
+                    ProductDetailViewModel(
+                        application.shoppingCartRepository,
+                        application.recentProductsRepository,
+                    )
+                }
+            }
     }
 }
