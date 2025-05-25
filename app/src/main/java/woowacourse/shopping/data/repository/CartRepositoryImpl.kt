@@ -41,16 +41,6 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun modify(
-        id: Long,
-        quantity: Quantity,
-    ) {
-        thread {
-            val entity = CartEntity(productId = id, quantity = quantity.value)
-            dataSource.modify(entity)
-        }
-    }
-
     override fun delete(
         id: Long,
         onResult: (() -> Unit)?,

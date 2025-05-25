@@ -36,34 +36,6 @@ class CartsDataSourceTest {
     }
 
     @Test
-    fun `기존_항목이_있을_때_accumulate을_호출하면_수량을_누적하여_업데이트한다`() {
-        val productId = 1L
-        val existing = CartEntity(productId, 2)
-        val incoming = CartEntity(productId, 3)
-        val updated = existing.copy(quantity = 5)
-
-        every { dao.cartByProductId(productId) } returns existing
-        every { dao.update(updated) } just Runs
-
-        dataSource.modify(incoming)
-
-        verify { dao.update(updated) }
-    }
-
-    @Test
-    fun `기존_항목이_없을_때_accumulate을_호출하면_새로운_항목을_추가한다`() {
-        val productId = 2L
-        val incoming = CartEntity(productId, 1)
-
-        every { dao.cartByProductId(productId) } returns null
-        every { dao.insert(incoming) } just Runs
-
-        dataSource.modify(incoming)
-
-        verify { dao.insert(incoming) }
-    }
-
-    @Test
     fun `delete를_호출하면_해당_productId의_항목을_삭제한다`() {
         val productId = 6L
 

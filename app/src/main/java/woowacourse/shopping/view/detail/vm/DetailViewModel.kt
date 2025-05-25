@@ -85,11 +85,7 @@ class DetailViewModel(
     fun saveCart(productId: Long) {
         withState(_uiState.value) { state ->
             cartRepository.getCart(productId) { cart ->
-                cart?.let {
-                    cartRepository.upsert(productId, state.product.cartQuantity)
-                } ?: run {
-                    cartRepository.modify(productId, state.product.cartQuantity)
-                }
+                cartRepository.upsert(productId, state.product.cartQuantity)
             }
             sendEvent(DetailUiEvent.MoveToCart)
         }

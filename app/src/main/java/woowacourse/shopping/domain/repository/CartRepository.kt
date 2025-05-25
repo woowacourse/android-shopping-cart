@@ -20,11 +20,6 @@ interface CartRepository {
         quantity: Quantity,
     )
 
-    fun modify(
-        id: Long,
-        quantity: Quantity,
-    )
-
     fun delete(
         id: Long,
         onResult: (() -> Unit)? = null,

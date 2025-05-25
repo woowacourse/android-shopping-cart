@@ -34,14 +34,6 @@ class FakeCartRepositoryImpl(
         dataSource.upsert(entity)
     }
 
-    override fun modify(
-        id: Long,
-        quantity: Quantity,
-    ) {
-        val entity = CartEntity(id, quantity.value)
-        dataSource.modify(entity)
-    }
-
     override fun delete(
         id: Long,
         onResult: (() -> Unit)?,

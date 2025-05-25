@@ -75,20 +75,6 @@ class CartRepositoryImplTest {
     }
 
     @Test
-    fun `modify_호출시_datasource의_modify가_호출된다`() {
-        // Given
-        val productId = 1L
-        val quantity = Quantity(15)
-        every { dataSource.modify(any()) } returns Unit
-
-        // When
-        repository.modify(productId, quantity)
-
-        // Then
-        verify(exactly = 1) { dataSource.modify(CartEntity(productId, quantity.value)) }
-    }
-
-    @Test
     fun `delete_호출시_datasource의_delete가_호출된다`() {
         // Given
         val productId = 1L

@@ -14,15 +14,6 @@ class CartDataSource(
 
     fun upsert(entity: CartEntity) = dao.upsert(entity)
 
-    fun modify(entity: CartEntity) {
-        dao.cartByProductId(entity.productId)?.let {
-            val updated = it.copy(quantity = it.quantity + entity.quantity)
-            dao.update(updated)
-        } ?: run {
-            dao.insert(entity)
-        }
-    }
-
     fun deleteCartByProductId(productId: Long) = dao.deleteByProductId(productId)
 
     fun singlePage(
