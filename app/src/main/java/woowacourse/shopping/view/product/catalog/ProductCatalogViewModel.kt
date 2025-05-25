@@ -8,6 +8,8 @@ import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.view.common.MutableSingleLiveData
+import woowacourse.shopping.view.common.SingleLiveData
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
 
 class ProductCatalogViewModel(
@@ -19,28 +21,23 @@ class ProductCatalogViewModel(
     private val productItems = mutableListOf<ProductCatalogItem.ProductItem>()
     private var recentProducts = emptyList<RecentProduct>()
     private var offset = FIRST_OFFSET
+    private var hasNext = false
 
     private val _productCatalogItems = MutableLiveData<List<ProductCatalogItem>>()
     val productCatalogItems: LiveData<List<ProductCatalogItem>> get() = _productCatalogItems
 
-    private val _selectedProduct = MutableLiveData<Product>()
-    val selectedProduct: LiveData<Product> get() = _selectedProduct
+    private val _selectedProduct = MutableSingleLiveData<Product>()
+    val selectedProduct: SingleLiveData<Product> get() = _selectedProduct
 
     private val _totalQuantity = MutableLiveData(0)
     val totalQuantity: LiveData<Int> get() = _totalQuantity
 
-    init {
-        loadRecentProducts()
-        loadProducts()
-        _totalQuantity.value = cartProductRepository.getTotalQuantity()
-    }
-
     override fun onRecentProductClick(item: RecentProduct) {
-        _selectedProduct.value = item.product
+        _selectedProduct.setValue(item.product)
     }
 
     override fun onProductClick(item: ProductCatalogItem.ProductItem) {
-        _selectedProduct.value = item.product
+        _selectedProduct.setValue(item.product)
     }
 
     override fun onAddClick(item: ProductCatalogItem.ProductItem) {
@@ -57,10 +54,23 @@ class ProductCatalogViewModel(
 
     override fun onMoreClick() {
         loadProducts()
+        _productCatalogItems.value = buildCatalogItems()
+    }
+
+    fun loadCatalog() {
+        loadRecentProducts()
+        if (productItems.isEmpty()) {
+            loadProducts()
+        } else {
+            syncProductQuantities()
+        }
+        _totalQuantity.value = cartProductRepository.getTotalQuantity()
+        _productCatalogItems.value = buildCatalogItems()
     }
 
     private fun loadRecentProducts() {
         recentProducts = recentProductRepository.getPagedProducts(RECENT_PRODUCT_SIZE_LIMIT)
+        _productCatalogItems.value = buildCatalogItems()
     }
 
     private fun loadProducts() {
@@ -73,7 +83,14 @@ class ProductCatalogViewModel(
                 ProductCatalogItem.ProductItem(it, quantity)
             }
         productItems.addAll(newItems)
-        _productCatalogItems.value = buildCatalogItems(result.hasNext)
+        hasNext = result.hasNext
+    }
+
+    private fun syncProductQuantities() {
+        productItems.replaceAll { item ->
+            val quantity = cartProductRepository.getQuantityByProductId(item.product.id) ?: 0
+            item.copy(quantity = quantity)
+        }
     }
 
     private fun updateQuantity(
@@ -90,7 +107,7 @@ class ProductCatalogViewModel(
         _productCatalogItems.value = buildCatalogItems()
     }
 
-    private fun buildCatalogItems(hasNext: Boolean = false): List<ProductCatalogItem> =
+    private fun buildCatalogItems(): List<ProductCatalogItem> =
         buildList {
             if (recentProducts.isNotEmpty()) {
                 add(ProductCatalogItem.RecentProductsItem(recentProducts))
