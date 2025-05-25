@@ -7,7 +7,6 @@ import woowacourse.shopping.domain.repository.CartProductRepository
 
 class FakeCartProductRepository : CartProductRepository {
     private val cartProducts = mutableListOf<CartProduct>()
-    private var nextId = 1L
 
     override fun insert(
         productId: Long,
@@ -23,7 +22,6 @@ class FakeCartProductRepository : CartProductRepository {
             )
         cartProducts.add(
             CartProduct(
-                id = nextId++,
                 product = product,
                 quantity = quantity,
             ),

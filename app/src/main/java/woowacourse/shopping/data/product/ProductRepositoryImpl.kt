@@ -14,7 +14,8 @@ class ProductRepositoryImpl(
         onSuccess: (Product?) -> Unit,
     ) {
         thread {
-            onSuccess(remoteDataSource.getProductById(id))
+            val result = remoteDataSource.getProductById(id)
+            onSuccess(result)
         }
     }
 
@@ -26,7 +27,8 @@ class ProductRepositoryImpl(
         require(offset >= 0)
         require(limit > 0)
         thread {
-            onSuccess(remoteDataSource.getPagedProducts(limit, offset))
+            val result = remoteDataSource.getPagedProducts(limit, offset)
+            onSuccess(result)
         }
     }
 }

@@ -6,7 +6,6 @@ import woowacourse.shopping.domain.model.CartProduct
 
 fun CartProductEntity.toDomain() =
     CartProduct(
-        id = this.id,
         product = this.productId.toProduct(),
         quantity = this.quantity,
     )
