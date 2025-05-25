@@ -29,9 +29,7 @@ class InventoryAdapter(
         return when (viewType) {
             InventoryItemType.PRODUCT.id -> ProductViewHolder(parent, handler)
             InventoryItemType.SHOW_MORE.id -> ShowMoreViewHolder(parent, handler)
-            InventoryItemType.RECENT_PRODUCTS.id -> {
-                RecentItemsListViewHolder(parent)
-            }
+            InventoryItemType.RECENT_PRODUCTS.id -> RecentItemsListViewHolder(parent)
             else -> throw IllegalStateException()
         }
     }

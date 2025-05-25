@@ -31,6 +31,7 @@ class InventoryActivity :
                 application.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
+
         initRecyclerview()
     }
 

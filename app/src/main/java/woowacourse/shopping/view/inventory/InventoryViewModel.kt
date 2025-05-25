@@ -24,7 +24,6 @@ class InventoryViewModel(
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
-    private val products: List<InventoryItem> get() = _items.value?.filterIsInstance<ProductItem>() ?: emptyList()
     val items: LiveData<List<InventoryItem>> get() = _items
 
     private val _cartCount: MutableLiveData<Int> = MutableLiveData()
@@ -37,13 +36,12 @@ class InventoryViewModel(
     }
 
     fun requestPage() {
-        shoppingCartRepository.getAll { allItems ->
-            allItems.forEach { item ->
-                inventoryRepository.insert(item.toInventoryProduct())
-            }
+        shoppingCartRepository.getAll { allProducts ->
+            allProducts.forEach { product -> inventoryRepository.insert(product.toInventoryProduct()) }
+            val currentPageSize = _items.value?.filterIsInstance<ProductItem>()?.size ?: 0
             inventoryRepository.getPage(
                 PAGE_SIZE,
-                products.size / PAGE_SIZE,
+                currentPageSize / PAGE_SIZE,
             ) { page -> updateInventoryProducts(page) }
         }
     }
@@ -85,6 +83,7 @@ class InventoryViewModel(
 
     private fun updateInventoryProducts(newPage: Page<ProductItem>) {
         recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
+            val products = _items.value?.filterIsInstance<ProductItem>() ?: emptyList()
             val newList =
                 buildList {
                     add(RecentProductsItem(recentProducts))

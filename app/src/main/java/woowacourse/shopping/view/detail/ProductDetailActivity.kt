@@ -27,6 +27,16 @@ class ProductDetailActivity :
         binding.handler = this
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun initializeViewModel(productId: Int) {
         val application = application as ShoppingApplication
         val factory =
@@ -38,16 +48,6 @@ class ProductDetailActivity :
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         viewModel.loadInventoryProduct(productId)
         viewModel.loadRecentProduct(productId)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onSelectRecentProduct() {
