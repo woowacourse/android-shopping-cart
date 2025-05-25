@@ -56,22 +56,13 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
-        productCountViewModel.isMinimumProductCount.observe(this) { isMinimumProductCount ->
-            if (isMinimumProductCount) {
-                Toast
-                    .makeText(
-                        this,
-                        getString(R.string.minimum_product_count),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-            }
-        }
-        productDetailViewModel.cartAddedEvent.observe(this) {
-            Toast
-                .makeText(this, R.string.detail_product_add_cart_success, Toast.LENGTH_SHORT)
-                .show()
-        }
-        productDetailViewModel.exitEvent.observe(this) { finish() }
+        observeIsMinimumProductCount()
+        observeCartAddedEvent()
+        observeExitEvent()
+        observeRecentlyViewedProductEvent()
+    }
+
+    private fun observeRecentlyViewedProductEvent() {
         productDetailViewModel.recentlyViewedProductEvent.observe(this) {
             val intent =
                 productDetailViewModel.recentlyViewedProduct.value?.let { it ->
@@ -82,6 +73,31 @@ class ProductDetailActivity : AppCompatActivity() {
                 }
             intent?.let { it.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP }
             startActivity(intent)
+        }
+    }
+
+    private fun observeExitEvent() {
+        productDetailViewModel.exitEvent.observe(this) { finish() }
+    }
+
+    private fun observeCartAddedEvent() {
+        productDetailViewModel.cartAddedEvent.observe(this) {
+            Toast
+                .makeText(this, R.string.detail_product_add_cart_success, Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
+    private fun observeIsMinimumProductCount() {
+        productCountViewModel.isMinimumProductCount.observe(this) { isMinimumProductCount ->
+            if (isMinimumProductCount) {
+                Toast
+                    .makeText(
+                        this,
+                        getString(R.string.minimum_product_count),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            }
         }
     }
 
