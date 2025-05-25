@@ -7,7 +7,6 @@ import woowacourse.shopping.presentation.view.ItemCounterListener
 
 class CatalogAdapter(
     private val eventListener: CatalogEventListener,
-    private val itemCounterListener: ItemCounterListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val items = mutableListOf<CatalogItem>()
 
@@ -27,7 +26,6 @@ class CatalogAdapter(
                 ProductViewHolder.from(
                     parent,
                     eventListener,
-                    itemCounterListener,
                 )
             CatalogItem.CatalogType.LOAD_MORE -> LoadMoreViewHolder.from(parent, eventListener)
         }
@@ -66,7 +64,7 @@ class CatalogAdapter(
         }
     }
 
-    interface CatalogEventListener {
+    interface CatalogEventListener : ItemCounterListener {
         fun onProductClicked(product: ProductUiModel)
 
         fun onLoadMoreClicked()
