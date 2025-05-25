@@ -3,8 +3,8 @@ package woowacourse.shopping
 import android.app.Application
 import woowacourse.shopping.data.repository.cart.CartRepository
 import woowacourse.shopping.data.repository.cart.CartRepositoryImpl
-import woowacourse.shopping.data.repository.products.ProductRepository
-import woowacourse.shopping.data.repository.products.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.products.catalog.ProductRepository
+import woowacourse.shopping.data.repository.products.catalog.ProductRepositoryImpl
 import woowacourse.shopping.data.source.cart.CartDatabase
 import woowacourse.shopping.data.source.cart.CartStorage
 import woowacourse.shopping.data.source.cart.CartStorageImpl

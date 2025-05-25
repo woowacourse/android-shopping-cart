@@ -10,7 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.cart.CartRepository
-import woowacourse.shopping.data.repository.products.ProductRepository
+import woowacourse.shopping.data.repository.products.catalog.ProductRepository
 import woowacourse.shopping.domain.Product
 
 class ProductViewModel(
