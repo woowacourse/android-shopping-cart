@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.domain.Cart
@@ -42,7 +40,6 @@ class MainActivity : AppCompatActivity() {
     private val productsAdapterEventHandler =
         object : ProductsAdapterEventHandler {
             override fun onSelectProduct(cart: Cart) {
-                viewModel.addRecentProduct(cart)
                 val intent = DetailActivity.newIntent(this@MainActivity, cart.product.id)
                 startActivity(intent)
             }

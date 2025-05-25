@@ -9,7 +9,6 @@ import woowacourse.shopping.domain.RecentProduct
 class RecentProductAdapter(
     private var items: List<RecentProduct> = listOf(),
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
-
     fun submitList(newItems: List<RecentProduct>) {
         items = newItems
         notifyDataSetChanged()

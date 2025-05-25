@@ -10,12 +10,11 @@ import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
-import java.time.LocalDateTime
 
 class MainViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val page = Page(initialPage = INITIAL_PAGE_NUMBER, pageSize = PAGE_SIZE)
     private val _carts = MutableLiveData<List<Cart>>(emptyList())
@@ -60,14 +59,6 @@ class MainViewModel(
                     this[cartIndex] = updated
                 },
             )
-        }
-    }
-
-    fun addRecentProduct(cart: Cart) {
-        recentProductRepository.insert(RecentProduct(cart.product, LocalDateTime.now())) {
-            if (recentProducts.value?.size == 10) recentProductRepository.deleteLastByCreatedDateTime {
-
-            }
         }
     }
 

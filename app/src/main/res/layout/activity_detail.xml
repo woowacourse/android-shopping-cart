@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="detailScreenEventHandler"
             type="woowacourse.shopping.view.detail.event.DetailScreenEventHandler" />
@@ -79,12 +81,45 @@
             android:layout_width="126dp"
             android:layout_height="42dp"
             app:cart="@{vm.cart}"
-            app:quantitySelectorEvent="@{quantitySelectorEventHandler}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_product_price"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:quantitySelectorEvent="@{quantitySelectorEventHandler}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="35dp"
+            android:background="@drawable/cart_border"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="@{vm.recentProduct != null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/button_save_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/text_view_recent_product_guide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/recent_product_guide"
+                android:textColor="@color/turquoise"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/text_view_recent_product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{vm.recentProduct.product.name}"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                tools:text="PET보틀-정사각형(500ml)" />
+        </LinearLayout>
 
         <Button
+            android:id="@+id/button_save_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:backgroundTint="#04C09E"

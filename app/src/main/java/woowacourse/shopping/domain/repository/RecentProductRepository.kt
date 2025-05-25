@@ -10,8 +10,10 @@ interface RecentProductRepository {
 
     fun getById(
         id: Long,
-        onResult: (RecentProduct) -> Unit,
+        onResult: (RecentProduct?) -> Unit,
     )
+
+    fun getLatest(onResult: (RecentProduct?) -> Unit)
 
     fun getAll(onResult: (List<RecentProduct>) -> Unit)
 
