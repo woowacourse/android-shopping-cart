@@ -65,14 +65,41 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:id="@+id/text_view_recent_product_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/recent_product_title"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/recycler_view_recent_product"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_top_app_bar" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_recent_product"
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="40dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/recycler_view_product"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_recent_product_title" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_product"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="7dp"
             android:adapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/button_load"
-            app:layout_constraintTop_toBottomOf="@id/layout_top_app_bar"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_recent_product"
             app:spanCount="2" />
 
         <Button
