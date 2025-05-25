@@ -15,7 +15,6 @@ class CartViewHolder(
 
     fun bind(cartProduct: CartProduct) {
         binding.cartProduct = cartProduct
-        binding.cartProductCount.setCount(cartProduct.quantity)
         binding.cartProductCount.setOnClickHandler(
             object : CartCountView.OnClickHandler {
                 override fun onIncreaseClick() {

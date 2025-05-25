@@ -82,6 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="8dp"
+            app:count="@{catalogProduct.quantity}"
             app:isGone="@{catalogProduct.quantity == 0}"
             app:layout_constraintBottom_toBottomOf="@id/productPreviewImage"
             app:layout_constraintEnd_toEndOf="@id/productPreviewImage"

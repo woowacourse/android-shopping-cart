@@ -11,14 +11,12 @@ class CartCountView(
     attrs: AttributeSet? = null,
 ) : LinearLayout(context, attrs) {
     private val binding: LayoutCartCountBinding by lazy { LayoutCartCountBinding.inflate(LayoutInflater.from(context), this, true) }
-    private var onClickHandler: OnClickHandler? = null
 
     fun setCount(count: Int) {
-        binding.cartCountText.text = count.toString()
+        binding.count = count
     }
 
     fun setOnClickHandler(onClickHandler: OnClickHandler) {
-        this.onClickHandler = onClickHandler
         binding.onClickHandler = onClickHandler
     }
 

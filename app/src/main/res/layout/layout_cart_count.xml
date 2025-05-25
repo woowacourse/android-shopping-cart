@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="count"
+            type="Integer" />
+
+        <variable
             name="onClickHandler"
             type="woowacourse.shopping.ui.custom.CartCountView.OnClickHandler" />
     </data>
@@ -33,6 +37,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:gravity="center"
+            android:text="@{String.valueOf(count)}"
             android:textAlignment="center"
             android:textColor="@color/gray_5"
             android:textSize="22sp"
