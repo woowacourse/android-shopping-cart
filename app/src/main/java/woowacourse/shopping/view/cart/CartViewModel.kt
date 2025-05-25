@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.cart
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
@@ -35,8 +38,20 @@ class CartViewModel(
     private val _finishCart = MutableLiveData<Event<Unit>>()
     val finishCart: LiveData<Event<Unit>> = _finishCart
 
+    private var cachedItems: List<CartItem> = emptyList()
+
+    private fun loadAllItemsAndThen(action: () -> Unit) {
+        cartRepository.getAll { allItems ->
+            _cartItems.postValue(allItems)
+            cachedItems = allItems
+            action()
+        }
+    }
+
     init {
-        loadPage(INITIAL_PAGE)
+        loadAllItemsAndThen {
+            loadPage(INITIAL_PAGE)
+        }
     }
 
     override fun increaseQuantity(
@@ -77,11 +92,12 @@ class CartViewModel(
     }
 
     fun removeFromCart(cartItem: CartItem) {
-        cartRepository.remove(cartItem.product.id)
-        _cartItems.value = cartRepository.getAll()
-        if (!existPage()) _currentPageNumber.value = minusPageNumber()
-
-        loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
+        cartRepository.remove(cartItem.product.id) {
+            loadAllItemsAndThen {
+                if (!existPage()) _currentPageNumber.postValue(minusPageNumber())
+                loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
+            }
+        }
     }
 
     fun loadNextPage() {
@@ -103,7 +119,7 @@ class CartViewModel(
         _finishCart.value = Event(Unit)
     }
 
-    private fun getMaxPageNumber(): Int = ((cartRepository.getAll().size - ONE_PAGE_COUNT) / PAGE_SIZE) + ONE_PAGE_COUNT
+    private fun getMaxPageNumber(): Int = ((cachedItems.size - ONE_PAGE_COUNT) / PAGE_SIZE) + ONE_PAGE_COUNT
 
     private fun minusPageNumber(): Int = (_currentPageNumber.value ?: INITIAL_PAGE) - ONE_PAGE_COUNT
 
@@ -116,7 +132,7 @@ class CartViewModel(
         return _currentPageNumber.value == totalPageNumber
     }
 
-    private fun checkOnlyOnePage(): Boolean = cartRepository.getAll().size <= PAGE_SIZE
+    private fun checkOnlyOnePage(): Boolean = cachedItems.size <= PAGE_SIZE
 
     private fun existPage(): Boolean {
         val maxPageNumber = getMaxPageNumber()
@@ -125,14 +141,16 @@ class CartViewModel(
 
     private fun loadPage(page: Int) {
         val start = (page - ONE_PAGE_COUNT) * PAGE_SIZE
-        val end = minOf(start + PAGE_SIZE, cartRepository.getAll().size)
+        val end = minOf(start + PAGE_SIZE, cachedItems.size)
 
-        val items = cartRepository.fetchProducts(start, end)
-        _cartItems.postValue(items)
-        _currentPageNumber.value = page
-        _isOnlyOnePage.value = checkOnlyOnePage()
-        _isFirstPage.value = checkFirstPage()
-        _isLastPage.value = checkLastPage()
+        val items = cachedItems.subList(start, end)
+        Handler(Looper.getMainLooper()).post {
+            _cartItems.value = items
+            _currentPageNumber.value = page
+            _isOnlyOnePage.value = checkOnlyOnePage()
+            _isFirstPage.value = checkFirstPage()
+            _isLastPage.value = checkLastPage()
+        }
     }
 
     companion object {
@@ -147,11 +165,15 @@ class CartViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    checkNotNull(extras[APPLICATION_KEY])
+                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    val context = application.applicationContext
+
+                    val database = ShoppingDatabase.getDatabase(context)
+                    val cartDao = database.cartDao()
                     extras.createSavedStateHandle()
 
                     return CartViewModel(
-                        CartRepositoryImpl,
+                        CartRepositoryImpl(cartDao),
                     ) as T
                 }
             }

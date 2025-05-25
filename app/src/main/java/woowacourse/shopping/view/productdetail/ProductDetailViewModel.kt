@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
@@ -27,7 +30,7 @@ class ProductDetailViewModel(
     ) {
         val current = _quantity.value ?: INIT_QUANTITY
         val newQuantity = current + quantityIncrease
-        _quantity.value = newQuantity
+        _quantity.postValue(newQuantity)
     }
 
     override fun decreaseQuantity(
@@ -38,7 +41,7 @@ class ProductDetailViewModel(
         val current = _quantity.value ?: INIT_QUANTITY
         if (current > minQuantity) {
             val newQuantity = current - quantityDecrease
-            _quantity.value = newQuantity
+            _quantity.postValue(newQuantity)
         }
     }
 
@@ -49,9 +52,9 @@ class ProductDetailViewModel(
     }
 
     fun onAddToCartClicked() {
-        _addToCart.value = Event(Unit)
         val newCartItem = cartItem.copy(quantity = _quantity.value ?: INIT_QUANTITY)
-        cartRepository.add(newCartItem)
+        _addToCart.value = Event(Unit)
+        cartRepository.add(newCartItem) {}
     }
 
     companion object {
@@ -61,11 +64,21 @@ class ProductDetailViewModel(
             private val cartItem: CartItem,
         ) : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                ProductDetailViewModel(
-                    CartRepositoryImpl,
+            override fun <T : ViewModel> create(
+                modelClass: Class<T>,
+                extras: CreationExtras,
+            ): T {
+                val application = checkNotNull(extras[APPLICATION_KEY])
+                val context = application.applicationContext
+
+                val database = ShoppingDatabase.getDatabase(context)
+                val cartDao = database.cartDao()
+
+                return ProductDetailViewModel(
+                    CartRepositoryImpl(cartDao),
                     cartItem,
                 ) as T
+            }
         }
     }
 }

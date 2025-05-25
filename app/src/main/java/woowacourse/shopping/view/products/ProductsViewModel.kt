@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
+import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.products.ProductRepository
@@ -29,7 +30,7 @@ class ProductsViewModel(
     private val _navigateToCart = MutableLiveData<Event<Unit>>()
     val navigateToCart: LiveData<Event<Unit>> = _navigateToCart
 
-    private val _cartItemCount = MutableLiveData(productRepository.getAll().size)
+    private val _cartItemCount = MutableLiveData(INITIAL_CART_ITEM_COUNT)
     val cartItemCount: LiveData<Int> = _cartItemCount
 
     private var isAllProductsFetched = false
@@ -40,7 +41,7 @@ class ProductsViewModel(
         productId: Long,
         quantityIncrease: Int,
     ) {
-        _productsInShop.value =
+        _productsInShop.postValue(
             _productsInShop.value?.map {
                 if (it.product.id == productId) {
                     val newQuantity = it.quantity + quantityIncrease
@@ -48,7 +49,8 @@ class ProductsViewModel(
                 } else {
                     it
                 }
-            }
+            },
+        )
     }
 
     override fun decreaseQuantity(
@@ -56,7 +58,7 @@ class ProductsViewModel(
         quantityDecrease: Int,
         minQuantity: Int,
     ) {
-        _productsInShop.value =
+        _productsInShop.postValue(
             _productsInShop.value?.map {
                 if (it.product.id == productId && it.quantity > minQuantity) {
                     val newQuantity = it.quantity - quantityDecrease
@@ -64,18 +66,29 @@ class ProductsViewModel(
                 } else {
                     it
                 }
-            }
+            },
+        )
     }
 
     override fun updateQuantity() {
-        _productsInShop.value?.forEach {
-            cartRepository.update(it.product.id, it.quantity)
+        cartRepository.getAll { cartItems ->
+            val allProducts = _productsInShop.value?.toMutableList() ?: return@getAll
+            cartItems.forEach { cartItem ->
+                val index = allProducts.indexOfFirst { it.product.id == cartItem.product.id }
+                val product = allProducts[index]
+                if (cartItem.quantity != product.quantity) {
+                    allProducts[index] = product.copy(quantity = cartItem.quantity)
+                }
+            }
+            _productsInShop.postValue(allProducts)
+            _productsInShop.value?.forEach {
+                cartRepository.update(it.product.id, it.quantity)
+            }
         }
     }
 
     fun loadPage() {
         setUpdatedProducts()
-        updateCartItemCount()
         val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
         val nextEnd = minOf(nextStart + pageSize, productRepository.getAll().size)
@@ -83,13 +96,15 @@ class ProductsViewModel(
         if (nextStart < productRepository.getAll().size) {
             val nextItems = productRepository.fetchProducts(nextStart, nextEnd)
             loadedItems.addAll(nextItems)
-            _productsInShop.value = loadedItems.toList()
+            _productsInShop.postValue(loadedItems.toList())
             currentPage++
             if (nextEnd == productRepository.getAll().size) isAllProductsFetched = true
         }
     }
 
     fun reloadPage() {
+        updateQuantity()
+        updateCartItemCount()
         if (_productsInShop.value?.isNotEmpty() == true) return
         loadPage()
     }
@@ -103,26 +118,46 @@ class ProductsViewModel(
     }
 
     fun onOpenQuantitySelectClick(cartItem: CartItem) {
-        cartRepository.add(cartItem)
-        updateCartItemCount()
+        cartRepository.add(cartItem) {
+            updateCartItemCount()
+        }
     }
 
     private fun updateCartItemCount() {
-        _cartItemCount.value = cartRepository.getAll().size
+        cartRepository.getAll { cartItems ->
+            _cartItemCount.postValue(cartItems.size)
+        }
     }
 
     private fun setUpdatedProducts() {
-        val updatedProducts =
-            loadedItems.map { cartItem ->
-                val quantityInRepo = cartRepository.findQuantityById(cartItem.product.id)
-                cartItem.copy(quantity = quantityInRepo)
+        val updatedList = mutableListOf<CartItem>()
+        var completedCount = 0
+
+        if (loadedItems.isEmpty()) {
+            _productsInShop.postValue(emptyList())
+            return
+        }
+
+        loadedItems.forEach { cartItem ->
+            cartRepository.findQuantityById(cartItem.product.id) { quantity ->
+                val updated = cartItem.copy(quantity = quantity)
+
+                synchronized(updatedList) {
+                    updatedList.add(updated)
+                    completedCount++
+
+                    if (completedCount == loadedItems.size) {
+                        _productsInShop.postValue(updatedList)
+                    }
+                }
             }
-        _productsInShop.value = updatedProducts
+        }
     }
 
     companion object {
         private const val INITIAL_PAGE = 0
         private const val PAGE_SIZE = 20
+        private const val INITIAL_CART_ITEM_COUNT = 0
 
         val Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
@@ -131,12 +166,16 @@ class ProductsViewModel(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T {
-                    checkNotNull(extras[APPLICATION_KEY])
+                    val application = checkNotNull(extras[APPLICATION_KEY])
+                    val context = application.applicationContext
+
+                    val database = ShoppingDatabase.getDatabase(context)
+                    val cartDao = database.cartDao()
                     extras.createSavedStateHandle()
 
                     return ProductsViewModel(
                         ProductRepositoryImpl(),
-                        CartRepositoryImpl,
+                        CartRepositoryImpl(cartDao),
                     ) as T
                 }
             }
