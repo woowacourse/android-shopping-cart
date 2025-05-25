@@ -19,10 +19,6 @@
             type="woowacourse.shopping.product.detail.event.DetailEventHandler" />
 
         <variable
-            name="catalogHandler"
-            type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
-
-        <variable
             name="recentItem"
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
     </data>
@@ -106,7 +102,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:visibility="@{recentItem == null ? View.GONE : View.VISIBLE}"
-                    android:onClick="@{() -> catalogHandler.onProductClick(product)}"
+                    android:onClick="@{() -> detailHandler.onProductClick(recentItem)}"
                     android:paddingVertical="16dp"
                     android:paddingHorizontal="18dp"
                     android:layout_marginHorizontal="18dp"

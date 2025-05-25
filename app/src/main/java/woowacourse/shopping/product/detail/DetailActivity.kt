@@ -58,12 +58,13 @@ class DetailActivity : AppCompatActivity() {
         viewModel.lastViewed.observe(this) {
             binding.recentItem = it
         }
-
-        binding.handler =
-            DetailEventHandlerImpl(
-                viewModel,
-            )
-        binding.detailHandler = DetailEventHandlerImpl(viewModel)
+        val handler =
+            DetailEventHandlerImpl(viewModel) { product ->
+                startActivity(newIntent(this, product))
+                finish()
+            }
+        binding.handler = handler
+        binding.detailHandler = handler
         binding.recentItem
         observeProduct()
     }

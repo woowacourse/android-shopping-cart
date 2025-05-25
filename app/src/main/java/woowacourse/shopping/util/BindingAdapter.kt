@@ -7,6 +7,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.event.CartEventHandler
+import woowacourse.shopping.product.catalog.ProductUiModel
 
 @BindingAdapter("loadImage")
 fun loadImage(
@@ -44,4 +45,12 @@ fun setPrevButtonEnabled(
     handler: CartEventHandler,
 ) {
     view.isEnabled = handler.isPrevButtonEnabled()
+}
+
+@BindingAdapter("app:visibleIfNotSameProduct")
+fun View.visibleIfNotSameProduct(
+    recentItem: ProductUiModel?,
+    current: ProductUiModel?,
+) {
+    visibility = if (recentItem != null && recentItem.id != current?.id) View.VISIBLE else View.GONE
 }

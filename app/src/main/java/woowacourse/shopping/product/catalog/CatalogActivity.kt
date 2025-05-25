@@ -37,9 +37,11 @@ class CatalogActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
         applyWindowInsets()
 
+        binding.lifecycleOwner = this
         initRecyclerView()
         observePagingData()
         observeRecentViewedItems()
+        binding.viewModel = viewModel
     }
 
     private fun applyWindowInsets() {

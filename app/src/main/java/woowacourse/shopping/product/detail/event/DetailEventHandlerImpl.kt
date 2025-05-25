@@ -6,6 +6,7 @@ import woowacourse.shopping.product.detail.DetailViewModel
 
 class DetailEventHandlerImpl(
     private val viewModel: DetailViewModel,
+    private val onNavigateToDetail: (ProductUiModel) -> Unit,
 ) : DetailEventHandler,
     ProductQuantityHandler {
     override fun onPlusQuantity(product: ProductUiModel) {
@@ -18,5 +19,9 @@ class DetailEventHandlerImpl(
 
     override fun onAddCartItem(product: ProductUiModel) {
         viewModel.addToCart()
+    }
+
+    override fun onProductClick(product: ProductUiModel) {
+        onNavigateToDetail(product)
     }
 }

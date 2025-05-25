@@ -30,6 +30,9 @@ class CatalogViewModel(
     private val _recentViewedItems = MutableLiveData<List<ProductUiModel>>()
     val recentViewedItems: LiveData<List<ProductUiModel>> = _recentViewedItems
 
+    private val _hasRecentViewedItems = MutableLiveData<Boolean>()
+    val hasRecentViewedItems: LiveData<Boolean> = _hasRecentViewedItems
+
     val page: Int get() = currentPage
 
     private var currentPage = INITIAL_PAGE
@@ -138,8 +141,9 @@ class CatalogViewModel(
     }
 
     fun loadRecentViewedItems() {
-        viewedRepository.getViewedItems { viewedItems ->
-            _recentViewedItems.postValue(viewedItems)
+        viewedRepository.getViewedItems { items ->
+            _recentViewedItems.postValue(items)
+            _hasRecentViewedItems.postValue(items.isNotEmpty())
         }
     }
 
