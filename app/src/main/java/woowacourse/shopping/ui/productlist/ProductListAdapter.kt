@@ -55,14 +55,17 @@ class ProductListAdapter(
     }
 
     private fun compareItems(newItems: List<ProductListViewType>) {
-        var position = 0
-        while (items.isNotEmpty() && items[position] == newItems[position]) {
-            position++
-        }
+        val oldItems = this.items.toList()
 
         this.items.clear()
         this.items.addAll(newItems)
-        notifyItemChanged(position)
+
+        for (index in oldItems.indices) {
+            if (index >= newItems.size) break
+            if (oldItems[index] != newItems[index]) {
+                notifyItemChanged(index)
+            }
+        }
     }
 
     companion object {

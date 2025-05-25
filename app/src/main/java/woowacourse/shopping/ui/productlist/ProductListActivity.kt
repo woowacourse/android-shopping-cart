@@ -34,6 +34,11 @@ class ProductListActivity : AppCompatActivity() {
         initObserver()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.loadInfos()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_list, menu)
         return super.onCreateOptionsMenu(menu)
