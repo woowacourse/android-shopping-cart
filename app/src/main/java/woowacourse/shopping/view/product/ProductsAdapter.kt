@@ -34,8 +34,11 @@ class ProductsAdapter(
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ProductsItem>) {
-        this.items = items
-        notifyDataSetChanged()
+        if (items.isEmpty()) {
+            val oldItemCount = itemCount
+            this.items = items
+            notifyItemRangeRemoved(0, oldItemCount)
+        }
 
         val paginationItemPosition = itemCount - 1
         notifyItemRemoved(paginationItemPosition)
