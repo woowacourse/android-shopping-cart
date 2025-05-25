@@ -42,7 +42,8 @@ class ProductDetailViewModel(
         productsRepository.getRecentWatchingProducts(1) { result ->
             result
                 .onSuccess { recentProducts: List<Product> ->
-                    if (recentProducts.isEmpty()) {
+                    val isLastWatchingProduct = recentProducts[0] == this.product.value
+                    if (recentProducts.isEmpty() || isLastWatchingProduct) {
                         _recentProductBoxVisible.postValue(false)
                         return@getRecentWatchingProducts
                     }
