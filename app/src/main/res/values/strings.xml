@@ -25,6 +25,7 @@
     <string name="cart_left_page_button"><![CDATA[<]]></string>
     <string name="cart_right_page_button"><![CDATA[>]]></string>
     <string name="goods_details_last_viewed">마지막으로 본 상품</string>
+    <string name="history_container_recent_history">최근 본 상품</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.cart.mockserver
+package woowacourse.shopping.server
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
@@ -7,13 +7,15 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import woowacourse.shopping.data.cart.server.CartService
+import woowacourse.shopping.data.cart.server.DummyCarts
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Carts
 
-class CartServiceImpl : CartService {
+class TestCartServiceImpl : CartService {
     private val gson = Gson()
     private val client = OkHttpClient()
-    private val server = MockWebServer()
+    val server = MockWebServer()
 
     init {
         server.dispatcher =

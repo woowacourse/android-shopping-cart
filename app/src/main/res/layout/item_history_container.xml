@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="14dp"
-            android:text="최근 본 상품"
+            android:text="@string/history_container_recent_history"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:textStyle="bold"

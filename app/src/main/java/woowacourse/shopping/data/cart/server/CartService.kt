@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.cart.mockserver
+package woowacourse.shopping.data.cart.server
 
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Carts
