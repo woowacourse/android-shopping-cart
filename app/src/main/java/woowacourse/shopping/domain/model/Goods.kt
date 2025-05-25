@@ -11,6 +11,8 @@ data class Goods(
 ) : Serializable {
     fun totalPrice(): Int = price.value * quantity
 
+    fun updateQuantity(quantity: Int): Goods = copy(quantity = quantity)
+
     companion object {
         fun of(
             id: Int,
