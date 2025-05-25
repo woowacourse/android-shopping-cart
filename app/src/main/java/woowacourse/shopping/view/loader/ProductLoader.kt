@@ -18,9 +18,11 @@ class ProductLoader(
             val productIds = page.products.map { it.id }
 
             cartRepository.getCarts(productIds) { carts ->
+                val cartMap = carts.associateBy { it?.productId }
+
                 val productStates =
-                    page.products.mapIndexed { index, product ->
-                        val quantity = carts.getOrNull(index)?.quantity ?: Quantity(0)
+                    page.products.map { product ->
+                        val quantity = cartMap[product.id]?.quantity ?: Quantity(0)
                         ProductState(product, quantity)
                     }
 
