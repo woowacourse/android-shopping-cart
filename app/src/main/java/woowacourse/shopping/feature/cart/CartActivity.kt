@@ -45,7 +45,6 @@ class CartActivity :
         binding.lifecycleOwner = this
         binding.rvCartItems.adapter = adapter
         binding.viewModel = viewModel
-        viewModel.removeItemEvent.observe(this) { onClickDeleteButton(it) }
     }
 
     override fun onResume() {
