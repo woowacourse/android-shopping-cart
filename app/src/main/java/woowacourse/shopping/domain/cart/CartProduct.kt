@@ -9,12 +9,12 @@ data class CartProduct(
     private var _quantity: Int,
 ) : Serializable {
     val quantity get() = _quantity
-    fun increase() {
-        _quantity++
+    fun increase(): CartProduct {
+        return copy(_quantity = quantity + 1)
     }
 
-    fun decrease() {
-        _quantity--
+    fun decrease(): CartProduct {
+        return copy(_quantity = quantity - 1)
     }
 
     fun totalPrice(): Int {

@@ -16,18 +16,22 @@ interface CartDao {
     ): List<CartItemDetail>
 
     @Transaction
-    @Query("SELECT * FROM cart WHERE id = :cartItemId")
-    fun findByCartItemId(cartItemId: Long): CartItemDetail
+    @Query("SELECT * FROM cart WHERE product_id = :productId")
+    fun findByProductId(productId: Long): CartItemDetail?
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(cartItemEntity: CartItemEntity): Long
 
     @Transaction
-    @Query("DELETE FROM cart WHERE id = :cartItemId")
-    fun delete(cartItemId: Long)
+    @Query("DELETE FROM cart WHERE product_id = :productId")
+    fun deleteByProductId(productId: Long)
 
     @Transaction
-    @Query("UPDATE cart SET quantity = quantity + :delta WHERE id = :cartItemId")
-    fun updateQuantity(cartItemId: Long, delta: Int)
+    @Query("DELETE FROM cart WHERE id = :cartItemId")
+    fun deleteByCartItemId(cartItemId: Long)
+
+    @Transaction
+    @Query("UPDATE cart SET quantity = quantity + :delta WHERE product_id = :productId")
+    fun updateQuantity(productId: Long, delta: Int)
 }

@@ -38,7 +38,7 @@ class CartDataSourceImpl(
         return runCatching {
             dao.insert(cartItemEntity)
         }.mapCatching { cartId ->
-            if (cartId == EXIST_PRODUCT_IN_CART) dao.updateQuantity(cartId, delta)
+            if (cartId == EXIST_PRODUCT_IN_CART) updateQuantityByProductId(productId, delta)
         }
     }
 
@@ -50,7 +50,13 @@ class CartDataSourceImpl(
 
     override fun deleteByProductId(productId: Long): Result<Unit> {
         return runCatching {
-            dao.delete(productId)
+            dao.deleteByProductId(productId)
+        }
+    }
+
+    override fun deleteByCartItemId(cartItemId: Long): Result<Unit> {
+        return runCatching {
+            dao.deleteByCartItemId(cartItemId)
         }
     }
 

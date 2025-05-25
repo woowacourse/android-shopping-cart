@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.ui.productdetail.ProductDetailViewModel" />
@@ -38,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
-            app:setImageWithGlide="@{viewModel.product.imageUrl}" />
+            app:setImageWithGlide="@{viewModel.cartProductUiState.product.imageUrl}" />
 
         <TextView
             android:id="@+id/tv_detail_product_title"
@@ -47,7 +48,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="15dp"
-            android:text="@{viewModel.product.name}"
+            android:text="@{viewModel.cartProductUiState.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -73,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@{@string/price(viewModel.totalPrice)}"
+            android:text="@{@string/price(viewModel.cartProductUiState.totalPrice())}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/include_detail_product_quantity_select"
@@ -90,10 +91,9 @@
             android:layout_marginHorizontal="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_detail_product_price"
-            bind:id="@{viewModel.product.id == null ? 0L : viewModel.product.id }"
+            bind:id="@{viewModel.cartProductUiState.product.id}"
             bind:listener="@{quantityChangeListener}"
-            bind:quantity="@{viewModel.quantity}" />
-<!--            bind:quantity="@{viewModel.cartProduct.quantity}" />-->
+            bind:quantity="@{viewModel.cartProductUiState.quantity}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_add_cart"

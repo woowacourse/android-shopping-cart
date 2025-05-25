@@ -4,63 +4,59 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.map
-import woowacourse.shopping.domain.cart.CartRepository
-import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductRepository
+import woowacourse.shopping.domain.cart.CartProduct
+import woowacourse.shopping.domain.product.ProductOverViewRepository
 import woowacourse.shopping.providers.RepositoryProvider
 
 class ProductDetailViewModel(
     private val productId: Long,
-    private val productRepository: ProductRepository,
-    private val cartRepository: CartRepository,
+    private val repository: ProductOverViewRepository,
 ) : ViewModel() {
-    lateinit var product: Product
-        private set
     private val _eventAddedCartToast = MutableLiveData<Unit>()
     val eventAddedCartToast: LiveData<Unit> = _eventAddedCartToast
 
-    private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
-    val quantity: LiveData<Int> get() = _quantity
-    val totalPrice: LiveData<Int> get() = _quantity.map { quantity -> quantity * product.price }
+    private var _cartProductUiState: MutableLiveData<CartProduct?> = MutableLiveData()
+    val cartProductUiState: LiveData<CartProduct?> get() = _cartProductUiState
 
     init {
-        productRepository.fetchById(productId) { fetchedProduct ->
-            product = fetchedProduct
+        repository.findById(productId) { result ->
+            result.onSuccess { product ->
+                product ?: return@onSuccess /* 존재 하지 않는 상품을 조회했음을 알려야 함 */
+                _cartProductUiState.postValue(CartProduct(product = product, _quantity = 1))
+            }
         }
     }
 
     fun addCart() {
-        cartRepository.insertOrAddQuantity(productId, quantity = quantity.value ?: 0) { result ->
-            when {
-                result.isSuccess -> {
-                    _eventAddedCartToast.postValue(Unit)
-                }
-
-                result.isFailure -> {}   // DB 접근 에러 발생 / 토스트로 이유 알려주기
+        val cartProduct = cartProductUiState.value ?: return
+        repository.insertOrAddQuantity(cartProduct.product.id!!, cartProduct.quantity) { result ->
+            result.onSuccess {
+                _eventAddedCartToast.postValue(Unit)
             }
         }
     }
 
     fun increaseQuantity() {
-        _quantity.value = _quantity.value?.plus(1)
+        val cartProduct = cartProductUiState.value ?: return
+        _cartProductUiState.postValue(cartProduct.increase())
     }
 
     fun decreaseQuantity() {
-        _quantity.value = _quantity.value?.minus(1)?.coerceAtLeast(1)
+        val cartProduct = cartProductUiState.value ?: return
+        val decreasedQuantityProduct = cartProduct.decrease()
+        if (decreasedQuantityProduct.quantity != 0) _cartProductUiState.postValue(
+            decreasedQuantityProduct
+        )
     }
 
     companion object {
-        private const val EXIST_PRODUCT_IN_CART = -1L
-
         fun createFactory(productId: Long): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ProductDetailViewModel(
                         productId = productId,
-                        productRepository = RepositoryProvider.provideProductRepository(),
-                        cartRepository = RepositoryProvider.provideCartRepository(),
+                        repository = RepositoryProvider.provideProductOverViewRepository(),
                     ) as T
                 }
             }

@@ -38,4 +38,8 @@ interface CartDataSource {
     fun deleteByProductId(
         productId: Long,
     ): Result<Unit>
+
+    fun deleteByCartItemId(
+        cartItemId: Long,
+    ): Result<Unit>
 }
