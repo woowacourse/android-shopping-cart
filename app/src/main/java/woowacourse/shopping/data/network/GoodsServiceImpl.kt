@@ -2,6 +2,7 @@ package woowacourse.shopping.data.network
 
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,10 +24,15 @@ class GoodsServiceImpl : GoodsService {
                 .build()
 
         val body = executeRequest(url)
-        return gson.fromJson(body, Array<GoodsEntity>::class.java).toList()
+        return try {
+            gson.fromJson(body, Array<GoodsEntity>::class.java).toList()
+        } catch (e: JsonSyntaxException) {
+            Log.e("GoodsServiceImpl", "JSON 파싱 실패: ${e.message}")
+            emptyList()
+        }
     }
 
-    override fun getGoodsById(id: Int): GoodsEntity {
+    override fun getGoodsById(id: Int): GoodsEntity? {
         val url =
             BASE_URL.toHttpUrl()
                 .newBuilder()
@@ -35,7 +41,12 @@ class GoodsServiceImpl : GoodsService {
                 .build()
 
         val body = executeRequest(url)
-        return gson.fromJson(body, GoodsEntity::class.java)
+        return try {
+            gson.fromJson(body, GoodsEntity::class.java)
+        } catch (e: JsonSyntaxException) {
+            Log.e("GoodsServiceImpl", "JSON 파싱 실패 (상품 ID: $id): ${e.message}")
+            null
+        }
     }
 
     private fun executeRequest(url: okhttp3.HttpUrl): String? {

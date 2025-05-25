@@ -8,5 +8,5 @@ interface GoodsService {
         count: Int,
     ): List<GoodsEntity>
 
-    fun getGoodsById(id: Int): GoodsEntity
+    fun getGoodsById(id: Int): GoodsEntity?
 }

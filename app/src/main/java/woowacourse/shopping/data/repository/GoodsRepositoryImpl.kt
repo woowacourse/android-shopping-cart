@@ -13,7 +13,7 @@ class GoodsRepositoryImpl(
         var result: Goods? = null
 
         thread {
-            result = goodsService.getGoodsById(id).toGoods()
+            result = goodsService.getGoodsById(id)?.toGoods()
         }.join()
 
         return result
