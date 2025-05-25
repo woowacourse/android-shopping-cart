@@ -3,9 +3,11 @@ package woowacourse.shopping.presentation.goods.list
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
 class GoodsAdapter(
     private val goodsClickListener: GoodsClickListener,
+    private val quantitySelectorListener: QuantitySelectorListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
     private var items: List<Goods> = emptyList()
 
@@ -13,7 +15,7 @@ class GoodsAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): GoodsViewHolder {
-        return GoodsViewHolder(parent, goodsClickListener)
+        return GoodsViewHolder(parent, goodsClickListener, quantitySelectorListener)
     }
 
     override fun getItemCount(): Int = items.size

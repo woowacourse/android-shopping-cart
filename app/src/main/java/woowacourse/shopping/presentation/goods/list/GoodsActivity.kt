@@ -14,6 +14,7 @@ import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
 class GoodsActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsBinding>(R.layout.activity_goods)
@@ -63,7 +64,8 @@ class GoodsActivity : BaseActivity() {
                 override fun onPlusClick(goodsId: Int) {
                     viewModel.addToShoppingCart(goodsId)
                 }
-
+            },
+            object : QuantitySelectorListener {
                 override fun onIncreaseQuantity(goodsId: Int) {
                     viewModel.increaseGoodsCount(goodsId)
                 }
