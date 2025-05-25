@@ -26,7 +26,7 @@ class GoodsRepositoryImpl(
         var result: List<Goods> = emptyList()
 
         thread {
-            result = goodsService.getPagedGoods(page, count).map { it.toGoods() }
+            result = goodsService.getPagedGoods(page, count).mapNotNull { it.toGoods() }
         }.join()
 
         return result
