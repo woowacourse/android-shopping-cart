@@ -12,6 +12,7 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.loader.CartLoader
 import woowacourse.shopping.view.loader.HistoryLoader
 import woowacourse.shopping.view.loader.ProductWithCartLoader
 import kotlin.getValue
@@ -42,4 +43,6 @@ class AppContainer(
     val productWithCartLoader = ProductWithCartLoader(productRepository, cartRepository)
 
     val historyLoader = HistoryLoader(productRepository, historyRepository)
+
+    val cartLoader = CartLoader(cartRepository, productRepository)
 }

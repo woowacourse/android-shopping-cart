@@ -16,9 +16,10 @@ import woowacourse.shopping.domain.cart.CartSinglePage
 import woowacourse.shopping.domain.product.Price
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
 import woowacourse.shopping.view.cart.vm.CartViewModel
+import woowacourse.shopping.view.loader.CartLoader
+import woowacourse.shopping.view.main.state.ProductState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
@@ -27,11 +28,14 @@ class CartViewModelTest {
 
     private lateinit var viewModel: CartViewModel
     private lateinit var cartRepository: CartRepository
-    private val productRepository: ProductRepository = mockk()
+
+    private lateinit var cartLoader: CartLoader
 
     @BeforeEach
     fun setUp() {
         cartRepository = mockk()
+        cartLoader = mockk()
+
         val dummyPages =
             listOf(
                 (1L..5L).map { Cart(Quantity(1), it) },
@@ -59,14 +63,20 @@ class CartViewModelTest {
         }
 
         every {
-            productRepository.getProduct(any(), any())
+            cartLoader.invoke(any(), any(), any())
         } answers {
-            val id = firstArg<Long>()
-            val callback = secondArg<(Product) -> Unit>()
-            callback(Product(id, "상품", "", Price(1000), Quantity(1)))
+            val pageIndex = firstArg<Int>()
+            val callback = thirdArg<(List<ProductState>, Boolean) -> Unit>()
+            val carts = dummyPages.getOrElse(pageIndex) { emptyList() }
+            val result =
+                carts.map {
+                    ProductState(Product(it.productId, "치즈닭갈비덮밥", "", Price(1000), Quantity(1)), it.quantity)
+                }
+            val hasNext = pageIndex + 1 < dummyPages.size
+            callback(result, hasNext)
         }
 
-        viewModel = CartViewModel(cartRepository, productRepository)
+        viewModel = CartViewModel(cartRepository, cartLoader)
     }
 
     @Test

@@ -4,19 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.cart.CartUiEvent
 import woowacourse.shopping.view.cart.state.CartUiState
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.loader.CartLoader
 import woowacourse.shopping.view.main.state.IncreaseState
-import woowacourse.shopping.view.main.state.ProductState
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
+    private val cartLoader: CartLoader,
 ) : ViewModel() {
     private val paging = Paging(initialPage = INITIAL_PAGE_NO, pageSize = PAGE_SIZE)
 
@@ -51,15 +50,12 @@ class CartViewModel(
 
     fun loadCarts() {
         val nextPage = paging.getPageNo() - 1
-        val products = mutableListOf<ProductState>()
-        cartRepository.singlePage(nextPage, PAGE_SIZE) { page ->
-            page.carts.map { cart ->
-                productRepository.getProduct(cart.productId) {
-                    products.add(ProductState(it, cart.quantity))
-                }
-            }
-            val pageState = paging.createPageState(page.hasNextPage)
-            _uiState.postValue(CartUiState(items = products, pageState = pageState))
+        cartLoader.invoke(
+            nextPage,
+            PAGE_SIZE,
+        ) { carts, hasNextPage ->
+            val pageState = paging.createPageState(hasNextPage)
+            _uiState.postValue(CartUiState(items = carts, pageState = pageState))
         }
     }
 
@@ -80,21 +76,14 @@ class CartViewModel(
     }
 
     private fun refresh() {
-        cartRepository.singlePage(paging.getPageNo() - 1, PAGE_SIZE) { page ->
-            val products = mutableListOf<ProductState>()
-            page.carts.map { cart ->
-                productRepository.getProduct(cart.productId) {
-                    products.add(ProductState(it, cart.quantity))
-                }
-            }
-
-            if (paging.resetToLastPageIfEmpty(products)) {
+        cartLoader.invoke(paging.getPageNo() - 1, PAGE_SIZE) { carts, hasNextPage ->
+            if (paging.resetToLastPageIfEmpty(carts)) {
                 refresh()
-                return@singlePage
+                return@invoke
             }
 
-            val pageState = paging.createPageState(page.hasNextPage)
-            _uiState.postValue(CartUiState(items = products, pageState = pageState))
+            val pageState = paging.createPageState(hasNextPage)
+            _uiState.postValue(CartUiState(items = carts, pageState = pageState))
         }
     }
 

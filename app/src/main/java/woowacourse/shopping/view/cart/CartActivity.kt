@@ -25,7 +25,7 @@ class CartActivity : AppCompatActivity(), CartQuantityHandler, CartAdapter.Handl
         val container = (application as App).container
         CartViewModelFactory(
             container.cartRepository,
-            container.productRepository,
+            container.cartLoader,
         )
     }
     private val cartAdapter by lazy {
