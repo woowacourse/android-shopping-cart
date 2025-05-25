@@ -1,6 +1,5 @@
 package woowacourse.shopping.di
 
-import android.content.Context
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
@@ -13,26 +12,24 @@ object RepositoryModule {
     private var cartRepository: CartRepository? = null
     private var recentProductRepository: RecentProductRepository? = null
 
-    fun provideProductRepository(context: Context): ProductRepository =
+    fun provideProductRepository(): ProductRepository =
         productRepository ?: run {
-            val cartDataSource = DataSourceModule.provideCartDataSource(context)
+            val cartDataSource = DataSourceModule.provideCartDataSource()
             val productDataSource = DataSourceModule.provideProductDataSource()
             ProductRepositoryImpl(cartDataSource, productDataSource).also {
                 productRepository = it
             }
         }
 
-    fun provideCartRepository(context: Context): CartRepository =
+    fun provideCartRepository(): CartRepository =
         cartRepository ?: run {
-            val cartDataSource = DataSourceModule.provideCartDataSource(context)
-            CartRepositoryImpl(cartDataSource).also {
-                cartRepository = it
-            }
+            val cartDataSource = DataSourceModule.provideCartDataSource()
+            CartRepositoryImpl(cartDataSource).also { cartRepository = it }
         }
 
-    fun provideRecentProductRepository(context: Context): RecentProductRepository =
+    fun provideRecentProductRepository(): RecentProductRepository =
         recentProductRepository ?: run {
-            val recentlyProductDataSource = DataSourceModule.provideRecentProductDataSource(context)
+            val recentlyProductDataSource = DataSourceModule.provideRecentProductDataSource()
             val productDataSource = DataSourceModule.provideProductDataSource()
             RecentProductRepositoryImpl(recentlyProductDataSource, productDataSource).also {
                 recentProductRepository = it

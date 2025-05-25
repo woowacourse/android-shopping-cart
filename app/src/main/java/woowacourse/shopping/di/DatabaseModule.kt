@@ -6,9 +6,16 @@ import woowacourse.shopping.data.db.CartDatabase
 import woowacourse.shopping.data.db.RecentlyProductDao
 
 object DatabaseModule {
-    fun provideDatabase(context: Context): CartDatabase = CartDatabase.getInstance(context.applicationContext)
+    private lateinit var appContext: Context
+    private var database: CartDatabase? = null
 
-    fun provideCartDao(db: CartDatabase): CartDao = db.cartDao()
+    fun init(context: Context) {
+        appContext = context.applicationContext
+    }
 
-    fun provideRecentProductDao(db: CartDatabase): RecentlyProductDao = db.recentlyProductDao()
+    fun provideDatabase(): CartDatabase = CartDatabase.getInstance(appContext).also { database = it }
+
+    fun provideCartDao(): CartDao = provideDatabase().cartDao()
+
+    fun provideRecentProductDao(): RecentlyProductDao = provideDatabase().recentlyProductDao()
 }

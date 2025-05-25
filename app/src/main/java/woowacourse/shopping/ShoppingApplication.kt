@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.data.remote.ProductMockWebServerDispatcher
+import woowacourse.shopping.di.DataSourceModule
+import woowacourse.shopping.di.DatabaseModule
 import java.io.IOException
 
 class ShoppingApplication : Application() {
@@ -12,6 +14,8 @@ class ShoppingApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         startMockServer()
+        DatabaseModule.init(this)
+        DataSourceModule.init(this)
     }
 
     override fun onTerminate() {
