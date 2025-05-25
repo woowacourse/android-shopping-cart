@@ -39,11 +39,45 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `장바구니에 상품을 추가한 후 event가 발생한다`() {
+    fun `수량 증가 버튼 클릭 시 수량이 증가한다`() {
+        // when
+        viewModel.onQuantityIncreaseClick(product)
+
+        // then
+        assertEquals(2, viewModel.quantity.value)
+    }
+
+    @Test
+    fun `수량 감소 버튼 클릭 시 수량이 감소한다`() {
+        // when
+        viewModel.onQuantityIncreaseClick(product)
+        viewModel.onQuantityDecreaseClick(product)
+
+        // then
+        assertEquals(1, viewModel.quantity.value)
+    }
+
+    @Test
+    fun `수량이 1일 때 수량 감소 버튼 클릭 시 수량이 감소하지 않는다`() {
+        viewModel.onQuantityDecreaseClick(product)
+        assertEquals(1, viewModel.quantity.value)
+    }
+
+    @Test
+    fun `장바구니 담기 클릭 시 이벤트가 발생한다`() {
         // when
         viewModel.onAddToCartClick()
 
         // then
         assertEquals(Unit, viewModel.addToCartEvent.getValue())
+    }
+
+    @Test
+    fun `최근 본 상품 클릭 시 이벤트가 발생한다`() {
+        // when
+        viewModel.onLastProductClick()
+
+        // then
+        assertEquals(Unit, viewModel.lastProductClickEvent.getValue())
     }
 }
