@@ -2,11 +2,12 @@ package woowacourse.shopping.data.recent
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface ViewedItemDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertViewedProduct(viewedItem: ViewedItem)
 
     @Query("DELETE FROM ViewedItemEntity WHERE id = :id")
@@ -15,9 +16,9 @@ interface ViewedItemDao {
     @Query("SELECT * FROM ViewedItemEntity WHERE id = :id")
     fun getViewedProductById(id: Long): ViewedItem?
 
-    @Query("SELECT * FROM ViewedItemEntity")
-    fun getAll(): List<ViewedItem>
+    @Query("SELECT * FROM ViewedItemEntity ORDER BY viewedAt DESC LIMIT 10")
+    fun getRecentViewedItems(): List<ViewedItem>
 
-    @Query("SELECT EXISTS(SELECT * FROM ViewedItemEntity WHERE id = :id)")
-    fun isViewedProductExist(id: Long): Boolean
+//    @Query("SELECT EXISTS(SELECT * FROM ViewedItemEntity WHERE id = :id)")
+//    fun isViewedProductExist(id: Long): Boolean
 }

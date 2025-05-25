@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-class ViewedItemAdapter(
-    private val viewedProducts: List<ProductUiModel>,
-) : RecyclerView.Adapter<ViewedItemHolder>() {
+class ViewedItemAdapter : RecyclerView.Adapter<ViewedItemHolder>() {
+    private var viewedProducts: List<ProductUiModel> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -18,4 +18,9 @@ class ViewedItemAdapter(
     ) = holder.bind(viewedProducts[position])
 
     override fun getItemCount(): Int = viewedProducts.size
+
+    fun setData(newItems: List<ProductUiModel>) {
+        viewedProducts = newItems
+        notifyDataSetChanged()
+    }
 }

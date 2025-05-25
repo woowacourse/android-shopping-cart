@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartItemDatabase
 import woowacourse.shopping.data.cart.CartItemRepositoryImpl
+import woowacourse.shopping.data.recent.ViewedItemDatabase
+import woowacourse.shopping.data.recent.ViewedItemRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.product.detail.DetailViewModel.Companion.factory
@@ -27,9 +29,11 @@ class DetailActivity : AppCompatActivity() {
     private val viewModel by lazy {
         val db = CartItemDatabase.getInstance(this)
         val repository = CartItemRepositoryImpl(db.cartItemDao())
+        val viewedDb = ViewedItemDatabase.getInstance(this)
+        val viewedRepository = ViewedItemRepositoryImpl(viewedDb.viewedItemDao())
         ViewModelProvider(
             this,
-            factory(repository),
+            factory(repository, viewedRepository),
         )[DetailViewModel::class.java]
     }
 

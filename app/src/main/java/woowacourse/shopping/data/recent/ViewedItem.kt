@@ -5,9 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "ViewedItemEntity")
 data class ViewedItem(
-    @PrimaryKey(autoGenerate = true) val uid: Long = 0,
-    val id: Long,
+    @PrimaryKey val id: Long,
     val imageUrl: String,
     val name: String,
     val price: Int,
+    val viewedAt: Long = System.currentTimeMillis(),
 )

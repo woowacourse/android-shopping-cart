@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.cart.CartItem
 import woowacourse.shopping.data.cart.CartItemRepository
 import woowacourse.shopping.data.product.ProductsDataSource
+import woowacourse.shopping.data.recent.ViewedItemRepository
 import woowacourse.shopping.product.catalog.model.PagingData
 
 class CatalogViewModel(
     private val dataSource: ProductsDataSource,
     private val repository: CartItemRepository,
+    private val viewedRepository: ViewedItemRepository,
 ) : ViewModel() {
     private val _pagingData = MutableLiveData<PagingData>()
     val pagingData: LiveData<PagingData> = _pagingData
@@ -25,12 +27,16 @@ class CatalogViewModel(
     private val _cartCount = MutableLiveData(INITIAL_QUANTITY)
     val cartCount: LiveData<Int> = _cartCount
 
+    private val _recentViewedItems = MutableLiveData<List<ProductUiModel>>()
+    val recentViewedItems: LiveData<List<ProductUiModel>> = _recentViewedItems
+
     val page: Int get() = currentPage
 
     private var currentPage = INITIAL_PAGE
 
     init {
         loadCatalogProducts()
+        loadRecentViewedItems()
         updateCartCount()
     }
 
@@ -131,6 +137,12 @@ class CatalogViewModel(
         }
     }
 
+    fun loadRecentViewedItems() {
+        viewedRepository.getViewedItems { viewedItems ->
+            _recentViewedItems.postValue(viewedItems)
+        }
+    }
+
     private fun updatePaging() {
         _pagingData.postValue(
             PagingData(
@@ -180,11 +192,12 @@ class CatalogViewModel(
         fun factory(
             dataSource: ProductsDataSource,
             repository: CartItemRepository,
+            viewedRepository: ViewedItemRepository,
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T =
                     if (modelClass.isAssignableFrom(CatalogViewModel::class.java)) {
-                        CatalogViewModel(dataSource, repository) as T
+                        CatalogViewModel(dataSource, repository, viewedRepository) as T
                     } else {
                         throw IllegalArgumentException("Unknown ViewModel class")
                     }
