@@ -19,4 +19,7 @@ interface LatestGoodsDao {
 
     @Query("DELETE FROM latestGoods WHERE goodsId = (SELECT goodsId FROM latestGoods ORDER BY timestamp ASC LIMIT 1)")
     fun deleteOldest()
+
+    @Query("SELECT COUNT(*) FROM latestGoods")
+    fun getCount(): Int
 }

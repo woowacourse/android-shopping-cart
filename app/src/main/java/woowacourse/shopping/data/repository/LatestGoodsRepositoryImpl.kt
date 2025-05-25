@@ -20,8 +20,8 @@ class LatestGoodsRepositoryImpl(
     }
 
     private fun isFull(): Boolean {
-        val latestGoods = latestGoodsDao.getAll()
-        return latestGoods.size > MAX_SIZE
+        val count = latestGoodsDao.getCount()
+        return count > MAX_SIZE
     }
 
     private fun deleteOldest() {
