@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     }
 
     override fun onClickHistory(productId: Long) {
-        moveToDetailActivity(productId)
+        viewModel.saveHistory(productId)
     }
 
     override fun onClickIncrease(productId: Long) {
@@ -143,6 +143,7 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
 
     override fun onResume() {
         super.onResume()
+        viewModel.syncHistory()
         viewModel.syncCartQuantities()
     }
 }
