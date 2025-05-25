@@ -52,6 +52,7 @@ class CartViewModel(
     fun removeCartItemOrDecreaseQuantity(cartItem: CartItem) {
         cartRepository.removeOrDecreaseQuantity(cartItem.goods, cartItem.quantity) {
             updateCartQuantity()
+            updatePage()
         }
     }
 
@@ -63,6 +64,7 @@ class CartViewModel(
             _cart.value = currentPageCartItems
         }
         updateCartDataSize()
+        updatePageMoveAvailability()
     }
 
     private fun updateCartData() {
@@ -84,15 +86,19 @@ class CartViewModel(
 
     fun delete(cartItem: CartItem) {
         cartRepository.delete(cartItem.goods) {
-            cartRepository.getAllItemsSize { totalCartSize ->
-                totalCartSizeData = totalCartSize
-                if (currentPage > endPage) {
-                    currentPage = endPage
-                }
-                _isMultiplePages.postValue(totalCartSize > PAGE_SIZE)
-                updatePageMoveAvailability()
-                updateCartData()
+            updatePage()
+        }
+    }
+
+    private fun updatePage() {
+        cartRepository.getAllItemsSize { totalCartSize ->
+            totalCartSizeData = totalCartSize
+            if (currentPage > endPage) {
+                currentPage = endPage
             }
+            _isMultiplePages.postValue(totalCartSize > PAGE_SIZE)
+            updatePageMoveAvailability()
+            updateCartData()
         }
     }
 
