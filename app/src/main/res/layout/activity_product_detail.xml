@@ -130,7 +130,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            isGone="@{viewModel.lastProduct == null}"
+            isGone="@{viewModel.lastProduct == null || viewModel.lastProduct.id == viewModel.product.product.id}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

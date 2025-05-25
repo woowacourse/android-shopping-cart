@@ -47,7 +47,7 @@ class ProductDetailActivity :
             )
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         viewModel.loadInventoryProduct(productId)
-        viewModel.loadRecentProduct(productId)
+        viewModel.loadLastViewedProduct()
     }
 
     override fun onSelectRecentProduct() {

@@ -31,7 +31,6 @@ class InventoryActivity :
                 application.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
-
         initRecyclerview()
     }
 
@@ -87,7 +86,7 @@ class InventoryActivity :
     }
 
     override fun onSelectProduct(product: ProductItem) {
-        viewModel.updateRecentProducts(product)
+//        viewModel.updateRecentProducts(product)
         startActivity(ProductDetailActivity.newIntent(this, product.product.id))
     }
 
