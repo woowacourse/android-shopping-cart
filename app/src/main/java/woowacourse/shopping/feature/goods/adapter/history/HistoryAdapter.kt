@@ -5,8 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemHistoryBinding
 import woowacourse.shopping.domain.model.History
+import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
 
-class HistoryAdapter : RecyclerView.Adapter<HistoryViewHolder>() {
+class HistoryAdapter(
+    private val goodsClickListener: GoodsClickListener,
+) : RecyclerView.Adapter<HistoryViewHolder>() {
     private val items: MutableList<History> = mutableListOf()
 
     fun setItems(newItems: List<History>) {
@@ -21,7 +24,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryViewHolder>() {
     ): HistoryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemHistoryBinding.inflate(inflater, parent, false)
-        return HistoryViewHolder(binding)
+        return HistoryViewHolder(binding, goodsClickListener)
     }
 
     override fun onBindViewHolder(

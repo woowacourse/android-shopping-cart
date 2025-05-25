@@ -18,6 +18,7 @@ import woowacourse.shopping.data.history.repository.HistoryRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
@@ -27,11 +28,9 @@ import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.util.toUi
 
-class GoodsActivity :
-    AppCompatActivity(),
-    GoodsClickListener {
+class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
-    private val adapter: GoodsAdapter by lazy { GoodsAdapter(this) }
+    private lateinit var adapter: GoodsAdapter
     private val viewModel: GoodsViewModel by viewModels {
         ViewModelFactory {
             GoodsViewModel(
@@ -47,22 +46,13 @@ class GoodsActivity :
         binding = ActivityGoodsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup = GoodsSpanSizeLookup(adapter)
-        binding.rvGoods.layoutManager = gridLayoutManager
-        binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
 
-        viewModel.items.observe(this) { itemList ->
-            adapter.setItems(itemList)
-        }
-        viewModel.hasNextPage.observe(this) { hasNext ->
-            adapter.setHasNextPage(hasNext)
-        }
-
-        observeCartInsertResult()
+        setupAdapter()
+        setupRecyclerView()
+        observeViewModel()
         setupActivityResultLauncher()
+        observeCartInsertResult()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -90,20 +80,59 @@ class GoodsActivity :
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClickGoods(cart: Cart) {
-        navigate(cart)
+    private fun setupRecyclerView() {
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup = GoodsSpanSizeLookup(adapter)
+        binding.rvGoods.layoutManager = gridLayoutManager
+        binding.rvGoods.adapter = adapter
     }
 
-    override fun insertToCart(cart: Cart) {
-        viewModel.insertToCart(cart)
+    private fun observeViewModel() {
+        viewModel.items.observe(this) { itemList ->
+            adapter.setItems(itemList)
+        }
+        viewModel.hasNextPage.observe(this) { hasNext ->
+            adapter.setHasNextPage(hasNext)
+        }
+        viewModel.navigateToCart.observe(this) { cart ->
+            navigate(cart)
+        }
     }
 
-    override fun removeFromCart(cart: Cart) {
-        viewModel.removeFromCart(cart)
+    private fun observeCartInsertResult() {
+        viewModel.isSuccess.observe(this) { cart ->
+            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
+        }
+        viewModel.isFail.observe(this) {
+            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
+        }
     }
 
-    override fun loadMore() {
-        viewModel.addPage()
+    private fun setupAdapter() {
+        adapter =
+            GoodsAdapter(
+                object : GoodsClickListener {
+                    override fun onClickGoods(cart: Cart) {
+                        navigate(cart)
+                    }
+
+                    override fun onClickHistory(history: History) {
+                        viewModel.findCartFromHistory(history)
+                    }
+
+                    override fun insertToCart(cart: Cart) {
+                        viewModel.insertToCart(cart)
+                    }
+
+                    override fun removeFromCart(cart: Cart) {
+                        viewModel.removeFromCart(cart)
+                    }
+
+                    override fun loadMore() {
+                        viewModel.addPage()
+                    }
+                },
+            )
     }
 
     private fun setupActivityResultLauncher() {
@@ -127,15 +156,6 @@ class GoodsActivity :
         adapter.updateItemQuantity(changedId, changedQuantity)
 
         viewModel.refreshHistoryOnly()
-    }
-
-    private fun observeCartInsertResult() {
-        viewModel.isSuccess.observe(this) { cart ->
-            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
-        }
-        viewModel.isFail.observe(this) {
-            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun navigate(cart: Cart) {

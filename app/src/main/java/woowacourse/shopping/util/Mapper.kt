@@ -2,6 +2,7 @@ package woowacourse.shopping.util
 
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.model.CartUiModel
 
 fun Cart.toUi(): CartUiModel =
@@ -38,3 +39,5 @@ fun List<Any>.updateCartQuantity(
     }
 
 fun Cart.updateQuantity(newQuantity: Int): Cart = this.copy(quantity = newQuantity)
+
+fun History.toCartFrom(carts: List<Cart>): Cart? = carts.find { it.goods.id == this.id }

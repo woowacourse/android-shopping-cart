@@ -85,7 +85,7 @@ class GoodsAdapter(
         return when (ItemViewType.from(viewType)) {
             ItemViewType.HISTORY -> {
                 val binding = ItemHistoryContainerBinding.inflate(inflater, parent, false)
-                HistoryContainerViewHolder(binding)
+                HistoryContainerViewHolder(binding, goodsClickListener)
             }
             ItemViewType.GOODS -> {
                 val binding = ItemGoodsBinding.inflate(inflater, parent, false)

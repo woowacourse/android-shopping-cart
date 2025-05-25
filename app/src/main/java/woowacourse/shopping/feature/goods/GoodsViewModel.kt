@@ -10,6 +10,7 @@ import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
+import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.updateCartQuantity
@@ -25,6 +26,8 @@ class GoodsViewModel(
     val totalQuantity: LiveData<Int> get() = _totalQuantity
     private val _hasNextPage = MutableLiveData(true)
     val hasNextPage: LiveData<Boolean> get() = _hasNextPage
+    private val _navigateToCart = MutableSingleLiveData<Cart>()
+    val navigateToCart: SingleLiveData<Cart> get() = _navigateToCart
     private val _isSuccess = MutableSingleLiveData<Unit>()
     val isSuccess: SingleLiveData<Unit> get() = _isSuccess
     private val _isFail = MutableSingleLiveData<Unit>()
@@ -72,6 +75,16 @@ class GoodsViewModel(
                 }
 
             _items.postValue(updatedItems)
+        }
+    }
+
+    fun findCartFromHistory(history: History) {
+        val cart =
+            _items.value
+                ?.filterIsInstance<Cart>()
+                ?.find { it.goods.id == history.id }
+        if (cart != null) {
+            _navigateToCart.setValue(cart)
         }
     }
 
