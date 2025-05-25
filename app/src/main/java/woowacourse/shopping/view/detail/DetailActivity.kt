@@ -18,6 +18,7 @@ import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.event.DetailScreenEventHandler
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
+import woowacourse.shopping.view.main.MainActivity
 import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 
 class DetailActivity : AppCompatActivity() {
@@ -49,6 +50,7 @@ class DetailActivity : AppCompatActivity() {
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
+        viewModel.loadRecentProduct(productId)
         initView()
     }
 
@@ -70,12 +72,22 @@ class DetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_bar_close -> {
+                navigateToMain()
                 finish()
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun navigateToMain() {
+        val intent =
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        startActivity(intent)
+        finish()
     }
 
     companion object {

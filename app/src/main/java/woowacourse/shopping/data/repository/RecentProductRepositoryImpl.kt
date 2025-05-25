@@ -25,11 +25,19 @@ class RecentProductRepositoryImpl(
 
     override fun getById(
         id: Long,
-        onResult: (RecentProduct) -> Unit,
+        onResult: (RecentProduct?) -> Unit,
     ) {
         thread {
             val product = productRepository.getById(id)
-            onResult(recentProductLocalDataSource.getById(id).toModel(product))
+            onResult(recentProductLocalDataSource.getById(id)?.toModel(product))
+        }
+    }
+
+    override fun getLatest(onResult: (RecentProduct?) -> Unit) {
+        thread {
+            val latestRecentProduct = recentProductLocalDataSource.getLatest()
+            val product = productRepository.getById(latestRecentProduct?.productId ?: return@thread)
+            onResult(latestRecentProduct.toModel(product))
         }
     }
 

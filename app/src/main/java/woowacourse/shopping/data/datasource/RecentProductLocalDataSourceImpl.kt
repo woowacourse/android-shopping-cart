@@ -7,9 +7,11 @@ class RecentProductLocalDataSourceImpl(private val recentProductDao: RecentProdu
     RecentProductLocalDataSource {
     override fun insert(productEntity: RecentProductEntity): Long = recentProductDao.insert(productEntity)
 
-    override fun getById(id: Long): RecentProductEntity = recentProductDao.getById(id)
+    override fun getById(id: Long): RecentProductEntity? = recentProductDao.getById(id)
 
     override fun getAll(): List<RecentProductEntity> = recentProductDao.getAll()
+
+    override fun getLatest(): RecentProductEntity? = recentProductDao.getLatest()
 
     override fun deleteLastByCreatedDateTime() {
         recentProductDao.deleteLastByCreatedDateTime()
