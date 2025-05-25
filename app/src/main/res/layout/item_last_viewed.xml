@@ -3,10 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="cart"
+            type="woowacourse.shopping.domain.model.Cart" />
+        <variable
+            name="lastViewedClickListener"
+            type="woowacourse.shopping.feature.CustomLastViewed.LastViewedClickListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@drawable/cart_item_background">
+        android:background="@drawable/cart_item_background"
+        android:onClick="@{() -> lastViewedClickListener.navigate()}">
 
         <TextView
             android:id="@+id/tv_last_viewed"

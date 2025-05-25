@@ -16,10 +16,12 @@ import woowacourse.shopping.data.history.HistoryDatabase
 import woowacourse.shopping.data.history.repository.HistoryRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.CustomCartQuantity
+import woowacourse.shopping.feature.CustomLastViewed
 import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.model.CartUiModel
 import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.util.toDomain
+import woowacourse.shopping.util.toUi
 import kotlin.getValue
 
 class GoodsDetailsActivity : AppCompatActivity() {
@@ -50,6 +52,13 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
         observeCartInsertResult()
         setOnClickListener()
+
+        viewModel.navigateToLastViewedCart.observe(this) { lastViewedCart ->
+            lastViewedCart.let {
+                val intent = newIntent(this@GoodsDetailsActivity, it.toUi())
+                startActivity(intent)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -97,6 +106,13 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
                 override fun onRemoveClick() {
                     viewModel.decreaseQuantity()
+                }
+            },
+        )
+        binding.customLastViewed.setClickListener(
+            object : CustomLastViewed.LastViewedClickListener {
+                override fun navigate() {
+                    viewModel.emitLastViewedCart()
                 }
             },
         )

@@ -9,6 +9,7 @@ import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
+import woowacourse.shopping.util.toCartFrom
 import woowacourse.shopping.util.updateQuantity
 
 class GoodsDetailsViewModel(
@@ -25,6 +26,8 @@ class GoodsDetailsViewModel(
     val isSuccess: SingleLiveData<Unit> get() = _isSuccess
     private val _isFail = MutableSingleLiveData<Unit>()
     val isFail: SingleLiveData<Unit> get() = _isFail
+    private val _navigateToLastViewedCart = MutableSingleLiveData<Cart>()
+    val navigateToLastViewedCart: SingleLiveData<Cart> get() = _navigateToLastViewedCart
 
     fun setInitialCart(cart: Cart) {
         _cart.value = cart
@@ -63,13 +66,24 @@ class GoodsDetailsViewModel(
     fun updateLastViewedVisibility() {
         val lastName = _lastViewed.value?.name
         val currentName = cart.value?.goods?.name
-        _isLastViewedVisible.value = lastName != null && currentName != null && lastName != currentName
+        _isLastViewedVisible.postValue(lastName != null && currentName != null && lastName != currentName)
     }
 
     fun loadLastViewed() {
         historyRepository.findLatest { lastViewed ->
             if (lastViewed != null) {
                 _lastViewed.postValue(lastViewed)
+                updateLastViewedVisibility()
+            }
+        }
+    }
+
+    fun emitLastViewedCart() {
+        val history = _lastViewed.value
+        cartRepository.getAll { carts ->
+            val matchedCart = history?.toCartFrom(carts.carts)
+            if (matchedCart != null) {
+                _navigateToLastViewedCart.postValue(matchedCart)
             }
         }
     }

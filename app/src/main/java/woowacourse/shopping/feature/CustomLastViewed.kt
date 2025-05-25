@@ -11,8 +11,18 @@ class CustomLastViewed(
     attributeSet: AttributeSet,
 ) : ConstraintLayout(context, attributeSet) {
     private val binding: ItemLastViewedBinding by lazy { ItemLastViewedBinding.inflate(LayoutInflater.from(context), this, true) }
+    private lateinit var clickListener: LastViewedClickListener
 
     fun setName(name: String) {
         binding.tvLastViewedName.text = name
+    }
+
+    fun setClickListener(lastViewedClickListener: LastViewedClickListener) {
+        clickListener = lastViewedClickListener
+        binding.lastViewedClickListener = clickListener
+    }
+
+    interface LastViewedClickListener {
+        fun navigate()
     }
 }
