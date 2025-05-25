@@ -18,6 +18,6 @@ class ShowMoreViewHolder(
     }
 
     fun bind(item: ShowMore) {
-        binding.button = item
+        binding.item = item
     }
 }

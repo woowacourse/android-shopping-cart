@@ -11,7 +11,7 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.databinding.ToolbarCartCounterBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
-import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 import woowacourse.shopping.view.inventory.item.InventoryItemType
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
@@ -85,23 +85,23 @@ class InventoryActivity :
         }
     }
 
-    override fun onProductSelected(product: InventoryProduct) {
-        viewModel.updateRecentProducts(product)
-        startActivity(ProductDetailActivity.newIntent(this, product.id))
+    override fun onProductSelected(item: ProductItem) {
+        viewModel.updateRecentProducts(item)
+        startActivity(ProductDetailActivity.newIntent(this, item.product.id))
     }
 
     override fun onIncreaseQuantity(
         position: Int,
-        product: InventoryProduct,
+        item: ProductItem,
     ) {
-        viewModel.increaseQuantity(position, product)
+        viewModel.increaseQuantity(position, item)
     }
 
     override fun onDecreaseQuantity(
         position: Int,
-        product: InventoryProduct,
+        item: ProductItem,
     ) {
-        viewModel.decreaseQuantity(position, product)
+        viewModel.decreaseQuantity(position, item)
     }
 
     override fun onLoadMoreProducts() {

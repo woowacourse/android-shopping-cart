@@ -47,7 +47,7 @@ class ShoppingCartActivity :
         }
 
         with(viewModel) {
-            cartItems.observe(this@ShoppingCartActivity) { page ->
+            products.observe(this@ShoppingCartActivity) { page ->
                 val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
                 adapter.updateCartItems(page.items)
             }

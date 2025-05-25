@@ -12,8 +12,8 @@ import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem
-import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
-import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
+import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProductsItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -24,8 +24,7 @@ class InventoryViewModel(
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _items: MutableLiveData<List<InventoryItem>> = MutableLiveData(emptyList())
-    private val products: List<InventoryItem>
-        get() = _items.value?.filterIsInstance<InventoryProduct>() ?: emptyList()
+    private val products: List<InventoryItem> get() = _items.value?.filterIsInstance<ProductItem>() ?: emptyList()
     val items: LiveData<List<InventoryItem>> get() = _items
 
     private val _cartCount: MutableLiveData<Int> = MutableLiveData()
@@ -56,7 +55,7 @@ class InventoryViewModel(
 
     fun increaseQuantity(
         position: Int,
-        product: InventoryProduct,
+        product: ProductItem,
     ) {
         val updatedProduct = product.copy(quantity = product.quantity + 1)
         (_items.value ?: emptyList()).toMutableList().let { newList ->
@@ -69,7 +68,7 @@ class InventoryViewModel(
 
     fun decreaseQuantity(
         position: Int,
-        product: InventoryProduct,
+        product: ProductItem,
     ) {
         val updatedProduct = product.copy(quantity = product.quantity - 1)
         (_items.value ?: emptyList()).toMutableList().let { newList ->
@@ -84,11 +83,11 @@ class InventoryViewModel(
         shoppingCartRepository.insert(updatedProduct.toCartItem())
     }
 
-    private fun updateItems(newPage: Page<InventoryProduct>) {
+    private fun updateItems(newPage: Page<ProductItem>) {
         recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
             val newList =
                 buildList {
-                    add(RecentProducts(recentProducts))
+                    add(RecentProductsItem(recentProducts))
                     addAll(products)
                     addAll(newPage.items)
                     if (newPage.hasNext) add(ShowMore)
@@ -97,9 +96,9 @@ class InventoryViewModel(
         }
     }
 
-    fun updateRecentProducts(product: InventoryProduct) {
+    fun updateRecentProducts(item: ProductItem) {
         val time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val recentProduct = RecentProduct(product.id, product.name, product.imageUrl, time)
+        val recentProduct = RecentProduct(item.product.id, item.product.name, item.product.imageUrl, time)
         recentProductRepository.insert(recentProduct)
     }
 

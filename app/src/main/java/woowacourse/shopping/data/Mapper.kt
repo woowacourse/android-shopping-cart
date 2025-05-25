@@ -6,20 +6,20 @@ import woowacourse.shopping.data.shoppingcart.CartItemEntity
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 
 fun Product.toEntity(): ProductEntity = ProductEntity(id, name, price, 0, imageUrl)
 
-fun InventoryProduct.toEntity(): ProductEntity = ProductEntity(id, name, price, quantity, imageUrl)
+fun ProductItem.toEntity(): ProductEntity = ProductEntity(product.id, product.name, product.price, quantity, product.imageUrl)
 
-fun ProductEntity.toDomain(): InventoryProduct = InventoryProduct(id, name, price, quantity, imageUrl)
+fun ProductEntity.toDomain(): ProductItem = ProductItem(Product(id, name, price, imageUrl), quantity)
 
 fun CartProduct.toEntity(): CartItemEntity = CartItemEntity(id, name, price, quantity, imageUrl)
 
 fun CartItemEntity.toDomain(): CartProduct = CartProduct(id, name, price, quantity, imageUrl)
 
-fun CartProduct.toInventoryProduct(): InventoryProduct = InventoryProduct(id, name, price, quantity, imageUrl)
+fun CartProduct.toInventoryProduct(): ProductItem = ProductItem(Product(id, name, price, imageUrl), quantity)
 
-fun InventoryProduct.toCartItem(): CartProduct = CartProduct(id, name, price, quantity, imageUrl)
+fun ProductItem.toCartItem(): CartProduct = CartProduct(product.id, product.name, product.price, quantity, product.imageUrl)
 
 fun RecentProduct.toEntity(): RecentProductEntity = RecentProductEntity(id, name, imageUrl, timestamp)

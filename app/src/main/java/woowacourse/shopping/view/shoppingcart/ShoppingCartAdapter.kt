@@ -7,15 +7,15 @@ import woowacourse.shopping.domain.CartProduct
 class ShoppingCartAdapter(
     private val handler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private val cartProducts: MutableList<CartProduct> = mutableListOf()
+    private val products: MutableList<CartProduct> = mutableListOf()
 
-    override fun getItemCount(): Int = cartProducts.size
+    override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(
         holder: ShoppingCartViewHolder,
         position: Int,
     ) {
-        val item = cartProducts[position]
+        val item = products[position]
         holder.bind(item)
     }
 
@@ -28,8 +28,8 @@ class ShoppingCartAdapter(
 
     fun updateCartItems(newItems: List<CartProduct>) {
         val oldCount = itemCount
-        cartProducts.clear()
-        cartProducts.addAll(newItems)
+        products.clear()
+        products.addAll(newItems)
         notifyItemRangeChanged(0, newItems.size.coerceAtLeast(oldCount))
     }
 }

@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="cartItem"
+            name="item"
             type="woowacourse.shopping.domain.CartProduct" />
 
         <variable
@@ -39,7 +39,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{cartItem.name}"
+                android:text="@{item.name}"
                 android:textColor="@color/dark_gray"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -49,14 +49,14 @@
                 android:id="@+id/iv_remove_item_product_icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:onClick="@{() -> handler.onRemoveCartItem(cartItem)}"
+                android:onClick="@{() -> handler.onRemoveCartItem(item)}"
                 android:src="@drawable/icon_close"
                 app:tint="@color/light_gray" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_shopping_cart_image"
-            productImage="@{cartItem.imageUrl}"
+            productImage="@{item.imageUrl}"
             android:layout_width="150dp"
             android:layout_height="80dp"
             android:layout_marginVertical="20dp"
@@ -94,7 +94,7 @@
                 android:background="@color/white"
                 android:clickable="true"
                 android:gravity="center"
-                android:text="@{String.valueOf(cartItem.quantity)}"
+                android:text="@{String.valueOf(item.quantity)}"
                 android:textColor="@color/dark_gray"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -115,7 +115,7 @@
 
         <TextView
             android:id="@+id/tv_price"
-            priceWithFormat="@{cartItem.price * cartItem.quantity}"
+            priceWithFormat="@{item.price * item.quantity}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"

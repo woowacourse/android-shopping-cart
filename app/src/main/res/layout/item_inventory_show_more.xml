@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="button"
+            name="item"
             type="woowacourse.shopping.view.inventory.item.InventoryItem" />
 
         <variable

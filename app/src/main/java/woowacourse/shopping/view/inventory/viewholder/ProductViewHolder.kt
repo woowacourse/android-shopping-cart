@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemInventoryProductBinding
 import woowacourse.shopping.view.base.BaseViewHolder
 import woowacourse.shopping.view.inventory.InventoryEventHandler
-import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 
 class ProductViewHolder(
     parent: ViewGroup,
@@ -21,8 +21,8 @@ class ProductViewHolder(
         binding.handler = handler
     }
 
-    fun bind(item: InventoryProduct) {
-        binding.product = item
+    fun bind(item: ProductItem) {
+        binding.item = item
         binding.tvDecreaseQuantity.setOnClickListener {
             handler.onDecreaseQuantity(adapterPosition, item)
         }

@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct" />
+            name="item"
+            type="woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem" />
 
         <variable
             name="handler"
@@ -17,12 +17,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> handler.onProductSelected(product)}"
+        android:onClick="@{() -> handler.onProductSelected(item)}"
         android:padding="10dp">
 
         <ImageView
             android:id="@+id/iv_product_image"
-            productImage="@{product.imageUrl}"
+            productImage="@{item.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
@@ -35,7 +35,7 @@
 
         <ImageView
             android:id="@+id/iv_add_product_icon"
-            isGone="@{product.quantity > 0}"
+            isGone="@{item.quantity > 0}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_margin="10dp"
@@ -45,7 +45,7 @@
             app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 
         <LinearLayout
-            isGone="@{product.quantity == 0}"
+            isGone="@{item.quantity == 0}"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_marginBottom="10dp"
@@ -72,7 +72,7 @@
                 android:background="@color/white"
                 android:clickable="true"
                 android:gravity="center"
-                android:text="@{String.valueOf(product.quantity)}"
+                android:text="@{String.valueOf(item.quantity)}"
                 android:textColor="@color/dark_gray"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -98,7 +98,7 @@
             android:layout_marginHorizontal="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{item.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -109,7 +109,7 @@
 
         <TextView
             android:id="@+id/tv_product_price"
-            priceWithFormat="@{product.price}"
+            priceWithFormat="@{item.product.price}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"

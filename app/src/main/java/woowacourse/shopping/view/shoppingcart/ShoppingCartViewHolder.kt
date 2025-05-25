@@ -20,16 +20,16 @@ class ShoppingCartViewHolder(
         binding.handler = handler
     }
 
-    fun bind(cartProduct: CartProduct) {
-        binding.cartItem = cartProduct
+    fun bind(product: CartProduct) {
+        binding.item = product
         binding.tvIncreaseQuantity.setOnClickListener {
-            handler.onIncreaseQuantity(adapterPosition, cartProduct)
+            handler.onIncreaseQuantity(adapterPosition, product)
         }
         binding.tvDecreaseQuantity.setOnClickListener {
-            handler.onDecreaseQuantity(adapterPosition, cartProduct)
+            handler.onDecreaseQuantity(adapterPosition, product)
         }
         binding.ivRemoveItemProductIcon.setOnClickListener {
-            handler.onRemoveCartItem(cartProduct)
+            handler.onRemoveCartItem(product)
         }
     }
 }

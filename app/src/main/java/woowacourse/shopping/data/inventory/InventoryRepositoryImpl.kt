@@ -5,13 +5,13 @@ import woowacourse.shopping.data.product.ProductEntity
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 import kotlin.concurrent.thread
 
 class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRepository {
     override fun getOrNull(
         id: Int,
-        onResult: (InventoryProduct?) -> Unit,
+        onResult: (ProductItem?) -> Unit,
     ) {
         thread {
             val product = productDao.getOrNull(id)?.toDomain()
@@ -19,7 +19,7 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
         }
     }
 
-    override fun getAll(onSuccess: (List<InventoryProduct>) -> Unit) {
+    override fun getAll(onSuccess: (List<ProductItem>) -> Unit) {
         thread {
             val result = productDao.getAll().map(ProductEntity::toDomain)
             onSuccess(result)
@@ -29,7 +29,7 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
     override fun getPage(
         pageSize: Int,
         pageIndex: Int,
-        onSuccess: (Page<InventoryProduct>) -> Unit,
+        onSuccess: (Page<ProductItem>) -> Unit,
     ) {
         getAll { allItems ->
             val from = pageSize * pageIndex
@@ -48,7 +48,7 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
         }
     }
 
-    override fun insert(product: InventoryProduct) {
+    override fun insert(product: ProductItem) {
         thread {
             productDao.insert(product.toEntity())
         }.join()
