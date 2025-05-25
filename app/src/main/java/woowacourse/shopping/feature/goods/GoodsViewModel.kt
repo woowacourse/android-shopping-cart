@@ -18,8 +18,8 @@ class GoodsViewModel(
     private var page: Int = 1
     private val _isFullLoaded = MutableLiveData(false)
     val isFullLoaded: LiveData<Boolean> get() = _isFullLoaded
-    private val _cartItemsWithZeroQuantity = MutableLiveData<List<CartItem>>()
-    val cartItemsWithZeroQuantity: LiveData<List<CartItem>> get() = _cartItemsWithZeroQuantity
+    private val _goodsWithCartQuantity = MutableLiveData<List<CartItem>>()
+    val goodsWithCartQuantity: LiveData<List<CartItem>> get() = _goodsWithCartQuantity
     private var _totalCartItemSize: MutableLiveData<String> = MutableLiveData("0")
     val totalCartItemSize: LiveData<String> get() = _totalCartItemSize
     private val _navigateToCart = MutableSingleLiveData<Unit>()
@@ -46,7 +46,7 @@ class GoodsViewModel(
             goodsRepository.fetchGoodsSize { totalSize ->
                 _isFullLoaded.postValue(page * PAGE_SIZE >= totalSize)
             }
-            _cartItemsWithZeroQuantity.postValue(goods.map { CartItem(goods = it, quantity = 0) })
+            _goodsWithCartQuantity.postValue(goods.map { CartItem(goods = it, quantity = 0) })
         }
     }
 
@@ -59,7 +59,7 @@ class GoodsViewModel(
     fun updateCartQuantity() {
         cartRepository.fetchAllCartItems { cartItems ->
             val cartItemsMap = cartItems.associateBy { it.goods.id }
-            _cartItemsWithZeroQuantity.value =
+            _goodsWithCartQuantity.value =
                 goods.map { goods ->
                     cartItemsMap[goods.id] ?: CartItem(goods = goods, quantity = 0)
                 }

@@ -83,20 +83,20 @@ class GoodsActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.lifecycleOwner = this
 
-        binding.rvCartItems.adapter = concatAdapter
+        binding.rvGoodsItems.adapter = concatAdapter
         binding.viewModel = viewModel
 
-        binding.rvCartItems.layoutManager = getLayoutManager()
+        binding.rvGoodsItems.layoutManager = getLayoutManager()
 
         viewModel.navigateToCart.observe(this) {
             val intent = CartActivity.newIntent(this)
             startActivity(intent)
         }
 
-        viewModel.cartItemsWithZeroQuantity.observe(this) {
+        viewModel.goodsWithCartQuantity.observe(this) {
             viewModel.updateCartQuantity()
         }
-        binding.rvCartItems.addItemDecoration(
+        binding.rvGoodsItems.addItemDecoration(
             GoodsGridItemDecoration(concatAdapter, GRID_GOODS_ITEM_HORIZONTAL_PADDING),
         )
 

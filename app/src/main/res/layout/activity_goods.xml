@@ -17,10 +17,10 @@
         android:fitsSystemWindows="true">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_cart_items"
+            android:id="@+id/rv_goods_items"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:cartItems="@{viewModel.cartItemsWithZeroQuantity}"
+            app:cartItems="@{viewModel.goodsWithCartQuantity}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
