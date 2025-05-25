@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import woowacourse.shopping.ShoppingProvider
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recentlyproducts.RecentlyProductsRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.PagedResult
@@ -14,6 +15,7 @@ import woowacourse.shopping.view.PagedResult
 class ProductCatalogViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentlyProductsRepository: RecentlyProductsRepository,
 ) : ViewModel() {
     private val products = MutableLiveData<PagedResult<Product>>()
 
@@ -35,6 +37,10 @@ class ProductCatalogViewModel(
         val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
         products.value = products.value?.plus(result)
         currentPage++
+    }
+
+    fun addToRecentlyProduct(productId: Long) {
+        recentlyProductsRepository.insert(productId)
     }
 
     fun addToShoppingCart(productId: Long) {
@@ -63,6 +69,7 @@ class ProductCatalogViewModel(
         fun provideFactory(
             productRepository: ProductRepository = ShoppingProvider.productRepository,
             shoppingCartRepository: ShoppingCartRepository = ShoppingProvider.shoppingCartRepository,
+            recentlyProductsRepository: RecentlyProductsRepository = ShoppingProvider.recentlyProductsRepository,
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
@@ -71,6 +78,7 @@ class ProductCatalogViewModel(
                         return ProductCatalogViewModel(
                             productRepository,
                             shoppingCartRepository,
+                            recentlyProductsRepository,
                         ) as T
                     }
                     throw IllegalArgumentException()

@@ -65,6 +65,7 @@ class ProductCatalogActivity : AppCompatActivity() {
                     object : OnCategoryEventListener {
                         override fun onItemClick(product: Product) {
                             navigateToProductDetail(product)
+                            viewModel.addToRecentlyProduct(product.id)
                         }
 
                         override fun onInitPlusButtonClick(productId: Long) {
