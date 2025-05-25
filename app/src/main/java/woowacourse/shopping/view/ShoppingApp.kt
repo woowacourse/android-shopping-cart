@@ -4,6 +4,7 @@ import android.app.Application
 import woowacourse.shopping.di.AppContainer
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ShoppingApp : Application() {
     override fun onCreate() {
@@ -18,5 +19,8 @@ class ShoppingApp : Application() {
 
         val productRepository: ProductRepository
             get() = appContainer.productRepository
+
+        val recentProductRepository: RecentProductRepository
+            get() = appContainer.recentProductRepository
     }
 }
