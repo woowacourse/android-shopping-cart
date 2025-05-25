@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -19,7 +18,7 @@ class ProductDetailActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(binding.toolbarProductDetail as Toolbar)
+//        setSupportActionBar(binding.toolbarProductDetail as Toolbar)
 
         val productId: Int = intent.getIntExtra(KEY_PRODUCT_ID, 0)
         initializeViewModel(productId)

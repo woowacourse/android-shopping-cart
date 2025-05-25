@@ -3,11 +3,13 @@ package woowacourse.shopping.view.inventory
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.databinding.ToolbarCartCounterBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
@@ -30,17 +32,28 @@ class InventoryActivity :
                 shoppingApplication.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
+        viewModel.loadCartCount()
         initRecyclerview()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar_main, menu)
+        val binding =
+            DataBindingUtil.inflate<ToolbarCartCounterBinding>(
+                layoutInflater,
+                R.layout.toolbar_cart_counter,
+                null,
+                false,
+            )
+        menu?.findItem(R.id.menu_item_shopping_cart)?.actionView = binding.root
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        return true
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.reloadPage()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
-        return true
     }
 
     private fun initRecyclerview() {

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_item_shopping_cart"
-        android:icon="@drawable/icon_shopping_cart"
         android:theme="@style/Theme.Shopping"
         android:title="@string/menu_item_shopping_cart"
+        app:actionLayout="@layout/toolbar_cart_counter"
         app:showAsAction="always" />
 </menu>

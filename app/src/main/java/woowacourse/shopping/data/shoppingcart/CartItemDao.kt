@@ -15,6 +15,9 @@ interface CartItemDao {
     @Query("SELECT * FROM $CART_ITEM_TABLE_NAME")
     fun getAll(): List<CartItemEntity>
 
+    @Query("SELECT SUM(quantity) FROM $CART_ITEM_TABLE_NAME")
+    fun getTotalCount(): Int
+
     @Delete
     fun delete(cartItem: CartItemEntity)
 

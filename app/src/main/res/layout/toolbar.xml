@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/dark_gray"
-    app:menu="@menu/menu_toolbar"
+    app:menu="@menu/menu_toolbar_main"
     app:title="@string/app_name"
     app:titleTextColor="@color/white">
 

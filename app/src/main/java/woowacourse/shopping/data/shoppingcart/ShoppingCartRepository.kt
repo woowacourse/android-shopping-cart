@@ -11,6 +11,8 @@ interface ShoppingCartRepository {
 
     fun getAll(onSuccess: (List<CartItem>) -> Unit)
 
+    fun getTotalCount(onResult: (Int) -> Unit)
+
     fun getPage(
         pageSize: Int,
         requestedIndex: Int,

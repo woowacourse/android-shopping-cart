@@ -28,6 +28,15 @@ class InventoryViewModel(
         get() = _items.value?.filterIsInstance<InventoryProduct>() ?: emptyList()
     val items: LiveData<List<InventoryItem>> get() = _items
 
+    private val _cartCount: MutableLiveData<Int> = MutableLiveData()
+    val cartCount: LiveData<Int> get() = _cartCount
+
+    fun loadCartCount() {
+        shoppingCartRepository.getTotalCount { totalCount ->
+            _cartCount.postValue(totalCount)
+        }
+    }
+
     fun requestPage() {
         shoppingCartRepository.getAll { allItems ->
             allItems.forEach { item ->
@@ -56,6 +65,7 @@ class InventoryViewModel(
         }
         inventoryRepository.insert(updatedProduct)
         shoppingCartRepository.insert(updatedProduct.toCartItem())
+        loadCartCount()
     }
 
     fun decreaseQuantity(
@@ -73,6 +83,7 @@ class InventoryViewModel(
             return
         }
         shoppingCartRepository.insert(updatedProduct.toCartItem())
+        loadCartCount()
     }
 
     private fun updateItems(newPage: Page<InventoryProduct>) {

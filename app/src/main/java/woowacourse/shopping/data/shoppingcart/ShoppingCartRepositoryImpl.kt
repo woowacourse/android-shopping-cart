@@ -12,15 +12,19 @@ class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : Shoppin
         onResult: (CartItem?) -> Unit,
     ) {
         thread {
-            val cartItem = cartItemDao.getOrNull(id)?.toDomain()
-            onResult(cartItem)
+            onResult(cartItemDao.getOrNull(id)?.toDomain())
         }
     }
 
     override fun getAll(onSuccess: (List<CartItem>) -> Unit) {
         thread {
-            val result = cartItemDao.getAll().map(CartItemEntity::toDomain)
-            onSuccess(result)
+            onSuccess(cartItemDao.getAll().map(CartItemEntity::toDomain))
+        }
+    }
+
+    override fun getTotalCount(onResult: (Int) -> Unit) {
+        thread {
+            onResult(cartItemDao.getTotalCount())
         }
     }
 
