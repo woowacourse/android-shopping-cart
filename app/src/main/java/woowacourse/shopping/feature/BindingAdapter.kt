@@ -32,3 +32,8 @@ fun View.setVisible(visible: Boolean) {
 fun CustomCartQuantity.setQuantity(count: Int) {
     setCount(count)
 }
+
+@BindingAdapter("name")
+fun CustomLastViewed.setName(name: String) {
+    setName(name)
+}

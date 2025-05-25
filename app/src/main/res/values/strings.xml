@@ -24,6 +24,7 @@
     <string name="cart_item_image_description">장바구니 아이템 이미지</string>
     <string name="cart_left_page_button"><![CDATA[<]]></string>
     <string name="cart_right_page_button"><![CDATA[>]]></string>
+    <string name="goods_details_last_viewed">마지막으로 본 상품</string>
 
 
 </resources>
