@@ -11,7 +11,9 @@ data class GoodsUiModel(
     val price: Int,
     val imageUrl: String,
     val quantity: Int,
-) : Serializable
+) : Serializable {
+    fun totalPrice(): Int = price * quantity
+}
 
 fun GoodsUiModel.toDomain(): Goods =
     Goods(
