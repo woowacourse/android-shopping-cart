@@ -6,8 +6,7 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.cart.CartDatabase
-import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
+import woowacourse.shopping.application.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
@@ -19,7 +18,7 @@ class CartActivity :
     CartViewHolder.CartClickListener {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
-        ViewModelFactory { CartViewModel(CartRepositoryImpl(CartDatabase.getDatabase(this))) }
+        (application as ShoppingApplication).shoppingFactory
     }
     private val adapter: CartAdapter by lazy { CartAdapter(this) }
 

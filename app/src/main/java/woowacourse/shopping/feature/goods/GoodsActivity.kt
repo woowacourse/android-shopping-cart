@@ -11,16 +11,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDatabase
-import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
-import woowacourse.shopping.data.history.HistoryDatabase
-import woowacourse.shopping.data.history.repository.HistoryRepositoryImpl
+import woowacourse.shopping.application.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
 import woowacourse.shopping.feature.goods.adapter.GoodsSpanSizeLookup
@@ -32,12 +28,7 @@ class GoodsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsBinding
     private lateinit var adapter: GoodsAdapter
     private val viewModel: GoodsViewModel by viewModels {
-        ViewModelFactory {
-            GoodsViewModel(
-                CartRepositoryImpl(CartDatabase.getDatabase(this)),
-                HistoryRepositoryImpl(HistoryDatabase.getDatabase(applicationContext).historyDao()),
-            )
-        }
+        (application as ShoppingApplication).shoppingFactory
     }
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 

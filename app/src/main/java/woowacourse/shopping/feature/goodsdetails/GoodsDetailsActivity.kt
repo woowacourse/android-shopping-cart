@@ -10,14 +10,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.IntentCompat
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDatabase
-import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
-import woowacourse.shopping.data.history.HistoryDatabase
-import woowacourse.shopping.data.history.repository.HistoryRepositoryImpl
+import woowacourse.shopping.application.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsDetailsBinding
 import woowacourse.shopping.feature.CustomCartQuantity
 import woowacourse.shopping.feature.CustomLastViewed
-import woowacourse.shopping.feature.cart.ViewModelFactory
 import woowacourse.shopping.feature.model.CartUiModel
 import woowacourse.shopping.feature.model.ResultCode
 import woowacourse.shopping.util.toDomain
@@ -28,12 +24,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
     private lateinit var cart: CartUiModel
     private val viewModel: GoodsDetailsViewModel by viewModels {
-        ViewModelFactory {
-            GoodsDetailsViewModel(
-                CartRepositoryImpl(CartDatabase.getDatabase(this)),
-                HistoryRepositoryImpl(HistoryDatabase.getDatabase(applicationContext).historyDao()),
-            )
-        }
+        (application as ShoppingApplication).shoppingFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
