@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -18,7 +19,7 @@ class ProductDetailActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setSupportActionBar(binding.toolbarProductDetail as Toolbar)
+        supportActionBar?.title = null
 
         val productId: Int = intent.getIntExtra(KEY_PRODUCT_ID, 0)
         initializeViewModel(productId)
@@ -41,7 +42,12 @@ class ProductDetailActivity :
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_product_detail, menu)
-        return true
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSelectRecentProduct() {

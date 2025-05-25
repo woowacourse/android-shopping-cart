@@ -2,7 +2,6 @@ package woowacourse.shopping.view.inventory
 
 import android.os.Bundle
 import android.view.Menu
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,6 +13,7 @@ import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.detail.ProductDetailActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.inventory.item.InventoryItemType
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class InventoryActivity :
     BaseActivity<ActivityMainBinding>(R.layout.activity_main),
@@ -22,7 +22,6 @@ class InventoryActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(binding.toolbar as Toolbar)
 
         val shoppingApplication = application as ShoppingApplication
         val factory =
@@ -38,6 +37,7 @@ class InventoryActivity :
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar_main, menu)
+
         val binding =
             DataBindingUtil.inflate<ToolbarCartCounterBinding>(
                 layoutInflater,
@@ -45,9 +45,13 @@ class InventoryActivity :
                 null,
                 false,
             )
+
         menu?.findItem(R.id.menu_item_shopping_cart)?.actionView = binding.root
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        binding.root.setOnClickListener {
+            startActivity(ShoppingCartActivity.newIntent(this))
+        }
         return true
     }
 

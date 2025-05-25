@@ -19,10 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/toolbar_product_detail"
-            layout="@layout/toolbar_product_detail" />
-
         <ImageView
             android:id="@+id/iv_product_detail_image"
             productImage="@{viewModel.inventoryProduct.imageUrl}"
@@ -33,7 +29,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/sample_product_detail_image" />
 
         <TextView

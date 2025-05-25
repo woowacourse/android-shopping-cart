@@ -3,6 +3,7 @@ package woowacourse.shopping.view.shoppingcart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
@@ -17,7 +18,10 @@ class ShoppingCartActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSubActivityMenuBar(getString(R.string.toolbar_title_cart), binding.toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.shopping_cart_toolbar_title)
+        }
 
         val shoppingApplication = application as ShoppingApplication
         val factory =
@@ -27,6 +31,11 @@ class ShoppingCartActivity :
             )
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
         initRecyclerView()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initRecyclerView() {
