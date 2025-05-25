@@ -188,6 +188,10 @@ object GoodsDataBase {
             ),
         )
 
+    fun getGoodsById(id: Long): Goods {
+        return dummyGoods.first { it.id == id }
+    }
+
     fun getPagedGoods(
         page: Int,
         count: Int,
