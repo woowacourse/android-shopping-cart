@@ -40,6 +40,7 @@ androidx-core-testing = { module = "androidx.arch.core:core-testing", version.re
 androidx-core-testing-v200 = { module = "androidx.arch.core:core-testing", version.ref = "androidx-core-testing" }
 androidx-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "androidx-espresso-core" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
+androidx-espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "androidx-espresso-core" }
 androidx-lifecycle-runtime-testing = { module = "androidx.lifecycle:lifecycle-runtime-testing", version.ref = "lifecycle-viewmodel-ktx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-viewmodel-ktx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
