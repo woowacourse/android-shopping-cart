@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.data.repository.CatalogProductRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 object CatalogDatabase : CatalogProductRepository {
@@ -9,22 +10,6 @@ object CatalogDatabase : CatalogProductRepository {
         startIndex: Int,
         endIndex: Int,
     ): List<ProductUiModel> = dummyProducts.subList(startIndex, endIndex)
-
-    override fun changeProductQuantity(
-        product: ProductUiModel,
-        diff: Int,
-    ): ProductUiModel {
-        val index = dummyProducts.indexOfFirst { it.name == product.name }
-        val updatedProduct: ProductUiModel =
-            dummyProducts[index].copy(quantity = dummyProducts[index].quantity + diff)
-        dummyProducts[index] = updatedProduct
-        return updatedProduct
-    }
-
-    override fun initQuantity(product: ProductUiModel) {
-        val index = dummyProducts.indexOfFirst { it.name == product.name }
-        dummyProducts[index] = dummyProducts[index].copy(quantity = 0)
-    }
 
     override fun getCartProductsByUids(uids: List<Int>): List<ProductUiModel> =
         uids.mapNotNull { uid ->

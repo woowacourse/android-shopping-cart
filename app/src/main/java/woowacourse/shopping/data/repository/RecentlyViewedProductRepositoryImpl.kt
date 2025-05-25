@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.CatalogProductRepository
 import woowacourse.shopping.data.dao.RecentlyViewedProductDao
 import woowacourse.shopping.data.entity.CartProductEntity
 import woowacourse.shopping.data.entity.RecentlyViewedProductEntity
