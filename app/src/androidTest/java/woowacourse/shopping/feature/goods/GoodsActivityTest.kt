@@ -30,14 +30,14 @@ class GoodsActivityTest {
 
     @Test
     fun 상품_목록이_표시된다() {
-        onView(withId(R.id.rv_cart_items))
+        onView(withId(R.id.rv_goods_items))
             .check(matches(isDisplayed()))
     }
 
     @Test
     fun 스크롤_했을_때_더보기_버튼이_표시된다() {
         repeat(5) {
-            onView(withId(R.id.rv_cart_items)).perform(swipeUp())
+            onView(withId(R.id.rv_goods_items)).perform(swipeUp())
         }
 
         onView(withId(R.id.btn_more))
@@ -47,20 +47,20 @@ class GoodsActivityTest {
     @Test
     fun 더보기_버튼을_클릭하면_다음_상품들이_로드된다() {
         var beforeItemCount = 0
-        onView(withId(R.id.rv_cart_items)).check { view, _ ->
+        onView(withId(R.id.rv_goods_items)).check { view, _ ->
             val recyclerView = view as RecyclerView
             beforeItemCount = recyclerView.adapter?.itemCount ?: 0
         }
 
         repeat(5) {
-            onView(withId(R.id.rv_cart_items)).perform(swipeUp())
+            onView(withId(R.id.rv_goods_items)).perform(swipeUp())
         }
 
         Thread.sleep(1000)
         onView(withId(R.id.btn_more)).perform(click())
 
         var afterItemCount = 0
-        onView(withId(R.id.rv_cart_items)).check { view, _ ->
+        onView(withId(R.id.rv_goods_items)).check { view, _ ->
             val recyclerView = view as RecyclerView
             afterItemCount = recyclerView.adapter?.itemCount ?: 0
         }
@@ -70,9 +70,12 @@ class GoodsActivityTest {
 
     @Test
     fun 상품_아이템을_클릭하면_상품_상세_화면으로_이동한다() {
-        onView(withId(R.id.rv_cart_items))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        Thread.sleep(200)
 
+        onView(withId(R.id.rv_goods_items))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
+
+        Thread.sleep(200)
         intended(hasComponent(GoodsDetailsActivity::class.java.name))
     }
 

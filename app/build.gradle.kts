@@ -85,6 +85,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.contrib)
     androidTestImplementation(libs.espresso.intents)
     androidTestImplementation(libs.androidx.core.testing.v200)
+    androidTestImplementation(libs.androidx.lifecycle.runtime.testing)
     testImplementation(libs.okhttp3.mockwebserver)
     implementation(libs.okhttp)
 
