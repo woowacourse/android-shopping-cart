@@ -82,9 +82,8 @@ class ShoppingCartViewModel(
         _page.value = page
         _hasPrevious.value = page > FIRST_PAGE_NUMBER
         _isSinglePage.value =
-            page == FIRST_PAGE_NUMBER &&
             hasNext.value == false &&
-            cartProducts.size <= PAGE_SIZE
+            hasPrevious.value == false
     }
 
     private fun updateQuantity(
