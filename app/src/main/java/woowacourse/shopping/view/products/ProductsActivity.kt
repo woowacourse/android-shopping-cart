@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
+import woowacourse.shopping.model.products.CartState
 import woowacourse.shopping.model.products.Product
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
@@ -32,6 +33,7 @@ class ProductsActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
+                cartViewModel.refreshCartState()
             }
         }
 
@@ -82,6 +84,11 @@ class ProductsActivity : AppCompatActivity() {
         cartViewModel.cartState.observe(this) { cartState ->
             adapter.updateCartState(cartState)
         }
+    }
+
+    private fun refreshQuantities() {
+        val currentCartState = cartViewModel.cartState.value ?: CartState()
+        adapter.updateCartState(currentCartState)
     }
 
     private fun setupRecyclerView() {

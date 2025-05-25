@@ -106,7 +106,7 @@ class CartViewModel(
         return cartState.getAllShoppingCartItem().size <= pageSize
     }
 
-    private fun refreshCartState() {
+    fun refreshCartState() {
         _cartState.value = cartRepository.getCurrentState()
         loadPage(1)
     }
