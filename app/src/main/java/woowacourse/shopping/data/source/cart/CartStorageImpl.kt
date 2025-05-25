@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.source.cart
 
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.TableCartItem
 import kotlin.concurrent.thread
@@ -50,6 +51,14 @@ class CartStorageImpl private constructor(
     override fun deleteProduct(cartItemId: Long) {
         thread {
             cartDao.deleteById(cartItemId)
+        }
+    }
+
+    override fun updateCartItem(cartItem: CartItem) {
+        thread {
+            if (cartDao.getCartItem(cartItem.product.id) != null) {
+                cartDao.updateCount(productId = cartItem.product.id, count = cartItem.count)
+            }
         }
     }
 

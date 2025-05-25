@@ -18,4 +18,6 @@ interface CartRepository {
     )
 
     fun deleteProduct(productId: Long)
+
+    fun updateCartItem(cartItem: CartItem)
 }

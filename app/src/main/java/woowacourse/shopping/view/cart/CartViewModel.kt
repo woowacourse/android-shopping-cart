@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -118,6 +119,32 @@ class CartViewModel(
 
     fun plusPage() {
         _currentPage.value = (_currentPage.value ?: 1) + 1
+    }
+
+    fun increaseProductCount(cartItem: CartItem) {
+        updateProductCount(cartItem, cartItem.count + 1)
+    }
+
+    fun decreaseProductCount(cartItem: CartItem) {
+        if (cartItem.count > 1) {
+            updateProductCount(cartItem, cartItem.count - 1)
+        }
+    }
+
+    private fun updateProductCount(
+        cartItem: CartItem,
+        newCount: Int,
+    ) {
+        val updatedItem = cartItem.copy(count = newCount)
+        cartRepository.updateCartItem(updatedItem)
+        Log.d("test", "새로운 시작 $newCount")
+        val updatedList =
+            _products.value?.map {
+                if (it.product.id == cartItem.product.id) updatedItem else it
+            } ?: return
+
+        _products.value = updatedList
+        pageCache[_currentPage.value ?: 1] = updatedList
     }
 
     private fun calculateTotalPages(totalCount: Int): Int = if (totalCount == 0) 0 else (totalCount - 1) / LIMIT_COUNT + 1

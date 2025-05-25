@@ -35,6 +35,8 @@ class CartRepositoryImpl private constructor(
 
     override fun deleteProduct(cartItemId: Long) = cartStorage.deleteProduct(cartItemId)
 
+    override fun updateCartItem(cartItem: CartItem) = cartStorage.updateCartItem(cartItem)
+
     companion object {
         private var instance: CartRepositoryImpl? = null
 

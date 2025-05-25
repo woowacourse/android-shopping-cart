@@ -8,6 +8,8 @@ import woowacourse.shopping.domain.CartItem
 
 class CartProductAdapter(
     private val onDeleteClick: (CartItem, Int) -> Unit,
+    private val onIncrease: (CartItem) -> Unit,
+    private val onDecrease: (CartItem) -> Unit,
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
     private var products: List<CartItem> = emptyList()
 
@@ -17,7 +19,7 @@ class CartProductAdapter(
     ): CartProductViewHolder {
         val binding =
             ItemCartProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartProductViewHolder(binding, onDeleteClick)
+        return CartProductViewHolder(binding, onDeleteClick, onIncrease, onDecrease)
     }
 
     override fun onBindViewHolder(

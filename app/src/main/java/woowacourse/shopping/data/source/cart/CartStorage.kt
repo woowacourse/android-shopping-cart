@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.source.cart
 
+import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.TableCartItem
 
@@ -18,4 +19,6 @@ interface CartStorage {
     )
 
     fun deleteProduct(cartItemId: Long)
+
+    fun updateCartItem(cartItem: CartItem)
 }

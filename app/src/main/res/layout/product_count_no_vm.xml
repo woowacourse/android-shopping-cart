@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="productCount"
+            type="int" />
+
+        <variable
+            name="decrease"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="increase"
+            type="kotlin.jvm.functions.Function0" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_product_count_control"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_product_count_minus"
+            style="@style/ProductCountStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_btn_product_count_minus"
+            android:onClick="@{() -> decrease.invoke()}"
+            android:text="@string/product_count_minus"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.33" />
+
+        <TextView
+            android:id="@+id/tv_product_count"
+            style="@style/ProductCountStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_product_count"
+            android:text="@{String.valueOf(productCount)}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count_minus"
+            app:layout_constraintStart_toEndOf="@id/tv_product_count_minus"
+            app:layout_constraintTop_toTopOf="@id/tv_product_count_minus"
+            app:layout_constraintWidth_percent="0.34"
+            tools:text="20" />
+
+        <TextView
+            android:id="@+id/tv_product_count_plus"
+            style="@style/ProductCountStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_btn_product_count_plus"
+            android:onClick="@{() -> increase.invoke()}"
+            android:text="@string/product_count_plus"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count_minus"
+            app:layout_constraintStart_toEndOf="@id/tv_product_count"
+            app:layout_constraintTop_toTopOf="@id/tv_product_count_minus"
+            app:layout_constraintWidth_percent="0.33" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

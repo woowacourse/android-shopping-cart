@@ -7,9 +7,13 @@ import woowacourse.shopping.domain.CartItem
 class CartProductViewHolder(
     val binding: ItemCartProductBinding,
     val onDeleteClick: (CartItem, Int) -> Unit,
+    val onIncreaseClick: (CartItem) -> Unit,
+    val onDecreaseClick: (CartItem) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.toDelete = onDeleteClick
+        binding.increase = { binding.cartItem?.let { onIncreaseClick(it) } }
+        binding.decrease = { binding.cartItem?.let { onDecreaseClick(it) } }
     }
 
     fun bind(
@@ -18,5 +22,6 @@ class CartProductViewHolder(
     ) {
         binding.cartItem = cartItem
         binding.position = position
+        binding.executePendingBindings()
     }
 }

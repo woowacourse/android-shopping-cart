@@ -16,33 +16,40 @@ import woowacourse.shopping.domain.CartItem
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    private val cartProductAdapter: CartProductAdapter by lazy { CartProductAdapter(::deleteProduct) }
+    private val cartProductAdapter: CartProductAdapter by lazy {
+        CartProductAdapter(
+            onDeleteClick = ::deleteProduct,
+            onIncrease = { viewModel.increaseProductCount(it) },
+            onDecrease = { viewModel.decreaseProductCount(it) },
+        )
+    }
     private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        initDataBinding()
         initView()
+        initDataBinding()
         bindData()
         initAdapter()
     }
 
-    private fun initDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-        binding.toBack = ::finish
-        binding.toPrevious = ::navigateToPrevious
-        binding.toNext = ::navigateToNext
-    }
-
     private fun initView() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun initDataBinding() {
+        binding.apply {
+            lifecycleOwner = this@CartActivity
+            viewModel = viewModel
+            toBack = ::finish
+            toPrevious = ::navigateToPrevious
+            toNext = ::navigateToNext
         }
     }
 
@@ -55,7 +62,9 @@ class CartActivity : AppCompatActivity() {
             viewModel.hasNext()
             viewModel.hasPrevious()
         }
-        viewModel.products.observe(this) { cartProductAdapter.setData(it) }
+        viewModel.products.observe(this) { product ->
+            cartProductAdapter.setData(product)
+        }
     }
 
     private fun deleteProduct(

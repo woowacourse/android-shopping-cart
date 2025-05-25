@@ -20,6 +20,14 @@
         <variable
             name="toDelete"
             type="kotlin.jvm.functions.Function2" />
+
+        <variable
+            name="decrease"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="increase"
+            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,20 +79,22 @@
         <include
             android:id="@+id/i_cart_count_control"
             style="@style/ProductDetailPriceStyle"
-            layout="@layout/product_count"
+            layout="@layout/product_count_no_vm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:decrease="@{decrease}"
+            app:increase="@{increase}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_cart_product"
             app:layout_constraintWidth_percent="0.36"
-            app:productCountVM="@{productCountVM}" />
+            app:productCount="@{cartItem.count}" />
 
         <TextView
             android:id="@+id/tv_cart_product_price"
             style="@style/CartPriceStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/cart_price(cartItem.product.price * productCountVM.productCount)}"
+            android:text="@{@string/cart_price(cartItem.product.price * cartItem.count)}"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
             app:layout_constraintEnd_toEndOf="@id/ib_cart_product_delete"
             tools:text="100,000원" />
