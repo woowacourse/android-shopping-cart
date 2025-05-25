@@ -5,6 +5,8 @@ import woowacourse.shopping.data.repository.cart.CartRepository
 import woowacourse.shopping.data.repository.cart.CartRepositoryImpl
 import woowacourse.shopping.data.repository.products.catalog.ProductRepository
 import woowacourse.shopping.data.repository.products.catalog.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.products.recentlyviewed.RecentlyViewedRepository
+import woowacourse.shopping.data.repository.products.recentlyviewed.RecentlyViewedRepositoryImpl
 import woowacourse.shopping.data.source.cart.CartDatabase
 import woowacourse.shopping.data.source.cart.CartStorage
 import woowacourse.shopping.data.source.cart.CartStorageImpl
@@ -29,6 +31,9 @@ class ShoppingApplication : Application() {
     }
     val recentlyViewedStorage: RecentlyViewedStorage by lazy {
         RecentlyViewedStorageImpl.initialize(recentlyViewedDatabase.recentlyViewedDao())
+    }
+    val recentlyViewedRepository: RecentlyViewedRepository by lazy {
+        RecentlyViewedRepositoryImpl.initialize(recentlyViewedStorage, productStorage)
     }
     val productRepository: ProductRepository by lazy {
         ProductRepositoryImpl.initialize(
