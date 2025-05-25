@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.core.ext.addSourceList
 import woowacourse.shopping.view.loader.HistoryLoader
 import woowacourse.shopping.view.loader.ProductWithCartLoader
 import woowacourse.shopping.view.main.MainUiEvent
@@ -33,9 +34,7 @@ class MainViewModel(
 
     private val _uiState =
         MediatorLiveData<ProductUiState>().apply {
-            addSource(productItems) { combine() }
-            addSource(historyItems) { combine() }
-            addSource(loadState) { combine() }
+            addSourceList(productItems, historyItems, loadState) { combine() }
         }
     val uiState: LiveData<ProductUiState> get() = _uiState
 
