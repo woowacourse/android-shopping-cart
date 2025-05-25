@@ -52,6 +52,7 @@ class ProductsAdapter(
             is ProductsItem.LastWatchTitleItem -> 3
         }
 
+
     fun updateProductItems(newItems: List<Product>, lastWatchedItems: List<Product>) {
         productsItems.clear()
         if (lastWatchedItems.isNotEmpty()) {

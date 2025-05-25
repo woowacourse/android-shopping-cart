@@ -52,6 +52,12 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchLastProducts()
+
+    }
+
     private fun createAdapterOnClickHandler() =
         object : ProductsAdapter.OnClickHandler {
             override fun onProductClick(id: Int) {

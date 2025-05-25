@@ -48,6 +48,17 @@ class ProductsViewModel(
     }
 
 
+    fun fetchLastProducts(){
+        lastProductRepository.fetchProducts { products ->
+            val result = products.map { it.product }
+            mainHandler.post {
+                _lastProducts.value = result
+            }
+        }
+
+    }
+
+
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
         val lastId = products.value?.lastOrNull()?.id ?: 0
         productsRepository.fetchProducts(count, lastId) { newProducts ->
