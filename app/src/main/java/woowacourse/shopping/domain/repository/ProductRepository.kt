@@ -4,8 +4,6 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 
 interface ProductRepository {
-    fun start(onResult: (Result<Unit>) -> Unit)
-
     fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
@@ -22,6 +20,4 @@ interface ProductRepository {
         pageSize: Int,
         onResult: (Result<List<CartItem>>) -> Unit,
     )
-
-    fun shutdown(onResult: (Result<Unit>) -> Unit)
 }

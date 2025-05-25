@@ -12,13 +12,6 @@ class ProductRepositoryImpl(
     private val cartDataSource: CartDataSource,
     private val productDataSource: ProductDataSource,
 ) : ProductRepository {
-    override fun start(onResult: (Result<Unit>) -> Unit) {
-        runThread(
-            block = { productDataSource.start() },
-            onResult = onResult,
-        )
-    }
-
     override fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
@@ -58,13 +51,6 @@ class ProductRepositoryImpl(
                 val cartItems = cartEntities.map { it.getOrThrow() }
                 Result.success(cartItems)
             },
-            onResult = onResult,
-        )
-    }
-
-    override fun shutdown(onResult: (Result<Unit>) -> Unit) {
-        runThread(
-            block = { productDataSource.shutdown() },
             onResult = onResult,
         )
     }

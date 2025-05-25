@@ -6,8 +6,6 @@ import woowacourse.shopping.domain.model.Product
 class ProductDataSourceImpl(
     private val productService: ProductService,
 ) : ProductDataSource {
-    override fun start(): Result<Unit> = Result.success(productService.start())
-
     override fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
@@ -26,6 +24,4 @@ class ProductDataSourceImpl(
         } catch (e: Exception) {
             Result.failure(Exception("상품 조회에 실패했습니다: $e"))
         }
-
-    override fun shutdown(): Result<Unit> = Result.success(productService.shutdown())
 }

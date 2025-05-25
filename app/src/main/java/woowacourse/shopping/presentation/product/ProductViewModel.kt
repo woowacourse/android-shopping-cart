@@ -32,13 +32,8 @@ class ProductViewModel(
     private var currentPage = FIRST_PAGE
 
     init {
-        productRepository.start { result ->
-            result
-                .onSuccess {
-                    fetchData()
-                    fetchCartItemCount()
-                }.onFailure { _toastMessage.postValue(R.string.product_toast_start_server_fail) }
-        }
+        fetchData()
+        fetchCartItemCount()
     }
 
     fun fetchData(currentPage: Int = FIRST_PAGE) {
@@ -151,13 +146,6 @@ class ProductViewModel(
                 if (it.product.productId == productId) it.copy(quantity = it.quantity + delta) else it
             }
         _products.postValue(ResultState.Success(updatedItem))
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        productRepository.shutdown { result ->
-            result.onFailure { _toastMessage.postValue(R.string.product_toast_terminate_server_fail) }
-        }
     }
 
     companion object {
