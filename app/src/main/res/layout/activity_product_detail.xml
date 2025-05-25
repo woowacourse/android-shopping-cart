@@ -9,7 +9,11 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel" />
+        <variable
+            name="lastProduct"
+            type="woowacourse.shopping.domain.model.Product" />
 
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -101,6 +105,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/mint_1"
@@ -114,5 +119,40 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:background="@drawable/bg_product_detail_gray_4_border"
+            android:visibility="@{viewModel.product.id != lastProduct.id ? View.VISIBLE : View.GONE}"/>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/lastProductText"
+            android:textColor="@color/mint_1"
+            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintTop_toTopOf="@+id/view"
+            android:visibility="@{viewModel.product.id != lastProduct.id ? View.VISIBLE : View.GONE}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="@{lastProduct.name}"
+            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            android:textSize="20sp"
+            tools:text="상품이름이 들어갑니다"
+            android:visibility="@{viewModel.product.id != lastProduct.id ? View.VISIBLE : View.GONE}"/>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

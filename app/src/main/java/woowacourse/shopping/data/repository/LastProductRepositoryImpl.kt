@@ -55,4 +55,15 @@ class LastProductRepositoryImpl(
             }
         }.start()
     }
+
+    override fun fetchLatestProduct(callback: (Product?) -> Unit) {
+        Thread {
+            val lastEntity = lastDao.getLatest()
+            val productEntity = lastEntity?.let { productDao.getById(it.productId.toInt()) }
+            val product = productEntity?.toDomain()
+            Handler(Looper.getMainLooper()).post {
+                callback(product)
+            }
+        }.start()
+    }
 }

@@ -47,16 +47,6 @@ class ProductsViewModel(
         }
     }
 
-    fun addLastProduct(id: Int) {
-        val product = _products.value?.find { it.id == id } ?: return
-
-        val updated = listOf(product) + _lastProducts.value.orEmpty().filter { it.id != product.id }
-        _lastProducts.value = updated.take(10)
-
-        Thread {
-            lastProductRepository.insertProduct(product)
-        }.start()
-    }
 
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
         val lastId = products.value?.lastOrNull()?.id ?: 0

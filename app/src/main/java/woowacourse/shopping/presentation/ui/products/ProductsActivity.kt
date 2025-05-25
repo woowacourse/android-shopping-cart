@@ -55,7 +55,6 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
     private fun createAdapterOnClickHandler() =
         object : ProductsAdapter.OnClickHandler {
             override fun onProductClick(id: Int) {
-                viewModel.addLastProduct(id)
                 navigateToProductDetail(id)
             }
 

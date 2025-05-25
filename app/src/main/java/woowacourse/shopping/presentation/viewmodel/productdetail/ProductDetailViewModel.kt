@@ -9,10 +9,12 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.util.SingleLiveEvent
 import android.os.Handler
 import android.os.Looper
+import woowacourse.shopping.data.repository.LastProductRepository
 
 class ProductDetailViewModel(
     private val productsRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val lastProductRepository: LastProductRepository,
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> =
         MutableLiveData(Product.Companion.INVALID_PRODUCT)
@@ -25,6 +27,24 @@ class ProductDetailViewModel(
     val finishFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
 
     private val mainHandler = Handler(Looper.getMainLooper())
+
+    private val _latestProduct = MutableLiveData<Product?>()
+    val latestProduct: LiveData<Product?> get() = _latestProduct
+
+    fun loadLatestViewedProduct() {
+        lastProductRepository.fetchLatestProduct { product ->
+            _latestProduct.postValue(product)
+        }
+    }
+
+    fun addLastProduct() {
+        Thread {
+            if(product.value!=null){
+                lastProductRepository.insertProduct(_product.value!!)
+            }
+        }.start()
+    }
+
 
     fun updateProductDetail(id: Int) {
         productsRepository.fetchProductDetail(id) { result ->

@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.productdetail
 
+import LastProductRepositoryImpl
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +12,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.LastProductRepository
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.base.BaseActivity
 import woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel
 import woowacourse.shopping.util.DatabaseProvider
@@ -27,6 +30,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
 
         removeSupportActionBarTitle()
         updateProductDetail()
+        updateLastProduct()
         initViewBinding()
 
         viewModel.putProductFlag.observe(this) {
@@ -34,6 +38,14 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
         }
         viewModel.finishFlag.observe(this) {
             finish()
+        }
+        viewModel.latestProduct.observe(this){ lastProduct ->
+            binding.lastProduct = lastProduct
+        }
+        viewModel.product.observe(this) { product ->
+            if (product != Product.INVALID_PRODUCT) {
+                viewModel.addLastProduct()
+            }
         }
     }
 
@@ -53,6 +65,10 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
 
     private fun updateProductDetail() {
         viewModel.updateProductDetail(intent.getIntExtra(KEY_PRODUCT_ID, 0))
+    }
+
+    private fun updateLastProduct(){
+        viewModel.loadLatestViewedProduct()
     }
 
     private fun initViewBinding() {
@@ -82,12 +98,14 @@ fun provideProductDetailViewModelFactory(
 
             val productDao = DatabaseProvider.getDatabase(appContext).productDao()
             val cartDao = DatabaseProvider.getDatabase(appContext).cartDao()
+            val lastProductDao  = DatabaseProvider.getDatabase(appContext).lastProductDao()
 
             val productRepository = ProductRepositoryImpl(productDao)
             val cartRepository = CartRepositoryImpl(cartDao, productDao)
+            val lastProductRepository = LastProductRepositoryImpl(lastProductDao,productDao)
 
             @Suppress("UNCHECKED_CAST")
-            return ProductDetailViewModel(productRepository, cartRepository) as T
+            return ProductDetailViewModel(productRepository, cartRepository,lastProductRepository) as T
         }
     }
 }

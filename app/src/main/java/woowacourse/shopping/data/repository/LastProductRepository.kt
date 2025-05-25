@@ -7,4 +7,5 @@ interface LastProductRepository {
     fun fetchProducts(callback: (List<LastProduct>) -> Unit)
     fun insertProduct(product: Product)
     fun deleteLastProduct()
+    fun fetchLatestProduct(callback: (Product?) -> Unit)
 }
