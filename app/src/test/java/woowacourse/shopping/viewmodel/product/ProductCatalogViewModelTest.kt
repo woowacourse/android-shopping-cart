@@ -88,7 +88,6 @@ class ProductCatalogViewModelTest {
         val item = ProductCatalogItem.ProductItem(product, 1)
 
         // when
-        viewModel.loadCatalog()
         viewModel.onQuantityIncreaseClick(item)
 
         // then
@@ -107,7 +106,6 @@ class ProductCatalogViewModelTest {
         val item = ProductCatalogItem.ProductItem(product, 2)
 
         // when
-        viewModel.loadCatalog()
         viewModel.onQuantityDecreaseClick(item)
 
         // then
