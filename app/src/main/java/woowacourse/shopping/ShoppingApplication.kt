@@ -8,8 +8,8 @@ import woowacourse.shopping.data.repository.products.ProductRepositoryImpl
 import woowacourse.shopping.data.source.cart.CartDatabase
 import woowacourse.shopping.data.source.cart.CartStorage
 import woowacourse.shopping.data.source.cart.CartStorageImpl
-import woowacourse.shopping.data.source.products.DummyProducts
-import woowacourse.shopping.data.source.products.ProductStorage
+import woowacourse.shopping.data.source.products.catalog.DummyProducts
+import woowacourse.shopping.data.source.products.catalog.ProductStorage
 
 class ShoppingApplication : Application() {
     val cartDatabase: CartDatabase by lazy {
