@@ -16,6 +16,14 @@ class GoodsAdapter(
     private val items: MutableList<Any> = mutableListOf()
 
     fun setItems(newItems: List<Any>) {
+        val oldHistory = items.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is History } } as? List<*>
+        val newHistory = newItems.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is History } } as? List<*>
+
+        if (oldHistory != null && newHistory != null && oldHistory != newHistory) {
+            items[0] = newHistory
+            notifyItemChanged(0)
+        }
+
         newItems.forEachIndexed { index, newItem ->
             val oldItem = items.getOrNull(index)
             if (
@@ -105,8 +113,5 @@ class GoodsAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        val count = items.size + 1
-        return count
-    }
+    override fun getItemCount(): Int = items.size + 1
 }

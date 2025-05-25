@@ -14,6 +14,8 @@ import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.updateCartQuantity
 import kotlin.math.min
+import kotlin.text.orEmpty
+import kotlin.text.toMutableList
 
 class GoodsViewModel(
     private val cartRepository: CartRepository,
@@ -54,6 +56,22 @@ class GoodsViewModel(
         viewModelScope.launch {
             cartRepository.delete(cart)
             updateItemsAndTotalQuantity(cart, cart.quantity - 1)
+        }
+    }
+
+    fun refreshHistoryOnly() {
+        historyRepository.getAll { histories ->
+            val currentItems = _items.value.orEmpty().toMutableList()
+
+            val updatedItems =
+                if (currentItems.firstOrNull() is List<*>) {
+                    val cartsOnly = currentItems.drop(1)
+                    listOf(histories) + cartsOnly
+                } else {
+                    listOf(histories) + currentItems
+                }
+
+            _items.postValue(updatedItems)
         }
     }
 

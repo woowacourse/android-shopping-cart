@@ -122,6 +122,8 @@ class GoodsActivity :
         val changedId = data?.getLongExtra("GOODS_ID", 0) ?: 0
         val changedQuantity = data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
         adapter.updateItemQuantity(changedId, changedQuantity)
+
+        viewModel.refreshHistoryOnly()
     }
 
     private fun observeCartInsertResult() {

@@ -46,6 +46,13 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
         observeCartInsertResult()
         setOnClickListener()
+
+        setResult(
+            ResultCode.GOODS_DETAIL_INSERT.code,
+            Intent().apply {
+                putExtra("HISTORY_ID", cart.id)
+            },
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
