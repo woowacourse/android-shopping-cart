@@ -14,12 +14,11 @@ class ShoppingCartViewHolder(
     private val binding = ItemSelectedGoodsBinding.bind(itemView)
 
     init {
-        binding.clickListener = clickListener
-        binding.clGoodsCount.clickListener = clickListener
+        binding.shoppingCartClickListener = clickListener
+        binding.clGoodsCount.quantityChangeListener = clickListener
     }
 
     fun bind(goods: GoodsUiModel) {
         binding.goods = goods
-        binding.clGoodsCount.quantity = goods.quantity
     }
 }

@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="clickListener"
+            name="lastGoodsClickListener"
             type="woowacourse.shopping.presentation.goods.detail.LastGoodsClickListener" />
 
         <variable
@@ -15,10 +15,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> clickListener.onLastGoodsClick(goods.id)}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_last_goods"
+        android:onClick="@{() -> lastGoodsClickListener.onLastGoodsClick(goods.id)}"
         android:paddingHorizontal="18dp"
         android:paddingVertical="16dp">
 

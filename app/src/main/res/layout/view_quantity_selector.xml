@@ -14,7 +14,7 @@
             type="int" />
 
         <variable
-            name="clickListener"
+            name="quantityChangeListener"
             type="woowacourse.shopping.presentation.util.QuantitySelectorListener" />
     </data>
 
@@ -28,7 +28,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onDecreaseQuantity(goodsId)}"
+            android:onClick="@{() -> quantityChangeListener.onDecreaseQuantity(goodsId)}"
             android:text="@string/btn_minus"
             android:textColor="@color/black"
             android:textSize="30sp"
@@ -58,7 +58,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onIncreaseQuantity(goodsId)}"
+            android:onClick="@{() -> quantityChangeListener.onIncreaseQuantity(goodsId)}"
             android:text="@string/btn_plus"
             android:textColor="@color/black"
             android:textSize="22sp"

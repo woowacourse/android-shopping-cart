@@ -15,7 +15,7 @@ class GoodsViewHolder(
 
     init {
         binding.goodsClickListener = goodsClickListener
-        binding.clGoodsQuantity.clickListener = goodsClickListener
+        binding.clGoodsQuantity.quantityChangeListener = goodsClickListener
     }
 
     fun bind(goods: GoodsUiModel) {
