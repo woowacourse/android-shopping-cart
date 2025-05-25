@@ -10,7 +10,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.view.base.BaseActivity
-import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity :
@@ -46,8 +45,15 @@ class ProductDetailActivity :
         return true
     }
 
-    override fun onAddToCart(product: InventoryProduct) {
-        viewModel.addToCart(product)
+    override fun onSelectRecentProduct() {
+        with(newIntent(this, viewModel.lastProduct.value?.id ?: 0)) {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(this)
+        }
+    }
+
+    override fun onAddToCart() {
+        viewModel.addToCart()
         startActivity(ShoppingCartActivity.newIntent(this))
     }
 
@@ -66,7 +72,10 @@ class ProductDetailActivity :
             context: Context,
             productId: Int,
         ): Intent {
-            return Intent(context, ProductDetailActivity::class.java).putExtra(KEY_PRODUCT_ID, productId)
+            return Intent(context, ProductDetailActivity::class.java).putExtra(
+                KEY_PRODUCT_ID,
+                productId,
+            )
         }
     }
 }
