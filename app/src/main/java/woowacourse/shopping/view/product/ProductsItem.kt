@@ -6,6 +6,13 @@ import woowacourse.shopping.view.product.ProductsItem.ItemType.entries
 sealed interface ProductsItem {
     val viewType: ItemType
 
+    data class RecentWatchingItem(
+        val products: List<Product>,
+    ) : ProductsItem {
+        override val viewType: ItemType
+            get() = ItemType.RECENT_WATCHING
+    }
+
     data class ProductItem(
         val product: Product,
         val selectedQuantity: Int = 0,
@@ -20,6 +27,7 @@ sealed interface ProductsItem {
     enum class ItemType {
         PRODUCT,
         MORE,
+        RECENT_WATCHING,
         ;
 
         companion object {

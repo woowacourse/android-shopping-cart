@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.product
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -104,6 +105,11 @@ class ProductsActivity :
                 binding.root.showSnackBar(
                     getString(R.string.products_minus_shopping_cart_product_error_message),
                 )
+
+            ProductsEvent.UPDATE_RECENT_WATCHING_PRODUCTS_FAILURE ->
+                binding.root.showSnackBar(
+                    "최근 본 상품을 조회하는 데 실패했습니다.",
+                )
         }
     }
 
@@ -115,6 +121,7 @@ class ProductsActivity :
                     when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
                         ProductsItem.ItemType.PRODUCT -> 1
                         ProductsItem.ItemType.MORE -> 2
+                        ProductsItem.ItemType.RECENT_WATCHING -> 2
                     }
             }
 
@@ -139,5 +146,9 @@ class ProductsActivity :
 
     override fun onLoadClick() {
         viewModel.updateProducts()
+    }
+
+    override fun onRecentProductClick(product: Product) {
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
     }
 }

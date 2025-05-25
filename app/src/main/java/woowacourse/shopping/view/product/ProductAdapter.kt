@@ -17,6 +17,11 @@ class ProductAdapter(
         when (ProductsItem.ItemType.from(viewType)) {
             ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, productListener)
             ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, productListener)
+            ProductsItem.ItemType.RECENT_WATCHING ->
+                ProductRecentWatchingViewHolder.of(
+                    parent,
+                    productListener,
+                )
         }
 
     override fun onBindViewHolder(
@@ -25,6 +30,7 @@ class ProductAdapter(
     ) {
         when (holder) {
             is ProductViewHolder -> holder.bind(items[position] as ProductsItem.ProductItem)
+            is ProductRecentWatchingViewHolder -> holder.bind((items[position] as ProductsItem.RecentWatchingItem).products)
         }
     }
 
@@ -61,5 +67,6 @@ class ProductAdapter(
 
     interface ProductListener :
         ProductViewHolder.ProductClickListener,
-        ProductMoreViewHolder.ProductMoreClickListener
+        ProductMoreViewHolder.ProductMoreClickListener,
+        RecentProductViewHolder.ProductRecentMoreWatchingClickListener
 }

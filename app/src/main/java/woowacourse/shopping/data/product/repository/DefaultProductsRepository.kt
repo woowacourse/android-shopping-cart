@@ -24,4 +24,19 @@ class DefaultProductsRepository(
             }
         }
     }
+
+    override fun getRecentWatchingProducts(
+        size: Int,
+        onResult: (Result<List<Product>>) -> Unit,
+    ) {
+        thread {
+            runCatching {
+                productsStorage.getRecentWatching(size).map(ProductEntity::toDomain)
+            }.onSuccess { products ->
+                onResult(Result.success(products))
+            }.onFailure { exception ->
+                onResult(Result.failure(exception))
+            }
+        }
+    }
 }

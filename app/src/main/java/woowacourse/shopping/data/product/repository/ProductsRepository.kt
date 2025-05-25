@@ -8,4 +8,9 @@ interface ProductsRepository {
         size: Int,
         onResult: (Result<List<Product>>) -> Unit,
     )
+
+    fun getRecentWatchingProducts(
+        size: Int,
+        onResult: (Result<List<Product>>) -> Unit,
+    )
 }
