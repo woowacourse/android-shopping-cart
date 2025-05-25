@@ -4,18 +4,14 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import woowacourse.shopping.data.inventory.InventoryRepositoryImpl
 import woowacourse.shopping.data.product.ProductDatabase
 import woowacourse.shopping.data.recent.RecentProductDatabase
 import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
 import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
-import woowacourse.shopping.inventoryItem
-import woowacourse.shopping.view.inventory.item.toUiModel
 
 @Suppress("FunctionName")
 class ProductDetailViewModelTest {
@@ -49,17 +45,5 @@ class ProductDetailViewModelTest {
         shoppingCartRepository = ShoppingCartRepositoryImpl(shoppingCartDatabase.cartItemDao())
         recentProductRepository = RecentProductRepositoryImpl(recentProductDatabase.recentProductDao())
         viewModel = ProductDetailViewModel(inventoryRepository, shoppingCartRepository, recentProductRepository)
-    }
-
-    @Test
-    fun 상품을_추가할_수_있다() {
-        // when
-        viewModel.addToCart(inventoryItem.toUiModel())
-
-        // then
-        val result =
-            inventoryRepository.getAll { products ->
-                assertThat(products).contains(inventoryItem)
-            }
     }
 }

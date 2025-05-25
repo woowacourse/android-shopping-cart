@@ -1,9 +1,12 @@
 
 package woowacourse.shopping
 
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
@@ -19,19 +22,24 @@ import woowacourse.shopping.view.inventory.InventoryActivity
 @Suppress("FunctionName")
 class InventoryActivityTest {
     @get:Rule
-    val inventoryActivityScenarioRule = ActivityScenarioRule(InventoryActivity::class.java)
+    val activityScenarioRule = ActivityScenarioRule(InventoryActivity::class.java)
+
+    @Before
+    fun setUp() {
+        ActivityScenario.launch(InventoryActivity::class.java)
+    }
 
     @Test
     fun 상품의_목록이_표시된다() {
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                0,
+                1,
                 R.id.tv_product_name,
             ),
         ).matchText("[병천아우내] 모듬순대")
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                0,
+                1,
                 R.id.tv_product_price,
             ),
         ).matchText("11,900원")
@@ -59,7 +67,7 @@ class InventoryActivityTest {
     fun 상품의_이름이_너무_길_경우_말줄임표로_표시된다() {
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                1,
+                2,
                 R.id.tv_product_name,
             ),
         ).check(isEllipsized())
@@ -69,7 +77,7 @@ class InventoryActivityTest {
     fun 상품을_클릭하면_상품_상세_화면으로_이동된다() {
         onView(
             withRecyclerView(R.id.rv_product_list).atPositionOnView(
-                0,
+                1,
                 R.id.tv_product_name,
             ),
         ).performClick()
@@ -80,5 +88,91 @@ class InventoryActivityTest {
     fun 장바구니_아이콘을_클릭하면_장바구니_화면으로_이동된다() {
         onView(withId(R.id.menu_item_shopping_cart)).performClick()
         onView(withId(R.id.rv_shopping_cart_list)).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니에_담겨있지_않은_상품은_담기_버튼이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.iv_add_product_icon,
+            ),
+        ).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니에_담긴_상품의_개수가_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.iv_add_product_icon,
+            ),
+        ).performClick()
+        onView(withId(R.id.tv_shopping_cart_quantity)).matchText("1")
+    }
+
+    @Test
+    fun 장바구니에_담겨있는_상품은_수량_감소_버튼이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.iv_add_product_icon,
+            ),
+        ).performClick()
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.tv_decrease_quantity,
+            ),
+        ).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니에_담겨있는_상품은_수량_증가_버튼이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.iv_add_product_icon,
+            ),
+        ).performClick()
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.tv_increase_quantity,
+            ),
+        ).isDisplayed()
+    }
+
+    @Test
+    fun 장바구니에_담겨있는_상품은_수량이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.iv_add_product_icon,
+            ),
+        ).performClick()
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.tv_quantity,
+            ),
+        ).matchText("1")
+    }
+
+    @Test
+    fun 최근_본_상품이_있으면_최근_본_상품_목록이_표시된다() {
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                1,
+                R.id.tv_product_name,
+            ),
+        ).performClick()
+        Espresso.pressBack()
+        onView(
+            withRecyclerView(R.id.rv_product_list).atPositionOnView(
+                0,
+                R.id.rv_recent_list,
+            ),
+        ).isDisplayed()
     }
 }
