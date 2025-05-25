@@ -1,22 +1,34 @@
 package woowacourse.shopping.presentation.ui.products
 
+import LastProductRepositoryImpl
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.dummyProducts
+import woowacourse.shopping.data.entity.toEntity
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.LastProductRepository
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.databinding.MenuCartCombinedBinding
 import woowacourse.shopping.presentation.ui.base.BaseActivity
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
+import woowacourse.shopping.util.DatabaseProvider
 
 @SuppressLint("NotifyDataSetChanged")
 class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
-    private val viewModel: ProductsViewModel by viewModels()
+    private val viewModel: ProductsViewModel by viewModels {
+        provideProductsViewModelFactory(this)
+    }
     private lateinit var productsAdapter: ProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +37,8 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         initViewBinding()
         initObservers()
         viewModel.updateProducts()
+        viewModel.updateIsLoadable()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -41,6 +55,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
     private fun createAdapterOnClickHandler() =
         object : ProductsAdapter.OnClickHandler {
             override fun onProductClick(id: Int) {
+                viewModel.addLastProduct(id)
                 navigateToProductDetail(id)
             }
 
@@ -78,6 +93,7 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         binding.rvProducts.adapter = productsAdapter
         binding.rvProducts.layoutManager = createLayoutManager()
         binding.lifecycleOwner = this
+
     }
 
     private fun createLayoutManager(): GridLayoutManager =
@@ -98,12 +114,14 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
 
     private fun initObservers() {
         viewModel.products.observe(this) { products ->
-            productsAdapter.updateProductItems(products)
+            productsAdapter.updateProductItems(products, viewModel.lastProducts.value.orEmpty())
             viewModel.updateIsLoadable()
         }
         viewModel.isLoadingProducts.observe(this) { isLoadable ->
             productsAdapter.updateLoadMoreItem(isLoadable)
-            productsAdapter.notifyDataSetChanged()
+        }
+        viewModel.lastProducts.observe(this) { lastProducts ->
+            productsAdapter.updateProductItems(viewModel.products.value.orEmpty(), lastProducts)
         }
     }
 
@@ -112,5 +130,24 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         private const val PRODUCT_LAYOUT_SIZE: Int = 1
         private const val LOAD_MORE_LAYOUT_SIZE: Int = 2
         private const val LAST_WATCH_LAYOUT_SIZE: Int = 2
+    }
+}
+fun provideProductsViewModelFactory(context: Context): ViewModelProvider.Factory {
+    return object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val appContext = context.applicationContext
+
+            val productDao = DatabaseProvider.getDatabase(appContext).productDao()
+            val cartDao = DatabaseProvider.getDatabase(appContext).cartDao()
+            val lastProductDao = DatabaseProvider.getDatabase(appContext).lastProductDao()
+
+
+            val productRepository = ProductRepositoryImpl(productDao)
+            val cartRepository = CartRepositoryImpl(cartDao, productDao)
+            val lastProductRepository =  LastProductRepositoryImpl(lastProductDao, productDao)
+
+            @Suppress("UNCHECKED_CAST")
+            return ProductsViewModel(productRepository, cartRepository,lastProductRepository) as T
+        }
     }
 }

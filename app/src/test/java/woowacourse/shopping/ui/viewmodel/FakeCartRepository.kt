@@ -7,13 +7,13 @@ import woowacourse.shopping.domain.model.Product
 class FakeCartRepository : CartRepository {
     var storage = dummyProducts.take(10).toMutableList()
 
-    override fun fetchCartProducts(page: Int): List<Product> {
+    override suspend fun fetchCartProducts(page: Int): List<Product> {
         val pageSize = 5
         val start = (page - 1) * pageSize
         return storage.drop(start).take(pageSize)
     }
 
-    override fun fetchMaxPageCount(): Int {
+    override suspend fun fetchMaxPageCount(): Int {
         val pageSize = 5
         return (storage.size + pageSize - 1) / pageSize
     }
@@ -22,11 +22,11 @@ class FakeCartRepository : CartRepository {
         storage.add(product)
     }
 
-    override fun removeCartProduct(id: Int) {
+    override suspend fun removeCartProduct(id: Int) {
         storage.removeIf { it.id == id }
     }
 
-    override fun clearCart() {
+    override suspend fun clearCart() {
         storage.clear()
     }
 }

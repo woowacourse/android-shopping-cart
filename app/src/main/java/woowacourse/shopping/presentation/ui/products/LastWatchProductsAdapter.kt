@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
+import android.util.Log
 
 @SuppressLint("NotifyDataSetChanged")
 class LastWatchProductsAdapter(
@@ -39,5 +40,6 @@ class LastWatchProductsAdapter(
     fun updateProductItems(newItems: List<Product>) {
         productsItems.clear()
         productsItems.addAll(newItems)
+        notifyDataSetChanged()
     }
 }

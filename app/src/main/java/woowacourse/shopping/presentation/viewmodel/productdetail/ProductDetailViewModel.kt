@@ -3,16 +3,16 @@ package woowacourse.shopping.presentation.viewmodel.productdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.repository.CartDummyRepositoryImpl
 import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.data.repository.ProductDummyRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.util.SingleLiveEvent
+import android.os.Handler
+import android.os.Looper
 
 class ProductDetailViewModel(
-    private val productsDummyRepository: ProductRepository = ProductDummyRepositoryImpl,
-    private val cartDummyRepository: CartRepository = CartDummyRepositoryImpl,
+    private val productsRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> =
         MutableLiveData(Product.Companion.INVALID_PRODUCT)
@@ -24,14 +24,28 @@ class ProductDetailViewModel(
     val putProductFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
     val finishFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
 
+    private val mainHandler = Handler(Looper.getMainLooper())
+
     fun updateProductDetail(id: Int) {
-        _product.value = productsDummyRepository.fetchProductDetail(id)
+        productsRepository.fetchProductDetail(id) { result ->
+            mainHandler.post {
+                _product.value = result ?: Product.INVALID_PRODUCT
+            }
+        }
     }
 
     fun addCartProduct() {
-        cartDummyRepository.upsertCartProduct(product.value ?: return, _count.value ?: return)
-        putProductFlag.call()
-        finishFlag.call()
+        val p = product.value ?: return
+        val c = count.value ?: return
+
+        Thread {
+            cartRepository.upsertCartProduct(p, c)
+
+            mainHandler.post {
+                putProductFlag.call()
+                finishFlag.call()
+            }
+        }.start()
     }
 
     fun upCount() {
@@ -39,7 +53,7 @@ class ProductDetailViewModel(
     }
 
     fun downCount() {
-        _count.value = (_count.value ?: 0) - 1
-        if ((_count.value ?: 0) <= 1) _count.value = 1
+        val newValue = (_count.value ?: 0) - 1
+        _count.value = if (newValue < 1) 1 else newValue
     }
 }

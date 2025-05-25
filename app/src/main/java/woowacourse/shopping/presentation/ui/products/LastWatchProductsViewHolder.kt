@@ -7,19 +7,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import woowacourse.shopping.databinding.LayoutLastProductsBinding
 import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
+import woowacourse.shopping.domain.model.Product
 
 class LastWatchProductsViewHolder(
     parent: ViewGroup,
     onClickHandler: ProductsAdapter.OnClickHandler,
-    val lifecycleOwner: LifecycleOwner,
+    private val lifecycleOwner: LifecycleOwner,
     viewModel: ProductsViewModel,
 ) : ProductsItemViewHolder<ProductsItem.LastWatchProductsItem, LayoutLastProductsBinding>(
-        LayoutLastProductsBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false,
-        ),
-    ) {
+    LayoutLastProductsBinding.inflate(
+        LayoutInflater.from(parent.context),
+        parent,
+        false,
+    ),
+) {
     private val nestedAdapter = LastWatchProductsAdapter(onClickHandler, lifecycleOwner, viewModel)
 
     init {
@@ -34,6 +35,5 @@ class LastWatchProductsViewHolder(
         super.bind(item)
         binding.lifecycleOwner = lifecycleOwner
         nestedAdapter.updateProductItems(item.value)
-        nestedAdapter.notifyDataSetChanged()
     }
 }

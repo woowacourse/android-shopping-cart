@@ -5,14 +5,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.ui.base.BaseActivity
 import woowacourse.shopping.presentation.ui.cart.CartAdapter
 import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
+import woowacourse.shopping.util.DatabaseProvider
 
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
-    private val viewModel: CartViewModel by viewModels()
+    private val viewModel: CartViewModel by viewModels {
+        provideCartViewModelFactory(this)
+    }
+
     private lateinit var cartAdapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,5 +61,21 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
 
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
+    }
+}
+
+fun provideCartViewModelFactory(context: Context): ViewModelProvider.Factory {
+    return object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val appContext = context.applicationContext
+
+            val cartDao = DatabaseProvider.getDatabase(appContext).cartDao()
+            val productDao = DatabaseProvider.getDatabase(appContext).productDao()
+
+            val cartRepository = CartRepositoryImpl(cartDao, productDao)
+
+            @Suppress("UNCHECKED_CAST")
+            return CartViewModel(cartRepository) as T
+        }
     }
 }

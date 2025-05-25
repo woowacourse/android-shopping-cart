@@ -2,10 +2,12 @@ package woowacourse.shopping.data.repository
 
 import android.os.Handler
 import android.os.Looper
-import woowacourse.shopping.data.dummyProducts
+import woowacourse.shopping.data.dao.ProductDao
+import woowacourse.shopping.data.entity.toDomain
 import woowacourse.shopping.domain.model.Product
-
-object ProductDummyRepositoryImpl : ProductRepository {
+class ProductRepositoryImpl(
+    private val productDao: ProductDao
+) : ProductRepository {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -15,9 +17,8 @@ object ProductDummyRepositoryImpl : ProductRepository {
         callback: (List<Product>) -> Unit
     ) {
         Thread {
-            val result = dummyProducts
-                .filter { it.id > lastId }
-                .take(count)
+            val result = productDao.fetchProducts(count, lastId)
+                .map { it.toDomain() }
 
             mainHandler.post {
                 callback(result)
@@ -30,7 +31,8 @@ object ProductDummyRepositoryImpl : ProductRepository {
         callback: (Product?) -> Unit
     ) {
         Thread {
-            val result = dummyProducts.find { it.id == id }
+            val result = productDao.getById(id)?.toDomain()
+
             mainHandler.post {
                 callback(result)
             }
@@ -42,7 +44,8 @@ object ProductDummyRepositoryImpl : ProductRepository {
         callback: (Boolean) -> Unit
     ) {
         Thread {
-            val result = dummyProducts.any { it.id > lastId }
+            val result = productDao.hasMoreThan(lastId)
+
             mainHandler.post {
                 callback(result)
             }

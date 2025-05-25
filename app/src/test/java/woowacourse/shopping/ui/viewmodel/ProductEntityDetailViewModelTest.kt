@@ -11,7 +11,7 @@ import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
-class ProductDetailViewModelTest {
+class ProductEntityDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
 
     @BeforeEach

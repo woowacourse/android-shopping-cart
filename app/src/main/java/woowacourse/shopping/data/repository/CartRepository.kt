@@ -4,18 +4,10 @@ import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
-    fun fetchCartProducts(page: Int): List<CartProduct>
-
-    fun fetchMaxPageCount(): Int
-
+    fun fetchCartProducts(page: Int, callback: (List<CartProduct>) -> Unit)
+    fun fetchAllProduct(callback: (List<CartProduct>) -> Unit)
+    fun fetchMaxPageCount(callback: (Int) -> Unit)
+    fun upsertCartProduct(product: Product, count: Int)
     fun removeCartProduct(id: Int)
-
     fun clearCart()
-
-    fun fetchAllProduct(): List<CartProduct>
-
-    fun upsertCartProduct(
-        product: Product,
-        count: Int,
-    )
 }

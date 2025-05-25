@@ -7,13 +7,20 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.ui.base.BaseActivity
 import woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel
+import woowacourse.shopping.util.DatabaseProvider
 
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
-    val viewModel: ProductDetailViewModel by viewModels()
+    val viewModel: ProductDetailViewModel by viewModels {
+        provideProductDetailViewModelFactory(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,5 +70,24 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layou
             Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT_ID, id)
             }
+    }
+}
+
+fun provideProductDetailViewModelFactory(
+    context: Context
+): ViewModelProvider.Factory {
+    return object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            val appContext = context.applicationContext
+
+            val productDao = DatabaseProvider.getDatabase(appContext).productDao()
+            val cartDao = DatabaseProvider.getDatabase(appContext).cartDao()
+
+            val productRepository = ProductRepositoryImpl(productDao)
+            val cartRepository = CartRepositoryImpl(cartDao, productDao)
+
+            @Suppress("UNCHECKED_CAST")
+            return ProductDetailViewModel(productRepository, cartRepository) as T
+        }
     }
 }
