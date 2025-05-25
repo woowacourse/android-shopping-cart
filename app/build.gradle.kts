@@ -63,11 +63,13 @@ dependencies {
     implementation(libs.androidx.espresso.intents)
     implementation(libs.androidx.espresso.contrib)
     kapt(libs.androidx.room.compiler)
+    implementation(libs.okhttp)
 
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
     testImplementation(libs.mockk)
+    testImplementation(libs.mockwebserver)
 
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
