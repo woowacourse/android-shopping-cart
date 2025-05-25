@@ -5,6 +5,6 @@ sealed interface MainUiEvent {
 
     data class NavigateToDetail(
         val productId: Long,
-        val lastWatchedProductId: Long? = null,
+        val lastSeenProductId: Long? = null,
     ) : MainUiEvent
 }

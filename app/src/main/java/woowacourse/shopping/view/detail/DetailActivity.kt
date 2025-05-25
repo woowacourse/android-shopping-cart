@@ -127,12 +127,12 @@ class DetailActivity : AppCompatActivity(), CartQuantityHandler {
         fun newIntent(
             context: Context,
             productId: Long,
-            lastWatchedProductId: Long? = null,
+            lastSeenProductId: Long? = null,
         ): Intent {
             return Intent(context, DetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT_ID, productId)
-                lastWatchedProductId?.let {
-                    putExtra(EXTRA_LAST_SEEN_PRODUCT_ID, lastWatchedProductId)
+                lastSeenProductId?.let {
+                    putExtra(EXTRA_LAST_SEEN_PRODUCT_ID, it)
                 }
             }
         }

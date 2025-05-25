@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
                 is MainUiEvent.NavigateToDetail ->
                     moveToDetailActivity(
                         event.productId,
-                        event.lastWatchedProductId,
+                        event.lastSeenProductId,
                     )
             }
         }
@@ -118,9 +118,9 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
 
     private fun moveToDetailActivity(
         productId: Long,
-        lastWatchedProductId: Long?,
+        lastSeenProductId: Long?,
     ) {
-        val intent = DetailActivity.newIntent(this, productId, lastWatchedProductId)
+        val intent = DetailActivity.newIntent(this, productId, lastSeenProductId)
         startActivity(intent)
     }
 
