@@ -46,15 +46,10 @@ class GoodsViewModel(
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
-        val currentGoods =
-            if (_goods.value == null) {
-                goodsRepository.getPagedGoods(page, ITEM_COUNT)
-            } else {
-                _goods.value
-            }
+        val currentGoods = _goods.value ?: goodsRepository.getPagedGoods(page, ITEM_COUNT)
         val selectedItems = shoppingRepository.getAllGoods()
 
-        val updatedGoods = getUpdatedGoods(currentGoods!!, selectedItems)
+        val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
 
         _goods.value = updatedGoods
         _shoppingGoodsCount.value = selectedItems.sumOf { it.goodsQuantity }
