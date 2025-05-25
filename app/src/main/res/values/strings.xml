@@ -23,4 +23,5 @@
     <string name="product_detail_add_shopping_cart_success_message">장바구니에 해당 상품이 추가되었습니다.</string>
     <string name="product_detail_add_shopping_cart_error_message">장바구니에 해당 상품을 추가하는 데 실패했습니다.</string>
     <string name="product_detail_add_shopping_cart_empty_message">장바구니에 담을 수량은 최소 1개 이상이여 합니다.</string>
+    <string name="product_detail_add_recent_watching_error_message">최근 본 상품에 추가하는 데 실패했습니다.</string>
 </resources>

@@ -39,6 +39,7 @@ class ProductsActivity :
                         result.data?.getSerializableExtraData("updateProduct")
                             ?: return@registerForActivityResult
                     viewModel.updateSelectedQuantity(updateItem)
+                    viewModel.updateRecentWatching()
                 }
 
                 ResultFrom.SHOPPING_CART_BACK.RESULT_OK -> {

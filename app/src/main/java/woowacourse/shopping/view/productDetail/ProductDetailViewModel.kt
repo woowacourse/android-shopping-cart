@@ -3,6 +3,8 @@ package woowacourse.shopping.view.productDetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.product.repository.DefaultProductsRepository
+import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
@@ -11,6 +13,7 @@ import woowacourse.shopping.view.common.SingleLiveData
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
+    private val productsRepository: ProductsRepository = DefaultProductsRepository.get(),
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
@@ -28,6 +31,12 @@ class ProductDetailViewModel(
     fun updateProduct(product: Product) {
         _product.value = product
         _price.value = product.price
+
+        productsRepository.updateRecentWatchingProduct(product) { result ->
+            result.onFailure {
+                _event.postValue(ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE)
+            }
+        }
     }
 
     fun addToShoppingCart() {

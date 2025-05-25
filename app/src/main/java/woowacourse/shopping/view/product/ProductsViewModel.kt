@@ -16,7 +16,7 @@ import woowacourse.shopping.view.product.ProductsItem.ProductItem
 import woowacourse.shopping.view.product.ProductsItem.RecentWatchingItem
 
 class ProductsViewModel(
-    private val productsRepository: ProductsRepository = DefaultProductsRepository(),
+    private val productsRepository: ProductsRepository = DefaultProductsRepository.get(),
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository.get(),
 ) : ViewModel() {
     private val _products: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
@@ -136,6 +136,34 @@ class ProductsViewModel(
             result
                 .onSuccess { quantity: Int ->
                     _shoppingCartQuantity.postValue(quantity)
+                }
+        }
+    }
+
+    fun updateRecentWatching() {
+        productsRepository.getRecentWatchingProducts(10) { result ->
+            result
+                .onSuccess { recentWatchingProducts: List<Product> ->
+                    val recentWatchingItem =
+                        if (recentWatchingProducts.isEmpty()) {
+                            null
+                        } else {
+                            RecentWatchingItem(recentWatchingProducts)
+                        }
+
+                    val currentProducts = _products.value ?: return@onSuccess
+                    val withoutOldRecentWatching =
+                        currentProducts.filterNot { it is RecentWatchingItem }
+
+                    val updatedProducts =
+                        buildList {
+                            recentWatchingItem?.let { add(it) }
+                            addAll(withoutOldRecentWatching)
+                        }
+
+                    _products.postValue(updatedProducts)
+                }.onFailure {
+                    _event.postValue(ProductsEvent.UPDATE_RECENT_WATCHING_PRODUCTS_FAILURE)
                 }
         }
     }
