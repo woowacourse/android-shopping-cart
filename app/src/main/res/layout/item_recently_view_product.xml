@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cl_product_recently_viewed_item"
-    android:layout_width="98dp"
-    android:layout_height="121dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/iv_recently_view_product"
+    <data>
+
+        <variable
+            name="navigateToProductDetail"
+            type="kotlin.jvm.functions.Function0" />
+
+        <variable
+            name="recentlyViewedProduct"
+            type="woowacourse.shopping.domain.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_product_recently_viewed_item"
         android:layout_width="98dp"
-        android:layout_height="98dp"
-        android:contentDescription="@string/recently_view_product_description"
-        android:src="@color/gray5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="121dp"
+        android:onClick="@{() -> navigateToProductDetail.invoke()}">
 
-    <TextView
-        style="@style/ProductRecentlyViewedNameStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="4dp"
-        android:layout_marginTop="7dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="PET 보틀 - 정사각형(500ml)"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/iv_recently_view_product"
-        app:layout_constraintStart_toStartOf="@id/iv_recently_view_product"
-        app:layout_constraintTop_toBottomOf="@id/iv_recently_view_product" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/iv_recently_view_product"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:contentDescription="@string/recently_view_product_description"
+            app:imageUrl="@{recentlyViewedProduct.imageUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/ProductRecentlyViewedNameStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="7dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{recentlyViewedProduct.name}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_recently_view_product"
+            app:layout_constraintStart_toStartOf="@id/iv_recently_view_product"
+            app:layout_constraintTop_toBottomOf="@id/iv_recently_view_product"
+            tools:text="PET 보틀 - 정사각형(500ml)" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
