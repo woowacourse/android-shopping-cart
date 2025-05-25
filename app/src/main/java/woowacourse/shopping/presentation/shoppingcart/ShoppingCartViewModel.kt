@@ -101,7 +101,7 @@ class ShoppingCartViewModel(
             }
 
         _goods.value = updatedList
-        _onQuantityChanged.setValue(position)
+        _onQuantityChanged.setValue(goodsId)
         return updatedItem
     }
 

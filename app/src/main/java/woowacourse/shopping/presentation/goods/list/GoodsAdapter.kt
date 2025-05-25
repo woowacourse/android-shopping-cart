@@ -36,4 +36,9 @@ class GoodsAdapter(
             notifyItemRangeChanged(0, items.size)
         }
     }
+
+    fun changeQuantity(goodsId: Int) {
+        val position = items.indexOfFirst { it.id == goodsId }
+        notifyItemChanged(position)
+    }
 }

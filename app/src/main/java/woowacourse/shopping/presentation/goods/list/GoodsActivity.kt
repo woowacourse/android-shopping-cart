@@ -123,8 +123,8 @@ class GoodsActivity : BaseActivity() {
             goodsAdapter.changeGoods(goods)
         }
 
-        viewModel.onQuantityChanged.observe(this) { position ->
-            goodsAdapter.notifyItemChanged(position)
+        viewModel.onQuantityChanged.observe(this) { goodsId ->
+            goodsAdapter.changeQuantity(goodsId)
         }
 
         viewModel.shouldNavigateToShoppingCart.observe(this) {
