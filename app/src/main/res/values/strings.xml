@@ -25,4 +25,5 @@
     <string name="product_count_minus">-</string>
     <string name="product_count_plus">+</string>
     <string name="minimum_product_count">최소 수량은 1입니다</string>
+    <string name="recently_viewed_item">마지막으로 본 상품</string>
 </resources>

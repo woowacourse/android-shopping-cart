@@ -74,6 +74,19 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <!--  product detail 페이지 마지막으로 본 상품 스타일  -->
+    <style name="ProductRecentlyViewedStyle" parent="BaseTextStyle">
+        <item name="android:textSize">@dimen/font_size_xsmall</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/cyan</item>
+    </style>
+
+    <!--  product detail 페이지 마지막으로 본 상품 이름 스타일  -->
+    <style name="ProductRecentlyViewedTitleStyle" parent="BaseTextStyle">
+        <item name="android:textSize">@dimen/font_size_normal</item>
+        <item name="android:textColor">@color/gray5</item>
+    </style>
+
     <!--  cart 페이지 상품 이름 스타일  -->
     <style name="CartTitleStyle" parent="BaseTextStyle">
         <item name="android:gravity">start</item>
