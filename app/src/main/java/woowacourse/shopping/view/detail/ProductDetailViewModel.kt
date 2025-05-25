@@ -16,16 +16,16 @@ class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
-    private val _productItem = MutableLiveData<ProductItem>()
-    val productItem: LiveData<ProductItem> get() = _productItem
+    private val _product = MutableLiveData<ProductItem>()
+    val product: LiveData<ProductItem> get() = _product
 
     private val _lastProduct = MutableLiveData<RecentProduct>()
     val lastProduct: LiveData<RecentProduct> get() = _lastProduct
 
     fun loadInventoryProduct(productId: Int) {
-        inventoryRepository.getOrNull(productId) { product ->
-            if (product != null) {
-                _productItem.postValue(product.copy(quantity = PRODUCT_MINIMUM_QUANTITY))
+        inventoryRepository.getOrNull(productId) { inventoryProduct ->
+            if (inventoryProduct != null) {
+                _product.postValue(inventoryProduct.copy(quantity = PRODUCT_MINIMUM_QUANTITY))
             }
         }
     }
@@ -37,7 +37,7 @@ class ProductDetailViewModel(
     }
 
     fun addToCart() {
-        val productItem = _productItem.value ?: return
+        val productItem = _product.value ?: return
         shoppingCartRepository.getOrNull(productItem.product.id) { cartItem ->
             val existingQuantity = productItem.quantity
             val currentQuantity = cartItem?.quantity ?: 0
@@ -48,14 +48,14 @@ class ProductDetailViewModel(
     }
 
     fun decreaseQuantity() {
-        val quantity = _productItem.value?.quantity ?: PRODUCT_MINIMUM_QUANTITY
+        val quantity = _product.value?.quantity ?: PRODUCT_MINIMUM_QUANTITY
         if (quantity == PRODUCT_MINIMUM_QUANTITY) return
-        _productItem.value = _productItem.value?.copy(quantity = quantity - 1)
+        _product.value = _product.value?.copy(quantity = quantity - 1)
     }
 
     fun increaseQuantity() {
-        val quantity = _productItem.value?.quantity ?: PRODUCT_MINIMUM_QUANTITY
-        _productItem.value = _productItem.value?.copy(quantity = quantity + 1)
+        val quantity = _product.value?.quantity ?: PRODUCT_MINIMUM_QUANTITY
+        _product.value = _product.value?.copy(quantity = quantity + 1)
     }
 
     companion object {

@@ -32,7 +32,7 @@ class ShoppingCartViewModelTest {
         viewModel.requestPage(0)
 
         // then
-        val actual = viewModel.cartItems.getOrAwaitValue()
+        val actual = viewModel.products.getOrAwaitValue()
         val expected = repository.getPage(5, 0)
         assertThat(actual).isEqualTo(expected)
     }
@@ -43,7 +43,7 @@ class ShoppingCartViewModelTest {
         viewModel.removeCartItem(shoppingCartItem)
 
         // then
-        val result = viewModel.cartItems.getOrAwaitValue().items
+        val result = viewModel.products.getOrAwaitValue().items
         assertThat(result).doesNotContain(shoppingCartItem)
     }
 
@@ -53,7 +53,7 @@ class ShoppingCartViewModelTest {
         viewModel.removeCartItem(shoppingCartLastPageItem)
 
         // then
-        val actual = viewModel.cartItems.getOrAwaitValue()
+        val actual = viewModel.products.getOrAwaitValue()
         val expected = repository.getPage(5, 4)
         assertThat(actual).isEqualTo(expected)
     }

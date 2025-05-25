@@ -9,13 +9,13 @@ interface ShoppingCartEventHandler {
 
     fun onIncreaseQuantity(
         position: Int,
-        cartProduct: CartProduct,
+        product: CartProduct,
     )
 
     fun onDecreaseQuantity(
         position: Int,
-        cartProduct: CartProduct,
+        product: CartProduct,
     )
 
-    fun onRemoveCartItem(cartProduct: CartProduct)
+    fun onRemoveProduct(product: CartProduct)
 }

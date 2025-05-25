@@ -26,10 +26,10 @@ class ShoppingCartAdapter(
         return ShoppingCartViewHolder(parent, handler)
     }
 
-    fun updateCartItems(newItems: List<CartProduct>) {
+    fun submitList(newProducts: List<CartProduct>) {
         val oldCount = itemCount
         products.clear()
-        products.addAll(newItems)
-        notifyItemRangeChanged(0, newItems.size.coerceAtLeast(oldCount))
+        products.addAll(newProducts)
+        notifyItemRangeChanged(0, newProducts.size.coerceAtLeast(oldCount))
     }
 }

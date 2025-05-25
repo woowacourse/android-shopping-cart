@@ -48,7 +48,7 @@ class InventoryAdapter(
         }
     }
 
-    fun updateProducts(newItems: List<InventoryItem>) {
+    fun submitList(newItems: List<InventoryItem>) {
         newItems.forEachIndexed { index, newItem ->
             val oldItem = items.getOrNull(index)
             if (oldItem == null) {

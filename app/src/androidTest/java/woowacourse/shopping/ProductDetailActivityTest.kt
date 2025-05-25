@@ -28,7 +28,7 @@ class ProductDetailActivityTest {
     @Before
     fun setUp() {
         val fakeContext = ApplicationProvider.getApplicationContext<Context>()
-        val intent = ProductDetailActivity.newIntent(fakeContext, inventoryItem.toUiModel())
+        val intent = ProductDetailActivity.newIntent(fakeContext, inventoryItem.id)
         scenario = ActivityScenario.launch(intent)
     }
 

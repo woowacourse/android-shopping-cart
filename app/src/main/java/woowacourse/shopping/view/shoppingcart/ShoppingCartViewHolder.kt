@@ -29,7 +29,7 @@ class ShoppingCartViewHolder(
             handler.onDecreaseQuantity(adapterPosition, product)
         }
         binding.ivRemoveItemProductIcon.setOnClickListener {
-            handler.onRemoveCartItem(product)
+            handler.onRemoveProduct(product)
         }
     }
 }

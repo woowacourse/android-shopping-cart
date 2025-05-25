@@ -23,11 +23,11 @@ class ShoppingCartActivity :
             title = getString(R.string.shopping_cart_toolbar_title)
         }
 
-        val shoppingApplication = application as ShoppingApplication
+        val application = application as ShoppingApplication
         val factory =
             ShoppingCartViewModel.createFactory(
-                shoppingApplication.inventoryRepository,
-                shoppingApplication.shoppingCartRepository,
+                application.inventoryRepository,
+                application.shoppingCartRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
         initRecyclerView()
@@ -49,7 +49,7 @@ class ShoppingCartActivity :
         with(viewModel) {
             products.observe(this@ShoppingCartActivity) { page ->
                 val adapter = binding.rvShoppingCartList.adapter as ShoppingCartAdapter
-                adapter.updateCartItems(page.items)
+                adapter.submitList(page.items)
             }
             requestPage(0)
         }
@@ -65,20 +65,20 @@ class ShoppingCartActivity :
 
     override fun onIncreaseQuantity(
         position: Int,
-        cartProduct: CartProduct,
+        product: CartProduct,
     ) {
-        viewModel.increaseQuantity(position, cartProduct)
+        viewModel.increaseQuantity(position, product)
     }
 
     override fun onDecreaseQuantity(
         position: Int,
-        cartProduct: CartProduct,
+        product: CartProduct,
     ) {
-        viewModel.decreaseQuantity(position, cartProduct)
+        viewModel.decreaseQuantity(position, product)
     }
 
-    override fun onRemoveCartItem(cartProduct: CartProduct) {
-        viewModel.removeCartItem(cartProduct)
+    override fun onRemoveProduct(product: CartProduct) {
+        viewModel.removeCartItem(product)
     }
 
     companion object {

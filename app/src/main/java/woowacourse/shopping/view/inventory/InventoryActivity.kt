@@ -23,12 +23,12 @@ class InventoryActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val shoppingApplication = application as ShoppingApplication
+        val application = application as ShoppingApplication
         val factory =
             InventoryViewModel.createFactory(
-                shoppingApplication.inventoryRepository,
-                shoppingApplication.shoppingCartRepository,
-                shoppingApplication.recentProductRepository,
+                application.inventoryRepository,
+                application.shoppingCartRepository,
+                application.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
         initRecyclerview()
@@ -78,33 +78,33 @@ class InventoryActivity :
         with(viewModel) {
             val adapter = binding.rvProductList.adapter as InventoryAdapter
             items.observe(this@InventoryActivity) { items ->
-                adapter.updateProducts(items)
+                adapter.submitList(items)
                 loadCartCount()
             }
             requestPage()
         }
     }
 
-    override fun onProductSelected(item: ProductItem) {
-        viewModel.updateRecentProducts(item)
-        startActivity(ProductDetailActivity.newIntent(this, item.product.id))
+    override fun onSelectProduct(product: ProductItem) {
+        viewModel.updateRecentProducts(product)
+        startActivity(ProductDetailActivity.newIntent(this, product.product.id))
     }
 
     override fun onIncreaseQuantity(
         position: Int,
-        item: ProductItem,
+        product: ProductItem,
     ) {
-        viewModel.increaseQuantity(position, item)
+        viewModel.increaseQuantity(position, product)
     }
 
     override fun onDecreaseQuantity(
         position: Int,
-        item: ProductItem,
+        product: ProductItem,
     ) {
-        viewModel.decreaseQuantity(position, item)
+        viewModel.decreaseQuantity(position, product)
     }
 
-    override fun onLoadMoreProducts() {
+    override fun onShowMore() {
         viewModel.requestPage()
     }
 

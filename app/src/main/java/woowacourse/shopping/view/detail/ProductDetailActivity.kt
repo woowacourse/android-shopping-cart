@@ -28,12 +28,12 @@ class ProductDetailActivity :
     }
 
     private fun initializeViewModel(productId: Int) {
-        val shoppingApplication = application as ShoppingApplication
+        val application = application as ShoppingApplication
         val factory =
             ProductDetailViewModel.createFactory(
-                shoppingApplication.inventoryRepository,
-                shoppingApplication.shoppingCartRepository,
-                shoppingApplication.recentProductRepository,
+                application.inventoryRepository,
+                application.shoppingCartRepository,
+                application.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
         viewModel.loadInventoryProduct(productId)

@@ -49,7 +49,7 @@
                 android:id="@+id/iv_remove_item_product_icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:onClick="@{() -> handler.onRemoveCartItem(item)}"
+                android:onClick="@{() -> handler.onRemoveProduct(item)}"
                 android:src="@drawable/icon_close"
                 app:tint="@color/light_gray" />
         </LinearLayout>

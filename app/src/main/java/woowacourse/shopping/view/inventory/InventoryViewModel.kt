@@ -44,7 +44,7 @@ class InventoryViewModel(
             inventoryRepository.getPage(
                 PAGE_SIZE,
                 products.size / PAGE_SIZE,
-            ) { page -> updateItems(page) }
+            ) { page -> updateInventoryProducts(page) }
         }
     }
 
@@ -83,7 +83,7 @@ class InventoryViewModel(
         shoppingCartRepository.insert(updatedProduct.toCartItem())
     }
 
-    private fun updateItems(newPage: Page<ProductItem>) {
+    private fun updateInventoryProducts(newPage: Page<ProductItem>) {
         recentProductRepository.getMostRecent(RECENT_PRODUCTS_MAX_COUNT) { recentProducts ->
             val newList =
                 buildList {

@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/iv_product_detail_image"
-            productImage="@{viewModel.productItem.product.imageUrl}"
+            productImage="@{viewModel.product.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
@@ -39,7 +39,7 @@
             android:layout_margin="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{viewModel.productItem.product.name}"
+            android:text="@{viewModel.product.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -70,7 +70,7 @@
 
             <TextView
                 android:id="@+id/tv_product_price"
-                priceWithFormat="@{viewModel.productItem.product.price * viewModel.productItem.quantity}"
+                priceWithFormat="@{viewModel.product.product.price * viewModel.product.quantity}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="center"
@@ -108,7 +108,7 @@
                     android:background="@color/white"
                     android:clickable="true"
                     android:gravity="center"
-                    android:text="@{String.valueOf(viewModel.productItem.quantity)}"
+                    android:text="@{String.valueOf(viewModel.product.quantity)}"
                     android:textColor="@color/dark_gray"
                     android:textSize="22sp"
                     android:textStyle="bold"
