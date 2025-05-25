@@ -25,23 +25,24 @@ import woowacourse.shopping.product.recent.ViewedItemAdapter
 
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
-    private lateinit var recentAdapter: ViewedItemAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var viewedAdapter: ViewedItemAdapter
+
     private val viewModel: CatalogViewModel by lazy {
         provideViewModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_catalog)
+        enableEdgeToEdge()
         applyWindowInsets()
 
-        binding.lifecycleOwner = this
         initRecyclerView()
-        observePagingData()
-        observeRecentViewedItems()
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        observeViewModel()
     }
 
     private fun applyWindowInsets() {
@@ -53,28 +54,31 @@ class CatalogActivity : AppCompatActivity() {
     }
 
     private fun provideViewModel(): CatalogViewModel {
-        val db = CartItemDatabase.getInstance(this)
-        val repository = CartItemRepositoryImpl(db.cartItemDao())
-        val viewedDb = ViewedItemDatabase.getInstance(this)
-        val viewedRepository = ViewedItemRepositoryImpl(viewedDb.viewedItemDao())
+        val cartDao = CartItemDatabase.getInstance(this).cartItemDao()
+        val viewedDao = ViewedItemDatabase.getInstance(this).viewedItemDao()
         return ViewModelProvider(
             this,
-            factory(MockProducts, repository, viewedRepository),
+            factory(
+                MockProducts,
+                CartItemRepositoryImpl(cartDao),
+                ViewedItemRepositoryImpl(viewedDao),
+            ),
         )[CatalogViewModel::class.java]
     }
 
     private fun initRecyclerView() {
         val handler = createHandler()
 
-        binding.recyclerViewProducts.apply {
-            adapter = ProductAdapter(emptyList(), handler, handler)
-            layoutManager = createGridLayoutManager(adapter as ProductAdapter)
-        }
+        setupProductRecyclerView(handler)
+        setupRecentViewedRecyclerView(handler)
+    }
 
-        recentAdapter = ViewedItemAdapter(handler)
-        binding.recyclerViewRecentView.apply {
-            layoutManager = LinearLayoutManager(this@CatalogActivity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = recentAdapter
+    private fun setupProductRecyclerView(handler: CatalogEventHandlerImpl) {
+        productAdapter = ProductAdapter(emptyList(), handler, handler)
+        binding.recyclerViewProducts.apply {
+            this.adapter = productAdapter
+            layoutManager =
+                createGridLayoutManager(productAdapter)
         }
     }
 
@@ -86,18 +90,23 @@ class CatalogActivity : AppCompatActivity() {
                 }
         }
 
-    private fun observePagingData() {
+    private fun setupRecentViewedRecyclerView(handler: CatalogEventHandlerImpl) {
+        viewedAdapter = ViewedItemAdapter(handler)
+        binding.recyclerViewRecentView.apply {
+            layoutManager = LinearLayoutManager(this@CatalogActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = viewedAdapter
+        }
+    }
+
+    private fun observeViewModel() {
         viewModel.pagingData.observe(this) { paging ->
-            (binding.recyclerViewProducts.adapter as ProductAdapter).apply {
+            productAdapter.apply {
                 setData(paging.products)
                 setLoadButtonVisible(paging.hasNext)
             }
         }
-    }
-
-    private fun observeRecentViewedItems() {
         viewModel.recentViewedItems.observe(this) { recentItems ->
-            recentAdapter.setData(recentItems)
+            viewedAdapter.setData(recentItems)
         }
     }
 

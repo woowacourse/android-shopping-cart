@@ -71,4 +71,17 @@ class CartItemRepositoryImpl(
             callback(result)
         }
     }
+
+    override fun updateOrInsertItem(
+        product: ProductUiModel,
+        callback: () -> Unit,
+    ) {
+        findCartItem(product) { existing ->
+            if (existing != null) {
+                updateCartItem(product, callback)
+            } else {
+                insertCartItem(product, callback)
+            }
+        }
+    }
 }
