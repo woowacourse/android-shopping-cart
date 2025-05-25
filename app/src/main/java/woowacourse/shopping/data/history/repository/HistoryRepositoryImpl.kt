@@ -27,4 +27,11 @@ class HistoryRepositoryImpl(
             }
         }
     }
+
+    override fun findLatest(callback: (History?) -> Unit) {
+        thread {
+            val lastViewed = dao.findLatest()
+            callback(lastViewed?.toDomain())
+        }
+    }
 }

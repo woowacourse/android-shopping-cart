@@ -17,6 +17,10 @@ class GoodsDetailsViewModel(
 ) : ViewModel() {
     private val _cart = MutableLiveData<Cart>()
     val cart: LiveData<Cart> get() = _cart
+    private val _lastViewed = MutableLiveData<History>()
+    val lastViewed: LiveData<History> get() = _lastViewed
+    private val _isLastViewedVisible = MutableLiveData<Boolean>()
+    val isLastViewedVisible: LiveData<Boolean> get() = _isLastViewedVisible
     private val _isSuccess = MutableSingleLiveData<Unit>()
     val isSuccess: SingleLiveData<Unit> get() = _isSuccess
     private val _isFail = MutableSingleLiveData<Unit>()
@@ -25,6 +29,7 @@ class GoodsDetailsViewModel(
     fun setInitialCart(cart: Cart) {
         _cart.value = cart
         insertToHistory(cart)
+        loadLastViewed()
     }
 
     fun increaseQuantity() {
@@ -52,6 +57,20 @@ class GoodsDetailsViewModel(
             _isSuccess.setValue(Unit)
         }.onFailure {
             _isFail.setValue(Unit)
+        }
+    }
+
+    fun updateLastViewedVisibility() {
+        val lastName = _lastViewed.value?.name
+        val currentName = cart.value?.goods?.name
+        _isLastViewedVisible.value = lastName != null && currentName != null && lastName != currentName
+    }
+
+    fun loadLastViewed() {
+        historyRepository.findLatest { lastViewed ->
+            if (lastViewed != null) {
+                _lastViewed.postValue(lastViewed)
+            }
         }
     }
 

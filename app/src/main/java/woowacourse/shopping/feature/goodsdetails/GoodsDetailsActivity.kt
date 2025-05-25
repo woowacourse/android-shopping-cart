@@ -44,15 +44,12 @@ class GoodsDetailsActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        viewModel.lastViewed.observe(this) {
+            viewModel.updateLastViewedVisibility()
+        }
+
         observeCartInsertResult()
         setOnClickListener()
-
-        setResult(
-            ResultCode.GOODS_DETAIL_INSERT.code,
-            Intent().apply {
-                putExtra("HISTORY_ID", cart.id)
-            },
-        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -83,6 +80,12 @@ class GoodsDetailsActivity : AppCompatActivity() {
         viewModel.isFail.observe(this) {
             Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
         }
+        setResult(
+            ResultCode.GOODS_DETAIL_INSERT.code,
+            Intent().apply {
+                putExtra("HISTORY_ID", cart.id)
+            },
+        )
     }
 
     private fun setOnClickListener() {
