@@ -154,10 +154,7 @@ class GoodsViewModel(
 
     private fun updateLatestGoods(goodsId: Int) {
         latestGoodsRepository.insertLatestGoods(goodsId)
-        _latestGoods.value =
-            latestGoodsRepository.getAll().mapNotNull {
-                goodsRepository.getById(it.goodsId)
-            }
+        setLatestGoods()
     }
 
     companion object {
