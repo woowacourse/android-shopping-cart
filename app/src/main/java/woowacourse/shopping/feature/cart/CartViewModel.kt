@@ -41,7 +41,6 @@ class CartViewModel(
 
     init {
         updateCartQuantity()
-        updateCartDataSize()
     }
 
     fun getPosition(cartItem: CartItem): Int? {
@@ -74,6 +73,7 @@ class CartViewModel(
         ) { currentPageCartItems ->
             _cart.value = currentPageCartItems
         }
+        updateCartDataSize()
     }
 
     private fun updateCartData() {
