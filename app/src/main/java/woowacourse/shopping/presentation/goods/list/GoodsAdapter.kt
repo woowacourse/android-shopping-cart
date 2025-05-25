@@ -2,12 +2,12 @@ package woowacourse.shopping.presentation.goods.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.domain.model.Goods
 
 class GoodsAdapter(
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
-    private var items: List<GoodsUiModel> = emptyList()
+    private var items: List<Goods> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +25,7 @@ class GoodsAdapter(
         holder.bind(items[position])
     }
 
-    fun changeGoods(goods: List<GoodsUiModel>) {
+    fun changeGoods(goods: List<Goods>) {
         if (goods.size > items.size) {
             val fromIndex = items.size
             val itemCount = goods.size - items.size

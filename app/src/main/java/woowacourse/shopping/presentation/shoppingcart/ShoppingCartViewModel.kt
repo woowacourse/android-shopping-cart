@@ -6,10 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.event.SingleLiveData
 
@@ -17,8 +16,8 @@ class ShoppingCartViewModel(
     private val goodsRepository: GoodsRepository,
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val _goods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
-    val goods: LiveData<List<GoodsUiModel>>
+    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
+    val goods: LiveData<List<Goods>>
         get() = _goods
 
     private val _page: MutableLiveData<Int> = MutableLiveData(DEFAULT_PAGE_VALUE)
@@ -44,7 +43,7 @@ class ShoppingCartViewModel(
     private fun updateState() {
         _goods.value =
             shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
-                .mapNotNull { goodsRepository.getById(it.goodsId)?.toUiModel()?.copy(quantity = it.goodsQuantity) }
+                .mapNotNull { goodsRepository.getById(it.goodsId)?.copy(quantity = it.goodsQuantity) }
         updateNextPage()
         updatePreviousPage()
     }
@@ -82,15 +81,15 @@ class ShoppingCartViewModel(
         }
     }
 
-    fun deleteGoods(goods: GoodsUiModel) {
+    fun deleteGoods(goods: Goods) {
         shoppingRepository.removeGoods(goods.id)
         updateState()
     }
 
     private fun updateGoods(
         goodsId: Int,
-        transform: (GoodsUiModel) -> GoodsUiModel,
-    ): GoodsUiModel {
+        transform: (Goods) -> Goods,
+    ): Goods {
         val currentList = goods.value.orEmpty()
         val position = currentList.indexOfFirst { it.id == goodsId }
 

@@ -11,7 +11,7 @@
 
         <variable
             name="goods"
-            type="woowacourse.shopping.presentation.model.GoodsUiModel" />
+            type="woowacourse.shopping.domain.model.Goods" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:ellipsize="end"
             android:maxWidth="98dp"
             android:maxLines="1"
-            android:text="@{goods.name}"
+            android:text="@{goods.name.value}"
             android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"

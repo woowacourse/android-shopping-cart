@@ -6,12 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.ShoppingGoods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.model.toUiModel
 import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.event.SingleLiveData
 
@@ -20,16 +19,16 @@ class GoodsViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val latestGoodsRepository: LatestGoodsRepository,
 ) : ViewModel() {
-    private val _goods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
-    val goods: LiveData<List<GoodsUiModel>>
+    private val _goods: MutableLiveData<List<Goods>> = MutableLiveData()
+    val goods: LiveData<List<Goods>>
         get() = _goods
 
     private val _shoppingGoodsCount: MutableLiveData<Int> = MutableLiveData(MINIMUM_QUANTITY)
     val shoppingGoodsCount: LiveData<Int>
         get() = _shoppingGoodsCount
 
-    private val _latestGoods: MutableLiveData<List<GoodsUiModel>> = MutableLiveData()
-    val latestGoods: LiveData<List<GoodsUiModel>>
+    private val _latestGoods: MutableLiveData<List<Goods>> = MutableLiveData()
+    val latestGoods: LiveData<List<Goods>>
         get() = _latestGoods
 
     private val _shouldShowLoadMore: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -49,7 +48,7 @@ class GoodsViewModel(
     fun initGoods() {
         val currentGoods =
             if (_goods.value == null) {
-                goodsRepository.getPagedGoods(page, ITEM_COUNT).map { it.toUiModel() }
+                goodsRepository.getPagedGoods(page, ITEM_COUNT)
             } else {
                 _goods.value
             }
@@ -62,9 +61,9 @@ class GoodsViewModel(
     }
 
     private fun getUpdatedGoods(
-        currentGoods: List<GoodsUiModel>,
+        currentGoods: List<Goods>,
         selectedItems: Set<ShoppingGoods>,
-    ): List<GoodsUiModel> {
+    ): List<Goods> {
         val updatedList =
             currentGoods.map { goods ->
                 val selected = selectedItems.firstOrNull { it.goodsId == goods.id }
@@ -77,7 +76,7 @@ class GoodsViewModel(
     fun setLatestGoods() {
         _latestGoods.value =
             latestGoodsRepository.getAll().mapNotNull {
-                goodsRepository.getById(it.goodsId)?.toUiModel()
+                goodsRepository.getById(it.goodsId)
             }
     }
 
@@ -112,8 +111,8 @@ class GoodsViewModel(
 
     private fun updateGoodsQuantity(
         goodsId: Int,
-        transform: (GoodsUiModel) -> GoodsUiModel,
-    ): GoodsUiModel {
+        transform: (Goods) -> Goods,
+    ): Goods {
         val currentGoods = goods.value.orEmpty()
 
         val position = currentGoods.indexOfFirst { it.id == goodsId }
@@ -132,7 +131,7 @@ class GoodsViewModel(
     fun loadMoreGoods() {
         _goods.value =
             _goods.value?.plus(
-                goodsRepository.getPagedGoods(++page, ITEM_COUNT).map { it.toUiModel() },
+                goodsRepository.getPagedGoods(++page, ITEM_COUNT),
             )
         _shouldShowLoadMore.value = false
     }
@@ -162,7 +161,7 @@ class GoodsViewModel(
         latestGoodsRepository.insertLatestGoods(goodsId)
         _latestGoods.value =
             latestGoodsRepository.getAll().mapNotNull {
-                goodsRepository.getById(it.goodsId)?.toUiModel()
+                goodsRepository.getById(it.goodsId)
             }
     }
 

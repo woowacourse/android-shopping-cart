@@ -2,12 +2,12 @@ package woowacourse.shopping.presentation.goods.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.domain.model.Goods
 
 class LatestGoodsAdapter(
     private val latestGoodsClickListener: LatestGoodsClickListener,
 ) : RecyclerView.Adapter<LatestGoodsViewHolder>() {
-    private val items: MutableList<GoodsUiModel> = mutableListOf()
+    private val items: MutableList<Goods> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +25,7 @@ class LatestGoodsAdapter(
         holder.bind(items[position])
     }
 
-    fun addLatestGoods(newItems: List<GoodsUiModel>) {
+    fun addLatestGoods(newItems: List<Goods>) {
         items.clear()
         items.addAll(newItems)
 

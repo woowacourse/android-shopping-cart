@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{vm.goods.name}"
+            android:text="@{vm.goods.name.value}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"

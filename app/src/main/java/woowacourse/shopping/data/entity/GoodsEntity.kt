@@ -1,8 +1,6 @@
 package woowacourse.shopping.data.entity
 
 import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.domain.model.Name
-import woowacourse.shopping.domain.model.Price
 
 class GoodsEntity(
     val id: String,
@@ -20,9 +18,9 @@ fun Goods.toEntity(): GoodsEntity =
     )
 
 fun GoodsEntity.toGoods(): Goods =
-    Goods(
+    Goods.of(
         id = id.toInt(),
-        name = Name(name),
-        price = Price(price.toInt()),
+        name = name,
+        price = price.toInt(),
         imageUrl = imageUrl,
     )

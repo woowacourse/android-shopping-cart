@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
-import woowacourse.shopping.presentation.model.GoodsUiModel
 
 class ShoppingCartActivity : BaseActivity() {
     private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
@@ -51,7 +51,7 @@ class ShoppingCartActivity : BaseActivity() {
     private fun makeAdapter(): ShoppingCartAdapter {
         return ShoppingCartAdapter(
             object : ShoppingCartClickListener {
-                override fun onDeleteGoods(goods: GoodsUiModel) {
+                override fun onDeleteGoods(goods: Goods) {
                     viewModel.deleteGoods(goods)
                 }
 
