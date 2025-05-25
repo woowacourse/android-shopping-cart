@@ -21,8 +21,8 @@ class ProductsActivity : AppCompatActivity() {
         ActivityProductsBinding.inflate(layoutInflater)
     }
     private val viewModel: ProductsViewModel by viewModels()
-    private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(::navigateToProductDetail, viewModel::updateProducts)
+    private val productsAdapter: ProductsAdapter by lazy {
+        ProductsAdapter(::navigateToProductDetail, viewModel::updateProducts)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,13 @@ class ProductsActivity : AppCompatActivity() {
                 spanSizeLookup =
                     object : GridLayoutManager.SpanSizeLookup() {
                         override fun getSpanSize(position: Int): Int =
-                            when (ProductsItem.ItemType.from(productAdapter.getItemViewType(position))) {
+                            when (
+                                ProductsItem.ItemType.from(
+                                    productsAdapter.getItemViewType(
+                                        position,
+                                    ),
+                                )
+                            ) {
                                 ProductsItem.ItemType.PRODUCT -> 1
                                 ProductsItem.ItemType.MORE -> spanCount
                             }
@@ -62,7 +68,7 @@ class ProductsActivity : AppCompatActivity() {
         }
 
     private fun initDataBinding() {
-        binding.adapter = productAdapter
+        binding.adapter = productsAdapter
         binding.onClickShoppingCartButton = ::navigateToShoppingCart
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -82,7 +88,7 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun bindData() {
         viewModel.productItems.observe(this) { productsItems: List<ProductsItem> ->
-            productAdapter.submitList(productsItems)
+            productsAdapter.submitList(productsItems)
         }
     }
 

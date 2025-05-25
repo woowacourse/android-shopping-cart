@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.product.Product
 
-class ProductAdapter(
+class ProductsAdapter(
     private val onSelectProduct: (Product) -> Unit,
     private val onLoad: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

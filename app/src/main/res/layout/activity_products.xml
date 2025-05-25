@@ -11,7 +11,7 @@
 
         <variable
             name="adapter"
-            type="woowacourse.shopping.view.product.ProductAdapter" />
+            type="woowacourse.shopping.view.product.ProductsAdapter" />
 
         <variable
             name="onClickShoppingCartButton"
