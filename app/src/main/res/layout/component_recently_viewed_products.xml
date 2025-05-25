@@ -31,10 +31,10 @@
             android:layout_marginTop="8dp"
             android:clipToPadding="false"
             android:contentDescription="@string/recently_viewed_products_description"
+            android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="@id/tv_recently_viewed_products_title"
             app:layout_constraintTop_toBottomOf="@id/tv_recently_viewed_products_title"
-            app:orientation="horizontal"
             tools:listitem="@layout/item_recently_view_product" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
