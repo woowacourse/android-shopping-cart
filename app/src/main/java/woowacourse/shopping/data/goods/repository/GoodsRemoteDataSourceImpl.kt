@@ -16,7 +16,9 @@ import woowacourse.shopping.data.util.mapper.toDomain
 import woowacourse.shopping.domain.model.Goods
 import java.io.IOException
 
-class GoodsRemoteDataSourceImpl : GoodsRemoteDataSource {
+class GoodsRemoteDataSourceImpl(
+    private val baseUrl: String = BuildConfig.BASE_URL,
+) : GoodsRemoteDataSource {
     private val okHttpClient =
         OkHttpClient
             .Builder()
@@ -28,7 +30,7 @@ class GoodsRemoteDataSourceImpl : GoodsRemoteDataSource {
         val request =
             Request
                 .Builder()
-                .url("${BuildConfig.BASE_URL}/$PRODUCTS/size")
+                .url("$baseUrl/$PRODUCTS/size")
                 .build()
         fetchGoodsSizeRequest(request, onComplete)
     }
@@ -41,7 +43,7 @@ class GoodsRemoteDataSourceImpl : GoodsRemoteDataSource {
         val request =
             Request
                 .Builder()
-                .url("${BuildConfig.BASE_URL}/$PRODUCTS?limit=$limit&offset=$offset")
+                .url("$baseUrl/$PRODUCTS?limit=$limit&offset=$offset")
                 .build()
         fetchPageGoodsRequest(request, onComplete)
     }
@@ -53,7 +55,7 @@ class GoodsRemoteDataSourceImpl : GoodsRemoteDataSource {
         val request =
             Request
                 .Builder()
-                .url("${BuildConfig.BASE_URL}/$PRODUCTS/$id")
+                .url("$baseUrl/$PRODUCTS/$id")
                 .build()
         fetchGoodsByIdRequest(request, onComplete)
     }
