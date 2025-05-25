@@ -100,14 +100,31 @@ class ProductListActivity : AppCompatActivity() {
     private fun initAdapter(): ProductListAdapter {
         return ProductListAdapter(
             items = mutableListOf(),
-            productClickListener = { product ->
-                val intent = ProductDetailActivity.newIntent(this@ProductListActivity, product)
-                startActivity(intent)
-            },
-            loadMoreClickListener = {
-                viewModel.loadProducts()
-            },
+            productClickListener = initProductClickListener(),
+            loadMoreClickListener = { viewModel.loadInfos() },
         )
+    }
+
+    private fun initProductClickListener(): ProductClickListener {
+        return object : ProductClickListener {
+            override fun onClickProduct(productId: Long) {
+                val intent = ProductDetailActivity.newIntent(this@ProductListActivity, productId)
+                startActivity(intent)
+            }
+
+            override fun onClickAddButton(productId: Long) {
+                viewModel.increaseQuantity(productId, 1)
+            }
+
+            override fun increase(productId: Long) {
+                viewModel.increaseQuantity(productId, 1)
+            }
+
+            override fun decrease(productId: Long) {
+                viewModel.decreaseQuantity(productId, -1)
+            }
+
+        }
     }
 
     private fun initCustomGridLayoutManager(): GridLayoutManager {
@@ -117,8 +134,8 @@ class ProductListActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        viewModel.products.observe(this) {
-            productListAdapter.update(it)
+        viewModel.productsUiState.observe(this) {
+            productListAdapter.update(it.productViewTypes)
         }
     }
 }

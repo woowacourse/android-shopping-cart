@@ -38,16 +38,34 @@ class ProductListAdapter(
 
     override fun getItemCount() = items.size
 
-    fun update(items: List<ProductListViewType>) {
+    fun update(newItems: List<ProductListViewType>) {
+        if (isLoadMore(newItems)) return
+        compareItems(newItems)
+    }
+
+    private fun isLoadMore(newItems: List<ProductListViewType>): Boolean {
         val positionStart = this.items.size
-        val itemCount = items.size - (this.items.size - LOAD_MORE_BUTTON_OFFSET)
+        val itemCount = newItems.size - this.items.size
+        if (itemCount == 0) return false
+
         this.items.clear()
-        this.items.addAll(items)
+        this.items.addAll(newItems)
         notifyItemRangeInserted(positionStart, itemCount)
+        return true
+    }
+
+    private fun compareItems(newItems: List<ProductListViewType>) {
+        var position = 0
+        while (items.isNotEmpty() && items[position] == newItems[position]) {
+            position++
+        }
+
+        this.items.clear()
+        this.items.addAll(newItems)
+        notifyItemChanged(position)
     }
 
     companion object {
         private const val ERROR_INVALID_VIEW_HOLDER_TYPE = "지원하지 않는 타입입니다."
-        private const val LOAD_MORE_BUTTON_OFFSET = 1
     }
 }

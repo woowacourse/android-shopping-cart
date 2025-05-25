@@ -4,42 +4,90 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductRepository
+import woowacourse.shopping.domain.cart.CartProduct
+import woowacourse.shopping.domain.product.ProductOverViewRepository
 import woowacourse.shopping.providers.RepositoryProvider
 
 class ProductListViewModel(
-    private val productRepository: ProductRepository,
+    private val repository: ProductOverViewRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<ProductListViewType>>(emptyList())
-    val products: LiveData<List<ProductListViewType>> get() = _products
-    private var pageNumber = 0
+    private val _productsUiState = MutableLiveData(ProductListUiState())
+    val productsUiState: LiveData<ProductListUiState> get() = _productsUiState
 
     init {
-        loadProducts()
+        loadInfos()
     }
 
-    fun loadProducts() {
-        val originProducts =
-            _products.value.orEmpty().filterIsInstance<ProductListViewType.ProductItemType>()
+    fun loadInfos() {
+        val pageNumber = _productsUiState.value?.pageNumber ?: 0
 
-        productRepository.fetchInRange(
+        repository.findInRange(
             limit = PAGE_FETCH_SIZE,
-            offset = (pageNumber++) * PAGE_SIZE,
-        ) { loadProducts ->
-            val newProducts =
-                loadProducts.take(PAGE_SIZE)
-                    .map { product -> ProductListViewType.ProductItemType(product) }
+            offset = (pageNumber) * PAGE_SIZE
+        ) { cartProductsResult ->
+            cartProductsResult.mapCatching { cartProducts ->
+                val newCartProducts = cartProducts.take(PAGE_SIZE)
+                val newProductsViewType = newCartProducts.map { cartProduct ->
+                    ProductListViewType.ProductItemType(cartProduct.product, cartProduct.quantity)
+                }
 
-            if (hasNextPage(loadProducts)) {
-                _products.postValue(originProducts + newProducts + ProductListViewType.LoadMoreType)
-            } else {
-                _products.postValue(originProducts + newProducts)
+                val isAddLoadMore = hasNextPage(cartProductsResult.getOrNull())
+                _productsUiState.postValue(
+                    productsUiState.value?.addProducts(
+                        newProductsViewType,
+                        isAddLoadMore
+                    )
+                )
+            }.onFailure {
+                // TODO : 데이터 가져오기 실패
             }
         }
     }
 
-    private fun hasNextPage(loadProducts: List<Product>) = loadProducts.size > PAGE_SIZE
+    fun increaseQuantity(productId: Long, delta: Int) {
+        repository.insertOrAddQuantity(productId, delta) { result ->
+            result.onSuccess {
+                _productsUiState.postValue(
+                    productsUiState.value?.updateQuantityByProductId(productId, delta)
+                )
+            }.onFailure {
+                // TODO : 데이터 가져오기 실패
+            }
+        }
+    }
+
+    fun decreaseQuantity(productId: Long, delta: Int) {
+        val uiStateValue = productsUiState.value ?: return
+        val quantity = uiStateValue.getQuantityByProductId(productId)
+        if (quantity + delta <= 0) {
+            repository.removeInCart(productId) { result ->
+                result.onSuccess {
+                    _productsUiState.postValue(
+                        uiStateValue.updateQuantityByProductId(productId, delta)
+                    )
+                }
+                    .onFailure {
+                        // TODO : 데이터 가져오기 실패 }
+                    }
+            }
+            return
+        }
+
+        repository.updateQuantityByProductId(productId, delta) { result ->
+            result.onSuccess {
+                _productsUiState.postValue(
+                    uiStateValue.updateQuantityByProductId(productId, delta)
+                )
+            }.onFailure {
+
+            }
+        }
+    }
+
+    private fun hasNextPage(loadProducts: List<CartProduct>?): Boolean {
+        if (loadProducts == null) return false
+        return loadProducts.size > PAGE_SIZE
+    }
 
     companion object {
         private const val PAGE_FETCH_SIZE = 21
@@ -49,7 +97,9 @@ class ProductListViewModel(
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return ProductListViewModel(RepositoryProvider.provideProductRepository()) as T
+                    return ProductListViewModel(
+                        repository = RepositoryProvider.provideProductOverViewRepository(),
+                    ) as T
                 }
             }
     }

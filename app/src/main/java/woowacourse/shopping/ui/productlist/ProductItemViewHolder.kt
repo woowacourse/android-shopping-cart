@@ -15,20 +15,20 @@ class ProductItemViewHolder private constructor(
         binding.productClickListener = productClickListener
     }
 
-    fun bind(item: ProductListViewType.ProductItemType) {
-        binding.product = item.product
+    fun bind(productItemType: ProductListViewType.ProductItemType) {
+        binding.productItemType = productItemType
     }
 
     companion object {
         fun create(
             parent: ViewGroup,
-            productClickListener: ProductClickListener
+            productClickListener: ProductClickListener,
         ): ProductItemViewHolder {
             return ProductItemViewHolder(
                 binding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context), R.layout.product_item, parent, false
                 ),
-                productClickListener = productClickListener
+                productClickListener = productClickListener,
             )
         }
     }

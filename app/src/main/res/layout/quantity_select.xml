@@ -11,7 +11,7 @@
 
         <variable
             name="quantity"
-            type="androidx.lifecycle.LiveData&lt;java.lang.Integer>" />
+            type="int" />
 
         <variable
             name="listener"
@@ -49,10 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="25dp"
             android:clickable="false"
+            android:text="@{String.valueOf(quantity)}"
             android:textColor="@color/deep_gray"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:bindLiveQuantityText="@{quantity}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_increase"
             app:layout_constraintStart_toEndOf="@id/tv_decrease"

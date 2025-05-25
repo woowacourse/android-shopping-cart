@@ -2,6 +2,7 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -11,8 +12,9 @@
             type="woowacourse.shopping.ui.productlist.ProductClickListener" />
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.product.Product" />
+            name="productItemType"
+            type="woowacourse.shopping.ui.productlist.ProductListViewType.ProductItemType" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:onClick="@{() -> productClickListener.onClick(product)}">
+        android:onClick="@{() -> productClickListener.onClickProduct(productItemType.product.id)}">
 
         <FrameLayout
             android:id="@+id/fl_product_image"
@@ -39,7 +41,7 @@
                 android:contentDescription="@string/product_description"
                 android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="1"
-                app:setImageWithGlide="@{product.imageUrl}"
+                app:setImageWithGlide="@{productItemType.product.imageUrl}"
                 tools:src="@drawable/ic_launcher_background" />
 
             <ImageView
@@ -51,8 +53,9 @@
                 android:layout_marginBottom="8dp"
                 android:clickable="true"
                 android:contentDescription="@string/plus_description"
+                android:onClick="@{() -> productClickListener.onClickAddButton(productItemType.product.id)}"
                 android:src="@drawable/ic_plus"
-                android:visibility="visible" />
+                app:isVisible="@{productItemType.quantity == 0}" />
 
             <include
                 android:id="@+id/include_quantity_select"
@@ -63,8 +66,10 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="15dp"
-                android:visibility="gone" />
-
+                app:isVisible="@{productItemType.quantity != 0}"
+                bind:id="@{productItemType.product.id}"
+                bind:listener="@{productClickListener}"
+                bind:quantity="@{productItemType.quantity}" />
         </FrameLayout>
 
         <TextView
@@ -76,7 +81,7 @@
             android:ellipsize="end"
             android:maxEms="9"
             android:singleLine="true"
-            android:text="@{product.name}"
+            android:text="@{productItemType.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -88,7 +93,7 @@
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/price(product.price)}"
+            android:text="@{@string/price(productItemType.product.price)}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv_product_title"
