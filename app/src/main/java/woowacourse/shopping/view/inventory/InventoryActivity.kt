@@ -31,7 +31,6 @@ class InventoryActivity :
                 shoppingApplication.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[InventoryViewModel::class.java]
-        viewModel.loadCartCount()
         initRecyclerview()
     }
 
@@ -80,6 +79,7 @@ class InventoryActivity :
             val adapter = binding.rvProductList.adapter as InventoryAdapter
             items.observe(this@InventoryActivity) { items ->
                 adapter.updateProducts(items)
+                loadCartCount()
             }
             requestPage()
         }

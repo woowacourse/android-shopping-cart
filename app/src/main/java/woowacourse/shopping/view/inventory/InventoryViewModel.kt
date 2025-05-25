@@ -65,7 +65,6 @@ class InventoryViewModel(
         }
         inventoryRepository.insert(updatedProduct)
         shoppingCartRepository.insert(updatedProduct.toCartItem())
-        loadCartCount()
     }
 
     fun decreaseQuantity(
@@ -83,7 +82,6 @@ class InventoryViewModel(
             return
         }
         shoppingCartRepository.insert(updatedProduct.toCartItem())
-        loadCartCount()
     }
 
     private fun updateItems(newPage: Page<InventoryProduct>) {
