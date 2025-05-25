@@ -80,6 +80,7 @@ class ProductDetailActivity : AppCompatActivity() {
                         it,
                     )
                 }
+            intent?.let { it.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP }
             startActivity(intent)
         }
     }
