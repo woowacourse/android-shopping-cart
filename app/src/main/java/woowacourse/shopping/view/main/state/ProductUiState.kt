@@ -5,7 +5,11 @@ data class ProductUiState(
     val historyItems: List<HistoryState> = emptyList(),
     val load: LoadState = LoadState.CannotLoad,
 ) {
-    val productIds = productItems.map { it.item.id }
+    val lastSeenProductId
+        get() = historyItems.firstOrNull()?.productId
+
+    val productIds
+        get() = productItems.map { it.item.id }
 
     val sumOfCartQuantity
         get() = productItems.sumOf { it.cartQuantity.value }

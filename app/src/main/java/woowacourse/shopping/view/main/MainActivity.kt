@@ -101,7 +101,11 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
                     )
                 }
 
-                is MainUiEvent.NavigateToDetail -> moveToDetailActivity(event.productId)
+                is MainUiEvent.NavigateToDetail ->
+                    moveToDetailActivity(
+                        event.productId,
+                        event.lastWatchedProductId,
+                    )
             }
         }
     }
@@ -112,8 +116,11 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
         }
     }
 
-    private fun moveToDetailActivity(productId: Long) {
-        val intent = DetailActivity.newIntent(this, productId)
+    private fun moveToDetailActivity(
+        productId: Long,
+        lastWatchedProductId: Long?,
+    ) {
+        val intent = DetailActivity.newIntent(this, productId, lastWatchedProductId)
         startActivity(intent)
     }
 

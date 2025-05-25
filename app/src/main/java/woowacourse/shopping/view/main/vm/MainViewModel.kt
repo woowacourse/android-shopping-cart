@@ -102,8 +102,10 @@ class MainViewModel(
     }
 
     fun saveHistory(productId: Long) {
-        historyRepository.saveHistory(productId) {
-            _uiEvent.postValue(MainUiEvent.NavigateToDetail(productId))
+        withState(_uiState.value) { state ->
+            historyRepository.saveHistory(productId) {
+                _uiEvent.postValue(MainUiEvent.NavigateToDetail(productId, state.lastSeenProductId))
+            }
         }
     }
 
