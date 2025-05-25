@@ -7,14 +7,14 @@ import woowacourse.shopping.data.cart.CartProductEntity
 
 @Dao
 interface CartProductDao {
-    @Query("SELECT * from cart_product")
-    fun getAll(): List<CartProductEntity>
+    @Insert
+    fun insert(cartProductEntity: CartProductEntity)
 
     @Query("SELECT COUNT(*) FROM cart_product")
-    fun count(): Int
+    fun getTotalCount(): Int
 
     @Query("SELECT * FROM cart_product LIMIT :limit OFFSET :offset")
-    fun getPaged(
+    fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): List<CartProductEntity>
@@ -30,9 +30,6 @@ interface CartProductDao {
         productId: Long,
         quantity: Int,
     )
-
-    @Insert
-    fun insert(product: CartProductEntity)
 
     @Query("DELETE from cart_product WHERE product_id == :productId")
     fun deleteByProductId(productId: Long)

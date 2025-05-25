@@ -5,18 +5,14 @@ import woowacourse.shopping.data.recent.RecentProductEntity
 class RecentProductLocalDataSource(
     private val dao: RecentProductDao,
 ) {
-    fun insert(product: RecentProductEntity) = dao.insert(product)
+    fun getLastViewedProduct(): RecentProductEntity? = dao.getLastViewedProduct()
 
-    fun insertByProductId(productId: Long) = dao.insertByProductId(productId)
-
-    fun getLastProduct(): RecentProductEntity? = dao.getLastProduct()
-
-    fun getPaged(
+    fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): List<RecentProductEntity> = dao.getPaged(limit, offset)
+    ): List<RecentProductEntity> = dao.getPagedProducts(limit, offset)
 
     fun deleteByProductId(productId: Long) = dao.deleteByProductId(productId)
 
-    fun replaceRecentProduct(recentProduct: RecentProductEntity) = dao.replaceRecentProduct(recentProduct)
+    fun replaceRecentProduct(recentProductEntity: RecentProductEntity) = dao.replaceRecentProduct(recentProductEntity)
 }

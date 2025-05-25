@@ -1,27 +1,12 @@
 package woowacourse.shopping.fixture
 
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class FakeRecentProductRepository : RecentProductRepository {
     private val recentProducts = mutableListOf<RecentProduct>()
-    private var nextId = 1L
 
-    override fun insert(
-        productId: Long,
-        onSuccess: () -> Unit,
-    ) {
-        val product =
-            RecentProduct(
-                id = nextId++,
-                Product(id = productId, imageUrl = "", name = "Product $productId", price = 1000),
-            )
-        recentProducts.add(product)
-        onSuccess()
-    }
-
-    override fun getLastProduct(onSuccess: (RecentProduct?) -> Unit) {
+    override fun getLastViewedProduct(onSuccess: (RecentProduct?) -> Unit) {
         onSuccess(recentProducts.lastOrNull())
     }
 
@@ -32,7 +17,7 @@ class FakeRecentProductRepository : RecentProductRepository {
     ) {
         onSuccess(
             recentProducts
-                .sortedByDescending { it.id }
+                .sortedByDescending { it.viewedAt }
                 .drop(offset)
                 .take(limit),
         )

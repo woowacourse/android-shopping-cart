@@ -12,7 +12,7 @@ class CartProductRepositoryImpl(
     private var totalCount: Int = 0
 
     init {
-        thread { totalCount = localDataSource.count() }.join()
+        thread { totalCount = localDataSource.getTotalCount() }.join()
     }
 
     override fun insert(
@@ -39,7 +39,7 @@ class CartProductRepositoryImpl(
 
         val endIndex = (offset + limit).coerceAtMost(totalCount)
         thread {
-            val items = localDataSource.getPaged(endIndex - offset, offset).map { it.toDomain() }
+            val items = localDataSource.getPagedProducts(endIndex - offset, offset).map { it.toDomain() }
             val hasNext = endIndex < totalCount
             onSuccess(PagedResult(items, hasNext))
         }

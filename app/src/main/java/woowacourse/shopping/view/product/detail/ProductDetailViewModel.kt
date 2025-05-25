@@ -72,7 +72,7 @@ class ProductDetailViewModel(
     }
 
     private fun loadLastViewedProduct() {
-        recentProductRepository.getLastProduct {
+        recentProductRepository.getLastViewedProduct {
             lastViewedProduct = it
         }
     }

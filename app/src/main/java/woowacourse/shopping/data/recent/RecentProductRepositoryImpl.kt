@@ -8,19 +8,10 @@ import kotlin.concurrent.thread
 class RecentProductRepositoryImpl(
     private val localDataSource: RecentProductLocalDataSource,
 ) : RecentProductRepository {
-    override fun insert(
-        productId: Long,
-        onSuccess: () -> Unit,
-    ) {
+    override fun getLastViewedProduct(onSuccess: (RecentProduct?) -> Unit) {
         thread {
-            localDataSource.insert(RecentProductEntity(productId = productId))
-            onSuccess()
-        }
-    }
-
-    override fun getLastProduct(onSuccess: (RecentProduct?) -> Unit) {
-        thread {
-            onSuccess(localDataSource.getLastProduct()?.toDomain())
+            val result = localDataSource.getLastViewedProduct()?.toDomain()
+            onSuccess(result)
         }
     }
 
@@ -30,7 +21,8 @@ class RecentProductRepositoryImpl(
         onSuccess: (List<RecentProduct>) -> Unit,
     ) {
         thread {
-            onSuccess(localDataSource.getPaged(limit, offset).map { it.toDomain() })
+            val result = localDataSource.getPagedProducts(limit, offset).map { it.toDomain() }
+            onSuccess(result)
         }
     }
 

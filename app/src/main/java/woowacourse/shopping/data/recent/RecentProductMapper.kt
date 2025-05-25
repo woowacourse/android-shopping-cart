@@ -9,7 +9,6 @@ import java.time.ZoneId
 
 fun RecentProductEntity.toDomain() =
     RecentProduct(
-        id = this.id,
         product = this.productId.toProduct(),
         viewedAt =
             LocalDateTime.ofInstant(

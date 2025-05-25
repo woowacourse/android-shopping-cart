@@ -9,19 +9,13 @@ import woowacourse.shopping.data.recent.RecentProductEntity
 @Dao
 interface RecentProductDao {
     @Insert
-    fun insert(product: RecentProductEntity)
-
-    @Query("INSERT INTO recent_product(product_id) VALUES(:productId)")
-    fun insertByProductId(productId: Long)
-
-    @Query("SELECT * from recent_product")
-    fun getAll(): List<RecentProductEntity>
+    fun insert(recentProductEntity: RecentProductEntity)
 
     @Query("SELECT * FROM recent_product ORDER BY viewed_at DESC LIMIT 1")
-    fun getLastProduct(): RecentProductEntity?
+    fun getLastViewedProduct(): RecentProductEntity?
 
     @Query("SELECT * FROM recent_product ORDER BY viewed_at DESC LIMIT :limit OFFSET :offset")
-    fun getPaged(
+    fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): List<RecentProductEntity>
@@ -30,8 +24,8 @@ interface RecentProductDao {
     fun deleteByProductId(productId: Long)
 
     @Transaction
-    fun replaceRecentProduct(recentProduct: RecentProductEntity) {
-        deleteByProductId(recentProduct.productId)
-        insert(recentProduct)
+    fun replaceRecentProduct(recentProductEntity: RecentProductEntity) {
+        deleteByProductId(recentProductEntity.productId)
+        insert(recentProductEntity)
     }
 }

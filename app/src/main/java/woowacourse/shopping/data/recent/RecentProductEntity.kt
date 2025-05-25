@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "recent_product")
 data class RecentProductEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
-    @ColumnInfo(name = "product_id") val productId: Long,
+    @PrimaryKey @ColumnInfo(name = "product_id") val productId: Long,
     @ColumnInfo(name = "viewed_at") val viewedAt: Long = System.currentTimeMillis(),
 )
