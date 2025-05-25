@@ -11,16 +11,16 @@ import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isNotClickable
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import org.hamcrest.Matchers.allOf
-import org.junit.Before
-import org.junit.Test
+import org.hamcrest.core.AllOf.allOf
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
-import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.di.provider.RepositoryProvider
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.PageableItem
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.fixture.dummyProductsFixture
+import woowacourse.shopping.fixture.FakeCartRepository
+import woowacourse.shopping.fixture.FakeProductRepository
+import woowacourse.shopping.fixture.FakeRecentProductRepository
+import woowacourse.shopping.fixture.productsFixture
 import woowacourse.shopping.presentation.view.cart.CartFragment
 import woowacourse.shopping.util.clickOnViewChild
 import woowacourse.shopping.util.nthChildOf
@@ -28,53 +28,19 @@ import woowacourse.shopping.util.nthChildOf
 class CartFragmentTest {
     private lateinit var fragmentScenario: FragmentScenario<CartFragment>
 
-    private val fakeRepository =
-        object : CartRepository {
-            private val shoppingCart = dummyProductsFixture.take(15).toMutableList()
-
-            override fun getCartItems(
-                limit: Int,
-                offset: Int,
-                onResult: (Result<PageableItem<CartItem>>) -> Unit,
-            ) {
-                val result =
-                    runCatching {
-                        val products = shoppingCart.subList(offset, offset + limit)
-                        val cartItems = products.map { CartItem(it.id, it, 1) }
-                        val hasMore =
-                            products
-                                .lastOrNull()
-                                ?.let { shoppingCart.any { product -> it.id < product.id } } ?: false
-                        PageableItem(cartItems, hasMore)
-                    }
-                onResult(result)
-            }
-
-            override fun deleteCartItem(
-                id: Long,
-                onResult: (Result<Long>) -> Unit,
-            ) {
-                val result =
-                    runCatching {
-                        val foundItem = shoppingCart.find { it.id == id }
-                        if (foundItem != null) {
-                            shoppingCart.remove(foundItem)
-                        }
-                        id
-                    }
-                onResult(result)
-            }
-
-            override fun addCartItem(
-                product: Product,
-                onResult: (Result<Unit>) -> Unit,
-            ) {
-            }
-        }
-
-    @Before
+    @BeforeEach
     fun setup() {
-        RepositoryProvider.initCartRepository(fakeRepository)
+        val fakeProductRepository = FakeProductRepository()
+        val fakeCartRepository =
+            FakeCartRepository(
+                initialCartItems = productsFixture.take(15).map { CartItem(it, 1) },
+            )
+        val fakeRecentProductRepository = FakeRecentProductRepository()
+
+        RepositoryProvider.initProductRepository(fakeProductRepository)
+        RepositoryProvider.initCartRepository(fakeCartRepository)
+        RepositoryProvider.initRecentProductRepository(fakeRecentProductRepository)
+
         fragmentScenario =
             launchFragmentInContainer(
                 themeResId = R.style.Theme_Shopping,
@@ -82,8 +48,8 @@ class CartFragmentTest {
     }
 
     @Test
-    fun `장바구니_아이팀을_확인할_수_있다`() {
-        firstProductInRecyclerView().check(matches(withText(dummyProductsFixture[0].name)))
+    fun `장바구니에_담긴_상품을_확인할_수_있다`() {
+        firstProductInRecyclerView(R.id.cart_item_name).check(matches(withText(productsFixture[0].name)))
     }
 
     @Test
@@ -110,7 +76,7 @@ class CartFragmentTest {
     }
 
     @Test
-    fun `마지막_페이지에서는_다음페이지_버튼을_클릭할_수_없다`() {
+    fun `다음_페이지에_조회_가능한_상품이_없다면_다음페이지_버튼을_클릭할_수_없다`() {
         onView(withId(R.id.btn_right)).perform(click())
         onView(withId(R.id.btn_right)).perform(click())
 
@@ -121,7 +87,7 @@ class CartFragmentTest {
 
     @Test
     fun `장바구니에_담긴_상품을_제거할_수_있다`() {
-        firstProductInRecyclerView().check(matches(withText(dummyProductsFixture[0].name)))
+        firstProductInRecyclerView(R.id.cart_item_name).check(matches(withText(productsFixture[0].name)))
 
         onView(withId(R.id.recycler_view_cart))
             .perform(
@@ -131,13 +97,74 @@ class CartFragmentTest {
                 ),
             )
 
-        firstProductInRecyclerView().check(matches(withText(dummyProductsFixture[1].name)))
+        firstProductInRecyclerView(R.id.cart_item_name).check(matches(withText(productsFixture[1].name)))
     }
 
-    private fun firstProductInRecyclerView() =
+    @Test
+    fun `특정_상품의_구매_개수를_증가시킬_수_있다`() {
+        // When
+        onView(withId(R.id.recycler_view_cart))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    clickOnViewChild(R.id.btn_quantity_plus),
+                ),
+            )
+
+        // Then
+        firstProductInRecyclerView(R.id.textview_quantity).check(matches(withText("2")))
+    }
+
+    @Test
+    fun `특정_상품의_구매_개수를_감소시킬_수_있다`() {
+        // Give
+        onView(withId(R.id.recycler_view_cart))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    clickOnViewChild(R.id.btn_quantity_plus),
+                ),
+            )
+        onView(withId(R.id.recycler_view_cart))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    clickOnViewChild(R.id.btn_quantity_plus),
+                ),
+            )
+
+        // When
+        onView(withId(R.id.recycler_view_cart))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    clickOnViewChild(R.id.btn_quantity_minus),
+                ),
+            )
+
+        // Then
+        firstProductInRecyclerView(R.id.textview_quantity).check(matches(withText("2")))
+    }
+
+    @Test
+    fun `구매_개수가_1개인_특정_상품의_구매_개수를_감소시키면_삭제된다`() {
+        // When
+        onView(withId(R.id.recycler_view_cart))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    clickOnViewChild(R.id.btn_quantity_minus),
+                ),
+            )
+
+        // Then
+        firstProductInRecyclerView(R.id.cart_item_name).check(matches(withText(productsFixture[1].name)))
+    }
+
+    private fun firstProductInRecyclerView(targetViewId: Int) =
         onView(
             allOf(
-                withId(R.id.cart_item_name),
+                withId(targetViewId),
                 isDescendantOfA(nthChildOf(withId(R.id.recycler_view_cart), 0)),
             ),
         )

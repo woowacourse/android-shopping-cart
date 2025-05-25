@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(
     indices = [Index(value = ["productId"], unique = true)],
+    tableName = "ShoppingCart",
 )
 data class CartEntity(
-    @PrimaryKey(autoGenerate = true) val cartId: Long = 0,
-    val productId: Long,
+    @PrimaryKey val productId: Long,
     val quantity: Int = 1,
     val createdAt: Long = System.currentTimeMillis(),
 )

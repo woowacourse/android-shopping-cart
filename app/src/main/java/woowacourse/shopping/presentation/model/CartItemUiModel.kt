@@ -3,11 +3,18 @@ package woowacourse.shopping.presentation.model
 import woowacourse.shopping.domain.model.CartItem
 
 data class CartItemUiModel(
-    val id: Long,
-    val product: ProductUiModel,
+    val productId: Long,
+    val productName: String,
+    val imageUrl: String,
     val quantity: Int,
-) {
-    val totalPrice: Int get() = product.price * quantity
-}
+    val totalPrice: Int,
+)
 
-fun CartItem.toUiModel() = CartItemUiModel(id, product.toUiModel(), quantity)
+fun CartItem.toCartItemUiModel() =
+    CartItemUiModel(
+        product.id,
+        product.name,
+        product.imageUrl,
+        quantity,
+        totalPrice,
+    )
