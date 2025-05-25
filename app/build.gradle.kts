@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.room.runtime)
     implementation(libs.okhttp)
+    implementation(libs.gson)
     implementation(libs.converter.gson)
     implementation(libs.mockwebserver)
     kapt(libs.androidx.room.compiler)
@@ -76,4 +77,5 @@ dependencies {
     androidTestImplementation(libs.mannodermaus.junit5.core)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     androidTestImplementation(libs.androidx.espresso.contrib)
+    testImplementation(kotlin("test"))
 }
