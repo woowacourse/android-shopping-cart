@@ -100,6 +100,7 @@
             app:productId="@{product.id}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/view_detail_last_viewed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
@@ -129,9 +130,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:text="@{vm.lastViewedProduct.name}"
                 android:textColor="@color/gray_55"
                 android:textSize="18sp"
-                android:text="@{vm.lastViewedProduct.name}"
                 app:layout_constraintEnd_toEndOf="@id/text_view_detail_last_viewed_title"
                 app:layout_constraintStart_toStartOf="@id/text_view_detail_last_viewed_title"
                 app:layout_constraintTop_toBottomOf="@id/text_view_detail_last_viewed_title"
@@ -145,7 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint"
-            android:onClick="@{() -> vm.addProduct(product)}"
+            android:onClick="@{() -> vm.addCartItem()}"
             android:text="@string/detail_add_cart_button_text"
             android:textColor="@color/white"
             android:textSize="20sp"

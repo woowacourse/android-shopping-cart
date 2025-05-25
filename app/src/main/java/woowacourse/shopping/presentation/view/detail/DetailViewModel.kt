@@ -22,6 +22,9 @@ class DetailViewModel(
     private val _amount = MutableLiveData<Int>(1)
     val amount: LiveData<Int> = _amount
 
+    private val _product = MutableLiveData<ProductUiModel>()
+    val product: LiveData<ProductUiModel> = _product
+
     private val _lastViewedProduct = MutableLiveData<ProductUiModel>()
     val lastViewedProduct: LiveData<ProductUiModel> = _lastViewedProduct
 
@@ -37,18 +40,30 @@ class DetailViewModel(
         _amount.value = current + 1
     }
 
-    fun addProduct(product: ProductUiModel) {
-        val newProduct = product.copy(amount = amount.value ?: 0)
+    fun fetchProduct(product: ProductUiModel) {
+        _product.postValue(product)
+        _amount.postValue(1)
+    }
+
+    fun addCartItem() {
+        val product = _product.value ?: return
+        val newProduct = product.copy(amount = _amount.value ?: 1)
         cartRepository.addCartItem(newProduct.toCartItem()) {
             _saveState.postValue(Unit)
         }
     }
 
-    fun fetchLastViewedProduct(currentProductId: Long) {
-        productRepository.loadLastViewedProduct(currentProductId) {
-            if (it != null) {
-                _lastViewedProduct.postValue(it.toUiModel())
+    fun loadProductById(productId: Long) {
+        productRepository.getProductById(productId) { product ->
+            product?.let {
+                fetchProduct(it.toUiModel())
             }
+        }
+    }
+
+    fun fetchLastViewedProduct(currentProductId: Long) {
+        productRepository.loadLastViewedProduct(currentProductId) { product ->
+            product?.let { _lastViewedProduct.postValue(it.toUiModel()) }
         }
     }
 

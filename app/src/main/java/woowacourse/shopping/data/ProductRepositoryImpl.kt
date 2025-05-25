@@ -70,4 +70,14 @@ class ProductRepositoryImpl(
             callback(product)
         }
     }
+
+    override fun getProductById(
+        id: Long,
+        callback: (Product?) -> Unit,
+    ) {
+        thread {
+            val product = products.find { it.id == id }
+            callback(product)
+        }
+    }
 }

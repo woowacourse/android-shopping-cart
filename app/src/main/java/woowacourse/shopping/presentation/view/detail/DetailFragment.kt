@@ -25,7 +25,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         initListener()
 
         val product = arguments.getParcelableCompat<ProductUiModel>(EXTRA_PRODUCT)
-        binding.product = product
+        product.let { viewModel.fetchProduct(it) }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
@@ -34,13 +34,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
 
         binding.detailItemCounter.listener =
             object : ItemCounterListener {
-                override fun increase(productId: Long) {
-                    viewModel.increaseAmount()
-                }
+                override fun increase(productId: Long) = viewModel.increaseAmount()
 
-                override fun decrease(productId: Long) {
-                    viewModel.decreaseAmount()
-                }
+                override fun decrease(productId: Long) = viewModel.decreaseAmount()
             }
     }
 
@@ -53,7 +49,13 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
             binding.detailItemCounter.textViewDetailAmount.text = it.toString()
         }
 
-        viewModel.lastViewedProduct.observe(viewLifecycleOwner) {
+        viewModel.product.observe(viewLifecycleOwner) {
+            binding.product = it
+        }
+        viewModel.lastViewedProduct.observe(viewLifecycleOwner) { recentProduct ->
+            binding.viewDetailLastViewed.setOnClickListener {
+                viewModel.loadProductById(recentProduct.id)
+            }
         }
     }
 

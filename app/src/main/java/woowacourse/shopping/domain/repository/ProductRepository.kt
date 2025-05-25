@@ -23,4 +23,9 @@ interface ProductRepository {
         currentProductId: Long,
         callback: (Product?) -> Unit,
     )
+
+    fun getProductById(
+        id: Long,
+        callback: (Product?) -> Unit,
+    )
 }
