@@ -2,9 +2,11 @@ package woowacourse.shopping.data.shoppingCart.repository
 
 import woowacourse.shopping.data.product.entity.CartItemEntity
 import woowacourse.shopping.data.product.entity.CartItemEntity.Companion.toEntity
+import woowacourse.shopping.data.product.entity.ProductEntity.Companion.toEntity
 import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartStorage
 import woowacourse.shopping.data.shoppingCart.storage.VolatileShoppingCartStorage
 import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(
@@ -33,6 +35,13 @@ class DefaultShoppingCartRepository(
         onUpdate: (Result<Unit>) -> Unit,
     ) {
         { shoppingCartStorage.update(cartItems.map { it.toEntity() }) }.runAsync(onUpdate)
+    }
+
+    override fun quantityOf(
+        product: Product,
+        onResult: (Result<Int>) -> Unit,
+    ) {
+        { shoppingCartStorage.quantityOf(product.toEntity().id) }.runAsync(onResult)
     }
 
     private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {

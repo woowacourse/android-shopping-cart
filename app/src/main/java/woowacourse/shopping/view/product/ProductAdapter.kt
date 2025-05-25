@@ -2,10 +2,10 @@ package woowacourse.shopping.view.product
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.domain.product.Product
 
 class ProductAdapter(
-    private val onSelectProduct: (CartItem) -> Unit,
+    private val onSelectProduct: (Product) -> Unit,
     private val onLoad: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<ProductsItem> = emptyList()
@@ -34,6 +34,9 @@ class ProductAdapter(
     override fun getItemCount(): Int = items.size
 
     fun submitList(items: List<ProductsItem>) {
+        this.items = items
+        notifyDataSetChanged()
+
         val paginationItemPosition = itemCount - 1
         notifyItemRemoved(paginationItemPosition)
 

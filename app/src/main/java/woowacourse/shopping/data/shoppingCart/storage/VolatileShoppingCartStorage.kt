@@ -3,19 +3,21 @@ package woowacourse.shopping.data.shoppingCart.storage
 import woowacourse.shopping.data.product.entity.CartItemEntity
 
 object VolatileShoppingCartStorage : ShoppingCartStorage {
-    private var products: List<CartItemEntity> = emptyList()
+    private var cartItems: List<CartItemEntity> = emptyList()
 
-    override fun load(): List<CartItemEntity> = products.toList()
+    override fun load(): List<CartItemEntity> = cartItems.toList()
 
     override fun add(product: CartItemEntity) {
-        products += product
+        cartItems += product
     }
 
     override fun remove(product: CartItemEntity) {
-        products -= product
+        cartItems -= product
     }
 
     override fun update(products: List<CartItemEntity>) {
-        this.products = products
+        this.cartItems = products
     }
+
+    override fun quantityOf(productId: Long): Int = cartItems.find { it.id == productId }?.quantity ?: 0
 }

@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.showToast
 
 class ProductDetailActivity :
@@ -33,7 +33,7 @@ class ProductDetailActivity :
             insets
         }
 
-        val product =
+        val product: Product =
             intent.getProductExtra() ?: run {
                 showToast(R.string.product_not_provided_error_message)
                 return finish()
@@ -43,15 +43,15 @@ class ProductDetailActivity :
         handleEvents()
     }
 
-    private fun initViewModel(cartItem: CartItem) {
+    private fun initViewModel(cartItem: Product) {
         viewModel.updateProduct(cartItem)
     }
 
-    private fun Intent.getProductExtra(): CartItem? =
+    private fun Intent.getProductExtra(): Product? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializableExtra(EXTRA_PRODUCT, CartItem::class.java)
+            getSerializableExtra(EXTRA_PRODUCT, Product::class.java)
         } else {
-            getSerializableExtra(EXTRA_PRODUCT) as? CartItem
+            getSerializableExtra(EXTRA_PRODUCT) as? Product
         }
 
     private fun bindViewModel() {
@@ -89,11 +89,11 @@ class ProductDetailActivity :
 
         fun newIntent(
             context: Context,
-            cartItem: CartItem,
+            product: Product,
         ): Intent =
             Intent(context, ProductDetailActivity::class.java).putExtra(
                 EXTRA_PRODUCT,
-                cartItem,
+                product,
             )
     }
 }

@@ -8,30 +8,32 @@ import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
 
 class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
-    private val _cartItem: MutableLiveData<CartItem> = MutableLiveData()
-    val cartItem: LiveData<CartItem> get() = _cartItem
+    private val _product: MutableLiveData<Product> = MutableLiveData()
+    val product: LiveData<Product> get() = _product
 
-    val imageUrl: LiveData<String?> = _cartItem.map { it.imageUrl }
+    val imageUrl: LiveData<String?> = _product.map { it.imageUrl }
 
     private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
 
-    fun updateProduct(cartItem: CartItem) {
-        _cartItem.value = cartItem
+    fun updateProduct(product: Product) {
+        _product.value = product
     }
 
     fun addToShoppingCart() {
-        val cartItem: CartItem =
-            cartItem.value ?: run {
+        val product: Product =
+            product.value ?: run {
                 _event.setValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
                 return
             }
+        val cartItem = CartItem(product, 1)
 
         shoppingCartRepository.add(cartItem) { result: Result<Unit> ->
             result

@@ -3,6 +3,7 @@ package woowacourse.shopping.view.product
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
-import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 import woowacourse.shopping.view.showToast
@@ -87,13 +88,22 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun navigateToShoppingCart() {
         viewModel.updateShoppingCart {
-            startActivity(ShoppingCartActivity.newIntent(this))
+            activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
         }
     }
 
-    private fun navigateToProductDetail(cartItem: CartItem) {
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.loadAllProducts()
+            }
+        }
+
+    private fun navigateToProductDetail(product: Product) {
         viewModel.updateShoppingCart {
-            startActivity(ProductDetailActivity.newIntent(this, cartItem))
+            startActivity(ProductDetailActivity.newIntent(this, product))
         }
     }
 }
