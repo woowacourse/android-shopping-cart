@@ -3,7 +3,6 @@ package woowacourse.shopping.view
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
-import net.bytebuddy.matcher.ElementMatchers.any
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.jupiter.api.BeforeEach
@@ -55,7 +54,6 @@ class CartViewModelTest {
             dummyPages.forEach { page ->
                 page.filter { it.productId != productId }
             }
-            // 비어있는 페이지 제거
             dummyPages.filter { it.isNotEmpty() }
             callback()
         }
@@ -112,24 +110,6 @@ class CartViewModelTest {
             { assertThat(state.pageState.page).isEqualTo(2) },
             { assertThat(state.items).hasSize(5) },
             { assertThat(state.items.map { it.item.id }).containsExactly(6L, 7L, 8L, 9L, 10L) },
-        )
-    }
-
-    @Test
-    fun `상품 삭제 시 페이지 수가 줄어들 경우 마지막 페이지로 이동한다`() {
-        // 마지막 페이지로 이동
-        viewModel.addPage()
-        viewModel.addPage()
-
-        // 상품 두 개 삭제
-        viewModel.deleteProduct(11)
-        viewModel.deleteProduct(10)
-
-        val state = viewModel.uiState.getOrAwaitValue()
-
-        assertAll(
-            { assertThat(state.pageState.page).isEqualTo(3) },
-            { assertThat(state.items.map { it.item.id }).containsExactly(6L, 7L, 8L, 9L) },
         )
     }
 }

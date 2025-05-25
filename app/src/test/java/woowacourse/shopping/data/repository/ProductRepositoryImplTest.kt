@@ -35,13 +35,13 @@ class ProductRepositoryImplTest {
         every { productEntity.toDomain() } returns productDomain
 
         // When
-        val product = repository.getProduct(productId) {}
-
-        // Then
-        assertNotNull(product)
-        assertEquals(productDomain, product)
-        verify(exactly = 1) { dataSource.getProduct(productId) }
-        verify(exactly = 1) { productEntity.toDomain() }
+        repository.getProduct(productId) { product ->
+            // Then
+            assertNotNull(product)
+            assertEquals(productDomain, product)
+            verify(exactly = 1) { dataSource.getProduct(productId) }
+            verify(exactly = 1) { productEntity.toDomain() }
+        }
     }
 
     @Test
