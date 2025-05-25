@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.inventory.item
+package woowacourse.shopping.domain
 
 data class RecentProduct(
     val id: Int,

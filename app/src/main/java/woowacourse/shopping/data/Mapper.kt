@@ -5,8 +5,8 @@ import woowacourse.shopping.data.recent.RecentProductEntity
 import woowacourse.shopping.data.shoppingcart.CartItemEntity
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
-import woowacourse.shopping.view.inventory.item.RecentProduct
 
 fun Product.toEntity(): ProductEntity = ProductEntity(id, name, price, 0, imageUrl)
 

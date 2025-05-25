@@ -2,7 +2,7 @@ package woowacourse.shopping.view.inventory
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.view.inventory.item.RecentProduct
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.inventory.viewholder.RecentItemViewHolder
 
 class RecentListAdapter : RecyclerView.Adapter<RecentItemViewHolder>() {

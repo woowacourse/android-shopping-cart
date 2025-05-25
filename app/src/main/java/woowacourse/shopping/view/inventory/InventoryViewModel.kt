@@ -10,11 +10,11 @@ import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.data.toInventoryProduct
 import woowacourse.shopping.domain.Page
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProducts
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
-import woowacourse.shopping.view.inventory.item.RecentProduct
 import java.time.LocalDateTime
 import java.time.ZoneId
 

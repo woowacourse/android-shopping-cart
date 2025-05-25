@@ -3,8 +3,8 @@ package woowacourse.shopping.view.inventory.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemInventoryRecentItemBinding
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.base.BaseViewHolder
-import woowacourse.shopping.view.inventory.item.RecentProduct
 
 class RecentItemViewHolder(
     parent: ViewGroup,

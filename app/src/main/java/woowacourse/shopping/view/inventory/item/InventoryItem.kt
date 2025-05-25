@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.inventory.item
 
+import woowacourse.shopping.domain.RecentProduct
+
 sealed interface InventoryItem {
     val type: InventoryItemType
 

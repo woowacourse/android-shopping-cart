@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.view.inventory.item.RecentProduct
+import woowacourse.shopping.domain.RecentProduct
 
 interface RecentProductRepository {
     fun getMostRecent(

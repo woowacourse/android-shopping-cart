@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import woowacourse.shopping.data.recent.RecentProductEntity.Companion.RECENT_PRODUCT_TABLE_NAME
-import woowacourse.shopping.view.inventory.item.RecentProduct
+import woowacourse.shopping.domain.RecentProduct
 
 @Dao
 interface RecentProductDao {
