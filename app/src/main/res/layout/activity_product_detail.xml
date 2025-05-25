@@ -77,33 +77,78 @@
                 app:layout_constraintTop_toBottomOf="@id/productDetailName" />
 
             <TextView
-                android:id="@+id/productDetailPriceTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/product_detail_price_title"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/productDetailDivider" />
-
-            <TextView
-                android:id="@+id/productDetailPriceContent"
+                android:id="@+id/productDetailPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginEnd="18dp"
-                android:gravity="end"
-                android:text="@{@string/product_price_format(viewModel.product.price)}"
+                android:text="@{@string/product_price_format(viewModel.product.price * viewModel.quantity)}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/productDetailAdd"
+                app:layout_constraintEnd_toStartOf="@id/productDetailQuantityStepper"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/productDetailDivider"
+                tools:text="99,800,800,800,800,800,800원" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/productDetailQuantityStepper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/productDetailPriceTitle"
-                app:layout_constraintTop_toTopOf="@id/productDetailPriceTitle"
-                app:layout_constraintVertical_chainStyle="spread_inside"
-                tools:text="99,800원" />
+                app:layout_constraintStart_toEndOf="@id/productDetailPrice"
+                app:layout_constraintTop_toBottomOf="@id/productDetailDivider">
+
+                <TextView
+                    android:id="@+id/shoppingCartProductQuantityMinusButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:onClick="@{() -> productDetailActionsListener.onMinusProductQuantity()}"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="12dp"
+                    android:text="@string/product_quantity_minus"
+                    android:textColor="@color/gray_5"
+                    android:textSize="22sp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/shoppingCartProductQuantity"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/shoppingCartProductQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@{String.valueOf(viewModel.quantity)}"
+                    android:textColor="@color/gray_5"
+                    android:textSize="22sp"
+                    app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductQuantityMinusButton"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/shoppingCartProductQuantityPlusButton"
+                    app:layout_constraintStart_toEndOf="@id/shoppingCartProductQuantityMinusButton"
+                    app:layout_constraintTop_toTopOf="@id/shoppingCartProductQuantityMinusButton"
+                    app:layout_constraintVertical_chainStyle="spread"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/shoppingCartProductQuantityPlusButton"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:onClick="@{() -> productDetailActionsListener.onPlusProductQuantity()}"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="12dp"
+                    android:text="@string/product_quantity_plus"
+                    android:textColor="@color/gray_5"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@id/shoppingCartProductQuantityMinusButton"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/shoppingCartProductQuantity"
+                    app:layout_constraintTop_toTopOf="@id/shoppingCartProductQuantityMinusButton" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/productDetailAdd"
@@ -118,7 +163,7 @@
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/productDetailPriceContent" />
+                app:layout_constraintTop_toBottomOf="@id/productDetailQuantityStepper" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

@@ -98,6 +98,12 @@ class ProductsActivity : AppCompatActivity() {
         }
     }
 
+    private fun navigateToProductDetail(product: Product) {
+        viewModel.updateShoppingCart {
+            activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
+        }
+    }
+
     private val activityResultLauncher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -106,10 +112,4 @@ class ProductsActivity : AppCompatActivity() {
                 viewModel.loadAllProducts()
             }
         }
-
-    private fun navigateToProductDetail(product: Product) {
-        viewModel.updateShoppingCart {
-            startActivity(ProductDetailActivity.newIntent(this, product))
-        }
-    }
 }

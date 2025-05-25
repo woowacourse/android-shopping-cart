@@ -84,6 +84,14 @@ class ProductDetailActivity :
         viewModel.addToShoppingCart()
     }
 
+    override fun onPlusProductQuantity() {
+        viewModel.plusProductQuantity()
+    }
+
+    override fun onMinusProductQuantity() {
+        viewModel.minusProductQuantity()
+    }
+
     companion object {
         private const val EXTRA_PRODUCT = "woowacourse.shopping.EXTRA_PRODUCT"
 
