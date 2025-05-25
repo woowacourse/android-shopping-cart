@@ -1,7 +1,9 @@
 package woowacourse.shopping.data.recentlyproducts
 
+import woowacourse.shopping.domain.Product
+
 interface RecentlyProductsRepository {
-    fun insert(productId: Long)
+    fun insert(product: Product)
 
     fun getFirst(): Long
 

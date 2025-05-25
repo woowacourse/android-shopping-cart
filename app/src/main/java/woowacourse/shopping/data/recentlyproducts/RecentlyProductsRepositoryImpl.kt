@@ -1,13 +1,15 @@
 package woowacourse.shopping.data.recentlyproducts
 
+import woowacourse.shopping.data.mapper.toRecentEntity
+import woowacourse.shopping.domain.Product
 import kotlin.concurrent.thread
 
 class RecentlyProductsRepositoryImpl(
     private val dao: RecentlyProductsDao,
 ) : RecentlyProductsRepository {
-    override fun insert(productId: Long) {
+    override fun insert(product: Product) {
         thread {
-            dao.insert(productId)
+            dao.insert(product.toRecentEntity())
         }.join()
     }
 
