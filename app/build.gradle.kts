@@ -61,6 +61,7 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.mockwebserver)
     debugImplementation(libs.androidx.fragment.testing.manifest)
     androidTestImplementation(libs.androidx.fragment.testing)
     androidTestImplementation(libs.androidx.espresso.core)
