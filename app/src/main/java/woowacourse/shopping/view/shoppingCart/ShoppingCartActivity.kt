@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.showSnackBar
 
 class ShoppingCartActivity :
@@ -44,7 +45,10 @@ class ShoppingCartActivity :
 
     private fun initDataBinding() {
         binding.adapter = shoppingCartProductAdapter
-        binding.onClickBackButton = ::finish
+        binding.onClickBackButton = {
+            setResult(ResultFrom.SHOPPING_CART_BACK.RESULT_OK)
+            ::finish
+        }
     }
 
     private fun bindData() {

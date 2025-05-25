@@ -1,8 +1,11 @@
 package woowacourse.shopping.view.product
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.showSnackBar
 import woowacourse.shopping.view.common.showToast
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
@@ -22,8 +26,23 @@ class ProductsActivity :
     private val binding: ActivityProductsBinding by lazy {
         ActivityProductsBinding.inflate(layoutInflater)
     }
+
     private val viewModel: ProductsViewModel by viewModels()
     private val productAdapter: ProductAdapter by lazy { ProductAdapter(this) }
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            when (result.resultCode) {
+                ResultFrom.PRODUCT_DETAIL_BACK.RESULT_OK -> {
+                    val updateItems =
+                        result.data?.getProductExtra() ?: return@registerForActivityResult
+                    viewModel.updateSelectedQuantity(updateItems)
+                }
+
+                ResultFrom.SHOPPING_CART_BACK.RESULT_OK -> viewModel::updateProducts
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,11 +117,11 @@ class ProductsActivity :
     }
 
     private fun navigateToShoppingCart() {
-        startActivity(ShoppingCartActivity.newIntent(this))
+        activityResultLauncher.launch(ShoppingCartActivity.newIntent(this))
     }
 
     override fun onProductClick(product: Product) {
-        startActivity(ProductDetailActivity.newIntent(this, product))
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product))
     }
 
     override fun onPlusShoppingCartClick(product: Product) {
@@ -116,4 +135,11 @@ class ProductsActivity :
     override fun onLoadClick() {
         viewModel.updateProducts()
     }
+
+    private fun Intent.getProductExtra(): Product? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getSerializableExtra("updateProduct", Product::class.java)
+        } else {
+            getSerializableExtra("updateProduct") as? Product
+        }
 }

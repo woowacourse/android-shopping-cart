@@ -115,6 +115,34 @@ class ProductsViewModel(
         }
     }
 
+    fun updateSelectedQuantity(product: Product) {
+        shoppingCartRepository.fetchSelectedQuantity(product) { result ->
+            result
+                .onSuccess { selectedQuantity: Int ->
+                    val currentList = products.value.orEmpty()
+                    val updatedList =
+                        currentList.map { item ->
+                            if (item is ProductItem && item.product == product) {
+                                item.copy(selectedQuantity = selectedQuantity)
+                            } else {
+                                item
+                            }
+                        }
+                    _products.postValue(updatedList)
+                    updateShoppingCartQuantity()
+                }
+        }
+    }
+
+    private fun updateShoppingCartQuantity() {
+        shoppingCartRepository.fetchAllQuantity { result ->
+            result
+                .onSuccess { quantity: Int ->
+                    _shoppingCartQuantity.postValue(quantity)
+                }
+        }
+    }
+
     companion object {
         private const val LOAD_PRODUCTS_SIZE = 20
     }

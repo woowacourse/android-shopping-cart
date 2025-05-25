@@ -76,4 +76,31 @@ class DefaultShoppingCartRepository(
             }
         }
     }
+
+    override fun fetchSelectedQuantity(
+        product: Product,
+        onResult: (Result<Int>) -> Unit,
+    ) {
+        thread {
+            runCatching {
+                shoppingCartStorage.fetchQuantity(product.toEntity())
+            }.onSuccess { quantity: Int ->
+                onResult(Result.success(quantity))
+            }.onFailure { exception ->
+                onResult(Result.failure(exception))
+            }
+        }
+    }
+
+    override fun fetchAllQuantity(onResult: (Result<Int>) -> Unit) {
+        thread {
+            runCatching {
+                shoppingCartStorage.size
+            }.onSuccess { allQuantity: Int ->
+                onResult(Result.success(allQuantity))
+            }.onFailure { exception ->
+                onResult(Result.failure(exception))
+            }
+        }
+    }
 }

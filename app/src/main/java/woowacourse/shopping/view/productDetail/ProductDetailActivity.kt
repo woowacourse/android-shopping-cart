@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.showSnackBar
 
 class ProductDetailActivity :
@@ -81,6 +82,11 @@ class ProductDetailActivity :
     }
 
     override fun onCloseButton() {
+        val intent =
+            Intent().apply {
+                putExtra("updateProduct", viewModel.product.value)
+            }
+        setResult(ResultFrom.PRODUCT_DETAIL_BACK.RESULT_OK, intent)
         finish()
     }
 

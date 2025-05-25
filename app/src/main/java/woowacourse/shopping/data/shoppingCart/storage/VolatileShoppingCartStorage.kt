@@ -7,7 +7,7 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
     private val products: MutableList<ShoppingCartProductEntity> = mutableListOf()
     override val size: Int
         get() {
-            return products.size
+            return products.sumOf { it.quantity }
         }
 
     override fun load(
@@ -64,4 +64,6 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
         products.clear()
         products.addAll(updateShoppingCart)
     }
+
+    override fun fetchQuantity(product: ProductEntity): Int = products.find { it.product == product }?.quantity ?: 0
 }

@@ -16,4 +16,6 @@ interface ShoppingCartStorage {
     fun decreaseQuantity(product: ProductEntity)
 
     fun remove(product: ProductEntity)
+
+    fun fetchQuantity(product: ProductEntity): Int
 }
