@@ -1,41 +1,79 @@
 package woowacourse.shopping.data.cart
 
+import android.os.Handler
+import android.os.Looper
 import woowacourse.shopping.model.cart.CartItem
 
-object CartRepositoryImpl : CartRepository {
-    private val cartItems = mutableListOf<CartItem>()
-
-    override fun getAll(): List<CartItem> = cartItems.toList()
-
-    override fun add(cartItem: CartItem) {
-        cartItems.add(cartItem)
+class CartRepositoryImpl(
+    private val cartDao: CartDao,
+) : CartRepository {
+    override fun getAll(callback: (List<CartItem>) -> Unit) {
+        Thread {
+            val values = cartDao.getAll().map { it.toCartItem() }
+            callback(values)
+        }.start()
     }
 
-    override fun remove(productId: Long) {
-        cartItems.removeIf { it.product.id == productId }
+    override fun add(
+        cartItem: CartItem,
+        callback: () -> Unit,
+    ) {
+        Thread {
+            val existing = cartDao.findItemById(cartItem.product.id)
+            if (existing == null) {
+                cartDao.insert(cartItem.toEntity())
+            } else {
+                cartDao.update(cartItem.product.id, cartItem.quantity)
+            }
+            Handler(Looper.getMainLooper()).post {
+                callback()
+            }
+        }.start()
+    }
+
+    override fun remove(
+        productId: Long,
+        callback: () -> Unit,
+    ) {
+        Thread {
+            cartDao.delete(productId)
+            callback()
+        }.start()
     }
 
     override fun update(
         productId: Long,
-        quantity: Int,
+        quantityIncrease: Int,
     ) {
-        val index = cartItems.indexOfFirst { it.product.id == productId }
-        if (index != -1) {
-            cartItems[index] = cartItems[index].copy(quantity = quantity)
-        }
+        Thread {
+            cartDao.update(productId, quantityIncrease)
+        }.start()
     }
 
     override fun fetchProducts(
         offset: Int,
         limit: Int,
-    ): List<CartItem> {
-        val end = (offset + limit).coerceAtMost(cartItems.size)
-        return cartItems.subList(offset, end)
+        callback: (List<CartItem>) -> Unit,
+    ) {
+        Thread {
+            val values = cartDao.fetchProducts(offset, limit).map { it.toCartItem() }
+            callback(values)
+        }.start()
     }
 
     override fun clear() {
-        cartItems.clear()
+        Thread {
+            cartDao.clear()
+        }.start()
     }
 
-    override fun findQuantityById(productId: Long): Int = cartItems.find { it.product.id == productId }?.quantity ?: 1
+    override fun findQuantityById(
+        productId: Long,
+        callback: (Int) -> Unit,
+    ) {
+        Thread {
+            val value = cartDao.findQuantityById(productId)
+            callback(value)
+        }.start()
+    }
 }
