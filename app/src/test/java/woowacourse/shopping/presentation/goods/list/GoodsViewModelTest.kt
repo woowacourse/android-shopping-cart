@@ -84,7 +84,7 @@ class GoodsViewModelTest {
     fun `구매할 상품 수량을 증가할 수 있다`() {
         // when
         goodsViewModel.increaseGoodsCount(1)
-        val actual = goodsViewModel.goods.getOrAwaitValue()[1].quantity
+        val actual = goodsViewModel.goods.getOrAwaitValue()[0].quantity
 
         // then
         actual shouldBe 1

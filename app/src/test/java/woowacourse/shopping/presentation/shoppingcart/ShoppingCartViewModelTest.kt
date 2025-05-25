@@ -96,7 +96,7 @@ class ShoppingCartViewModelTest {
     @Test
     fun `구매할 물품 수량을 증가할 수 있다`() {
         // when
-        shoppingCartViewModel.increaseGoodsCount(0)
+        shoppingCartViewModel.increaseGoodsCount(1)
 
         // then
         shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 3
@@ -109,7 +109,7 @@ class ShoppingCartViewModelTest {
     @Test
     fun `구매할 물품 수량을 감소할 수 있다`() {
         // when
-        shoppingCartViewModel.decreaseGoodsCount(0)
+        shoppingCartViewModel.decreaseGoodsCount(1)
 
         // then
         shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 1
