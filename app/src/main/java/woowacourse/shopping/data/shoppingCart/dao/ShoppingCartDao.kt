@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.data
+package woowacourse.shopping.data.shoppingCart.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -12,7 +12,7 @@ interface ShoppingCartDao {
     @Query("SELECT * FROM shoppingCart")
     fun load(): List<CartItemEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     fun upsert(entity: CartItemEntity)
 
     @Delete
@@ -26,7 +26,7 @@ interface ShoppingCartDao {
     @Query("DELETE FROM shoppingCart")
     fun deleteAll()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     fun insertAll(entities: List<CartItemEntity>)
 
     @Query("SELECT quantity FROM shoppingCart WHERE id = :productId")

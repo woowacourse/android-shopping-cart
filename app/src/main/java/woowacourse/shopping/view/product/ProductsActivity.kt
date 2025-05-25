@@ -10,10 +10,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.product.dataSource.LocalProductsDataSource
+import woowacourse.shopping.data.shoppingCart.storage.LocalShoppingCartDataSource
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.data.LocalProductsDataSource
-import woowacourse.shopping.view.data.LocalShoppingCartDataSource
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 import woowacourse.shopping.view.showToast

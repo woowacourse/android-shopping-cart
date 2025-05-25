@@ -1,9 +1,10 @@
-package woowacourse.shopping.view.data
+package woowacourse.shopping.data.shoppingCart.storage
 
 import android.content.Context
 import androidx.room.Room
 import woowacourse.shopping.data.product.entity.CartItemEntity
-import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartDataSource
+import woowacourse.shopping.data.shoppingCart.dao.ShoppingCartDao
+import woowacourse.shopping.data.shoppingCart.database.ShoppingCartDatabase
 
 object LocalShoppingCartDataSource : ShoppingCartDataSource {
     private lateinit var dao: ShoppingCartDao

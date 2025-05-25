@@ -3,10 +3,10 @@ package woowacourse.shopping.data.shoppingCart.repository
 import woowacourse.shopping.data.product.entity.CartItemEntity
 import woowacourse.shopping.data.product.entity.CartItemEntity.Companion.toEntity
 import woowacourse.shopping.data.product.entity.ProductEntity.Companion.toEntity
+import woowacourse.shopping.data.shoppingCart.storage.LocalShoppingCartDataSource
 import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartDataSource
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.data.LocalShoppingCartDataSource
 import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(

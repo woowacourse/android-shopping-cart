@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.product.repository
 
+import woowacourse.shopping.data.product.dataSource.LocalProductsDataSource
+import woowacourse.shopping.data.product.dataSource.ProductsDataSource
 import woowacourse.shopping.data.product.entity.ProductEntity
-import woowacourse.shopping.data.product.storage.ProductsDataSource
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.view.data.LocalProductsDataSource
 import kotlin.concurrent.thread
 
 class DefaultProductsRepository(
