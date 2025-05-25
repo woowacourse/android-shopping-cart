@@ -31,6 +31,8 @@ class ShoppingCartActivity : AppCompatActivity() {
         initRecyclerView()
         initBindings()
         initObservers()
+
+        supportActionBar?.title = ACTION_BAR_TITLE
     }
 
     private fun setUpView() {
@@ -46,6 +48,7 @@ class ShoppingCartActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         adapter = CartProductAdapter(eventHandler = viewModel)
         binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
     }
 
     private fun initBindings() {
@@ -62,5 +65,7 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
+
+        private const val ACTION_BAR_TITLE = "Cart"
     }
 }

@@ -35,6 +35,8 @@ class ProductDetailActivity : AppCompatActivity() {
             )[ProductDetailViewModel::class.java]
         initBindings(product)
         initObservers()
+
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun setUpView() {

@@ -17,6 +17,7 @@ class RecentProductListViewHolder(
         binding.rvRecentProducts.adapter = adapter
         binding.rvRecentProducts.layoutManager =
             LinearLayoutManager(binding.root.context, RecyclerView.HORIZONTAL, false)
+        binding.rvRecentProducts.itemAnimator = null
     }
 
     fun bind(item: ProductCatalogItem.RecentProductsItem) {

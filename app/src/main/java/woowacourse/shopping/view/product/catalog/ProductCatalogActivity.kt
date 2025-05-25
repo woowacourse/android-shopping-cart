@@ -101,6 +101,7 @@ class ProductCatalogActivity : AppCompatActivity() {
                     }
             }
         binding.rvProducts.layoutManager = gridLayoutManager
+        binding.rvProducts.itemAnimator = null
     }
 
     private fun initObservers() {
