@@ -16,10 +16,15 @@ class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
+    private val _inventoryProduct = MutableLiveData<InventoryProduct>()
+    val inventoryProduct: LiveData<InventoryProduct> get() = _inventoryProduct
+
     private val _lastProduct = MutableLiveData<RecentProduct>()
     val lastProduct: LiveData<RecentProduct> get() = _lastProduct
-    private val _quantity = MutableLiveData(PRODUCT_MINIMUM_QUANTITY)
-    val quantity: LiveData<Int> get() = _quantity
+
+    fun loadInventoryProduct(product: InventoryProduct) {
+        _inventoryProduct.value = product.copy(quantity = PRODUCT_MINIMUM_QUANTITY)
+    }
 
     fun loadRecentProduct(product: InventoryProduct) {
         recentProductRepository.getLastProductBefore(product) { recentProduct ->
@@ -30,19 +35,21 @@ class ProductDetailViewModel(
     fun addToCart(product: InventoryProduct) {
         shoppingCartRepository.getOrNull(product.id) { cartItem ->
             val currentQuantity = cartItem?.quantity ?: 0
-            val item = product.copy(quantity = currentQuantity + (quantity.value ?: 0))
+            val item = product.copy(quantity = currentQuantity + (_inventoryProduct.value?.quantity ?: 0))
             inventoryRepository.insert(item)
             shoppingCartRepository.insert(item.toCartItem())
         }
     }
 
     fun decreaseQuantity() {
-        if (_quantity.value == PRODUCT_MINIMUM_QUANTITY) return
-        _quantity.value = _quantity.value?.minus(1)
+        val quantity = _inventoryProduct.value?.quantity ?: PRODUCT_MINIMUM_QUANTITY
+        if (quantity == PRODUCT_MINIMUM_QUANTITY) return
+        _inventoryProduct.value = _inventoryProduct.value?.copy(quantity = quantity - 1)
     }
 
     fun increaseQuantity() {
-        _quantity.value = _quantity.value?.plus(1)
+        val quantity = _inventoryProduct.value?.quantity ?: PRODUCT_MINIMUM_QUANTITY
+        _inventoryProduct.value = _inventoryProduct.value?.copy(quantity = quantity + 1)
     }
 
     companion object {

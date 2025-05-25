@@ -4,14 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="product"
-            type="woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct" />
-
-        <variable
-            name="recentProduct"
-            type="woowacourse.shopping.view.inventory.item.RecentProduct" />
+            name="viewModel"
+            type="woowacourse.shopping.view.detail.ProductDetailViewModel" />
 
         <variable
             name="handler"
@@ -29,7 +24,7 @@
 
         <ImageView
             android:id="@+id/iv_product_detail_image"
-            productImage="@{product.imageUrl}"
+            productImage="@{viewModel.inventoryProduct.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/content_description_product_image"
@@ -47,7 +42,7 @@
             android:layout_margin="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{viewModel.inventoryProduct.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -83,6 +78,7 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                priceWithFormat="@{viewModel.inventoryProduct.price * viewModel.inventoryProduct.quantity}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -114,6 +110,7 @@
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:clickable="true"
+                    android:text="@{String.valueOf(viewModel.inventoryProduct.quantity)}"
                     android:gravity="center"
                     android:textColor="@color/dark_gray"
                     android:textSize="22sp"
@@ -136,7 +133,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            isGone="@{recentProduct == null}"
+            isGone="@{viewModel.lastProduct == null}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -158,7 +155,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{recentProduct.name}"
+                android:text="@{viewModel.lastProduct.name}"
                 android:textSize="18sp"
                 tools:text="PET보틀-정사각형(500ml)" />
         </LinearLayout>
@@ -170,7 +167,7 @@
             android:backgroundTint="#04C09E"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:onClick="@{() -> handler.onAddToCart(product)}"
+            android:onClick="@{() -> handler.onAddToCart(viewModel.inventoryProduct)}"
             android:text="@string/button_text_add_to_shopping_cart"
             android:textSize="20sp"
             android:textStyle="bold"

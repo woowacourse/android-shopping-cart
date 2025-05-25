@@ -13,7 +13,6 @@ import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.util.getParcelableCompat
-import woowacourse.shopping.view.util.setPrice
 
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
@@ -30,10 +29,8 @@ class ProductDetailActivity :
                 return
             }
         initializeViewModel(product)
-        binding.apply {
-            this.product = product
-            handler = this@ProductDetailActivity
-        }
+        binding.viewModel = viewModel
+        binding.handler = this
     }
 
     private fun initializeViewModel(product: InventoryProduct) {
@@ -45,16 +42,8 @@ class ProductDetailActivity :
                 shoppingApplication.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
-        with(viewModel) {
-            lastProduct.observe(this@ProductDetailActivity) { lastProduct ->
-                binding.recentProduct = lastProduct
-            }
-            quantity.observe(this@ProductDetailActivity) { quantity ->
-                binding.tvQuantity.text = quantity.toString()
-                setPrice(binding.tvProductPrice, product.price * quantity)
-            }
-            loadRecentProduct(product)
-        }
+        viewModel.loadInventoryProduct(product)
+        viewModel.loadRecentProduct(product)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
