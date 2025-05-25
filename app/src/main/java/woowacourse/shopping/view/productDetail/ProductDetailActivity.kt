@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -62,17 +61,16 @@ class ProductDetailActivity :
 
     private fun handleEvents() {
         viewModel.event.observe(this) { event: ProductDetailEvent ->
-            @StringRes
-            val messageResourceId: Int =
-                when (event) {
-                    ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS ->
-                        R.string.product_detail_add_shopping_cart_success_message
-
-                    ProductDetailEvent.ADD_SHOPPING_CART_FAILURE ->
-                        R.string.product_detail_add_shopping_cart_error_message
+            when (event) {
+                ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> {
+                    showToast(R.string.product_detail_add_shopping_cart_success_message)
+                    setResult(RESULT_OK)
+                    finish()
                 }
 
-            showToast(messageResourceId)
+                ProductDetailEvent.ADD_SHOPPING_CART_FAILURE ->
+                    showToast(R.string.product_detail_add_shopping_cart_error_message)
+            }
         }
     }
 

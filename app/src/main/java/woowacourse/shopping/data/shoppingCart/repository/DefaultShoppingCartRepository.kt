@@ -16,11 +16,11 @@ class DefaultShoppingCartRepository(
         { shoppingCartStorage.load().map(CartItemEntity::toDomain) }.runAsync(onLoad)
     }
 
-    override fun add(
+    override fun upsert(
         cartItem: CartItem,
         onAdd: (Result<Unit>) -> Unit,
     ) {
-        { shoppingCartStorage.add(cartItem.toEntity()) }.runAsync(onAdd)
+        { shoppingCartStorage.upsert(cartItem.toEntity()) }.runAsync(onAdd)
     }
 
     override fun remove(

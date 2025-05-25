@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.product.Product
 interface ShoppingCartRepository {
     fun load(onLoad: (Result<List<CartItem>>) -> Unit)
 
-    fun add(
+    fun upsert(
         cartItem: CartItem,
         onAdd: (Result<Unit>) -> Unit,
     )

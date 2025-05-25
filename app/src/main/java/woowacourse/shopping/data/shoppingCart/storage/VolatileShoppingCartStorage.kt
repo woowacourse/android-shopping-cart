@@ -7,16 +7,17 @@ object VolatileShoppingCartStorage : ShoppingCartStorage {
 
     override fun load(): List<CartItemEntity> = cartItems.toList()
 
-    override fun add(product: CartItemEntity) {
-        cartItems += product
+    override fun upsert(cartItem: CartItemEntity) {
+        cartItems = cartItems.filterNot { it.id == cartItem.id }
+        cartItems += cartItem
     }
 
-    override fun remove(product: CartItemEntity) {
-        cartItems -= product
+    override fun remove(cartItem: CartItemEntity) {
+        cartItems -= cartItem
     }
 
-    override fun update(products: List<CartItemEntity>) {
-        this.cartItems = products
+    override fun update(cartItems: List<CartItemEntity>) {
+        this.cartItems = cartItems
     }
 
     override fun quantityOf(productId: Long): Int = cartItems.find { it.id == productId }?.quantity ?: 0

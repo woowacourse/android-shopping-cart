@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.productDetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,7 +49,9 @@ class ProductDetailViewModel(
             }
         val cartItem = CartItem(product, quantity.value ?: 1)
 
-        shoppingCartRepository.add(cartItem) { result: Result<Unit> ->
+        Log.e("TAG", "cartItem: $cartItem")
+
+        shoppingCartRepository.upsert(cartItem) { result: Result<Unit> ->
             result
                 .onSuccess {
                     _event.postValue(ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS)
