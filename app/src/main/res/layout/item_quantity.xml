@@ -5,7 +5,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="126dp"
-        android:layout_height="42dp">
+        android:layout_height="42dp"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/tv_minus"
