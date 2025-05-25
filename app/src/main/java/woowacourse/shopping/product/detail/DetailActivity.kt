@@ -25,39 +25,57 @@ import woowacourse.shopping.util.IntentCompat
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
-
-    private val viewModel by lazy {
-        val db = CartItemDatabase.getInstance(this)
-        val repository = CartItemRepositoryImpl(db.cartItemDao())
-        val viewedDb = ViewedItemDatabase.getInstance(this)
-        val viewedRepository = ViewedItemRepositoryImpl(viewedDb.viewedItemDao())
-        ViewModelProvider(
-            this,
-            factory(repository, viewedRepository),
-        )[DetailViewModel::class.java]
-    }
+    private val viewModel by lazy { provideViewModel() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        applyWindowInsets()
-        setSupportActionBar()
 
-        observeCartUiState()
+        setupWindowInsets()
+        setupToolbar()
 
-        val product: ProductUiModel? = productFromIntent()
-        product?.let {
+        initBinding()
+        initObservers()
+        initHandlers()
+        loadInitialData()
+    }
+
+    private fun provideViewModel(): DetailViewModel {
+        val cartDao = CartItemDatabase.getInstance(this).cartItemDao()
+        val viewedDao = ViewedItemDatabase.getInstance(this).viewedItemDao()
+        return ViewModelProvider(
+            this,
+            factory(CartItemRepositoryImpl(cartDao), ViewedItemRepositoryImpl(viewedDao)),
+        )[DetailViewModel::class.java]
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+    }
+
+    private fun initObservers() {
+        viewModel.uiState.observe(this) { state ->
+            val msgRes =
+                when (state) {
+                    CartUiState.SUCCESS -> R.string.text_add_to_cart_success
+                    CartUiState.FAIL -> R.string.text_unInserted_toast
+                }
+            showToast(msgRes)
+        }
+
+        viewModel.product.observe(this) {
             binding.product = it
-            viewModel.setProduct(it)
-
-            viewModel.loadLastViewedItem(product.id)
+            binding.executePendingBindings()
         }
 
         viewModel.lastViewed.observe(this) {
             binding.recentItem = it
         }
+    }
+
+    private fun initHandlers() {
         val handler =
             DetailEventHandlerImpl(viewModel) { product ->
                 startActivity(newIntent(this, product))
@@ -65,13 +83,42 @@ class DetailActivity : AppCompatActivity() {
             }
         binding.handler = handler
         binding.detailHandler = handler
-        binding.recentItem
-        observeProduct()
     }
+
+    private fun loadInitialData() {
+        productFromIntent()?.let { product ->
+            binding.product = product
+            viewModel.setProduct(product)
+            viewModel.loadLastViewedItem(product.id)
+        }
+    }
+
+    private fun setupToolbar() {
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowHomeEnabled(false)
+            title = ""
+        }
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
+        }
+    }
+
+    private fun showToast(messageResId: Int) {
+        Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun productFromIntent(): ProductUiModel? =
+        IntentCompat.getParcelableExtra(intent, KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_back_menu_item, menu)
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -83,46 +130,6 @@ class DetailActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
-
-    private fun observeCartUiState() {
-        viewModel.uiState.observe(this) { value ->
-            when (value) {
-                CartUiState.SUCCESS -> showToastMessage(getString(R.string.text_add_to_cart_success))
-                CartUiState.FAIL -> showToastMessage(getString(R.string.text_unInserted_toast))
-            }
-        }
-        binding.lifecycleOwner = this
-    }
-
-    private fun observeProduct() {
-        viewModel.product.observe(this) { product ->
-            binding.product = product
-            binding.executePendingBindings()
-        }
-    }
-
-    private fun setSupportActionBar() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowHomeEnabled(false)
-        supportActionBar?.title = ""
-    }
-
-    private fun showToastMessage(message: String) {
-        Toast
-            .makeText(this, message, Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    private fun applyWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-    }
-
-    private fun productFromIntent(): ProductUiModel? =
-        IntentCompat.getParcelableExtra(intent, KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
 
     companion object {
         private const val KEY_PRODUCT_DETAIL = "productDetail"

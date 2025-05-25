@@ -22,57 +22,49 @@ class DetailViewModel(
     private val _lastViewed = MutableLiveData<ProductUiModel?>()
     val lastViewed: LiveData<ProductUiModel?> = _lastViewed
 
-    fun addToCart() {
-        val currentProduct = _product.value ?: return
-        if (currentProduct.quantity <= 0) return
-
-        repository.findCartItem(currentProduct) { existItem ->
-            if (existItem != null) {
-                val totalQuantity = existItem.quantity + currentProduct.quantity
-                val updated = existItem.copy(quantity = totalQuantity)
-                repository.updateCartItem(updated.toUiModel()) {
-                    _uiState.postValue(CartUiState.SUCCESS)
-                }
-            } else {
-                repository.insertCartItem(currentProduct) {
-                    _uiState.postValue(CartUiState.SUCCESS)
-                }
-            }
-        }
-    }
-
     fun setProduct(
         product: ProductUiModel,
-        callback: () -> Unit = {},
+        onInserted: () -> Unit = {},
     ) {
         _product.value = product.copy(quantity = 1)
+        viewedRepository.insertViewedItem(product) { onInserted() }
+    }
 
-        viewedRepository.insertViewedItem(product) {
-            callback()
+    fun addToCart() {
+        val item = _product.value ?: return
+        if (item.quantity <= 0) return
+
+        repository.findCartItem(item) { exist ->
+            val updated =
+                exist?.let {
+                    it.copy(quantity = it.quantity + item.quantity).toUiModel()
+                } ?: item
+
+            val callback = { _uiState.postValue(CartUiState.SUCCESS) }
+
+            if (exist != null) {
+                repository.updateCartItem(updated, callback)
+            } else {
+                repository.insertCartItem(updated, callback)
+            }
         }
     }
 
     fun loadLastViewedItem(currentProductId: Long) {
         viewedRepository.getLastViewedItem { lastViewedItem ->
-            if (lastViewedItem?.id == currentProductId) {
-                _lastViewed.postValue(null)
-            } else {
-                _lastViewed.postValue(lastViewedItem)
-            }
+            val filtered = if (lastViewedItem?.id == currentProductId) null else lastViewedItem
+            _lastViewed.postValue(filtered)
         }
     }
 
-    fun increaseQuantity() {
-        val currentProduct = _product.value ?: return
-        val newProduct = currentProduct.copy(quantity = currentProduct.quantity + 1)
-        _product.postValue(newProduct)
-    }
+    fun increaseQuantity() = updateQuantity(+1)
 
-    fun decreaseQuantity() {
-        val currentProduct = _product.value ?: return
-        val newQuantity = if (currentProduct.quantity > 1) currentProduct.quantity - 1 else 0
-        val newProduct = currentProduct.copy(quantity = newQuantity)
-        _product.postValue(newProduct)
+    fun decreaseQuantity() = updateQuantity(-1)
+
+    private fun updateQuantity(diff: Int) {
+        val current = _product.value ?: return
+        val newQty = (current.quantity + diff).coerceAtLeast(0)
+        _product.postValue(current.copy(quantity = newQty))
     }
 
     companion object {
