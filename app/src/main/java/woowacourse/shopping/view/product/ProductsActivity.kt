@@ -16,7 +16,6 @@ import woowacourse.shopping.view.common.GridItemDecoration
 import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.getSerializableExtraData
 import woowacourse.shopping.view.common.showSnackBar
-import woowacourse.shopping.view.common.showToast
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 
@@ -96,7 +95,7 @@ class ProductsActivity :
 
     private fun handleUiEvent(event: ProductsEvent) {
         when (event) {
-            ProductsEvent.UPDATE_PRODUCT_FAILURE -> showToast(getString(R.string.products_update_products_error_message))
+            ProductsEvent.UPDATE_PRODUCT_FAILURE -> binding.root.showSnackBar(getString(R.string.products_update_products_error_message))
             ProductsEvent.NOT_ADD_TO_SHOPPING_CART ->
                 binding.root.showSnackBar(
                     getString(R.string.product_detail_add_shopping_cart_error_message),
@@ -109,7 +108,7 @@ class ProductsActivity :
 
             ProductsEvent.UPDATE_RECENT_WATCHING_PRODUCTS_FAILURE ->
                 binding.root.showSnackBar(
-                    "최근 본 상품을 조회하는 데 실패했습니다.",
+                    getString(R.string.products_add_recent_watching_product_error_message),
                 )
         }
     }
