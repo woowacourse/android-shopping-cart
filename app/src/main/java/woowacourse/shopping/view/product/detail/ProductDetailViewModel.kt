@@ -28,6 +28,9 @@ class ProductDetailViewModel(
     private val _recentlyViewedProduct = MutableLiveData<Product>()
     val recentlyViewedProduct: LiveData<Product> get() = _recentlyViewedProduct
 
+    private val _recentlyViewedProductEvent = MutableLiveData<Unit>()
+    val recentlyViewedProductEvent: LiveData<Unit> get() = _recentlyViewedProductEvent
+
     fun fetchData(product: Product) {
         recentlyViewedRepository.getLatestViewed { recentlyViewed ->
             if (recentlyViewed != null && recentlyViewed != product) {
@@ -47,6 +50,10 @@ class ProductDetailViewModel(
 
     fun onExitClicked() {
         _exitEvent.value = Unit
+    }
+
+    fun onRecentlyViewedProductClicked() {
+        _recentlyViewedProductEvent.value = Unit
     }
 
     companion object {

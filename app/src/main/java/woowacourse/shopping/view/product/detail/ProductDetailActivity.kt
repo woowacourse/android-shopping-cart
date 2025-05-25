@@ -72,6 +72,16 @@ class ProductDetailActivity : AppCompatActivity() {
                 .show()
         }
         productDetailViewModel.exitEvent.observe(this) { finish() }
+        productDetailViewModel.recentlyViewedProductEvent.observe(this) {
+            val intent =
+                productDetailViewModel.recentlyViewedProduct.value?.let { it ->
+                    newIntent(
+                        this,
+                        it,
+                    )
+                }
+            startActivity(intent)
+        }
     }
 
     companion object {
