@@ -44,7 +44,7 @@ class ProductDetailViewModel(
             product.id,
             shoppingCartQuantity,
             shoppingCartQuantity + addQuantity,
-        )
+        ) {}
         shoppingCartQuantity += addQuantity
         _addToCartEvent.setValue(Unit)
         updateQuantity(INITIAL_QUANTITY)
@@ -66,7 +66,9 @@ class ProductDetailViewModel(
     }
 
     private fun loadQuantity() {
-        shoppingCartQuantity = cartProductRepository.getQuantityByProductId(product.id) ?: 0
+        cartProductRepository.getQuantityByProductId(product.id) {
+            shoppingCartQuantity = it ?: 0
+        }
     }
 
     private fun loadLastViewedProduct() {

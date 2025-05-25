@@ -18,66 +18,85 @@ class CartProductRepositoryImpl(
     override fun insert(
         productId: Long,
         quantity: Int,
+        onSuccess: () -> Unit,
     ) {
         thread {
             localDataSource.insert(CartProductEntity(productId = productId, quantity = quantity))
-        }.join()
-        totalCount++
-    }
-
-    override fun getAll(): List<CartProduct> {
-        var result = listOf<CartProduct>()
-        thread { result = localDataSource.getAll().map { it.toDomain() } }.join()
-        return result
+            totalCount++
+            onSuccess()
+        }
     }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<CartProduct> {
-        if (offset >= totalCount) return PagedResult(emptyList(), false)
+        onSuccess: (PagedResult<CartProduct>) -> Unit,
+    ) {
+        if (offset >= totalCount) {
+            onSuccess(PagedResult(emptyList(), false))
+            return
+        }
 
         val endIndex = (offset + limit).coerceAtMost(totalCount)
-        var items = listOf<CartProduct>()
         thread {
-            items = localDataSource.getPaged(endIndex - offset, offset).map { it.toDomain() }
-        }.join()
-
-        val hasNext = endIndex < totalCount
-        return PagedResult(items, hasNext)
+            val items = localDataSource.getPaged(endIndex - offset, offset).map { it.toDomain() }
+            val hasNext = endIndex < totalCount
+            onSuccess(PagedResult(items, hasNext))
+        }
     }
 
-    override fun getQuantityByProductId(productId: Long): Int? {
-        var result: Int? = null
-        thread { result = localDataSource.getQuantityByProductId(productId) }.join()
-        return result
+    override fun getQuantityByProductId(
+        productId: Long,
+        onSuccess: (Int?) -> Unit,
+    ) {
+        thread {
+            val result = localDataSource.getQuantityByProductId(productId)
+            onSuccess(result)
+        }
     }
 
-    override fun getTotalQuantity(): Int {
-        var result = 0
-        thread { result = localDataSource.getTotalQuantity() }.join()
-        return result
+    override fun getTotalQuantity(onSuccess: (Int) -> Unit) {
+        thread {
+            val result = localDataSource.getTotalQuantity()
+            onSuccess(result)
+        }
     }
 
     override fun updateQuantity(
         productId: Long,
         currentQuantity: Int,
         newQuantity: Int,
+        onSuccess: () -> Unit,
     ) {
-        if (currentQuantity == newQuantity) return
-        if (newQuantity == 0) {
-            deleteByProductId(productId)
-            return
+        thread {
+            when {
+                currentQuantity == newQuantity -> onSuccess()
+                newQuantity == 0 -> {
+                    deleteByProductId(productId) { onSuccess() }
+                }
+
+                currentQuantity == 0 -> {
+                    insert(productId, newQuantity) { onSuccess() }
+                }
+
+                else -> {
+                    thread {
+                        localDataSource.updateQuantity(productId, newQuantity)
+                        onSuccess()
+                    }
+                }
+            }
         }
-        if (currentQuantity == 0) {
-            insert(productId, newQuantity)
-            return
-        }
-        thread { localDataSource.updateQuantity(productId, newQuantity) }.join()
     }
 
-    override fun deleteByProductId(productId: Long) {
-        thread { localDataSource.deleteByProductId(productId) }.join()
-        totalCount--
+    override fun deleteByProductId(
+        productId: Long,
+        onSuccess: () -> Unit,
+    ) {
+        thread {
+            localDataSource.deleteByProductId(productId)
+            totalCount--
+            onSuccess()
+        }
     }
 }

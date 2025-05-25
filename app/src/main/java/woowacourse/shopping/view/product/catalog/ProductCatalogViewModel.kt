@@ -63,7 +63,9 @@ class ProductCatalogViewModel(
         } else {
             syncProductQuantities()
         }
-        _totalQuantity.value = cartProductRepository.getTotalQuantity()
+        cartProductRepository.getTotalQuantity {
+            _totalQuantity.postValue(it)
+        }
     }
 
     private fun loadRecentProducts() {
@@ -77,30 +79,46 @@ class ProductCatalogViewModel(
         productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset) { result ->
             offset += result.items.size
 
-            val newItems =
-                result.items.map {
-                    val quantity = cartProductRepository.getQuantityByProductId(it.id) ?: 0
-                    ProductCatalogItem.ProductItem(it, quantity)
+            val tempItems = mutableListOf<ProductCatalogItem.ProductItem>()
+            var completedCount = 0
+            result.items.forEach { product ->
+                cartProductRepository.getQuantityByProductId(product.id) { quantity ->
+                    tempItems.add(ProductCatalogItem.ProductItem(product, quantity ?: 0))
+                    completedCount++
+
+                    if (completedCount == result.items.size) {
+                        productItems.addAll(tempItems)
+                        hasNext = result.hasNext
+                        _productCatalogItems.postValue(buildCatalogItems())
+                    }
                 }
-            productItems.addAll(newItems)
-            hasNext = result.hasNext
-            _productCatalogItems.postValue(buildCatalogItems())
+            }
         }
     }
 
     private fun syncProductQuantities() {
-        productItems.replaceAll { item ->
-            val quantity = cartProductRepository.getQuantityByProductId(item.product.id) ?: 0
-            item.copy(quantity = quantity)
+        val updatedItems = mutableListOf<ProductCatalogItem.ProductItem>()
+        var completedCount = 0
+
+        productItems.forEach { item ->
+            cartProductRepository.getQuantityByProductId(item.product.id) { quantity ->
+                updatedItems.add(item.copy(quantity = quantity ?: 0))
+                completedCount++
+
+                if (completedCount == productItems.size) {
+                    productItems.clear()
+                    productItems.addAll(updatedItems)
+                    _productCatalogItems.postValue(buildCatalogItems())
+                }
+            }
         }
-        _productCatalogItems.value = buildCatalogItems()
     }
 
     private fun updateQuantity(
         item: ProductCatalogItem.ProductItem,
         newQuantity: Int,
     ) {
-        cartProductRepository.updateQuantity(item.product.id, item.quantity, newQuantity)
+        cartProductRepository.updateQuantity(item.product.id, item.quantity, newQuantity) {}
         val index = productItems.indexOfFirst { it.product.id == item.product.id }
         if (index != -1) {
             productItems[index] = productItems[index].copy(quantity = newQuantity)
@@ -115,7 +133,7 @@ class ProductCatalogViewModel(
             if (recentProducts.isNotEmpty()) {
                 add(ProductCatalogItem.RecentProductsItem(recentProducts))
             }
-            addAll(productItems)
+            addAll(productItems.sortedBy { it.product.id })
             if (hasNext) {
                 add(ProductCatalogItem.LoadMoreItem)
             }

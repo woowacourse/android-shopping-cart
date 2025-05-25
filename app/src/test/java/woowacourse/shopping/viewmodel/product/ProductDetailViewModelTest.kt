@@ -11,6 +11,7 @@ import woowacourse.shopping.fixture.FakeCartProductRepository
 import woowacourse.shopping.fixture.FakeRecentProductRepository
 import woowacourse.shopping.view.product.detail.ProductDetailViewModel
 import woowacourse.shopping.viewmodel.InstantTaskExecutorExtension
+import woowacourse.shopping.viewmodel.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
@@ -28,23 +29,12 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `장바구니에 상품을 추가하면 repository에 저장된다`() {
-        // when
-        viewModel.onAddToCartClick()
-
-        // then
-        val cartProducts = cartProductRepository.getAll()
-        assertEquals(1, cartProducts.size)
-        assertEquals(product, cartProducts.first().product)
-    }
-
-    @Test
     fun `수량 증가 버튼 클릭 시 수량이 증가한다`() {
         // when
         viewModel.onQuantityIncreaseClick(product)
 
         // then
-        assertEquals(2, viewModel.quantity.value)
+        assertEquals(2, viewModel.quantity.getOrAwaitValue())
     }
 
     @Test
@@ -54,13 +44,13 @@ class ProductDetailViewModelTest {
         viewModel.onQuantityDecreaseClick(product)
 
         // then
-        assertEquals(1, viewModel.quantity.value)
+        assertEquals(1, viewModel.quantity.getOrAwaitValue())
     }
 
     @Test
     fun `수량이 1일 때 수량 감소 버튼 클릭 시 수량이 감소하지 않는다`() {
         viewModel.onQuantityDecreaseClick(product)
-        assertEquals(1, viewModel.quantity.value)
+        assertEquals(1, viewModel.quantity.getOrAwaitValue())
     }
 
     @Test

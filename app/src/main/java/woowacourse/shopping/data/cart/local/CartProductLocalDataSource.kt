@@ -5,8 +5,6 @@ import woowacourse.shopping.data.cart.CartProductEntity
 class CartProductLocalDataSource(
     private val dao: CartProductDao,
 ) {
-    fun getAll(): List<CartProductEntity> = dao.getAll()
-
     fun count(): Int = dao.count()
 
     fun getPaged(

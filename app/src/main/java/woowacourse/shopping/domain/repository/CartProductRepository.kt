@@ -7,24 +7,31 @@ interface CartProductRepository {
     fun insert(
         productId: Long,
         quantity: Int = 1,
+        onSuccess: () -> Unit,
     )
-
-    fun getAll(): List<CartProduct>
 
     fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<CartProduct>
+        onSuccess: (PagedResult<CartProduct>) -> Unit,
+    )
 
-    fun getQuantityByProductId(productId: Long): Int?
+    fun getQuantityByProductId(
+        productId: Long,
+        onSuccess: (Int?) -> Unit,
+    )
 
-    fun getTotalQuantity(): Int
+    fun getTotalQuantity(onSuccess: (Int) -> Unit)
 
     fun updateQuantity(
         productId: Long,
         currentQuantity: Int,
         newQuantity: Int,
+        onSuccess: () -> Unit,
     )
 
-    fun deleteByProductId(productId: Long)
+    fun deleteByProductId(
+        productId: Long,
+        onSuccess: () -> Unit,
+    )
 }

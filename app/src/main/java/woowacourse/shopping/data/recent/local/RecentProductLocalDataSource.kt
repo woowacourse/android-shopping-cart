@@ -9,8 +9,6 @@ class RecentProductLocalDataSource(
 
     fun insertByProductId(productId: Long) = dao.insertByProductId(productId)
 
-    fun getAll(): List<RecentProductEntity> = dao.getAll()
-
     fun getLastProduct(): RecentProductEntity? = dao.getLastProduct()
 
     fun getPaged(
