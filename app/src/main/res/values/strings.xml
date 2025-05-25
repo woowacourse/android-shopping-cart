@@ -11,4 +11,5 @@
     <string name="minus">-</string>
     <string name="recent_product">최근 본 상품</string>
     <string name="last_product">마지막으로 본 상품</string>
+    <string name="message_add_to_cart">장바구니에 상품을 담았어요</string>
 </resources>

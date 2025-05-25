@@ -63,7 +63,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.addToCartEvent.observe(this) {
-            Toast.makeText(this, MESSAGE_ADD_TO_CART, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_add_to_cart, Toast.LENGTH_SHORT).show()
         }
 
         viewModel.lastProductClickEvent.observe(this) {
@@ -83,6 +83,5 @@ class ProductDetailActivity : AppCompatActivity() {
             }
 
         private const val KEY_PRODUCT = "product"
-        private const val MESSAGE_ADD_TO_CART = "장바구니에 상품을 담았어요"
     }
 }
