@@ -89,6 +89,7 @@
             android:background="@drawable/cart_border"
             android:orientation="vertical"
             android:padding="16dp"
+            android:onClick="@{() -> vm.loadLastSeenProduct(vm.uiState.lastSeenProduct.id)}"
             android:visibility="@{vm.uiState.lastSeenProduct != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/button_add_cart"
             app:layout_constraintEnd_toEndOf="parent"

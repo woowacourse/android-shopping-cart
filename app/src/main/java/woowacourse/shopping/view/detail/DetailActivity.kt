@@ -23,9 +23,12 @@ import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
 class DetailActivity : AppCompatActivity(), CartQuantityHandler {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels {
+        val container = (application as App).container
+
         DetailViewModelFactory(
-            (application as App).container.productRepository,
-            (application as App).container.cartRepository,
+            container.productRepository,
+            container.cartRepository,
+            container.historyRepository,
         )
     }
 
@@ -78,6 +81,11 @@ class DetailActivity : AppCompatActivity(), CartQuantityHandler {
                     showToast(
                         getString(R.string.text_minimum_quantity),
                     )
+                }
+
+                is DetailUiEvent.MoveToLastSeenProduct -> {
+                    startActivity(newIntent(this, it.productId))
+                    finish()
                 }
             }
         }

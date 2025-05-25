@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
@@ -17,6 +18,7 @@ import woowacourse.shopping.view.main.state.ProductState
 class DetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val historyRepository: HistoryRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData<DetailUiState>()
     val uiState: LiveData<DetailUiState> get() = _uiState
@@ -90,6 +92,12 @@ class DetailViewModel(
                 }
             }
             sendEvent(DetailUiEvent.MoveToCart)
+        }
+    }
+
+    fun loadLastSeenProduct(lastSeenProductId: Long) {
+        historyRepository.saveHistory(lastSeenProductId) {
+            _event.postValue(DetailUiEvent.MoveToLastSeenProduct(lastSeenProductId))
         }
     }
 

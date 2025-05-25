@@ -14,9 +14,11 @@ import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.cart.Cart
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
 import woowacourse.shopping.fixture.productFixture1
+import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -27,29 +29,32 @@ class DetailViewModelTest {
     private lateinit var viewModel: DetailViewModel
     private lateinit var cartRepository: CartRepository
     private lateinit var productRepository: ProductRepository
+    private lateinit var historyRepository: HistoryRepository
 
     @BeforeEach
     fun setup() {
         cartRepository = mockk(relaxed = true)
         productRepository = mockk()
+        historyRepository = mockk(relaxed = true)
 
-        every { productRepository.getProducts(any(), any()) } answers {
-            val callback = secondArg<(List<Product>) -> Unit>()
-            callback(listOf(productFixture1))
+        every { productRepository.getProduct(any(), any()) } answers {
+            val callback = secondArg<(Product) -> Unit>()
+            callback(productFixture2)
         }
-        viewModel = DetailViewModel(productRepository, cartRepository)
-        viewModel.load(1L, 1L)
+
+        viewModel = DetailViewModel(productRepository, cartRepository, historyRepository)
+        viewModel.load(2L, 1L)
     }
 
     @Test
     fun `조회한_프로덕트를_로드한다`() {
         // when
-        viewModel.load(1L, 2L)
+        viewModel.load(2L, 2L)
 
         // then
         val expected = viewModel.uiState.getOrAwaitValue()
 
-        assertThat(expected.product.item).isEqualTo(productFixture1)
+        assertThat(expected.product.item).isEqualTo(productFixture2)
     }
 
     @Test
@@ -82,20 +87,6 @@ class DetailViewModelTest {
         every { cartRepository.getCart(any(), any()) } answers {
             val callback = secondArg<(Cart?) -> Unit>()
             callback(Cart(Quantity(2), 1L))
-        }
-
-        viewModel.saveCart(1L)
-
-        verify {
-            cartRepository.upsert(productFixture1.id, Quantity(1))
-        }
-    }
-
-    @Test
-    fun `상품이_장바구니에_없다면_추가한다`() {
-        every { cartRepository.getCarts(any(), any()) } answers {
-            val callback = secondArg<(Cart?) -> Unit>()
-            callback(null)
         }
 
         viewModel.saveCart(1L)
