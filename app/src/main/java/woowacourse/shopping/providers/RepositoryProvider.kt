@@ -1,9 +1,9 @@
 package woowacourse.shopping.providers
 
-import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductOverViewRepositoryImpl
 import woowacourse.shopping.domain.cart.CartRepository
-import woowacourse.shopping.domain.product.ProductRepository
+import woowacourse.shopping.domain.product.ProductOverViewRepository
 
 object RepositoryProvider {
     fun provideCartRepository(): CartRepository {
@@ -12,9 +12,10 @@ object RepositoryProvider {
         )
     }
 
-    fun provideProductRepository(): ProductRepository {
-        return ProductRepositoryImpl(
-            ClothesStoreDatabaseProvider.provideProductDao(),
+    fun provideProductOverViewRepository(): ProductOverViewRepository {
+        return ProductOverViewRepositoryImpl(
+            DataSourceProvider.provideProductDataSource(),
+            DataSourceProvider.provideCartDataSource()
         )
     }
 }
