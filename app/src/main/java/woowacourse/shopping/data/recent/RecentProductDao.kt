@@ -12,6 +12,9 @@ interface RecentProductDao {
     @Query("SELECT * FROM $RECENT_PRODUCT_TABLE_NAME ORDER BY timestamp DESC LIMIT :count")
     fun getMostRecent(count: Int): List<RecentProduct>
 
+    @Query("SELECT * FROM $RECENT_PRODUCT_TABLE_NAME WHERE id != :id ORDER BY timestamp DESC LIMIT 1")
+    fun getLastProductBefore(id: Int): RecentProduct?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(recentProductEntity: RecentProductEntity)
 }

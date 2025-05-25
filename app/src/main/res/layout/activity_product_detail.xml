@@ -6,12 +6,12 @@
     <data>
 
         <variable
-            name="quantity"
-            type="Integer" />
-
-        <variable
             name="product"
             type="woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct" />
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.view.inventory.item.RecentProduct" />
 
         <variable
             name="handler"
@@ -136,6 +136,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
+            isGone="@{recentProduct == null}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -157,9 +158,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{recentProduct.name}"
                 android:textSize="18sp"
                 tools:text="PET보틀-정사각형(500ml)" />
-
         </LinearLayout>
 
         <Button

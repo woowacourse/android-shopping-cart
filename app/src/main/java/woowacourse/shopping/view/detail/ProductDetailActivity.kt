@@ -32,7 +32,6 @@ class ProductDetailActivity :
         initializeViewModel(product)
         binding.apply {
             this.product = product
-            quantity = viewModel.quantity.value
             handler = this@ProductDetailActivity
         }
     }
@@ -43,11 +42,18 @@ class ProductDetailActivity :
             ProductDetailViewModel.createFactory(
                 shoppingApplication.inventoryRepository,
                 shoppingApplication.shoppingCartRepository,
+                shoppingApplication.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
-        viewModel.quantity.observe(this) { quantity ->
-            binding.tvQuantity.text = quantity.toString()
-            setPrice(binding.tvProductPrice, product.price * quantity)
+        with(viewModel) {
+            lastProduct.observe(this@ProductDetailActivity) { lastProduct ->
+                binding.recentProduct = lastProduct
+            }
+            quantity.observe(this@ProductDetailActivity) { quantity ->
+                binding.tvQuantity.text = quantity.toString()
+                setPrice(binding.tvProductPrice, product.price * quantity)
+            }
+            loadRecentProduct(product)
         }
     }
 

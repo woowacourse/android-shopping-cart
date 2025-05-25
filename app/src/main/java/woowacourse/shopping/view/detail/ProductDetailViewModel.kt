@@ -5,16 +5,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
+import woowacourse.shopping.view.inventory.item.RecentProduct
 
 class ProductDetailViewModel(
     private val inventoryRepository: InventoryRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
+    private val _lastProduct = MutableLiveData<RecentProduct>()
+    val lastProduct: LiveData<RecentProduct> get() = _lastProduct
     private val _quantity = MutableLiveData(PRODUCT_MINIMUM_QUANTITY)
     val quantity: LiveData<Int> get() = _quantity
+
+    fun loadRecentProduct(product: InventoryProduct) {
+        recentProductRepository.getLastProductBefore(product) { recentProduct ->
+            _lastProduct.postValue(recentProduct)
+        }
+    }
 
     fun addToCart(product: InventoryProduct) {
         shoppingCartRepository.getOrNull(product.id) { cartItem ->
@@ -41,6 +52,7 @@ class ProductDetailViewModel(
         fun createFactory(
             inventoryRepository: InventoryRepository,
             shoppingCartRepository: ShoppingCartRepository,
+            recentProductRepository: RecentProductRepository,
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -48,6 +60,7 @@ class ProductDetailViewModel(
                         ProductDetailViewModel(
                             inventoryRepository,
                             shoppingCartRepository,
+                            recentProductRepository,
                         ) as T
                     )
                 }
