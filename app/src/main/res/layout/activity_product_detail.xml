@@ -97,6 +97,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_detail_product_price" />
 
+        <include
+            android:id="@+id/included_recent_product"
+            layout="@layout/recent_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_detail_add_cart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_detail_add_cart"
             android:layout_width="0dp"
