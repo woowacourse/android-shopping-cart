@@ -23,7 +23,8 @@ class DetailViewModel(
 
         repository.findCartItem(currentProduct) { existItem ->
             if (existItem != null) {
-                val updated = existItem.copy(quantity = currentProduct.quantity)
+                val totalQuantity = existItem.quantity + currentProduct.quantity
+                val updated = existItem.copy(quantity = totalQuantity)
                 repository.updateCartItem(updated.toUiModel()) {
                     _uiState.postValue(CartUiState.SUCCESS)
                 }
@@ -36,7 +37,7 @@ class DetailViewModel(
     }
 
     fun setProduct(product: ProductUiModel) {
-        _product.value = product
+        _product.value = product.copy(quantity = 1)
     }
 
     fun increaseQuantity() {

@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.cart.CartItem
 
-@Database(entities = [CartItem::class], version = 1)
+@Database(entities = [ViewedItem::class], version = 1)
 abstract class ViewedItemDatabase : RoomDatabase() {
     abstract fun viewedItemDao(): ViewedItemDao
 
