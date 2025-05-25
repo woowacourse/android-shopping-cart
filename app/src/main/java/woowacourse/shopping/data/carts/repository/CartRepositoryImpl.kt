@@ -36,19 +36,6 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun insert(
-        goods: Goods,
-        onComplete: () -> Unit,
-    ) {
-        thread {
-            shoppingDatabase.cartDao().insertAll(goods.toEntity())
-
-            Handler(Looper.getMainLooper()).post {
-                onComplete()
-            }
-        }
-    }
-
     override fun addOrIncreaseQuantity(
         goods: Goods,
         addQuantity: Int,

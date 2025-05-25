@@ -12,11 +12,6 @@ interface CartRepository {
         onComplete: (List<CartItem>) -> Unit,
     )
 
-    fun insert(
-        goods: Goods,
-        onComplete: () -> Unit,
-    )
-
     fun addOrIncreaseQuantity(
         goods: Goods,
         addQuantity: Int,
