@@ -13,7 +13,13 @@ data class Goods(
 
     fun updateQuantity(quantity: Int): Goods = copy(quantity = quantity)
 
+    fun increaseQuantity(): Goods = copy(quantity = quantity + QUANTITY_STEP)
+
+    fun decreaseQuantity(): Goods = copy(quantity = quantity - QUANTITY_STEP)
+
     companion object {
+        private const val QUANTITY_STEP: Int = 1
+
         fun of(
             id: Int,
             name: String,

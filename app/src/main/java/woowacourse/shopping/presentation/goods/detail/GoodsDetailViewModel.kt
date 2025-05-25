@@ -54,12 +54,12 @@ class GoodsDetailViewModel(
     }
 
     fun increaseCount() {
-        _goods.value = goods.value?.updateQuantity(goods.value?.quantity?.plus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
+        _goods.value = goods.value?.increaseQuantity()
     }
 
     fun tryDecreaseCount() {
         if ((_goods.value?.quantity ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY) {
-            _goods.value = goods.value?.updateQuantity(goods.value?.quantity?.minus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
+            _goods.value = goods.value?.decreaseQuantity()
         }
     }
 
@@ -69,7 +69,6 @@ class GoodsDetailViewModel(
 
     companion object {
         private const val MIN_PURCHASE_QUANTITY: Int = 1
-        private const val QUANTITY_STEP: Int = 1
 
         fun provideFactory(
             goodsRepository: GoodsRepository,

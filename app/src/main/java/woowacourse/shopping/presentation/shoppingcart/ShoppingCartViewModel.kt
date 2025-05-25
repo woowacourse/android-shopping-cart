@@ -63,7 +63,7 @@ class ShoppingCartViewModel(
     fun increaseGoodsCount(goodsId: Int) {
         val updatedItem =
             updateGoods(goodsId) {
-                it.updateQuantity(it.quantity + QUANTITY_CHANGE_AMOUNT)
+                it.increaseQuantity()
             }
         shoppingRepository.increaseGoodsQuantity(updatedItem.id)
     }
@@ -71,7 +71,7 @@ class ShoppingCartViewModel(
     fun decreaseGoodsCount(goodsId: Int) {
         val updatedItem =
             updateGoods(goodsId) {
-                it.updateQuantity(it.quantity - QUANTITY_CHANGE_AMOUNT)
+                it.decreaseQuantity()
             }
 
         if (updatedItem.quantity <= MINIMUM_QUANTITY) {
@@ -118,7 +118,6 @@ class ShoppingCartViewModel(
         private const val ITEM_COUNT: Int = 5
         private const val DEFAULT_PAGE_VALUE: Int = 0
         private const val PAGE_CHANGE_AMOUNT: Int = 1
-        private const val QUANTITY_CHANGE_AMOUNT: Int = 1
         private const val MINIMUM_QUANTITY: Int = 0
 
         fun provideFactory(
