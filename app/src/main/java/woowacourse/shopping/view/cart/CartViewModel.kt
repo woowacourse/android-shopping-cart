@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -137,7 +136,6 @@ class CartViewModel(
     ) {
         val updatedItem = cartItem.copy(count = newCount)
         cartRepository.updateCartItem(updatedItem)
-        Log.d("test", "새로운 시작 $newCount")
         val updatedList =
             _products.value?.map {
                 if (it.product.id == cartItem.product.id) updatedItem else it
