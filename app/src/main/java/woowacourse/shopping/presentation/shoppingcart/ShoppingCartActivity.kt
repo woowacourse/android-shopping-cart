@@ -55,12 +55,12 @@ class ShoppingCartActivity : BaseActivity() {
                     viewModel.deleteGoods(goods)
                 }
 
-                override fun onIncreaseQuantity(position: Int) {
-                    viewModel.increaseGoodsCount(position)
+                override fun onIncreaseQuantity(goodsId: Int) {
+                    viewModel.increaseGoodsCount(goodsId)
                 }
 
-                override fun onDecreaseQuantity(position: Int) {
-                    viewModel.decreaseGoodsCount(position)
+                override fun onDecreaseQuantity(goodsId: Int) {
+                    viewModel.decreaseGoodsCount(goodsId)
                 }
             },
         )

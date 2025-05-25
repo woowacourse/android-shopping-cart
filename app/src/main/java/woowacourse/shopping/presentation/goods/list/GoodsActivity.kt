@@ -61,16 +61,16 @@ class GoodsActivity : BaseActivity() {
                     }
                 }
 
-                override fun onPlusClick(position: Int) {
-                    viewModel.addToShoppingCart(position)
+                override fun onPlusClick(goodsId: Int) {
+                    viewModel.addToShoppingCart(goodsId)
                 }
 
-                override fun onIncreaseQuantity(position: Int) {
-                    viewModel.increaseGoodsCount(position)
+                override fun onIncreaseQuantity(goodsId: Int) {
+                    viewModel.increaseGoodsCount(goodsId)
                 }
 
-                override fun onDecreaseQuantity(position: Int) {
-                    viewModel.decreaseGoodsCount(position)
+                override fun onDecreaseQuantity(goodsId: Int) {
+                    viewModel.decreaseGoodsCount(goodsId)
                 }
             },
         )

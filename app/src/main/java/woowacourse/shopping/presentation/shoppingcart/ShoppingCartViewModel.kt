@@ -61,17 +61,17 @@ class ShoppingCartViewModel(
             ).isNotEmpty()
     }
 
-    fun increaseGoodsCount(position: Int) {
+    fun increaseGoodsCount(goodsId: Int) {
         val updatedItem =
-            updateGoods(position) {
+            updateGoods(goodsId) {
                 it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.increaseGoodsQuantity(updatedItem.id)
     }
 
-    fun decreaseGoodsCount(position: Int) {
+    fun decreaseGoodsCount(goodsId: Int) {
         val updatedItem =
-            updateGoods(position) {
+            updateGoods(goodsId) {
                 it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
 
@@ -88,10 +88,11 @@ class ShoppingCartViewModel(
     }
 
     private fun updateGoods(
-        position: Int,
+        goodsId: Int,
         transform: (GoodsUiModel) -> GoodsUiModel,
     ): GoodsUiModel {
         val currentList = goods.value.orEmpty()
+        val position = currentList.indexOfFirst { it.id == goodsId }
 
         val updatedItem = transform(currentList[position])
         val updatedList =

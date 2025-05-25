@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.util
 
 interface QuantitySelectorListener {
-    fun onIncreaseQuantity(position: Int)
+    fun onIncreaseQuantity(goodsId: Int)
 
-    fun onDecreaseQuantity(position: Int)
+    fun onDecreaseQuantity(goodsId: Int)
 }

@@ -48,11 +48,11 @@ class GoodsDetailActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.selectorClickListener =
             object : QuantitySelectorListener {
-                override fun onIncreaseQuantity(position: Int) {
+                override fun onIncreaseQuantity(goodsId: Int) {
                     viewModel.increaseCount()
                 }
 
-                override fun onDecreaseQuantity(position: Int) {
+                override fun onDecreaseQuantity(goodsId: Int) {
                     viewModel.tryDecreaseCount()
                 }
             }

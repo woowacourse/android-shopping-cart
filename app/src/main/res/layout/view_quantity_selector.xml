@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="position"
+            name="goodsId"
             type="int" />
 
         <variable
@@ -28,7 +28,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onDecreaseQuantity(position)}"
+            android:onClick="@{() -> clickListener.onDecreaseQuantity(goodsId)}"
             android:text="@string/btn_minus"
             android:textColor="@color/black"
             android:textSize="30sp"
@@ -58,7 +58,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onIncreaseQuantity(position)}"
+            android:onClick="@{() -> clickListener.onIncreaseQuantity(goodsId)}"
             android:text="@string/btn_plus"
             android:textColor="@color/black"
             android:textSize="22sp"

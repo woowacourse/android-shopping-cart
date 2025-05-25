@@ -81,27 +81,27 @@ class GoodsViewModel(
             }
     }
 
-    fun addToShoppingCart(position: Int) {
+    fun addToShoppingCart(goodsId: Int) {
         val updatedItem =
-            updateGoodsQuantity(position) {
+            updateGoodsQuantity(goodsId) {
                 it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.insertGoods(updatedItem.id, QUANTITY_CHANGE_AMOUNT)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
     }
 
-    fun increaseGoodsCount(position: Int) {
+    fun increaseGoodsCount(goodsId: Int) {
         val updatedItem =
-            updateGoodsQuantity(position) {
+            updateGoodsQuantity(goodsId) {
                 it.copy(quantity = it.quantity + QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.increaseGoodsQuantity(updatedItem.id)
         _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
     }
 
-    fun decreaseGoodsCount(position: Int) {
+    fun decreaseGoodsCount(goodsId: Int) {
         val updatedItem =
-            updateGoodsQuantity(position) {
+            updateGoodsQuantity(goodsId) {
                 it.copy(quantity = it.quantity - QUANTITY_CHANGE_AMOUNT)
             }
         shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
@@ -111,10 +111,12 @@ class GoodsViewModel(
     }
 
     private fun updateGoodsQuantity(
-        position: Int,
+        goodsId: Int,
         transform: (GoodsUiModel) -> GoodsUiModel,
     ): GoodsUiModel {
         val currentGoods = goods.value.orEmpty()
+
+        val position = currentGoods.indexOfFirst { it.id == goodsId }
 
         val updatedItem = transform(currentGoods[position])
         val updatedList =

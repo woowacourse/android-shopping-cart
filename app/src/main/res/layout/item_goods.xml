@@ -9,10 +9,6 @@
         <import type="android.view.View" />
 
         <variable
-            name="position"
-            type="int" />
-
-        <variable
             name="goods"
             type="woowacourse.shopping.presentation.model.GoodsUiModel" />
 
@@ -47,7 +43,7 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/btn_select_goods"
             android:gravity="center"
-            android:onClick="@{() -> goodsClickListener.onPlusClick(position)}"
+            android:onClick="@{() -> goodsClickListener.onPlusClick(goods.id)}"
             android:text="@string/btn_plus"
             android:textColor="@color/black"
             android:textSize="30sp"
@@ -66,7 +62,7 @@
             app:layout_constraintEnd_toEndOf="@id/iv_goods"
             app:layout_constraintStart_toStartOf="@id/iv_goods"
             bind:quantity="@{goods.quantity}"
-            bind:position="@{position}" />
+            bind:goodsId="@{goods.id}" />
 
         <TextView
             android:id="@+id/tv_goods_name"
