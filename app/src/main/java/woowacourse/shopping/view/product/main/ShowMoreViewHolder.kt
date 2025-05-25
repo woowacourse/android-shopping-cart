@@ -3,10 +3,10 @@ package woowacourse.shopping.view.product.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ShowMoreBinding
+import woowacourse.shopping.databinding.ComponentShowMoreBinding
 
 class ShowMoreViewHolder(
-    val binding: ShowMoreBinding,
+    val binding: ComponentShowMoreBinding,
     val toShowMore: () -> Boolean,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
@@ -19,7 +19,7 @@ class ShowMoreViewHolder(
             toShowMore: () -> Boolean,
         ): ShowMoreViewHolder {
             val binding =
-                ShowMoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ComponentShowMoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return ShowMoreViewHolder(binding, toShowMore)
         }
     }
