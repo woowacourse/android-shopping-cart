@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.CatalogDataSource
+import woowacourse.shopping.data.CatalogProductRepository
 import woowacourse.shopping.data.dao.RecentlyViewedProductDao
 import woowacourse.shopping.data.entity.CartProductEntity
 import woowacourse.shopping.data.entity.RecentlyViewedProductEntity
@@ -10,7 +10,7 @@ import kotlin.concurrent.thread
 
 class RecentlyViewedProductRepositoryImpl(
     val recentlyViewedProductDao: RecentlyViewedProductDao,
-    val catalogDataSource: CatalogDataSource,
+    val catalogProductRepository: CatalogProductRepository,
 ) : RecentlyViewedProductRepository {
     override fun insertRecentlyViewedProductUid(uid: Int) {
         thread {
@@ -21,7 +21,7 @@ class RecentlyViewedProductRepositoryImpl(
     override fun getRecentlyViewedProducts(callback: (List<CartProductEntity>) -> Unit) {
         thread {
             val uids = recentlyViewedProductDao.getRecentlyViewedProductUids()
-            val items = catalogDataSource.getCartProductsByUids(uids).map { it.toEntity() }
+            val items = catalogProductRepository.getCartProductsByUids(uids).map { it.toEntity() }
             callback(items)
         }
     }
@@ -29,7 +29,7 @@ class RecentlyViewedProductRepositoryImpl(
     override fun getLatestViewedProduct(callback: (ProductUiModel) -> Unit) {
         thread {
             val uid = recentlyViewedProductDao.getLatestViewedProductUid()
-            val item = catalogDataSource.getCartProductsByUids(listOf(uid)).firstOrNull()
+            val item = catalogProductRepository.getCartProductsByUids(listOf(uid)).firstOrNull()
             item?.let { callback(item) }
         }
     }

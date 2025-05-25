@@ -2,7 +2,7 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.product.catalog.ProductUiModel
 
-object CatalogDatabase : CatalogDataSource {
+object CatalogDatabase : CatalogProductRepository {
     override fun getAllProductsSize(): Int = dummyProducts.size
 
     override fun getProductsInRange(

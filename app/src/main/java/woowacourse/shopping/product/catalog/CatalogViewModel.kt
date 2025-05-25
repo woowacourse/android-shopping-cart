@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.CatalogDataSource
 import woowacourse.shopping.data.CatalogDatabase
+import woowacourse.shopping.data.CatalogProductRepository
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.mapper.toUiModel
 import woowacourse.shopping.data.repository.CartProductRepository
@@ -13,11 +13,11 @@ import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.product.catalog.CatalogItem.ProductItem
 
 class CatalogViewModel(
-    private val catalogDataSource: CatalogDataSource = CatalogDatabase,
+    private val catalogProductRepository: CatalogProductRepository = CatalogDatabase,
     private val cartProductRepository: CartProductRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ViewModel() {
-    val allProductsSize get() = catalogDataSource.getAllProductsSize()
+    val allProductsSize get() = catalogProductRepository.getAllProductsSize()
 
     private val _catalogItems =
         MutableLiveData<List<CatalogItem>>(emptyList<CatalogItem>())
@@ -87,7 +87,7 @@ class CatalogViewModel(
         endIndex: Int,
     ) {
         val pagedProducts: List<ProductUiModel> =
-            catalogDataSource.getProductsInRange(startIndex, endIndex)
+            catalogProductRepository.getProductsInRange(startIndex, endIndex)
 
         cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
 
