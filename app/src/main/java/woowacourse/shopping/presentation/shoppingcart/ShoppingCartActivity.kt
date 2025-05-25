@@ -11,6 +11,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
 class ShoppingCartActivity : BaseActivity() {
     private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
@@ -53,7 +54,8 @@ class ShoppingCartActivity : BaseActivity() {
                 override fun onDeleteGoods(goods: Goods) {
                     viewModel.deleteGoods(goods)
                 }
-
+            },
+            object : QuantitySelectorListener {
                 override fun onIncreaseQuantity(goodsId: Int) {
                     viewModel.increaseGoodsCount(goodsId)
                 }

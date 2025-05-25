@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Goods
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
 class ShoppingCartAdapter(
-    private val clickListener: ShoppingCartClickListener,
+    private val shoppingCartClickListener: ShoppingCartClickListener,
+    private val quantitySelectorListener: QuantitySelectorListener,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var items: List<Goods> = emptyList()
 
@@ -14,7 +16,7 @@ class ShoppingCartAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ShoppingCartViewHolder {
-        return ShoppingCartViewHolder(parent, clickListener)
+        return ShoppingCartViewHolder(parent, shoppingCartClickListener, quantitySelectorListener)
     }
 
     override fun getItemCount(): Int = items.size
