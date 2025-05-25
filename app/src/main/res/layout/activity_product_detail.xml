@@ -62,7 +62,7 @@
             android:layout_height="1dp"
             android:layout_centerInParent="true"
             android:layout_marginVertical="10dp"
-            android:background="#AAAAAA"
+            android:background="@color/light_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
@@ -104,7 +104,7 @@
                     android:gravity="center"
                     android:onClick="@{() -> handler.onDecreaseQuantity()}"
                     android:text="@string/button_minus"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/dark_gray"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -115,7 +115,7 @@
                     android:background="@color/white"
                     android:clickable="true"
                     android:gravity="center"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/dark_gray"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="1" />
@@ -129,7 +129,7 @@
                     android:gravity="center"
                     android:onClick="@{() -> handler.onIncreaseQuantity()}"
                     android:text="@string/button_plus"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/dark_gray"
                     android:textSize="22sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -150,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_most_recent_product"
-                android:textColor="@color/pagination_enabled"
+                android:textColor="@color/teal"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 

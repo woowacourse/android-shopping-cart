@@ -60,7 +60,7 @@
             android:gravity="center"
             android:text="@{String.valueOf(viewModel.cartItems.pageIndex + 1)}"
             android:textAlignment="center"
-            android:textColor="@color/gray"
+            android:textColor="@color/dark_gray"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

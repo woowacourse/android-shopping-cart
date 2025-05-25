@@ -61,7 +61,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="@string/button_minus"
-                android:textColor="@color/gray"
+                android:textColor="@color/dark_gray"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -73,7 +73,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="@{String.valueOf(product.quantity)}"
-                android:textColor="@color/gray"
+                android:textColor="@color/dark_gray"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 tools:text="1" />
@@ -86,7 +86,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:text="@string/button_plus"
-                android:textColor="@color/gray"
+                android:textColor="@color/dark_gray"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -113,7 +113,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:textColor="@color/gray"
+            android:textColor="@color/dark_gray"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
