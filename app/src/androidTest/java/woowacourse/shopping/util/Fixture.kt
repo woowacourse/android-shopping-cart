@@ -113,17 +113,6 @@ class FakeCartRepository : CartRepository {
         }
     }
 
-    override fun insert(
-        goods: Goods,
-        onComplete: () -> Unit,
-    ) {
-        val existingItem = cartItems.find { it.goods.name == goods.name }
-        if (existingItem == null) {
-            cartItems.add(CartItem(goods, 1))
-        }
-        onComplete()
-    }
-
     override fun addOrIncreaseQuantity(
         goods: Goods,
         addQuantity: Int,
