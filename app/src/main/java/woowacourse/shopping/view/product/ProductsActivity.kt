@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.product
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.GridItemDecoration
 import woowacourse.shopping.view.common.ResultFrom
 import woowacourse.shopping.view.common.getSerializableExtraData
 import woowacourse.shopping.view.common.showSnackBar
@@ -125,7 +125,18 @@ class ProductsActivity :
                     }
             }
 
-        binding.products.layoutManager = gridLayoutManager
+        binding.products.apply {
+            layoutManager = gridLayoutManager
+            addItemDecoration(
+                GridItemDecoration(
+                    context = this@ProductsActivity,
+                    viewTypeToDecorate = ProductsItem.ItemType.PRODUCT.ordinal,
+                    spanCount = 2,
+                    sideMarginDp = 20,
+                    itemSpacingDp = 12,
+                ),
+            )
+        }
     }
 
     private fun navigateToShoppingCart() {
