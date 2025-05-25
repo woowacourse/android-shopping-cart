@@ -32,10 +32,6 @@ class ProductCatalogViewModel(
     private val _totalQuantity = MutableLiveData(0)
     val totalQuantity: LiveData<Int> get() = _totalQuantity
 
-    init {
-        loadCatalog()
-    }
-
     override fun onRecentProductClick(item: RecentProduct) {
         _selectedProduct.setValue(item.product)
     }

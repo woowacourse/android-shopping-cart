@@ -32,6 +32,7 @@ class ProductCatalogViewModelTest {
                 cartProductRepository,
                 recentProductRepository,
             )
+        viewModel.loadCatalog()
     }
 
     @Test
