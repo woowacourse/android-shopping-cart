@@ -2,7 +2,7 @@ package woowacourse.shopping.data.product.storage
 
 import woowacourse.shopping.data.product.entity.ProductEntity
 
-object VolatileProductsStorage : ProductsStorage {
+object VolatileProductsDataSource : ProductsDataSource {
     private val products: List<ProductEntity> =
         listOf(
             ProductEntity(id = 1, name = "럭키", price = 4000),

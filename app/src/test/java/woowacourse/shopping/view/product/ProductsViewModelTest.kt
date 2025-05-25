@@ -7,7 +7,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.product.repository.ProductsRepository
 
 class ProductsViewModelTest {
     private lateinit var repository: ProductsRepository

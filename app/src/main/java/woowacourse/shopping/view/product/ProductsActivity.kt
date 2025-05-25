@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.data.LocalProductsDataSource
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingCart.ShoppingCartActivity
 import woowacourse.shopping.view.showToast
@@ -35,6 +36,7 @@ class ProductsActivity : AppCompatActivity() {
             insets
         }
 
+        LocalProductsDataSource.init(applicationContext)
         initDataBinding()
         handleEventsFromViewModel()
         bindData()
