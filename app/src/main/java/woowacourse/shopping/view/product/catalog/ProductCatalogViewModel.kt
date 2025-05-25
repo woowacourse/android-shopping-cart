@@ -67,8 +67,10 @@ class ProductCatalogViewModel(
     }
 
     private fun loadRecentProducts() {
-        recentProducts = recentProductRepository.getPagedProducts(RECENT_PRODUCT_SIZE_LIMIT)
-        _productCatalogItems.value = buildCatalogItems()
+        recentProductRepository.getPagedProducts(RECENT_PRODUCT_SIZE_LIMIT) {
+            recentProducts = it
+            _productCatalogItems.postValue(buildCatalogItems())
+        }
     }
 
     private fun loadProducts() {

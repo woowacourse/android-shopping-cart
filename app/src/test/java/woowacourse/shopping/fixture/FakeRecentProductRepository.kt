@@ -8,30 +8,42 @@ class FakeRecentProductRepository : RecentProductRepository {
     private val recentProducts = mutableListOf<RecentProduct>()
     private var nextId = 1L
 
-    override fun insert(productId: Long) {
+    override fun insert(
+        productId: Long,
+        onSuccess: () -> Unit,
+    ) {
         val product =
             RecentProduct(
                 id = nextId++,
                 Product(id = productId, imageUrl = "", name = "Product $productId", price = 1000),
             )
         recentProducts.add(product)
+        onSuccess()
     }
 
-    override fun getAll(): List<RecentProduct> = recentProducts.toList()
-
-    override fun getLastProduct(): RecentProduct? = recentProducts.lastOrNull()
+    override fun getLastProduct(onSuccess: (RecentProduct?) -> Unit) {
+        onSuccess(recentProducts.lastOrNull())
+    }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): List<RecentProduct> =
-        recentProducts
-            .sortedByDescending { it.id }
-            .drop(offset)
-            .take(limit)
+        onSuccess: (List<RecentProduct>) -> Unit,
+    ) {
+        onSuccess(
+            recentProducts
+                .sortedByDescending { it.id }
+                .drop(offset)
+                .take(limit),
+        )
+    }
 
-    override fun replaceRecentProduct(recentProduct: RecentProduct) {
-        recentProducts.remove(recentProduct)
-        insert(recentProduct.product.id)
+    override fun replaceRecentProduct(
+        recentProduct: RecentProduct,
+        onSuccess: () -> Unit,
+    ) {
+        recentProducts.removeIf { it.product.id == recentProduct.product.id }
+        recentProducts.add(recentProduct)
+        onSuccess()
     }
 }

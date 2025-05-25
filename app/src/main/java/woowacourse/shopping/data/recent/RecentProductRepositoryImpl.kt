@@ -8,32 +8,39 @@ import kotlin.concurrent.thread
 class RecentProductRepositoryImpl(
     private val localDataSource: RecentProductLocalDataSource,
 ) : RecentProductRepository {
-    override fun insert(productId: Long) {
-        thread { localDataSource.insert(RecentProductEntity(productId = productId)) }.join()
+    override fun insert(
+        productId: Long,
+        onSuccess: () -> Unit,
+    ) {
+        thread {
+            localDataSource.insert(RecentProductEntity(productId = productId))
+            onSuccess()
+        }
     }
 
-    override fun getAll(): List<RecentProduct> {
-        var result = listOf<RecentProduct>()
-        thread { result = localDataSource.getAll().map { it.toDomain() } }.join()
-        return result
-    }
-
-    override fun getLastProduct(): RecentProduct? {
-        var result: RecentProduct? = null
-        thread { result = localDataSource.getLastProduct()?.toDomain() }.join()
-        return result
+    override fun getLastProduct(onSuccess: (RecentProduct?) -> Unit) {
+        thread {
+            onSuccess(localDataSource.getLastProduct()?.toDomain())
+        }
     }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): List<RecentProduct> {
-        var result = listOf<RecentProduct>()
-        thread { result = localDataSource.getPaged(limit, offset).map { it.toDomain() } }.join()
-        return result
+        onSuccess: (List<RecentProduct>) -> Unit,
+    ) {
+        thread {
+            onSuccess(localDataSource.getPaged(limit, offset).map { it.toDomain() })
+        }
     }
 
-    override fun replaceRecentProduct(recentProduct: RecentProduct) {
-        thread { localDataSource.replaceRecentProduct(recentProduct.toEntity()) }.join()
+    override fun replaceRecentProduct(
+        recentProduct: RecentProduct,
+        onSuccess: () -> Unit,
+    ) {
+        thread {
+            localDataSource.replaceRecentProduct(recentProduct.toEntity())
+            onSuccess()
+        }
     }
 }

@@ -70,12 +70,14 @@ class ProductDetailViewModel(
     }
 
     private fun loadLastViewedProduct() {
-        lastViewedProduct = recentProductRepository.getLastProduct()
+        recentProductRepository.getLastProduct {
+            lastViewedProduct = it
+        }
     }
 
     private fun updateRecentProduct() {
         val recentProduct = RecentProduct(product = product)
-        recentProductRepository.replaceRecentProduct(recentProduct)
+        recentProductRepository.replaceRecentProduct(recentProduct) {}
     }
 
     private fun updateQuantity(newQuantity: Int) {
