@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.CartProducts
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
 
-class LocalCartRepository(
+class CartRepository(
     private val dao: CartDao,
 ) : CartRepository {
     override fun fetchCartProduct(

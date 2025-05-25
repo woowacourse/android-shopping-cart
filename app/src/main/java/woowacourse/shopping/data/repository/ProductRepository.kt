@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.concurrent.thread
 
-class ComplexProductRepository(
+class ProductRepository(
     private val dao: ProductDao,
     private val api: ProductApi,
 ) : ProductRepository {

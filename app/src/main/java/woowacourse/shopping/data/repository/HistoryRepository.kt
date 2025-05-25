@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.model.HistoryProduct
 import woowacourse.shopping.domain.repository.HistoryRepository
 import kotlin.concurrent.thread
 
-class LocalHistoryRepository(
+class HistoryRepository(
     private val dao: HistoryDao,
 ) : HistoryRepository {
     override fun fetchAllSearchHistory(callback: (List<HistoryProduct>) -> Unit) {
