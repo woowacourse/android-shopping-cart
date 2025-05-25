@@ -7,10 +7,6 @@ interface CartDataSource {
 
     fun getTotalQuantity(): Int?
 
-    fun getCartProducts(): List<CartEntity>
-
-    fun getCartItemById(productId: Long): CartEntity
-
     fun getQuantityById(productId: Long): Int
 
     fun getPagedCartProducts(

@@ -12,14 +12,10 @@ interface ProductRepository {
         onResult: (Result<List<CartItem>>) -> Unit,
     )
 
-    fun fetchProducts(onResult: (Result<List<Product>>) -> Unit)
-
     fun fetchProductById(
         productId: Long,
         onResult: (Result<Product>) -> Unit,
     )
-
-    fun fetchCartItems(onResult: (Result<List<CartItem>>) -> Unit)
 
     fun fetchPagedCartItems(
         page: Int,

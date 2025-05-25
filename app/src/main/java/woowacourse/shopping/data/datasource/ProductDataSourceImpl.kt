@@ -8,8 +8,6 @@ class ProductDataSourceImpl(
 ) : ProductDataSource {
     override fun start() = productService.start()
 
-    override fun fetchProducts(): List<Product> = productService.fetchProducts()
-
     override fun fetchProductById(id: Long): Product = productService.fetchProductById(id)
 
     override fun fetchPagingProducts(

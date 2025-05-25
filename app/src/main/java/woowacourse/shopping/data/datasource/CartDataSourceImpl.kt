@@ -10,10 +10,6 @@ class CartDataSourceImpl(
 
     override fun getTotalQuantity(): Int? = dao.getTotalQuantity()
 
-    override fun getCartProducts(): List<CartEntity> = dao.getAllProducts()
-
-    override fun getCartItemById(productId: Long): CartEntity = dao.getCartItemById(productId) ?: throw NoSuchElementException()
-
     override fun getQuantityById(productId: Long): Int = dao.getQuantityById(productId)
 
     override fun getPagedCartProducts(

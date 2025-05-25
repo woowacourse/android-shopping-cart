@@ -30,26 +30,12 @@ class ProductRepositoryImpl(
         )
     }
 
-    override fun fetchProducts(onResult: (Result<List<Product>>) -> Unit) {
-        runThread(
-            block = { productDataSource.fetchProducts() },
-            onResult = onResult,
-        )
-    }
-
     override fun fetchProductById(
         productId: Long,
         onResult: (Result<Product>) -> Unit,
     ) {
         runThread(
             block = { productDataSource.fetchProductById(productId) },
-            onResult = onResult,
-        )
-    }
-
-    override fun fetchCartItems(onResult: (Result<List<CartItem>>) -> Unit) {
-        runThread(
-            block = { cartDataSource.getCartProducts().map { it.toCartItem() } },
             onResult = onResult,
         )
     }
