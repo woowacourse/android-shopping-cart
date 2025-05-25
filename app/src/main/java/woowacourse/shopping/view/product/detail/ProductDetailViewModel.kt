@@ -9,10 +9,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.cart.CartRepository
+import woowacourse.shopping.data.repository.products.recentlyviewed.RecentlyViewedRepository
 import woowacourse.shopping.domain.Product
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
+    private val recentlyViewedRepository: RecentlyViewedRepository,
 ) : ViewModel() {
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product> get() = _product
@@ -23,8 +25,17 @@ class ProductDetailViewModel(
     private val _exitEvent = MutableLiveData<Unit>()
     val exitEvent: LiveData<Unit> get() = _exitEvent
 
+    private val _recentlyViewedProduct = MutableLiveData<Product>()
+    val recentlyViewedProduct: LiveData<Product> get() = _recentlyViewedProduct
+
     fun fetchData(product: Product) {
         _product.value = product
+        recentlyViewedRepository.insert(product)
+        recentlyViewedRepository.getLatestViewed { recentlyViewed ->
+            if (recentlyViewed != null && recentlyViewed != product) {
+                _recentlyViewedProduct.postValue(recentlyViewed)
+            }
+        }
     }
 
     fun onAddCartClicked(count: Int) {
@@ -44,8 +55,11 @@ class ProductDetailViewModel(
                 initializer {
                     val cartRepository =
                         (this[APPLICATION_KEY] as ShoppingApplication).cartRepository
+                    val recentlyViewedRepository =
+                        (this[APPLICATION_KEY] as ShoppingApplication).recentlyViewedRepository
                     ProductDetailViewModel(
                         cartRepository = cartRepository,
+                        recentlyViewedRepository = recentlyViewedRepository,
                     )
                 }
             }
