@@ -1,5 +1,10 @@
 package woowacourse.shopping
 
+import android.content.Context
+import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.ProductRepositoryImpl
+import woowacourse.shopping.data.db.ShoppingDatabase
+import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 
@@ -23,6 +28,21 @@ object RepositoryProvider {
                     ProductRepository::class.simpleName,
                 )
             }
+
+    private var isInitialized = false
+
+    fun initialize(context: Context) {
+        if (isInitialized) return
+
+        val database = ShoppingDatabase.getDatabase(context.applicationContext)
+        val cartDao = database.cartDao()
+        val recentProductDao = database.recentProductDao()
+
+        _cartRepository = CartRepositoryImpl(cartDao)
+        _productRepository = ProductRepositoryImpl(dummyProducts, cartDao, recentProductDao)
+
+        isInitialized = true
+    }
 
     fun initCartRepository(repository: CartRepository) {
         _cartRepository = repository
