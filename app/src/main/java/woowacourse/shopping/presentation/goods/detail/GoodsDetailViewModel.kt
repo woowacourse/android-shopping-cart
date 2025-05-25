@@ -26,10 +26,6 @@ class GoodsDetailViewModel(
     val goods: LiveData<GoodsUiModel>
         get() = _goods
 
-    private val _count: MutableLiveData<Int> = MutableLiveData(MIN_PURCHASE_QUANTITY)
-    val count: LiveData<Int>
-        get() = _count
-
     private val _onItemAddedToCart: MutableSingleLiveData<Int> = MutableSingleLiveData()
     val onItemAddedToCart: SingleLiveData<Int>
         get() = _onItemAddedToCart
@@ -48,24 +44,23 @@ class GoodsDetailViewModel(
     }
 
     fun addToShoppingCart() {
-        val count = _count.value ?: MIN_PURCHASE_QUANTITY
         _goods.value?.let { goods ->
             if (shoppingRepository.getGoodsById(goods.id) != null) {
-                shoppingRepository.increaseGoodsQuantity(goods.id, count)
+                shoppingRepository.increaseGoodsQuantity(goods.id, goods.quantity)
             } else {
-                shoppingRepository.insertGoods(goods.id, count)
+                shoppingRepository.insertGoods(goods.id, goods.quantity)
             }
         }
-        _onItemAddedToCart.setValue(count)
+        _onItemAddedToCart.setValue(_goods.value?.quantity ?: MIN_PURCHASE_QUANTITY)
     }
 
     fun increaseCount() {
-        _count.value = _count.value?.plus(QUANTITY_STEP)
+        _goods.value = goods.value?.copy(quantity = goods.value?.quantity?.plus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
     }
 
     fun tryDecreaseCount() {
-        if ((_count.value ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY) {
-            _count.value = _count.value?.minus(QUANTITY_STEP)
+        if ((_goods.value?.quantity ?: MIN_PURCHASE_QUANTITY) > MIN_PURCHASE_QUANTITY) {
+            _goods.value = goods.value?.copy(quantity = goods.value?.quantity?.minus(QUANTITY_STEP) ?: MIN_PURCHASE_QUANTITY)
         }
     }
 

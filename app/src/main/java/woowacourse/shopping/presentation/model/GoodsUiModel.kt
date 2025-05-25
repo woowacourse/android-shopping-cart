@@ -29,5 +29,5 @@ fun Goods.toUiModel(): GoodsUiModel =
         name = name.value,
         price = price.value,
         imageUrl = imageUrl,
-        quantity = 0,
+        quantity = 1,
     )
