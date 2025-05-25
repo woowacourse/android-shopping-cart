@@ -62,32 +62,18 @@ class CatalogActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
+        val handler = createHandler()
+
         binding.recyclerViewProducts.apply {
-            adapter = createAdapter()
+            adapter = ProductAdapter(emptyList(), handler, handler)
             layoutManager = createGridLayoutManager(adapter as ProductAdapter)
         }
 
-        recentAdapter = createViewedAdapter()
+        recentAdapter = ViewedItemAdapter(handler)
         binding.recyclerViewRecentView.apply {
             layoutManager = LinearLayoutManager(this@CatalogActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = recentAdapter
         }
-    }
-
-    private fun createViewedAdapter(): ViewedItemAdapter {
-        val handler =
-            CatalogEventHandlerImpl(viewModel) { product ->
-                startActivity(newIntent(this, product))
-            }
-        return ViewedItemAdapter(handler)
-    }
-
-    private fun createAdapter(): ProductAdapter {
-        val handler =
-            CatalogEventHandlerImpl(viewModel) { product ->
-                startActivity(newIntent(this, product))
-            }
-        return ProductAdapter(emptyList(), handler, handler)
     }
 
     private fun createGridLayoutManager(adapter: ProductAdapter): GridLayoutManager =
@@ -124,6 +110,11 @@ class CatalogActivity : AppCompatActivity() {
         val holder = CartActionViewHolder(this, this, viewModel)
         menuItem.actionView = holder.rootView
     }
+
+    private fun createHandler(): CatalogEventHandlerImpl =
+        CatalogEventHandlerImpl(viewModel) { product ->
+            startActivity(newIntent(this, product))
+        }
 
     override fun onResume() {
         super.onResume()
