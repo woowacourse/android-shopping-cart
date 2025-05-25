@@ -14,8 +14,6 @@ import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.updateCartQuantity
 import kotlin.math.min
-import kotlin.text.orEmpty
-import kotlin.text.toMutableList
 
 class GoodsViewModel(
     private val cartRepository: CartRepository,
@@ -25,11 +23,13 @@ class GoodsViewModel(
     val items: LiveData<List<Any>> get() = _items
     private val _totalQuantity = MutableLiveData(0)
     val totalQuantity: LiveData<Int> get() = _totalQuantity
+    private val _hasNextPage = MutableLiveData(true)
+    val hasNextPage: LiveData<Boolean> get() = _hasNextPage
     private val _isSuccess = MutableSingleLiveData<Unit>()
     val isSuccess: SingleLiveData<Unit> get() = _isSuccess
     private val _isFail = MutableSingleLiveData<Unit>()
     val isFail: SingleLiveData<Unit> get() = _isFail
-    private var page: Int = 0
+    private var page: Int = INITIAL_PAGE
 
     init {
         loadItems()
@@ -100,6 +100,10 @@ class GoodsViewModel(
         historyRepository.getAll { histories ->
             cartRepository.getAll { cartsResult ->
                 val newGoods = getProducts(page)
+
+                val hasMore = (page + 1) * PAGE_SIZE < dummyGoods.size
+                _hasNextPage.postValue(hasMore)
+
                 val updatedCarts =
                     newGoods.map { goods ->
                         val quantity = cartsResult.carts.find { it.goods.id == goods.id }?.quantity ?: 0
@@ -107,7 +111,7 @@ class GoodsViewModel(
                     }
 
                 val combinedItems: MutableList<Any> = mutableListOf()
-                if (page == 0) combinedItems.add(histories)
+                if (page == INITIAL_PAGE) combinedItems.add(histories)
                 combinedItems.addAll(updatedCarts)
 
                 _items.postValue(currentItems + combinedItems)
@@ -120,5 +124,6 @@ class GoodsViewModel(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val INITIAL_PAGE = 0
     }
 }

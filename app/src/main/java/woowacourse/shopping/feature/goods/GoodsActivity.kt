@@ -57,6 +57,9 @@ class GoodsActivity :
         viewModel.items.observe(this) { itemList ->
             adapter.setItems(itemList)
         }
+        viewModel.hasNextPage.observe(this) { hasNext ->
+            adapter.setHasNextPage(hasNext)
+        }
 
         observeCartInsertResult()
         setupActivityResultLauncher()

@@ -14,6 +14,7 @@ class GoodsAdapter(
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val items: MutableList<Any> = mutableListOf()
+    private var hasNextPage: Boolean = true
 
     fun setItems(newItems: List<Any>) {
         val oldHistory = items.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is History } } as? List<*>
@@ -44,6 +45,13 @@ class GoodsAdapter(
         }
     }
 
+    fun setHasNextPage(value: Boolean) {
+        if (hasNextPage != value) {
+            hasNextPage = value
+            notifyItemInserted(items.size)
+        }
+    }
+
     fun updateItemQuantity(
         id: Long,
         quantity: Int,
@@ -56,18 +64,18 @@ class GoodsAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (position < 0 || position >= items.size) {
-            return ItemViewType.LOAD_MORE.type
-        }
-
-        val item = items[position]
-        return when {
-            item is List<*> && item.all { it is History } -> ItemViewType.HISTORY.type
-            item is Cart -> ItemViewType.GOODS.type
+    override fun getItemViewType(position: Int): Int =
+        when {
+            position < items.size -> {
+                val item = items[position]
+                when {
+                    item is List<*> && item.all { it is History } -> ItemViewType.HISTORY.type
+                    item is Cart -> ItemViewType.GOODS.type
+                    else -> ItemViewType.LOAD_MORE.type
+                }
+            }
             else -> ItemViewType.LOAD_MORE.type
         }
-    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -113,5 +121,5 @@ class GoodsAdapter(
         }
     }
 
-    override fun getItemCount(): Int = items.size + 1
+    override fun getItemCount(): Int = items.size + if (hasNextPage) 1 else 0
 }
