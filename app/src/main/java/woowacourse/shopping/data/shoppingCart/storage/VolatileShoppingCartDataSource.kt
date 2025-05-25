@@ -2,7 +2,7 @@ package woowacourse.shopping.data.shoppingCart.storage
 
 import woowacourse.shopping.data.product.entity.CartItemEntity
 
-object VolatileShoppingCartStorage : ShoppingCartStorage {
+object VolatileShoppingCartDataSource : ShoppingCartDataSource {
     private var cartItems: List<CartItemEntity> = emptyList()
 
     override fun load(): List<CartItemEntity> = cartItems.toList()

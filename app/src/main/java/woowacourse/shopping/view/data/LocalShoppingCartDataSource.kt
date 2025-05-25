@@ -1,0 +1,32 @@
+package woowacourse.shopping.view.data
+
+import android.content.Context
+import androidx.room.Room
+import woowacourse.shopping.data.product.entity.CartItemEntity
+import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartDataSource
+
+object LocalShoppingCartDataSource : ShoppingCartDataSource {
+    private lateinit var dao: ShoppingCartDao
+
+    fun init(applicationContext: Context) {
+        val db =
+            Room
+                .databaseBuilder(
+                    applicationContext,
+                    ShoppingCartDatabase::class.java,
+                    "shoppingCart",
+                ).build()
+
+        dao = db.dao()
+    }
+
+    override fun load(): List<CartItemEntity> = dao.load()
+
+    override fun upsert(cartItem: CartItemEntity) = dao.upsert(cartItem)
+
+    override fun remove(cartItem: CartItemEntity) = dao.remove(cartItem)
+
+    override fun update(cartItems: List<CartItemEntity>) = dao.replaceAll(cartItems)
+
+    override fun quantityOf(productId: Long): Int = dao.quantityOf(productId)
+}

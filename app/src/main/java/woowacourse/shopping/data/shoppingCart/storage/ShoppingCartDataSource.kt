@@ -2,7 +2,7 @@ package woowacourse.shopping.data.shoppingCart.storage
 
 import woowacourse.shopping.data.product.entity.CartItemEntity
 
-interface ShoppingCartStorage {
+interface ShoppingCartDataSource {
     fun load(): List<CartItemEntity>
 
     fun upsert(product: CartItemEntity)

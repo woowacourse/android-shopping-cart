@@ -3,45 +3,45 @@ package woowacourse.shopping.data.shoppingCart.repository
 import woowacourse.shopping.data.product.entity.CartItemEntity
 import woowacourse.shopping.data.product.entity.CartItemEntity.Companion.toEntity
 import woowacourse.shopping.data.product.entity.ProductEntity.Companion.toEntity
-import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartStorage
-import woowacourse.shopping.data.shoppingCart.storage.VolatileShoppingCartStorage
+import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartDataSource
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.data.LocalShoppingCartDataSource
 import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(
-    private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage,
+    private val shoppingCartDataSource: ShoppingCartDataSource = LocalShoppingCartDataSource,
 ) : ShoppingCartRepository {
     override fun load(onLoad: (Result<List<CartItem>>) -> Unit) {
-        { shoppingCartStorage.load().map(CartItemEntity::toDomain) }.runAsync(onLoad)
+        { shoppingCartDataSource.load().map(CartItemEntity::toDomain) }.runAsync(onLoad)
     }
 
     override fun upsert(
         cartItem: CartItem,
         onAdd: (Result<Unit>) -> Unit,
     ) {
-        { shoppingCartStorage.upsert(cartItem.toEntity()) }.runAsync(onAdd)
+        { shoppingCartDataSource.upsert(cartItem.toEntity()) }.runAsync(onAdd)
     }
 
     override fun remove(
         cartItem: CartItem,
         onRemove: (Result<Unit>) -> Unit,
     ) {
-        { shoppingCartStorage.remove(cartItem.toEntity()) }.runAsync(onRemove)
+        { shoppingCartDataSource.remove(cartItem.toEntity()) }.runAsync(onRemove)
     }
 
     override fun update(
         cartItems: List<CartItem>,
         onUpdate: (Result<Unit>) -> Unit,
     ) {
-        { shoppingCartStorage.update(cartItems.map { it.toEntity() }) }.runAsync(onUpdate)
+        { shoppingCartDataSource.update(cartItems.map { it.toEntity() }) }.runAsync(onUpdate)
     }
 
     override fun quantityOf(
         product: Product,
         onResult: (Result<Int>) -> Unit,
     ) {
-        { shoppingCartStorage.quantityOf(product.toEntity().id) }.runAsync(onResult)
+        { shoppingCartDataSource.quantityOf(product.toEntity().id) }.runAsync(onResult)
     }
 
     private inline fun <T> (() -> T).runAsync(crossinline onResult: (Result<T>) -> Unit) {
