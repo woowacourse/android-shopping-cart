@@ -10,4 +10,6 @@ interface ProductDetailClickListener {
     fun onPlusQuantity(product: Product)
 
     fun onMinusQuantity(product: Product)
+
+    fun onRecentProduct(product: Product)
 }

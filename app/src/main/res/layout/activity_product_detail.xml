@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.productDetail.ProductDetailViewModel" />
@@ -112,6 +114,47 @@
                     <include
                         android:id="@+id/productDetailQuantityComponent"
                         layout="@layout/component_product_quantity" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/background_product_detail_recent_watching"
+                    android:onClick="@{() -> productDetailEventListener.onRecentProduct(viewModel.recentWatchingProduct)}"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="16dp"
+                    android:visibility="@{viewModel.recentProductBoxVisible ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDetailPrice">
+
+                    <TextView
+                        android:id="@+id/productDetailRecentWatchingTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/product_detail_recent_watching_title"
+                        android:textColor="@color/mint"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@{viewModel.recentWatchingProduct.name}"
+                        android:textColor="@color/gray_5"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/productDetailRecentWatchingTitle"
+                        tools:text="엄청엄청엄청엄청긴이름을가진상품입니다라마바사" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

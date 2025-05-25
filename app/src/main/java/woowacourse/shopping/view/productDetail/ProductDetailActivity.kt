@@ -70,6 +70,7 @@ class ProductDetailActivity :
                 ProductDetailEvent.ADD_SHOPPING_CART_SUCCESS -> R.string.product_detail_add_shopping_cart_success_message
                 ProductDetailEvent.ADD_SHOPPING_CART_FAILURE -> R.string.product_detail_add_shopping_cart_error_message
                 ProductDetailEvent.ADD_RECENT_WATCHING_FAILURE -> R.string.product_detail_add_recent_watching_error_message
+                ProductDetailEvent.GET_RECENT_WATCHING_FAILURE -> R.string.product_detail_update_recent_watching_error_message
             }
 
         binding.root.showSnackBar(getString(messageResourceId))
@@ -94,6 +95,11 @@ class ProductDetailActivity :
 
     override fun onMinusQuantity(product: Product) {
         viewModel.minusQuantity()
+    }
+
+    override fun onRecentProduct(product: Product) {
+        startActivity(newIntent(this, product))
+        finish()
     }
 
     companion object {

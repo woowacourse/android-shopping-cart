@@ -28,6 +28,32 @@ class ProductDetailViewModel(
     private val _price: MutableLiveData<Int> = MutableLiveData()
     val price: LiveData<Int> get() = _price
 
+    private val _recentWatchingProduct: MutableLiveData<Product> = MutableLiveData()
+    val recentWatchingProduct: LiveData<Product> get() = _recentWatchingProduct
+
+    private val _recentProductBoxVisible: MutableLiveData<Boolean> = MutableLiveData()
+    val recentProductBoxVisible: LiveData<Boolean> get() = _recentProductBoxVisible
+
+    init {
+        updateRecentWatchingProduct()
+    }
+
+    private fun updateRecentWatchingProduct() {
+        productsRepository.getRecentWatchingProducts(1) { result ->
+            result
+                .onSuccess { recentProducts: List<Product> ->
+                    if (recentProducts.isEmpty()) {
+                        _recentProductBoxVisible.postValue(false)
+                        return@getRecentWatchingProducts
+                    }
+                    _recentWatchingProduct.postValue(recentProducts[0])
+                    _recentProductBoxVisible.postValue(true)
+                }.onFailure {
+                    _event.postValue(ProductDetailEvent.GET_RECENT_WATCHING_FAILURE)
+                }
+        }
+    }
+
     fun updateProduct(product: Product) {
         _product.value = product
         _price.value = product.price
