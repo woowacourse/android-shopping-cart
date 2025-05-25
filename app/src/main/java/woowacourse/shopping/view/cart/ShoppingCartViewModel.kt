@@ -92,7 +92,7 @@ class ShoppingCartViewModel(
         newQuantity: Int,
     ) {
         repository.updateQuantity(item.product.id, item.quantity, newQuantity)
-        val index = cartProducts.indexOf(item)
+        val index = cartProducts.indexOfFirst { it.product.id == item.product.id }
         if (index != -1) {
             cartProducts[index] = cartProducts[index].copy(quantity = newQuantity)
         }

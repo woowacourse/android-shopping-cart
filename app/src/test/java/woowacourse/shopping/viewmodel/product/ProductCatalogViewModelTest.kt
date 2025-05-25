@@ -82,14 +82,68 @@ class ProductCatalogViewModelTest {
     }
 
     @Test
+    fun `상품 수량 증가 클릭 시 수량이 1 증가한다`() {
+        // given
+        val product = productRepository.getAll().first()
+        val item = ProductCatalogItem.ProductItem(product, 1)
+
+        // when
+        viewModel.loadCatalog()
+        viewModel.onQuantityIncreaseClick(item)
+
+        // then
+        val updatedItem =
+            viewModel.productCatalogItems.value
+                ?.filterIsInstance<ProductCatalogItem.ProductItem>()
+                ?.first { it.product.id == product.id }
+
+        assertEquals(2, updatedItem?.quantity)
+    }
+
+    @Test
+    fun `상품 수량 감소 클릭 시 수량이 1 감소한다`() {
+        // given
+        val product = productRepository.getAll().first()
+        val item = ProductCatalogItem.ProductItem(product, 2)
+
+        // when
+        viewModel.loadCatalog()
+        viewModel.onQuantityDecreaseClick(item)
+
+        // then
+        val updatedItem =
+            viewModel.productCatalogItems.value
+                ?.filterIsInstance<ProductCatalogItem.ProductItem>()
+                ?.first { it.product.id == product.id }
+
+        assertEquals(1, updatedItem?.quantity)
+    }
+
+    @Test
+    fun `상품 수량 변경 시 총 수량에 반영된다`() {
+        // given
+        val product = productRepository.getAll().first()
+        val item = ProductCatalogItem.ProductItem(product, 2)
+        val totalQuantity = viewModel.totalQuantity.value ?: 0
+
+        // when
+        viewModel.onQuantityIncreaseClick(item)
+        viewModel.onQuantityIncreaseClick(item)
+
+        // then
+        assertEquals(2, viewModel.totalQuantity.value?.minus(totalQuantity))
+    }
+
+    @Test
     fun `상품 클릭 시 선택된 상품이 selectedProduct에 반영된다`() {
         // given
         val product = productRepository.getAll().first()
+        val item = ProductCatalogItem.ProductItem(product, 0)
 
         // when
-        viewModel.onProductClick(ProductCatalogItem.ProductItem(product, 0))
+        viewModel.onProductClick(item)
 
         // then
-        assertEquals(product, viewModel.selectedProduct.value)
+        assertEquals(product, viewModel.selectedProduct.getValue())
     }
 }

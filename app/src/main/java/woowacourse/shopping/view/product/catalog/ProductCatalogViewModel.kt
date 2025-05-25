@@ -32,6 +32,10 @@ class ProductCatalogViewModel(
     private val _totalQuantity = MutableLiveData(0)
     val totalQuantity: LiveData<Int> get() = _totalQuantity
 
+    init {
+        loadCatalog()
+    }
+
     override fun onRecentProductClick(item: RecentProduct) {
         _selectedProduct.setValue(item.product)
     }
@@ -98,7 +102,7 @@ class ProductCatalogViewModel(
         newQuantity: Int,
     ) {
         cartProductRepository.updateQuantity(item.product.id, item.quantity, newQuantity)
-        val index = productItems.indexOf(item)
+        val index = productItems.indexOfFirst { it.product.id == item.product.id }
         if (index != -1) {
             productItems[index] = productItems[index].copy(quantity = newQuantity)
         }
