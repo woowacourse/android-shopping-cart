@@ -1,9 +1,12 @@
 package woowacourse.shopping.data.product.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import woowacourse.shopping.domain.product.Product
 
+@Entity(tableName = "product")
 data class ProductEntity(
-    val id: Long,
+    @PrimaryKey val id: Long,
     val name: String,
     val price: Int,
     val imageUrl: String,

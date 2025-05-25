@@ -1,11 +1,16 @@
 package woowacourse.shopping.data.shoppingCart.entity
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import woowacourse.shopping.data.product.entity.ProductEntity
 import woowacourse.shopping.data.product.entity.toEntity
 import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 
+@Entity(tableName = "shoppingCart")
 data class ShoppingCartProductEntity(
-    val product: ProductEntity,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @Embedded(prefix = "product_") val product: ProductEntity,
     val quantity: Int,
 ) {
     fun toDomain(): ShoppingCartProduct =
