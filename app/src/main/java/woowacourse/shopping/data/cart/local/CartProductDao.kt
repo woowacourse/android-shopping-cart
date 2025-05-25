@@ -10,14 +10,14 @@ interface CartProductDao {
     @Insert
     fun insert(cartProductEntity: CartProductEntity)
 
-    @Query("SELECT COUNT(*) FROM cart_product")
-    fun getTotalCount(): Int
-
     @Query("SELECT * FROM cart_product LIMIT :limit OFFSET :offset")
     fun getPagedProducts(
         limit: Int,
         offset: Int,
     ): List<CartProductEntity>
+
+    @Query("SELECT COUNT(*) FROM cart_product")
+    fun getTotalCount(): Int
 
     @Query("SELECT quantity FROM cart_product WHERE product_id = :productId")
     fun getQuantityByProductId(productId: Long): Int?

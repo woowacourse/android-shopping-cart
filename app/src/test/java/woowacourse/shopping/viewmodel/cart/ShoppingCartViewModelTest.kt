@@ -21,7 +21,7 @@ class ShoppingCartViewModelTest {
     @BeforeEach
     fun setup() {
         repository = FakeCartProductRepository()
-        repeat(12) { id -> repository.insert(id.toLong()) {} }
+        repeat(12) { id -> repository.updateQuantity(id.toLong(), 0, 1) {} }
         viewModel = ShoppingCartViewModel(repository)
     }
 

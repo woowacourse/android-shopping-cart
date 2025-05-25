@@ -15,18 +15,6 @@ class CartProductRepositoryImpl(
         thread { totalCount = localDataSource.getTotalCount() }.join()
     }
 
-    override fun insert(
-        productId: Long,
-        quantity: Int,
-        onSuccess: () -> Unit,
-    ) {
-        thread {
-            localDataSource.insert(CartProductEntity(productId = productId, quantity = quantity))
-            totalCount++
-            onSuccess()
-        }
-    }
-
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
@@ -39,7 +27,8 @@ class CartProductRepositoryImpl(
 
         val endIndex = (offset + limit).coerceAtMost(totalCount)
         thread {
-            val items = localDataSource.getPagedProducts(endIndex - offset, offset).map { it.toDomain() }
+            val items =
+                localDataSource.getPagedProducts(endIndex - offset, offset).map { it.toDomain() }
             val hasNext = endIndex < totalCount
             onSuccess(PagedResult(items, hasNext))
         }
@@ -76,14 +65,14 @@ class CartProductRepositoryImpl(
                 }
 
                 currentQuantity == 0 -> {
-                    insert(productId, newQuantity) { onSuccess() }
+                    localDataSource.insert(CartProductEntity(productId, newQuantity))
+                    totalCount++
+                    onSuccess()
                 }
 
                 else -> {
-                    thread {
-                        localDataSource.updateQuantity(productId, newQuantity)
-                        onSuccess()
-                    }
+                    localDataSource.updateQuantity(productId, newQuantity)
+                    onSuccess()
                 }
             }
         }

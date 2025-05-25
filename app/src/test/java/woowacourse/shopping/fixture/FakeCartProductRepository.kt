@@ -8,27 +8,6 @@ import woowacourse.shopping.domain.repository.CartProductRepository
 class FakeCartProductRepository : CartProductRepository {
     private val cartProducts = mutableListOf<CartProduct>()
 
-    override fun insert(
-        productId: Long,
-        quantity: Int,
-        onSuccess: () -> Unit,
-    ) {
-        val product =
-            Product(
-                id = productId,
-                imageUrl = "",
-                name = "Product $productId",
-                price = 1000,
-            )
-        cartProducts.add(
-            CartProduct(
-                product = product,
-                quantity = quantity,
-            ),
-        )
-        onSuccess()
-    }
-
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
@@ -61,7 +40,7 @@ class FakeCartProductRepository : CartProductRepository {
             return
         }
         if (currentQuantity == 0) {
-            insert(productId, newQuantity) { onSuccess() }
+            insert(productId, newQuantity)
             return
         }
         cartProducts.replaceAll {
@@ -76,5 +55,19 @@ class FakeCartProductRepository : CartProductRepository {
     ) {
         cartProducts.removeIf { it.product.id == productId }
         onSuccess()
+    }
+
+    private fun insert(
+        productId: Long,
+        quantity: Int,
+    ) {
+        val product =
+            Product(
+                id = productId,
+                imageUrl = "",
+                name = "Product $productId",
+                price = 1000,
+            )
+        cartProducts.add(CartProduct(product, quantity))
     }
 }

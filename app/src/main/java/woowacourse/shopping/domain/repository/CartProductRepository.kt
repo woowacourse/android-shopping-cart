@@ -4,12 +4,6 @@ import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.domain.model.CartProduct
 
 interface CartProductRepository {
-    fun insert(
-        productId: Long,
-        quantity: Int = 1,
-        onSuccess: () -> Unit,
-    )
-
     fun getPagedProducts(
         limit: Int,
         offset: Int,
