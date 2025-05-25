@@ -15,4 +15,5 @@
     <string name="button_minus">-</string>
     <string name="button_plus">+</string>
     <string name="recent_list_header">최근 본 상품</string>
+    <string name="title_most_recent_product">마지막으로 본 상품</string>
 </resources>
