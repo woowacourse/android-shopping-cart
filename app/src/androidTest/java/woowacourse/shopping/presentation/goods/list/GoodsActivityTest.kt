@@ -2,8 +2,6 @@ package woowacourse.shopping.presentation.goods.list
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.test.core.app.ActivityScenario
@@ -21,11 +19,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.awaitility.kotlin.await
-import org.hamcrest.Description
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
-import org.hamcrest.TypeSafeMatcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -36,6 +31,7 @@ import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.repository.LatestGoodsRepositoryImpl
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.presentation.testutil.nthChildOf
 import java.util.concurrent.TimeUnit
 
 class GoodsActivityTest {
@@ -230,23 +226,5 @@ class GoodsActivityTest {
                 isDescendantOfA(nthChildOf(withId(R.id.rv_latest_goods_list), 0)),
             ),
         ).check(matches(isDisplayed()))
-    }
-
-    private fun nthChildOf(
-        parentMatcher: Matcher<View>,
-        childPosition: Int,
-    ): Matcher<View> {
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText("Nth child of parent matcher")
-            }
-
-            override fun matchesSafely(view: View): Boolean {
-                val parent = view.parent
-                return parent is ViewGroup && parentMatcher.matches(parent) && parent.getChildAt(
-                    childPosition,
-                ) == view
-            }
-        }
     }
 }
