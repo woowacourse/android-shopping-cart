@@ -18,6 +18,7 @@ import woowacourse.shopping.product.catalog.CatalogViewModel.Companion.factory
 import woowacourse.shopping.product.catalog.event.CatalogEventHandlerImpl
 import woowacourse.shopping.product.catalog.viewHolder.CartActionViewHolder
 import woowacourse.shopping.product.detail.DetailActivity.Companion.newIntent
+import woowacourse.shopping.product.recent.ViewedItemAdapter
 
 class CatalogActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogBinding
@@ -58,6 +59,10 @@ class CatalogActivity : AppCompatActivity() {
             adapter = createAdapter()
             layoutManager = createGridLayoutManager(adapter as ProductAdapter)
         }
+
+        binding.recyclerViewRecentView.apply {
+            adapter = createViewedAdapter()
+        }
     }
 
     private fun createAdapter(): ProductAdapter {
@@ -67,6 +72,8 @@ class CatalogActivity : AppCompatActivity() {
             }
         return ProductAdapter(emptyList(), handler, handler)
     }
+
+    private fun createViewedAdapter(): ViewedItemAdapter = ViewedItemAdapter(emptyList())
 
     private fun createGridLayoutManager(adapter: ProductAdapter): GridLayoutManager =
         GridLayoutManager(this, 2).apply {
