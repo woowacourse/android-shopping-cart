@@ -3,14 +3,14 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.domain.model.Product
 
 interface ProductDataSource {
-    fun start()
-
-    fun fetchProductById(id: Long): Product
+    fun start(): Result<Unit>
 
     fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
-    ): List<Product>
+    ): Result<List<Product>>
 
-    fun shutdown()
+    fun fetchProductById(id: Long): Result<Product>
+
+    fun shutdown(): Result<Unit>
 }

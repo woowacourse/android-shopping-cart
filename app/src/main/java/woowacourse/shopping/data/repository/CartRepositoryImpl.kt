@@ -40,7 +40,7 @@ class CartRepositoryImpl(
     ) {
         runThread(
             block = {
-                val exists = cartDataSource.existsByProductId(productId)
+                val exists = cartDataSource.existsByProductId(productId).getOrThrow()
                 if (exists) {
                     cartDataSource.increaseQuantity(productId, quantity)
                 } else {
