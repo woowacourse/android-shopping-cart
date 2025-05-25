@@ -8,6 +8,7 @@ import woowacourse.shopping.view.cart.CartUiEvent
 import woowacourse.shopping.view.cart.state.CartUiState
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
+import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
 import woowacourse.shopping.view.loader.CartLoader
@@ -26,7 +27,7 @@ class CartViewModel(
     val event: SingleLiveData<CartUiEvent> get() = _event
 
     fun decreaseCartQuantity(productId: Long) {
-        withUiState { state ->
+        withState(_uiState.value) { state ->
             val result = state.decreaseCartQuantity(productId)
 
             _uiState.value = state.modifyUiState(result)
@@ -35,7 +36,7 @@ class CartViewModel(
     }
 
     fun increaseCartQuantity(productId: Long) {
-        withUiState { state ->
+        withState(_uiState.value) { state ->
             when (val result = state.canIncreaseCartQuantity(productId)) {
                 is IncreaseState.CanIncrease -> {
                     val newState = result.value
@@ -85,10 +86,6 @@ class CartViewModel(
             val pageState = paging.createPageState(hasNextPage)
             _uiState.postValue(CartUiState(items = carts, pageState = pageState))
         }
-    }
-
-    private fun withUiState(block: (CartUiState) -> Unit) {
-        _uiState.value?.let { block }
     }
 
     private fun sendEvent(event: CartUiEvent) {
