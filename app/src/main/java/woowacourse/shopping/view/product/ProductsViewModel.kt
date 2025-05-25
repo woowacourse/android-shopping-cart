@@ -8,6 +8,7 @@ import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 import woowacourse.shopping.view.common.MutableSingleLiveData
 import woowacourse.shopping.view.common.SingleLiveData
 import woowacourse.shopping.view.product.ProductsItem.LoadItem
@@ -129,6 +130,29 @@ class ProductsViewModel(
                             }
                         }
                     _products.postValue(updatedList)
+                    updateShoppingCartQuantity()
+                }
+        }
+    }
+
+    fun updateSelectedQuantity(products: List<Product>) {
+        shoppingCartRepository.fetchSelectedQuantity(products) { result ->
+            result
+                .onSuccess { fetchedList: List<ShoppingCartProduct> ->
+                    val updated =
+                        this.products.value.orEmpty().map { item ->
+                            if (item is ProductItem) {
+                                val match = fetchedList.find { it.product == item.product }
+                                if (match != null) {
+                                    item.copy(selectedQuantity = match.quantity)
+                                } else {
+                                    item
+                                }
+                            } else {
+                                item
+                            }
+                        }
+                    _products.postValue(updated)
                     updateShoppingCartQuantity()
                 }
         }

@@ -46,8 +46,12 @@ class ShoppingCartActivity :
     private fun initDataBinding() {
         binding.adapter = shoppingCartProductAdapter
         binding.onClickBackButton = {
-            setResult(ResultFrom.SHOPPING_CART_BACK.RESULT_OK)
-            ::finish
+            val intent =
+                Intent().apply {
+                    putExtra("updateProducts", viewModel.updatedProducts.value?.toTypedArray())
+                }
+            setResult(ResultFrom.SHOPPING_CART_BACK.RESULT_OK, intent)
+            finish()
         }
     }
 

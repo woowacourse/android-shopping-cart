@@ -2,7 +2,6 @@ package woowacourse.shopping.view.productDetail
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -14,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.common.ResultFrom
+import woowacourse.shopping.view.common.getSerializableExtraData
 import woowacourse.shopping.view.common.showSnackBar
 
 class ProductDetailActivity :
@@ -35,7 +35,7 @@ class ProductDetailActivity :
         }
 
         val product: Product =
-            intent.getProductExtra() ?: run {
+            intent.getSerializableExtraData(EXTRA_PRODUCT) ?: run {
                 binding.root.showSnackBar(getString(R.string.product_not_provided_error_message))
                 return finish()
             }
@@ -43,13 +43,6 @@ class ProductDetailActivity :
         bindViewModel(product)
         setupObservers()
     }
-
-    private fun Intent.getProductExtra(): Product? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializableExtra(EXTRA_PRODUCT, Product::class.java)
-        } else {
-            getSerializableExtra(EXTRA_PRODUCT) as? Product
-        }
 
     private fun bindViewModel(product: Product) {
         binding.viewModel = viewModel

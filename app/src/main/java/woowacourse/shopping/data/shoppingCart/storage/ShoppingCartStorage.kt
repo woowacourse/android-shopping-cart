@@ -4,6 +4,8 @@ import woowacourse.shopping.data.product.entity.ProductEntity
 import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
 
 interface ShoppingCartStorage {
+    val quantity: Int
+
     val size: Int
 
     fun load(

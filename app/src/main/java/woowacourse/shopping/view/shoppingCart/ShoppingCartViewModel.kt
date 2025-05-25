@@ -18,6 +18,10 @@ class ShoppingCartViewModel(
     private val _shoppingCart: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
     val shoppingCart: LiveData<List<ShoppingCartItem>> get() = _shoppingCart
 
+    private val _updatedProducts: MutableLiveData<List<Product>> =
+        MutableLiveData()
+    val updatedProducts: LiveData<List<Product>> get() = _updatedProducts
+
     private val _event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ShoppingCartEvent> get() = _event
 
@@ -73,6 +77,11 @@ class ShoppingCartViewModel(
             result
                 .onSuccess {
                     updateShoppingCart()
+                    val currentUpdatedProducts =
+                        updatedProducts.value?.toMutableList() ?: mutableListOf()
+                    if (currentUpdatedProducts.contains(product)) return@remove
+                    currentUpdatedProducts.add(product)
+                    _updatedProducts.postValue(currentUpdatedProducts)
                 }.onFailure {
                     _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
                 }
@@ -84,6 +93,11 @@ class ShoppingCartViewModel(
             result
                 .onSuccess {
                     updateShoppingCart()
+                    val currentUpdatedProducts =
+                        updatedProducts.value?.toMutableList() ?: mutableListOf()
+                    if (currentUpdatedProducts.contains(product)) return@decreaseQuantity
+                    currentUpdatedProducts.add(product)
+                    _updatedProducts.postValue(currentUpdatedProducts)
                 }.onFailure {
                     _event.postValue(ShoppingCartEvent.DECREASE_SHOPPING_CART_PRODUCT_FAILURE)
                 }
@@ -95,6 +109,11 @@ class ShoppingCartViewModel(
             result
                 .onSuccess {
                     updateShoppingCart()
+                    val currentUpdatedProducts =
+                        updatedProducts.value?.toMutableList() ?: mutableListOf()
+                    if (currentUpdatedProducts.contains(product)) return@add
+                    currentUpdatedProducts.add(product)
+                    _updatedProducts.postValue(currentUpdatedProducts)
                 }.onFailure {
                     _event.postValue(ShoppingCartEvent.ADD_SHOPPING_CART_PRODUCT_FAILURE)
                 }

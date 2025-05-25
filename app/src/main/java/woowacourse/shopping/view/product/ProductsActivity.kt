@@ -1,7 +1,5 @@
 package woowacourse.shopping.view.product
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.common.ResultFrom
+import woowacourse.shopping.view.common.getSerializableExtraData
 import woowacourse.shopping.view.common.showSnackBar
 import woowacourse.shopping.view.common.showToast
 import woowacourse.shopping.view.productDetail.ProductDetailActivity
@@ -35,12 +34,18 @@ class ProductsActivity :
         ) { result ->
             when (result.resultCode) {
                 ResultFrom.PRODUCT_DETAIL_BACK.RESULT_OK -> {
-                    val updateItems =
-                        result.data?.getProductExtra() ?: return@registerForActivityResult
-                    viewModel.updateSelectedQuantity(updateItems)
+                    val updateItem: Product =
+                        result.data?.getSerializableExtraData("updateProduct")
+                            ?: return@registerForActivityResult
+                    viewModel.updateSelectedQuantity(updateItem)
                 }
 
-                ResultFrom.SHOPPING_CART_BACK.RESULT_OK -> viewModel::updateProducts
+                ResultFrom.SHOPPING_CART_BACK.RESULT_OK -> {
+                    val updateItems: Array<Product> =
+                        result.data?.getSerializableExtraData("updateProducts")
+                            ?: return@registerForActivityResult
+                    viewModel.updateSelectedQuantity(updateItems.toList())
+                }
             }
         }
 
@@ -135,11 +140,4 @@ class ProductsActivity :
     override fun onLoadClick() {
         viewModel.updateProducts()
     }
-
-    private fun Intent.getProductExtra(): Product? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            getSerializableExtra("updateProduct", Product::class.java)
-        } else {
-            getSerializableExtra("updateProduct") as? Product
-        }
 }

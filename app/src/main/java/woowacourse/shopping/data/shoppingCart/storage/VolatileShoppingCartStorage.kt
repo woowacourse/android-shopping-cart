@@ -5,10 +5,12 @@ import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
 
 object VolatileShoppingCartStorage : ShoppingCartStorage {
     private val products: MutableList<ShoppingCartProductEntity> = mutableListOf()
-    override val size: Int
+    override val quantity: Int
         get() {
             return products.sumOf { it.quantity }
         }
+    override val size: Int
+        get() = products.size
 
     override fun load(
         offset: Int,
