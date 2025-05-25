@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 
-class DetailViewModel(item: Product): ViewModel() {
+class DetailViewModel(item: Product) : ViewModel() {
     private val _cartItem = MutableLiveData(CartItem(item.id, item, 1))
     val cartItem: LiveData<CartItem> = _cartItem
 

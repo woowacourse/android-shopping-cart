@@ -16,7 +16,6 @@ class FashionProductListAdapter(
     private val productClickListener: ProductClickListener,
     private val loadMoreClickListener: LoadMoreClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     private var cartItemsMap: Map<Long, CartItem> = emptyMap()
 
     override fun getItemViewType(position: Int): Int {

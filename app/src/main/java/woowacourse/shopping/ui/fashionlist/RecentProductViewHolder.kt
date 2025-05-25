@@ -5,8 +5,8 @@ import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.domain.product.Product
 
 class RecentProductViewHolder(
-    private val binding: ItemRecentProductBinding
-): RecyclerView.ViewHolder(binding.root) {
+    private val binding: ItemRecentProductBinding,
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Product) {
         binding.product = item
     }

@@ -12,12 +12,12 @@ import woowacourse.shopping.utils.toProductEntity
 private const val DATABASE_NAME = "cart-db"
 
 class CartRepository private constructor(context: Context, private val productRepository: ProductRepository) {
-
-    private val cartDatabase: CartDatabase = Room.databaseBuilder(
-        context.applicationContext,
-        CartDatabase::class.java,
-        DATABASE_NAME
-    ).build()
+    private val cartDatabase: CartDatabase =
+        Room.databaseBuilder(
+            context.applicationContext,
+            CartDatabase::class.java,
+            DATABASE_NAME,
+        ).build()
 
     private val cartDao = cartDatabase.cartDao()
     private val cartItemDao = cartDatabase.cartItemDao()
@@ -48,11 +48,16 @@ class CartRepository private constructor(context: Context, private val productRe
         val cartItemEntity = cartItemDao.findById(id) ?: return null
         val product = cartDao.findById(id) ?: return null
         return CartItem(
-            id, product.toProduct(), cartItemEntity.quantity
+            id,
+            product.toProduct(),
+            cartItemEntity.quantity,
         )
     }
 
-    fun getPagedItems(limit: Int, offset: Int): List<CartItem> {
+    fun getPagedItems(
+        limit: Int,
+        offset: Int,
+    ): List<CartItem> {
         return cartDao.findPagedItems(limit, offset).map { getCartItemWithProduct(it.id) }
     }
 
@@ -68,7 +73,7 @@ class CartRepository private constructor(context: Context, private val productRe
 
     fun insertRecentProduct(id: Long) {
         val target = historyDao.findById(id)
-        if(target != null) {
+        if (target != null) {
             historyDao.deleteById(id)
         }
         historyDao.insert(HistoryEntity(id))
@@ -113,22 +118,25 @@ class CartRepository private constructor(context: Context, private val productRe
         return CartItem(
             id = id,
             product = product.toProduct(),
-            quantity = cartItem.quantity
+            quantity = cartItem.quantity,
         )
     }
 
     companion object {
         private var INSTANCE: CartRepository? = null
 
-        fun initialize(context: Context, productRepository: ProductRepository) {
+        fun initialize(
+            context: Context,
+            productRepository: ProductRepository,
+        ) {
             if (INSTANCE == null) {
                 INSTANCE = CartRepository(context, productRepository)
             }
         }
 
         fun get(): CartRepository {
-            return INSTANCE ?:
-            throw IllegalStateException("CartRepository가 초기화되지 않았습니다.")
+            return INSTANCE
+                ?: throw IllegalStateException("CartRepository가 초기화되지 않았습니다.")
         }
     }
 }

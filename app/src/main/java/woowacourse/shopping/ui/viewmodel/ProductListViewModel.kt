@@ -37,30 +37,34 @@ class ProductListViewModel(
     }
 
     fun loadProducts() {
-        val currentProducts = _products.value.orEmpty()
-            .filterIsInstance<ProductListViewType.FashionProductItemType>()
+        val currentProducts =
+            _products.value.orEmpty()
+                .filterIsInstance<ProductListViewType.FashionProductItemType>()
 
         val cartMap = _cartItems.value.orEmpty()
 
-        val newProducts = productRepository.productsByPageNumberAndSize(pageNumber++, 20)
-            .map {
-                val quantity = cartMap[it.id] ?: 0
-                ProductListViewType.FashionProductItemType(
-                    product = it,
-                    quantity = quantity,
-                    isButtonVisible = quantity == 0
-                )
+        val newProducts =
+            productRepository.productsByPageNumberAndSize(pageNumber++, 20)
+                .map {
+                    val quantity = cartMap[it.id] ?: 0
+                    ProductListViewType.FashionProductItemType(
+                        product = it,
+                        quantity = quantity,
+                        isButtonVisible = quantity == 0,
+                    )
+                }
+
+        val productList =
+            if (productRepository.canMoreLoad(pageNumber, 20)) {
+                currentProducts + newProducts + ProductListViewType.LoadMoreType
+            } else {
+                currentProducts + newProducts
             }
 
-        val productList = if (productRepository.canMoreLoad(pageNumber, 20)) {
-            currentProducts + newProducts + ProductListViewType.LoadMoreType
-        } else {
-            currentProducts + newProducts
-        }
-
-        val recent = _recentProducts.value?.takeIf { it.isNotEmpty() }?.let {
-            listOf(ProductListViewType.RecentProducts(it))
-        } ?: emptyList()
+        val recent =
+            _recentProducts.value?.takeIf { it.isNotEmpty() }?.let {
+                listOf(ProductListViewType.RecentProducts(it))
+            } ?: emptyList()
 
         _products.value = recent + currentProducts + productList
     }
@@ -71,15 +75,18 @@ class ProductListViewModel(
             val cartMap = items.associateBy { it.id }
             _cartItems.postValue(cartMap.mapValues { it.value.quantity })
 
-            val updatedProducts = _products.value.orEmpty().map {
-                if (it is ProductListViewType.FashionProductItemType) {
-                    val cartItem = cartMap[it.product.id]
-                    it.copy(
-                        isButtonVisible = cartItem == null || cartItem.quantity == 0,
-                        quantity = cartItem?.quantity ?: 0
-                    )
-                } else it
-            }
+            val updatedProducts =
+                _products.value.orEmpty().map {
+                    if (it is ProductListViewType.FashionProductItemType) {
+                        val cartItem = cartMap[it.product.id]
+                        it.copy(
+                            isButtonVisible = cartItem == null || cartItem.quantity == 0,
+                            quantity = cartItem?.quantity ?: 0,
+                        )
+                    } else {
+                        it
+                    }
+                }
             _products.postValue(updatedProducts)
         }
     }
@@ -105,13 +112,14 @@ class ProductListViewModel(
     fun onFloatingButtonClick(productId: Long) {
         val currentList = _products.value.orEmpty()
 
-        val updatedList = currentList.map {
-            if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
-                it.copy(isButtonVisible = false)
-            } else {
-                it
+        val updatedList =
+            currentList.map {
+                if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
+                    it.copy(isButtonVisible = false)
+                } else {
+                    it
+                }
             }
-        }
         _products.value = updatedList
     }
 
@@ -149,7 +157,10 @@ class ProductListViewModel(
         }
     }
 
-    private fun updateCartItemState(productId: Long, quantity: Int) {
+    private fun updateCartItemState(
+        productId: Long,
+        quantity: Int,
+    ) {
         _cartItems.postValue(
             _cartItems.value.orEmpty().toMutableMap().apply {
                 if (quantity == 0) {
@@ -157,24 +168,33 @@ class ProductListViewModel(
                 } else {
                     put(productId, quantity)
                 }
-            }
+            },
         )
 
-        val updatedList = _products.value?.map {
-            if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
-                it.copy(quantity = quantity, isButtonVisible = quantity == 0)
-            } else it
-        } ?: return
+        val updatedList =
+            _products.value?.map {
+                if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
+                    it.copy(quantity = quantity, isButtonVisible = quantity == 0)
+                } else {
+                    it
+                }
+            } ?: return
 
         _products.postValue(updatedList)
     }
 
-    private fun updateProductQuantityInList(productId: Long, quantity: Int) {
-        val updatedList = _products.value?.map {
-            if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
-                it.copy(quantity = quantity, isButtonVisible = quantity == 0)
-            } else it
-        } ?: return
+    private fun updateProductQuantityInList(
+        productId: Long,
+        quantity: Int,
+    ) {
+        val updatedList =
+            _products.value?.map {
+                if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
+                    it.copy(quantity = quantity, isButtonVisible = quantity == 0)
+                } else {
+                    it
+                }
+            } ?: return
         _products.postValue(updatedList)
     }
 }

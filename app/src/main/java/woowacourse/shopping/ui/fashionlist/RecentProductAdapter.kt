@@ -9,16 +9,22 @@ import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.domain.product.Product
 
 class RecentProductAdapter(private val products: List<Product>) : RecyclerView.Adapter<RecentProductViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecentProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding: ItemRecentProductBinding =
-                    DataBindingUtil.inflate(inflater, R.layout.item_recent_product, parent, false)
+            DataBindingUtil.inflate(inflater, R.layout.item_recent_product, parent, false)
         return RecentProductViewHolder(binding)
     }
 
     override fun getItemCount(): Int = products.size
 
-    override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecentProductViewHolder,
+        position: Int,
+    ) {
         holder.bind(products[position])
     }
 }

@@ -63,10 +63,14 @@ class CartViewModel : ViewModel() {
 
     fun increaseQuantity(cartItem: CartItem) {
         val newItem = cartItem.copy(quantity = cartItem.quantity + 1)
-        val updatedList = _cartItems.value?.map {
-            if (it.id == cartItem.id) newItem
-            else it
-        } ?: return
+        val updatedList =
+            _cartItems.value?.map {
+                if (it.id == cartItem.id) {
+                    newItem
+                } else {
+                    it
+                }
+            } ?: return
 
         _cartItems.value = updatedList
 
@@ -80,9 +84,10 @@ class CartViewModel : ViewModel() {
         val newCartItem = cartItem.copy(quantity = target.quantity.minus(1).coerceAtLeast(1))
         if (target.quantity > 1) {
             val newCartItem = cartItem.copy(quantity = target.quantity - 1)
-            val updatedList = _cartItems.value?.map {
-                if (it.id == cartItem.id) newCartItem else it
-            } ?: return
+            val updatedList =
+                _cartItems.value?.map {
+                    if (it.id == cartItem.id) newCartItem else it
+                } ?: return
 
             _cartItems.value = updatedList
 
