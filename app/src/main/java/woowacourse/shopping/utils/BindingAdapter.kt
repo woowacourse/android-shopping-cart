@@ -1,12 +1,9 @@
 package woowacourse.shopping.utils
 
+import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 
 object BindingAdapter {
     @JvmStatic
@@ -18,18 +15,8 @@ object BindingAdapter {
     }
 
     @JvmStatic
-    @BindingAdapter("bindLiveQuantityText")
-    fun TextView.bindLiveQuantityText(quantity: LiveData<Int>?) {
-        quantity?.observe(this.findViewTreeLifecycleOwner() ?: return) {
-            this.text = it.toString()
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("bindLiveTotalPriceText")
-    fun TextView.bindLiveTotalPriceText(totalPrice: LiveData<Int>?) {
-        totalPrice?.observe(this.findViewTreeLifecycleOwner() ?: return) { price ->
-            this.text = context.getString(R.string.price, price)
-        }
+    @BindingAdapter("isVisible")
+    fun View.setVisible(isVisible: Boolean) {
+        this.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 }
