@@ -109,19 +109,21 @@ class GoodsViewModel(
         goodsId: Int,
         transform: (Goods) -> Goods,
     ): Goods {
-        val currentGoods = goods.value.orEmpty()
-
-        val position = currentGoods.indexOfFirst { it.id == goodsId }
-
-        val updatedItem = transform(currentGoods[position])
+        var updatedItem: Goods? = null
         val updatedList =
-            currentGoods.toMutableList().apply {
-                this[position] = updatedItem
+            goods.value.orEmpty().mapIndexed { _, item ->
+                if (item.id == goodsId) {
+                    val transformed = transform(item)
+                    updatedItem = transformed
+                    transformed
+                } else {
+                    item
+                }
             }
 
         _goods.value = updatedList
         _onQuantityChanged.setValue(goodsId)
-        return updatedItem
+        return updatedItem ?: throw IllegalStateException("id $goodsId 해당하는 Goods가 없습니다")
     }
 
     fun loadMoreGoods() {
