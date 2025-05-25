@@ -39,7 +39,7 @@ class ProductsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        productsViewModel.loadPage()
+        productsViewModel.reloadPage()
     }
 
     override fun onPause() {

@@ -29,7 +29,7 @@ class ProductsViewModel(
     private val _navigateToCart = MutableLiveData<Event<Unit>>()
     val navigateToCart: LiveData<Event<Unit>> = _navigateToCart
 
-    private val _cartItemCount = MutableLiveData(0)
+    private val _cartItemCount = MutableLiveData(productRepository.getAll().size)
     val cartItemCount: LiveData<Int> = _cartItemCount
 
     private var isAllProductsFetched = false
@@ -75,6 +75,7 @@ class ProductsViewModel(
 
     fun loadPage() {
         setUpdatedProducts()
+        updateCartItemCount()
         val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
         val nextEnd = minOf(nextStart + pageSize, productRepository.getAll().size)
@@ -88,6 +89,11 @@ class ProductsViewModel(
         }
     }
 
+    fun reloadPage() {
+        if (_productsInShop.value?.isNotEmpty() == true) return
+        loadPage()
+    }
+
     fun updateButtonVisibility(canLoadMore: Boolean) {
         _isLoadMoreButtonVisible.value = canLoadMore && !isAllProductsFetched
     }
@@ -98,6 +104,10 @@ class ProductsViewModel(
 
     fun onOpenQuantitySelectClick(cartItem: CartItem) {
         cartRepository.add(cartItem)
+        updateCartItemCount()
+    }
+
+    private fun updateCartItemCount() {
         _cartItemCount.value = cartRepository.getAll().size
     }
 
