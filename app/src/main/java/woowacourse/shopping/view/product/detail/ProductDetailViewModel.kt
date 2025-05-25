@@ -12,30 +12,40 @@ import woowacourse.shopping.data.repository.cart.CartRepository
 import woowacourse.shopping.domain.Product
 
 class ProductDetailViewModel(
-    private val cartRepositoryImpl: CartRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _product: MutableLiveData<Product> = MutableLiveData()
+    private val _product = MutableLiveData<Product>()
     val product: LiveData<Product> get() = _product
+
+    private val _cartAddedEvent = MutableLiveData<Unit>()
+    val cartAddedEvent: LiveData<Unit> get() = _cartAddedEvent
+
+    private val _exitEvent = MutableLiveData<Unit>()
+    val exitEvent: LiveData<Unit> get() = _exitEvent
 
     fun fetchData(product: Product) {
         _product.value = product
     }
 
-    fun addData(
-        product: Product,
-        count: Int,
-    ) {
-        cartRepositoryImpl.addProduct(product, count)
+    fun onAddCartClicked(count: Int) {
+        product.value?.let {
+            cartRepository.addProduct(it, count)
+            _cartAddedEvent.value = Unit
+        }
+    }
+
+    fun onExitClicked() {
+        _exitEvent.value = Unit
     }
 
     companion object {
         val Factory: ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    val cartRepositoryImpl =
+                    val cartRepository =
                         (this[APPLICATION_KEY] as ShoppingApplication).cartRepository
                     ProductDetailViewModel(
-                        cartRepositoryImpl = cartRepositoryImpl,
+                        cartRepository = cartRepository,
                     )
                 }
             }

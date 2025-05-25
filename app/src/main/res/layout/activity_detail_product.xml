@@ -12,14 +12,6 @@
         <variable
             name="productDetailVM"
             type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
-
-        <variable
-            name="toExit"
-            type="kotlin.jvm.functions.Function0" />
-
-        <variable
-            name="toCart"
-            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +36,7 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/gray5"
             android:contentDescription="@string/detail_product_ic_exit"
-            android:onClick="@{() -> toExit.invoke()}"
+            android:onClick="@{() -> productDetailVM.onExitClicked()}"
             android:src="@drawable/ic_exit"
             app:layout_constraintBottom_toBottomOf="@id/tb_detail_product"
             app:layout_constraintEnd_toEndOf="@id/tb_detail_product"
@@ -126,7 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/cyan"
-            android:onClick="@{() -> toCart.invoke()}"
+            android:onClick="@{() -> productDetailVM.onAddCartClicked(productCountVM.productCount)}"
             android:text="@string/detail_product_add_cart"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

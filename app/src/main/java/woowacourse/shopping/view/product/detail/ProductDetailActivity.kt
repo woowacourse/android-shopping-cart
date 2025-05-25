@@ -26,9 +26,11 @@ class ProductDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         initView()
         initDataBinding()
-        bindData()
+        fetchData()
+        observeData()
     }
 
     private fun initView() {
@@ -46,13 +48,14 @@ class ProductDetailActivity : AppCompatActivity() {
             lifecycleOwner = this@ProductDetailActivity
             productDetailVM = productDetailViewModel
             productCountVM = productCountViewModel
-            toCart = ::addCart
-            toExit = ::finish
         }
     }
 
-    private fun bindData() {
+    private fun fetchData() {
         productDetailViewModel.fetchData(product)
+    }
+
+    private fun observeData() {
         productCountViewModel.isMinimumProductCount.observe(this) { isMinimumProductCount ->
             if (isMinimumProductCount) {
                 Toast
@@ -63,11 +66,12 @@ class ProductDetailActivity : AppCompatActivity() {
                     ).show()
             }
         }
-    }
-
-    private fun addCart() {
-        productDetailViewModel.addData(product, productCountViewModel.productCount.value ?: 1)
-        Toast.makeText(this, R.string.detail_product_add_cart_success, Toast.LENGTH_SHORT).show()
+        productDetailViewModel.cartAddedEvent.observe(this) {
+            Toast
+                .makeText(this, R.string.detail_product_add_cart_success, Toast.LENGTH_SHORT)
+                .show()
+        }
+        productDetailViewModel.exitEvent.observe(this) { finish() }
     }
 
     companion object {
