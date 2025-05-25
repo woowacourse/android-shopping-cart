@@ -30,7 +30,7 @@ class GoodsDetailViewModel(
         get() = _onItemAddedToCart
 
     fun setGoods(id: Int) {
-        _goods.value = goodsRepository.getById(id)
+        _goods.value = goodsRepository.getById(id)?.copy(quantity = MIN_PURCHASE_QUANTITY)
     }
 
     fun setLastGoods(id: Int?) {
