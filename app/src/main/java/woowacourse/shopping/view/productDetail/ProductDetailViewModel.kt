@@ -20,13 +20,24 @@ class ProductDetailViewModel(
 
     val imageUrl: LiveData<String?> = _product.map { it.imageUrl }
 
-    val quantity: MutableLiveData<Int> = MutableLiveData(1)
+    private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
+    val quantity: LiveData<Int> get() = _quantity
 
     private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
 
     fun updateProduct(product: Product) {
         _product.value = product
+        updateQuantity()
+    }
+
+    fun updateQuantity() {
+        val product = product.value ?: return
+        shoppingCartRepository.quantityOf(product) { result: Result<Int> ->
+            if (result.getOrNull() != 0) {
+                _quantity.postValue(result.getOrElse { 1 })
+            }
+        }
     }
 
     fun addToShoppingCart() {
@@ -35,7 +46,7 @@ class ProductDetailViewModel(
                 _event.setValue(ProductDetailEvent.ADD_SHOPPING_CART_FAILURE)
                 return
             }
-        val cartItem = CartItem(product, 1)
+        val cartItem = CartItem(product, quantity.value ?: 1)
 
         shoppingCartRepository.add(cartItem) { result: Result<Unit> ->
             result
@@ -48,10 +59,10 @@ class ProductDetailViewModel(
     }
 
     fun plusProductQuantity() {
-        quantity.value = quantity.value?.plus(1) ?: 2
+        _quantity.value = quantity.value?.plus(1) ?: 2
     }
 
     fun minusProductQuantity() {
-        quantity.value = quantity.value?.minus(1)?.coerceAtLeast(1) ?: 1
+        _quantity.value = quantity.value?.minus(1)?.coerceAtLeast(1) ?: 1
     }
 }
