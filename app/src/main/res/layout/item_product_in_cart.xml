@@ -55,6 +55,16 @@
             app:layout_constraintStart_toStartOf="@id/product_title"
             app:layout_constraintTop_toBottomOf="@id/product_title" />
 
+        <include
+            layout="@layout/item_quantity"
+            android:id="@+id/quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/product_image"
+            app:layout_constraintTop_toBottomOf="@id/product_title"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp" />
+
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
