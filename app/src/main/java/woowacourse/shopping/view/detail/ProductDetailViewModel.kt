@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,17 +18,26 @@ class ProductDetailViewModel(
     private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _inventoryProduct = MutableLiveData<InventoryProduct>()
-    val inventoryProduct: LiveData<InventoryProduct> get() = _inventoryProduct
-
-    private val _lastProduct = MutableLiveData<RecentProduct>()
-    val lastProduct: LiveData<RecentProduct> get() = _lastProduct
-
-    fun loadInventoryProduct(product: InventoryProduct) {
-        _inventoryProduct.value = product.copy(quantity = PRODUCT_MINIMUM_QUANTITY)
+    val inventoryProduct: LiveData<InventoryProduct> get() {
+        return _inventoryProduct
     }
 
-    fun loadRecentProduct(product: InventoryProduct) {
-        recentProductRepository.getLastProductBefore(product) { recentProduct ->
+    private val _lastProduct = MutableLiveData<RecentProduct>()
+    val lastProduct: LiveData<RecentProduct> get() {
+        Log.wtf("asdf", "${_lastProduct.value}")
+        return _lastProduct
+    }
+
+    fun loadInventoryProduct(productId: Int) {
+        inventoryRepository.getOrNull(productId) { product ->
+            if (product != null) {
+                _inventoryProduct.postValue(product.copy(quantity = PRODUCT_MINIMUM_QUANTITY))
+            }
+        }
+    }
+
+    fun loadRecentProduct(productId: Int) {
+        recentProductRepository.getLastProductBefore(productId) { recentProduct ->
             _lastProduct.postValue(recentProduct)
         }
     }

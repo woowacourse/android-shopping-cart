@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.RecentProduct
 
 interface RecentProductRepository {
@@ -10,7 +9,7 @@ interface RecentProductRepository {
     )
 
     fun getLastProductBefore(
-        product: InventoryItem.InventoryProduct,
+        productId: Int,
         onResult: (RecentProduct?) -> Unit,
     )
 

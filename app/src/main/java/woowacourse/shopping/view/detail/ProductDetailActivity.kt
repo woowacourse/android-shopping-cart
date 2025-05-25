@@ -12,7 +12,6 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.view.base.BaseActivity
 import woowacourse.shopping.view.inventory.item.InventoryItem.InventoryProduct
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
-import woowacourse.shopping.view.util.getParcelableCompat
 
 class ProductDetailActivity :
     BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail),
@@ -23,17 +22,13 @@ class ProductDetailActivity :
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
 
-        val product: InventoryProduct =
-            intent.getParcelableCompat<InventoryProduct>(KEY_PRODUCT) ?: run {
-                onUnexpectedError(getString(R.string.error_product_is_null))
-                return
-            }
-        initializeViewModel(product)
+        val productId: Int = intent.getIntExtra(KEY_PRODUCT_ID, 0)
+        initializeViewModel(productId)
         binding.viewModel = viewModel
         binding.handler = this
     }
 
-    private fun initializeViewModel(product: InventoryProduct) {
+    private fun initializeViewModel(productId: Int) {
         val shoppingApplication = application as ShoppingApplication
         val factory =
             ProductDetailViewModel.createFactory(
@@ -42,8 +37,8 @@ class ProductDetailActivity :
                 shoppingApplication.recentProductRepository,
             )
         viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
-        viewModel.loadInventoryProduct(product)
-        viewModel.loadRecentProduct(product)
+        viewModel.loadInventoryProduct(productId)
+        viewModel.loadRecentProduct(productId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,13 +60,13 @@ class ProductDetailActivity :
     }
 
     companion object {
-        private const val KEY_PRODUCT = "product"
+        private const val KEY_PRODUCT_ID = "product_id"
 
         fun newIntent(
             context: Context,
-            product: InventoryProduct,
+            productId: Int,
         ): Intent {
-            return Intent(context, ProductDetailActivity::class.java).putExtra(KEY_PRODUCT, product)
+            return Intent(context, ProductDetailActivity::class.java).putExtra(KEY_PRODUCT_ID, productId)
         }
     }
 }

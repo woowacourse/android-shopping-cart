@@ -18,7 +18,7 @@ fun setPrice(
 @BindingAdapter("productImage")
 fun setImage(
     view: ImageView,
-    url: String,
+    url: String?,
 ) {
     Glide.with(view.context)
         .load(url)

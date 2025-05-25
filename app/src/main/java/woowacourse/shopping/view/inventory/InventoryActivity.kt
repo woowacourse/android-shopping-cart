@@ -70,7 +70,7 @@ class InventoryActivity :
 
     override fun onProductSelected(product: InventoryProduct) {
         viewModel.updateRecentProducts(product)
-        startActivity(ProductDetailActivity.newIntent(this, product))
+        startActivity(ProductDetailActivity.newIntent(this, product.id))
     }
 
     override fun onIncreaseQuantity(

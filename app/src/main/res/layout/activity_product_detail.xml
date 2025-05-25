@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.detail.ProductDetailViewModel" />
@@ -73,12 +74,12 @@
 
             <TextView
                 android:id="@+id/tv_product_price"
+                priceWithFormat="@{viewModel.inventoryProduct.price * viewModel.inventoryProduct.quantity}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                priceWithFormat="@{viewModel.inventoryProduct.price * viewModel.inventoryProduct.quantity}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -110,8 +111,8 @@
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:clickable="true"
-                    android:text="@{String.valueOf(viewModel.inventoryProduct.quantity)}"
                     android:gravity="center"
+                    android:text="@{String.valueOf(viewModel.inventoryProduct.quantity)}"
                     android:textColor="@color/dark_gray"
                     android:textSize="22sp"
                     android:textStyle="bold"
