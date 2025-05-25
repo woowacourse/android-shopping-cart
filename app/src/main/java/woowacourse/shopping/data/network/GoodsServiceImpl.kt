@@ -40,7 +40,7 @@ class GoodsServiceImpl : GoodsService {
 
     private fun executeRequest(url: okhttp3.HttpUrl): String? {
         val request =
-            Request.Builder()
+            requestBuilder
                 .url(url)
                 .build()
 
@@ -60,6 +60,7 @@ class GoodsServiceImpl : GoodsService {
     }
 
     companion object {
+        private val requestBuilder = Request.Builder()
         private val gson = Gson()
         private val client = OkHttpClient()
         private const val BASE_URL: String = "http://localhost:8888"
