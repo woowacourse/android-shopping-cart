@@ -13,8 +13,8 @@ abstract class HttpClientProductDataSource {
     private val parser = Gson()
     private val client = OkHttpClient()
 
-    protected open val findUrl: String = ""
-    protected open val totalSizeUrl: String = ""
+    abstract val findUrl: String
+    abstract val totalSizeUrl: String
 
     fun findAll(pageRequest: PageRequest): Page<ProductUiModel> {
         val url =
