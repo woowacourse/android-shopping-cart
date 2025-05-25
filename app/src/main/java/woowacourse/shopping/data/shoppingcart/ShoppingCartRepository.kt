@@ -1,25 +1,25 @@
 package woowacourse.shopping.data.shoppingcart
 
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
 
 interface ShoppingCartRepository {
     fun getOrNull(
         id: Int,
-        onResult: (CartItem?) -> Unit,
+        onResult: (CartProduct?) -> Unit,
     )
 
-    fun getAll(onSuccess: (List<CartItem>) -> Unit)
+    fun getAll(onSuccess: (List<CartProduct>) -> Unit)
 
     fun getTotalCount(onResult: (Int) -> Unit)
 
     fun getPage(
         pageSize: Int,
         requestedIndex: Int,
-        onSuccess: (Page<CartItem>) -> Unit,
+        onSuccess: (Page<CartProduct>) -> Unit,
     )
 
-    fun insert(cartItem: CartItem)
+    fun insert(cartProduct: CartProduct)
 
-    fun delete(cartItem: CartItem)
+    fun delete(cartProduct: CartProduct)
 }

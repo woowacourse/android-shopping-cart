@@ -2,21 +2,21 @@ package woowacourse.shopping.data.shoppingcart
 
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.data.toEntity
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
 import kotlin.concurrent.thread
 
 class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : ShoppingCartRepository {
     override fun getOrNull(
         id: Int,
-        onResult: (CartItem?) -> Unit,
+        onResult: (CartProduct?) -> Unit,
     ) {
         thread {
             onResult(cartItemDao.getOrNull(id)?.toDomain())
         }
     }
 
-    override fun getAll(onSuccess: (List<CartItem>) -> Unit) {
+    override fun getAll(onSuccess: (List<CartProduct>) -> Unit) {
         thread {
             onSuccess(cartItemDao.getAll().map(CartItemEntity::toDomain))
         }
@@ -31,7 +31,7 @@ class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : Shoppin
     override fun getPage(
         pageSize: Int,
         requestedIndex: Int,
-        onSuccess: (Page<CartItem>) -> Unit,
+        onSuccess: (Page<CartProduct>) -> Unit,
     ) {
         getAll { allItems ->
             val pageIndex = requestedIndex.coerceAtLeast(0)
@@ -51,15 +51,15 @@ class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : Shoppin
         }
     }
 
-    override fun insert(cartItem: CartItem) {
+    override fun insert(cartProduct: CartProduct) {
         thread {
-            cartItemDao.insert(cartItem.toEntity())
+            cartItemDao.insert(cartProduct.toEntity())
         }
     }
 
-    override fun delete(cartItem: CartItem) {
+    override fun delete(cartProduct: CartProduct) {
         thread {
-            cartItemDao.delete(cartItem.toEntity())
+            cartItemDao.delete(cartProduct.toEntity())
         }
     }
 }

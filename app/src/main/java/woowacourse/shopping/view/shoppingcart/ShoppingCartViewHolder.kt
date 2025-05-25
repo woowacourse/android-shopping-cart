@@ -3,7 +3,7 @@ package woowacourse.shopping.view.shoppingcart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.view.base.BaseViewHolder
 
 class ShoppingCartViewHolder(
@@ -20,16 +20,16 @@ class ShoppingCartViewHolder(
         binding.handler = handler
     }
 
-    fun bind(cartItem: CartItem) {
-        binding.cartItem = cartItem
+    fun bind(cartProduct: CartProduct) {
+        binding.cartItem = cartProduct
         binding.tvIncreaseQuantity.setOnClickListener {
-            handler.onIncreaseQuantity(adapterPosition, cartItem)
+            handler.onIncreaseQuantity(adapterPosition, cartProduct)
         }
         binding.tvDecreaseQuantity.setOnClickListener {
-            handler.onDecreaseQuantity(adapterPosition, cartItem)
+            handler.onDecreaseQuantity(adapterPosition, cartProduct)
         }
         binding.ivRemoveItemProductIcon.setOnClickListener {
-            handler.onRemoveCartItem(cartItem)
+            handler.onRemoveCartItem(cartProduct)
         }
     }
 }

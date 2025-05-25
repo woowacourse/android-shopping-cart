@@ -7,15 +7,15 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toInventoryProduct
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Page
 
 class ShoppingCartViewModel(
     private val inventoryRepository: InventoryRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _cartItems = MutableLiveData<Page<CartItem>>()
-    val cartItems: LiveData<Page<CartItem>> get() = _cartItems
+    private val _cartItems = MutableLiveData<Page<CartProduct>>()
+    val cartItems: LiveData<Page<CartProduct>> get() = _cartItems
 
     fun requestPage(pageIndex: Int) {
         shoppingCartRepository.getPage(PAGE_SIZE, pageIndex) { page ->
@@ -43,9 +43,9 @@ class ShoppingCartViewModel(
 
     fun increaseQuantity(
         position: Int,
-        cartItem: CartItem,
+        cartProduct: CartProduct,
     ) {
-        val updatedItem = cartItem.copy(quantity = cartItem.quantity + 1)
+        val updatedItem = cartProduct.copy(quantity = cartProduct.quantity + 1)
         (_cartItems.value?.items ?: emptyList()).toMutableList().let { newList ->
             newList[position] = updatedItem
             _cartItems.postValue(_cartItems.value?.copy(items = newList))
@@ -56,13 +56,13 @@ class ShoppingCartViewModel(
 
     fun decreaseQuantity(
         position: Int,
-        cartItem: CartItem,
+        cartProduct: CartProduct,
     ) {
-        if (cartItem.quantity == MINIMUM_CART_ITEM_QUANTITY) {
-            removeCartItem(cartItem)
+        if (cartProduct.quantity == MINIMUM_CART_ITEM_QUANTITY) {
+            removeCartItem(cartProduct)
             return
         }
-        val updatedItem = cartItem.copy(quantity = cartItem.quantity - 1)
+        val updatedItem = cartProduct.copy(quantity = cartProduct.quantity - 1)
         (_cartItems.value?.items ?: emptyList()).toMutableList().let { newList ->
             newList[position] = updatedItem
             _cartItems.postValue(_cartItems.value?.copy(items = newList))
@@ -71,9 +71,9 @@ class ShoppingCartViewModel(
         shoppingCartRepository.insert(updatedItem)
     }
 
-    fun removeCartItem(cartItem: CartItem) {
-        shoppingCartRepository.delete(cartItem)
-        inventoryRepository.insert(cartItem.toInventoryProduct().copy(quantity = 0))
+    fun removeCartItem(cartProduct: CartProduct) {
+        shoppingCartRepository.delete(cartProduct)
+        inventoryRepository.insert(cartProduct.toInventoryProduct().copy(quantity = 0))
         requestPage(_cartItems.value?.pageIndex ?: 0)
     }
 

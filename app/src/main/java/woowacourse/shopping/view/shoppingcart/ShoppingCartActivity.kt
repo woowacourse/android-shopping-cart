@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.view.base.BaseActivity
 
 class ShoppingCartActivity :
@@ -65,20 +65,20 @@ class ShoppingCartActivity :
 
     override fun onIncreaseQuantity(
         position: Int,
-        cartItem: CartItem,
+        cartProduct: CartProduct,
     ) {
-        viewModel.increaseQuantity(position, cartItem)
+        viewModel.increaseQuantity(position, cartProduct)
     }
 
     override fun onDecreaseQuantity(
         position: Int,
-        cartItem: CartItem,
+        cartProduct: CartProduct,
     ) {
-        viewModel.decreaseQuantity(position, cartItem)
+        viewModel.decreaseQuantity(position, cartProduct)
     }
 
-    override fun onRemoveCartItem(cartItem: CartItem) {
-        viewModel.removeCartItem(cartItem)
+    override fun onRemoveCartItem(cartProduct: CartProduct) {
+        viewModel.removeCartItem(cartProduct)
     }
 
     companion object {
