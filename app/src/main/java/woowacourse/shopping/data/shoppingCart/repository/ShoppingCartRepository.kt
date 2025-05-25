@@ -28,7 +28,7 @@ interface ShoppingCartRepository {
 
     fun fetchSelectedQuantity(
         product: Product,
-        onResult: (Result<Int>) -> Unit,
+        onResult: (Result<Int?>) -> Unit,
     )
 
     fun fetchSelectedQuantity(

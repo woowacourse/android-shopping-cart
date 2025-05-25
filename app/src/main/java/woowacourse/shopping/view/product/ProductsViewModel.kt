@@ -31,6 +31,7 @@ class ProductsViewModel(
 
     init {
         updateProducts()
+        updateShoppingCartQuantity()
     }
 
     fun updateProducts() {
@@ -42,33 +43,43 @@ class ProductsViewModel(
             result
                 .onSuccess { newProducts ->
                     loadable = newProducts.size == LOAD_PRODUCTS_SIZE + 1
-                    val productsToShow: List<Product> = newProducts.take(LOAD_PRODUCTS_SIZE)
-                    val updatedProducts: List<ProductsItem> =
-                        getUpdateProductsItem(productsToShow, currentProducts, loadable)
+                    val productsToShow = newProducts.take(LOAD_PRODUCTS_SIZE)
 
-                    _products.postValue(updatedProducts)
+                    updateProductsQuantity(productsToShow, currentProducts)
                 }.onFailure {
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }
         }
     }
 
-    private fun getUpdateProductsItem(
+    private fun updateProductsQuantity(
         productsToShow: List<Product>,
         currentProducts: List<ProductsItem>,
-        loadable: Boolean,
-    ): List<ProductsItem> {
-        val productsWithoutLoadItem =
-            if (currentProducts.lastOrNull() is LoadItem) {
-                currentProducts.dropLast(1)
-            } else {
-                currentProducts
-            }
+    ) {
+        shoppingCartRepository.fetchSelectedQuantity(productsToShow) { result ->
+            result
+                .onSuccess { shoppingCartProducts: List<ShoppingCartProduct> ->
+                    val productsWithoutLoadItem =
+                        if (currentProducts.lastOrNull() is LoadItem) {
+                            currentProducts.dropLast(1)
+                        } else {
+                            currentProducts
+                        }
+                    val updatedProductItems =
+                        productsToShow.map { product ->
+                            val quantity =
+                                shoppingCartProducts.find { it.product == product }?.quantity ?: 0
+                            ProductItem(product, quantity)
+                        }
 
-        return buildList {
-            addAll(productsWithoutLoadItem)
-            addAll(productsToShow.map(::ProductItem))
-            if (loadable) add(LoadItem)
+                    val updatedList =
+                        productsWithoutLoadItem + updatedProductItems +
+                            if (loadable) listOf(LoadItem) else emptyList()
+
+                    _products.postValue(updatedList)
+                }.onFailure {
+                    _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
+                }
         }
     }
 
@@ -119,7 +130,8 @@ class ProductsViewModel(
     fun updateSelectedQuantity(product: Product) {
         shoppingCartRepository.fetchSelectedQuantity(product) { result ->
             result
-                .onSuccess { selectedQuantity: Int ->
+                .onSuccess { selectedQuantity: Int? ->
+                    if (selectedQuantity == null) return@fetchSelectedQuantity
                     val currentList = products.value.orEmpty()
                     val updatedList =
                         currentList.map { item ->

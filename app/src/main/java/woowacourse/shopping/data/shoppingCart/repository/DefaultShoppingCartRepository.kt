@@ -1,17 +1,13 @@
 package woowacourse.shopping.data.shoppingCart.repository
 
-import woowacourse.shopping.data.product.entity.toEntity
 import woowacourse.shopping.data.shoppingCart.dao.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
 import woowacourse.shopping.data.shoppingCart.entity.toEntity
-import woowacourse.shopping.data.shoppingCart.storage.ShoppingCartStorage
-import woowacourse.shopping.data.shoppingCart.storage.VolatileShoppingCartStorage
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 import kotlin.concurrent.thread
 
 class DefaultShoppingCartRepository(
-    private val shoppingCartStorage: ShoppingCartStorage = VolatileShoppingCartStorage,
     private val shoppingCartDao: ShoppingCartDao,
 ) : ShoppingCartRepository {
     override fun load(
@@ -37,10 +33,10 @@ class DefaultShoppingCartRepository(
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        val shoppingCartProduct = ShoppingCartProduct(product, quantity)
         thread {
             runCatching {
-                shoppingCartDao.insertShoppingCart(shoppingCartProduct.toEntity())
+                val shoppingCartProduct = ShoppingCartProduct(product, quantity)
+                shoppingCartDao.increaseQuantity(shoppingCartProduct.toEntity())
             }.onSuccess {
                 onResult(Result.success(Unit))
             }.onFailure { exception ->
@@ -55,7 +51,7 @@ class DefaultShoppingCartRepository(
     ) {
         thread {
             runCatching {
-                shoppingCartStorage.decreaseQuantity(product.toEntity())
+                shoppingCartDao.decreaseQuantity(product.id)
             }.onSuccess {
                 onResult(Result.success(Unit))
             }.onFailure { exception ->
@@ -70,7 +66,7 @@ class DefaultShoppingCartRepository(
     ) {
         thread {
             runCatching {
-                shoppingCartStorage.remove(product.toEntity())
+                shoppingCartDao.delete(product.id)
             }.onSuccess {
                 onResult(Result.success(Unit))
             }.onFailure { exception ->
@@ -81,12 +77,12 @@ class DefaultShoppingCartRepository(
 
     override fun fetchSelectedQuantity(
         product: Product,
-        onResult: (Result<Int>) -> Unit,
+        onResult: (Result<Int?>) -> Unit,
     ) {
         thread {
             runCatching {
-                shoppingCartStorage.fetchQuantity(product.toEntity())
-            }.onSuccess { quantity: Int ->
+                shoppingCartDao.getQuantity(product.id)
+            }.onSuccess { quantity: Int? ->
                 onResult(Result.success(quantity))
             }.onFailure { exception ->
                 onResult(Result.failure(exception))
@@ -101,12 +97,13 @@ class DefaultShoppingCartRepository(
         thread {
             runCatching {
                 products.map { product ->
+                    val quantity = shoppingCartDao.getQuantity(product.id)
                     ShoppingCartProduct(
                         product = product,
-                        quantity = shoppingCartStorage.fetchQuantity(product.toEntity()),
+                        quantity = quantity,
                     )
                 }
-            }.onSuccess { shoppingCartProducts: List<ShoppingCartProduct> ->
+            }.onSuccess { shoppingCartProducts ->
                 onResult(Result.success(shoppingCartProducts))
             }.onFailure { exception ->
                 onResult(Result.failure(exception))
@@ -117,7 +114,7 @@ class DefaultShoppingCartRepository(
     override fun fetchAllQuantity(onResult: (Result<Int>) -> Unit) {
         thread {
             runCatching {
-                shoppingCartStorage.quantity
+                shoppingCartDao.getTotalQuantity()
             }.onSuccess { allQuantity: Int ->
                 onResult(Result.success(allQuantity))
             }.onFailure { exception ->

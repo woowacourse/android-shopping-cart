@@ -12,7 +12,8 @@ class ShoppingApplication : Application() {
                 applicationContext,
                 ShoppingCartDatabase::class.java,
                 "shoppingCart",
-            ).build()
+            ).fallbackToDestructiveMigration()
+            .build()
     }
 
     override fun onCreate() {
