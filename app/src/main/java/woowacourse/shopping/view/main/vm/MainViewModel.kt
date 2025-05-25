@@ -1,16 +1,19 @@
 package woowacourse.shopping.view.main.vm
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
+import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
 import woowacourse.shopping.view.loader.HistoryLoader
 import woowacourse.shopping.view.loader.ProductLoader
 import woowacourse.shopping.view.main.MainUiEvent
+import woowacourse.shopping.view.main.state.HistoryState
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.LoadState
 import woowacourse.shopping.view.main.state.ProductState
@@ -22,67 +25,79 @@ class MainViewModel(
     private val productLoader: ProductLoader,
     private val historyLoader: HistoryLoader,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData(ProductUiState())
+    private val productItems = MutableLiveData<List<ProductState>>(emptyList())
+
+    private val historyItems = MutableLiveData<List<HistoryState>>(emptyList())
+
+    private val loadState = MutableLiveData<LoadState>()
+
+    private val _uiState =
+        MediatorLiveData<ProductUiState>().apply {
+            addSource(productItems) { combine() }
+            addSource(historyItems) { combine() }
+            addSource(loadState) { combine() }
+        }
     val uiState: LiveData<ProductUiState> get() = _uiState
 
     private val _uiEvent = MutableSingleLiveData<MainUiEvent>()
     val uiEvent: SingleLiveData<MainUiEvent> get() = _uiEvent
 
     init {
-        productLoader(INITIAL_PAGE, PAGE_SIZE) { productStates, hasNextPage ->
-            historyLoader { historyStates ->
-                _uiState.postValue(
-                    ProductUiState(
-                        productItems = productStates,
-                        historyItems = historyStates,
-                        load = LoadState.of(hasNextPage),
-                    ),
-                )
+        loadInitial()
+    }
+
+    private fun loadInitial() {
+        historyLoader { historyStates ->
+            productLoader(INITIAL_PAGE, PAGE_SIZE) { productStates, hasNextPage ->
+                historyItems.postValue(historyStates)
+                productItems.postValue(productStates)
+                loadState.postValue(LoadState.of(hasNextPage))
             }
         }
     }
 
     fun loadPage() {
-        withUiState { state ->
-            val newPage = state.productItemCount().div(PAGE_SIZE)
-
-            productLoader.invoke(
-                pageIndex = newPage,
-                pageSize = PAGE_SIZE,
-            ) { productStates, hasNext ->
-                val newState = state.addItems(productStates, hasNext)
-                _uiState.postValue(newState)
+        withState(productItems.value) { state ->
+            val pageIndex = state.size / PAGE_SIZE
+            productLoader(pageIndex, PAGE_SIZE) { newProducts, hasNext ->
+                productItems.postValue(state + newProducts)
+                loadState.postValue(LoadState.of(hasNext))
             }
         }
     }
 
     fun decreaseCartQuantity(productId: Long) {
-        withUiState { state ->
+        withState(_uiState.value) { state ->
             val result = state.decreaseCartQuantity(productId)
             handleDecreaseQuantity(state, result, productId)
         }
     }
 
     fun increaseCartQuantity(productId: Long) {
-        withUiState { state ->
+        withState(_uiState.value) { state ->
             val result = state.canIncreaseCartQuantity(productId)
             handleIncreaseQuantity(state, result, productId)
         }
     }
 
     fun syncCartQuantities() {
-        withUiState { state ->
-            val products = state.productItems
-            val productIds = state.productIds
+        withState(productItems.value) { state ->
+            val productIds = state.map { it.item.id }
 
             cartRepository.getCarts(productIds) { carts ->
-                val synced =
-                    products.mapIndexed { index, productState ->
-                        val quantity = carts.getOrNull(index)?.quantity ?: Quantity(0)
+                val updated =
+                    state.mapIndexed { i, productState ->
+                        val quantity = carts.getOrNull(i)?.quantity ?: Quantity(0)
                         productState.copy(cartQuantity = quantity)
                     }
-                _uiState.postValue(state.copy(productItems = synced))
+                productItems.postValue(updated)
             }
+        }
+    }
+
+    fun syncHistory() {
+        historyLoader { historyStates ->
+            historyItems.postValue(historyStates)
         }
     }
 
@@ -126,8 +141,17 @@ class MainViewModel(
         _uiEvent.setValue(event)
     }
 
-    private inline fun withUiState(block: (ProductUiState) -> Unit) {
-        _uiState.value?.let(block)
+    private fun combine() {
+        val products = productItems.value ?: return
+        val history = historyItems.value ?: return
+        val load = loadState.value ?: return
+
+        _uiState.value =
+            ProductUiState(
+                productItems = products,
+                historyItems = history,
+                load = load,
+            )
     }
 
     companion object {
