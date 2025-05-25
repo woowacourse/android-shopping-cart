@@ -18,7 +18,7 @@ class CartActivity :
     CartViewHolder.CartClickListener {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
-        (application as ShoppingApplication).shoppingFactory
+        (application as ShoppingApplication).cartFactory
     }
     private val adapter: CartAdapter by lazy { CartAdapter(this) }
 

@@ -24,7 +24,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGoodsDetailsBinding
     private lateinit var cart: CartUiModel
     private val viewModel: GoodsDetailsViewModel by viewModels {
-        (application as ShoppingApplication).shoppingFactory
+        (application as ShoppingApplication).goodsDetailsFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
