@@ -3,12 +3,14 @@ package woowacourse.shopping.view.products
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.model.products.CartState
 
 class ProductsAdapter(
     private val productClickListener: ProductsClickListener,
     private val loadMoreClickListener: LoadMoreClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var product: List<ProductListViewType> = emptyList()
+    private var cartState: CartState = CartState()
 
     override fun getItemViewType(position: Int): Int =
         when (product[position]) {
@@ -21,7 +23,12 @@ class ProductsAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_product -> ProductViewHolder.create(parent, productClickListener)
+            R.layout.item_product ->
+                ProductViewHolder.create(
+                    parent,
+                    productClickListener,
+                )
+
             R.layout.item_load_more -> LoadMoreViewHolder.create(parent, loadMoreClickListener)
 
             else -> throw IllegalArgumentException("지원하지 않는 타입입니다")
@@ -34,12 +41,21 @@ class ProductsAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(product[position] as ProductListViewType.ProductType)
+            is ProductViewHolder -> {
+                val productType = product[position] as ProductListViewType.ProductType
+                val quantity = cartState.getQuantity(productType.product.id)
+                holder.bind(productType, quantity)
+            }
         }
     }
 
     fun updateProductsView(list: List<ProductListViewType>?) {
         product = list.orEmpty()
+        notifyDataSetChanged()
+    }
+
+    fun updateCartState(newCartState: CartState) {
+        cartState = newCartState
         notifyDataSetChanged()
     }
 }

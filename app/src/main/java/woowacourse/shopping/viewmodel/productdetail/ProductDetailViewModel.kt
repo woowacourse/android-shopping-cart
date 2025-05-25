@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.model.products.Product
-import woowacourse.shopping.view.cart.Cart
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.CartRepositoryImpl
 
 class ProductDetailViewModel(
-    private val cart: Cart,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     fun addToCart(product: Product) {
-        cart.add(product)
+        cartRepository.addProduct(product)
     }
 
     companion object {
@@ -27,7 +28,7 @@ class ProductDetailViewModel(
                     extras.createSavedStateHandle()
 
                     return ProductDetailViewModel(
-                        Cart,
+                        CartRepositoryImpl.getInstance(),
                     ) as T
                 }
             }

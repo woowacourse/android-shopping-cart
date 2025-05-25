@@ -45,7 +45,19 @@
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            app:fabSize="mini" />
+
+        <include
+            layout="@layout/item_quantity"
+            android:id="@+id/quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/product_title"
