@@ -54,7 +54,7 @@ class GoodsDetailViewModelTest {
     @Test
     fun `장바구니에 추가할 상품 수량의 기본값은 1이다`() {
         // then
-        goodsDetailViewModel.count.getOrAwaitValue() shouldBe 1
+        goodsDetailViewModel.goods.getOrAwaitValue().quantity shouldBe 1
     }
 
     @Test
@@ -63,7 +63,7 @@ class GoodsDetailViewModelTest {
         goodsDetailViewModel.increaseCount()
 
         // then
-        goodsDetailViewModel.count.getOrAwaitValue() shouldBe 2
+        goodsDetailViewModel.goods.getOrAwaitValue().quantity shouldBe 2
     }
 
     @Test
@@ -75,7 +75,7 @@ class GoodsDetailViewModelTest {
         goodsDetailViewModel.tryDecreaseCount()
 
         // then
-        goodsDetailViewModel.count.getOrAwaitValue() shouldBe 1
+        goodsDetailViewModel.goods.getOrAwaitValue().quantity shouldBe 1
     }
 
     @Test
