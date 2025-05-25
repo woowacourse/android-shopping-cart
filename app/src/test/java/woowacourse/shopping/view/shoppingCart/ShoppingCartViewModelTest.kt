@@ -28,7 +28,7 @@ class ShoppingCartViewModelTest {
         every { repository.load(any(), any()) } just Awaits
 
         // when
-        viewModel.updateShoppingCart()
+        viewModel.loadShoppingCart()
 
         // then
         verify { repository.load(any(), any()) }

@@ -10,4 +10,6 @@ interface ShoppingCartStorage {
     fun remove(product: CartItemEntity)
 
     fun update(products: List<CartItemEntity>)
+
+    fun quantityOf(productId: Long): Int
 }

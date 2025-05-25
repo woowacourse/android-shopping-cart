@@ -8,8 +8,6 @@ import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
-import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.PaginationItem
-import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
@@ -36,19 +34,19 @@ class ShoppingCartViewModel(
         get() {
             val hasNext = endExclusive < allShoppingCartItems.size
             val hasPrevious = page > FIRST_PAGE
-            val paginationItem = PaginationItem(page, hasNext, hasPrevious)
+            val paginationItem = ShoppingCartItem.PaginationItem(page, hasNext, hasPrevious)
 
-            return map(::ProductItem) + paginationItem
+            return map(ShoppingCartItem::ProductItem) + paginationItem
         }
 
     private val _event: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ShoppingCartEvent> get() = _event
 
     init {
-        updateShoppingCart()
+        loadShoppingCart()
     }
 
-    fun updateShoppingCart() {
+    fun loadShoppingCart() {
         shoppingCartRepository.load { result: Result<List<CartItem>> ->
             result
                 .onSuccess { cartItems: List<CartItem> ->
@@ -61,7 +59,32 @@ class ShoppingCartViewModel(
                             ).toShoppingCartItems,
                     )
                 }.onFailure {
-                    _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_FAILURE)
+                    _event.postValue(ShoppingCartEvent.LOAD_SHOPPING_CART_FAILURE)
+                }
+        }
+    }
+
+    fun updateShoppingCart() {
+        val productItems: List<ShoppingCartItem.ProductItem> =
+            shoppingCartItems.value?.filterIsInstance<ShoppingCartItem.ProductItem>() ?: return
+
+        val cartItemsToUpdate: List<CartItem> =
+            productItems
+                .map { productItem: ShoppingCartItem.ProductItem ->
+                    CartItem(
+                        productItem.cartItem.id,
+                        productItem.cartItem.name,
+                        productItem.cartItem.price,
+                        productItem.quantity,
+                    )
+                }.filter { cartItem -> cartItem.quantity != 0 }
+
+        shoppingCartRepository.update(cartItemsToUpdate) { result ->
+            result
+                .onSuccess {
+                    _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_PRODUCT_SUCCESS)
+                }.onFailure {
+                    _event.postValue(ShoppingCartEvent.UPDATE_SHOPPING_CART_PRODUCT_FAILURE)
                 }
         }
     }
@@ -70,7 +93,7 @@ class ShoppingCartViewModel(
         shoppingCartRepository.remove(cartItem) { result: Result<Unit> ->
             result
                 .onSuccess {
-                    updateShoppingCart()
+                    loadShoppingCart()
                 }.onFailure {
                     _event.postValue(ShoppingCartEvent.REMOVE_SHOPPING_CART_PRODUCT_FAILURE)
                 }
@@ -79,7 +102,7 @@ class ShoppingCartViewModel(
 
     fun plusPage() {
         page++
-        updateShoppingCart()
+        loadShoppingCart()
     }
 
     fun minusPage() {
@@ -87,7 +110,7 @@ class ShoppingCartViewModel(
             page--
         }
 
-        updateShoppingCart()
+        loadShoppingCart()
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.product
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,47 +9,81 @@ import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
 
 class ProductsViewModel(
-    productsRepository: ProductsRepository = DefaultProductsRepository(),
+    private val productsRepository: ProductsRepository = DefaultProductsRepository(),
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
-    private var allCartItems: List<CartItem> = emptyList()
+    private var allProducts: List<Product> = emptyList()
+    private var shoppingCart: List<CartItem> = emptyList()
 
-    private val _productItems: MutableLiveData<List<ProductsItem>> = MutableLiveData()
+    private val _productItems: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
     val productItems: LiveData<List<ProductsItem>> get() = _productItems
 
     private val _event: MutableSingleLiveData<ProductsEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductsEvent> get() = _event
 
     init {
-        loadAllProducts(productsRepository)
+        loadAllProducts()
+    }
+
+    fun loadAllProducts() {
+        _productItems.value = emptyList()
+        productsRepository.load { result: Result<List<Product>> ->
+            result
+                .onSuccess { products: List<Product> ->
+                    allProducts = products
+                    loadShoppingCart()
+                }.onFailure {
+                    _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
+                }
+        }
+    }
+
+    private fun loadShoppingCart() {
+        shoppingCartRepository.load { result: Result<List<CartItem>> ->
+            shoppingCart = result.getOrElse { emptyList() }
+            updateProducts()
+        }
     }
 
     fun updateProducts() {
         runCatching {
-            val lastCartItem: CartItem? =
+            val lastProduct: Product? =
                 _productItems.value
                     ?.filterIsInstance<ProductsItem.ProductItem>()
                     ?.lastOrNull()
-                    ?.cartItem
-            val startExclusive: Int = allCartItems.indexOf(lastCartItem)
+                    ?.product
+            val startExclusive: Int = allProducts.indexOf(lastProduct)
             val lastExclusive: Int =
-                (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allCartItems.size)
-
-            allCartItems.subList(startExclusive + 1, lastExclusive)
-        }.onSuccess { newCartItems: List<CartItem> ->
-            val currentProductItems =
-                productItems.value?.filterIsInstance<ProductsItem.ProductItem>() ?: emptyList()
-            val productItems = currentProductItems + newCartItems.map(ProductsItem::ProductItem)
-            val loadItem = ProductsItem.LoadItem(allCartItems.size > productItems.size)
-
-            _productItems.postValue(productItems + loadItem)
+                (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allProducts.size)
+            allProducts.subList(startExclusive + 1, lastExclusive)
+        }.onSuccess { newProducts: List<Product> ->
+            addProductItems(newProducts)
         }.onFailure {
             _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
         }
+    }
+
+    private fun addProductItems(newProducts: List<Product>) {
+        val newProductItems: List<ProductsItem.ProductItem> =
+            newProducts.map { product: Product ->
+                val quantity: Int = shoppingCart.find { it.id == product.id }?.quantity ?: 0
+                ProductsItem.ProductItem(product, quantity)
+            }
+
+        Log.e("TAG", "addProductItems invoked... newProductItems: $newProductItems")
+
+        val currentProductItems =
+            productItems.value?.filterIsInstance<ProductsItem.ProductItem>() ?: emptyList()
+
+        val productItems = currentProductItems + newProductItems
+        val loadItem = ProductsItem.LoadItem(allProducts.size > productItems.size)
+
+        _productItems.postValue(productItems + loadItem)
     }
 
     fun updateShoppingCart(onUpdate: () -> Unit) {
@@ -58,12 +93,7 @@ class ProductsViewModel(
         val cartItemsToUpdate: List<CartItem> =
             productItems
                 .map { productItem: ProductsItem.ProductItem ->
-                    CartItem(
-                        productItem.cartItem.id,
-                        productItem.cartItem.name,
-                        productItem.cartItem.price,
-                        productItem.quantity,
-                    )
+                    CartItem(productItem.product, productItem.quantity)
                 }.filter { cartItem -> cartItem.quantity != 0 }
 
         shoppingCartRepository.update(cartItemsToUpdate) { result: Result<Unit> ->
@@ -73,18 +103,6 @@ class ProductsViewModel(
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
                 }
             onUpdate()
-        }
-    }
-
-    private fun loadAllProducts(productsRepository: ProductsRepository) {
-        productsRepository.load { result: Result<List<CartItem>> ->
-            result
-                .onSuccess { cartItems: List<CartItem> ->
-                    allCartItems = cartItems
-                    updateProducts()
-                }.onFailure {
-                    _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
-                }
         }
     }
 
