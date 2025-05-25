@@ -33,7 +33,13 @@ class DetailActivity : AppCompatActivity(), CartQuantityHandler {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
-        viewModel.load(productId)
+        val lastSeenProductId =
+            intent.getLongExtra(
+                EXTRA_LAST_SEEN_PRODUCT_ID,
+                NO_LAST_SEEN_PRODUCT,
+            )
+
+        viewModel.load(productId, lastSeenProductId)
 
         setUpBinding()
         setUpSystemBars()
@@ -106,14 +112,20 @@ class DetailActivity : AppCompatActivity(), CartQuantityHandler {
     }
 
     companion object {
+        const val NO_LAST_SEEN_PRODUCT = 0L
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
+        private const val EXTRA_LAST_SEEN_PRODUCT_ID = "extra_last_watched_product_id"
 
         fun newIntent(
             context: Context,
             productId: Long,
+            lastWatchedProductId: Long? = null,
         ): Intent {
             return Intent(context, DetailActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT_ID, productId)
+                lastWatchedProductId?.let {
+                    putExtra(EXTRA_LAST_SEEN_PRODUCT_ID, lastWatchedProductId)
+                }
             }
         }
     }

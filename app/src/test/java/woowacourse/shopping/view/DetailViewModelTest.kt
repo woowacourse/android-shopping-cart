@@ -6,8 +6,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
-import org.junit.Test
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.Quantity
@@ -38,18 +38,18 @@ class DetailViewModelTest {
             callback(listOf(productFixture1))
         }
         viewModel = DetailViewModel(productRepository, cartRepository)
-        viewModel.load(1L)
+        viewModel.load(1L, 1L)
     }
 
     @Test
     fun `조회한_프로덕트를_로드한다`() {
         // when
-        viewModel.load(1L)
+        viewModel.load(1L, 2L)
 
         // then
         val expected = viewModel.uiState.getOrAwaitValue()
 
-        assertThat(expected.item).isEqualTo(productFixture1)
+        assertThat(expected.product.item).isEqualTo(productFixture1)
     }
 
     @Test
@@ -57,7 +57,7 @@ class DetailViewModelTest {
         viewModel.increaseCartQuantity()
 
         val state = viewModel.uiState.getOrAwaitValue()
-        assertThat(state.cartQuantity.value).isEqualTo(2)
+        assertThat(state.product.cartQuantity.value).isEqualTo(2)
     }
 
     @Test
@@ -66,7 +66,7 @@ class DetailViewModelTest {
         viewModel.decreaseCartQuantity()
 
         val state = viewModel.uiState.getOrAwaitValue()
-        assertThat(state.cartQuantity.value).isEqualTo(1)
+        assertThat(state.product.cartQuantity.value).isEqualTo(1)
     }
 
     @Test
@@ -74,7 +74,7 @@ class DetailViewModelTest {
         viewModel.decreaseCartQuantity()
 
         val state = viewModel.uiState.getOrAwaitValue()
-        assertThat(state.cartQuantity.value).isEqualTo(1)
+        assertThat(state.product.cartQuantity.value).isEqualTo(1)
     }
 
     @Test
@@ -84,7 +84,7 @@ class DetailViewModelTest {
             callback(Cart(Quantity(2), 1L))
         }
 
-        viewModel.saveCart()
+        viewModel.saveCart(1L)
 
         verify {
             cartRepository.upsert(productFixture1.id, Quantity(1))
@@ -98,7 +98,7 @@ class DetailViewModelTest {
             callback(null)
         }
 
-        viewModel.saveCart()
+        viewModel.saveCart(1L)
 
         verify {
             cartRepository.upsert(productFixture1.id, Quantity(1))

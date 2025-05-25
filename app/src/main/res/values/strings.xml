@@ -10,4 +10,5 @@
     <string name="text_recent_product">최근 본 상품</string>
 
     <string name="action_bar_title_cart_screen">Cart</string>
+    <string name="text_last_watch_product">마지막으로 본 상품</string>
 </resources>

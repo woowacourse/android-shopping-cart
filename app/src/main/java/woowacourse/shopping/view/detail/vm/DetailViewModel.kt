@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.detail.DetailActivity.Companion.NO_LAST_SEEN_PRODUCT
 import woowacourse.shopping.view.detail.DetailUiEvent
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.ProductState
@@ -16,23 +18,42 @@ class DetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<ProductState>()
-    val uiState: LiveData<ProductState> get() = _uiState
+    private val _uiState = MutableLiveData<DetailUiState>()
+    val uiState: LiveData<DetailUiState> get() = _uiState
 
     private val _event = MutableSingleLiveData<DetailUiEvent>()
     val event: SingleLiveData<DetailUiEvent> get() = _event
 
-    fun load(productId: Long) {
-        productRepository.getProduct(productId) {
-            _uiState.postValue((ProductState(it, Quantity(1))))
+    fun load(
+        productId: Long,
+        lastSeenProductId: Long,
+    ) {
+        productRepository.getProduct(productId) { product ->
+            if (lastSeenProductId != NO_LAST_SEEN_PRODUCT && lastSeenProductId != productId) {
+                productRepository.getProduct(lastSeenProductId) { lastSeenProduct ->
+                    _uiState.postValue(
+                        DetailUiState(
+                            product = ProductState(product, Quantity(1)),
+                            lastSeenProduct = lastSeenProduct,
+                        ),
+                    )
+                }
+            } else {
+                _uiState.postValue(
+                    DetailUiState(
+                        product = ProductState(product, Quantity(1)),
+                        lastSeenProduct = null,
+                    ),
+                )
+            }
         }
     }
 
     fun increaseCartQuantity() {
-        withUiState { state ->
-            when (val result = state.increaseCartQuantity()) {
+        withState(_uiState.value) { state ->
+            when (val result = state.product.increaseCartQuantity()) {
                 is IncreaseState.CanIncrease -> {
-                    _uiState.value = result.value
+                    _uiState.value = state.copy(product = result.value)
                 }
 
                 is IncreaseState.CannotIncrease -> {
@@ -43,8 +64,9 @@ class DetailViewModel(
     }
 
     fun decreaseCartQuantity() {
-        withUiState { state ->
-            val decreasedCartQuantity = (state.cartQuantity - 1)
+        withState(_uiState.value) { state ->
+            val product = state.product
+            val decreasedCartQuantity = (product.cartQuantity - 1)
 
             val quantity =
                 if (!decreasedCartQuantity.hasQuantity()) {
@@ -54,25 +76,21 @@ class DetailViewModel(
                     decreasedCartQuantity
                 }
 
-            _uiState.value = state.copy(cartQuantity = quantity)
+            _uiState.value = state.copy(product = product.copy(cartQuantity = quantity))
         }
     }
 
-    fun saveCart() {
-        withUiState { state ->
-            cartRepository.getCart(state.item.id) { cart ->
+    fun saveCart(productId: Long) {
+        withState(_uiState.value) { state ->
+            cartRepository.getCart(productId) { cart ->
                 cart?.let {
-                    cartRepository.upsert(state.item.id, state.cartQuantity)
+                    cartRepository.upsert(productId, state.product.cartQuantity)
                 } ?: run {
-                    cartRepository.modify(state.item.id, state.cartQuantity)
+                    cartRepository.modify(productId, state.product.cartQuantity)
                 }
             }
             sendEvent(DetailUiEvent.MoveToCart)
         }
-    }
-
-    private inline fun withUiState(block: (ProductState) -> Unit) {
-        _uiState.value?.let(block)
     }
 
     private fun sendEvent(event: DetailUiEvent) {
