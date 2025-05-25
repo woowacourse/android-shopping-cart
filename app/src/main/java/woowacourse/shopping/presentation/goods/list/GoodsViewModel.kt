@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.goods.list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -124,10 +125,13 @@ class GoodsViewModel(
     }
 
     fun loadMoreGoods() {
-        _goods.value =
-            _goods.value?.plus(
-                goodsRepository.getPagedGoods(++page, ITEM_COUNT),
-            )
+        val moreGoods = goodsRepository.getPagedGoods(page + 1, ITEM_COUNT)
+        if (moreGoods.isNotEmpty()) {
+            _goods.value = _goods.value?.plus(moreGoods)
+            page.plus(1)
+        } else {
+            Log.e("GoodsViewModel", "상품 로드 실패")
+        }
         _shouldShowLoadMore.value = false
     }
 
