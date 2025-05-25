@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.dao
+package woowacourse.shopping.data.service
 
 import woowacourse.shopping.data.entity.GoodsEntity
 
-interface GoodsDao {
+interface GoodsService {
     fun getPagedGoods(
         page: Int,
         count: Int,

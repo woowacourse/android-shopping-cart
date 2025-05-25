@@ -1,19 +1,19 @@
 package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.dao.GoodsDao
 import woowacourse.shopping.data.entity.toGoods
+import woowacourse.shopping.data.service.GoodsService
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import kotlin.concurrent.thread
 
 class GoodsRepositoryImpl(
-    private val goodsDao: GoodsDao,
+    private val goodsService: GoodsService,
 ) : GoodsRepository {
     override fun getById(id: Int): Goods? {
         var result: Goods? = null
 
         thread {
-            result = goodsDao.getGoodsById(id).toGoods()
+            result = goodsService.getGoodsById(id).toGoods()
         }.join()
 
         return result
@@ -26,7 +26,7 @@ class GoodsRepositoryImpl(
         var result: List<Goods> = emptyList()
 
         thread {
-            result = goodsDao.getPagedGoods(page, count).map { it.toGoods() }
+            result = goodsService.getPagedGoods(page, count).map { it.toGoods() }
         }.join()
 
         return result

@@ -5,10 +5,10 @@ import com.google.gson.Gson
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import woowacourse.shopping.data.dao.GoodsDao
 import woowacourse.shopping.data.entity.GoodsEntity
+import woowacourse.shopping.data.service.GoodsService
 
-class GoodsDaoImpl : GoodsDao {
+class GoodsServiceImpl : GoodsService {
     override fun getPagedGoods(
         page: Int,
         count: Int,
