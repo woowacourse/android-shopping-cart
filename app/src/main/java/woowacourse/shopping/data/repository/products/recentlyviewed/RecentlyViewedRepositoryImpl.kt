@@ -29,7 +29,7 @@ class RecentlyViewedRepositoryImpl(
     override fun insert(product: Product) {
         recentlyViewedStorage.insert(product)
         recentlyViewedStorage.getCount { count ->
-            if (count > MAX_COUNT_RECENTLY_VIEWED_PRODUCTS) recentlyViewedStorage.deleteOldestViewed()
+            if (count >= MAX_COUNT_RECENTLY_VIEWED_PRODUCTS) recentlyViewedStorage.deleteOldestViewed()
         }
     }
 
