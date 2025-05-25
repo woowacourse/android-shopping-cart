@@ -41,7 +41,7 @@ object NetworkModule {
             .build()
     }
 
-    val productService: ProductApi by lazy {
+    val productApi: ProductApi by lazy {
         retrofit.create(ProductApi::class.java)
     }
 
