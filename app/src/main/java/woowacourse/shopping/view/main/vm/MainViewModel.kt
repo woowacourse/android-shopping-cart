@@ -3,21 +3,30 @@ package woowacourse.shopping.view.main.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Page
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
+import java.time.LocalDateTime
 
 class MainViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository
 ) : ViewModel() {
     private val page = Page(initialPage = INITIAL_PAGE_NUMBER, pageSize = PAGE_SIZE)
-    private val _carts = MutableLiveData(emptyList<Cart>())
+    private val _carts = MutableLiveData<List<Cart>>(emptyList())
     val carts: LiveData<List<Cart>> = _carts
 
-    private val _totalQuantity = MutableLiveData(0)
-    val totalQuantity: LiveData<Int> = _totalQuantity
+    private val _recentProducts = MutableLiveData<List<RecentProduct>>(emptyList())
+    val recentProducts: LiveData<List<RecentProduct>> = _recentProducts
+
+    val recentProductsCount: LiveData<Int> = _recentProducts.map { it.size }
+
+    val totalQuantity: LiveData<Int> = _carts.map { it.sumOf { it.quantity } }
 
     private val _loadable = MutableLiveData(false)
     val loadable: LiveData<Boolean> = _loadable
@@ -27,7 +36,12 @@ class MainViewModel(
         cartRepository.getPagedShopItems(page.currentPage, limit) { carts: List<Cart> ->
             _carts.postValue((this.carts.value ?: emptyList()) + carts)
             _loadable.postValue(productRepository.notHasMoreProduct(page.currentPage, limit).not())
-            _totalQuantity.postValue((totalQuantity.value ?: 0) + carts.sumOf { it.quantity })
+        }
+    }
+
+    fun loadRecentProducts() {
+        recentProductRepository.getAll { recentProducts ->
+            this._recentProducts.postValue(recentProducts)
         }
     }
 
@@ -46,7 +60,14 @@ class MainViewModel(
                     this[cartIndex] = updated
                 },
             )
-            _totalQuantity.postValue((totalQuantity.value ?: 0) + 1)
+        }
+    }
+
+    fun addRecentProduct(cart: Cart) {
+        recentProductRepository.insert(RecentProduct(cart.product, LocalDateTime.now())) {
+            if (recentProducts.value?.size == 10) recentProductRepository.deleteLastByCreatedDateTime {
+
+            }
         }
     }
 
@@ -60,7 +81,6 @@ class MainViewModel(
                     this[cartIndex] = updated
                 },
             )
-            _totalQuantity.postValue((totalQuantity.value ?: 0) + 1)
         }
     }
 
@@ -76,7 +96,6 @@ class MainViewModel(
                             this[cartIndex] = updated
                         },
                     )
-                    _totalQuantity.postValue((totalQuantity.value ?: 0) - 1)
                 }
                 return@update
             }
@@ -85,7 +104,6 @@ class MainViewModel(
                     this[cartIndex] = updated
                 },
             )
-            _totalQuantity.postValue((totalQuantity.value ?: 0) - 1)
         }
     }
 

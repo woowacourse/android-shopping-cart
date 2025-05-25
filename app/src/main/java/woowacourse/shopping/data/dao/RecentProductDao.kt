@@ -14,7 +14,7 @@ interface RecentProductDao {
     @Query("SELECT * FROM recent_product WHERE productId =:id")
     fun getById(id: Long): RecentProductEntity
 
-    @Query("SELECT * FROM recent_product ")
+    @Query("SELECT * FROM recent_product ORDER BY createdDateTime DESC")
     fun getAll(): List<RecentProductEntity>
 
     @Query(

@@ -8,8 +8,12 @@
         <import type="android.view.View" />
 
         <variable
-            name="adapter"
+            name="productAdapter"
             type="woowacourse.shopping.view.main.adapter.ProductAdapter" />
+
+        <variable
+            name="recentProductAdapter"
+            type="woowacourse.shopping.view.main.adapter.RecentProductAdapter" />
 
         <variable
             name="vm"
@@ -59,6 +63,8 @@
                 android:background="@drawable/cart_badge_quantity_background"
                 android:gravity="center"
                 android:textColor="@android:color/white"
+                android:text="@{vm.totalQuantity.toString()}"
+                android:visibility="@{vm.totalQuantity &gt; 0 ? View.VISIBLE : View.GONE}"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,6 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/recent_product_title"
+            android:visibility="@{vm.recentProductsCount &gt; 0 ? View.VISIBLE : View.GONE}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -84,7 +91,9 @@
             android:layout_height="121dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="40dp"
+            android:adapter="@{recentProductAdapter}"
             android:orientation="horizontal"
+            android:visibility="@{vm.recentProductsCount  &gt; 0 ? View.VISIBLE : View.GONE}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/recycler_view_product"
             app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="7dp"
-            android:adapter="@{adapter}"
+            android:adapter="@{productAdapter}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/button_load"
             app:layout_constraintTop_toBottomOf="@id/recycler_view_recent_product"

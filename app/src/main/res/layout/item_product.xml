@@ -25,7 +25,7 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> productsAdapterEventHandler.onSelectProduct(cart.product.id)}">
+        android:onClick="@{() -> productsAdapterEventHandler.onSelectProduct(cart)}">
 
         <ImageView
             android:id="@+id/image_view_product"
