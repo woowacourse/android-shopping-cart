@@ -3,28 +3,34 @@ package woowacourse.shopping.presentation.goods.list
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.goods.repository.GoodsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
-import woowacourse.shopping.presentation.model.GoodsUiModel
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.presentation.util.QuantityClickListener
+import woowacourse.shopping.presentation.util.ShoppingCartEvent
 
 class GoodsActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsBinding>(R.layout.activity_goods)
-    private val viewModel: GoodsViewModel by viewModels {
-        GoodsViewModelFactory(GoodsRepositoryImpl())
-    }
+    private val viewModel: GoodsViewModel by viewModels { GoodsViewModel.FACTORY }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
         setUpGoodsList()
+        observeEvent()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.initGoods()
     }
 
     private fun setUpBinding() {
@@ -36,7 +42,18 @@ class GoodsActivity : BaseActivity() {
 
     private fun setUpGoodsList() {
         binding.rvGoodsList.apply {
-            this.adapter = GoodsAdapter { goodsUiModel -> navigateToDetail(goodsUiModel) }
+            GoodsAdapter(
+                quantityClickListener = object : QuantityClickListener {
+                    override fun increase(item: ShoppingCartItem) {
+                        viewModel.increaseQuantity(item)
+                    }
+
+                    override fun decrease(item: ShoppingCartItem) {
+                        viewModel.decreaseQuantity(item)
+                    }
+                },
+                goodsClickListener = ::navigateToDetail
+            ).also { this.adapter = it }
             layoutManager = GridLayoutManager(this@GoodsActivity, SPAN_COUNT)
             addOnScrollListener(
                 object : RecyclerView.OnScrollListener() {
@@ -52,8 +69,26 @@ class GoodsActivity : BaseActivity() {
         }
     }
 
-    private fun navigateToDetail(goodsUiModel: GoodsUiModel) {
-        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goodsUiModel)
+    private fun observeEvent() {
+        viewModel.shoppingCartEvent.observe(this) { event ->
+            when (event) {
+                ShoppingCartEvent.FAILURE -> {
+                    Toast.makeText(this, getString(R.string.text_save_failure), Toast.LENGTH_SHORT).show()
+                }
+
+                ShoppingCartEvent.SUCCESS -> {}
+            }
+            navigateToShoppingCart()
+        }
+    }
+
+    private fun navigateToDetail(item: ShoppingCartItem) {
+        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, item.goods.id)
+        startActivity(intent)
+    }
+
+    private fun navigateToShoppingCart() {
+        val intent = ShoppingCartActivity.newIntent(this)
         startActivity(intent)
     }
 
@@ -65,8 +100,7 @@ class GoodsActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                val intent = ShoppingCartActivity.newIntent(this)
-                startActivity(intent)
+                viewModel.addToShoppingCart()
                 true
             }
 

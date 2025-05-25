@@ -15,7 +15,7 @@
 
         <variable
             name="item"
-            type="woowacourse.shopping.presentation.model.ShoppingCartItemUiModel" />
+            type="woowacourse.shopping.domain.model.ShoppingCartItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,10 +30,10 @@
             android:id="@+id/tv_goods_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:goodsName="@{item}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
@@ -45,7 +45,7 @@
             android:layout_marginTop="20dp"
             android:background="@color/black"
             android:scaleType="centerCrop"
-            app:goodsImage="@{item.imageUrl}"
+            app:goodsImage="@{item.goods.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name" />
 
@@ -65,17 +65,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:item="@{item}"
-            app:quantityClickListener="@{quantityClickListener}"
             app:layout_constraintBottom_toTopOf="@id/tv_goods_price"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_delete" />
+            app:layout_constraintTop_toBottomOf="@id/btn_delete"
+            app:quantityClickListener="@{quantityClickListener}" />
 
         <TextView
             android:id="@+id/tv_goods_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:goodsPrice="@{item.price}"
+            app:goodsPrice="@{item}"
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />

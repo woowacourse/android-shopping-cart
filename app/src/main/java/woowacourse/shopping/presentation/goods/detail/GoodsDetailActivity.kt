@@ -8,26 +8,22 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
 import woowacourse.shopping.presentation.BaseActivity
-import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.util.getParcelableCompat
+import woowacourse.shopping.presentation.util.ShoppingCartEvent
 
 class GoodsDetailActivity : BaseActivity() {
     private val binding by bind<ActivityGoodsDetailBinding>(R.layout.activity_goods_detail)
     private val viewModel: GoodsDetailViewModel by viewModels {
-        GoodsDetailViewModelFactory(
-            intent.getParcelableCompat<GoodsUiModel>(EXTRA_GOODS),
-            ShoppingCartRepositoryImpl(),
-        )
+        GoodsDetailViewModel.FACTORY
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
-        setUpGoodsSaveToast()
+        setUpResultToast()
+        viewModel.setGoods(intent.getLongExtra(EXTRA_GOODS, 0L))
     }
 
     private fun setUpBinding() {
@@ -37,9 +33,13 @@ class GoodsDetailActivity : BaseActivity() {
         }
     }
 
-    private fun setUpGoodsSaveToast() {
-        viewModel.onGoodsAdded.observe(this) {
-            Toast.makeText(this, getString(R.string.text_save_goods), Toast.LENGTH_SHORT).show()
+    private fun setUpResultToast() {
+        viewModel.shoppingCartEvent.observe(this) { event ->
+            val message = when (event) {
+                ShoppingCartEvent.SUCCESS -> R.string.text_save_success
+                ShoppingCartEvent.FAILURE -> R.string.text_save_failure
+            }
+            Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -64,10 +64,10 @@ class GoodsDetailActivity : BaseActivity() {
 
         fun newIntent(
             context: Context,
-            goodsUiModel: GoodsUiModel,
+            id: Long,
         ): Intent =
             Intent(context, GoodsDetailActivity::class.java).apply {
-                putExtra(EXTRA_GOODS, goodsUiModel)
+                putExtra(EXTRA_GOODS, id)
             }
     }
 }

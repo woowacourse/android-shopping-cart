@@ -2,14 +2,14 @@ package woowacourse.shopping.presentation.goods.list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.ShoppingCartItemUiModel
+import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.util.QuantityClickListener
 
 class GoodsAdapter(
     private val quantityClickListener: QuantityClickListener,
     private val goodsClickListener: GoodsClickListener,
 ) : RecyclerView.Adapter<GoodsViewHolder>() {
-    private var items: List<ShoppingCartItemUiModel> = emptyList()
+    private var items: List<ShoppingCartItem> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,7 +27,7 @@ class GoodsAdapter(
         holder.bind(items[position])
     }
 
-    fun updateItems(newItems: List<ShoppingCartItemUiModel>) {
+    fun updateItems(newItems: List<ShoppingCartItem>) {
         val oldItems = items
         val mutableItems = oldItems.toMutableList()
 

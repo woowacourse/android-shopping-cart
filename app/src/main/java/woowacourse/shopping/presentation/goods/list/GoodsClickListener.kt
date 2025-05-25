@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.goods.list
 
-import woowacourse.shopping.presentation.model.GoodsUiModel
+import woowacourse.shopping.domain.model.ShoppingCartItem
 
 fun interface GoodsClickListener {
-    fun onGoodsClick(goodsUiModel: GoodsUiModel)
+    fun onGoodsClick(item: ShoppingCartItem)
 }

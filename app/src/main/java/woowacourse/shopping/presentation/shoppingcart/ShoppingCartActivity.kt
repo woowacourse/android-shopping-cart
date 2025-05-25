@@ -7,15 +7,14 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.shoppingcart.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.util.QuantityClickListener
 
 class ShoppingCartActivity : BaseActivity() {
     private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
-    private val viewModel: ShoppingCartViewModel by viewModels {
-        ShoppingCartViewModelFactory(ShoppingCartRepositoryImpl())
-    }
+    private val viewModel: ShoppingCartViewModel by viewModels { ShoppingCartViewModel.FACTORY }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +39,19 @@ class ShoppingCartActivity : BaseActivity() {
     }
 
     private fun setUpAdapter() {
-        val adapter = ShoppingCartAdapter { goodsUiModel -> viewModel.deleteGoods(goodsUiModel) }
+        val adapter = ShoppingCartAdapter(
+            quantityClickListener = object : QuantityClickListener {
+                override fun increase(item: ShoppingCartItem) {
+                    viewModel.increaseQuantity(item)
+                }
+
+                override fun decrease(item: ShoppingCartItem) {
+                    viewModel.decreaseQuantity(item)
+                }
+
+            },
+            clickListener = { item -> viewModel.deleteItem(item) }
+        )
         binding.rvSelectedGoodsList.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)

@@ -3,26 +3,53 @@ package woowacourse.shopping.presentation.goods.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.ShoppingCartItem
+import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.presentation.model.GoodsUiModel
-import woowacourse.shopping.presentation.model.toDomainModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
+import woowacourse.shopping.presentation.util.ShoppingCartEvent
 import woowacourse.shopping.presentation.util.SingleLiveData
 
 class GoodsDetailViewModel(
-    goods: GoodsUiModel,
-    private val repository: ShoppingCartRepository,
+    private val goodsRepository: GoodsRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _goodsUiModel: MutableLiveData<GoodsUiModel> = MutableLiveData(goods)
-    val goodsUiModel: LiveData<GoodsUiModel>
-        get() = _goodsUiModel
+    private val _item: MutableLiveData<ShoppingCartItem> = MutableLiveData()
+    val item: LiveData<ShoppingCartItem>
+        get() = _item
 
-    private val _onGoodsAdded: MutableSingleLiveData<Unit> = MutableSingleLiveData()
-    val onGoodsAdded: SingleLiveData<Unit>
-        get() = _onGoodsAdded
+    private val _shoppingCartEvent: MutableSingleLiveData<ShoppingCartEvent> = MutableSingleLiveData()
+    val shoppingCartEvent: SingleLiveData<ShoppingCartEvent>
+        get() = _shoppingCartEvent
+
+    fun setGoods(id: Long) {
+        _item.value = ShoppingCartItem(goodsRepository.getGoodsById(id))
+    }
 
     fun addToShoppingCart() {
-        _goodsUiModel.value?.let { repository.addGoods(it.toDomainModel()) }
-        _onGoodsAdded.setValue(Unit)
+        val currentItem = _item.value ?: return
+
+        shoppingCartRepository.addItem(currentItem) { result ->
+            result.onSuccess {
+                _shoppingCartEvent.postValue(ShoppingCartEvent.SUCCESS)
+            }.onFailure {
+                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
+            }
+        }
+    }
+
+    companion object {
+        val FACTORY: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                GoodsDetailViewModel(
+                    goodsRepository = RepositoryProvider.goodsRepository,
+                    shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
+                )
+            }
+        }
     }
 }

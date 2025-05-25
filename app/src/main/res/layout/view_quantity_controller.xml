@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="woowacourse.shopping.presentation.model.ShoppingCartItemUiModel" />
+            type="woowacourse.shopping.domain.model.ShoppingCartItem" />
 
         <variable
             name="quantityClickListener"

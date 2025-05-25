@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.util
 
-import woowacourse.shopping.presentation.model.ShoppingCartItemUiModel
+import woowacourse.shopping.domain.model.ShoppingCartItem
 
 interface QuantityClickListener {
-    fun increase(item: ShoppingCartItemUiModel)
+    fun increase(item: ShoppingCartItem)
 
-    fun decrease(item: ShoppingCartItemUiModel)
+    fun decrease(item: ShoppingCartItem)
 }
