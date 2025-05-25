@@ -89,10 +89,8 @@ val fixtureGoodsItem =
 class FakeCartRepository : CartRepository {
     private val cartItems = fixtureCartItem.toMutableList()
 
-    override fun getAll(): List<CartItem> = cartItems
-
     override fun fetchAllCartItems(onComplete: (List<CartItem>) -> Unit) {
-        onComplete(getAll())
+        onComplete(cartItems)
     }
 
     override fun fetchPageCartItems(
@@ -103,9 +101,7 @@ class FakeCartRepository : CartRepository {
         onComplete(getPage(limit, offset))
     }
 
-    override fun getAllItemsSize(): Int = cartItems.size
-
-    override fun getPage(
+    private fun getPage(
         limit: Int,
         offset: Int,
     ): List<CartItem> {
@@ -168,6 +164,10 @@ class FakeCartRepository : CartRepository {
     ) {
         cartItems.removeAll { it.goods.name == goods.name }
         onComplete()
+    }
+
+    override fun getAllItemsSize(onComplete: (Int) -> Unit) {
+        onComplete(cartItems.size)
     }
 }
 

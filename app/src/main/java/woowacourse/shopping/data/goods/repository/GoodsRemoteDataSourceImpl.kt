@@ -18,12 +18,16 @@ import java.io.IOException
 
 class GoodsRemoteDataSourceImpl(
     private val baseUrl: String = BuildConfig.BASE_URL,
+    private val useInterceptor: Boolean = true,
 ) : GoodsRemoteDataSource {
     private val okHttpClient =
         OkHttpClient
             .Builder()
-            .addInterceptor(MockInterceptor())
-            .build()
+            .apply {
+                if (useInterceptor) {
+                    addInterceptor(MockInterceptor())
+                }
+            }.build()
     private val gson = Gson()
 
     override fun fetchGoodsSize(onComplete: (Int) -> Unit) {

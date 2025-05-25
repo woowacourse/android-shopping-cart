@@ -4,8 +4,6 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
 
 interface CartRepository {
-    fun getAll(): List<CartItem>
-
     fun fetchAllCartItems(onComplete: (List<CartItem>) -> Unit)
 
     fun fetchPageCartItems(
@@ -36,10 +34,5 @@ interface CartRepository {
         onComplete: () -> Unit,
     )
 
-    fun getPage(
-        limit: Int,
-        offset: Int,
-    ): List<CartItem>
-
-    fun getAllItemsSize(): Int
+    fun getAllItemsSize(onComplete: (Int) -> Unit)
 }

@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.Looper
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.util.toDomainCartItem
-import woowacourse.shopping.data.util.toDomainGoods
 import woowacourse.shopping.data.util.toEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Goods
@@ -13,11 +12,6 @@ import kotlin.concurrent.thread
 class CartRepositoryImpl(
     private val shoppingDatabase: ShoppingDatabase,
 ) : CartRepository {
-    override fun getAll(): List<CartItem> =
-        shoppingDatabase.cartDao().getAll().map { entities ->
-            entities.toDomainCartItem()
-        }
-
     override fun fetchAllCartItems(onComplete: (List<CartItem>) -> Unit) {
         thread {
             val cartEntities = shoppingDatabase.cartDao().getAll()
@@ -100,13 +94,13 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun getPage(
-        limit: Int,
-        offset: Int,
-    ): List<CartItem> =
-        shoppingDatabase.cartDao().getPage(limit, offset).map { entities ->
-            CartItem(entities.toDomainGoods(), entities.quantity)
-        }
+    override fun getAllItemsSize(onComplete: (Int) -> Unit) {
+        thread {
+            val size = shoppingDatabase.cartDao().getAllItemsSize()
 
-    override fun getAllItemsSize(): Int = shoppingDatabase.cartDao().getAllItemsSize()
+            Handler(Looper.getMainLooper()).post {
+                onComplete(size)
+            }
+        }
+    }
 }

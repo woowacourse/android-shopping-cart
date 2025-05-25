@@ -7,7 +7,6 @@ import woowacourse.shopping.data.carts.repository.CartRepository
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
-import kotlin.concurrent.thread
 import kotlin.math.max
 
 class CartViewModel(
@@ -69,22 +68,26 @@ class CartViewModel(
     }
 
     fun updateCartQuantity() {
-        cartRepository.fetchPageCartItems(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE) { currentPageCartItems ->
+        cartRepository.fetchPageCartItems(
+            PAGE_SIZE,
+            (currentPage - 1) * PAGE_SIZE,
+        ) { currentPageCartItems ->
             _cart.value = currentPageCartItems
         }
     }
 
     private fun updateCartData() {
-        thread {
-            val currentPageCartItems =
-                cartRepository.getPage(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE)
+        cartRepository.fetchPageCartItems(
+            PAGE_SIZE,
+            (currentPage - 1) * PAGE_SIZE,
+        ) { currentPageCartItems ->
             _cart.postValue(currentPageCartItems)
         }
     }
 
     private fun updateCartDataSize() {
-        thread {
-            totalCartSizeData = cartRepository.getAllItemsSize()
+        cartRepository.getAllItemsSize { totalCartSize ->
+            totalCartSizeData = totalCartSize
             _isMultiplePages.postValue(totalCartSizeData > PAGE_SIZE)
             updatePageMoveAvailability()
         }
@@ -92,12 +95,12 @@ class CartViewModel(
 
     fun delete(cartItem: CartItem) {
         cartRepository.delete(cartItem.goods) {
-            thread {
-                totalCartSizeData = cartRepository.getAllItemsSize()
+            cartRepository.getAllItemsSize { totalCartSize ->
+                totalCartSizeData = totalCartSize
                 if (currentPage > endPage) {
                     currentPage = endPage
                 }
-                _isMultiplePages.postValue(totalCartSizeData > PAGE_SIZE)
+                _isMultiplePages.postValue(totalCartSize > PAGE_SIZE)
                 updatePageMoveAvailability()
                 updateCartData()
             }
