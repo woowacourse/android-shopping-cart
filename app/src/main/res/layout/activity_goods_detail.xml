@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="35dp"
             android:clickable="true"
-            android:visibility="@{vm.lastGoods == null ? View.INVISIBLE : View.VISIBLE}"
+            app:isVisible="@{vm.lastGoods != null}"
             app:layout_constraintBottom_toTopOf="@id/btn_shopping_cart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

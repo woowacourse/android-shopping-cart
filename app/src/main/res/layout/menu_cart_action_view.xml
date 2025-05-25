@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="vm"
@@ -13,9 +13,9 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> vm.updateShouldNavigateToShoppingCart()}"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:onClick="@{() -> vm.updateShouldNavigateToShoppingCart()}">
 
         <ImageView
             android:id="@+id/cart_icon"
@@ -30,13 +30,13 @@
         <TextView
             android:id="@+id/cart_count"
             android:layout_width="24dp"
-            android:text="@{vm.shoppingGoodsCount.toString()}"
-            android:visibility="@{vm.shoppingGoodsCount &lt;= 0 ? View.GONE : View.VISIBLE}"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/bg_cart_count"
             android:gravity="center"
+            android:text="@{vm.shoppingGoodsCount.toString()}"
             android:textColor="@android:color/white"
+            app:isVisible="@{vm.shoppingGoodsCount > 0}"
             app:layout_constraintBottom_toBottomOf="@id/cart_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cart_icon"

@@ -103,7 +103,7 @@
                     android:text="@string/btn_load_more"
                     android:textSize="30sp"
                     android:textStyle="bold"
-                    android:visibility="@{vm.shouldShowLoadMore ? View.VISIBLE : View.GONE}"
+                    app:isVisible="@{vm.shouldShowLoadMore}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
