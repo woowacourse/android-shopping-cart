@@ -47,9 +47,10 @@
             android:text="@string/btn_plus"
             android:textColor="@color/black"
             android:textSize="30sp"
-            android:visibility="@{goods.quantity == 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{goods.quantity == 0 ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
-            app:layout_constraintEnd_toEndOf="@id/iv_goods" />
+            app:layout_constraintEnd_toEndOf="@id/iv_goods"
+            tools:visibility="invisible" />
 
         <include
             android:id="@+id/cl_goods_quantity"
