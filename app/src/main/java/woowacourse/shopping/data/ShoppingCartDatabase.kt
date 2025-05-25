@@ -6,12 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import woowacourse.shopping.data.cart.CartProductEntity
 import woowacourse.shopping.data.cart.local.CartProductDao
-import woowacourse.shopping.data.product.ProductEntity
 import woowacourse.shopping.data.recent.RecentProductEntity
 import woowacourse.shopping.data.recent.local.RecentProductDao
 
 @Database(
-    entities = [ProductEntity::class, CartProductEntity::class, RecentProductEntity::class],
+    entities = [CartProductEntity::class, RecentProductEntity::class],
     version = 1,
 )
 abstract class ShoppingCartDatabase : RoomDatabase() {
