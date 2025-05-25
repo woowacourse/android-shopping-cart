@@ -20,14 +20,17 @@ class ProductDetailViewModel(
     var lastViewedProduct: RecentProduct? = null
         private set
 
+    private val _quantity = MutableLiveData(INITIAL_QUANTITY)
+    val quantity: LiveData<Int> get() = _quantity
+
+    private val _totalPrice = MutableLiveData(product.price)
+    val totalPrice: LiveData<Int> get() = _totalPrice
+
     private val _addToCartEvent = MutableSingleLiveData<Unit>()
     val addToCartEvent: SingleLiveData<Unit> get() = _addToCartEvent
 
     private val _lastProductClickEvent = MutableSingleLiveData<Unit>()
     val lastProductClickEvent: SingleLiveData<Unit> get() = _lastProductClickEvent
-
-    private val _quantity = MutableLiveData(INITIAL_QUANTITY)
-    val quantity: LiveData<Int> get() = _quantity
 
     init {
         loadQuantity()
@@ -36,7 +39,7 @@ class ProductDetailViewModel(
     }
 
     override fun onAddToCartClick() {
-        val addQuantity = quantity.value ?: 0
+        val addQuantity = quantity.value ?: return
         cartProductRepository.updateQuantity(
             product.id,
             shoppingCartQuantity,
@@ -44,17 +47,17 @@ class ProductDetailViewModel(
         )
         shoppingCartQuantity += addQuantity
         _addToCartEvent.setValue(Unit)
-        _quantity.value = INITIAL_QUANTITY
+        updateQuantity(INITIAL_QUANTITY)
     }
 
     override fun onQuantityIncreaseClick(item: Product) {
-        _quantity.value = (quantity.value ?: INITIAL_QUANTITY) + 1
+        updateQuantity((quantity.value ?: INITIAL_QUANTITY) + 1)
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
-        val current = quantity.value ?: INITIAL_QUANTITY
-        if (current > 1) {
-            _quantity.value = current - 1
+        val quantity = (quantity.value ?: INITIAL_QUANTITY) - 1
+        if (quantity > 0) {
+            updateQuantity(quantity)
         }
     }
 
@@ -73,6 +76,11 @@ class ProductDetailViewModel(
     private fun updateRecentProduct() {
         val recentProduct = RecentProduct(product = product)
         recentProductRepository.replaceRecentProduct(recentProduct)
+    }
+
+    private fun updateQuantity(newQuantity: Int) {
+        _quantity.value = newQuantity
+        _totalPrice.value = newQuantity * product.price
     }
 
     companion object {
