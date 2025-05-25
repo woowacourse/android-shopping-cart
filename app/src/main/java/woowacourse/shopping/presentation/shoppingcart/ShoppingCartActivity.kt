@@ -20,6 +20,7 @@ class ShoppingCartActivity : BaseActivity() {
             (application as ShoppingApplication).shoppingRepository,
         )
     }
+    private val shoppingCartAdapter = makeAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +28,11 @@ class ShoppingCartActivity : BaseActivity() {
         setUpAppBar()
         setUpBinding()
 
-        val adapter = makeAdapter()
-
         binding.rvSelectedGoodsList.apply {
-            this.adapter = adapter
+            this.adapter = shoppingCartAdapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
         }
-        setUpObserver(adapter)
+        setUpObserver(shoppingCartAdapter)
     }
 
     private fun setUpBinding() {

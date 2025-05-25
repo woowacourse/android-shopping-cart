@@ -24,16 +24,15 @@ class GoodsActivity : BaseActivity() {
             (application as ShoppingApplication).latestGoodsRepository,
         )
     }
+    private val goodsAdapter = makeGoodsAdapter()
+    private val latestGoodsAdapter = makeLatestGoodsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
 
-        val goodsAdapter = makeGoodsAdapter()
         setUpGoodsList(goodsAdapter)
-
-        val latestGoodsAdapter = makeLatestGoodsAdapter()
         setUpLatestGoodsList(latestGoodsAdapter)
 
         setSupportActionBar(binding.toolbar)
