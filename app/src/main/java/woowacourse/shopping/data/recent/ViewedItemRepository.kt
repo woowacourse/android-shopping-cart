@@ -9,4 +9,6 @@ interface ViewedItemRepository {
     )
 
     fun getViewedItems(callback: (List<ProductUiModel>) -> Unit)
+
+    fun getLastViewedItem(callback: (ProductUiModel?) -> Unit)
 }

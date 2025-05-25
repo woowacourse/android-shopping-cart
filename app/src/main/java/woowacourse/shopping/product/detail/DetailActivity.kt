@@ -51,6 +51,12 @@ class DetailActivity : AppCompatActivity() {
         product?.let {
             binding.product = it
             viewModel.setProduct(it)
+
+            viewModel.loadLastViewedItem(product.id)
+        }
+
+        viewModel.lastViewed.observe(this) {
+            binding.recentItem = it
         }
 
         binding.handler =
@@ -58,6 +64,7 @@ class DetailActivity : AppCompatActivity() {
                 viewModel,
             )
         binding.detailHandler = DetailEventHandlerImpl(viewModel)
+        binding.recentItem
         observeProduct()
     }
 

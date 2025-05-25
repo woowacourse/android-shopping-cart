@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="android.view.View" />
         <variable
             name="product"
             type="woowacourse.shopping.product.catalog.ProductUiModel" />
@@ -17,6 +18,13 @@
             name="detailHandler"
             type="woowacourse.shopping.product.detail.event.DetailEventHandler" />
 
+        <variable
+            name="catalogHandler"
+            type="woowacourse.shopping.product.catalog.event.CatalogEventHandler" />
+
+        <variable
+            name="recentItem"
+            type="woowacourse.shopping.product.catalog.ProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +37,6 @@
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:context=".product.detail.DetailActivity">
@@ -96,10 +103,48 @@
                         android:id="@+id/layout_quantity_selector"
                         layout="@layout/product_count_item" />
 
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:visibility="@{recentItem == null ? View.GONE : View.VISIBLE}"
+                    android:onClick="@{() -> catalogHandler.onProductClick(product)}"
+                    android:paddingVertical="16dp"
+                    android:paddingHorizontal="18dp"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="29dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textView_price_info"
+                    android:background="@drawable/cart_item_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp">
+
+                    <TextView
+                        android:id="@+id/textView_last_viewed_product_info"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="@string/text_last_viewed_product_info"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/mint_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:text="@{recentItem.name}"
+                        android:textSize="18sp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@id/textView_last_viewed_product_info"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:text="아이스 카페 아메리카노"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

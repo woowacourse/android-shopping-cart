@@ -25,4 +25,12 @@ class ViewedItemRepositoryImpl(
             callback(uiModels)
         }
     }
+
+    override fun getLastViewedItem(callback: (ProductUiModel?) -> Unit) {
+        thread {
+            val lastViewed = dao.getLastViewedItem()
+            val uiModel = lastViewed?.toUiModel()
+            callback(uiModel)
+        }
+    }
 }

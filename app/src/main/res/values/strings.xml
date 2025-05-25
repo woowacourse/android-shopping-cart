@@ -17,4 +17,5 @@
     <string name="text_product_minus">-</string>
     <string name="text_product_plus">+</string>
     <string name="text_product_count_open_button">product_count_open_button</string>
+    <string name="text_last_viewed_product_info">마지막으로 본 상품</string>
 </resources>

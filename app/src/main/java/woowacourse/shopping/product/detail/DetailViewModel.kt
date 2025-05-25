@@ -19,6 +19,9 @@ class DetailViewModel(
     private val _uiState = MutableLiveData<CartUiState>()
     val uiState: LiveData<CartUiState> = _uiState
 
+    private val _lastViewed = MutableLiveData<ProductUiModel?>()
+    val lastViewed: LiveData<ProductUiModel?> = _lastViewed
+
     fun addToCart() {
         val currentProduct = _product.value ?: return
         if (currentProduct.quantity <= 0) return
@@ -46,6 +49,16 @@ class DetailViewModel(
 
         viewedRepository.insertViewedItem(product) {
             callback()
+        }
+    }
+
+    fun loadLastViewedItem(currentProductId: Long) {
+        viewedRepository.getLastViewedItem { lastViewedItem ->
+            if (lastViewedItem?.id == currentProductId) {
+                _lastViewed.postValue(null)
+            } else {
+                _lastViewed.postValue(lastViewedItem)
+            }
         }
     }
 
