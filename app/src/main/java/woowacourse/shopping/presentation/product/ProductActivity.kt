@@ -31,9 +31,7 @@ class ProductActivity :
     private lateinit var binding: ActivityProductBinding
     private var _toolbarBinding: ViewCartActionBinding? = null
     private val toolbarBinding get() = _toolbarBinding!!
-    private val viewModel: ProductViewModel by viewModels {
-        ProductViewModelFactory(applicationContext)
-    }
+    private val viewModel: ProductViewModel by viewModels { ProductViewModelFactory() }
     private val recentAdapter: RecentAdapter by lazy {
         RecentAdapter(this)
     }

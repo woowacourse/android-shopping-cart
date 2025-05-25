@@ -26,9 +26,7 @@ class ProductDetailActivity :
     AppCompatActivity(),
     ItemClickListener {
     private lateinit var binding: ActivityDetailProductBinding
-    private val viewModel: ProductDetailViewModel by viewModels {
-        ProductDetailViewModelFactory(applicationContext)
-    }
+    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

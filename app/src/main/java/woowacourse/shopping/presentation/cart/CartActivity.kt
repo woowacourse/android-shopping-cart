@@ -22,7 +22,7 @@ class CartActivity :
     CartPageClickListener,
     CartCounterClickListener {
     private lateinit var binding: ActivityCartBinding
-    private val viewModel: CartViewModel by viewModels { CartViewModelFactory(applicationContext) }
+    private val viewModel: CartViewModel by viewModels { CartViewModelFactory() }
     private val cartAdapter by lazy {
         CartAdapter(
             cartCounterClickListener = this,
