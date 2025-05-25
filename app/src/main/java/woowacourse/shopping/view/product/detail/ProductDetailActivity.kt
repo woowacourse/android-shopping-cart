@@ -3,6 +3,7 @@ package woowacourse.shopping.view.product.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,7 +13,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.view.cart.ShoppingCartActivity
 import woowacourse.shopping.view.util.getSerializableExtraCompat
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -60,9 +60,8 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel.navigateEvent.observe(this) {
-            val intent = ShoppingCartActivity.newIntent(this)
-            startActivity(intent)
+        viewModel.addToCartEvent.observe(this) {
+            Toast.makeText(this, MESSAGE_ADD_TO_CART, Toast.LENGTH_SHORT).show()
         }
 
         viewModel.lastProductClickEvent.observe(this) {
@@ -82,5 +81,6 @@ class ProductDetailActivity : AppCompatActivity() {
             }
 
         private const val KEY_PRODUCT = "product"
+        private const val MESSAGE_ADD_TO_CART = "장바구니에 상품을 담았어요"
     }
 }

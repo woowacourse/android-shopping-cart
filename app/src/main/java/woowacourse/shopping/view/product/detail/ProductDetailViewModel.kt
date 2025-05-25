@@ -20,13 +20,13 @@ class ProductDetailViewModel(
     var lastViewedProduct: RecentProduct? = null
         private set
 
-    private val _navigateEvent = MutableSingleLiveData<Unit>()
-    val navigateEvent: SingleLiveData<Unit> get() = _navigateEvent
+    private val _addToCartEvent = MutableSingleLiveData<Unit>()
+    val addToCartEvent: SingleLiveData<Unit> get() = _addToCartEvent
 
     private val _lastProductClickEvent = MutableSingleLiveData<Unit>()
     val lastProductClickEvent: SingleLiveData<Unit> get() = _lastProductClickEvent
 
-    private val _quantity = MutableLiveData(1)
+    private val _quantity = MutableLiveData(INITIAL_QUANTITY)
     val quantity: LiveData<Int> get() = _quantity
 
     init {
@@ -35,22 +35,24 @@ class ProductDetailViewModel(
         updateRecentProduct()
     }
 
-    override fun onAddToShoppingCartClick() {
-        val addQuantity = quantity.value ?: 1
+    override fun onAddToCartClick() {
+        val addQuantity = quantity.value ?: 0
         cartProductRepository.updateQuantity(
             product.id,
             shoppingCartQuantity,
             shoppingCartQuantity + addQuantity,
         )
-        _navigateEvent.setValue(Unit)
+        shoppingCartQuantity += addQuantity
+        _addToCartEvent.setValue(Unit)
+        _quantity.value = INITIAL_QUANTITY
     }
 
     override fun onQuantityIncreaseClick(item: Product) {
-        _quantity.value = (quantity.value ?: 1) + 1
+        _quantity.value = (quantity.value ?: INITIAL_QUANTITY) + 1
     }
 
     override fun onQuantityDecreaseClick(item: Product) {
-        val current = quantity.value ?: 1
+        val current = quantity.value ?: INITIAL_QUANTITY
         if (current > 1) {
             _quantity.value = current - 1
         }
@@ -71,5 +73,9 @@ class ProductDetailViewModel(
     private fun updateRecentProduct() {
         val recentProduct = RecentProduct(product = product)
         recentProductRepository.replaceRecentProduct(recentProduct)
+    }
+
+    companion object {
+        private const val INITIAL_QUANTITY = 1
     }
 }

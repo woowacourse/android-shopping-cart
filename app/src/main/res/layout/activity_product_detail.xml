@@ -129,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary_color"
-            android:onClick="@{() -> handler.onAddToShoppingCartClick()}"
+            android:onClick="@{() -> handler.onAddToCartClick()}"
             android:paddingVertical="12dp"
             android:text="@string/add_shopping_cart"
             android:textColor="@color/white"

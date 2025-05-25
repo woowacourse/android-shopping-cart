@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.common.QuantityControlEventHandler
 
 interface ProductDetailEventHandler : QuantityControlEventHandler<Product> {
-    fun onAddToShoppingCartClick()
+    fun onAddToCartClick()
 
     fun onLastProductClick()
 }
