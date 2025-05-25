@@ -56,13 +56,12 @@
             layout="@layout/view_quantity_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:visibility="@{goods.quantity > 0 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintBottom_toBottomOf="@id/btn_plus"
             app:layout_constraintEnd_toEndOf="@id/iv_goods"
             app:layout_constraintStart_toStartOf="@id/iv_goods"
-            bind:quantity="@{goods.quantity}"
-            bind:goodsId="@{goods.id}" />
+            bind:goodsId="@{goods.id}"
+            bind:quantity="@{goods.quantity}" />
 
         <TextView
             android:id="@+id/tv_goods_name"
