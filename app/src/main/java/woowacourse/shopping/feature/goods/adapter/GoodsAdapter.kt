@@ -7,7 +7,6 @@ import woowacourse.shopping.databinding.ItemGoodsBinding
 import woowacourse.shopping.databinding.ItemHistoryContainerBinding
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.goods.adapter.history.HistoryContainerViewHolder
 
 class GoodsAdapter(
@@ -17,8 +16,8 @@ class GoodsAdapter(
     private var hasNextPage: Boolean = true
 
     fun setItems(newItems: List<Any>) {
-        val oldHistory = items.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is History } } as? List<*>
-        val newHistory = newItems.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is History } } as? List<*>
+        val oldHistory = items.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is Cart } } as? List<*>
+        val newHistory = newItems.firstOrNull()?.takeIf { it is List<*> && it.all { h -> h is Cart } } as? List<*>
 
         if (oldHistory != null && newHistory != null && oldHistory != newHistory) {
             items[0] = newHistory
@@ -69,7 +68,7 @@ class GoodsAdapter(
             position < items.size -> {
                 val item = items[position]
                 when {
-                    item is List<*> && item.all { it is History } -> ItemViewType.HISTORY.type
+                    item is List<*> && item.all { it is Cart } -> ItemViewType.HISTORY.type
                     item is Cart -> ItemViewType.GOODS.type
                     else -> ItemViewType.LOAD_MORE.type
                 }
@@ -105,8 +104,8 @@ class GoodsAdapter(
         when (holder) {
             is HistoryContainerViewHolder -> {
                 val item = items[position]
-                if (item is List<*> && item.all { it is History }) {
-                    holder.bind(item as List<History>)
+                if (item is List<*> && item.all { it is Cart }) {
+                    holder.bind(item as List<Cart>)
                 }
             }
             is GoodsViewHolder -> {

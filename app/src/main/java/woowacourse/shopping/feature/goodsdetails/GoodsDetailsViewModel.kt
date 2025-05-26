@@ -6,10 +6,9 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.domain.model.History
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
-import woowacourse.shopping.util.toCartFrom
 import woowacourse.shopping.util.updateQuantity
 
 class GoodsDetailsViewModel(
@@ -18,8 +17,8 @@ class GoodsDetailsViewModel(
 ) : ViewModel() {
     private val _cart = MutableLiveData<Cart>()
     val cart: LiveData<Cart> get() = _cart
-    private val _lastViewed = MutableLiveData<History>()
-    val lastViewed: LiveData<History> get() = _lastViewed
+    private val _lastViewed = MutableLiveData<Cart>()
+    val lastViewed: LiveData<Cart> get() = _lastViewed
     private val _isLastViewedVisible = MutableLiveData<Boolean>()
     val isLastViewedVisible: LiveData<Boolean> get() = _isLastViewedVisible
     private val _isSuccess = MutableSingleLiveData<Unit>()
@@ -64,7 +63,7 @@ class GoodsDetailsViewModel(
     }
 
     fun updateLastViewedVisibility() {
-        val lastName = _lastViewed.value?.name
+        val lastName = _lastViewed.value?.goods?.name
         val currentName = cart.value?.goods?.name
         _isLastViewedVisible.postValue(lastName != null && currentName != null && lastName != currentName)
     }
@@ -80,15 +79,10 @@ class GoodsDetailsViewModel(
 
     fun emitLastViewedCart() {
         val history = _lastViewed.value
-        cartRepository.getAll { carts ->
-            val matchedCart = history?.toCartFrom(carts.carts)
-            if (matchedCart != null) {
-                _navigateToLastViewedCart.postValue(matchedCart)
-            }
-        }
+        if (history != null) _navigateToLastViewedCart.postValue(history)
     }
 
     private fun insertToHistory(cart: Cart) {
-        historyRepository.insert(History(cart.goods.id, cart.goods.name, cart.goods.thumbnailUrl))
+        historyRepository.insert(Cart(Goods(cart.goods.id, cart.goods.name, cart.goods.price, cart.goods.thumbnailUrl), cart.quantity))
     }
 }

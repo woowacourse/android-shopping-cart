@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="history"
-            type="woowacourse.shopping.domain.model.History" />
+            name="cart"
+            type="woowacourse.shopping.domain.model.Cart" />
         <variable
             name="goodsClickListener"
             type="woowacourse.shopping.feature.goods.adapter.GoodsClickListener" />
@@ -17,7 +17,7 @@
         android:layout_height="141dp"
         android:paddingHorizontal="6dp"
         android:paddingBottom="12dp"
-        android:onClick="@{() -> goodsClickListener.onClickHistory(history)}">
+        android:onClick="@{() -> goodsClickListener.onClickHistory(cart)}">
 
         <ImageView
             android:id="@+id/iv_item_goods_thumbnail"
@@ -25,7 +25,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/goods_image_description"
             android:scaleType="centerCrop"
-            app:imgUrl="@{history.thumbnailUrl}"
+            app:imgUrl="@{cart.goods.thumbnailUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -40,7 +40,7 @@
             android:layout_marginEnd="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{history.name}"
+            android:text="@{cart.goods.name}"
             android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"

@@ -15,7 +15,6 @@ import woowacourse.shopping.application.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.goods.adapter.GoodsAdapter
 import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
@@ -107,8 +106,8 @@ class GoodsActivity : AppCompatActivity() {
                         navigate(cart)
                     }
 
-                    override fun onClickHistory(history: History) {
-                        viewModel.findCartFromHistory(history)
+                    override fun onClickHistory(cart: Cart) {
+                        viewModel.findCartFromHistory(cart)
                     }
 
                     override fun insertToCart(cart: Cart) {

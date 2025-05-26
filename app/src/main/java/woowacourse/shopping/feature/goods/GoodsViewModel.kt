@@ -10,7 +10,6 @@ import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
-import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.updateCartQuantity
@@ -78,11 +77,11 @@ class GoodsViewModel(
         }
     }
 
-    fun findCartFromHistory(history: History) {
+    fun findCartFromHistory(cart: Cart) {
         val cart =
             _items.value
                 ?.filterIsInstance<Cart>()
-                ?.find { it.goods.id == history.id }
+                ?.find { it.goods.id == cart.goods.id }
         if (cart != null) {
             _navigateToCart.setValue(cart)
         }

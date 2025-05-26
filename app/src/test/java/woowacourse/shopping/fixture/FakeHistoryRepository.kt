@@ -1,7 +1,6 @@
 package woowacourse.shopping.fixture
 
 import woowacourse.shopping.data.history.repository.HistoryRepository
-import woowacourse.shopping.domain.model.History
 
 class FakeHistoryRepository : HistoryRepository {
     val historyList = mutableListOf<History>()

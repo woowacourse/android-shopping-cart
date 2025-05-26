@@ -19,7 +19,6 @@ import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
-import woowacourse.shopping.domain.model.History
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsViewModel
 import woowacourse.shopping.fixture.FakeCartRepository
 import woowacourse.shopping.server.TestCartServiceImpl
