@@ -8,6 +8,8 @@ class ProductRemoteDataSource(
 ) {
     fun getProductById(id: Long): Product? = service.getProductById(id)
 
+    fun getProductsByIds(ids: List<Long>): List<Product>? = service.getProductsByIds(ids)
+
     fun getPagedProducts(
         limit: Int,
         offset: Int,

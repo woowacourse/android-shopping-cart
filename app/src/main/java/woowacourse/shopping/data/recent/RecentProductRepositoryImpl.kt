@@ -5,7 +5,6 @@ import woowacourse.shopping.data.recent.local.RecentProductLocalDataSource
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
-import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 class RecentProductRepositoryImpl(
@@ -34,20 +33,22 @@ class RecentProductRepositoryImpl(
     ) {
         thread {
             val entities = localDataSource.getPagedProducts(limit, offset)
-            val latch = CountDownLatch(entities.size)
-
-            val recentProducts = mutableListOf<RecentProduct>()
-            entities.forEach { entity ->
-                productRepository.getProductById(entity.productId) { product ->
-                    product?.let {
-                        val recentProduct = RecentProduct(it, entity.viewedAt.toLocalDateTime())
-                        recentProducts.add(recentProduct)
-                    }
-                    latch.countDown()
+            val productIds = entities.map { it.productId }
+            productRepository.getProductsByIds(productIds) { products ->
+                if (products == null) {
+                    onSuccess(emptyList())
+                    return@getProductsByIds
                 }
+
+                val productMap = products.associateBy { it.id }
+                val recentProducts =
+                    entities.mapNotNull { entity ->
+                        productMap[entity.productId]?.let { product ->
+                            RecentProduct(product, entity.viewedAt.toLocalDateTime())
+                        }
+                    }
+                onSuccess(recentProducts)
             }
-            latch.await()
-            onSuccess(recentProducts)
         }
     }
 

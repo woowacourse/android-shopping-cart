@@ -9,9 +9,14 @@ interface ProductRepository {
         onSuccess: (Product?) -> Unit,
     )
 
+    fun getProductsByIds(
+        ids: List<Long>,
+        onSuccess: (List<Product>?) -> Unit,
+    )
+
     fun getPagedProducts(
         limit: Int,
         offset: Int,
-        onSuccess: (PagedResult<Product>?) -> Unit,
+        onSuccess: (PagedResult<Product>) -> Unit,
     )
 }

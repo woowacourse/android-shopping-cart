@@ -27,12 +27,19 @@ class ShoppingServer {
         }
 
     private fun handleProductRequest(request: RecordedRequest): MockResponse {
-        val id =
-            request.requestUrl?.queryParameter(PARAM_ID)?.toLongOrNull()
+        val idParams =
+            request.requestUrl?.queryParameterValues(PARAM_ID)
                 ?: return failureResponse()
 
-        val product = ProductData.getProductById(id) ?: return failureResponse()
-        val body = gson.toJson(product)
+        if (idParams.size == 1) {
+            val id = idParams.firstOrNull()?.toLongOrNull() ?: return failureResponse()
+            val product = ProductData.getProductById(id) ?: return failureResponse()
+            val body = gson.toJson(product)
+            return successResponse(body)
+        }
+        val ids = idParams.mapNotNull { it?.toLongOrNull() }
+        val products = ids.mapNotNull { ProductData.getProductById(it) }
+        val body = gson.toJson(products)
         return successResponse(body)
     }
 
@@ -66,8 +73,8 @@ class ShoppingServer {
         private const val SUCCESS_RESPONSE_CODE: Int = 200
         private const val FAILURE_RESPONSE_CODE: Int = 404
 
-        const val PARAM_ID: String = "id"
-        const val PARAM_LIMIT: String = "limit"
-        const val PARAM_OFFSET: String = "offset"
+        private const val PARAM_ID: String = "id"
+        private const val PARAM_LIMIT: String = "limit"
+        private const val PARAM_OFFSET: String = "offset"
     }
 }

@@ -75,7 +75,7 @@ object ProductData {
             ),
         )
 
-    val products: List<Product> =
+    private val products: List<Product> =
         (0..4)
             .flatMap { i -> items.map { it.copy(id = it.id + i * items.size) } }
 
