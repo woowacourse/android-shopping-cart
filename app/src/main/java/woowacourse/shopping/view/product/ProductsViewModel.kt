@@ -60,26 +60,10 @@ class ProductsViewModel(
         shoppingCartRepository.fetchSelectedQuantity(productsToShow) { result ->
             result
                 .onSuccess { shoppingCartProducts: List<ShoppingCartProduct> ->
-                    val productsWithoutLoadItem =
-                        if (currentProducts.lastOrNull() is LoadItem) {
-                            currentProducts.dropLast(1)
-                        } else {
-                            currentProducts
-                        }
-
-                    val updatedProductItems =
-                        productsToShow.map { product ->
-                            val quantity =
-                                shoppingCartProducts.find { it.product == product }?.quantity
-                                    ?: 0
-                            ProductItem(product, quantity)
-                        }
-                    val hasRecentWatching =
-                        currentProducts.any { it is ProductsItem.RecentWatchingItem }
-                    updateRecentProducts(
-                        productsWithoutLoadItem,
-                        updatedProductItems,
-                        hasRecentWatching,
+                    handleShoppingCartQuantitySuccess(
+                        currentProducts,
+                        productsToShow,
+                        shoppingCartProducts,
                     )
                 }.onFailure {
                     _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
@@ -87,48 +71,99 @@ class ProductsViewModel(
         }
     }
 
+    private fun handleShoppingCartQuantitySuccess(
+        currentProducts: List<ProductsItem>,
+        productsToShow: List<Product>,
+        shoppingCartProducts: List<ShoppingCartProduct>,
+    ) {
+        val productsWithoutLoadItem =
+            if (currentProducts.lastOrNull() is LoadItem) {
+                currentProducts.dropLast(1)
+            } else {
+                currentProducts
+            }
+
+        val updatedProductItems =
+            productsToShow.map { product ->
+                val quantity =
+                    shoppingCartProducts.find { it.product == product }?.quantity
+                        ?: 0
+                ProductItem(product, quantity)
+            }
+        val hasRecentWatching =
+            currentProducts.any { it is RecentWatchingItem }
+        updateRecentProducts(
+            productsWithoutLoadItem,
+            updatedProductItems,
+            hasRecentWatching,
+        )
+    }
+
     private fun updateRecentProducts(
         productsWithoutLoadItem: List<ProductsItem>,
         updatedProductItems: List<ProductItem>,
         hasRecentWatching: Boolean,
     ) {
-        if (hasRecentWatching == true) {
-            val updatedProducts =
-                productsWithoutLoadItem +
-                    updatedProductItems +
-                    if (loadable) listOf(LoadItem) else emptyList()
-            _products.postValue(updatedProducts)
+        if (hasRecentWatching) {
+            updateNewProducts(
+                productsWithoutLoadItem,
+                updatedProductItems,
+                null,
+            )
             return
         }
+
         productsRepository.getRecentWatchingProducts(10) { result ->
             result
-                .onSuccess { recentWatchingProducts: List<Product> ->
-                    val recentWatchingItem =
-                        if (recentWatchingProducts.isEmpty()) {
-                            null
-                        } else {
-                            RecentWatchingItem(recentWatchingProducts)
-                        }
-
-                    val updatedProducts =
-                        buildList {
-                            recentWatchingItem?.let { add(it) }
-                            addAll(productsWithoutLoadItem)
-                            addAll(updatedProductItems)
-                            if (loadable) add(LoadItem)
-                        }
-
-                    _products.postValue(updatedProducts)
+                .onSuccess { recentWatchingProducts ->
+                    handleRecentProductsSuccess(
+                        recentWatchingProducts,
+                        productsWithoutLoadItem,
+                        updatedProductItems,
+                    )
                 }.onFailure {
-                    val updatedProducts =
-                        productsWithoutLoadItem +
-                            updatedProductItems +
-                            if (loadable) listOf(LoadItem) else emptyList()
-                    _products.postValue(updatedProducts)
-
+                    updateNewProducts(
+                        productsWithoutLoadItem,
+                        updatedProductItems,
+                        null,
+                    )
                     _event.postValue(ProductsEvent.UPDATE_RECENT_WATCHING_PRODUCTS_FAILURE)
                 }
         }
+    }
+
+    private fun handleRecentProductsSuccess(
+        recentWatchingProducts: List<Product>,
+        productsWithoutLoadItem: List<ProductsItem>,
+        updatedProductItems: List<ProductItem>,
+    ) {
+        val recentWatchingItem =
+            if (recentWatchingProducts.isEmpty()) {
+                null
+            } else {
+                RecentWatchingItem(recentWatchingProducts)
+            }
+
+        updateNewProducts(
+            productsWithoutLoadItem,
+            updatedProductItems,
+            recentWatchingItem,
+        )
+    }
+
+    private fun updateNewProducts(
+        productsWithoutLoadItem: List<ProductsItem>,
+        updatedProductItems: List<ProductItem>,
+        recentWatchingItem: ProductsItem?,
+    ) {
+        _products.postValue(
+            buildList {
+                recentWatchingItem?.let { add(it) }
+                addAll(productsWithoutLoadItem)
+                addAll(updatedProductItems)
+                if (loadable) add(LoadItem)
+            },
+        )
     }
 
     private fun updateShoppingCartQuantity() {
