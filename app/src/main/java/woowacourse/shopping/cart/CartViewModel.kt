@@ -113,7 +113,7 @@ class CartViewModel(
                     if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
                         return CartViewModel(repository) as T
                     }
-                    throw IllegalArgumentException("Unknown ViewModel class")
+                    throw IllegalArgumentException("알 수 없는 ViewModel 클래스입니다.$modelClass")
                 }
             }
     }

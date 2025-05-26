@@ -78,7 +78,7 @@ class DetailViewModel(
                     if (modelClass.isAssignableFrom(DetailViewModel::class.java)) {
                         return DetailViewModel(repository, viewedRepository) as T
                     }
-                    throw IllegalArgumentException("Unknown ViewModel class")
+                    throw IllegalArgumentException("알 수 없는 ViewModel 클래스입니다.$modelClass")
                 }
             }
     }

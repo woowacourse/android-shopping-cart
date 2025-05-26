@@ -145,7 +145,7 @@ class CatalogViewModel(
                     if (modelClass.isAssignableFrom(CatalogViewModel::class.java)) {
                         CatalogViewModel(dataSource, repository, viewedRepository) as T
                     } else {
-                        throw IllegalArgumentException("Unknown ViewModel class")
+                        throw IllegalArgumentException("알 수 없는 ViewModel 클래스입니다.$modelClass")
                     }
             }
     }
