@@ -7,8 +7,11 @@ import androidx.room.Query
 
 @Dao
 interface RecentGoodsDao {
+    @Query("SELECT * FROM recent_goods ORDER BY time DESC LIMIT 1")
+    fun getLatestRecentGoods(): RecentGoodsEntity?
+
     @Query("SELECT * FROM recent_goods ORDER BY time DESC LIMIT :count")
-    fun getRecentGoods(count: Int): List<RecentGoodsEntity>
+    fun getRecentGoods(count: Int): List<RecentGoodsEntity>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGoods(goods: RecentGoodsEntity)

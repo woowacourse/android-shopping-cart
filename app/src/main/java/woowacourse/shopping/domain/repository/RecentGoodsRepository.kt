@@ -8,5 +8,7 @@ interface RecentGoodsRepository {
         onResult: (Result<Unit>) -> Unit,
     )
 
-    fun getRecentGoods(onResult: (Result<List<Long>>) -> Unit)
+    fun getLatestRecentGoods(onResult: (Result<Long?>) -> Unit)
+
+    fun getRecentGoods(onResult: (Result<List<Long>?>) -> Unit)
 }
