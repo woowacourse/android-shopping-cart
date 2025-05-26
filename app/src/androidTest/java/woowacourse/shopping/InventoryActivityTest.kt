@@ -1,14 +1,22 @@
 
 package woowacourse.shopping
 
-import androidx.test.core.app.ActivityScenario
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.data.recent.RecentProductDatabase
+import woowacourse.shopping.data.recent.RecentProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
+import woowacourse.shopping.data.shoppingcart.ShoppingCartDatabase
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
+import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.matcher.RecyclerViewMatcher.Companion.withRecyclerView
 import woowacourse.shopping.matcher.isDisplayed
 import woowacourse.shopping.matcher.isEllipsized
@@ -24,9 +32,33 @@ class InventoryActivityTest {
     @get:Rule
     val activityScenarioRule = ActivityScenarioRule(InventoryActivity::class.java)
 
+    private lateinit var context: ShoppingApplication
+    private lateinit var shoppingCartRepository: ShoppingCartRepository
+    private lateinit var recentProductRepository: RecentProductRepository
+
     @Before
     fun setUp() {
-        ActivityScenario.launch(InventoryActivity::class.java)
+        context = ApplicationProvider.getApplicationContext()
+
+        val shoppingCartDatabase =
+            Room.inMemoryDatabaseBuilder(context, ShoppingCartDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
+        shoppingCartRepository = ShoppingCartRepositoryImpl(shoppingCartDatabase.cartItemDao())
+
+        val recentProductDatabase =
+            Room.inMemoryDatabaseBuilder(context, RecentProductDatabase::class.java)
+                .allowMainThreadQueries()
+                .build()
+        recentProductRepository = RecentProductRepositoryImpl(recentProductDatabase.recentProductDao())
+    }
+
+    @After
+    fun tearDown() {
+        context.cacheDir.deleteRecursively()
+        context.filesDir.deleteRecursively()
+        shoppingCartRepository.clear()
+        recentProductRepository.clear()
     }
 
     @Test
