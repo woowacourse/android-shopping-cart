@@ -53,11 +53,9 @@ class CartRepositoryImpl(
         Thread {
             val existing = cartDao.getAll().find { it.productId == product.id.toLong() }
             val newCount = (existing?.count ?: 0) + count
-
+            cartDao.deleteById(product.id)
             if (newCount >= 1) {
                 cartDao.upsert(CartEntity(productId = product.id.toLong(), count = newCount))
-            } else {
-                cartDao.deleteById(product.id)
             }
         }.start()
     }
