@@ -20,23 +20,29 @@ class ShoppingServer {
         object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse =
                 when (request.requestUrl?.encodedPath) {
-                    "/products" -> handleProductRequest(request)
+                    "/product" -> handleSingleProductRequest(request)
+                    "/products" -> handleMultipleProductsRequest(request)
                     "/products/page" -> handlePagedProductsRequest(request)
                     else -> MockResponse().setResponseCode(FAILURE_RESPONSE_CODE)
                 }
         }
 
-    private fun handleProductRequest(request: RecordedRequest): MockResponse {
+    private fun handleSingleProductRequest(request: RecordedRequest): MockResponse {
+        val idParam =
+            request.requestUrl?.queryParameter(PARAM_ID)
+                ?: return failureResponse()
+
+        val id = idParam.toLongOrNull() ?: return failureResponse()
+        val product = ProductData.getProductById(id) ?: return failureResponse()
+        val body = gson.toJson(product)
+        return successResponse(body)
+    }
+
+    private fun handleMultipleProductsRequest(request: RecordedRequest): MockResponse {
         val idParams =
             request.requestUrl?.queryParameterValues(PARAM_ID)
                 ?: return failureResponse()
 
-        if (idParams.size == 1) {
-            val id = idParams.firstOrNull()?.toLongOrNull() ?: return failureResponse()
-            val product = ProductData.getProductById(id) ?: return failureResponse()
-            val body = gson.toJson(product)
-            return successResponse(body)
-        }
         val ids = idParams.mapNotNull { it?.toLongOrNull() }
         val products = ids.mapNotNull { ProductData.getProductById(it) }
         val body = gson.toJson(products)

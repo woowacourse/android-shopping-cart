@@ -18,7 +18,7 @@ class ProductServiceImpl : ProductService {
             BASE_URL
                 .toHttpUrl()
                 .newBuilder()
-                .addPathSegment("products")
+                .addPathSegment("product")
                 .addQueryParameter(PARAM_ID, id.toString())
                 .build()
 
