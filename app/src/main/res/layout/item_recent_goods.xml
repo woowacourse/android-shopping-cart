@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="goods"
+            type="woowacourse.shopping.domain.model.Goods" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="98dp"
+        android:layout_height="121dp">
+
+        <ImageView
+            android:id="@+id/iv_goods"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:goodsImage="@{goods.imageUrl}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:goodsName="@{goods.name}"
+            app:layout_constraintStart_toEndOf="@id/iv_goods"
+            app:layout_constraintTop_toBottomOf="@id/iv_goods"
+            tools:text="PET보틀-정사각형" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
