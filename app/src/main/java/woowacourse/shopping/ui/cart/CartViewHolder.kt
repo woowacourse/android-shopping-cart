@@ -26,9 +26,13 @@ class CartViewHolder private constructor(
             cartClickListener: CartClickListener,
         ): CartViewHolder {
             return CartViewHolder(
-                binding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context), R.layout.cart_item, parent, false
-                ),
+                binding =
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.cart_item,
+                        parent,
+                        false,
+                    ),
                 cartClickListener = cartClickListener,
             )
         }

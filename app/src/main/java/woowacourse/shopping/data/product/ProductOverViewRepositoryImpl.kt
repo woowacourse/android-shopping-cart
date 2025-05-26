@@ -9,13 +9,12 @@ import woowacourse.shopping.providers.ThreadProvider
 
 class ProductOverViewRepositoryImpl(
     private val productDataSource: ProductDataSource,
-    private val cartDataSource: CartDataSource
+    private val cartDataSource: CartDataSource,
 ) : ProductOverViewRepository {
-
     override fun findInRange(
         limit: Int,
         offset: Int,
-        onResult: (Result<List<CartProduct>>) -> Unit
+        onResult: (Result<List<CartProduct>>) -> Unit,
     ) {
         ThreadProvider.execute {
             runCatching {
@@ -35,7 +34,10 @@ class ProductOverViewRepositoryImpl(
         }
     }
 
-    override fun findById(productId: Long, onResult: (Result<Product?>) -> Unit) {
+    override fun findById(
+        productId: Long,
+        onResult: (Result<Product?>) -> Unit,
+    ) {
         ThreadProvider.execute {
             runCatching {
                 onResult(productDataSource.findById(productId))
@@ -43,8 +45,10 @@ class ProductOverViewRepositoryImpl(
         }
     }
 
-
-    override fun insertAll(vararg products: Product, onResult: (Result<Unit>) -> Unit) {
+    override fun insertAll(
+        vararg products: Product,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
         ThreadProvider.execute {
             runCatching {
                 onResult(productDataSource.insertAll(*products))
@@ -55,7 +59,7 @@ class ProductOverViewRepositoryImpl(
     override fun insertOrAddQuantity(
         productId: Long,
         delta: Int,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     ) {
         ThreadProvider.execute {
             runCatching {
@@ -67,7 +71,7 @@ class ProductOverViewRepositoryImpl(
     override fun updateQuantityByProductId(
         productId: Long,
         delta: Int,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     ) {
         ThreadProvider.execute {
             runCatching {
@@ -76,7 +80,10 @@ class ProductOverViewRepositoryImpl(
         }
     }
 
-    override fun removeInCart(productId: Long, onResult: (Result<Unit>) -> Unit) {
+    override fun removeInCart(
+        productId: Long,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
         ThreadProvider.execute {
             runCatching {
                 onResult(cartDataSource.deleteByProductId(productId))

@@ -7,6 +7,6 @@ fun CartItemDetail.toCartProduct(): CartProduct {
     return CartProduct(
         this.cartItemEntity.id,
         this.productEntity.toProduct(),
-        this.cartItemEntity.quantity
+        this.cartItemEntity.quantity,
     )
 }

@@ -86,15 +86,16 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.quantityChangeListener = initQuantityChangerListener()
     }
 
-    private fun initQuantityChangerListener() = object : QuantityChangeListener {
-        override fun increase(productId: Long) {
-            viewModel.increaseQuantity()
-        }
+    private fun initQuantityChangerListener() =
+        object : QuantityChangeListener {
+            override fun increase(productId: Long) {
+                viewModel.increaseQuantity()
+            }
 
-        override fun decrease(productId: Long) {
-            viewModel.decreaseQuantity()
+            override fun decrease(productId: Long) {
+                viewModel.decreaseQuantity()
+            }
         }
-    }
 
     private fun initObserve() {
         viewModel.eventAddedCartToast.observe(this) {
@@ -103,7 +104,6 @@ class ProductDetailActivity : AppCompatActivity() {
             finish()
         }
     }
-
 
     private fun showAddedCartToast() {
         Toast.makeText(

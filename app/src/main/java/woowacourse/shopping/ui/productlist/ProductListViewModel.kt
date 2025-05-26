@@ -22,22 +22,23 @@ class ProductListViewModel(
         val pageNumber = _productsUiState.value?.pageNumber ?: 0
         repository.findInRange(
             limit = PAGE_FETCH_SIZE,
-            offset = (pageNumber) * PAGE_SIZE
+            offset = (pageNumber) * PAGE_SIZE,
         ) { cartProductsResult ->
             cartProductsResult.mapCatching { cartProducts ->
                 val newCartProducts = cartProducts.take(PAGE_SIZE)
-                val newProductsViewType = newCartProducts.map { cartProduct ->
-                    ProductListViewType.ProductItemType(
-                        cartProduct.product,
-                        cartProduct.quantity
-                    )
-                }
+                val newProductsViewType =
+                    newCartProducts.map { cartProduct ->
+                        ProductListViewType.ProductItemType(
+                            cartProduct.product,
+                            cartProduct.quantity,
+                        )
+                    }
                 val isAddLoadMore = hasNextPage(cartProductsResult.getOrNull())
                 _productsUiState.postValue(
                     productsUiState.value?.addProducts(
                         newProductsViewType,
-                        isAddLoadMore
-                    )
+                        isAddLoadMore,
+                    ),
                 )
             }.onFailure {
                 // TODO : 데이터 가져오기 실패
@@ -45,11 +46,14 @@ class ProductListViewModel(
         }
     }
 
-    fun increaseQuantity(productId: Long, delta: Int) {
+    fun increaseQuantity(
+        productId: Long,
+        delta: Int,
+    ) {
         repository.insertOrAddQuantity(productId, delta) { result ->
             result.onSuccess {
                 _productsUiState.postValue(
-                    productsUiState.value?.updateQuantityByProductId(productId, delta)
+                    productsUiState.value?.updateQuantityByProductId(productId, delta),
                 )
             }.onFailure {
                 // TODO : 데이터 가져오기 실패
@@ -57,14 +61,17 @@ class ProductListViewModel(
         }
     }
 
-    fun decreaseQuantity(productId: Long, delta: Int) {
+    fun decreaseQuantity(
+        productId: Long,
+        delta: Int,
+    ) {
         val uiStateValue = productsUiState.value ?: return
         val quantity = uiStateValue.getQuantityByProductId(productId)
         if (quantity + delta <= 0) {
             repository.removeInCart(productId) { result ->
                 result.onSuccess {
                     _productsUiState.postValue(
-                        uiStateValue.updateQuantityByProductId(productId, delta)
+                        uiStateValue.updateQuantityByProductId(productId, delta),
                     )
                 }
                     .onFailure {
@@ -77,10 +84,9 @@ class ProductListViewModel(
         repository.updateQuantityByProductId(productId, delta) { result ->
             result.onSuccess {
                 _productsUiState.postValue(
-                    uiStateValue.updateQuantityByProductId(productId, delta)
+                    uiStateValue.updateQuantityByProductId(productId, delta),
                 )
             }.onFailure {
-
             }
         }
     }

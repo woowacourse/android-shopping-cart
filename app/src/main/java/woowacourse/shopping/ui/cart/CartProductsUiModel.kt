@@ -10,21 +10,26 @@ data class CartProductsUiModel(
     }
 
     fun increaseQuantity(productId: Long): CartProductsUiModel {
-        val updateCartProducts = cartProducts.map { cartProduct ->
-            if (cartProduct.product.id == productId){
-                cartProduct.copy(_quantity = cartProduct.quantity + 1)
+        val updateCartProducts =
+            cartProducts.map { cartProduct ->
+                if (cartProduct.product.id == productId) {
+                    cartProduct.copy(_quantity = cartProduct.quantity + 1)
+                } else {
+                    cartProduct
+                }
             }
-            else cartProduct
-        }
         return CartProductsUiModel(updateCartProducts)
     }
 
     fun decreaseQuantity(productId: Long): CartProductsUiModel {
-        val updateCartProducts = cartProducts.map { cartProduct ->
-            if (cartProduct.product.id == productId && cartProduct.quantity > 1) cartProduct.copy(_quantity = cartProduct.quantity - 1)
-            else cartProduct
-        }
+        val updateCartProducts =
+            cartProducts.map { cartProduct ->
+                if (cartProduct.product.id == productId && cartProduct.quantity > 1) {
+                    cartProduct.copy(_quantity = cartProduct.quantity - 1)
+                } else {
+                    cartProduct
+                }
+            }
         return CartProductsUiModel(updateCartProducts)
     }
-
 }

@@ -4,12 +4,12 @@ import woowacourse.shopping.domain.cart.CartRepository
 import woowacourse.shopping.providers.ThreadProvider
 
 class CartRepositoryImpl(
-    private val cartDataSource: CartDataSource
+    private val cartDataSource: CartDataSource,
 ) : CartRepository {
     override fun fetchInRange(
         limit: Int,
         offset: Int,
-        onResult: (Result<List<CartProduct>>) -> Unit
+        onResult: (Result<List<CartProduct>>) -> Unit,
     ) {
         ThreadProvider.execute {
             runCatching {
@@ -18,7 +18,10 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun fetchByProductId(productId: Long, onResult: (Result<CartProduct?>) -> Unit) {
+    override fun fetchByProductId(
+        productId: Long,
+        onResult: (Result<CartProduct?>) -> Unit,
+    ) {
         ThreadProvider.execute {
             runCatching {
                 cartDataSource.findByProductId(productId)
@@ -26,7 +29,11 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun insert(productId: Long, quantity: Int, onResult: (Result<Long>) -> Unit) {
+    override fun insert(
+        productId: Long,
+        quantity: Int,
+        onResult: (Result<Long>) -> Unit,
+    ) {
         ThreadProvider.execute {
             runCatching {
                 onResult(cartDataSource.insertByProductId(productId, quantity))
@@ -37,7 +44,7 @@ class CartRepositoryImpl(
     override fun insertOrAddQuantity(
         productId: Long,
         quantity: Int,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     ) {
         ThreadProvider.execute {
             runCatching {
@@ -46,7 +53,11 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun updateQuantity(productId: Long, delta: Int, onResult: (Result<Unit>) -> Unit) {
+    override fun updateQuantity(
+        productId: Long,
+        delta: Int,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
         ThreadProvider.execute {
             runCatching {
                 onResult(cartDataSource.updateQuantityByProductId(productId, delta))
@@ -54,7 +65,10 @@ class CartRepositoryImpl(
         }
     }
 
-    override fun delete(cartItemId: Long, onResult: (Result<Unit>) -> Unit) {
+    override fun delete(
+        cartItemId: Long,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
         ThreadProvider.execute {
             runCatching {
                 onResult(cartDataSource.deleteByCartItemId(cartItemId))

@@ -33,5 +33,8 @@ interface CartDao {
 
     @Transaction
     @Query("UPDATE cart SET quantity = quantity + :delta WHERE product_id = :productId")
-    fun updateQuantity(productId: Long, delta: Int)
+    fun updateQuantity(
+        productId: Long,
+        delta: Int,
+    )
 }

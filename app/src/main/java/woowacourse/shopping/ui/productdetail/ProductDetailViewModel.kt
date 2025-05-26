@@ -21,7 +21,7 @@ class ProductDetailViewModel(
     init {
         repository.findById(productId) { result ->
             result.onSuccess { product ->
-                product ?: return@onSuccess /* 존재 하지 않는 상품을 조회했음을 알려야 함 */
+                product ?: return@onSuccess // 존재 하지 않는 상품을 조회했음을 알려야 함
                 _cartProductUiState.postValue(CartProduct(product = product, _quantity = 1))
             }
         }
@@ -44,9 +44,11 @@ class ProductDetailViewModel(
     fun decreaseQuantity() {
         val cartProduct = cartProductUiState.value ?: return
         val decreasedQuantityProduct = cartProduct.decrease()
-        if (decreasedQuantityProduct.quantity != 0) _cartProductUiState.postValue(
-            decreasedQuantityProduct
-        )
+        if (decreasedQuantityProduct.quantity != 0) {
+            _cartProductUiState.postValue(
+                decreasedQuantityProduct,
+            )
+        }
     }
 
     companion object {

@@ -128,7 +128,6 @@ class ProductListActivity : AppCompatActivity() {
             override fun decrease(productId: Long) {
                 viewModel.decreaseQuantity(productId, -1)
             }
-
         }
     }
 

@@ -5,9 +5,12 @@ import woowacourse.shopping.domain.cart.CartProduct
 import woowacourse.shopping.utils.toCartProduct
 
 class CartDataSourceImpl(
-    private val dao: CartDao
+    private val dao: CartDao,
 ) : CartDataSource {
-    override fun findInRange(limit: Int, offset: Int): Result<List<CartProduct>> {
+    override fun findInRange(
+        limit: Int,
+        offset: Int,
+    ): Result<List<CartProduct>> {
         return runCatching {
             dao.findCartItemsInRange(limit, offset)
         }.mapCatching { cartItemDetails ->
@@ -23,7 +26,10 @@ class CartDataSourceImpl(
         }
     }
 
-    override fun insertByProductId(productId: Long, quantity: Int): Result<Long> {
+    override fun insertByProductId(
+        productId: Long,
+        quantity: Int,
+    ): Result<Long> {
         return runCatching {
             val cartItemEntity = CartItemEntity(productId = productId, quantity = quantity)
             dao.insert(cartItemEntity)
@@ -42,7 +48,10 @@ class CartDataSourceImpl(
         }
     }
 
-    override fun updateQuantityByProductId(productId: Long, delta: Int): Result<Unit> {
+    override fun updateQuantityByProductId(
+        productId: Long,
+        delta: Int,
+    ): Result<Unit> {
         return runCatching {
             dao.updateQuantity(productId, delta)
         }

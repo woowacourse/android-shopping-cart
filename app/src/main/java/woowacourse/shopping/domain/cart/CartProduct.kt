@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain.cart
 
-import java.io.Serializable
 import woowacourse.shopping.domain.product.Product
+import java.io.Serializable
 
 data class CartProduct(
     val id: Long? = null,
@@ -9,6 +9,7 @@ data class CartProduct(
     private var _quantity: Int,
 ) : Serializable {
     val quantity get() = _quantity
+
     fun increase(): CartProduct {
         return copy(_quantity = quantity + 1)
     }

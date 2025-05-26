@@ -6,7 +6,7 @@ import woowacourse.shopping.utils.toProduct
 import woowacourse.shopping.utils.toProductEntity
 
 class ProductDataSourceImpl(
-    private val dao: ProductDao
+    private val dao: ProductDao,
 ) : ProductDataSource {
     override fun findById(productId: Long): Result<Product?> {
         return runCatching {
@@ -16,7 +16,10 @@ class ProductDataSourceImpl(
         }
     }
 
-    override fun findInRange(limit: Int, offset: Int): Result<List<Product>> {
+    override fun findInRange(
+        limit: Int,
+        offset: Int,
+    ): Result<List<Product>> {
         return runCatching {
             dao.findInRange(limit, offset)
         }.mapCatching { productEntities ->
@@ -31,5 +34,4 @@ class ProductDataSourceImpl(
             dao.insertAll(*productEntities)
         }
     }
-
 }

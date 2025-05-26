@@ -25,9 +25,13 @@ class ProductItemViewHolder private constructor(
             productClickListener: ProductClickListener,
         ): ProductItemViewHolder {
             return ProductItemViewHolder(
-                binding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context), R.layout.product_item, parent, false
-                ),
+                binding =
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.product_item,
+                        parent,
+                        false,
+                    ),
                 productClickListener = productClickListener,
             )
         }

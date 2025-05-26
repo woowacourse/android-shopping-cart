@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.productlist
 
 data class ProductListUiModel(
-    val productViewTypes: List<ProductListViewType> = emptyList()
+    val productViewTypes: List<ProductListViewType> = emptyList(),
 ) {
     var pageNumber: Int = 0
         private set
@@ -12,38 +12,40 @@ data class ProductListUiModel(
 
     fun addProducts(
         newProducts: List<ProductListViewType>,
-        isAddLoadMore: Boolean
+        isAddLoadMore: Boolean,
     ): ProductListUiModel {
         return ProductListUiModel(
-            if (isAddLoadMore) originProducts + newProducts + loadMore else originProducts + newProducts
+            if (isAddLoadMore) originProducts + newProducts + loadMore else originProducts + newProducts,
         )
     }
 
     fun updateQuantityByProductId(
         productId: Long,
-        delta: Int
+        delta: Int,
     ): ProductListUiModel {
-        val updated = productViewTypes.map { productViewType ->
-            if (productViewType is ProductListViewType.ProductItemType && productViewType.product.id == productId) {
-                ProductListViewType.ProductItemType(
-                    productViewType.product, productViewType.quantity + delta
-                )
-            } else {
-                productViewType
+        val updated =
+            productViewTypes.map { productViewType ->
+                if (productViewType is ProductListViewType.ProductItemType && productViewType.product.id == productId) {
+                    ProductListViewType.ProductItemType(
+                        productViewType.product,
+                        productViewType.quantity + delta,
+                    )
+                } else {
+                    productViewType
+                }
             }
-        }
         return ProductListUiModel(updated)
     }
 
     fun getQuantityByProductId(productId: Long): Int {
-        val viewType = productViewTypes.find { productViewType ->
-            productViewType is ProductListViewType.ProductItemType && productViewType.product.id == productId
-        } ?: return 0
+        val viewType =
+            productViewTypes.find { productViewType ->
+                productViewType is ProductListViewType.ProductItemType && productViewType.product.id == productId
+            } ?: return 0
         return (viewType as ProductListViewType.ProductItemType).quantity
     }
 
     fun pageUp() {
         pageNumber++
     }
-
 }

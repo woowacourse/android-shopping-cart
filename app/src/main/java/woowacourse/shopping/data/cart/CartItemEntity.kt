@@ -7,11 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "cart",
-    indices = [Index(value = ["product_id"], unique = true)]
+    indices = [Index(value = ["product_id"], unique = true)],
 )
-
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo("product_id") val productId: Long,
-    @ColumnInfo("quantity") val quantity: Int
+    @ColumnInfo("quantity") val quantity: Int,
 )

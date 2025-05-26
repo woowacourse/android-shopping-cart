@@ -8,14 +8,14 @@ import woowacourse.shopping.domain.product.ProductOverViewRepository
 object RepositoryProvider {
     fun provideCartRepository(): CartRepository {
         return CartRepositoryImpl(
-            DataSourceProvider.provideCartDataSource()
+            DataSourceProvider.provideCartDataSource(),
         )
     }
 
     fun provideProductOverViewRepository(): ProductOverViewRepository {
         return ProductOverViewRepositoryImpl(
             DataSourceProvider.provideProductDataSource(),
-            DataSourceProvider.provideCartDataSource()
+            DataSourceProvider.provideCartDataSource(),
         )
     }
 }

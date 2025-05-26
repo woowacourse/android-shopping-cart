@@ -22,7 +22,7 @@ interface ProductOverViewRepository {
     fun insertOrAddQuantity(
         productId: Long,
         delta: Int,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     )
 
     /**
@@ -33,11 +33,11 @@ interface ProductOverViewRepository {
     fun updateQuantityByProductId(
         productId: Long,
         delta: Int,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     )
 
     fun removeInCart(
         productId: Long,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     )
 }

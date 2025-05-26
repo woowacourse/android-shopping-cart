@@ -6,9 +6,7 @@ interface CartDataSource {
         offset: Int,
     ): Result<List<CartProduct>>
 
-    fun findByProductId(
-        productId: Long,
-    ): Result<CartProduct?>
+    fun findByProductId(productId: Long): Result<CartProduct?>
 
     /**
      *  @param productId 추가하려는 상품의 ID
@@ -35,11 +33,7 @@ interface CartDataSource {
         delta: Int,
     ): Result<Unit>
 
-    fun deleteByProductId(
-        productId: Long,
-    ): Result<Unit>
+    fun deleteByProductId(productId: Long): Result<Unit>
 
-    fun deleteByCartItemId(
-        cartItemId: Long,
-    ): Result<Unit>
+    fun deleteByCartItemId(cartItemId: Long): Result<Unit>
 }

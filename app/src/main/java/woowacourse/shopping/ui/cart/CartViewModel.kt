@@ -31,7 +31,7 @@ class CartViewModel(
 
         repository.fetchInRange(
             PAGE_FETCH_SIZE,
-            (pageNumber - 1) * PAGE_SIZE
+            (pageNumber - 1) * PAGE_SIZE,
         ) { result ->
             result.onSuccess { cartProducts ->
                 isLastPage =
@@ -66,7 +66,7 @@ class CartViewModel(
 
     private fun handleUpdateItems(
         visibleProductsSize: Int,
-        products: List<CartProduct>
+        products: List<CartProduct>,
     ) {
         val cartProductUiModel = uiState.value ?: return
         if (hasPages(visibleProductsSize)) {
@@ -77,7 +77,7 @@ class CartViewModel(
         val updateItems = products.take(visibleProductsSize)
         _uiState.postValue(
             cartProductUiModel
-                .loadPage(updateItems)
+                .loadPage(updateItems),
         )
     }
 
@@ -91,7 +91,7 @@ class CartViewModel(
             result.onSuccess {
                 _uiState.postValue(
                     cartProductUiModel
-                        .increaseQuantity(productId)
+                        .increaseQuantity(productId),
                 )
             }
         }
@@ -103,7 +103,7 @@ class CartViewModel(
             result.onSuccess {
                 _uiState.postValue(
                     cartProductUiModel
-                        .decreaseQuantity(productId)
+                        .decreaseQuantity(productId),
                 )
             }
         }

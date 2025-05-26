@@ -18,13 +18,17 @@ class LoadMoreViewHolder private constructor(
     companion object {
         fun create(
             parent: ViewGroup,
-            loadMoreClickListener: LoadMoreClickListener
+            loadMoreClickListener: LoadMoreClickListener,
         ): LoadMoreViewHolder {
             return LoadMoreViewHolder(
-                binding = DataBindingUtil.inflate(
-                    LayoutInflater.from(parent.context), R.layout.load_more_item, parent, false
-                ),
-                loadMoreClickListener = loadMoreClickListener
+                binding =
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.load_more_item,
+                        parent,
+                        false,
+                    ),
+                loadMoreClickListener = loadMoreClickListener,
             )
         }
     }
