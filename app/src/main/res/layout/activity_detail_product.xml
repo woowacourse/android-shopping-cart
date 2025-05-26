@@ -71,11 +71,12 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/textview_margin"
             android:layout_marginStart="18dp"
-            android:text="@{@string/product_detail_price(vm.product.price * vm.productCount)}"
             android:textColor="@color/black"
             android:textSize="22sp"
+            app:count="@{vm.productCount}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
+            app:price="@{vm.product.price}"
             tools:text="99,800원" />
 
         <include
