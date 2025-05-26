@@ -17,7 +17,7 @@ class RecentProductRepositoryImpl(
                 val recentlyViewedProduct =
                     recentProductDataSource
                         .getProducts()
-                        .getOrDefault(emptyList())
+                        .getOrThrow()
 
                 val products =
                     recentlyViewedProduct
@@ -46,16 +46,16 @@ class RecentProductRepositoryImpl(
     ) {
         runThread(
             block = {
-                val recentProducts = recentProductDataSource.getProducts().getOrThrow()
-                val recentProductSize = recentProductDataSource.getCount().getOrThrow()
+                val recentProducts = recentProductDataSource.getProducts().getOrDefault(emptyList())
                 val productId = product.productId
 
-                if (isNewProduct(recentProducts, productId) && recentProductSize == 10) {
+                if (isNewProduct(recentProducts, productId) && recentProducts.size == 10) {
                     val oldProduct = recentProductDataSource.getOldestProduct().getOrThrow()
                     recentProductDataSource.delete(oldProduct)
                 }
 
                 recentProductDataSource.insert(product.toEntity())
+                Result.success(Unit)
             },
             onResult = onResult,
         )

@@ -42,13 +42,8 @@ class ProductRepositoryImpl(
     ) {
         runThread(
             block = {
-                val cartEntities =
-                    cartDataSource
-                        .getPagedCartProducts(page, pageSize)
-                        .getOrThrow()
-                        .map { it.toCartItem() }
-
-                val cartItems = cartEntities.map { it.getOrThrow() }
+                val cartEntities = cartDataSource.getPagedCartProducts(page, pageSize).getOrThrow()
+                val cartItems = cartEntities.map { it.toCartItem().getOrThrow() }
                 Result.success(cartItems)
             },
             onResult = onResult,
