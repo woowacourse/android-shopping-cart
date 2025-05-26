@@ -33,8 +33,9 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+        binding.lifecycleOwner = this
         binding.viewModel = productDetailViewModel
-
+        productDetailViewModel.setLastProductTitle()
         binding.quantitySelector.productId = intentCartItemData.product.id
         binding.quantitySelector.tvProductQuantity.text = intentCartItemData.quantity.toString()
 

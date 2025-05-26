@@ -9,12 +9,15 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.data.ShoppingDatabase
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.recentProducts.RecentProductsRepository
+import woowacourse.shopping.data.recentProducts.RecentProductsRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.QuantityController
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
+    private val recentProductsRepository: RecentProductsRepository,
     val cartItem: CartItem,
 ) : ViewModel(),
     QuantityController {
@@ -23,6 +26,9 @@ class ProductDetailViewModel(
 
     private val _quantity = MutableLiveData(cartItem.quantity)
     val quantity: LiveData<Int> = _quantity
+
+    private val _lastProductTitle = MutableLiveData<String>()
+    val lastProductTitle: LiveData<String> = _lastProductTitle
 
     override fun increaseQuantity(
         productId: Long,
@@ -57,6 +63,12 @@ class ProductDetailViewModel(
         cartRepository.add(newCartItem) {}
     }
 
+    fun setLastProductTitle() {
+        recentProductsRepository.getMostRecentProduct {
+            _lastProductTitle.postValue(it.title)
+        }
+    }
+
     companion object {
         private const val INIT_QUANTITY = 1
 
@@ -73,9 +85,11 @@ class ProductDetailViewModel(
 
                 val database = ShoppingDatabase.getDatabase(context)
                 val cartDao = database.cartDao()
+                val recentProductDao = database.recentProductDao()
 
                 return ProductDetailViewModel(
                     CartRepositoryImpl(cartDao),
+                    RecentProductsRepositoryImpl(recentProductDao),
                     cartItem,
                 ) as T
             }

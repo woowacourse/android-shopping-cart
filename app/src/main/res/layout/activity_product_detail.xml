@@ -114,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="sdfsdfdsfsdfs"
+                android:text="@{viewModel.lastProductTitle}"
                 android:textSize="18sp"
                 tools:text="PET보틀-정사각형(500ml)" />
 
