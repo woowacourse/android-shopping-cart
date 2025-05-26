@@ -31,11 +31,11 @@ class CartFragment :
     }
 
     override fun increaseQuantity(productId: Long) {
-        viewModel.addProductToCart(productId)
+        viewModel.increaseProductQuantity(productId)
     }
 
     override fun decreaseQuantity(productId: Long) {
-        viewModel.removeProductFromCart(productId)
+        viewModel.decreaseProductQuantity(productId)
     }
 
     private fun setupActionBar() {
