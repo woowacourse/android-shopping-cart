@@ -7,10 +7,13 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.ui.cart.adapter.CartAdapter
+import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 import woowacourse.shopping.ui.common.DataBindingActivity
+import woowacourse.shopping.ui.model.ActivityResult
 
 class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_cart) {
-    private val viewModel: CartViewModel by viewModels()
+    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
     private val cartAdapter: CartAdapter = CartAdapter(createAdapterOnClickHandler())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +42,17 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
     }
 
     private fun initObservers() {
-        viewModel.products.observe(this) { products ->
-            cartAdapter.submitItems(products)
+        viewModel.cartProducts.observe(this) { products ->
+            cartAdapter.submitItems(products.products)
+            viewModel.updateTotalPage(products.totalPage)
+        }
+        viewModel.editedProductIds.observe(this) { editedProductIds ->
+            setResult(
+                ActivityResult.CART_PRODUCT_EDITED.code,
+                Intent().apply {
+                    putIntegerArrayListExtra(ActivityResult.CART_PRODUCT_EDITED.key, ArrayList(editedProductIds))
+                },
+            )
         }
     }
 
@@ -48,6 +60,14 @@ class CartActivity : DataBindingActivity<ActivityCartBinding>(R.layout.activity_
         object : CartViewHolder.OnClickHandler {
             override fun onRemoveCartProductClick(id: Int) {
                 viewModel.removeCartProduct(id)
+            }
+
+            override fun onIncreaseClick(id: Int) {
+                viewModel.increaseCartProductQuantity(id)
+            }
+
+            override fun onDecreaseClick(id: Int) {
+                viewModel.decreaseCartProductQuantity(id)
             }
         }
 

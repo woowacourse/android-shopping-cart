@@ -6,6 +6,9 @@ import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
+/**
+ * 출처: LiveData 강의자료
+ */
 class InstantTaskExecutorExtension :
     BeforeEachCallback,
     AfterEachCallback {

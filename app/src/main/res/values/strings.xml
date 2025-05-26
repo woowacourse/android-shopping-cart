@@ -3,18 +3,22 @@
     <string name="app_name">Shopping</string>
 
     <!--    상품 목록-->
-    <string name="products_price">%,d원</string>
-    <string name="products_load_more">더보기</string>
+    <string name="catalog_price">%,d원</string>
+    <string name="catalog_load_more">더보기</string>
+    <string name="catalog_history_title">최근 본 상품</string>
 
     <!--    상품 상세-->
-    <string name="product_detail_cart_add_success">성공적으로 장바구니에 담겼습니다!</string>
+    <string name="product_detail_cart_add_success">성공적으로 장바구니에 반영되었습니다!</string>
     <string name="product_detail_price">가격</string>
     <string name="product_detail_cart_add">장바구니 담기</string>
     <string name="product_detail_close">닫기</string>
+    <string name="product_detail_last_history_title">마지막으로 본 상품</string>
 
     <!--    장바구니-->
     <string name="cart_title">Cart</string>
     <string name="cart_page_previous"><![CDATA[<]]></string>
     <string name="cart_page_next"><![CDATA[>]]></string>
     <string name="products_cart">장바구니</string>
+    <string name="cart_count_decrease">–</string>
+    <string name="cart_count_increase">+</string>
 </resources>

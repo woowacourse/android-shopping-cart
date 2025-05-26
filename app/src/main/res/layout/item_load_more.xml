@@ -6,7 +6,7 @@
 
         <variable
             name="onClickHandler"
-            type="woowacourse.shopping.ui.products.LoadMoreViewHolder.OnClickHandler" />
+            type="woowacourse.shopping.ui.catalog.adapter.product.LoadMoreViewHolder.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +21,7 @@
             android:background="@drawable/bg_products_mint_1_radius_8dp"
             android:onClick="@{()->onClickHandler.onLoadMoreClick()}"
             android:padding="6dp"
-            android:text="@string/products_load_more"
+            android:text="@string/catalog_load_more"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
