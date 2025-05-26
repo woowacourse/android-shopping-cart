@@ -103,6 +103,7 @@ class ProductDetailActivity :
         val intent =
             Intent().apply {
                 putExtra("recentProduct", viewModel.recentWatchingProduct.value)
+                putExtra("updateProduct", viewModel.product.value)
             }
         setResult(ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK, intent)
         finish()

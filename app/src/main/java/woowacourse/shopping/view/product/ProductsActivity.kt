@@ -49,10 +49,14 @@ class ProductsActivity :
                 }
 
                 ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK -> {
-                    val updateItem: Product =
+                    val updateQuantityProduct: Product =
+                        result.data?.getSerializableExtraData("updateProduct")
+                            ?: return@registerForActivityResult
+                    val recentProduct: Product =
                         result.data?.getSerializableExtraData("recentProduct")
                             ?: return@registerForActivityResult
-                    navigateToRecentProduct(updateItem)
+                    viewModel.updateSelectedQuantity(listOf(updateQuantityProduct, recentProduct))
+                    navigateToRecentProduct(recentProduct)
                 }
             }
         }

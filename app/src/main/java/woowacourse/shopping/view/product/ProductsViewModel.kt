@@ -220,8 +220,9 @@ class ProductsViewModel(
                     val currentList = products.value.orEmpty()
                     val updatedList =
                         currentList.map { item ->
-                            if (item is ProductItem && item.product == product) {
-                                item.copy(selectedQuantity = selectedQuantity)
+                            if (item is ProductItem && item.product.id == product.id) {
+                                val newItem = item.copy(selectedQuantity = selectedQuantity)
+                                newItem
                             } else {
                                 item
                             }
