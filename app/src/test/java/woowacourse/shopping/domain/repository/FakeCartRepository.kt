@@ -58,4 +58,9 @@ class FakeCartRepository : CartRepository {
             }
         } ?: callback(null)
     }
+
+    fun addTestCartItems(items: List<CartItem>) {
+        cartItems.clear()
+        cartItems.addAll(items)
+    }
 }
