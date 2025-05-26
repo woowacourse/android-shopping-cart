@@ -65,9 +65,7 @@ class DetailViewModel(
 
     fun decreaseQuantity() {
         val currentQuantity = _quantity.value ?: DEFAULT_QUANTITY
-        if (currentQuantity > DEFAULT_QUANTITY) {
-            _quantity.value = currentQuantity - QUANTITY_STEP
-        }
+        _quantity.value = (currentQuantity - QUANTITY_STEP).coerceAtLeast(DEFAULT_QUANTITY)
     }
 
     fun addProductToCart() {
