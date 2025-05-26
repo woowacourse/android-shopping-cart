@@ -157,8 +157,6 @@ object VolatileProductsStorage : ProductsStorage {
             ),
         )
 
-    private val recentWatchingProduct: List<ProductEntity> = products.subList(0, 13)
-
     override fun load(
         lastProductId: Long?,
         size: Int,
