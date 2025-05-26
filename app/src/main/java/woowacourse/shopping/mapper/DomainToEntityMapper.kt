@@ -26,7 +26,6 @@ fun ProductEntity.toProduct(): Product {
 
 fun ShoppingCartItem.toEntity(): ShoppingCartItemEntity {
     return ShoppingCartItemEntity(
-        id = id,
         productId = product.id,
         quantity = quantity,
     )
@@ -34,7 +33,6 @@ fun ShoppingCartItem.toEntity(): ShoppingCartItemEntity {
 
 fun ShoppingCartItemWithProduct.toShoppingCartItem(): ShoppingCartItem {
     return ShoppingCartItem(
-        id = shoppingCartItem.id,
         product = product.toProduct(),
         quantity = shoppingCartItem.quantity,
     )
