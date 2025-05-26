@@ -12,6 +12,11 @@ class ShoppingApp : Application() {
         appContainer = AppContainer(applicationContext)
     }
 
+    override fun onTerminate() {
+        super.onTerminate()
+        appContainer.productServer.shutdown()
+    }
+
     companion object {
         private lateinit var appContainer: AppContainer
         val cartRepository: CartRepository
