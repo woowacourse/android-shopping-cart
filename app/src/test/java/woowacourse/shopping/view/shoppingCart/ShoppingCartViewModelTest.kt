@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.shoppingCart
 
-import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 
@@ -10,61 +9,7 @@ class ShoppingCartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        repository = mockk()
+        repository = FakeShoppingCartRepository()
         viewModel = ShoppingCartViewModel(repository)
     }
-
-//    @Test
-//    fun `장바구니에 담은 상품들을 보여준다`() {
-//        // given
-//        every { repository.hasNext } just Awaits
-//        every { repository.hasPrevious } just Awaits
-//        every { repository.load(any(), any()) } just Awaits
-//
-//        // when
-//        viewModel.loadShoppingCart()
-//
-//        // then
-//        verify { repository.load(any(), any()) }
-//    }
-
-//    @Test
-//    fun `제거하고 싶은 상품을 장바구니에서 삭제할 수 있다`() {
-//        // given:
-//        every { repository.remove(any()) } just Awaits
-//
-//        // when:
-//        viewModel.removeShoppingCartProduct(CartItem_AIDA)
-//
-//        // then:
-//        verify { repository.remove(any()) }
-//    }
-
-//    @Test
-//    fun `장바구니의 다음 페이지 정보를 확인할 수 있다`() {
-//        // given:
-//        every { repository.hasNext } just Awaits
-//        every { repository.hasPrevious } just Awaits
-//        every { repository.load(any(), any()) } just Awaits
-//
-//        // when:
-//        viewModel.plusPage()
-//
-//        // then:
-//        verify { repository.load(any(), any()) }
-//    }
-//
-//    @Test
-//    fun `장바구니의 이전 페이지 정보를 확인할 수 있다`() {
-//        // given:
-//        every { repository.hasNext } just Awaits
-//        every { repository.hasPrevious } just Awaits
-//        every { repository.load(any(), any()) } just Awaits
-//
-//        // when:
-//        viewModel.minusPage()
-//
-//        // then:
-//        verify { repository.load(any(), any()) }
-//    }
 }
