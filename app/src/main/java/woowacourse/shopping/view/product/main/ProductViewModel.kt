@@ -1,38 +1,46 @@
 package woowacourse.shopping.view.product.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.map
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.repository.cart.CartRepository
 import woowacourse.shopping.data.repository.products.catalog.ProductRepository
+import woowacourse.shopping.data.repository.products.recentlyviewed.RecentlyViewedRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.product.main.adapter.ViewItems
+import woowacourse.shopping.view.product.main.adapter.ViewItems.Divider
+import woowacourse.shopping.view.product.main.adapter.ViewItems.Products
+import woowacourse.shopping.view.product.main.adapter.ViewItems.RecentlyViewedProducts
+import woowacourse.shopping.view.product.main.adapter.ViewItems.ShowMore
 
 class ProductViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentlyViewedRepository: RecentlyViewedRepository,
 ) : ViewModel() {
-    private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
-    val products: LiveData<List<Product>> get() = _products
+    private val _products = MutableLiveData<List<ViewItems>>(emptyList())
+    val products: LiveData<List<ViewItems>> get() = _products
 
-    private val _isShowMore: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isShowMore: LiveData<Boolean> get() = _isShowMore
-
-    private val _cartItemsCount: MutableLiveData<Int> = MutableLiveData(0)
+    private val _cartItemsCount = MutableLiveData<Int>(0)
     val cartItemsCount: LiveData<String>
         get() =
             _cartItemsCount.map { count -> if (count > 99) CART_ITEMS_COUNT_OVER_100 else count.toString() }
 
-    private val _isAddCart: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val _recentlyViewedProducts = MutableLiveData<List<Product>>(emptyList())
+    val recentlyViewedProducts: LiveData<List<Product>> get() = _recentlyViewedProducts
+
+    private val _isAddCart = MutableLiveData<Boolean>(false)
     val isAddCart: LiveData<Boolean> get() = _isAddCart
 
     var totalProductsCount: Int = 0
     private var currentIndex = 0
+    private var isShowMore = false
 
     init {
         fetchInitData()
@@ -41,24 +49,52 @@ class ProductViewModel(
 
     fun fetchInitData() {
         totalProductsCount = productRepository.getProductsSize()
-        _isShowMore.postValue(totalProductsCount > LIMIT_COUNT)
         fetchCartItemsCount()
+        fetchRecentlyViewedData()
+        Log.d("test", "최근 본 상품 ${_recentlyViewedProducts.value}")
     }
 
     fun fetchData() {
-        val newProducts = productRepository.getProducts(currentIndex, LIMIT_COUNT)
-        _products.value = (_products.value ?: emptyList()).plus(newProducts)
+        val newProducts = productRepository.getProducts(currentIndex, LIMIT_COUNT + 1)
+        isShowMore = newProducts.size == LIMIT_COUNT + 1
+        val productToUpdate: List<Product> = newProducts.take(LIMIT_COUNT)
+        val updatedViewItems: List<ViewItems> = getUpdatedViewItems(productToUpdate)
+        _products.postValue(updatedViewItems)
         currentIndex += LIMIT_COUNT
+    }
+
+    fun fetchRecentlyViewedData() {
+        recentlyViewedRepository.getRecentlyViewed {
+            Log.d("test", "실행됨1 $it")
+            _recentlyViewedProducts.postValue(it)
+            Log.d("test", "실행됨2 ${_recentlyViewedProducts.value}")
+        }
+    }
+
+    private fun getUpdatedViewItems(productToUpdate: List<Product>): List<ViewItems> {
+        val currentProducts = products.value ?: emptyList()
+        val productsWithoutLoadItem =
+            if (currentProducts.lastOrNull() is ShowMore) {
+                currentProducts.dropLast(1)
+            } else {
+                currentProducts
+            }
+
+        return buildList {
+            _recentlyViewedProducts.value?.takeIf { it.isNotEmpty() }?.let {
+                add(RecentlyViewedProducts(it))
+                add(Divider)
+            }
+            addAll(productsWithoutLoadItem)
+            addAll(productToUpdate.map(::Products))
+            if (isShowMore) add(ShowMore)
+        }
     }
 
     fun fetchCartItemsCount() {
         cartRepository.getAllProductsSize {
             _cartItemsCount.postValue(it)
         }
-    }
-
-    fun changeShowState(isShow: Boolean) {
-        _isShowMore.postValue(isShow)
     }
 
     fun addCart(product: Product) {
@@ -75,12 +111,16 @@ class ProductViewModel(
             viewModelFactory {
                 initializer {
                     val productRepository =
-                        (this[APPLICATION_KEY] as ShoppingApplication).productRepository
+                        (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as ShoppingApplication).productRepository
                     val cartRepository =
-                        (this[APPLICATION_KEY] as ShoppingApplication).cartRepository
+                        (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as ShoppingApplication).cartRepository
+                    val recentlyViewedRepository =
+                        (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as ShoppingApplication)
+                            .recentlyViewedRepository
                     ProductViewModel(
                         productRepository = productRepository,
                         cartRepository = cartRepository,
+                        recentlyViewedRepository = recentlyViewedRepository,
                     )
                 }
             }

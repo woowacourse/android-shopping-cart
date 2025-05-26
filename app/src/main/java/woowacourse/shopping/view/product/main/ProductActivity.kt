@@ -80,6 +80,9 @@ class ProductActivity : AppCompatActivity() {
         productViewModel.products.observe(this) { products ->
             productAdapter.updateData(products)
         }
+        productViewModel.recentlyViewedProducts.observe(this) {
+            productViewModel.fetchData()
+        }
     }
 
     private fun navigateToCart() {
