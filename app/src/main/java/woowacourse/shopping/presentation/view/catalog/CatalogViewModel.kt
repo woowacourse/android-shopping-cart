@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.model.ProductUiModel
@@ -129,25 +130,26 @@ class CatalogViewModel(
 
     fun increaseCartItem(productId: Long) {
         cartRepository.increaseCartItem(productId) { updatedCartItem ->
-            updatedCartItem?.let {
-                _itemUpdateEvent.postValue(it.toUiModel())
-                calculateTotalCartCount()
-            }
+            handleUpdatedCartItem(updatedCartItem)
         }
     }
 
     fun decreaseCartItem(productId: Long) {
         cartRepository.decreaseCartItem(productId) { updatedCartItem ->
-            updatedCartItem?.let {
-                _itemUpdateEvent.postValue(it.toUiModel())
-                calculateTotalCartCount()
-            }
+            handleUpdatedCartItem(updatedCartItem)
         }
     }
 
     fun addRecentProduct(product: ProductUiModel) {
         productRepository.addRecentProduct(product.toProduct())
         updateRecentProducts()
+    }
+
+    private fun handleUpdatedCartItem(updatedCartItem: CartItem?) {
+        updatedCartItem?.let {
+            _itemUpdateEvent.postValue(it.toUiModel())
+            calculateTotalCartCount()
+        }
     }
 
     private fun calculateTotalCartCount() {
