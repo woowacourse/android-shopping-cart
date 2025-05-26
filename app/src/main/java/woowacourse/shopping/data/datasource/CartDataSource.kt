@@ -9,7 +9,7 @@ class CartDataSource(
     fun getCartByProductId(productId: Long): CartEntity? = dao.cartByProductId(productId)
 
     fun getCartsByProductIds(productIds: List<Long>): List<CartEntity?> {
-        return productIds.map { dao.cartByProductId(it) }
+        return dao.cartsByProductIds(productIds)
     }
 
     fun upsert(entity: CartEntity) = dao.upsert(entity)
