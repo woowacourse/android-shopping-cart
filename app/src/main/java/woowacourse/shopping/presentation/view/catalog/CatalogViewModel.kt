@@ -37,6 +37,9 @@ class CatalogViewModel(
     fun fetchProducts() {
         productRepository.loadCartItems { cartItems ->
 
+            val totalCount = cartItems?.sumOf { it.amount } ?: 0
+            _totalCartCount.postValue(totalCount)
+
             val cartItemState =
                 cartItems?.associateBy(
                     { it.product.id },
