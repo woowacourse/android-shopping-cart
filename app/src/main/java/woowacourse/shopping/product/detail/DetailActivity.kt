@@ -50,6 +50,12 @@ class DetailActivity : AppCompatActivity() {
                     viewModel.decreaseQuantity()
                 }
             }
+        binding.layoutLatestViewedProduct.latestViewedProductClickListener =
+            LatestViewedProductClickListener { product ->
+                val intent = DetailActivity.newIntent(this, product)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+            }
         viewModel.setLatestViewedProduct()
     }
 
@@ -96,7 +102,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
     private fun setAddToCartClickListener() {
-        binding.clickListener =
+        binding.addToCartClickListener =
             AddToCartClickListener { product ->
                 showToastMessage()
                 viewModel.addToCart()

@@ -31,6 +31,7 @@ class DetailViewModel(
     }
 
     fun decreaseQuantity() {
+        if ((_quantity.value ?: 0) <= 0) return
         _quantity.value = _quantity.value?.minus(1)
         setPriceSum()
     }
