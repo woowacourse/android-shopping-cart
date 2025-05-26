@@ -57,7 +57,7 @@ class CartViewModel(
         }
     }
 
-    fun addProductToCart(productId: Long) {
+    fun increaseProductQuantity(productId: Long) {
         cartRepository.addCartItem(productId, QUANTITY_STEP) { result ->
             result
                 .onSuccess { refreshProductQuantity(productId) }
@@ -65,7 +65,7 @@ class CartViewModel(
         }
     }
 
-    fun removeProductFromCart(productId: Long) {
+    fun decreaseProductQuantity(productId: Long) {
         cartRepository.decreaseCartItemQuantity(productId) { result ->
             result
                 .onSuccess { refreshProductQuantity(productId) }
