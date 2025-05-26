@@ -47,6 +47,9 @@ class InventoryAdapter(
     }
 
     fun submitList(newItems: List<InventoryItem>) {
+        val oldCount = items.size
+        val newCount = newItems.size
+
         newItems.forEachIndexed { index, newItem ->
             val oldItem = items.getOrNull(index)
             if (oldItem == null) {
@@ -56,6 +59,13 @@ class InventoryAdapter(
                 items[index] = newItem
                 notifyItemChanged(index)
             }
+        }
+
+        if (newCount < oldCount) {
+            for (removedIndex in newCount..<oldCount) {
+                items.removeAt(items.size - 1)
+            }
+            notifyItemRangeRemoved(newCount, oldCount - newCount)
         }
     }
 }
