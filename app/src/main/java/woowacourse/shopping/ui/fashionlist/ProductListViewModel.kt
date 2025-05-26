@@ -3,7 +3,10 @@ package woowacourse.shopping.ui.fashionlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.repository.CartItemRepositoryImpl
 import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.HistoryRepositoryImpl
+import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.concurrent.thread
@@ -11,7 +14,9 @@ import kotlin.concurrent.thread
 class ProductListViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
-    private val cartRepositoryImpl = CartRepositoryImpl.get()
+    private val cartRepository = CartRepositoryImpl.get()
+    private val cartItemRepository = CartItemRepositoryImpl.get()
+    private val historyRepository = HistoryRepositoryImpl.get()
     private val _products = MutableLiveData<List<ProductListViewType>>(emptyList())
     val products: LiveData<List<ProductListViewType>> = _products
 
@@ -70,7 +75,7 @@ class ProductListViewModel(
 
     fun loadCartItems() {
         thread {
-            val items = cartRepositoryImpl.getCartItems()
+            val items = cartItemRepository.getCartItems()
             val cartMap = items.associateBy { it.id }
             _cartItems.postValue(cartMap.mapValues { it.value.quantity })
 
@@ -92,7 +97,7 @@ class ProductListViewModel(
 
     fun loadRecentProducts() {
         thread {
-            val items = cartRepositoryImpl.getRecentTenProducts()
+            val items = historyRepository.getRecentProducts()
             _recentProducts.postValue(items)
 
             val rest = _products.value.orEmpty()
@@ -104,7 +109,7 @@ class ProductListViewModel(
 
     fun addRecentProduct(id: Long) {
         thread {
-            cartRepositoryImpl.insertRecentProduct(id)
+            historyRepository.insert(id)
         }
     }
 
@@ -124,76 +129,62 @@ class ProductListViewModel(
 
     fun add(product: Product) {
         thread {
-            cartRepositoryImpl.insert(product)
+            cartRepository.insert(product)
+            cartItemRepository.insert(CartItem(product.id, product, 1))
             loadCartItems()
         }
     }
 
     fun increaseQuantity(id: Long) {
         thread {
-            cartRepositoryImpl.increaseQuantity(id)
-            val cartItem = cartRepositoryImpl.findById(id)
-            if (cartItem != null) {
-                updateCartItemState(id, cartItem.quantity)
-                updateProductQuantityInList(id, cartItem.quantity)
-            }
+            cartItemRepository.increaseQuantity(id)
         }
     }
 
     fun decreaseQuantity(id: Long) {
         thread {
-            val cartItem = cartRepositoryImpl.findById(id) ?: return@thread
-
-            if (cartItem.quantity == 1) {
-                cartRepositoryImpl.delete(cartItem.id)
-                updateCartItemState(id, 0)
-            } else {
-                cartRepositoryImpl.decreaseQuantity(id)
-
-                val updated = cartRepositoryImpl.findById(id)
-                updateCartItemState(id, updated?.quantity ?: 1)
-            }
+            cartItemRepository.decreaseQuantity(id)
         }
     }
 
-    private fun updateCartItemState(
-        productId: Long,
-        quantity: Int,
-    ) {
-        _cartItems.postValue(
-            _cartItems.value.orEmpty().toMutableMap().apply {
-                if (quantity == 0) {
-                    remove(productId)
-                } else {
-                    put(productId, quantity)
-                }
-            },
-        )
-
-        val updatedList =
-            _products.value?.map {
-                if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
-                    it.copy(quantity = quantity, isButtonVisible = quantity == 0)
-                } else {
-                    it
-                }
-            } ?: return
-
-        _products.postValue(updatedList)
-    }
-
-    private fun updateProductQuantityInList(
-        productId: Long,
-        quantity: Int,
-    ) {
-        val updatedList =
-            _products.value?.map {
-                if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
-                    it.copy(quantity = quantity, isButtonVisible = quantity == 0)
-                } else {
-                    it
-                }
-            } ?: return
-        _products.postValue(updatedList)
-    }
+//    private fun updateCartItemState(
+//        productId: Long,
+//        quantity: Int,
+//    ) {
+//        _cartItems.postValue(
+//            _cartItems.value.orEmpty().toMutableMap().apply {
+//                if (quantity == 0) {
+//                    remove(productId)
+//                } else {
+//                    put(productId, quantity)
+//                }
+//            },
+//        )
+//
+//        val updatedList =
+//            _products.value?.map {
+//                if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
+//                    it.copy(quantity = quantity, isButtonVisible = quantity == 0)
+//                } else {
+//                    it
+//                }
+//            } ?: return
+//
+//        _products.postValue(updatedList)
+//    }
+//
+//    private fun updateProductQuantityInList(
+//        productId: Long,
+//        quantity: Int,
+//    ) {
+//        val updatedList =
+//            _products.value?.map {
+//                if (it is ProductListViewType.FashionProductItemType && it.product.id == productId) {
+//                    it.copy(quantity = quantity, isButtonVisible = quantity == 0)
+//                } else {
+//                    it
+//                }
+//            } ?: return
+//        _products.postValue(updatedList)
+//    }
 }

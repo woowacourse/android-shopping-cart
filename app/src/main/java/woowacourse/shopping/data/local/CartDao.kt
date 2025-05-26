@@ -7,11 +7,8 @@ import androidx.room.Query
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM cart")
-    fun findAll(): List<ProductEntity>
-
     @Query("SELECT * FROM cart WHERE id =:id")
-    fun findById(id: Long): ProductEntity
+    fun findById(id: Long): ProductEntity?
 
     @Query("SELECT * FROM cart LIMIT :limit OFFSET :offset")
     fun findPagedItems(

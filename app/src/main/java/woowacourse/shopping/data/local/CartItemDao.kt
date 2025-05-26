@@ -9,7 +9,7 @@ import androidx.room.Update
 @Dao
 interface CartItemDao {
     @Query("SELECT * FROM cart_item")
-    fun findAll(): List<CartItemEntity>
+    fun getAll(): List<CartItemEntity>
 
     @Query("SELECT * FROM cart_item WHERE id =:id")
     fun findById(id: Long): CartItemEntity

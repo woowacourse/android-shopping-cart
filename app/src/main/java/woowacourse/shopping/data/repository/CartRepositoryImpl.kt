@@ -1,138 +1,42 @@
 package woowacourse.shopping.data.repository
 
-import android.content.Context
-import androidx.room.Room
-import woowacourse.shopping.data.local.CartDatabase
-import woowacourse.shopping.data.local.CartItemEntity
-import woowacourse.shopping.data.local.HistoryEntity
-import woowacourse.shopping.domain.product.CartItem
+import woowacourse.shopping.data.local.CartDao
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductRepository
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.utils.toProduct
 import woowacourse.shopping.utils.toProductEntity
 
-private const val DATABASE_NAME = "cart-db"
-
-class CartRepositoryImpl private constructor(context: Context, private val productRepository: ProductRepository) {
-    private val cartDatabase: CartDatabase =
-        Room.databaseBuilder(
-            context.applicationContext,
-            CartDatabase::class.java,
-            DATABASE_NAME,
-        ).build()
-
-    private val cartDao = cartDatabase.cartDao()
-    private val cartItemDao = cartDatabase.cartItemDao()
-    private val historyDao = cartDatabase.historyDao()
-
-    fun getProducts(): List<Product> = cartDao.findAll().map { it.toProduct() }
-
-    fun getProduct(id: Long): Product = cartDao.findById(id).toProduct()
-
-    fun getCartItems(): List<CartItem> {
-        val cartItems = cartItemDao.findAll()
-        val carts = cartDao.findAll().map { it.toProduct() }
-        return cartItems.map { getCartItemWithProduct(it.id) }
+class CartRepositoryImpl private constructor(
+    private val dao: CartDao,
+) : CartRepository {
+    override fun findProductById(id: Long): Product? {
+        return dao.findById(id)?.toProduct()
     }
 
-    fun getLastRecentProduct(): Product? {
-        val target = historyDao.findLast(1, 1) ?: return null
-        return productRepository.fetchById(target.id)
+    override fun insert(product: Product) {
+        dao.insert(product.toProductEntity())
     }
 
-    fun getRecentTenProducts(): List<Product> {
-        return historyDao.findRecentProduct(10).mapNotNull { productRepository.fetchById(it.id) }
+    override fun deleteById(id: Long) {
+        dao.deleteById(id)
     }
 
-    fun findByIdOrNull(id: Long): CartItemEntity = cartItemDao.findById(id)
-
-    fun findById(id: Long): CartItem? {
-        val cartItemEntity = cartItemDao.findById(id) ?: return null
-        val product = cartDao.findById(id) ?: return null
-        return CartItem(
-            id,
-            product.toProduct(),
-            cartItemEntity.quantity,
-        )
+    override fun getSize(): Int {
+        return dao.size()
     }
 
-    fun getPagedItems(
-        limit: Int,
-        offset: Int,
-    ): List<CartItem> {
-        return cartDao.findPagedItems(limit, offset).map { getCartItemWithProduct(it.id) }
-    }
-
-    fun insert(product: Product) {
-        cartDao.insert(product.toProductEntity())
-        cartItemDao.insert(CartItemEntity(product.id, quantity = 1))
-    }
-
-    fun insert(cartItem: CartItem) {
-        cartDao.insert(cartItem.product.toProductEntity())
-        cartItemDao.insert(CartItemEntity(cartItem.product.id, cartItem.quantity))
-    }
-
-    fun insertRecentProduct(id: Long) {
-        val target = historyDao.findById(id)
-        if (target != null) {
-            historyDao.deleteById(id)
-        }
-        historyDao.insert(HistoryEntity(id))
-    }
-
-    fun insertAll(vararg product: Product) = cartDao.insertAll(*product.map { it.toProductEntity() }.toTypedArray())
-
-    fun delete(id: Long) {
-        val product = cartDao.findById(id)
-        val cartItem = cartItemDao.findById(id)
-        cartDao.delete(product)
-        cartItemDao.delete(cartItem)
-    }
-
-    fun size(): Int = cartDao.size()
-
-    fun update(newCartItem: CartItem) {
-        val existingProduct = getProduct(newCartItem.id)
-        val updated = CartItem(newCartItem.id, existingProduct, newCartItem.quantity)
-        cartItemDao.update(CartItemEntity(updated.id, updated.quantity))
-    }
-
-    fun increaseQuantity(id: Long) {
-        val cartItem = cartItemDao.findById(id)
-        cartItemDao.update(cartItem.copy(quantity = cartItem.quantity + 1))
-    }
-
-    fun decreaseQuantity(id: Long) {
-        val cartItem = cartItemDao.findById(id)
-        if (cartItem.quantity > 1) {
-            cartItemDao.update(cartItem.copy(quantity = (cartItem.quantity - 1)))
-        } else {
-            cartDao.deleteById(id)
-            cartItemDao.deleteById(id)
-        }
-    }
-
-    private fun getCartItemWithProduct(id: Long): CartItem {
-        val product = cartDao.findById(id)
-        val cartItem = cartItemDao.findById(id)
-
-        return CartItem(
-            id = id,
-            product = product.toProduct(),
-            quantity = cartItem.quantity,
-        )
+    override fun getPagedProduct(limit: Int, offset: Int): List<Product> {
+        return dao.findPagedItems(limit, offset).map { it.toProduct() }
     }
 
     companion object {
         private var INSTANCE: CartRepositoryImpl? = null
 
         fun initialize(
-            context: Context,
-            productRepository: ProductRepository,
+            dao: CartDao,
         ) {
             if (INSTANCE == null) {
-                INSTANCE = CartRepositoryImpl(context, productRepository)
+                INSTANCE = CartRepositoryImpl(dao)
             }
         }
 
