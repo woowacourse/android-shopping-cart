@@ -13,14 +13,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.ui.QuantityClickListener
+import woowacourse.shopping.utils.QuantityClickListener
 import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
-import woowacourse.shopping.ui.viewmodel.DetailViewModel
-import woowacourse.shopping.ui.viewmodel.DetailViewModelFactory
 import woowacourse.shopping.utils.intentSerializable
 
 class ProductDetailActivity : AppCompatActivity() {

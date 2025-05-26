@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.product.Money
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity

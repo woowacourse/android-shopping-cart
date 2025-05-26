@@ -1,6 +1,6 @@
 package woowacourse.shopping.utils
 
-import woowacourse.shopping.data.product.ProductEntity
+import woowacourse.shopping.data.local.ProductEntity
 import woowacourse.shopping.domain.product.Money
 import woowacourse.shopping.domain.product.Product
 

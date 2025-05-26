@@ -11,7 +11,7 @@
 
         <variable
             name="quantityClickListener"
-            type="woowacourse.shopping.ui.QuantityClickListener" />
+            type="woowacourse.shopping.utils.QuantityClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

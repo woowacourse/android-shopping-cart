@@ -16,7 +16,6 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
-import woowacourse.shopping.ui.viewmodel.CartViewModel
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding

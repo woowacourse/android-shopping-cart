@@ -14,13 +14,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.viewmodel.ProductListViewModel
 import woowacourse.shopping.utils.ViewModelFactory
 
 class FashionProductListActivity : AppCompatActivity() {

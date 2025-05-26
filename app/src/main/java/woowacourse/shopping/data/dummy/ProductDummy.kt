@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.dummy
 
 import woowacourse.shopping.domain.product.Money
 import woowacourse.shopping.domain.product.Product

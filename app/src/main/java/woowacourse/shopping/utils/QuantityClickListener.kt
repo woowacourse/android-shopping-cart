@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui
+package woowacourse.shopping.utils
 
 import woowacourse.shopping.domain.product.CartItem
 

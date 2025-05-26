@@ -1,12 +1,11 @@
-package woowacourse.shopping.ui.viewmodel
+package woowacourse.shopping.ui.fashionlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductRepository
-import woowacourse.shopping.ui.fashionlist.ProductListViewType
 import kotlin.concurrent.thread
 
 class ProductListViewModel(

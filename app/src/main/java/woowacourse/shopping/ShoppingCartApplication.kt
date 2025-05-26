@@ -1,8 +1,8 @@
-package woowacourse.shopping.data
+package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 
 class ShoppingCartApplication : Application() {
     override fun onCreate() {
