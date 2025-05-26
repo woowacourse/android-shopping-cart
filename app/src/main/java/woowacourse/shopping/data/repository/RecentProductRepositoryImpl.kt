@@ -11,6 +11,7 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 class RecentProductRepositoryImpl(
     private val productRemoteDataSource: ProductRemoteDataSource,
     private val recentProductLocalDataSource: RecentProductLocalDataSource,
+    private val recentProductLimit: Int = 10,
 ) : RecentProductRepository {
     override fun getRecentProducts(
         limit: Int,
@@ -26,20 +27,6 @@ class RecentProductRepositoryImpl(
         onResult: (Result<Unit>) -> Unit,
     ) = runCatchingInThread(onResult) {
         recentProductLocalDataSource.insertRecentProduct(RecentProductEntity(productId))
-        trimRecentProductsToLimit()
-    }
-
-    private fun trimRecentProductsToLimit() {
-        val savedRecentProductCount = recentProductLocalDataSource.getRecentProductCount()
-        if (savedRecentProductCount > RECENT_PRODUCT_LIMIT) {
-            val overflowCount = savedRecentProductCount - RECENT_PRODUCT_LIMIT
-            repeat(overflowCount) {
-                recentProductLocalDataSource.deleteOldestRecentProduct()
-            }
-        }
-    }
-
-    companion object {
-        private const val RECENT_PRODUCT_LIMIT = 10
+        recentProductLocalDataSource.trimToLimit(recentProductLimit)
     }
 }
