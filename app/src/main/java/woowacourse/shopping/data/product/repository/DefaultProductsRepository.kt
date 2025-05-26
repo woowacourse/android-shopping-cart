@@ -3,13 +3,13 @@ package woowacourse.shopping.data.product.repository
 import woowacourse.shopping.data.product.local.dao.RecentWatchingDao
 import woowacourse.shopping.data.product.local.entity.ProductEntity
 import woowacourse.shopping.data.product.local.entity.RecentWatchingEntity
-import woowacourse.shopping.data.product.local.storage.ProductsStorage
-import woowacourse.shopping.data.product.local.storage.VolatileProductsStorage
+import woowacourse.shopping.data.product.storage.ProductRemoteStorage
+import woowacourse.shopping.data.product.storage.ProductsStorage
 import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 
 class DefaultProductsRepository(
-    private val productsStorage: ProductsStorage = VolatileProductsStorage,
+    private val productsStorage: ProductsStorage = ProductRemoteStorage(),
     private val recentWatchingDao: RecentWatchingDao,
 ) : ProductsRepository {
     override fun load(
