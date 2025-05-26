@@ -1,86 +1,69 @@
 package woowacourse.shopping.domain
 
-import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.data.FakeCartLocalDataSource
 
 class PageTest {
+
     private lateinit var page: Page
-    private lateinit var fakeCartStorage: FakeCartLocalDataSource
 
     @BeforeEach
     fun setUp() {
-        page = Page(initialPage = 1, pageSize = 5)
-        fakeCartStorage =
-            FakeCartLocalDataSource(
-                products =
-                    mutableListOf(
-                        Product(1L, "맥북", Price(1000), ""),
-                        Product(2L, "아이폰", Price(2000), ""),
-                        Product(3L, "에어팟", Price(3000), ""),
-                        Product(4L, "매직키보드", Price(4000), ""),
-                        Product(5L, "에어팟맥스", Price(5000), ""),
-                        Product(6L, "에어팟깁스", Price(6000), ""),
-                    ),
-            )
+        page = Page(initialPage = 1, pageSize = 10)
     }
 
     @Test
-    fun `다음 페이지로 이동하면 페이지 번호가 증가한다`() {
+    fun `초기 페이지 번호는 초기값과 같아야 한다`() {
+        assertEquals(1, page.getPageNumber())
+    }
+
+    @Test
+    fun `다음 페이지로 이동하면 페이지 번호가 증가해야 한다`() {
         page.moveToNextPage()
-        assertThat(page.getPageNumber()).isEqualTo(2)
+        assertEquals(2, page.getPageNumber())
     }
 
     @Test
-    fun `이전 페이지는 초기 페이지보다 작아질 수 없다`() {
+    fun `이전 페이지로 이동하면 페이지 번호가 감소해야 한다`() {
+        page.moveToNextPage()  // 2로 증가
         page.moveToPreviousPage()
-        assertThat(page.getPageNumber()).isEqualTo(1)
+        assertEquals(1, page.getPageNumber())
     }
 
     @Test
-    fun `2페이지 이상일 때 이전 페이지로 이동하면 페이지 번호가 감소한다`() {
-        page.moveToNextPage()
+    fun `이전 페이지 이동은 초기 페이지보다 작아질 수 없다`() {
         page.moveToPreviousPage()
-        assertThat(page.getPageNumber()).isEqualTo(1)
+        assertEquals(1, page.getPageNumber())
     }
 
     @Test
-    fun `현재 페이지에 항목이 없으면 이전 페이지로 이동하고 true를 반환한다`() {
+    fun `현재 페이지 오프셋 계산은 올바르게 동작해야 한다`() {
+        page.moveToNextPage()  // 2페이지
+        val offset = page.targetRange()
+        assertEquals(10, offset.offset) // (2-1)*10
+        assertEquals(10, offset.limit)
+    }
+
+    @Test
+    fun `페이지 리셋은 아이템이 없을 때만 감소해야 한다`() {
+        page.moveToNextPage()  // 2페이지
+        page.resetToLastPageIfEmpty(0) { }  // 아이템 0개
+        assertEquals(1, page.getPageNumber())
+    }
+
+    @Test
+    fun `페이지 리셋은 아이템이 있으면 유지되어야 한다`() {
+        page.moveToNextPage()  // 2페이지
+        page.resetToLastPageIfEmpty(1) { }  // 아이템 1개
+        assertEquals(2, page.getPageNumber())
+    }
+
+    @Test
+    fun `이전 페이지 존재 여부를 반환한다`() {
+        assertFalse(page.hasPreviousPage())
         page.moveToNextPage()
-        val result = page.resetToLastPageIfEmpty(0)
-        assertThat(result).isTrue()
-        assertThat(page.getPageNumber()).isEqualTo(1)
-    }
-
-    @Test
-    fun `현재 페이지에 항목이 있으면 이전 페이지로 이동하지 않고 false를 반환한다`() {
-        val result = page.resetToLastPageIfEmpty(1)
-        assertThat(result).isFalse()
-        assertThat(page.getPageNumber()).isEqualTo(1)
-    }
-
-    @Test
-    fun `다음 페이지가 존재하면 true를 반환한다`() {
-        val result = page.hasNextPage(fakeCartStorage.totalSize())
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `현재 페이지가 초기 페이지보다 크면 이전 페이지가 존재한다`() {
-        page.moveToNextPage()
-        assertThat(page.hasPreviousPage()).isTrue()
-    }
-
-    @Test
-    fun `현재 페이지가 마지막 페이지이면 true를 반환한다`() {
-        page.moveToNextPage()
-        assertThat(page.hasOnePage(fakeCartStorage.totalSize())).isTrue()
-    }
-
-    @Test
-    fun `targetRange는 현재 페이지의 인덱스 범위를 반환한다`() {
-        val range = page.targetRange(fakeCartStorage.totalSize())
-        assertThat(range).isEqualTo(0..4)
+        assertTrue(page.hasPreviousPage())
     }
 }
+
