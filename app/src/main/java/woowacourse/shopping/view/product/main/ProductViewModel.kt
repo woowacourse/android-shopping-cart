@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.product.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,20 +37,25 @@ class ProductViewModel(
     private val _isAddCart = MutableLiveData<Boolean>(false)
     val isAddCart: LiveData<Boolean> get() = _isAddCart
 
+    private val _onNavigateToCartEvent = MutableLiveData<Unit>()
+    val onNavigateToCartEvent: LiveData<Unit> get() = _onNavigateToCartEvent
+
     var totalProductsCount: Int = 0
     private var currentIndex = 0
     private var isShowMore = false
 
     init {
         fetchInitData()
-        fetchData()
+    }
+
+    fun onNavigateToCartClicked() {
+        _onNavigateToCartEvent.value = Unit
     }
 
     fun fetchInitData() {
-        totalProductsCount = productRepository.getProductsSize()
         fetchCartItemsCount()
         fetchRecentlyViewedData()
-        Log.d("test", "최근 본 상품 ${_recentlyViewedProducts.value}")
+        totalProductsCount = productRepository.getProductsSize()
     }
 
     fun fetchData() {
@@ -65,9 +69,7 @@ class ProductViewModel(
 
     fun fetchRecentlyViewedData() {
         recentlyViewedRepository.getRecentlyViewed {
-            Log.d("test", "실행됨1 $it")
             _recentlyViewedProducts.postValue(it)
-            Log.d("test", "실행됨2 ${_recentlyViewedProducts.value}")
         }
     }
 

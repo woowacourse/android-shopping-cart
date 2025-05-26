@@ -30,11 +30,11 @@ class ProductActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        initDataBinding()
         initView()
+        initDataBinding()
         bindData()
         bindingAdapterManager()
+        bindingAdapterDecoration()
     }
 
     private fun bindingAdapterManager() {
@@ -44,20 +44,22 @@ class ProductActivity : AppCompatActivity() {
                 override fun getSpanSize(position: Int): Int =
                     when (productAdapter.getItemViewType(position)) {
                         0 -> 1
-                        1 -> 2
                         else -> 2
                     }
             }
         binding.rvProducts.layoutManager = layoutManager
+    }
+
+    private fun bindingAdapterDecoration() {
         val spacingInPx = resources.getDimensionPixelSize(R.dimen.spacing_12dp)
         val edgeSpacingPx = resources.getDimensionPixelSize(R.dimen.spacing_20dp)
-
         binding.rvProducts.addItemDecoration(
             GridSpacingProductDecoration(2, spacingInPx, edgeSpacingPx),
         )
     }
 
     private fun initView() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product)
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -67,11 +69,9 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun initDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product)
         binding.apply {
             lifecycleOwner = this@ProductActivity
             vm = productViewModel
-            onClick = ::navigateToCart
             rvProducts.adapter = productAdapter
         }
     }
@@ -83,6 +83,7 @@ class ProductActivity : AppCompatActivity() {
         productViewModel.recentlyViewedProducts.observe(this) {
             productViewModel.fetchData()
         }
+        productViewModel.onNavigateToCartEvent.observe(this) { navigateToCart() }
     }
 
     private fun navigateToCart() {
