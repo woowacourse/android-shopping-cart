@@ -1,9 +1,9 @@
 package woowacourse.shopping
 
 import android.app.Application
-import android.content.SharedPreferences
-import androidx.core.content.edit
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import woowacourse.shopping.data.DummyProducts
 import woowacourse.shopping.data.DummyShoppingCart
 import woowacourse.shopping.data.ShoppingCartDatabase
@@ -39,34 +39,27 @@ class ShoppingCartApplication : Application() {
             applicationContext,
             ShoppingCartDatabase::class.java,
             DATABASE_NAME,
-        ).build()
+        )
+            .addCallback(InitialDataCallback())
+            .build()
     }
 
-    override fun onCreate() {
-        super.onCreate()
+    private inner class InitialDataCallback : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            thread {
+                DummyProducts.products.forEach {
+                    this@ShoppingCartApplication.db.productDao().insert(
+                        it.toEntity(),
+                    )
+                }
 
-        val prefs: SharedPreferences = getSharedPreferences("first_run", MODE_PRIVATE)
-        val isFirstRun = prefs.getBoolean("first_run", true)
-
-        if (isFirstRun) {
-            setData()
-            prefs.edit { putBoolean("first_run", false) }
-        }
-    }
-
-    private fun setData() {
-        thread {
-            DummyProducts.products.forEach {
-                db.productDao().insert(
-                    it.toEntity(),
-                )
-            }
-
-            DummyShoppingCart.items.forEach {
-                db.shoppingCartDao().insert(
-                    it.toEntity(),
-                )
-            }
+                DummyShoppingCart.items.forEach {
+                    this@ShoppingCartApplication.db.shoppingCartDao().insert(
+                        it.toEntity(),
+                    )
+                }
+            }.join()
         }
     }
 
