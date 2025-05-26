@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.dto
+package woowacourse.shopping.data.model.response
 
-data class ProductDto(
+data class ProductResponse(
     val id: Int,
     val name: String,
     val imageUrl: String,

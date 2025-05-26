@@ -1,11 +1,11 @@
-package woowacourse.shopping.data.dto
+package woowacourse.shopping.data.model.response
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import woowacourse.shopping.data.entity.CartProductEntity
-import woowacourse.shopping.data.entity.ProductEntity
+import woowacourse.shopping.data.model.entity.CartProductEntity
+import woowacourse.shopping.data.model.entity.ProductEntity
 
-data class CartProductDetailDto(
+data class CartProductDetailResponse(
     @Embedded val cartProduct: CartProductEntity,
     @Relation(
         parentColumn = "productId",

@@ -2,7 +2,7 @@ package woowacourse.shopping.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import woowacourse.shopping.data.dto.ProductDto
+import woowacourse.shopping.data.model.response.ProductResponse
 
 @Dao
 interface ProductDao {
@@ -21,7 +21,7 @@ interface ProductDao {
     fun getNextProducts(
         lastId: Int,
         count: Int,
-    ): List<ProductDto>
+    ): List<ProductResponse>
 
     @Query("SELECT MAX(id) FROM products")
     fun getMaxId(): Int
@@ -36,7 +36,7 @@ interface ProductDao {
     WHERE p.id = :productId
     """,
     )
-    fun getProduct(productId: Int): ProductDto?
+    fun getProduct(productId: Int): ProductResponse?
 
     @Query(
         """
@@ -48,5 +48,5 @@ interface ProductDao {
     WHERE p.id IN (:productIds)
     """,
     )
-    fun getProducts(productIds: List<Int>): List<ProductDto>
+    fun getProducts(productIds: List<Int>): List<ProductResponse>
 }

@@ -8,7 +8,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.entity.HistoryProductEntity
+import woowacourse.shopping.data.model.entity.HistoryProductEntity
 import java.util.concurrent.TimeUnit
 
 @Suppress("ktlint:standard:function-naming")

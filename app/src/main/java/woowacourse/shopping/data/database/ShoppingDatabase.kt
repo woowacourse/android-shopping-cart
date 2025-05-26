@@ -7,9 +7,9 @@ import androidx.room.RoomDatabase
 import woowacourse.shopping.data.dao.CartDao
 import woowacourse.shopping.data.dao.HistoryDao
 import woowacourse.shopping.data.dao.ProductDao
-import woowacourse.shopping.data.entity.CartProductEntity
-import woowacourse.shopping.data.entity.HistoryProductEntity
-import woowacourse.shopping.data.entity.ProductEntity
+import woowacourse.shopping.data.model.entity.CartProductEntity
+import woowacourse.shopping.data.model.entity.HistoryProductEntity
+import woowacourse.shopping.data.model.entity.ProductEntity
 
 @Database(
     entities = [ProductEntity::class, CartProductEntity::class, HistoryProductEntity::class],

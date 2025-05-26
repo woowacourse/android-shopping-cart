@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.dto.ProductDto
-import woowacourse.shopping.data.entity.ProductEntity
+import woowacourse.shopping.data.model.entity.ProductEntity
+import woowacourse.shopping.data.model.response.ProductResponse
 import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.model.Product
 
@@ -13,7 +13,7 @@ fun ProductEntity.toDomain(): Product =
         price = price,
     )
 
-fun ProductDto.toDomain(): CatalogProduct =
+fun ProductResponse.toDomain(): CatalogProduct =
     CatalogProduct(
         product =
             Product(
