@@ -9,11 +9,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.ShoppingGoods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.fixture.GOODS_SUNDAE
 import woowacourse.shopping.fixture.SHOPPING_GOODS_SUNDAE
+import woowacourse.shopping.fixture.createGoods
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -28,7 +30,14 @@ class ShoppingCartViewModelTest {
             lambda<(List<ShoppingGoods>) -> Unit>().invoke(listOf(SHOPPING_GOODS_SUNDAE))
         }
 
-        every { goodsRepository.getById(1) } returns GOODS_SUNDAE
+        every { goodsRepository.getById(1, captureLambda()) } answers {
+            lambda<(Goods?) -> Unit>().captured.invoke(GOODS_SUNDAE)
+        }
+
+        every { goodsRepository.getGoodsListByIds(any(), captureLambda()) } answers {
+            lambda<(List<Goods>) -> Unit>().invoke(listOf(createGoods()))
+        }
+
         shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
     }
 

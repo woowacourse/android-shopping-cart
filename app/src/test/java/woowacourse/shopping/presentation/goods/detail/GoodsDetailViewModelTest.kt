@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
@@ -28,10 +29,13 @@ class GoodsDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { goodsRepository.getById(1) } returns GOODS_SUNDAE
+        every { goodsRepository.getById(1, captureLambda()) } answers {
+            lambda<((Goods?) -> Unit)>().captured.invoke(GOODS_SUNDAE)
+        }
+
         goodsDetailViewModel =
             GoodsDetailViewModel(goodsRepository, shoppingRepository, latestGoodsRepository)
-        goodsDetailViewModel.setGoods(1)
+        goodsDetailViewModel.setGoodsAndLast(1, null)
     }
 
     @Test
@@ -79,15 +83,9 @@ class GoodsDetailViewModelTest {
     }
 
     @Test
-    fun `마지막으로 본 상품이 없으면 마지막으로 본 상품에 대한 정보가 없다`() {
-        // then
-        goodsDetailViewModel.lastGoods shouldBe null
-    }
-
-    @Test
     fun `마지막으로 본 상품이 있으면 마지막으로 본 상품에 대한 정보가 있다`() {
         // given
-        goodsDetailViewModel.setLastGoods(5)
+        goodsDetailViewModel.setGoodsAndLast(1, 5)
 
         // then
         goodsDetailViewModel.lastGoods shouldNotBe null

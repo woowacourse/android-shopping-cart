@@ -160,6 +160,10 @@ class GoodsViewModelTest {
         every { latestGoodsRepository.getAll(captureLambda()) } answers {
             lambda<(List<LatestGoods>) -> Unit>().invoke(listOf(LatestGoods(1), LatestGoods(2)))
         }
+        every { goodsRepository.getGoodsListByIds(any(), captureLambda()) } answers {
+            lambda<(List<Goods>) -> Unit>().invoke(listOf(createGoods(), createGoods()))
+        }
+
         goodsViewModel.initGoods()
 
         // when
