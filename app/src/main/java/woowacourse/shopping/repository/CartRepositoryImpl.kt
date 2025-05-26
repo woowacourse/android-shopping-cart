@@ -32,10 +32,10 @@ class CartRepositoryImpl : CartRepository {
         _cartState = _cartState.copy(items = _cartState.items + (cart.product.id to cart))
     }
 
-    override fun getProductQuantity(productId: String): Int = _cartState.getQuantity(productId)
+    override fun getProductQuantity(productId: Int): Int = _cartState.getQuantity(productId)
 
     override fun updateQuantity(
-        productId: String,
+        productId: Int,
         quantity: Int,
     ): CartState {
         _cartState =
@@ -53,7 +53,7 @@ class CartRepositoryImpl : CartRepository {
         return _cartState
     }
 
-    override fun removeProduct(productId: String): CartState {
+    override fun removeProduct(productId: Int): CartState {
         _cartState = _cartState.copy(items = _cartState.items - productId)
         return _cartState
     }

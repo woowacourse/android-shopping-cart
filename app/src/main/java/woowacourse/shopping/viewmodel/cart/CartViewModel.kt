@@ -35,7 +35,7 @@ class CartViewModel(
     }
 
     fun updateQuantity(
-        productId: String,
+        productId: Int,
         quantity: Int,
     ) {
         val newState = cartRepository.updateQuantity(productId, quantity)
@@ -44,14 +44,14 @@ class CartViewModel(
         loadPage(currentPage)
     }
 
-    fun removeFromCart(productId: String) {
+    fun removeFromCart(productId: Int) {
         val newState = cartRepository.removeProduct(productId)
         _cartState.value = newState
         val currentPage = _pageCount.value ?: 1
         loadPage(currentPage)
     }
 
-    fun getQuantity(productId: String): Int = _cartState.value?.getQuantity(productId) ?: 0
+    fun getQuantity(productId: Int): Int = _cartState.value?.getQuantity(productId) ?: 0
 
     fun loadPage(page: Int) {
         val cartState = _cartState.value ?: CartState()

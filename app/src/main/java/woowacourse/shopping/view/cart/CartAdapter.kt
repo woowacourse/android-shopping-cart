@@ -7,8 +7,8 @@ import woowacourse.shopping.databinding.ItemProductInCartBinding
 import woowacourse.shopping.model.products.ShoppingCartItem
 
 class CartAdapter(
-    private val onProductRemove: (String) -> Unit,
-    private val onQuantityChange: (String, Int) -> Unit,
+    private val onProductRemove: (Int) -> Unit,
+    private val onQuantityChange: (Int, Int) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private var itemsInCart: List<ShoppingCartItem> = emptyList()
 

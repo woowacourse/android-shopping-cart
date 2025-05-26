@@ -1,5 +1,5 @@
 package woowacourse.shopping.view.cart
 
 fun interface OnProductRemoveClickListener {
-    fun onRemoveClick(productId: String)
+    fun onRemoveClick(productId: Int)
 }

@@ -9,14 +9,14 @@ interface CartRepository {
 
     fun addProduct2(cart: ShoppingCartItem)
 
-    fun getProductQuantity(productId: String): Int
+    fun getProductQuantity(productId: Int): Int
 
     fun updateQuantity(
-        productId: String,
+        productId: Int,
         quantity: Int,
     ): CartState
 
-    fun removeProduct(productId: String): CartState
+    fun removeProduct(productId: Int): CartState
 
     fun getCurrentState(): CartState
 

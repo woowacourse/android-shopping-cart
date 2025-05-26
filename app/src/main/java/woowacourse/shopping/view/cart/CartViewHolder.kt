@@ -6,15 +6,15 @@ import woowacourse.shopping.model.products.ShoppingCartItem
 
 class CartViewHolder(
     private val binding: ItemProductInCartBinding,
-    private val onProductRemove: (String) -> Unit,
-    private val onQuantityChange: (String, Int) -> Unit,
+    private val onProductRemove: (Int) -> Unit,
+    private val onQuantityChange: (Int, Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: ShoppingCartItem) {
         binding.model = item
 
         binding.onProductRemoveClickListener =
             object : OnProductRemoveClickListener {
-                override fun onRemoveClick(productId: String) {
+                override fun onRemoveClick(productId: Int) {
                     onProductRemove(productId)
                 }
             }
