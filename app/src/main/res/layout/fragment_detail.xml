@@ -101,6 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:background="@drawable/shape_cart_item"
+            android:onClick="@{() -> vm.loadProduct(vm.recentProduct.id)}"
             android:orientation="vertical"
             android:padding="20dp"
             android:visibility="@{vm.isRecentProductVisible ? View.VISIBLE : View.GONE}"
