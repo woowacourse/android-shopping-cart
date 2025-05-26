@@ -67,15 +67,15 @@ class GoodsViewModel(
     }
 
     fun decreaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.mapNotNull {
+        _items.value = _items.value?.map {
             if (it.goods.id == item.goods.id) {
-                if (it.quantity > MINIMUM_VALUE) {
-                    val updated = it.decreaseQuantity()
+                val updated = it.decreaseQuantity()
+                if (updated.quantity > MINIMUM_VALUE) {
                     updateQuantity(updated)
                     updated
                 } else {
-                    removeItem(it)
-                    null
+                    removeItem(updated)
+                    updated
                 }
             } else {
                 it

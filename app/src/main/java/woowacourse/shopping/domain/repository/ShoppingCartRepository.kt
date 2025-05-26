@@ -13,13 +13,8 @@ interface ShoppingCartRepository {
         onResult: (Result<Unit>) -> Unit,
     )
 
-    fun decreaseQuantity(
-        item: ShoppingCartItem,
-        onResult: (Result<Unit>) -> Unit,
-    )
-
     fun removeItem(
-        shoppingCartItem: ShoppingCartItem,
+        item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     )
 

@@ -45,25 +45,13 @@ class ShoppingCartRepositoryImpl(
         )
     }
 
-    override fun decreaseQuantity(
+    override fun removeItem(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit
     ) {
         doAsyncCatching(
             block = {
-                dao.update(item.goods.id, item.quantity)
-            },
-            onResult = onResult,
-        )
-    }
-
-    override fun removeItem(
-        shoppingCartItem: ShoppingCartItem,
-        onResult: (Result<Unit>) -> Unit
-    ) {
-        doAsyncCatching(
-            block = {
-                dao.delete(shoppingCartItem.toEntity())
+                dao.delete(item.toEntity())
             },
             onResult = onResult,
         )
