@@ -10,13 +10,10 @@ import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
 import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.RecentProductsItem
 import woowacourse.shopping.view.inventory.item.InventoryItem.ShowMore
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 class InventoryViewModel(
     private val inventoryRepository: InventoryRepository,
@@ -93,12 +90,6 @@ class InventoryViewModel(
                 }
             _items.postValue(newList)
         }
-    }
-
-    fun updateRecentProducts(item: ProductItem) {
-        val time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val recentProduct = RecentProduct(item.product.id, item.product.name, item.product.imageUrl, time)
-        recentProductRepository.insert(recentProduct)
     }
 
     companion object {

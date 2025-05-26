@@ -86,7 +86,6 @@ class InventoryActivity :
     }
 
     override fun onSelectProduct(product: ProductItem) {
-//        viewModel.updateRecentProducts(product)
         startActivity(ProductDetailActivity.newIntent(this, product.product.id))
     }
 
