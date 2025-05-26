@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="120dp"
         android:layout_height="match_parent"
-        android:onClick="@{() -> eventListener.onProductClicked(recentProduct.id)}">
+        android:onClick="@{() -> eventListener.onProductClick(recentProduct.id)}">
 
         <ImageView
             android:id="@+id/image_view_recent_product"

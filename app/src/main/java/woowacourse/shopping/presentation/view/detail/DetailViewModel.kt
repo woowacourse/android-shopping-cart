@@ -36,10 +36,10 @@ class DetailViewModel(
     val addToCartSuccessEvent: SingleLiveData<Unit> = _addToCartSuccessEvent
 
     init {
-        fetchRecentProduct()
+        loadRecentProduct()
     }
 
-    fun fetchProduct(productId: Long) {
+    fun loadProduct(productId: Long) {
         updateRecentProduct(productId)
 
         productRepository.findProductInfoById(productId) { result ->
@@ -61,7 +61,7 @@ class DetailViewModel(
         }
     }
 
-    fun addProduct() {
+    fun addProductToCart() {
         val product = _product.value ?: return
         val quantity = _quantity.value ?: DEFAULT_QUANTITY
 
@@ -72,17 +72,17 @@ class DetailViewModel(
         }
     }
 
-    private fun updateRecentProduct(productId: Long) {
-        recentProductRepository.insertAndTrimToLimit(productId) { result ->
-            result.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
-        }
-    }
-
-    private fun fetchRecentProduct() {
+    private fun loadRecentProduct() {
         recentProductRepository.getRecentProducts(1) { result ->
             result
                 .onSuccess { _recentProduct.postValue(it.firstOrNull()?.toUiModel()) }
                 .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
+        }
+    }
+
+    private fun updateRecentProduct(productId: Long) {
+        recentProductRepository.insertAndTrimToLimit(productId) { result ->
+            result.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
         }
     }
 

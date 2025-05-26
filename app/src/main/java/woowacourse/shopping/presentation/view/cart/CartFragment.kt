@@ -22,13 +22,12 @@ class CartFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-
-        initActionBar()
-        initObserver()
-        setCartAdapter()
+        setupActionBar()
+        setupObservers()
+        setupCartAdapter()
     }
 
-    override fun onProductDeletion(cartItem: CartItemUiModel) {
+    override fun onDeleteProduct(cartItem: CartItemUiModel) {
         viewModel.deleteCartItem(cartItem)
     }
 
@@ -40,14 +39,14 @@ class CartFragment :
         viewModel.removeProductFromCart(productId)
     }
 
-    private fun initActionBar() {
+    private fun setupActionBar() {
         binding.toolbarCart.setNavigationIcon(R.drawable.ic_arrow)
         binding.toolbarCart.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
     }
 
-    private fun initObserver() {
+    private fun setupObservers() {
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -60,7 +59,7 @@ class CartFragment :
         }
     }
 
-    private fun setCartAdapter() {
+    private fun setupCartAdapter() {
         binding.recyclerViewCart.adapter = cartAdapter
     }
 

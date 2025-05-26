@@ -33,7 +33,7 @@ class DetailViewModelTest {
     fun `상품 ID에 해당하는 상품을 조회한다`() {
         // When
         val productId = 1L
-        viewModel.fetchProduct(productId)
+        viewModel.loadProduct(productId)
         val result = viewModel.product.getOrAwaitValue().toProduct()
         val expected = productsFixture.find { it.id == productId }
 
@@ -44,7 +44,7 @@ class DetailViewModelTest {
     @Test
     fun `최근에 본 상품을 조회한다`() {
         // When
-        viewModel.fetchProduct(1)
+        viewModel.loadProduct(1)
         val result = viewModel.recentProduct.getOrAwaitValue().toProduct()
 
         val expected = productsFixture.find { it.id == 3L }
@@ -56,10 +56,10 @@ class DetailViewModelTest {
     @Test
     fun `상품을 장바구니에 추가하면 저장 상태가 변경된다`() {
         // Given
-        viewModel.fetchProduct(1)
+        viewModel.loadProduct(1)
 
         // When
-        viewModel.addProduct()
+        viewModel.addProductToCart()
         val result = viewModel.addToCartSuccessEvent.getValue()
 
         // Then
