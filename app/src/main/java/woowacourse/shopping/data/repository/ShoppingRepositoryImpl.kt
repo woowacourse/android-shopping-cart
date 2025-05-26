@@ -34,8 +34,7 @@ class ShoppingRepositoryImpl(
         quantity: Int,
     ) {
         thread {
-            val itemInCart = shoppingDao.findGoodsById(id)
-            shoppingDao.updateQuantity(id, itemInCart?.quantity?.plus(quantity) ?: quantity)
+            shoppingDao.increaseQuantity(id, quantity)
         }
     }
 
@@ -44,8 +43,7 @@ class ShoppingRepositoryImpl(
         quantity: Int,
     ) {
         thread {
-            val itemInCart = shoppingDao.findGoodsById(id)
-            shoppingDao.updateQuantity(id, itemInCart?.quantity?.minus(quantity) ?: quantity)
+            shoppingDao.decreaseOrDelete(id, quantity)
         }
     }
 

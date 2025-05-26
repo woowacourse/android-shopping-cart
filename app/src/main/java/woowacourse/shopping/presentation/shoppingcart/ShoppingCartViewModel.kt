@@ -43,7 +43,9 @@ class ShoppingCartViewModel(
     private fun updateState() {
         _goods.value =
             shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
-                .mapNotNull { goodsRepository.getById(it.goodsId)?.updateQuantity(it.goodsQuantity) }
+                .mapNotNull {
+                    goodsRepository.getById(it.goodsId)?.updateQuantity(it.goodsQuantity)
+                }
         updateNextPage()
         updatePreviousPage()
     }
@@ -74,10 +76,9 @@ class ShoppingCartViewModel(
                 it.decreaseQuantity()
             }
 
-        if (updatedItem.quantity <= MINIMUM_QUANTITY) {
-            deleteGoods(updatedItem)
-        } else {
-            shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
+        shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
+        if (updatedItem.quantity == MINIMUM_QUANTITY) {
+            updateState()
         }
     }
 
