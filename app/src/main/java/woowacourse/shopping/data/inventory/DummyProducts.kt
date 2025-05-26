@@ -2,6 +2,7 @@
 
 package woowacourse.shopping.data.inventory
 
+import woowacourse.shopping.data.toEntity
 import woowacourse.shopping.domain.Product
 
 object DummyProducts {
@@ -186,5 +187,5 @@ object DummyProducts {
             39700,
             "https://product-image.kurly.com/hdims/resize/%5E%3E360x%3E468/cropcenter/360x468/quality/85/src/product/image/c1ea8fff-29d9-4e12-b2f1-667d76e2bdc9.jpeg",
         ),
-    )
+    ).map(Product::toEntity)
 }

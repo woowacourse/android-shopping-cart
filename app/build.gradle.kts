@@ -72,4 +72,7 @@ dependencies {
     androidTestImplementation(libs.androidx.core.testing)
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
+    implementation(libs.okhttp)
+    implementation(libs.mockwebserver)
+    implementation(libs.gson)
 }
