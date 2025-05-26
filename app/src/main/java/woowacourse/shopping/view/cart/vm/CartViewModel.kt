@@ -59,7 +59,7 @@ class CartViewModel(
                         PageState(
                             previousPageEnabled = page.hasPreviousPage(),
                             nextPageEnabled = hasNext,
-                            pageVisibility = hasOnePage,
+                            pageVisibility = !hasOnePage,
                         ),
                     )
                 }
