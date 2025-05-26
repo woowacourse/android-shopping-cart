@@ -53,7 +53,7 @@ class ShoppingCartRepositoryImpl(
             } else {
                 dao.insert(ShoppingCartEntity(productId = productId, quantity = 1))
             }
-        }
+        }.join()
     }
 
     override fun removeProduct(productId: Long) {
@@ -64,7 +64,7 @@ class ShoppingCartRepositoryImpl(
             } else {
                 dao.delete(productId)
             }
-        }
+        }.join()
     }
 
     override fun get(productId: Long): ShoppingProduct? {

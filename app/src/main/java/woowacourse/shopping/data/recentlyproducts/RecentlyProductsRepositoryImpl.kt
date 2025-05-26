@@ -15,7 +15,7 @@ class RecentlyProductsRepositoryImpl(
         thread {
             dao.insert(entity)
             callback?.invoke()
-        }
+        }.join()
     }
 
     override fun getFirst(callback: (Long?) -> Unit) {
