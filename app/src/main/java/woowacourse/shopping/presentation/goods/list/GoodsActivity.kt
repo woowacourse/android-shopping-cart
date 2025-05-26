@@ -46,16 +46,17 @@ class GoodsActivity : BaseActivity() {
     private fun setUpItems() {
         binding.rvGoodsList.apply {
             GoodsAdapter(
-                quantityClickListener = object : QuantityClickListener {
-                    override fun increase(item: ShoppingCartItem) {
-                        viewModel.increaseQuantity(item)
-                    }
+                quantityClickListener =
+                    object : QuantityClickListener {
+                        override fun increase(item: ShoppingCartItem) {
+                            viewModel.increaseQuantity(item)
+                        }
 
-                    override fun decrease(item: ShoppingCartItem) {
-                        viewModel.decreaseQuantity(item)
-                    }
-                },
-                goodsClickListener = ::navigateToDetail
+                        override fun decrease(item: ShoppingCartItem) {
+                            viewModel.decreaseQuantity(item)
+                        }
+                    },
+                goodsClickListener = ::navigateToDetail,
             ).also { this.adapter = it }
             layoutManager = GridLayoutManager(this@GoodsActivity, SPAN_COUNT)
             addOnScrollListener(

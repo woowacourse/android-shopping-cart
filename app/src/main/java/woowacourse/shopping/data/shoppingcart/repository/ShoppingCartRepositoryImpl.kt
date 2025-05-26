@@ -12,7 +12,7 @@ class ShoppingCartRepositoryImpl(
 ) : ShoppingCartRepository {
     override fun upsertItem(
         item: ShoppingCartItem,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     ) {
         doAsyncCatching(
             block = {
@@ -29,7 +29,7 @@ class ShoppingCartRepositoryImpl(
 
     override fun addOrIncreaseItem(
         item: ShoppingCartItem,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     ) {
         doAsyncCatching(
             block = {
@@ -47,7 +47,7 @@ class ShoppingCartRepositoryImpl(
 
     override fun removeItem(
         item: ShoppingCartItem,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     ) {
         doAsyncCatching(
             block = {
@@ -59,7 +59,7 @@ class ShoppingCartRepositoryImpl(
 
     override fun getItem(
         id: Long,
-        onResult: (Result<ShoppingCartItem?>) -> Unit
+        onResult: (Result<ShoppingCartItem?>) -> Unit,
     ) {
         doAsyncCatching(
             block = {
@@ -74,14 +74,14 @@ class ShoppingCartRepositoryImpl(
             block = {
                 dao.getAll().map { it.toDomain() }
             },
-            onResult = onResult
+            onResult = onResult,
         )
     }
 
     override fun getPagedItems(
         page: Int,
         count: Int,
-        onResult: (Result<List<ShoppingCartItem>>) -> Unit
+        onResult: (Result<List<ShoppingCartItem>>) -> Unit,
     ) {
         doAsyncCatching(
             block = {

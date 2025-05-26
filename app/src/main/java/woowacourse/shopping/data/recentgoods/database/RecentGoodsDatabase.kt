@@ -18,7 +18,7 @@ abstract class RecentGoodsDatabase : RoomDatabase() {
                 Room.databaseBuilder(
                     context,
                     RecentGoodsDatabase::class.java,
-                    "recent_goods"
+                    "recent_goods",
                 ).build().also { INSTANCE = it }
             }
         }

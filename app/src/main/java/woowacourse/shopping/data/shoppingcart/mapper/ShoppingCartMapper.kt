@@ -6,12 +6,13 @@ import woowacourse.shopping.domain.model.ShoppingCartItem
 
 fun ShoppingCartEntity.toDomain(): ShoppingCartItem {
     return ShoppingCartItem(
-        goods = Goods.of(
-            id = this.id,
-            name = this.name,
-            price = this.price,
-            imageUrl = this.imageUrl
-        ),
+        goods =
+            Goods.of(
+                id = this.id,
+                name = this.name,
+                price = this.price,
+                imageUrl = this.imageUrl,
+            ),
         quantity = this.quantity,
     )
 }

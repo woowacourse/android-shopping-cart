@@ -60,34 +60,36 @@ class GoodsViewModel(
     }
 
     fun increaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.map {
-            if (it.goods.id == item.goods.id) {
-                val updated = it.increaseQuantity()
-                updateQuantity(updated)
-                _itemsCount.postValue(_itemsCount.value?.plus(COUNT_OFFSET))
-                updated
-            } else {
-                it
+        _items.value =
+            _items.value?.map {
+                if (it.goods.id == item.goods.id) {
+                    val updated = it.increaseQuantity()
+                    updateQuantity(updated)
+                    _itemsCount.postValue(_itemsCount.value?.plus(COUNT_OFFSET))
+                    updated
+                } else {
+                    it
+                }
             }
-        }
     }
 
     fun decreaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.map {
-            if (it.goods.id == item.goods.id) {
-                val updated = it.decreaseQuantity()
-                _itemsCount.postValue(_itemsCount.value?.minus(COUNT_OFFSET))
-                if (updated.quantity > MINIMUM_VALUE) {
-                    updateQuantity(updated)
-                    updated
+        _items.value =
+            _items.value?.map {
+                if (it.goods.id == item.goods.id) {
+                    val updated = it.decreaseQuantity()
+                    _itemsCount.postValue(_itemsCount.value?.minus(COUNT_OFFSET))
+                    if (updated.quantity > MINIMUM_VALUE) {
+                        updateQuantity(updated)
+                        updated
+                    } else {
+                        removeItem(updated)
+                        updated
+                    }
                 } else {
-                    removeItem(updated)
-                    updated
+                    it
                 }
-            } else {
-                it
             }
-        }
     }
 
     private fun fetchShoppingCartItems() {
@@ -130,10 +132,11 @@ class GoodsViewModel(
         currentItems: List<ShoppingCartItem>,
         selectedItems: List<ShoppingCartItem>,
     ) {
-        val updatedItems = currentItems.map { item ->
-            val selected = selectedItems.firstOrNull { it.goods.id == item.goods.id }
-            item.copy(quantity = selected?.quantity ?: MINIMUM_VALUE)
-        }
+        val updatedItems =
+            currentItems.map { item ->
+                val selected = selectedItems.firstOrNull { it.goods.id == item.goods.id }
+                item.copy(quantity = selected?.quantity ?: MINIMUM_VALUE)
+            }
         _items.postValue(updatedItems)
     }
 
@@ -159,14 +162,15 @@ class GoodsViewModel(
         private const val MINIMUM_VALUE: Int = 0
         private const val COUNT_OFFSET: Int = 1
 
-        val FACTORY: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                GoodsViewModel(
-                    goodsRepository = RepositoryProvider.goodsRepository,
-                    shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
-                    recentGoodsRepository = RepositoryProvider.recentGoodsRepository,
-                )
+        val FACTORY: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    GoodsViewModel(
+                        goodsRepository = RepositoryProvider.goodsRepository,
+                        shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
+                        recentGoodsRepository = RepositoryProvider.recentGoodsRepository,
+                    )
+                }
             }
-        }
     }
 }

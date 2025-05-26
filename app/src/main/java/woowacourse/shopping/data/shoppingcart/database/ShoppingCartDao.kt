@@ -15,13 +15,19 @@ interface ShoppingCartDao {
     fun getItemById(id: Long): ShoppingCartEntity?
 
     @Query("SELECT * FROM shopping_cart LIMIT :limit OFFSET :offset")
-    fun getPage(offset: Int, limit: Int): List<ShoppingCartEntity>
+    fun getPage(
+        offset: Int,
+        limit: Int,
+    ): List<ShoppingCartEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: ShoppingCartEntity)
 
     @Query("UPDATE shopping_cart SET quantity = :quantity WHERE id = :id")
-    fun update(id: Long, quantity: Int)
+    fun update(
+        id: Long,
+        quantity: Int,
+    )
 
     @Delete
     fun delete(item: ShoppingCartEntity)

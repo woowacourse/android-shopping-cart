@@ -20,7 +20,7 @@ interface ShoppingCartRepository {
 
     fun getItem(
         id: Long,
-        onResult: (Result<ShoppingCartItem?>) -> Unit
+        onResult: (Result<ShoppingCartItem?>) -> Unit,
     )
 
     fun getAllItems(onResult: (Result<List<ShoppingCartItem>>) -> Unit)

@@ -11,8 +11,8 @@ class RecentGoodsViewHolder(
     parent: ViewGroup,
     clickListener: GoodsClickListener,
 ) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(R.layout.item_recent_goods, parent, false)
-) {
+        LayoutInflater.from(parent.context).inflate(R.layout.item_recent_goods, parent, false),
+    ) {
     private val binding = ItemRecentGoodsBinding.bind(itemView)
 
     init {

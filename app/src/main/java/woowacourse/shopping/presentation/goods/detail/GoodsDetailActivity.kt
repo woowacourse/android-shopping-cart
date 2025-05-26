@@ -37,23 +37,25 @@ class GoodsDetailActivity : BaseActivity() {
     }
 
     private fun setUpClickListener() {
-        binding.clickListener = object : QuantityClickListener {
-            override fun increase(item: ShoppingCartItem) {
-                viewModel.increaseQuantity()
-            }
+        binding.clickListener =
+            object : QuantityClickListener {
+                override fun increase(item: ShoppingCartItem) {
+                    viewModel.increaseQuantity()
+                }
 
-            override fun decrease(item: ShoppingCartItem) {
-                viewModel.decreaseQuantity()
+                override fun decrease(item: ShoppingCartItem) {
+                    viewModel.decreaseQuantity()
+                }
             }
-        }
     }
 
     private fun observeEvent() {
         viewModel.shoppingCartEvent.observe(this) { event ->
-            val message = when (event) {
-                ShoppingCartEvent.SUCCESS -> R.string.text_save_success
-                ShoppingCartEvent.FAILURE -> R.string.text_save_failure
-            }
+            val message =
+                when (event) {
+                    ShoppingCartEvent.SUCCESS -> R.string.text_save_success
+                    ShoppingCartEvent.FAILURE -> R.string.text_save_failure
+                }
             Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show()
             finish()
         }

@@ -74,20 +74,20 @@ class GoodsDetailViewModel(
         val currentItem = _item.value ?: return
         recentGoodsRepository.addRecentGoods(currentItem.goods) { result ->
             result.onFailure {
-
             }
         }
     }
 
     companion object {
-        val FACTORY: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                GoodsDetailViewModel(
-                    goodsRepository = RepositoryProvider.goodsRepository,
-                    shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
-                    recentGoodsRepository = RepositoryProvider.recentGoodsRepository,
-                )
+        val FACTORY: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    GoodsDetailViewModel(
+                        goodsRepository = RepositoryProvider.goodsRepository,
+                        shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
+                        recentGoodsRepository = RepositoryProvider.recentGoodsRepository,
+                    )
+                }
             }
-        }
     }
 }

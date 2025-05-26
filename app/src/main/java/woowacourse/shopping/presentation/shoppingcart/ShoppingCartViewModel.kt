@@ -39,32 +39,34 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
     }
 
     fun increaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.map {
-            if (it.goods.id == item.goods.id) {
-                val updated = it.increaseQuantity()
-                updateQuantity(updated)
-                updated
-            } else {
-                it
-            }
-        }
-    }
-
-    fun decreaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.mapNotNull {
-            if (it.goods.id == item.goods.id) {
-                val updated = it.decreaseQuantity()
-                if (updated.quantity > MINIMUM_VALUE) {
+        _items.value =
+            _items.value?.map {
+                if (it.goods.id == item.goods.id) {
+                    val updated = it.increaseQuantity()
                     updateQuantity(updated)
                     updated
                 } else {
-                    deleteItem(it)
-                    null
+                    it
                 }
-            } else {
-                it
             }
-        }
+    }
+
+    fun decreaseQuantity(item: ShoppingCartItem) {
+        _items.value =
+            _items.value?.mapNotNull {
+                if (it.goods.id == item.goods.id) {
+                    val updated = it.decreaseQuantity()
+                    if (updated.quantity > MINIMUM_VALUE) {
+                        updateQuantity(updated)
+                        updated
+                    } else {
+                        deleteItem(it)
+                        null
+                    }
+                } else {
+                    it
+                }
+            }
     }
 
     fun deleteItem(item: ShoppingCartItem) {
@@ -113,7 +115,7 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
     private fun updateNextPage() {
         repository.getPagedItems(
             _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
-            ITEM_COUNT
+            ITEM_COUNT,
         ) { result ->
             result.onSuccess { items ->
                 _hasNextPage.postValue(items.isNotEmpty())
@@ -124,7 +126,7 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
     }
 
     private fun updateQuantity(item: ShoppingCartItem) {
-       repository.upsertItem(item) { result ->
+        repository.upsertItem(item) { result ->
             result.onFailure {
                 _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
             }
@@ -145,10 +147,11 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
         private const val PAGE_CHANGE_AMOUNT: Int = 1
         private const val MINIMUM_VALUE: Int = 0
 
-        val FACTORY: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                ShoppingCartViewModel(RepositoryProvider.shoppingCartRepository)
+        val FACTORY: ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    ShoppingCartViewModel(RepositoryProvider.shoppingCartRepository)
+                }
             }
-        }
     }
 }

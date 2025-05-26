@@ -18,7 +18,7 @@ abstract class ShoppingCartDatabase : RoomDatabase() {
                 Room.databaseBuilder(
                     context,
                     ShoppingCartDatabase::class.java,
-                    "shopping_cart"
+                    "shopping_cart",
                 ).build().also { INSTANCE = it }
             }
         }

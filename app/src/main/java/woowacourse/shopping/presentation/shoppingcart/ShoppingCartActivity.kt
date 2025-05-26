@@ -42,19 +42,20 @@ class ShoppingCartActivity : BaseActivity() {
     }
 
     private fun setUpAdapter() {
-        val adapter = ShoppingCartAdapter(
-            quantityClickListener = object : QuantityClickListener {
-                override fun increase(item: ShoppingCartItem) {
-                    viewModel.increaseQuantity(item)
-                }
+        val adapter =
+            ShoppingCartAdapter(
+                quantityClickListener =
+                    object : QuantityClickListener {
+                        override fun increase(item: ShoppingCartItem) {
+                            viewModel.increaseQuantity(item)
+                        }
 
-                override fun decrease(item: ShoppingCartItem) {
-                    viewModel.decreaseQuantity(item)
-                }
-
-            },
-            clickListener = { item -> viewModel.deleteItem(item) }
-        )
+                        override fun decrease(item: ShoppingCartItem) {
+                            viewModel.decreaseQuantity(item)
+                        }
+                    },
+                clickListener = { item -> viewModel.deleteItem(item) },
+            )
         binding.rvSelectedGoodsList.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
@@ -65,11 +66,12 @@ class ShoppingCartActivity : BaseActivity() {
         viewModel.shoppingCartEvent.observe(this) { event ->
             when (event) {
                 ShoppingCartEvent.SUCCESS -> {}
-                ShoppingCartEvent.FAILURE -> Toast.makeText(
-                    this,
-                    getString(R.string.shopping_cart_error),
-                    Toast.LENGTH_SHORT
-                ).show()
+                ShoppingCartEvent.FAILURE ->
+                    Toast.makeText(
+                        this,
+                        getString(R.string.shopping_cart_error),
+                        Toast.LENGTH_SHORT,
+                    ).show()
             }
         }
     }

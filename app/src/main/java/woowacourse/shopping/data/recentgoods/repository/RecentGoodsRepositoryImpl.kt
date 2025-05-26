@@ -7,18 +7,18 @@ import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.repository.RecentGoodsRepository
 
 class RecentGoodsRepositoryImpl(
-    private val dao: RecentGoodsDao
+    private val dao: RecentGoodsDao,
 ) : RecentGoodsRepository {
     override fun addRecentGoods(
         goods: Goods,
-        onResult: (Result<Unit>) -> Unit
+        onResult: (Result<Unit>) -> Unit,
     ) {
         doAsyncCatching(
             block = {
                 dao.insertGoods(goods.toEntity())
                 dao.trimGoods(MAX_RECENT_GOODS)
             },
-            onResult = onResult
+            onResult = onResult,
         )
     }
 
@@ -27,7 +27,7 @@ class RecentGoodsRepositoryImpl(
             block = {
                 dao.getLatestRecentGoods()?.id
             },
-            onResult = onResult
+            onResult = onResult,
         )
     }
 
@@ -36,7 +36,7 @@ class RecentGoodsRepositoryImpl(
             block = {
                 dao.getRecentGoods(MAX_RECENT_GOODS)?.map { it.id }
             },
-            onResult = onResult
+            onResult = onResult,
         )
     }
 
