@@ -83,6 +83,9 @@ class ProductsActivity : AppCompatActivity() {
 
         cartViewModel.cartState.observe(this) { cartState ->
             adapter.updateCartState(cartState)
+
+            val itemCount = cartState?.items?.size ?: 0
+            binding.cartItemCount = itemCount
         }
     }
 
