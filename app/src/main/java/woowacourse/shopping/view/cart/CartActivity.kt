@@ -19,11 +19,11 @@ class CartActivity : AppCompatActivity() {
     private val cartProductAdapter: CartProductAdapter by lazy {
         CartProductAdapter(
             onDeleteClick = ::deleteProduct,
-            onIncrease = { viewModel.increaseProductCount(it) },
-            onDecrease = { viewModel.decreaseProductCount(it) },
+            onIncrease = { cartViewModel.increaseProductCount(it) },
+            onDecrease = { cartViewModel.decreaseProductCount(it) },
         )
     }
-    private val viewModel: CartViewModel by viewModels { CartViewModel.Factory }
+    private val cartViewModel: CartViewModel by viewModels { CartViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +46,7 @@ class CartActivity : AppCompatActivity() {
     private fun initDataBinding() {
         binding.apply {
             lifecycleOwner = this@CartActivity
-            viewModel = viewModel
-            toBack = ::finish
+            cartVM = cartViewModel
             toPrevious = ::navigateToPrevious
             toNext = ::navigateToNext
         }
@@ -58,12 +57,15 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun bindData() {
-        viewModel.currentPage.observe(this) {
-            viewModel.hasNext()
-            viewModel.hasPrevious()
+        cartViewModel.currentPage.observe(this) {
+            cartViewModel.hasNext()
+            cartViewModel.hasPrevious()
         }
-        viewModel.products.observe(this) { product ->
+        cartViewModel.products.observe(this) { product ->
             cartProductAdapter.setData(product)
+        }
+        cartViewModel.exitEvent.observe(this) {
+            finish()
         }
     }
 
@@ -72,20 +74,20 @@ class CartActivity : AppCompatActivity() {
         position: Int,
     ) {
         cartProductAdapter.removeProduct(position)
-        viewModel.deleteProduct(cartItem)
+        cartViewModel.deleteProduct(cartItem)
         Toast
             .makeText(this, R.string.cart_product_delete, Toast.LENGTH_SHORT)
             .show()
     }
 
     private fun navigateToPrevious() {
-        viewModel.minusPage()
-        viewModel.fetchData()
+        cartViewModel.minusPage()
+        cartViewModel.fetchData()
     }
 
     private fun navigateToNext() {
-        viewModel.plusPage()
-        viewModel.fetchData()
+        cartViewModel.plusPage()
+        cartViewModel.fetchData()
     }
 
     companion object {

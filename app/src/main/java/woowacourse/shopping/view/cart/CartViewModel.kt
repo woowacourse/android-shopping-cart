@@ -26,6 +26,9 @@ class CartViewModel(
     private val _hasNext: MutableLiveData<Boolean> = MutableLiveData(false)
     val hasNext: LiveData<Boolean> get() = _hasNext
 
+    private val _exitEvent = MutableLiveData<Unit>()
+    val exitEvent: LiveData<Unit> get() = _exitEvent
+
     private var totalProductsCount = 0
     private var totalPage = 0
     private var offset = 0
@@ -34,6 +37,10 @@ class CartViewModel(
     init {
         fetchInfo()
         fetchData()
+    }
+
+    fun onExitClicked() {
+        _exitEvent.value = Unit
     }
 
     fun fetchInfo() {

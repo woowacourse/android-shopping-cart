@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.product.main.adapter
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -53,7 +52,6 @@ class ProductAdapter(
         val insertedCount = items.size - previousSize
 
         this.items = items
-        Log.d("test", "$items")
         notifyItemRangeInserted(previousSize, insertedCount)
     }
 }
