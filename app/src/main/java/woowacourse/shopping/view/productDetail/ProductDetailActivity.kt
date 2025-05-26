@@ -91,6 +91,15 @@ class ProductDetailActivity :
         viewModel.minusProductQuantity()
     }
 
+    override fun onSelectLatestViewedProduct() {
+        val intent =
+            newIntent(this, viewModel.latestViewedProduct.value ?: return).apply {
+                flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
+            }
+        startActivity(intent)
+        finish()
+    }
+
     companion object {
         private const val EXTRA_PRODUCT = "woowacourse.shopping.EXTRA_PRODUCT"
 

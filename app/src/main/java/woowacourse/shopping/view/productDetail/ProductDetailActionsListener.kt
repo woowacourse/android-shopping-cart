@@ -8,4 +8,6 @@ interface ProductDetailActionsListener {
     fun onPlusProductQuantity()
 
     fun onMinusProductQuantity()
+
+    fun onSelectLatestViewedProduct()
 }

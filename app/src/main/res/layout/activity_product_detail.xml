@@ -159,6 +159,7 @@
                 android:layout_marginHorizontal="18dp"
                 android:layout_marginTop="29dp"
                 android:background="@drawable/background_last_viewed_product"
+                android:onClick="@{() -> productDetailActionsListener.onSelectLatestViewedProduct()}"
                 android:paddingHorizontal="18dp"
                 android:paddingVertical="16dp"
                 android:visibility="@{viewModel.latestViewedProduct != null &amp;&amp; !viewModel.product.equals(viewModel.latestViewedProduct) ? View.VISIBLE : View.GONE}"
