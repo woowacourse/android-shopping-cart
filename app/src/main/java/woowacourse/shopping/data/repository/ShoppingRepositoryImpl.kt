@@ -10,69 +10,62 @@ import kotlin.concurrent.thread
 class ShoppingRepositoryImpl(
     private val shoppingDao: ShoppingDao,
 ) : ShoppingRepository {
-    override fun getAllGoods(): Set<ShoppingGoods> {
-        var result: Set<ShoppingGoods> = emptySet()
-
+    override fun getAllGoods(onSuccess: (Set<ShoppingGoods>) -> Unit) {
         thread {
-            result = shoppingDao.getAll().map { it.toShoppingGoods() }.toSet()
-        }.join()
-
-        return result
+            onSuccess(shoppingDao.getAll().map { it.toShoppingGoods() }.toSet())
+        }
     }
 
     override fun insertGoods(
         id: Int,
         quantity: Int,
+        onSuccess: () -> Unit,
     ) {
         thread {
             shoppingDao.insert(ShoppingGoods(id, quantity).toShoppingEntity())
-        }.join()
+            onSuccess()
+        }
     }
 
     override fun increaseGoodsQuantity(
         id: Int,
         quantity: Int,
+        onSuccess: () -> Unit,
     ) {
         thread {
             shoppingDao.increaseOrInsert(id, quantity)
+            onSuccess()
         }
     }
 
     override fun decreaseGoodsQuantity(
         id: Int,
         quantity: Int,
+        onSuccess: () -> Unit,
     ) {
         thread {
             shoppingDao.decreaseOrDelete(id, quantity)
+            onSuccess()
         }
     }
 
-    override fun removeGoods(id: Int) {
+    override fun removeGoods(
+        id: Int,
+        onSuccess: () -> Unit,
+    ) {
         thread {
             shoppingDao.delete(id)
-        }.join()
+            onSuccess()
+        }
     }
 
     override fun getPagedGoods(
         page: Int,
         count: Int,
-    ): List<ShoppingGoods> {
-        var result: List<ShoppingGoods> = emptyList()
-
+        onSuccess: (List<ShoppingGoods>) -> Unit,
+    ) {
         thread {
-            result = shoppingDao.getPagedGoods(page, count).map { it.toShoppingGoods() }
-        }.join()
-
-        return result
-    }
-
-    override fun getGoodsById(id: Int): ShoppingGoods? {
-        var result: ShoppingGoods? = null
-
-        thread {
-            result = shoppingDao.findGoodsById(id)?.toShoppingGoods()
-        }.join()
-
-        return result
+            onSuccess(shoppingDao.getPagedGoods(page, count).map { it.toShoppingGoods() })
+        }
     }
 }

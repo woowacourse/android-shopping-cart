@@ -48,12 +48,12 @@ class GoodsViewModel(
 
     fun initGoods() {
         val currentGoods = _goods.value ?: goodsRepository.getPagedGoods(page, ITEM_COUNT)
-        val selectedItems = shoppingRepository.getAllGoods()
+        shoppingRepository.getAllGoods { selectedItems ->
+            val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
 
-        val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
-
-        _goods.value = updatedGoods
-        _shoppingGoodsCount.value = selectedItems.sumOf { it.goodsQuantity }
+            _goods.postValue(updatedGoods)
+            _shoppingGoodsCount.postValue(selectedItems.sumOf { it.goodsQuantity })
+        }
     }
 
     private fun getUpdatedGoods(
@@ -81,8 +81,9 @@ class GoodsViewModel(
             updateGoodsQuantity(goodsId) {
                 it.increaseQuantity()
             }
-        shoppingRepository.insertGoods(updatedItem.id, QUANTITY_CHANGE_AMOUNT)
-        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
+        shoppingRepository.insertGoods(updatedItem.id, QUANTITY_CHANGE_AMOUNT) {
+            _shoppingGoodsCount.postValue(_shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT))
+        }
     }
 
     fun increaseGoodsCount(goodsId: Int) {
@@ -90,8 +91,9 @@ class GoodsViewModel(
             updateGoodsQuantity(goodsId) {
                 it.increaseQuantity()
             }
-        shoppingRepository.increaseGoodsQuantity(updatedItem.id)
-        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT)
+        shoppingRepository.increaseGoodsQuantity(updatedItem.id) {
+            _shoppingGoodsCount.postValue(_shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT))
+        }
     }
 
     fun decreaseGoodsCount(goodsId: Int) {
@@ -99,8 +101,9 @@ class GoodsViewModel(
             updateGoodsQuantity(goodsId) {
                 it.decreaseQuantity()
             }
-        shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
-        _shoppingGoodsCount.value = _shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT)
+        shoppingRepository.decreaseGoodsQuantity(updatedItem.id) {
+            _shoppingGoodsCount.postValue(_shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT))
+        }
     }
 
     private fun updateGoodsQuantity(

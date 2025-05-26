@@ -41,25 +41,29 @@ class ShoppingCartViewModel(
     }
 
     private fun updateState() {
-        _goods.value =
-            shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT)
-                .mapNotNull {
+        shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT) { pagedGoods ->
+            val updatedGoods =
+                pagedGoods.mapNotNull {
                     goodsRepository.getById(it.goodsId)?.updateQuantity(it.goodsQuantity)
                 }
-        updateNextPage()
-        updatePreviousPage()
+
+            _goods.postValue(updatedGoods)
+            updateNextPage()
+            updatePreviousPage()
+        }
     }
 
     private fun updatePreviousPage() {
-        _hasPreviousPage.value = _page.value != DEFAULT_PAGE_VALUE
+        _hasPreviousPage.postValue(_page.value != DEFAULT_PAGE_VALUE)
     }
 
     private fun updateNextPage() {
-        _hasNextPage.value =
-            shoppingRepository.getPagedGoods(
-                _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
-                ITEM_COUNT,
-            ).isNotEmpty()
+        shoppingRepository.getPagedGoods(
+            _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
+            ITEM_COUNT,
+        ) {
+            _hasNextPage.postValue(it.isNotEmpty())
+        }
     }
 
     fun increaseGoodsCount(goodsId: Int) {
@@ -67,7 +71,7 @@ class ShoppingCartViewModel(
             updateGoods(goodsId) {
                 it.increaseQuantity()
             }
-        shoppingRepository.increaseGoodsQuantity(updatedItem.id)
+        shoppingRepository.increaseGoodsQuantity(updatedItem.id) {}
     }
 
     fun decreaseGoodsCount(goodsId: Int) {
@@ -76,15 +80,17 @@ class ShoppingCartViewModel(
                 it.decreaseQuantity()
             }
 
-        shoppingRepository.decreaseGoodsQuantity(updatedItem.id)
-        if (updatedItem.quantity == MINIMUM_QUANTITY) {
-            updateState()
+        shoppingRepository.decreaseGoodsQuantity(updatedItem.id) {
+            if (updatedItem.quantity == MINIMUM_QUANTITY) {
+                updateState()
+            }
         }
     }
 
     fun deleteGoods(goods: Goods) {
-        shoppingRepository.removeGoods(goods.id)
-        updateState()
+        shoppingRepository.removeGoods(goods.id) {
+            updateState()
+        }
     }
 
     private fun updateGoods(
