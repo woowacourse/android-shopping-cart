@@ -10,7 +10,7 @@
 
         <variable
             name="onClick"
-            type="woowacourse.shopping.view.product.catalog.OnRecentProductEventListener" />
+            type="woowacourse.shopping.view.product.catalog.recentproducts.OnRecentProductEventListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

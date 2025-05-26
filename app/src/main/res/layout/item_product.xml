@@ -14,7 +14,7 @@
 
         <variable
             name="onClick"
-            type="woowacourse.shopping.view.product.catalog.OnCategoryEventListener" />
+            type="woowacourse.shopping.view.product.catalog.allproducts.OnCategoryEventListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

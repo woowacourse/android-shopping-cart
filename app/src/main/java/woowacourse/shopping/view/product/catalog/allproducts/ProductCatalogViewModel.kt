@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.product.catalog
+package woowacourse.shopping.view.product.catalog.allproducts
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -62,7 +62,14 @@ class ProductCatalogViewModel(
     }
 
     private fun PagedResult<Product>.toProductItems(): List<ProductItem> {
-        val items = this.items.map { ProductItem.CatalogProduct(it, findQuantity(it.id)) }.toMutableList<ProductItem>()
+        val items =
+            this.items
+                .map {
+                    ProductItem.CatalogProduct(
+                        it,
+                        findQuantity(it.id),
+                    )
+                }.toMutableList<ProductItem>()
         if (hasNext) {
             items.add(ProductItem.LoadMore)
         }

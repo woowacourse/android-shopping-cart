@@ -5,7 +5,7 @@
     <data>
         <variable
             name="onLoadClick"
-            type="woowacourse.shopping.view.product.catalog.OnLoadEventListener" />
+            type="woowacourse.shopping.view.product.catalog.allproducts.OnLoadEventListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

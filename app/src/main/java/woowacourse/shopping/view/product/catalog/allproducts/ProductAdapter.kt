@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.product.catalog
+package woowacourse.shopping.view.product.catalog.allproducts
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,12 @@ class ProductAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            PRODUCT -> ProductViewHolder.from(parent, onQuantityControlListener, categoryEventListener)
+            PRODUCT ->
+                ProductViewHolder.from(
+                    parent,
+                    onQuantityControlListener,
+                    categoryEventListener,
+                )
             LOAD_MORE -> LoadMoreViewHolder.from(parent, loadEventListener)
             else -> throw IllegalArgumentException()
         }

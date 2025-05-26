@@ -14,7 +14,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductCatalogBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.DefaultQuantityControlListener
-import woowacourse.shopping.view.product.catalog.ProductAdapter.Companion.LOAD_MORE
+import woowacourse.shopping.view.product.catalog.allproducts.OnCategoryEventListener
+import woowacourse.shopping.view.product.catalog.allproducts.ProductAdapter
+import woowacourse.shopping.view.product.catalog.allproducts.ProductAdapter.Companion.LOAD_MORE
+import woowacourse.shopping.view.product.catalog.allproducts.ProductCatalogViewModel
+import woowacourse.shopping.view.product.catalog.recentproducts.RecentAdapter
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
