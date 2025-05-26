@@ -64,6 +64,6 @@ class CartAdapter(
     }
 
     interface CartEventListener : QuantityChangeListener {
-        fun onDeleteProduct(cartItem: CartItemUiModel)
+        fun onDeleteProduct(productId: Long)
     }
 }
