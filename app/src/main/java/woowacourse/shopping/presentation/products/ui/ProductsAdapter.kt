@@ -1,13 +1,13 @@
-package woowacourse.shopping.presentation.ui.products
+package woowacourse.shopping.presentation.products.ui
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.dummyProducts
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
+import woowacourse.shopping.presentation.products.ProductsViewModel
+
 @SuppressLint("NotifyDataSetChanged")
 class ProductsAdapter(
     private val onClickHandler: OnClickHandler,

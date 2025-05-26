@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.viewmodel.products
+package woowacourse.shopping.presentation.products
 
 import android.os.Handler
 import android.os.Looper

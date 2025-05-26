@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.cart
+package woowacourse.shopping.presentation.cart.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
+import woowacourse.shopping.presentation.cart.CartViewModel
 
 class CartAdapter(
     private val onClickHandler: CartViewHolder.OnClickHandler,

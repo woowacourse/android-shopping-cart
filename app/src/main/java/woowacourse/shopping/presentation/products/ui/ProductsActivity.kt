@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.products
+package woowacourse.shopping.presentation.products.ui
 
 import LastProductRepositoryImpl
 import android.annotation.SuppressLint
@@ -15,10 +15,10 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.databinding.MenuCartCombinedBinding
-import woowacourse.shopping.presentation.ui.base.BindingActivity
-import woowacourse.shopping.presentation.ui.cart.CartActivity
-import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
+import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.cart.ui.CartActivity
+import woowacourse.shopping.presentation.productdetail.ui.ProductDetailActivity
+import woowacourse.shopping.presentation.products.ProductsViewModel
 import woowacourse.shopping.util.DatabaseProvider
 
 @SuppressLint("NotifyDataSetChanged")

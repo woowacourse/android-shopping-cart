@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.productdetail
+package woowacourse.shopping.presentation.productdetail.ui
 
 import LastProductRepositoryImpl
 import android.content.Context
@@ -15,8 +15,8 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.ui.base.BindingActivity
-import woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel
+import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.productdetail.ProductDetailViewModel
 import woowacourse.shopping.util.DatabaseProvider
 
 class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {

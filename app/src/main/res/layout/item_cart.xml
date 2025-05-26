@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.presentation.viewmodel.cart.CartViewModel" />
+            type="woowacourse.shopping.presentation.cart.CartViewModel" />
 
         <variable
             name="product"
@@ -15,7 +15,7 @@
 
         <variable
             name="onClickHandler"
-            type="woowacourse.shopping.presentation.ui.cart.CartViewHolder.OnClickHandler" />
+            type="woowacourse.shopping.presentation.cart.ui.CartViewHolder.OnClickHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

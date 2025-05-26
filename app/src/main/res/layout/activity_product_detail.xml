@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel" />
+            type="woowacourse.shopping.presentation.productdetail.ProductDetailViewModel" />
         <variable
             name="lastProduct"
             type="woowacourse.shopping.domain.model.Product" />

@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.products
+package woowacourse.shopping.presentation.products.ui
 
 import androidx.annotation.CallSuper
 import androidx.databinding.ViewDataBinding

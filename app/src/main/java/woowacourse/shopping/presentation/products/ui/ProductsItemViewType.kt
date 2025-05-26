@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.products
+package woowacourse.shopping.presentation.products.ui
 
 enum class ProductsItemViewType(val typeId : Int) {
     PRODUCT(0),

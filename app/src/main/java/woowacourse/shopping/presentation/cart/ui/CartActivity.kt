@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.cart
+package woowacourse.shopping.presentation.cart.ui
 
 import android.content.Context
 import android.content.Intent
@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.presentation.ui.base.BindingActivity
-import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
+import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.cart.CartViewModel
 import woowacourse.shopping.util.DatabaseProvider
 
 class CartActivity : BindingActivity<ActivityCartBinding>(R.layout.activity_cart) {
