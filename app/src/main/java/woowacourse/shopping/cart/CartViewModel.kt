@@ -4,16 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.cart.CartItem.ProductItem
-import woowacourse.shopping.data.CatalogDatabase
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.mapper.toUiModel
 import woowacourse.shopping.data.repository.CartProductRepository
-import woowacourse.shopping.data.repository.CatalogProductRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
 
 class CartViewModel(
     private val cartProductRepository: CartProductRepository,
-    private val catalogProductRepository: CatalogProductRepository = CatalogDatabase,
 ) : ViewModel() {
     private val products = mutableListOf<ProductUiModel>()
 
@@ -39,7 +36,6 @@ class CartViewModel(
     fun deleteCartProduct(cartProduct: ProductItem) {
         products.remove(cartProduct.productItem)
         cartProductRepository.deleteCartProduct(cartProduct.productItem.toEntity())
-//        catalogProductRepository.initQuantity(cartProduct.productItem)
 
         cartProductRepository.getAllProductsSize { updatedSize ->
             val currentPage = page.value ?: INITIAL_PAGE

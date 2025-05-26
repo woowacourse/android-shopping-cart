@@ -31,7 +31,7 @@ class FakeCartProductRepositoryImpl : CartProductRepository {
     ) {
         val index: Int = cartProducts.indexOf(cartProduct)
         val product: CartProductEntity = cartProducts[index]
-        cartProducts[index] = product.copy(quantity = product.quantity - diff)
+        cartProducts[index] = product.copy(quantity = product.quantity + diff)
         callback(cartProducts[index])
     }
 
