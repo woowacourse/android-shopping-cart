@@ -1,9 +1,10 @@
 package woowacourse.shopping.ui.productlist
 
-data class ProductListUiState(
-    val pageNumber: Int = 0,
+data class ProductListUiModel(
     val productViewTypes: List<ProductListViewType> = emptyList()
 ) {
+    var pageNumber: Int = 0
+        private set
     private val originProducts: List<ProductListViewType.ProductItemType>
         get() = productViewTypes.filterIsInstance<ProductListViewType.ProductItemType>()
 
@@ -12,9 +13,8 @@ data class ProductListUiState(
     fun addProducts(
         newProducts: List<ProductListViewType>,
         isAddLoadMore: Boolean
-    ): ProductListUiState {
-        return ProductListUiState(
-            pageNumber + 1,
+    ): ProductListUiModel {
+        return ProductListUiModel(
             if (isAddLoadMore) originProducts + newProducts + loadMore else originProducts + newProducts
         )
     }
@@ -22,7 +22,7 @@ data class ProductListUiState(
     fun updateQuantityByProductId(
         productId: Long,
         delta: Int
-    ): ProductListUiState {
+    ): ProductListUiModel {
         val updated = productViewTypes.map { productViewType ->
             if (productViewType is ProductListViewType.ProductItemType && productViewType.product.id == productId) {
                 ProductListViewType.ProductItemType(
@@ -32,7 +32,7 @@ data class ProductListUiState(
                 productViewType
             }
         }
-        return ProductListUiState(this.pageNumber, updated)
+        return ProductListUiModel(updated)
     }
 
     fun getQuantityByProductId(productId: Long): Int {
@@ -40,6 +40,10 @@ data class ProductListUiState(
             productViewType is ProductListViewType.ProductItemType && productViewType.product.id == productId
         } ?: return 0
         return (viewType as ProductListViewType.ProductItemType).quantity
+    }
+
+    fun pageUp() {
+        pageNumber++
     }
 
 }

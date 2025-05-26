@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,8 +11,8 @@ import woowacourse.shopping.providers.RepositoryProvider
 class CartViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData(CartProductsUiState())
-    val uiState: LiveData<CartProductsUiState> get() = _uiState
+    private val _uiState = MutableLiveData(CartProductsUiModel())
+    val uiState: LiveData<CartProductsUiModel> get() = _uiState
 
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> get() = _pageNumber
@@ -44,8 +43,6 @@ class CartViewModel(
     }
 
     fun isVisiblePagination(): Boolean {
-        Log.d("CN_Log", "isLastPage =${isLastPage}")
-        Log.d("CN_Log", "pageNumber = ${pageNumber.value}")
         return !(isLastPage && pageNumber.value == 1)
     }
 
@@ -71,14 +68,17 @@ class CartViewModel(
         visibleProductsSize: Int,
         products: List<CartProduct>
     ) {
-        val cartProductsUiState = uiState.value ?: return
+        val cartProductUiModel = uiState.value ?: return
         if (hasPages(visibleProductsSize)) {
             moveToPrevious()
             return
         }
 
         val updateItems = products.take(visibleProductsSize)
-        _uiState.postValue(cartProductsUiState.loadPage(updateItems))
+        _uiState.postValue(
+            cartProductUiModel
+                .loadPage(updateItems)
+        )
     }
 
     private fun hasPages(visibleProductsSize: Int): Boolean {
@@ -86,19 +86,25 @@ class CartViewModel(
     }
 
     fun increaseQuantity(productId: Long) {
-        val cartProductsUiState = uiState.value ?: return
+        val cartProductUiModel = uiState.value ?: return
         repository.updateQuantity(productId, 1) { result ->
             result.onSuccess {
-                _uiState.postValue(cartProductsUiState.increaseQuantity(productId))
+                _uiState.postValue(
+                    cartProductUiModel
+                        .increaseQuantity(productId)
+                )
             }
         }
     }
 
     fun decreaseQuantity(productId: Long) {
-        val cartProductsUiState = uiState.value ?: return
+        val cartProductUiModel = uiState.value ?: return
         repository.updateQuantity(productId, -1) { result ->
             result.onSuccess {
-                _uiState.postValue(cartProductsUiState.decreaseQuantity(productId))
+                _uiState.postValue(
+                    cartProductUiModel
+                        .decreaseQuantity(productId)
+                )
             }
         }
     }

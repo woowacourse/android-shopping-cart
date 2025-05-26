@@ -11,8 +11,8 @@ import woowacourse.shopping.providers.RepositoryProvider
 class ProductListViewModel(
     private val repository: ProductOverViewRepository,
 ) : ViewModel() {
-    private val _productsUiState = MutableLiveData(ProductListUiState())
-    val productsUiState: LiveData<ProductListUiState> get() = _productsUiState
+    private val _productsUiState = MutableLiveData(ProductListUiModel())
+    val productsUiState: LiveData<ProductListUiModel> get() = _productsUiState
 
     init {
         loadInfos()
@@ -20,7 +20,6 @@ class ProductListViewModel(
 
     fun loadInfos() {
         val pageNumber = _productsUiState.value?.pageNumber ?: 0
-
         repository.findInRange(
             limit = PAGE_FETCH_SIZE,
             offset = (pageNumber) * PAGE_SIZE
@@ -28,9 +27,11 @@ class ProductListViewModel(
             cartProductsResult.mapCatching { cartProducts ->
                 val newCartProducts = cartProducts.take(PAGE_SIZE)
                 val newProductsViewType = newCartProducts.map { cartProduct ->
-                    ProductListViewType.ProductItemType(cartProduct.product, cartProduct.quantity)
+                    ProductListViewType.ProductItemType(
+                        cartProduct.product,
+                        cartProduct.quantity
+                    )
                 }
-
                 val isAddLoadMore = hasNextPage(cartProductsResult.getOrNull())
                 _productsUiState.postValue(
                     productsUiState.value?.addProducts(
@@ -87,6 +88,11 @@ class ProductListViewModel(
     private fun hasNextPage(loadProducts: List<CartProduct>?): Boolean {
         if (loadProducts == null) return false
         return loadProducts.size > PAGE_SIZE
+    }
+
+    fun loadMore() {
+        productsUiState.value?.pageUp()
+        loadInfos()
     }
 
     companion object {

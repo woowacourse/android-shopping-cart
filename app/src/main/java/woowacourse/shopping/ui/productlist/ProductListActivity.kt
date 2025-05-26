@@ -106,7 +106,7 @@ class ProductListActivity : AppCompatActivity() {
         return ProductListAdapter(
             items = mutableListOf(),
             productClickListener = initProductClickListener(),
-            loadMoreClickListener = { viewModel.loadInfos() },
+            loadMoreClickListener = { viewModel.loadMore() },
         )
     }
 
