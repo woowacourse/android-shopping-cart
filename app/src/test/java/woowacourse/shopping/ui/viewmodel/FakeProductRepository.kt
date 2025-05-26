@@ -7,15 +7,21 @@ import woowacourse.shopping.domain.model.Product
 class FakeProductRepository : ProductRepository {
     private val all = dummyProducts.toList()
 
-    override fun fetchProducts(
-        count: Int,
-        lastId: Int,
-    ): List<Product> =
-        all
+    override fun fetchProducts(count: Int, lastId: Int, callback: (List<Product>) -> Unit) {
+        callback(
+            all
             .filter { it.id > lastId }
-            .take(count)
+            .take(count))
+    }
 
-    override fun fetchProductDetail(id: Int): Product? = all.find { it.id == id }
 
-    override fun fetchIsProductsLoadable(lastId: Int): Boolean = all.any { it.id > lastId }
+    override fun fetchProductDetail(id: Int, callback: (Product?) -> Unit) {
+        callback(all.find { it.id == id })
+    }
+
+
+    override fun fetchIsProductsLoadable(lastId: Int, callback: (Boolean) -> Unit) {
+        callback(all.any { it.id > lastId })
+    }
+
 }
