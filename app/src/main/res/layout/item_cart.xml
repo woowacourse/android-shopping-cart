@@ -7,7 +7,7 @@
 
         <variable
             name="cartItem"
-            type="woowacourse.shopping.presentation.model.CartItemUiModel" />
+            type="woowacourse.shopping.presentation.model.CartProductUiModel" />
 
         <variable
             name="eventListener"
