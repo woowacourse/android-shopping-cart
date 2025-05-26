@@ -1,18 +1,15 @@
 package woowacourse.shopping.data.client
 
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import woowacourse.shopping.data.page.Page
 import woowacourse.shopping.data.page.PageRequest
 import woowacourse.shopping.view.uimodel.ProductUiModel
 
-abstract class HttpClientProductDataSource {
-    private val parser = Gson()
-    private val client = OkHttpClient()
-
+abstract class HttpClientProductDataSource(
+    private val client: HttpClient,
+    private val parser: JsonParser,
+) {
     abstract val findUrl: String
     abstract val totalSizeUrl: String
 
@@ -25,23 +22,15 @@ abstract class HttpClientProductDataSource {
                 .build()
 
         val request =
-            Request.Builder()
-                .url(url)
-                .get()
-                .build()
-
+            RequestImpl(
+                url,
+                HttpMethod.GET,
+            )
         val items =
             runCatching {
-                val response = client.newCall(request).execute()
-
-                if (!response.isSuccessful) {
-                    return pageRequest.toPage(emptyList(), totalSize())
-                }
-
-                response.body?.string()?.let {
-                    val productListType = object : TypeToken<List<ProductUiModel>>() {}.type
-                    parser.fromJson<List<ProductUiModel>>(it, productListType)
-                } ?: emptyList()
+                val response = client.request(request)
+                val productListType = object : TypeToken<List<ProductUiModel>>() {}.type
+                parser.fromJson<List<ProductUiModel>>(response.body, productListType)
             }.getOrNull() ?: emptyList()
 
         return pageRequest.toPage(items, totalSize())
@@ -49,18 +38,14 @@ abstract class HttpClientProductDataSource {
 
     fun totalSize(): Int {
         val request =
-            Request.Builder()
-                .url(totalSizeUrl)
-                .get()
-                .build()
+            RequestImpl(
+                totalSizeUrl.toHttpUrl(),
+                HttpMethod.GET,
+            )
 
         val size =
             runCatching {
-                val response = client.newCall(request).execute()
-                if (!response.isSuccessful) {
-                    return 0
-                }
-                response.body?.string()?.toIntOrNull()
+                client.request(request).body.toIntOrNull()
             }.getOrNull() ?: 0
         return size
     }
