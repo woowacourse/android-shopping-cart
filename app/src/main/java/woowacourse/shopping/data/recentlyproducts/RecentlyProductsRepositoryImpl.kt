@@ -7,28 +7,30 @@ import kotlin.concurrent.thread
 class RecentlyProductsRepositoryImpl(
     private val dao: RecentlyProductsDao,
 ) : RecentlyProductsRepository {
-    override fun insert(product: Product) {
-        var productId: RecentlyProductsEntity? = null
-        productId = product.toRecentEntity()
+    override fun insert(
+        product: Product,
+        callback: (() -> Unit)?,
+    ) {
+        val entity = product.toRecentEntity()
         thread {
-            dao.insert(productId)
-        }.join()
+            dao.insert(entity)
+            callback?.invoke()
+        }
     }
 
-    override fun getFirst(): Long? {
-        var recentProduct: Long? = null
+    override fun getFirst(callback: (Long?) -> Unit) {
         thread {
-            recentProduct = dao.getRecent()
-        }.join()
-        return recentProduct
+            val recentProduct = dao.getRecent()
+            callback(recentProduct)
+        }
     }
 
-    override fun getAll(): List<Long>? {
+    override fun getAll(callback: (List<Long>?) -> Unit) {
         var recentProducts: List<Long>? = null
         thread {
             recentProducts = dao.getAll()
-        }.join()
-        return recentProducts
+            callback(recentProducts)
+        }
     }
 
     override fun deleteMostRecent() {

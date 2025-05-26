@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.product.catalog.allproducts
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,8 +34,10 @@ class ProductCatalogViewModel(
         val result = productRepository.getPaged(PRODUCT_SIZE_LIMIT, currentPage * PRODUCT_SIZE_LIMIT)
         pageResultProducts.value = result
         currentPage++
-        _products.value = recentlyProductsRepository.getAll()?.map { it.toProductDomain() } ?: emptyList()
-        Log.d("asdf", "products : ${_products.value}")
+
+        recentlyProductsRepository.getAll { recentlyViewedProducts ->
+            _products.postValue(recentlyViewedProducts?.map { it.toProductDomain() } ?: emptyList())
+        }
     }
 
     fun loadProducts() {
@@ -46,9 +47,7 @@ class ProductCatalogViewModel(
     }
 
     fun addToRecentlyProduct(product: Product) {
-        Log.d("asdf", "product : $product")
-        recentlyProductsRepository.insert(product)
-        Log.d("asdf", "적재 : ${recentlyProductsRepository.getAll()}")
+        recentlyProductsRepository.insert(product) {}
     }
 
     fun addToShoppingCart(productId: Long) {

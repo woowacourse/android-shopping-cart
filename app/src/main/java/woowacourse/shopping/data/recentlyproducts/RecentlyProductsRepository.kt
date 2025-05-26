@@ -3,11 +3,14 @@ package woowacourse.shopping.data.recentlyproducts
 import woowacourse.shopping.domain.Product
 
 interface RecentlyProductsRepository {
-    fun insert(product: Product)
+    fun insert(
+        product: Product,
+        callback: (() -> Unit)?,
+    )
 
-    fun getFirst(): Long?
+    fun getFirst(callback: (Long?) -> Unit)
 
-    fun getAll(): List<Long>?
+    fun getAll(callback: (List<Long>?) -> Unit)
 
     fun deleteMostRecent()
 }

@@ -47,7 +47,9 @@ class ProductDetailViewModel(
     }
 
     fun getLastViewedProduct() {
-        _recentProduct.value = recentlyProductsRepository.getFirst()?.toProductDomain()
+        recentlyProductsRepository.getFirst {
+            _recentProduct.postValue(it?.toProductDomain())
+        }
     }
 
     fun deleteMostRecentProduct() {
