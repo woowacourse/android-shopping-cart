@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain.repository
+package woowacourse.shopping.data.repository
 
 import android.content.Context
 import androidx.room.Room
@@ -13,7 +13,7 @@ import woowacourse.shopping.utils.toProductEntity
 
 private const val DATABASE_NAME = "cart-db"
 
-class CartRepository private constructor(context: Context, private val productRepository: ProductRepository) {
+class CartRepositoryImpl private constructor(context: Context, private val productRepository: ProductRepository) {
     private val cartDatabase: CartDatabase =
         Room.databaseBuilder(
             context.applicationContext,
@@ -125,18 +125,18 @@ class CartRepository private constructor(context: Context, private val productRe
     }
 
     companion object {
-        private var INSTANCE: CartRepository? = null
+        private var INSTANCE: CartRepositoryImpl? = null
 
         fun initialize(
             context: Context,
             productRepository: ProductRepository,
         ) {
             if (INSTANCE == null) {
-                INSTANCE = CartRepository(context, productRepository)
+                INSTANCE = CartRepositoryImpl(context, productRepository)
             }
         }
 
-        fun get(): CartRepository {
+        fun get(): CartRepositoryImpl {
             return INSTANCE
                 ?: throw IllegalStateException("CartRepository가 초기화되지 않았습니다.")
         }

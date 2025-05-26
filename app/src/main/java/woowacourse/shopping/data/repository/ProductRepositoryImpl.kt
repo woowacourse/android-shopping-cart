@@ -2,7 +2,7 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.dummy.ProductDummy
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl : ProductRepository {
     private val products = ProductDummy.products

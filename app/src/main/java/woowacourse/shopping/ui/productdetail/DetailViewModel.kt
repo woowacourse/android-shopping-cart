@@ -3,13 +3,13 @@ package woowacourse.shopping.ui.productdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 
 class DetailViewModel(item: Product) : ViewModel() {
-    private val cartRepository = CartRepository.get()
+    private val cartRepositoryImpl = CartRepositoryImpl.get()
     private val _cartItem = MutableLiveData(CartItem(item.id, item, 1))
     val cartItem: LiveData<CartItem> = _cartItem
 
@@ -25,14 +25,14 @@ class DetailViewModel(item: Product) : ViewModel() {
 
     fun loadLastItem() {
         thread {
-            val recent = cartRepository.getLastRecentProduct() ?: return@thread
+            val recent = cartRepositoryImpl.getLastRecentProduct() ?: return@thread
             _lastItem.postValue(recent)
         }
     }
 
     fun insertCartItem(cartItem: CartItem) {
         thread {
-            cartRepository.insert(cartItem)
+            cartRepositoryImpl.insert(cartItem)
         }
     }
 

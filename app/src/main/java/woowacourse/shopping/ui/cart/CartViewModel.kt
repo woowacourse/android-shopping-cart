@@ -3,13 +3,13 @@ package woowacourse.shopping.ui.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.product.CartItem
 import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 
 class CartViewModel : ViewModel() {
-    private val cartRepository = CartRepository.get()
+    private val cartRepositoryImpl = CartRepositoryImpl.get()
 
     private val _cartItems = MutableLiveData<List<CartItem>>(emptyList())
     val cartItems: LiveData<List<CartItem>> = _cartItems
@@ -21,7 +21,7 @@ class CartViewModel : ViewModel() {
 
     init {
         thread {
-            size = cartRepository.size()
+            size = cartRepositoryImpl.size()
         }
         update()
     }
@@ -35,7 +35,7 @@ class CartViewModel : ViewModel() {
     private fun update() {
         val pageNumber = pageNumber.value ?: 1
         thread {
-            val items = cartRepository.getPagedItems(5, (pageNumber - 1) * 5)
+            val items = cartRepositoryImpl.getPagedItems(5, (pageNumber - 1) * 5)
             _cartItems.postValue(items)
         }
     }
@@ -56,7 +56,7 @@ class CartViewModel : ViewModel() {
 
     fun deleteProduct(product: Product) {
         thread {
-            cartRepository.delete(product.id)
+            cartRepositoryImpl.delete(product.id)
         }
         _cartItems.value = _cartItems.value?.filter { it.id != product.id }
     }
@@ -75,7 +75,7 @@ class CartViewModel : ViewModel() {
         _cartItems.value = updatedList
 
         thread {
-            cartRepository.update(newItem)
+            cartRepositoryImpl.update(newItem)
         }
     }
 
@@ -92,14 +92,14 @@ class CartViewModel : ViewModel() {
             _cartItems.value = updatedList
 
             thread {
-                cartRepository.update(newCartItem)
+                cartRepositoryImpl.update(newCartItem)
             }
         } else {
             val updatedList = _cartItems.value?.filter { it.id != cartItem.id } ?: return
             _cartItems.value = updatedList
 
             thread {
-                cartRepository.delete(cartItem.product.id)
+                cartRepositoryImpl.delete(cartItem.product.id)
             }
         }
     }

@@ -3,15 +3,15 @@ package woowacourse.shopping.ui.fashionlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.domain.product.Product
-import woowacourse.shopping.domain.product.ProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.concurrent.thread
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
 ) : ViewModel() {
-    private val cartRepository = CartRepository.get()
+    private val cartRepositoryImpl = CartRepositoryImpl.get()
     private val _products = MutableLiveData<List<ProductListViewType>>(emptyList())
     val products: LiveData<List<ProductListViewType>> = _products
 
@@ -70,7 +70,7 @@ class ProductListViewModel(
 
     fun loadCartItems() {
         thread {
-            val items = cartRepository.getCartItems()
+            val items = cartRepositoryImpl.getCartItems()
             val cartMap = items.associateBy { it.id }
             _cartItems.postValue(cartMap.mapValues { it.value.quantity })
 
@@ -92,7 +92,7 @@ class ProductListViewModel(
 
     fun loadRecentProducts() {
         thread {
-            val items = cartRepository.getRecentTenProducts()
+            val items = cartRepositoryImpl.getRecentTenProducts()
             _recentProducts.postValue(items)
 
             val rest = _products.value.orEmpty()
@@ -104,7 +104,7 @@ class ProductListViewModel(
 
     fun addRecentProduct(id: Long) {
         thread {
-            cartRepository.insertRecentProduct(id)
+            cartRepositoryImpl.insertRecentProduct(id)
         }
     }
 
@@ -124,15 +124,15 @@ class ProductListViewModel(
 
     fun add(product: Product) {
         thread {
-            cartRepository.insert(product)
+            cartRepositoryImpl.insert(product)
             loadCartItems()
         }
     }
 
     fun increaseQuantity(id: Long) {
         thread {
-            cartRepository.increaseQuantity(id)
-            val cartItem = cartRepository.findById(id)
+            cartRepositoryImpl.increaseQuantity(id)
+            val cartItem = cartRepositoryImpl.findById(id)
             if (cartItem != null) {
                 updateCartItemState(id, cartItem.quantity)
                 updateProductQuantityInList(id, cartItem.quantity)
@@ -142,15 +142,15 @@ class ProductListViewModel(
 
     fun decreaseQuantity(id: Long) {
         thread {
-            val cartItem = cartRepository.findById(id) ?: return@thread
+            val cartItem = cartRepositoryImpl.findById(id) ?: return@thread
 
             if (cartItem.quantity == 1) {
-                cartRepository.delete(cartItem.id)
+                cartRepositoryImpl.delete(cartItem.id)
                 updateCartItemState(id, 0)
             } else {
-                cartRepository.decreaseQuantity(id)
+                cartRepositoryImpl.decreaseQuantity(id)
 
-                val updated = cartRepository.findById(id)
+                val updated = cartRepositoryImpl.findById(id)
                 updateCartItemState(id, updated?.quantity ?: 1)
             }
         }

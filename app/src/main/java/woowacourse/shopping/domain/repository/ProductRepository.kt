@@ -1,4 +1,6 @@
-package woowacourse.shopping.domain.product
+package woowacourse.shopping.domain.repository
+
+import woowacourse.shopping.domain.product.Product
 
 interface ProductRepository {
     fun productsByPageNumberAndSize(

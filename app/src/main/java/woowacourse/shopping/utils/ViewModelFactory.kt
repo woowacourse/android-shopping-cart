@@ -2,7 +2,7 @@ package woowacourse.shopping.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.domain.product.ProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.ui.fashionlist.ProductListViewModel
 
 object ViewModelFactory {
