@@ -15,6 +15,7 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     fun submitList(newItems: List<Cart>) {
         val lastPosition = items.size
+        val newItemsSize = newItems.size
         val subList = newItems.subList(lastPosition, newItems.size)
         val updatedItems = newItems.subtract(items.toSet()).toList()
         if (updatedItems.size == 1) {
@@ -23,7 +24,7 @@ class ProductAdapter(
             notifyItemChanged(updateItemIndex)
         } else {
             items = items + subList
-            notifyItemRangeInserted(lastPosition, subList.size)
+            notifyItemRangeInserted(lastPosition, newItemsSize - lastPosition)
         }
     }
 
