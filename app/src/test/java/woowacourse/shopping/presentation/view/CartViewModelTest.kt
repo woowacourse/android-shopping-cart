@@ -63,7 +63,7 @@ class CartViewModelTest {
         val target = items.last()
 
         // When
-        viewModel.deleteCartItem(target)
+        viewModel.deleteCartItem(target.productId)
         val newItems = viewModel.cartItems.getOrAwaitValue()
 
         // Then
@@ -88,7 +88,7 @@ class CartViewModelTest {
         // When
         val before = viewModel.cartItems.getOrAwaitValue()
         val target = before.first()
-        viewModel.addProductToCart(target.productId)
+        viewModel.increaseProductQuantity(target.productId)
 
         // Then
         val after = viewModel.cartItems.getOrAwaitValue()
@@ -102,7 +102,7 @@ class CartViewModelTest {
         val target = before.first()
 
         // When
-        viewModel.removeProductFromCart(target.productId)
+        viewModel.decreaseProductQuantity(target.productId)
 
         // Then
         val after = viewModel.cartItems.getOrAwaitValue()
@@ -114,8 +114,8 @@ class CartViewModelTest {
         // When
         val before = viewModel.cartItems.getOrAwaitValue()
         val target = before.first()
-        viewModel.removeProductFromCart(target.productId)
-        viewModel.removeProductFromCart(target.productId)
+        viewModel.decreaseProductQuantity(target.productId)
+        viewModel.decreaseProductQuantity(target.productId)
 
         // Then
         val after = viewModel.cartItems.getOrAwaitValue()

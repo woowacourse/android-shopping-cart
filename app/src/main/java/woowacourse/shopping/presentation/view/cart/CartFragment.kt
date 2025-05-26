@@ -6,7 +6,6 @@ import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BaseFragment
-import woowacourse.shopping.presentation.model.CartItemUiModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
 import woowacourse.shopping.presentation.view.cart.event.CartMessageEvent
 
@@ -27,8 +26,8 @@ class CartFragment :
         setupCartAdapter()
     }
 
-    override fun onDeleteProduct(cartItem: CartItemUiModel) {
-        viewModel.deleteCartItem(cartItem)
+    override fun onDeleteProduct(productId: Long) {
+        viewModel.deleteCartItem(productId)
     }
 
     override fun increaseQuantity(productId: Long) {

@@ -49,10 +49,10 @@ class CartViewModel(
         }
     }
 
-    fun deleteCartItem(item: CartItemUiModel) {
-        cartRepository.deleteCartItem(item.productId) { result ->
+    fun deleteCartItem(productId: Long) {
+        cartRepository.deleteCartItem(productId) { result ->
             result
-                .onSuccess { handleFetchCartItemDeleted(item.productId) }
+                .onSuccess { handleFetchCartItemDeleted(productId) }
                 .onFailure { postFailureEvent(CartMessageEvent.DELETE_CART_ITEM_FAILURE) }
         }
     }
