@@ -36,11 +36,14 @@ class RecentAdapter(
 
     class RecentProductViewHolder(
         private val binding: ItemRecentProductBinding,
-        private val itemClickListener: ItemClickListener,
+        itemClickListener: ItemClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.itemClickListener = itemClickListener
+        }
+
         fun bind(item: Product) {
             binding.product = item
-            binding.itemClickListener = itemClickListener
             binding.executePendingBindings()
         }
     }

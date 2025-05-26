@@ -63,13 +63,16 @@ class ProductAdapter(
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        private val cartCounterClickListener: CartCounterClickListener,
-        private val itemClickListener: ItemClickListener,
+        cartCounterClickListener: CartCounterClickListener,
+        itemClickListener: ItemClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: CartItem) {
-            binding.cartItem = item
+        init {
             binding.itemClickListener = itemClickListener
             binding.counterClickListener = cartCounterClickListener
+        }
+
+        fun bind(item: CartItem) {
+            binding.cartItem = item
             binding.executePendingBindings()
         }
     }
