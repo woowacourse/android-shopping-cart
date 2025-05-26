@@ -6,7 +6,7 @@ data class CartItem(
     private val product: Product,
     val quantity: Int = 0,
 ) : Serializable {
-    constructor(id: Long, name: String, price: Int, quantity: Int) :
+    constructor(id: Long, name: String, price: Int, quantity: Int = 0) :
         this(Product(id, name, price), quantity)
 
     val id: Long = product.id
