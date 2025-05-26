@@ -8,7 +8,7 @@ import woowacourse.shopping.data.inventory.InventoryRepository
 import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.data.toCartItem
-import woowacourse.shopping.data.toInventoryProduct
+import woowacourse.shopping.data.toDomain
 import woowacourse.shopping.domain.Page
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.view.inventory.item.InventoryItem
@@ -37,7 +37,7 @@ class InventoryViewModel(
 
     fun requestPage() {
         shoppingCartRepository.getAll { allProducts ->
-            allProducts.forEach { product -> inventoryRepository.insert(product.toInventoryProduct()) }
+            allProducts.forEach { product -> inventoryRepository.insert(product.toDomain()) }
             val currentPageSize = _items.value?.filterIsInstance<ProductItem>()?.size ?: 0
             inventoryRepository.getPage(
                 PAGE_SIZE,
