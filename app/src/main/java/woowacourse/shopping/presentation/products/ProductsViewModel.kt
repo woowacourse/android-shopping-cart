@@ -64,6 +64,7 @@ class ProductsViewModel(
             mainHandler.post {
                 _products.value = products.value.orEmpty() + newProducts
                 currentPage += 1
+                updateIsLoadable()
             }
         }
     }

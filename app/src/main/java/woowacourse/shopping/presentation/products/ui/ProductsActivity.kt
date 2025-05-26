@@ -119,7 +119,6 @@ class ProductsActivity : BindingActivity<ActivityProductsBinding>(R.layout.activ
     private fun initObservers() {
         viewModel.products.observe(this) { products ->
             productsAdapter.updateProductItems(products, viewModel.lastProducts.value.orEmpty())
-            viewModel.updateIsLoadable()
         }
         viewModel.isLoadingProducts.observe(this) { isLoadable ->
             productsAdapter.updateLoadMoreItem(isLoadable)
