@@ -36,8 +36,7 @@ class ProductDetailViewModel(
             result
                 .onSuccess { product ->
                     _product.postValue(product)
-                    loadRecentProduct()
-                    checkIfCurrentIsMostRecent(product.productId)
+                    handleRecentProduct(productId)
                     insertCurrentProductToRecent(product)
                 }.onFailure {
                     _toastMessage.postValue(R.string.product_detail_toast_load_fail)
@@ -76,22 +75,18 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun loadRecentProduct() {
+    private fun handleRecentProduct(currentProductId: Long) {
         recentProductRepository.getMostRecentProduct { result ->
             result
-                .onSuccess { _recentProduct.postValue(it) }
-                .onFailure {
+                .onSuccess { recentProduct ->
+                    _recentProduct.postValue(recentProduct)
+
+                    val isSame =
+                        recentProduct == null || recentProduct.productId == currentProductId
+                    _isRecentProduct.postValue(isSame)
+                }.onFailure {
                     _toastMessage.postValue(R.string.product_detail_toast_most_recent_load_fail)
                 }
-        }
-    }
-
-    private fun checkIfCurrentIsMostRecent(currentProductId: Long) {
-        recentProductRepository.getMostRecentProduct { result ->
-            result.onSuccess { recentProduct ->
-                val isSame = recentProduct == null || recentProduct.productId == currentProductId
-                _isRecentProduct.postValue(isSame)
-            }
         }
     }
 }
