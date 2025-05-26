@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.goods
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -75,6 +76,7 @@ class GoodsViewModel(
 
             _items.postValue(updatedItems)
         }
+        Log.d("123451", "dd")
     }
 
     fun findCartFromHistory(cart: Cart) {

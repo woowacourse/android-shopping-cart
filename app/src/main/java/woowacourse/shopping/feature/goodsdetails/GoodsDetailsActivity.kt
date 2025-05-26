@@ -43,13 +43,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
         observeCartInsertResult()
         setOnClickListener()
-
-        viewModel.navigateToLastViewedCart.observe(this) { lastViewedCart ->
-            lastViewedCart.let {
-                val intent = newIntent(this@GoodsDetailsActivity, it.toUi())
-                startActivity(intent)
-            }
-        }
+        navigateToLastViewed()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -64,6 +58,16 @@ class GoodsDetailsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun navigateToLastViewed() {
+        viewModel.navigateToLastViewedCart.observe(this) { lastViewedCart ->
+            lastViewedCart.let {
+                val intent = newIntent(this@GoodsDetailsActivity, it.toUi())
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 
     private fun observeCartInsertResult() {
@@ -110,7 +114,7 @@ class GoodsDetailsActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val GOODS_KEY = "GOODS"
+        private const val GOODS_KEY = "GOODS_KEY"
 
         fun newIntent(
             context: Context,
