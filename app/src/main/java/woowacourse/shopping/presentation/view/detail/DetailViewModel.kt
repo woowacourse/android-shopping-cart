@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.view.detail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,12 @@ class DetailViewModel(
 
     private val _addToCartSuccessEvent = MutableSingleLiveData<Unit>()
     val addToCartSuccessEvent: SingleLiveData<Unit> = _addToCartSuccessEvent
+
+    val isRecentProductVisible: LiveData<Boolean> =
+        MediatorLiveData<Boolean>().apply {
+            addSource(_product) { updateVisibility() }
+            addSource(_recentProduct) { updateVisibility() }
+        }
 
     init {
         loadRecentProduct()
@@ -84,6 +91,12 @@ class DetailViewModel(
         recentProductRepository.insertAndTrimToLimit(productId) { result ->
             result.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
         }
+    }
+
+    private fun MediatorLiveData<Boolean>.updateVisibility() {
+        val currentProduct = _product.value
+        val recent = _recentProduct.value
+        value = recent != null && recent.id != currentProduct?.id
     }
 
     companion object {

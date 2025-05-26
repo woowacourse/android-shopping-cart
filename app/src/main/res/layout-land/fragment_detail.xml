@@ -118,7 +118,7 @@
                     android:background="@drawable/shape_cart_item"
                     android:orientation="vertical"
                     android:padding="20dp"
-                    android:visibility="@{(vm.recentProduct == null || vm.recentProduct.id == vm.product.id) ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{vm.isRecentProductVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/text_view_detail_product_name"
                     app:layout_constraintStart_toStartOf="@id/text_view_detail_product_name"
