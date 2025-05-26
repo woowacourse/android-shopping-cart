@@ -1,19 +1,43 @@
 package woowacourse.shopping.viewmodel.productdetail
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.model.products.Product
+import woowacourse.shopping.model.products.ShoppingCartItem
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.CartRepositoryImpl
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    fun addToCart(product: Product) {
-        cartRepository.addProduct(product)
+    private val _shoppingCartItem = MutableLiveData<ShoppingCartItem>()
+    val shoppingCartItem: LiveData<ShoppingCartItem> get() = _shoppingCartItem
+
+    fun loadProduct(product: Product) {
+        _shoppingCartItem.value = ShoppingCartItem(product, 1)
+    }
+
+    fun increaseQuantity() {
+        val currentShoppingCartItem = _shoppingCartItem.value ?: return
+        val currentQuantity = _shoppingCartItem.value?.quantity ?: 1
+
+        _shoppingCartItem.value = currentShoppingCartItem.copy(quantity = currentQuantity + 1)
+    }
+
+    fun decreaseQuantity() {
+        val currentShoppingCartItem = _shoppingCartItem.value ?: return
+        val current = _shoppingCartItem.value?.quantity ?: 1
+        if (current > 1) {
+            _shoppingCartItem.value = currentShoppingCartItem.copy(quantity = current - 1)
+        }
+    }
+
+    fun addToCart() {
+        val cart = _shoppingCartItem.value ?: return
+        cartRepository.addProduct2(cart)
     }
 
     companion object {
@@ -23,14 +47,10 @@ class ProductDetailViewModel(
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
-                ): T {
-                    checkNotNull(extras[APPLICATION_KEY])
-                    extras.createSavedStateHandle()
-
-                    return ProductDetailViewModel(
+                ): T =
+                    ProductDetailViewModel(
                         CartRepositoryImpl.getInstance(),
                     ) as T
-                }
             }
     }
 }

@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="quantity"
+            type="int" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="126dp"
         android:layout_height="42dp"
@@ -29,6 +36,7 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="22sp"
+            android:text="@{String.valueOf(quantity)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_plus"
             app:layout_constraintHorizontal_chainStyle="packed"
