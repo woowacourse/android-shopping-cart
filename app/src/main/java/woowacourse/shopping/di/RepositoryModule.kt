@@ -1,8 +1,8 @@
 package woowacourse.shopping.di
 
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.data.repository.local.CartRepositoryImpl
+import woowacourse.shopping.data.repository.remote.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.remote.RecentProductRepositoryImpl
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository

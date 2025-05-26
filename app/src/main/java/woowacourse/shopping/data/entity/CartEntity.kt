@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.db
+package woowacourse.shopping.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

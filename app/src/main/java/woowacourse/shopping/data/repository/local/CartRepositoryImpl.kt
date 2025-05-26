@@ -1,7 +1,7 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.local
 
-import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.data.db.CartEntity
+import woowacourse.shopping.data.datasource.local.CartDataSource
+import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository

@@ -1,7 +1,7 @@
 package woowacourse.shopping
 
-import woowacourse.shopping.data.db.CartEntity
-import woowacourse.shopping.data.db.RecentlyViewedProduct
+import woowacourse.shopping.data.entity.CartEntity
+import woowacourse.shopping.data.entity.RecentlyViewedProduct
 import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
 

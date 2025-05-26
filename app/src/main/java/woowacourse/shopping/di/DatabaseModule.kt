@@ -1,9 +1,9 @@
 package woowacourse.shopping.di
 
 import android.content.Context
-import woowacourse.shopping.data.db.CartDao
-import woowacourse.shopping.data.db.CartDatabase
-import woowacourse.shopping.data.db.RecentlyProductDao
+import woowacourse.shopping.data.dao.CartDao
+import woowacourse.shopping.data.dao.RecentlyProductDao
+import woowacourse.shopping.data.database.CartDatabase
 
 object DatabaseModule {
     private lateinit var appContext: Context

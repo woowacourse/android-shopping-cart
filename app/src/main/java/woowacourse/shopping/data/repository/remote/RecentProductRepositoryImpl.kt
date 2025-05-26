@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.repository
+package woowacourse.shopping.data.repository.remote
 
-import woowacourse.shopping.data.datasource.ProductDataSource
-import woowacourse.shopping.data.datasource.RecentProductDataSource
-import woowacourse.shopping.data.db.RecentlyViewedProduct
+import woowacourse.shopping.data.datasource.local.RecentProductDataSource
+import woowacourse.shopping.data.datasource.remote.ProductDataSource
+import woowacourse.shopping.data.entity.RecentlyViewedProduct
 import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.RecentProductRepository

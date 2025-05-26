@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.datasource
+package woowacourse.shopping.data.datasource.local
 
-import woowacourse.shopping.data.db.CartEntity
+import woowacourse.shopping.data.entity.CartEntity
 
 interface CartDataSource {
     fun getCartProductCount(): Result<Int>

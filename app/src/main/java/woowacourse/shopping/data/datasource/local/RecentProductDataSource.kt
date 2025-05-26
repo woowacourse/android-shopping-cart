@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.datasource
+package woowacourse.shopping.data.datasource.local
 
-import woowacourse.shopping.data.db.RecentlyViewedProduct
+import woowacourse.shopping.data.entity.RecentlyViewedProduct
 
 interface RecentProductDataSource {
     fun getProducts(): Result<List<RecentlyViewedProduct>>
