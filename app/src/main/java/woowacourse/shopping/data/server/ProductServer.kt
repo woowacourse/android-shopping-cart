@@ -38,6 +38,10 @@ class ProductServer(private val gson: Gson) {
         mockWebServer.start()
     }
 
+    fun shutdown() {
+        mockWebServer.shutdown()
+    }
+
     @Suppress("ktlint:standard:max-line-length")
     companion object {
         private val initProducts =

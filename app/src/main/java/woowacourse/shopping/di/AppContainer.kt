@@ -22,7 +22,7 @@ class AppContainer(applicationContext: Context) {
     private val client = OkHttpClient()
     private val gson = Gson()
     private val database = getDatabase(applicationContext)
-    private val productServer = ProductServer(gson)
+    val productServer = ProductServer(gson)
     private val productDataSource: ProductDataSource by lazy {
         ProductDataSourceImpl(
             productServer,
