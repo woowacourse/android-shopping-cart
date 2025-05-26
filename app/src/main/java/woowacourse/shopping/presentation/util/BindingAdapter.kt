@@ -6,14 +6,16 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.model.Name
+import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.goods.list.GoodsAdapter
 import woowacourse.shopping.presentation.shoppingcart.ShoppingCartAdapter
 import java.text.DecimalFormat
 
 @BindingAdapter("goodsPrice")
-fun TextView.setPrice(item: ShoppingCartItem) {
-    text = context.getString(R.string.text_price, DecimalFormat("#,###").format(item.goods.price.value))
+fun TextView.setPrice(price: Price) {
+    text = context.getString(R.string.text_price, DecimalFormat("#,###").format(price.value))
 }
 
 @BindingAdapter("goodsTotalPrice")
@@ -22,8 +24,8 @@ fun TextView.setTotalPrice(item: ShoppingCartItem) {
 }
 
 @BindingAdapter("goodsName")
-fun TextView.setName(item: ShoppingCartItem) {
-    text = item.goods.name.value
+fun TextView.setName(name: Name) {
+    text = name.value
 }
 
 @BindingAdapter("goodsImage")
