@@ -53,16 +53,4 @@ class InventoryRepositoryImpl(private val productDao: ProductDao) : InventoryRep
             productDao.insert(product.toEntity())
         }.join()
     }
-
-    override fun insertAll(products: List<ProductItem>) {
-        thread {
-            productDao.insertAll(products.map(ProductItem::toEntity))
-        }.join()
-    }
-
-    override fun clear() {
-        thread {
-            productDao.clear()
-        }
-    }
 }
