@@ -161,7 +161,7 @@
                 android:background="@drawable/background_last_viewed_product"
                 android:paddingHorizontal="18dp"
                 android:paddingVertical="16dp"
-                android:visibility="@{viewModel.latestViewedProduct != null ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.latestViewedProduct != null &amp;&amp; !viewModel.product.equals(viewModel.latestViewedProduct) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/productDetailPrice">
 
                 <TextView
