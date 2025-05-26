@@ -13,16 +13,14 @@ class ProductRepositoryImpl(
         id: Long,
         onSuccess: (Product?) -> Unit,
     ) {
-        thread {
-            val result = remoteDataSource.getProductById(id)
-            onSuccess(result)
-        }
+        val result = remoteDataSource.getProductById(id)
+        onSuccess(result)
     }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-        onSuccess: (PagedResult<Product>) -> Unit,
+        onSuccess: (PagedResult<Product>?) -> Unit,
     ) {
         require(offset >= 0)
         require(limit > 0)

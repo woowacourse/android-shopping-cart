@@ -25,7 +25,7 @@ class FakeProductRepository : ProductRepository {
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-        onSuccess: (PagedResult<Product>) -> Unit,
+        onSuccess: (PagedResult<Product>?) -> Unit,
     ) {
         val pagedItems = fakeProducts.drop(offset).take(limit)
         val hasNext = offset + pagedItems.size < fakeProducts.size

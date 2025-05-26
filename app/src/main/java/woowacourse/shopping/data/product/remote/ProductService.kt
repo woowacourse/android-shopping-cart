@@ -9,5 +9,5 @@ interface ProductService {
     fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product>
+    ): PagedResult<Product>?
 }

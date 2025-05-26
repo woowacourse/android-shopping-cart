@@ -67,7 +67,7 @@ class ProductDetailActivity : AppCompatActivity() {
         }
 
         viewModel.lastProductClickEvent.observe(this) {
-            val intent = newIntent(this, viewModel.lastViewedProduct?.product ?: return@observe)
+            val intent = newIntent(this, viewModel.lastViewedProduct.value?.product ?: return@observe)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }

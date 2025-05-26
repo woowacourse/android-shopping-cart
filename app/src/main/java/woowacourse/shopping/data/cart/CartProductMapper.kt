@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.data.product.toId
 import woowacourse.shopping.data.product.toProduct
 import woowacourse.shopping.domain.model.CartProduct
 
@@ -12,6 +11,6 @@ fun CartProductEntity.toDomain() =
 
 fun CartProduct.toEntity() =
     CartProductEntity(
-        productId = this.product.toId(),
+        productId = this.product.id,
         quantity = this.quantity,
     )

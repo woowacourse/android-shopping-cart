@@ -11,5 +11,5 @@ class ProductRemoteDataSource(
     fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product> = service.getPagedProducts(limit, offset)
+    ): PagedResult<Product>? = service.getPagedProducts(limit, offset)
 }

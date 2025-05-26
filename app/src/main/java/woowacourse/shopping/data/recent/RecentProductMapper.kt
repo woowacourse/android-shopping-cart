@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.recent
 
-import woowacourse.shopping.data.product.toId
 import woowacourse.shopping.data.product.toProduct
 import woowacourse.shopping.domain.model.RecentProduct
 import java.time.Instant
@@ -19,6 +18,6 @@ fun RecentProductEntity.toDomain() =
 
 fun RecentProduct.toEntity() =
     RecentProductEntity(
-        productId = this.product.toId(),
+        productId = this.product.id,
         viewedAt = viewedAt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
     )

@@ -17,8 +17,12 @@ class ProductDetailViewModel(
 ) : ViewModel(),
     ProductDetailEventHandler {
     private var shoppingCartQuantity = 0
-    var lastViewedProduct: RecentProduct? = null
-        private set
+
+    private val _lastViewedProduct = MutableLiveData<RecentProduct?>()
+    val lastViewedProduct: LiveData<RecentProduct?> get() = _lastViewedProduct
+
+//    var lastViewedProduct: RecentProduct? = null
+//        private set
 
     private val _quantity = MutableLiveData(INITIAL_QUANTITY)
     val quantity: LiveData<Int> get() = _quantity
@@ -73,7 +77,7 @@ class ProductDetailViewModel(
 
     private fun loadLastViewedProduct() {
         recentProductRepository.getLastViewedProduct {
-            lastViewedProduct = it
+            _lastViewedProduct.postValue(it)
         }
     }
 

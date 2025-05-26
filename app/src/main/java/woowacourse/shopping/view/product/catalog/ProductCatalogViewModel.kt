@@ -77,6 +77,7 @@ class ProductCatalogViewModel(
 
     private fun loadProducts() {
         productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset) { result ->
+            result ?: return@getPagedProducts
             offset += result.items.size
 
             val tempItems = mutableListOf<ProductCatalogItem.ProductItem>()

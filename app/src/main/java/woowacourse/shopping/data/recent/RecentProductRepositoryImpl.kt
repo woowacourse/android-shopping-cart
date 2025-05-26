@@ -1,17 +1,29 @@
 package woowacourse.shopping.data.recent
 
+import woowacourse.shopping.data.product.toLocalDateTime
 import woowacourse.shopping.data.recent.local.RecentProductLocalDataSource
 import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 class RecentProductRepositoryImpl(
     private val localDataSource: RecentProductLocalDataSource,
+    private val productRepository: ProductRepository,
 ) : RecentProductRepository {
     override fun getLastViewedProduct(onSuccess: (RecentProduct?) -> Unit) {
         thread {
-            val result = localDataSource.getLastViewedProduct()?.toDomain()
-            onSuccess(result)
+            val entity = localDataSource.getLastViewedProduct()
+            if (entity != null) {
+                productRepository.getProductById(entity.productId) { product ->
+                    val result =
+                        product?.let { RecentProduct(it, entity.viewedAt.toLocalDateTime()) }
+                    onSuccess(result)
+                }
+            } else {
+                onSuccess(null)
+            }
         }
     }
 
@@ -21,8 +33,21 @@ class RecentProductRepositoryImpl(
         onSuccess: (List<RecentProduct>) -> Unit,
     ) {
         thread {
-            val result = localDataSource.getPagedProducts(limit, offset).map { it.toDomain() }
-            onSuccess(result)
+            val entities = localDataSource.getPagedProducts(limit, offset)
+            val latch = CountDownLatch(entities.size)
+
+            val recentProducts = mutableListOf<RecentProduct>()
+            entities.forEach { entity ->
+                productRepository.getProductById(entity.productId) { product ->
+                    product?.let {
+                        val recentProduct = RecentProduct(it, entity.viewedAt.toLocalDateTime())
+                        recentProducts.add(recentProduct)
+                    }
+                    latch.countDown()
+                }
+            }
+            latch.await()
+            onSuccess(recentProducts)
         }
     }
 
