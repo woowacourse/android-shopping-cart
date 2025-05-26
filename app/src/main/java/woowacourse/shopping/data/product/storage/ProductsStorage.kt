@@ -7,6 +7,4 @@ interface ProductsStorage {
         lastProductId: Long?,
         size: Int,
     ): List<ProductEntity>
-
-    fun getRecentWatching(size: Int): List<ProductEntity>
 }

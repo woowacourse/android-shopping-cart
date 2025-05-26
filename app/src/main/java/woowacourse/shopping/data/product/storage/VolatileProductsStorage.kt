@@ -175,9 +175,4 @@ object VolatileProductsStorage : ProductsStorage {
         if (startPosition + size > products.size) return products.slice(startPosition..products.size - 1)
         return products.subList(startPosition, startPosition + size)
     }
-
-    override fun getRecentWatching(size: Int): List<ProductEntity> {
-        val fromIndex = (recentWatchingProduct.size - size).coerceAtLeast(0)
-        return recentWatchingProduct.subList(fromIndex, recentWatchingProduct.size)
-    }
 }

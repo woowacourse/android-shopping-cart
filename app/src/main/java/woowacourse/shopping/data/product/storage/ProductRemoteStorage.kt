@@ -35,24 +35,6 @@ class ProductRemoteStorage : ProductsStorage {
         )
     }
 
-    override fun getRecentWatching(size: Int): List<ProductEntity> {
-        val request =
-            Request
-                .Builder()
-                .url("$BASE_URL/products/recentWatching?size=$size")
-                .build()
-        val result =
-            client
-                .newCall(request)
-                .execute()
-                .body
-                ?.string()
-        return convertJsonToList(
-            result ?: "",
-            ProductEntity::class.java,
-        )
-    }
-
     companion object {
         private const val BASE_URL = "http://localhost:12345"
     }
