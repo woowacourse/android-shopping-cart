@@ -11,10 +11,17 @@ import woowacourse.shopping.util.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductsViewModelTest {
     private lateinit var viewModel: ProductsViewModel
+    private lateinit var fakeCartRepository: FakeCartRepository
+    private lateinit var fakeProductRepository: FakeProductRepository
+    private lateinit var fakeLastProductRepository: FakeLastProductRepository
 
     @BeforeEach
     fun setup() {
-        viewModel = ProductsViewModel(FakeProductRepository())
+        fakeCartRepository = FakeCartRepository()
+        fakeProductRepository = FakeProductRepository()
+        fakeLastProductRepository = FakeLastProductRepository()
+
+        viewModel = ProductsViewModel(fakeProductRepository,fakeCartRepository,fakeLastProductRepository)
     }
 
     @Test
