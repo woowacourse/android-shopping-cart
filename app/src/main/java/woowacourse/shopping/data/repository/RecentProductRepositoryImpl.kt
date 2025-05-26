@@ -17,9 +17,10 @@ class RecentProductRepositoryImpl(
         limit: Int,
         onResult: (Result<List<Product>>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        recentProductLocalDataSource
-            .getRecentProducts(limit)
-            .map { productRemoteDataSource.findProductById(it.productId).toProduct() }
+        val recentProducts = recentProductLocalDataSource.getRecentProducts(limit)
+        val products =
+            productRemoteDataSource.findProductsByIds(recentProducts.map { it.productId })
+        products.map { it.toProduct() }
     }
 
     override fun insertAndTrimToLimit(
