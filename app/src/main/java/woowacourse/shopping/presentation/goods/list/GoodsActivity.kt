@@ -121,7 +121,7 @@ class GoodsActivity : BaseActivity() {
         latestGoodsAdapter: LatestGoodsAdapter,
     ) {
         viewModel.goods.observe(this) { goods ->
-            goodsAdapter.changeGoods(goods)
+            goodsAdapter.updateItems(goods)
         }
 
         viewModel.shouldNavigateToShoppingCart.observe(this) {
