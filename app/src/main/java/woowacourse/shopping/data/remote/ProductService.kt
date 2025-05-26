@@ -3,8 +3,6 @@ package woowacourse.shopping.data.remote
 import woowacourse.shopping.domain.model.Product
 
 interface ProductService {
-    fun start()
-
     fun fetchProductById(id: Long): Product
 
     fun fetchPagingProducts(
@@ -13,6 +11,4 @@ interface ProductService {
     ): List<Product>
 
     fun fetchProducts(): List<Product>
-
-    fun shutdown()
 }
