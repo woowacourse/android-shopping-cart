@@ -8,8 +8,10 @@ class RecentlyProductsRepositoryImpl(
     private val dao: RecentlyProductsDao,
 ) : RecentlyProductsRepository {
     override fun insert(product: Product) {
+        var productId: RecentlyProductsEntity? = null
+        productId = product.toRecentEntity()
         thread {
-            dao.insert(product.toRecentEntity())
+            dao.insert(productId)
         }.join()
     }
 
@@ -21,11 +23,11 @@ class RecentlyProductsRepositoryImpl(
         return recentProduct ?: throw IllegalArgumentException()
     }
 
-    override fun getAll(): List<Long> {
+    override fun getAll(): List<Long>? {
         var recentProducts: List<Long>? = null
         thread {
             recentProducts = dao.getAll()
-        }
-        return recentProducts ?: throw IllegalArgumentException()
+        }.join()
+        return recentProducts
     }
 }

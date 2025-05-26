@@ -12,4 +12,5 @@
     <string name="confirm">확인</string>
     <string name="quantity_minus">-</string>
     <string name="quantity_plus">+</string>
+    <string name="recently_viewed_products">최근 본 상품</string>
 </resources>

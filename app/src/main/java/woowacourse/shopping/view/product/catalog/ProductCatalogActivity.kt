@@ -23,6 +23,7 @@ class ProductCatalogActivity : AppCompatActivity() {
     private lateinit var viewModel: ProductCatalogViewModel
 
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentlyProductAdapter: RecentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class ProductCatalogActivity : AppCompatActivity() {
                 ProductCatalogViewModel.provideFactory(),
             )[ProductCatalogViewModel::class.java]
 
+        initRecentRecyclerView()
         initRecyclerView()
         initObservers()
     }
@@ -58,6 +60,15 @@ class ProductCatalogActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun initRecentRecyclerView() {
+        recentlyProductAdapter =
+            RecentAdapter { product ->
+                navigateToProductDetail(product)
+            }
+
+        binding.rvRecentlyProducts.adapter = recentlyProductAdapter
+    }
+
     private fun initRecyclerView() {
         productAdapter =
             ProductAdapter(
@@ -65,7 +76,7 @@ class ProductCatalogActivity : AppCompatActivity() {
                     object : OnCategoryEventListener {
                         override fun onItemClick(product: Product) {
                             navigateToProductDetail(product)
-                            viewModel.addToRecentlyProduct(product.id)
+                            viewModel.addToRecentlyProduct(product)
                         }
 
                         override fun onInitPlusButtonClick(productId: Long) {
@@ -81,6 +92,7 @@ class ProductCatalogActivity : AppCompatActivity() {
             )
 
         binding.rvProducts.adapter = productAdapter
+
         val gridLayoutManager = GridLayoutManager(this, GRID_SPAN_COUNT)
         gridLayoutManager.spanSizeLookup =
             object : SpanSizeLookup() {
@@ -97,6 +109,10 @@ class ProductCatalogActivity : AppCompatActivity() {
     private fun initObservers() {
         viewModel.productItems.observe(this) { value ->
             productAdapter.updateProductItems(value)
+        }
+
+        viewModel.products.observe(this) { value ->
+            recentlyProductAdapter.updateRecentProducts(value)
         }
     }
 

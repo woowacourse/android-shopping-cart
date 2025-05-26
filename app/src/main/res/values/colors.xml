@@ -11,4 +11,5 @@
     <color name="primary_color">#FF04C09E</color>
     <color name="white_gray">#FFAAAAAA</color>
     <color name="dark_gray">#FF555555</color>
+    <color name="light_gray">#EBEBEB</color>
 </resources>
