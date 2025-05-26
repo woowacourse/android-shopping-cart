@@ -1,13 +1,11 @@
 package woowacourse.shopping.presentation.product
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -53,6 +51,12 @@ class ProductActivity :
         setupToolbar()
         initAdapter()
         observeViewModel()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.fetchData()
+        viewModel.fetchCartItemCount()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -175,12 +179,12 @@ class ProductActivity :
 
     private fun navigateToCart() {
         val intent = CartActivity.newIntent(this)
-        activityResultLauncher.launch(intent)
+        startActivity(intent)
     }
 
     override fun onClickProductItem(productId: Long) {
         val intent = ProductDetailActivity.newIntent(this, productId)
-        activityResultLauncher.launch(intent)
+        startActivity(intent)
     }
 
     override fun onClickAddToCart(cartItem: CartItem) {
@@ -199,14 +203,4 @@ class ProductActivity :
         super.onDestroy()
         _toolbarBinding = null
     }
-
-    private val activityResultLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.fetchData()
-                viewModel.fetchCartItemCount()
-            }
-        }
 }
