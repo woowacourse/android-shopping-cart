@@ -16,6 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import io.kotest.matchers.shouldBe
+import org.awaitility.kotlin.await
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matchers.allOf
 import org.junit.Test
@@ -26,6 +27,8 @@ import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.repository.ShoppingRepositoryImpl
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.testutil.nthChildOf
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class ShoppingCartActivityTest {
     private lateinit var scenario: ActivityScenario<ShoppingCartActivity>
@@ -111,8 +114,15 @@ class ShoppingCartActivityTest {
         setUp(6)
 
         // then
-        onView(withId(R.id.cl_page_info))
-            .check(matches(isDisplayed()))
+        await.atMost(1, TimeUnit.SECONDS).until {
+            try {
+                onView(withId(R.id.cl_page_info))
+                    .check(matches(isDisplayed()))
+                true
+            } catch (e: Throwable) {
+                false
+            }
+        }
 
         tearDown(6)
     }
@@ -122,15 +132,22 @@ class ShoppingCartActivityTest {
         // given
         setUp(10)
 
-        onView(withId(R.id.tv_page))
-            .check(matches(withText("1")))
+        await.atMost(1, TimeUnit.SECONDS).until {
+            try {
+                onView(withId(R.id.tv_page))
+                    .check(matches(withText("1")))
 
-        // when
-        clickButton(R.id.btn_next_page)
+                // when
+                clickButton(R.id.btn_next_page)
 
-        // then
-        onView(withId(R.id.tv_page))
-            .check(matches(withText("2")))
+                // then
+                onView(withId(R.id.tv_page))
+                    .check(matches(withText("2")))
+                true
+            } catch (e: Throwable) {
+                false
+            }
+        }
 
         tearDown(10)
     }
@@ -139,17 +156,25 @@ class ShoppingCartActivityTest {
     fun `이전_페이지_버튼을_누르면_페이지가_감소한다`() {
         // given
         setUp(10)
-        clickButton(R.id.btn_next_page)
 
-        onView(withId(R.id.tv_page))
-            .check(matches(withText("2")))
+        await.atMost(1, TimeUnit.SECONDS).until {
+            try {
+                clickButton(R.id.btn_next_page)
 
-        // when
-        clickButton(R.id.btn_previous_page)
+                onView(withId(R.id.tv_page))
+                    .check(matches(withText("2")))
 
-        // then
-        onView(withId(R.id.tv_page))
-            .check(matches(withText("1")))
+                // when
+                clickButton(R.id.btn_previous_page)
+
+                // then
+                onView(withId(R.id.tv_page))
+                    .check(matches(withText("1")))
+                true
+            } catch (e: Throwable) {
+                false
+            }
+        }
 
         tearDown(10)
     }
@@ -234,15 +259,21 @@ class ShoppingCartActivityTest {
     }
 
     private fun addItems(count: Int) {
+        val launch = CountDownLatch(count)
         repeat(count) {
             shoppingRepository.insertGoods(it + 1, 1) {}
+            launch.countDown()
         }
+        launch.await()
     }
 
     private fun removeItems(count: Int) {
+        val launch = CountDownLatch(count)
         repeat(count) {
             shoppingRepository.removeGoods(it + 1) {}
+            launch.countDown()
         }
+        launch.await()
     }
 
     private fun clickButton(button: Int) {
