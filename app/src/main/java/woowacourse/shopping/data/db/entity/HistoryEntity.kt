@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "history_table")
 data class HistoryEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val productId: Long,
     val createdAt: Long = System.currentTimeMillis(),
 )

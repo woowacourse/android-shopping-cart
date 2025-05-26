@@ -11,7 +11,7 @@ import woowacourse.shopping.data.db.entity.HistoryEntity
 
 @Database(
     entities = [CartEntity::class, HistoryEntity::class],
-    version = 2,
+    version = 3,
 )
 abstract class PetoMarketDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
@@ -29,7 +29,9 @@ abstract class PetoMarketDatabase : RoomDatabase() {
                         context.applicationContext,
                         PetoMarketDatabase::class.java,
                         "peto_market_database",
-                    ).build()
+                    )
+                        .fallbackToDestructiveMigration(true)
+                        .build()
                 instance = newInstance
                 newInstance
             }
