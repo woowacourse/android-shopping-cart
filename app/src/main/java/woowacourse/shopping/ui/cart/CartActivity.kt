@@ -86,29 +86,27 @@ class CartActivity : AppCompatActivity() {
             items = mutableListOf(),
             cartClickListener =
                 object : CartClickListener {
-                    override fun onClick(cartId: Long) {
+                    override fun onClickRemoveButton(cartId: Long) {
                         viewModel.deleteProduct(cartId)
                     }
 
-                    override fun increase(cartId: Long) {
-                        viewModel.increaseQuantity(cartId)
+                    override fun increase(productId: Long) {
+                        viewModel.increaseQuantity(productId)
                     }
 
-                    override fun decrease(cartId: Long) {
-                        viewModel.decreaseQuantity(cartId)
+                    override fun decrease(productId: Long) {
+                        viewModel.decreaseQuantity(productId)
                     }
                 },
-            viewModel = viewModel
         )
     }
 
     private fun initObserve() {
-        viewModel.cartProducts.observe(this) {
-            cartAdapter.updateItems(it)
+        viewModel.uiState.observe(this) {
+            cartAdapter.updateItems(it.cartProducts)
             setPaginationVisibility()
             setPaginationButtonTint()
         }
-
         viewModel.pageNumber.observe(this) {
             viewModel.loadCartProducts()
         }

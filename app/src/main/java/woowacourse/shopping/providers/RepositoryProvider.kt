@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.product.ProductOverViewRepository
 object RepositoryProvider {
     fun provideCartRepository(): CartRepository {
         return CartRepositoryImpl(
-            ClothesStoreDatabaseProvider.provideCartDao(),
+            DataSourceProvider.provideCartDataSource()
         )
     }
 

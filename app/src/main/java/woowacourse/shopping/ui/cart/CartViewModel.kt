@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,22 +12,16 @@ import woowacourse.shopping.providers.RepositoryProvider
 class CartViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _cartProducts = MutableLiveData<List<CartProduct>>(emptyList())
-    val cartProducts: LiveData<List<CartProduct>> get() = _cartProducts
+    private val _uiState = MutableLiveData(CartProductsUiState())
+    val uiState: LiveData<CartProductsUiState> get() = _uiState
 
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> get() = _pageNumber
 
     val isFirstPage: Boolean
         get() = pageNumber.value == 1
-
     var isLastPage: Boolean = false
         private set
-
-    private val _productsQuantity = mutableMapOf<Long, MutableLiveData<Int>>()
-    val productsQuantity: Map<Long, LiveData<Int>> get() = _productsQuantity
-    private val _productsTotalPrice = mutableMapOf<Long, MutableLiveData<Int>>()
-    val productsTotalPrice: Map<Long, LiveData<Int>> get() = _productsTotalPrice
 
     init {
         loadCartProducts()
@@ -34,29 +29,35 @@ class CartViewModel(
 
     fun loadCartProducts() {
         val pageNumber = pageNumber.value ?: 1
-        repository.fetchInRange(PAGE_FETCH_SIZE, (pageNumber - 1) * PAGE_SIZE) { products ->
-            isLastPage = products.size != PAGE_FETCH_SIZE
 
-            initQuantityAndPrice(products)
-
-            val visibleProductsSize = PAGE_SIZE.coerceAtMost(products.size)
-            handleUpdateItems(visibleProductsSize, products)
+        repository.fetchInRange(
+            PAGE_FETCH_SIZE,
+            (pageNumber - 1) * PAGE_SIZE
+        ) { result ->
+            result.onSuccess { cartProducts ->
+                isLastPage =
+                    cartProducts.size != PAGE_FETCH_SIZE // 비동기로 uistate 에서 관리하면 값이 늦게 갱신되고 있음..
+                val visibleProductsSize = PAGE_SIZE.coerceAtMost(cartProducts.size)
+                handleUpdateItems(visibleProductsSize, cartProducts)
+            }
         }
     }
 
     fun isVisiblePagination(): Boolean {
+        Log.d("CN_Log", "isLastPage =${isLastPage}")
+        Log.d("CN_Log", "pageNumber = ${pageNumber.value}")
         return !(isLastPage && pageNumber.value == 1)
     }
 
     fun moveToPrevious() {
-        if (pageNumber.value != 1) {
-            _pageNumber.postValue(_pageNumber.value?.minus(1))
+        if (!isFirstPage) {
+            _pageNumber.postValue(pageNumber.value?.minus(1))
         }
     }
 
     fun moveToNext() {
         if (!isLastPage) {
-            _pageNumber.value = _pageNumber.value?.plus(1)
+            _pageNumber.value = pageNumber.value?.plus(1)
         }
     }
 
@@ -66,63 +67,38 @@ class CartViewModel(
         }
     }
 
-    private fun initQuantityAndPrice(products: List<CartProduct>) {
-        products.forEach { product ->
-            _productsQuantity[product.id!!] = MutableLiveData(product.quantity)
-            _productsTotalPrice[product.id] = MutableLiveData(product.totalPrice())
-        }
-    }
-
     private fun handleUpdateItems(
         visibleProductsSize: Int,
         products: List<CartProduct>
     ) {
+        val cartProductsUiState = uiState.value ?: return
         if (hasPages(visibleProductsSize)) {
             moveToPrevious()
             return
         }
 
         val updateItems = products.take(visibleProductsSize)
-        _cartProducts.postValue(updateItems)
+        _uiState.postValue(cartProductsUiState.loadPage(updateItems))
     }
 
-    private fun hasPages(visibleProductsSize: Int) = visibleProductsSize == 0 && !isFirstPage
+    private fun hasPages(visibleProductsSize: Int): Boolean {
+        return visibleProductsSize == 0 && !isFirstPage
+    }
 
-    fun increaseQuantity(cartId: Long) {
-        // TODO: Result 처리하는 부분 함수 하나로 만들어서 간략하게 만들어보기
-        repository.updateQuantity(cartId, 1) { result ->
-            val cartProduct = cartProducts.value?.first { it.id == cartId }
-            cartProduct?.increase()
-
-            when {
-                result.isSuccess -> {
-                    _productsQuantity[cartId]?.postValue(cartProduct?.quantity)
-                    _productsTotalPrice[cartId]?.postValue(cartProduct?.totalPrice())
-                }
-
-                result.isFailure -> {
-                    // TODO: 쿼리문 실패
-                }
+    fun increaseQuantity(productId: Long) {
+        val cartProductsUiState = uiState.value ?: return
+        repository.updateQuantity(productId, 1) { result ->
+            result.onSuccess {
+                _uiState.postValue(cartProductsUiState.increaseQuantity(productId))
             }
         }
     }
 
-    fun decreaseQuantity(cartId: Long) {
-        if (_productsQuantity[cartId]?.value == 1) return // TODO: 토스트로 장바구니에서 제거하고 싶으면 x 누르라고 하기
-
-        repository.updateQuantity(cartId, -1) { result ->
-            val cartProduct = cartProducts.value?.first { it.id == cartId }
-            cartProduct?.decrease()
-
-            when {
-                result.isSuccess -> {
-                    _productsQuantity[cartId]?.postValue(cartProduct?.quantity)
-                    _productsTotalPrice[cartId]?.postValue(cartProduct?.totalPrice())
-                }
-
-                result.isFailure -> {
-                    // TODO: 쿼리문 실패
-                }
+    fun decreaseQuantity(productId: Long) {
+        val cartProductsUiState = uiState.value ?: return
+        repository.updateQuantity(productId, -1) { result ->
+            result.onSuccess {
+                _uiState.postValue(cartProductsUiState.decreaseQuantity(productId))
             }
         }
     }

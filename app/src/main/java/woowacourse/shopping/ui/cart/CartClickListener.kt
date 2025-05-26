@@ -4,5 +4,5 @@ import woowacourse.shopping.ui.common.QuantityChangeListener
 
 
 interface CartClickListener : QuantityChangeListener {
-    fun onClick(cartId: Long)
+    fun onClickRemoveButton(cartId: Long)
 }

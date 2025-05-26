@@ -1,27 +1,35 @@
-package woowacourse.shopping.data.cart
-
-import kotlin.concurrent.thread
+import woowacourse.shopping.domain.cart.CartDataSource
 import woowacourse.shopping.domain.cart.CartProduct
 import woowacourse.shopping.domain.cart.CartRepository
-import woowacourse.shopping.utils.toProduct
+import woowacourse.shopping.providers.ThreadProvider
 
-class CartRepositoryImpl(private val dao: CartDao) : CartRepository {
-    override fun insert(
-        productId: Long,
-        quantity: Int,
-        onResult: (Result<Long>) -> Unit
+class CartRepositoryImpl(
+    private val cartDataSource: CartDataSource
+) : CartRepository {
+    override fun fetchInRange(
+        limit: Int,
+        offset: Int,
+        onResult: (Result<List<CartProduct>>) -> Unit
     ) {
-        thread {
-            val cartItemEntity = CartItemEntity(
-                productId = productId,
-                quantity = quantity
-            )
+        ThreadProvider.execute {
             runCatching {
-                dao.insert(cartItemEntity)
-            }.onSuccess { result ->
-                onResult(Result.success(result))
-            }.onFailure {
-                onResult(Result.failure(it))
+                onResult(cartDataSource.findInRange(limit, offset))
+            }
+        }
+    }
+
+    override fun fetchByProductId(productId: Long, onResult: (Result<CartProduct?>) -> Unit) {
+        ThreadProvider.execute {
+            runCatching {
+                cartDataSource.findByProductId(productId)
+            }.mapCatching { cartProduct -> onResult(cartProduct) }
+        }
+    }
+
+    override fun insert(productId: Long, quantity: Int, onResult: (Result<Long>) -> Unit) {
+        ThreadProvider.execute {
+            runCatching {
+                onResult(cartDataSource.insertByProductId(productId, quantity))
             }
         }
     }
@@ -31,78 +39,26 @@ class CartRepositoryImpl(private val dao: CartDao) : CartRepository {
         quantity: Int,
         onResult: (Result<Unit>) -> Unit
     ) {
-        thread {
-            val cartItemEntity = CartItemEntity(productId = productId, quantity = quantity)
+        ThreadProvider.execute {
             runCatching {
-                dao.insert(cartItemEntity)
-            }.onSuccess { cartId ->
-                if (cartId == EXIST_PRODUCT_IN_CART) {
-                    dao.updateQuantity(cartId, quantity)
-                }
-
-                onResult(Result.success(Unit))
-            }.onFailure {
-                onResult(Result.failure(it))
-            }
-
-        }
-    }
-
-    override fun updateQuantity(cartItemId: Long, delta: Int, onResult: (Result<Unit>) -> Unit) {
-        thread {
-            runCatching {
-                dao.updateQuantity(cartItemId, delta)
-            }.onSuccess {
-                onResult(Result.success(Unit))
-            }.onFailure {
-                onResult(Result.failure(it))
+                onResult(cartDataSource.insertOrAddQuantity(productId, quantity))
             }
         }
     }
 
-    override fun fetchByProductId(
-        productId: Long,
-        onResult: (CartProduct) -> Unit,
-    ) {
-        thread {
-            val cartItemDetail: CartItemDetail = dao.findByCartItemId(productId)
-            onResult(cartItemDetail.toDomain())
-        }
-    }
-
-    override fun fetchInRange(
-        limit: Int,
-        offset: Int,
-        onResult: (List<CartProduct>) -> Unit,
-    ) {
-        thread {
-            val cartItemDetails: List<CartItemDetail> = dao.findCartItemsInRange(limit, offset)
-            val cartProducts: List<CartProduct> =
-                cartItemDetails.map { cartItemDetail -> cartItemDetail.toDomain() }
-            onResult(cartProducts)
-        }
-    }
-
-    override fun delete(
-        cartItemId: Long,
-        onResult: (Unit) -> Unit,
-    ) {
-        thread {
+    override fun updateQuantity(productId: Long, delta: Int, onResult: (Result<Unit>) -> Unit) {
+        ThreadProvider.execute {
             runCatching {
-                dao.delete(cartItemId)
-            }.onSuccess { onResult(Unit) }
+                onResult(cartDataSource.updateQuantityByProductId(productId, delta))
+            }
         }
     }
 
-    companion object {
-        private const val EXIST_PRODUCT_IN_CART = -1L
+    override fun delete(cartItemId: Long, onResult: (Result<Unit>) -> Unit) {
+        ThreadProvider.execute {
+            runCatching {
+                onResult(cartDataSource.deleteByCartItemId(cartItemId))
+            }
+        }
     }
-}
-
-private fun CartItemDetail.toDomain(): CartProduct {
-    return CartProduct(
-        this.cartItemEntity.id,
-        this.productEntity.toProduct(),
-        this.cartItemEntity.quantity
-    )
 }
