@@ -15,7 +15,7 @@ class ProductsViewModel(
     private val cartRepository: CartRepository,
     private val lastProductRepository: LastProductRepository
 ) : ViewModel() {
-
+    private var currentPage = 1
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
@@ -60,10 +60,10 @@ class ProductsViewModel(
 
 
     fun updateProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        val lastId = products.value?.lastOrNull()?.id ?: 0
-        productsRepository.fetchProducts(count, lastId) { newProducts ->
+        productsRepository.fetchProducts(currentPage, count) { newProducts ->
             mainHandler.post {
                 _products.value = products.value.orEmpty() + newProducts
+                currentPage += 1
             }
         }
     }

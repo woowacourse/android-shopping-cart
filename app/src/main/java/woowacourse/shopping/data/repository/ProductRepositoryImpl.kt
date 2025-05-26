@@ -12,12 +12,13 @@ class ProductRepositoryImpl(
     private val mainHandler = Handler(Looper.getMainLooper())
 
     override fun fetchProducts(
+        page: Int,
         count: Int,
-        lastId: Int,
         callback: (List<Product>) -> Unit
     ) {
+        val offset = (page - 1) * count
         Thread {
-            val result = productDao.fetchProducts(count, lastId)
+            val result = productDao.fetchProductsWithOffset(offset, count)
                 .map { it.toDomain() }
 
             mainHandler.post {

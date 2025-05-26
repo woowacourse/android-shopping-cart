@@ -10,8 +10,8 @@ import woowacourse.shopping.data.entity.ProductEntity
 @Dao
 interface ProductDao {
 
-    @Query("SELECT * FROM product WHERE id > :lastId ORDER BY id ASC LIMIT :count")
-    fun fetchProducts(count: Int, lastId: Int): List<ProductEntity>
+    @Query("SELECT * FROM product ORDER BY id ASC LIMIT :count OFFSET :offset")
+    fun fetchProductsWithOffset(offset: Int, count: Int): List<ProductEntity>
 
     @Query("SELECT * FROM product")
      fun getAll(): List<ProductEntity>
