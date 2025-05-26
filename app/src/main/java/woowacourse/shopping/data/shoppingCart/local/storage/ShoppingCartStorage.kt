@@ -1,7 +1,7 @@
-package woowacourse.shopping.data.shoppingCart.storage
+package woowacourse.shopping.data.shoppingCart.local.storage
 
-import woowacourse.shopping.data.product.entity.ProductEntity
-import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
+import woowacourse.shopping.data.product.local.entity.ProductEntity
+import woowacourse.shopping.data.shoppingCart.local.entity.ShoppingCartProductEntity
 
 interface ShoppingCartStorage {
     val quantity: Int

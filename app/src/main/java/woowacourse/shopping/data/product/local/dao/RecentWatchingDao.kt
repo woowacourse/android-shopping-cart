@@ -1,10 +1,10 @@
-package woowacourse.shopping.data.product.dao
+package woowacourse.shopping.data.product.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import woowacourse.shopping.data.product.entity.RecentWatchingEntity
+import woowacourse.shopping.data.product.local.entity.RecentWatchingEntity
 
 @Dao
 interface RecentWatchingDao {

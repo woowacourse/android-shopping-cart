@@ -1,10 +1,10 @@
-package woowacourse.shopping.data.product.database
+package woowacourse.shopping.data.product.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.product.dao.RecentWatchingDao
-import woowacourse.shopping.data.product.entity.ProductEntity
-import woowacourse.shopping.data.product.entity.RecentWatchingEntity
+import woowacourse.shopping.data.product.local.dao.RecentWatchingDao
+import woowacourse.shopping.data.product.local.entity.ProductEntity
+import woowacourse.shopping.data.product.local.entity.RecentWatchingEntity
 
 @Database(
     entities = [ProductEntity::class, RecentWatchingEntity::class],

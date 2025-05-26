@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.product.repository
 
-import woowacourse.shopping.data.product.dao.RecentWatchingDao
-import woowacourse.shopping.data.product.entity.ProductEntity
-import woowacourse.shopping.data.product.entity.RecentWatchingEntity
-import woowacourse.shopping.data.product.storage.ProductsStorage
-import woowacourse.shopping.data.product.storage.VolatileProductsStorage
+import woowacourse.shopping.data.product.local.dao.RecentWatchingDao
+import woowacourse.shopping.data.product.local.entity.ProductEntity
+import woowacourse.shopping.data.product.local.entity.RecentWatchingEntity
+import woowacourse.shopping.data.product.local.storage.ProductsStorage
+import woowacourse.shopping.data.product.local.storage.VolatileProductsStorage
 import woowacourse.shopping.domain.product.Product
 import kotlin.concurrent.thread
 

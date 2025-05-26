@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.shoppingCart.dao
+package woowacourse.shopping.data.shoppingCart.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -6,14 +6,14 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
+import woowacourse.shopping.data.shoppingCart.local.entity.ShoppingCartProductEntity
 
 @Dao
 interface ShoppingCartDao {
     @Query("SELECT * FROM shoppingCart WHERE product_id = :productId LIMIT 1")
     fun getShoppingCartProduct(productId: Long): ShoppingCartProductEntity?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
     fun insert(entity: ShoppingCartProductEntity): Long
 
     @Update

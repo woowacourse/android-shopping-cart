@@ -2,9 +2,9 @@ package woowacourse.shopping
 
 import android.app.Application
 import androidx.room.Room
-import woowacourse.shopping.data.product.database.ProductDatabase
+import woowacourse.shopping.data.product.local.database.ProductDatabase
 import woowacourse.shopping.data.product.repository.DefaultProductsRepository
-import woowacourse.shopping.data.shoppingCart.database.ShoppingCartDatabase
+import woowacourse.shopping.data.shoppingCart.local.database.ShoppingCartDatabase
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 
 class ShoppingApplication : Application() {

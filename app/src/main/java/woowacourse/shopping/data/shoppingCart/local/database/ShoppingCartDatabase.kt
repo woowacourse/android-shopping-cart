@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.shoppingCart.database
+package woowacourse.shopping.data.shoppingCart.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.shoppingCart.dao.ShoppingCartDao
-import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
+import woowacourse.shopping.data.shoppingCart.local.dao.ShoppingCartDao
+import woowacourse.shopping.data.shoppingCart.local.entity.ShoppingCartProductEntity
 
 @Database(entities = [ShoppingCartProductEntity::class], version = 2)
 abstract class ShoppingCartDatabase : RoomDatabase() {

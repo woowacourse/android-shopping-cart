@@ -1,11 +1,11 @@
-package woowacourse.shopping.data.shoppingCart.entity
+package woowacourse.shopping.data.shoppingCart.local.entity
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import woowacourse.shopping.data.product.entity.ProductEntity
-import woowacourse.shopping.data.product.entity.toEntity
+import woowacourse.shopping.data.product.local.entity.ProductEntity
+import woowacourse.shopping.data.product.local.entity.toEntity
 import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 
 @Entity(

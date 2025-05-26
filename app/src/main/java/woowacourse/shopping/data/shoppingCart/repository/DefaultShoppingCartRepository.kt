@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.shoppingCart.repository
 
-import woowacourse.shopping.data.shoppingCart.dao.ShoppingCartDao
-import woowacourse.shopping.data.shoppingCart.entity.ShoppingCartProductEntity
-import woowacourse.shopping.data.shoppingCart.entity.toEntity
+import woowacourse.shopping.data.shoppingCart.local.dao.ShoppingCartDao
+import woowacourse.shopping.data.shoppingCart.local.entity.ShoppingCartProductEntity
+import woowacourse.shopping.data.shoppingCart.local.entity.toEntity
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.shoppingCart.ShoppingCartProduct
 import kotlin.concurrent.thread
