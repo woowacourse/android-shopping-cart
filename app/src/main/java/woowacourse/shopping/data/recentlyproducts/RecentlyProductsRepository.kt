@@ -8,4 +8,6 @@ interface RecentlyProductsRepository {
     fun getFirst(): Long?
 
     fun getAll(): List<Long>?
+
+    fun deleteMostRecent()
 }

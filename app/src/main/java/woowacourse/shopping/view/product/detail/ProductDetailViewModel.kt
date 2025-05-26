@@ -50,6 +50,10 @@ class ProductDetailViewModel(
         _recentProduct.value = recentlyProductsRepository.getFirst()?.toProductDomain()
     }
 
+    fun deleteMostRecentProduct() {
+        recentlyProductsRepository.deleteMostRecent()
+    }
+
     companion object {
         fun provideFactory(
             product: Product,

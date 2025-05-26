@@ -30,4 +30,10 @@ class RecentlyProductsRepositoryImpl(
         }.join()
         return recentProducts
     }
+
+    override fun deleteMostRecent() {
+        thread {
+            dao.deleteMostRecent()
+        }
+    }
 }

@@ -59,6 +59,7 @@ class ProductDetailActivity : AppCompatActivity() {
             OnRecentProductEventListener { product ->
                 val intent = newIntent(this@ProductDetailActivity, product)
                 startActivity(intent)
+                viewModel.deleteMostRecentProduct()
             }
     }
 

@@ -15,4 +15,7 @@ interface RecentlyProductsDao {
 
     @Query("SELECT product_id FROM recently_products ORDER BY time DESC")
     fun getAll(): List<Long>?
+
+    @Query("DELETE FROM recently_products WHERE product_id = (SELECT product_id FROM recently_products ORDER BY time DESC LIMIT 1)")
+    fun deleteMostRecent()
 }
