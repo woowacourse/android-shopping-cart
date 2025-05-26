@@ -11,9 +11,10 @@ class ProductHttpClient(private val url: String = "https://shoppingcart.com") {
     private val client = OkHttpClient()
 
     fun fetchProductList(): List<Product> {
-        val request = Request.Builder()
-            .url("$url/products")
-            .build()
+        val request =
+            Request.Builder()
+                .url("$url/products")
+                .build()
 
         val response: Response = client.newCall(request).execute()
 

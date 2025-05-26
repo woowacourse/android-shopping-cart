@@ -13,7 +13,7 @@ interface HistoryDao {
     fun findLast(
         limit: Int,
         offset: Int,
-        ): HistoryEntity?
+    ): HistoryEntity?
 
     @Query("SELECT * FROM history ORDER BY createdAt DESC LIMIT :limit")
     fun findRecentProduct(limit: Int): List<HistoryEntity>

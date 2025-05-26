@@ -30,16 +30,17 @@ class ProductHttpClientTest {
     @Test
     fun dataFetchedSuccessfully() {
         // given
-        val mockBody = """
+        val mockBody =
+            """
             [
                 {"id": 1, "imageUrl": "https://image.msscdn.net/thumbnails/images/goods_img/20220215/2359611/2359611_17024446698621_big.jpg?w=1200", "name": "오버사이즈 칼라드 스웨트셔츠 [블랙]", "price": 35090}
             ]
-        """.trimIndent()
+            """.trimIndent()
 
         mockServer.enqueue(
             MockResponse()
                 .setResponseCode(200)
-                .setBody(mockBody)
+                .setBody(mockBody),
         )
 
         // when
@@ -49,7 +50,11 @@ class ProductHttpClientTest {
         assertAll(
             { assertThat(products.size).isEqualTo(1) },
             { assertThat(products[0].id).isEqualTo(1) },
-            { assertThat(products[0].imageUrl).isEqualTo("https://image.msscdn.net/thumbnails/images/goods_img/20220215/2359611/2359611_17024446698621_big.jpg?w=1200") },
+            {
+                assertThat(
+                    products[0].imageUrl,
+                ).isEqualTo("https://image.msscdn.net/thumbnails/images/goods_img/20220215/2359611/2359611_17024446698621_big.jpg?w=1200")
+            },
             { assertThat(products[0].name).isEqualTo("오버사이즈 칼라드 스웨트셔츠 [블랙]") },
             { assertThat(products[0].price).isEqualTo(35090) },
         )

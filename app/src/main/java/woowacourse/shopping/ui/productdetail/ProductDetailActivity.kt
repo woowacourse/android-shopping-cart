@@ -3,10 +3,8 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -24,11 +22,9 @@ import woowacourse.shopping.ui.fashionlist.FashionProductListActivity
 import woowacourse.shopping.ui.viewmodel.DetailViewModel
 import woowacourse.shopping.ui.viewmodel.DetailViewModelFactory
 import woowacourse.shopping.utils.intentSerializable
-import kotlin.concurrent.thread
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    val cartRepository = CartRepository.get()
 
     private lateinit var viewModel: DetailViewModel
 
