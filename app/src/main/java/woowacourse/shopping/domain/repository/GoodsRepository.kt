@@ -8,5 +8,6 @@ interface GoodsRepository {
     fun getPagedGoods(
         page: Int,
         count: Int,
-    ): List<Goods>
+        onSuccess: (List<Goods>) -> Unit,
+    )
 }

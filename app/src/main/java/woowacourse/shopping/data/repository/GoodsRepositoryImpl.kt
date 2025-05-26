@@ -22,16 +22,14 @@ class GoodsRepositoryImpl(
     override fun getPagedGoods(
         page: Int,
         count: Int,
-    ): List<Goods> {
-        var result: List<Goods> = emptyList()
-
+        onSuccess: (List<Goods>) -> Unit,
+    ) {
         thread {
-            result =
+            onSuccess(
                 goodsService.getPagedGoods(page, count).map {
                     it.toGoods() ?: throw Exception()
-                }
-        }.join()
-
-        return result
+                },
+            )
+        }
     }
 }

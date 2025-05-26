@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.LatestGoods
 import woowacourse.shopping.domain.model.ShoppingGoods
 import woowacourse.shopping.domain.repository.GoodsRepository
@@ -31,15 +32,20 @@ class GoodsViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { goodsRepository.getPagedGoods(any(), any()) } returns List(20) { createGoods() }
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+            lambda<(List<Goods>) -> Unit>().invoke(listOf(createGoods()))
+        }
+
         goodsViewModel =
             GoodsViewModel(goodsRepository, shoppingRepository, latestGoodsRepository)
-        goodsViewModel.initGoods()
     }
 
     @Test
     fun `상품 목록을 정해진 수량만큼 가져온다`() {
         // given
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+            lambda<(List<Goods>) -> Unit>().invoke(List(20) { createGoods() })
+        }
         every { shoppingRepository.getAllGoods(captureLambda()) } answers {
             lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf())
         }
@@ -72,7 +78,10 @@ class GoodsViewModelTest {
     @Test
     fun `데이터가 존재할 경우 로딩이 가능하다`() {
         // given
-        every { goodsRepository.getPagedGoods(any(), any()) } returns listOf(createGoods())
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+            lambda<(List<Goods>) -> Unit>().invoke(listOf(createGoods()))
+        }
+        goodsViewModel.initGoods()
 
         // when
         goodsViewModel.updateShouldShowLoadMore()
@@ -85,7 +94,10 @@ class GoodsViewModelTest {
     @Test
     fun `데이터가 존재하지 않을 경우 로딩이 불가능하다`() {
         // given
-        every { goodsRepository.getPagedGoods(any(), any()) } returns emptyList()
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+            lambda<(List<Goods>) -> Unit>().invoke(emptyList())
+        }
+        goodsViewModel.initGoods()
 
         // when
         goodsViewModel.updateShouldShowLoadMore()
@@ -121,7 +133,7 @@ class GoodsViewModelTest {
 
         // when
         goodsViewModel.decreaseGoodsCount(1)
-        val actual = goodsViewModel.goods.getOrAwaitValue()[1].quantity
+        val actual = goodsViewModel.goods.getOrAwaitValue()[0].quantity
 
         // then
         actual shouldBe 0
@@ -133,8 +145,9 @@ class GoodsViewModelTest {
         every { shoppingRepository.getAllGoods(captureLambda()) } answers {
             lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf(createShoppingGoods(1, 2)))
         }
-        // when
         goodsViewModel.initGoods()
+
+        // when
         val actual = goodsViewModel.goods.getOrAwaitValue()[0].quantity
 
         // then
@@ -147,6 +160,7 @@ class GoodsViewModelTest {
         every { latestGoodsRepository.getAll(captureLambda()) } answers {
             lambda<(List<LatestGoods>) -> Unit>().invoke(listOf(LatestGoods(1), LatestGoods(2)))
         }
+        goodsViewModel.initGoods()
 
         // when
         goodsViewModel.setLatestGoods()
@@ -163,6 +177,7 @@ class GoodsViewModelTest {
         every { latestGoodsRepository.getLast(captureLambda()) } answers {
             lambda<(LatestGoods?) -> Unit>().invoke(LatestGoods(1))
         }
+        goodsViewModel.initGoods()
 
         // when
         goodsViewModel.moveToDetail(1) { _, _ -> }

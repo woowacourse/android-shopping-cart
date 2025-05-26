@@ -47,12 +47,13 @@ class GoodsViewModel(
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
-        val currentGoods = _goods.value ?: goodsRepository.getPagedGoods(page, ITEM_COUNT)
-        shoppingRepository.getAllGoods { selectedItems ->
-            val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
+        _goods.value ?: goodsRepository.getPagedGoods(page, ITEM_COUNT) { currentGoods ->
+            shoppingRepository.getAllGoods { selectedItems ->
+                val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
 
-            _goods.postValue(updatedGoods)
-            _shoppingGoodsCount.postValue(selectedItems.sumOf { it.goodsQuantity })
+                _goods.postValue(updatedGoods)
+                _shoppingGoodsCount.postValue(selectedItems.sumOf { it.goodsQuantity })
+            }
         }
     }
 
@@ -132,22 +133,22 @@ class GoodsViewModel(
     }
 
     fun loadMoreGoods() {
-        val moreGoods = goodsRepository.getPagedGoods(page + 1, ITEM_COUNT)
-        if (moreGoods.isNotEmpty()) {
-            _goods.value = _goods.value?.plus(moreGoods)
-            page.plus(1)
-        } else {
-            Log.e("GoodsViewModel", "상품 로드 실패")
+        goodsRepository.getPagedGoods(page + 1, ITEM_COUNT) { moreGoods ->
+
+            if (moreGoods.isNotEmpty()) {
+                _goods.postValue(_goods.value?.plus(moreGoods))
+                page.plus(1)
+            } else {
+                Log.e("GoodsViewModel", "상품 로드 실패")
+            }
+            _shouldShowLoadMore.postValue(false)
         }
-        _shouldShowLoadMore.value = false
     }
 
     fun updateShouldShowLoadMore() {
-        _shouldShowLoadMore.value = canLoadMore()
-    }
-
-    private fun canLoadMore(): Boolean {
-        return goodsRepository.getPagedGoods(page + 1, ITEM_COUNT).isNotEmpty()
+        goodsRepository.getPagedGoods(page + 1, ITEM_COUNT) {
+            _shouldShowLoadMore.postValue(it.isNotEmpty())
+        }
     }
 
     fun updateShouldNavigateToShoppingCart() {
