@@ -64,11 +64,10 @@ class CartRepositoryImpl(
         callback: (CartItem?) -> Unit,
     ) {
         thread {
-            cartDao.decreaseAmount(productId)
+            cartDao.decreaseAmountOrDelete(productId)
+
             val item = cartDao.getByProductId(productId)
-            if (item != null) {
-                callback(item.toCartItem())
-            }
+            callback(item?.toCartItem())
         }
     }
 }

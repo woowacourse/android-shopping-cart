@@ -51,4 +51,14 @@ interface CartDao {
 
     @Query("UPDATE CartEntity SET amount = amount - 1 WHERE id = :id")
     fun decreaseAmount(id: Long)
+
+    @Transaction
+    fun decreaseAmountOrDelete(id: Long) {
+        val item = getByProductId(id) ?: return
+        if (item.amount <= 1) {
+            delete(id)
+        } else {
+            decreaseAmount(id)
+        }
+    }
 }

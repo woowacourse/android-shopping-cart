@@ -65,7 +65,9 @@ class CartViewModel(
 
     fun decreaseAmount(productId: Long) {
         cartRepository.decreaseCartItem(productId) { updatedItem ->
-            updatedItem?.let { _itemUpdateEvent.postValue(it) }
+            updatedItem?.let {
+                _itemUpdateEvent.postValue(it)
+            } ?: _deleteState.postValue(productId)
         }
     }
 
