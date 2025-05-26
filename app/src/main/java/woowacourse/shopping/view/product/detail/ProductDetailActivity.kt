@@ -14,6 +14,7 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.view.DefaultQuantityControlListener
+import woowacourse.shopping.view.product.catalog.recentproducts.OnRecentProductEventListener
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -54,6 +55,11 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.vm = viewModel
         binding.lastViewedProduct.vm = viewModel
         binding.lifecycleOwner = this
+        binding.onRecentProductEventListener =
+            OnRecentProductEventListener { product ->
+                val intent = newIntent(this@ProductDetailActivity, product)
+                startActivity(intent)
+            }
     }
 
     private fun initObservers() {

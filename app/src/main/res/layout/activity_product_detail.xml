@@ -7,6 +7,10 @@
         <variable
             name="vm"
             type="woowacourse.shopping.view.product.detail.ProductDetailViewModel" />
+
+        <variable
+            name="onRecentProductEventListener"
+            type="woowacourse.shopping.view.product.catalog.recentproducts.OnRecentProductEventListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,6 +87,7 @@
                 <include
                     android:id="@+id/last_viewed_product"
                     layout="@layout/item_last_viewed_product"
+                    android:onClick="@{()-> onRecentProductEventListener.itemClick(vm.recentProduct)}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50dp"
