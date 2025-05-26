@@ -10,14 +10,16 @@ import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.model.CatalogProducts.Companion.EMPTY_CATALOG_PRODUCTS
 import woowacourse.shopping.domain.model.HistoryProduct
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.usecase.DecreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.IncreaseCartProductQuantityUseCase
 
 class CatalogViewModel(
     private val productRepository: ProductRepository,
-    private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
+    private val increaseCartProductQuantityUseCase: IncreaseCartProductQuantityUseCase,
+    private val decreaseCartProductQuantityUseCase: DecreaseCartProductQuantityUseCase,
 ) : ViewModel() {
     private val _catalogProducts: MutableLiveData<CatalogProducts> = MutableLiveData(EMPTY_CATALOG_PRODUCTS)
     val catalogProducts: LiveData<CatalogProducts> get() = _catalogProducts
@@ -46,13 +48,13 @@ class CatalogViewModel(
     }
 
     fun increaseCartProduct(id: Int) {
-        cartRepository.increaseProductQuantity(id) { newQuantity ->
+        increaseCartProductQuantityUseCase(id) { newQuantity ->
             _catalogProducts.postValue(catalogProducts.value?.updateCatalogProductQuantity(id, newQuantity))
         }
     }
 
     fun decreaseCartProduct(id: Int) {
-        cartRepository.decreaseProductQuantity(id) { newQuantity ->
+        decreaseCartProductQuantityUseCase(id) { newQuantity ->
             _catalogProducts.postValue(catalogProducts.value?.updateCatalogProductQuantity(id, newQuantity))
         }
     }
@@ -82,9 +84,10 @@ class CatalogViewModel(
                     val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return CatalogViewModel(
-                        application.productRepository,
-                        application.cartRepository,
-                        application.historyRepository,
+                        productRepository = application.productRepository,
+                        historyRepository = application.historyRepository,
+                        increaseCartProductQuantityUseCase = application.increaseCartProductQuantityUseCase,
+                        decreaseCartProductQuantityUseCase = application.decreaseCartProductQuantityUseCase,
                     ) as T
                 }
             }

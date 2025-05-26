@@ -4,20 +4,48 @@ import android.app.Application
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.di.NetworkModule
 import woowacourse.shopping.data.di.NetworkModule.productApi
+import woowacourse.shopping.domain.usecase.DecreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.GetCartProductsUseCase
+import woowacourse.shopping.domain.usecase.IncreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.RemoveCartProductUseCase
+import woowacourse.shopping.domain.usecase.UpdateCartProductUseCase
 
 class ShoppingApp : Application() {
     private val database: ShoppingDatabase by lazy { ShoppingDatabase.getInstance(this) }
+
+    private val cartRepository: woowacourse.shopping.domain.repository.CartRepository by lazy {
+        woowacourse.shopping.data.repository
+            .CartRepository(database.cartDao())
+    }
+
     val productRepository: woowacourse.shopping.domain.repository.ProductRepository by lazy {
         woowacourse.shopping.data.repository
             .ProductRepository(database.productDao(), productApi)
     }
-    val cartRepository: woowacourse.shopping.domain.repository.CartRepository by lazy {
-        woowacourse.shopping.data.repository
-            .CartRepository(database.cartDao())
-    }
+
     val historyRepository: woowacourse.shopping.domain.repository.HistoryRepository by lazy {
         woowacourse.shopping.data.repository
             .HistoryRepository(database.historyDao())
+    }
+
+    val getCartProductsUseCase by lazy {
+        GetCartProductsUseCase(cartRepository)
+    }
+
+    val increaseCartProductQuantityUseCase by lazy {
+        IncreaseCartProductQuantityUseCase(cartRepository)
+    }
+
+    val decreaseCartProductQuantityUseCase by lazy {
+        DecreaseCartProductQuantityUseCase(cartRepository)
+    }
+
+    val removeCartProductUseCase by lazy {
+        RemoveCartProductUseCase(cartRepository)
+    }
+
+    val updateCartProductUseCase by lazy {
+        UpdateCartProductUseCase(cartRepository)
     }
 
     override fun onCreate() {

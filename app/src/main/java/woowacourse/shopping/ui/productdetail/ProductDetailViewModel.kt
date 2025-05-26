@@ -11,16 +11,16 @@ import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.model.CatalogProduct.Companion.EMPTY_CATALOG_PRODUCT
 import woowacourse.shopping.domain.model.HistoryProduct
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.usecase.UpdateCartProductUseCase
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
-    private val cartRepository: CartRepository,
     private val historyRepository: HistoryRepository,
+    private val updateCartProductUseCase: UpdateCartProductUseCase,
 ) : ViewModel() {
     private val _catalogProduct: MutableLiveData<CatalogProduct> = MutableLiveData(EMPTY_CATALOG_PRODUCT)
     val catalogProduct: LiveData<CatalogProduct> get() = _catalogProduct
@@ -58,7 +58,7 @@ class ProductDetailViewModel(
     fun updateCartProduct() {
         val catalogProduct: CatalogProduct = catalogProduct.value ?: return
         runCatching {
-            cartRepository.saveCartProduct(CartProduct(catalogProduct.product, catalogProduct.quantity))
+            updateCartProductUseCase(CartProduct(catalogProduct.product, catalogProduct.quantity))
         }.onSuccess {
             _onCartProductAddSuccess.postValue(true)
         }
@@ -75,9 +75,9 @@ class ProductDetailViewModel(
                     val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return ProductDetailViewModel(
-                        application.productRepository,
-                        application.cartRepository,
-                        application.historyRepository,
+                        productRepository = application.productRepository,
+                        historyRepository = application.historyRepository,
+                        updateCartProductUseCase = application.updateCartProductUseCase,
                     ) as T
                 }
             }

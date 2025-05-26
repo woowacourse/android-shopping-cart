@@ -2,96 +2,30 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.dao.CartDao
 import woowacourse.shopping.data.entity.CartProductEntity
-import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.model.CartProducts
 import woowacourse.shopping.domain.repository.CartRepository
-import kotlin.concurrent.thread
 
 class CartRepository(
     private val dao: CartDao,
 ) : CartRepository {
-    override fun fetchCartProduct(
-        productId: Int,
-        callback: (CartProduct?) -> Unit,
-    ) {
-        thread {
-            callback(
-                dao.getCartProductDetailById(productId)?.toDomain(),
-            )
-        }
-    }
+    override fun fetchCartProductDetail(productId: Int): CartProduct? = dao.getCartProductDetailById(productId)?.toDomain()
 
     override fun fetchCartProducts(
         page: Int,
         size: Int,
-        callback: (CartProducts) -> Unit,
-    ) {
-        thread {
-            callback(
-                CartProducts(
-                    products = dao.getCartProductDetails(page, size).map { it.toDomain() },
-                    totalPage = (dao.getCartItemCount() + size - TOTAL_PAGE_COUNT_OFFSET) / size,
-                ),
-            )
-        }
-    }
+    ): List<CartProduct> = dao.getCartProductDetails(page, size).map { it.toDomain() }
 
-    override fun increaseProductQuantity(
+    override fun fetchCartItemCount(): Int = dao.getCartItemCount()
+
+    override fun saveCartProduct(
         productId: Int,
         quantity: Int,
-        callback: (Int) -> Unit,
     ) {
-        thread {
-            val existing = dao.getCartProductById(productId)
-            if (existing != null) {
-                dao.insertCartProduct(
-                    existing.copy(quantity = existing.quantity + quantity),
-                )
-            } else {
-                dao.insertCartProduct(
-                    CartProductEntity(productId, quantity),
-                )
-            }
-            callback(existing?.quantity?.plus(quantity) ?: quantity)
-        }
+        dao.insertCartProduct(CartProductEntity(productId, quantity))
     }
 
-    override fun decreaseProductQuantity(
-        productId: Int,
-        quantity: Int,
-        callback: (Int) -> Unit,
-    ) {
-        thread {
-            val existing = dao.getCartProductById(productId)
-            if (existing != null) {
-                val newQuantity = existing.quantity - quantity
-                if (newQuantity <= 0) {
-                    dao.deleteCartProduct(productId)
-                } else {
-                    dao.insertCartProduct(
-                        existing.copy(quantity = newQuantity),
-                    )
-                }
-            }
-            callback(existing?.quantity?.minus(quantity) ?: 0)
-        }
-    }
-
-    override fun removeCartProduct(productId: Int) {
-        thread {
-            dao.deleteCartProduct(productId)
-        }
-    }
-
-    override fun saveCartProduct(cartProduct: CartProduct) {
-        thread {
-            dao.insertCartProduct(cartProduct.toData())
-        }
-    }
-
-    companion object {
-        private const val TOTAL_PAGE_COUNT_OFFSET = 1
+    override fun deleteCartProduct(productId: Int) {
+        dao.deleteCartProduct(productId)
     }
 }

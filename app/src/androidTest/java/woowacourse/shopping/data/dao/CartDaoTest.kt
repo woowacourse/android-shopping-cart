@@ -49,8 +49,8 @@ class CartDaoTest {
         dao.insertCartProduct(cartProduct)
 
         // then
-        val result = dao.getCartProductById(1)
-        assertThat(result).isEqualTo(cartProduct)
+        val result = dao.getCartProductDetailById(1)
+        assertThat(result?.cartProduct).isEqualTo(cartProduct)
     }
 
     @Test
@@ -63,7 +63,7 @@ class CartDaoTest {
         dao.deleteCartProduct(2)
 
         // then
-        val result = dao.getCartProductById(2)
+        val result = dao.getCartProductDetailById(2)
         assertThat(result).isNull()
     }
 
