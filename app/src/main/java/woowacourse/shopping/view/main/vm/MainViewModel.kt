@@ -31,10 +31,11 @@ class MainViewModel(
     val loadable: LiveData<Boolean> = _loadable
 
     fun loadProducts() {
-        val (offset, limit) = page.targetRange()
-        cartRepository.getPagedShopItems(page.currentPage, limit) { carts: List<Cart> ->
+        cartRepository.getPagedShopItems(page.currentPage, page.pageSize) { carts: List<Cart> ->
             _carts.postValue((this.carts.value ?: emptyList()) + carts)
-            _loadable.postValue(productRepository.notHasMoreProduct(page.currentPage, limit).not())
+            _loadable.postValue(
+                productRepository.notHasMoreProduct(page.currentPage, page.pageSize).not(),
+            )
         }
     }
 
