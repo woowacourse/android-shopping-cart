@@ -22,6 +22,9 @@ interface RecentProductDao {
     )
 
     @Query("SELECT * FROM recent_product ORDER BY viewedTime DESC LIMIT 1 OFFSET 1")
+    fun getSecondMostRecentProduct(): RecentProductEntity?
+
+    @Query("SELECT * FROM recent_product ORDER BY viewedTime DESC LIMIT 1")
     fun getMostRecentProduct(): RecentProductEntity?
 
     @Query("SELECT * FROM recent_product WHERE id = :productId")

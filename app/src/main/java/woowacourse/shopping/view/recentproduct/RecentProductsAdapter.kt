@@ -22,9 +22,9 @@ class RecentProductsAdapter(
     }
 
     fun updateRecentProductsView(updatedProducts: List<Product>) {
-        val distinctList = updatedProducts.distinctBy { it.id }
         products.clear()
-        products.addAll(distinctList)
-        notifyItemInserted(products.lastIndex)
+        products.addAll(updatedProducts)
+//        notifyItemInserted(products.lastIndex)
+        notifyDataSetChanged()
     }
 }

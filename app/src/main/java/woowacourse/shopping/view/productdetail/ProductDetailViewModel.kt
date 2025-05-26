@@ -30,6 +30,9 @@ class ProductDetailViewModel(
     private val _lastProductTitle = MutableLiveData<String>()
     val lastProductTitle: LiveData<String> = _lastProductTitle
 
+    private val _lastProductVisibility = MutableLiveData<Boolean>()
+    val lastProductVisibility: LiveData<Boolean> = _lastProductVisibility
+
     override fun increaseQuantity(
         productId: Long,
         quantityIncrease: Int,
@@ -64,9 +67,18 @@ class ProductDetailViewModel(
     }
 
     fun setLastProductTitle() {
-        recentProductsRepository.getMostRecentProduct {
+        setLastProductVisibility()
+        recentProductsRepository.getSecondMostRecentProduct {
             _lastProductTitle.postValue(it.title)
         }
+    }
+
+    private fun setLastProductVisibility() {
+//        recentProductsRepository.getAll { recentProducts ->
+//            val secondRecent = recentProducts.getOrNull(1)
+//            val shouldShow = secondRecent != null && secondRecent.id != cartItem.product.id
+//            _lastProductVisibility.postValue(shouldShow)
+//        }
     }
 
     companion object {

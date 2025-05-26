@@ -18,6 +18,13 @@ class RecentProductsRepositoryImpl(
         Thread {
             val existing = recentProductDao.findRecentProductById(product.id)
             if (existing == null) {
+                val allProducts = recentProductDao.getAll()
+                if (allProducts.size >= MAX_RECENT_PRODUCT_COUNT) {
+                    val oldest = allProducts.lastOrNull()
+                    if (oldest != null) {
+                        recentProductDao.delete(oldest.id)
+                    }
+                }
                 recentProductDao.insert(product.toEntity())
             } else {
                 recentProductDao.updateViewedTime(product.id)
@@ -30,6 +37,13 @@ class RecentProductsRepositoryImpl(
         callback: () -> Unit,
     ) {
         Thread {
+        }.start()
+    }
+
+    override fun getSecondMostRecentProduct(callback: (Product) -> Unit) {
+        Thread {
+            val value = recentProductDao.getSecondMostRecentProduct()
+            if (value != null) callback(value.toProduct())
         }.start()
     }
 
@@ -54,5 +68,9 @@ class RecentProductsRepositoryImpl(
             val value = recentProductDao.findRecentProductById(productId)
             if (value != null) callback(value.toProduct())
         }
+    }
+
+    companion object {
+        private const val MAX_RECENT_PRODUCT_COUNT = 10
     }
 }

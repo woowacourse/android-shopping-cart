@@ -94,14 +94,7 @@ class ProductsViewModel(
         }
     }
 
-    private fun setRecentProducts() {
-        recentProductsRepository.getAll { recentProducts ->
-            _recentProducts.postValue(recentProducts)
-        }
-    }
-
     fun loadPage() {
-        setRecentProducts()
         setUpdatedProducts()
         val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
@@ -119,6 +112,7 @@ class ProductsViewModel(
     fun reloadPage() {
         updateQuantity()
         updateCartItemCount()
+        setRecentProducts()
         if (_productsInShop.value?.isNotEmpty() == true) return
         loadPage()
     }
@@ -141,6 +135,12 @@ class ProductsViewModel(
         val recentProduct = cartItem.product
         recentProductsRepository.add(recentProduct)
         _recentProducts.value = _recentProducts.value?.plus(cartItem.product)
+    }
+
+    private fun setRecentProducts() {
+        recentProductsRepository.getAll { recentProducts ->
+            _recentProducts.postValue(recentProducts)
+        }
     }
 
     private fun updateCartItemCount() {

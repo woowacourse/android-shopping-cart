@@ -3,6 +3,7 @@ package woowacourse.shopping.view.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +55,7 @@ class ProductDetailActivity : AppCompatActivity() {
             }
 
         setCloseButtonClickListener()
+        observeRecentProductVisibility()
         observeAddToCart()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -79,6 +81,12 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun showAddToCartToastMessage() {
         Toast.makeText(this, getString(R.string.add_to_cart_message), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun observeRecentProductVisibility() {
+        productDetailViewModel.lastProductVisibility.observe(this) { visible ->
+            binding.recentProductInfo.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     companion object {
