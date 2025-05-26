@@ -124,10 +124,6 @@ class GoodsActivity : BaseActivity() {
             goodsAdapter.changeGoods(goods)
         }
 
-        viewModel.onQuantityChanged.observe(this) { goodsId ->
-            goodsAdapter.changeQuantity(goodsId)
-        }
-
         viewModel.shouldNavigateToShoppingCart.observe(this) {
             val intent = ShoppingCartActivity.newIntent(this)
             startActivity(intent)

@@ -40,10 +40,6 @@ class GoodsViewModel(
     val shouldNavigateToShoppingCart: SingleLiveData<Unit>
         get() = _shouldNavigateToShoppingCart
 
-    private val _onQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
-    val onQuantityChanged: SingleLiveData<Int>
-        get() = _onQuantityChanged
-
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
@@ -125,7 +121,6 @@ class GoodsViewModel(
             }
 
         _goods.value = updatedList
-        _onQuantityChanged.setValue(goodsId)
         return updatedItem ?: throw IllegalStateException("id $goodsId 해당하는 Goods가 없습니다")
     }
 
