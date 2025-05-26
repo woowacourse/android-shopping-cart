@@ -52,6 +52,7 @@ class CartActivity : AppCompatActivity() {
                 object : CartViewHolder.CartClickListener {
                     override fun onClickDeleteButton(cart: Cart) {
                         viewModel.delete(cart)
+                        sendCartResult(cart)
                     }
 
                     override fun insertToCart(cart: Cart) {
