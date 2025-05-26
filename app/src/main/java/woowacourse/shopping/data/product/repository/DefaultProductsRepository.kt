@@ -18,6 +18,21 @@ class DefaultProductsRepository(
         { productsDataSource.load().map(ProductEntity::toDomain) }.runAsync(onLoad)
     }
 
+    override fun loadLatestViewedProduct(onLoad: (Result<Product?>) -> Unit) {
+        {
+            val latestViewedProductId: Long? =
+                recentViewedProductsDataSource
+                    .load()
+                    .maxByOrNull { it.viewedAt }
+                    ?.productId
+            if (latestViewedProductId == null) {
+                null
+            } else {
+                productsDataSource.getById(latestViewedProductId)?.toDomain()
+            }
+        }.runAsync(onLoad)
+    }
+
     override fun loadLastViewedProducts(onLoad: (Result<List<Product>>) -> Unit) {
         {
             recentViewedProductsDataSource

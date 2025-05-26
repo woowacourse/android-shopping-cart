@@ -23,11 +23,18 @@ class ProductDetailViewModel(
 
     val imageUrl: LiveData<String?> = _product.map { it.imageUrl }
 
-    private val _quantity: MutableLiveData<Int> = MutableLiveData(1)
+    private val _quantity: MutableLiveData<Int> = MutableLiveData(QUANTITY_MIN)
     val quantity: LiveData<Int> get() = _quantity
+
+    private val _latestViewedProduct: MutableLiveData<Product?> = MutableLiveData()
+    val latestViewedProduct: LiveData<Product?> get() = _latestViewedProduct
 
     private val _event: MutableSingleLiveData<ProductDetailEvent> = MutableSingleLiveData()
     val event: SingleLiveData<ProductDetailEvent> get() = _event
+
+    init {
+        loadLatestViewedProduct()
+    }
 
     fun updateProduct(product: Product) {
         _product.value = product
@@ -41,6 +48,12 @@ class ProductDetailViewModel(
             if (result.getOrNull() != 0) {
                 _quantity.postValue(result.getOrElse { 1 })
             }
+        }
+    }
+
+    fun loadLatestViewedProduct() {
+        productsRepository.loadLatestViewedProduct { result: Result<Product?> ->
+            _latestViewedProduct.postValue(result.getOrNull())
         }
     }
 
@@ -67,6 +80,10 @@ class ProductDetailViewModel(
     }
 
     fun minusProductQuantity() {
-        _quantity.value = quantity.value?.minus(1)?.coerceAtLeast(1) ?: 1
+        _quantity.value = quantity.value?.minus(1)?.coerceAtLeast(QUANTITY_MIN) ?: QUANTITY_MIN
+    }
+
+    companion object {
+        private const val QUANTITY_MIN = 1
     }
 }

@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.view.productDetail.ProductDetailViewModel" />
@@ -150,11 +152,52 @@
                     app:layout_constraintTop_toTopOf="@id/shoppingCartProductQuantityMinusButton" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/productDetailLastViewedProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="18dp"
+                android:layout_marginTop="29dp"
+                android:background="@drawable/background_last_viewed_product"
+                android:paddingHorizontal="18dp"
+                android:paddingVertical="16dp"
+                android:visibility="@{viewModel.latestViewedProduct != null ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toBottomOf="@id/productDetailPrice">
+
+                <TextView
+                    android:id="@+id/productDetailLastViewedProductTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="마지막으로 본 상품"
+                    android:textColor="@color/mint"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/productDetailLastViewedProductName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/productDetailLastViewedProductName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{viewModel.latestViewedProduct.name}"
+                    android:textColor="@color/gray_5"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/productDetailLastViewedProductTitle"
+                    tools:text="PET보틀-정사각형(500ml)" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             <TextView
                 android:id="@+id/productDetailAdd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="144dp"
+                android:layout_marginTop="35dp"
                 android:background="@color/mint"
                 android:gravity="center"
                 android:onClick="@{() -> productDetailActionsListener.onAddToShoppingCart()}"
@@ -163,7 +206,7 @@
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/productDetailQuantityStepper" />
+                app:layout_constraintTop_toBottomOf="@id/productDetailLastViewedProduct" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
