@@ -10,8 +10,14 @@ class RecentProductAdapter(
     private var items: List<RecentProduct> = listOf(),
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
     fun submitList(newItems: List<RecentProduct>) {
+        val oldSize = items.size
         items = newItems
-        notifyDataSetChanged()
+        if (newItems.size == oldSize) {
+            notifyItemRangeChanged(0, newItems.size)
+        } else {
+            notifyItemRangeRemoved(0, oldSize)
+            notifyItemRangeInserted(0, newItems.size)
+        }
     }
 
     override fun onCreateViewHolder(
