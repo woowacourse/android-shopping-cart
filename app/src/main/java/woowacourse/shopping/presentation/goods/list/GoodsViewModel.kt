@@ -126,10 +126,9 @@ class GoodsViewModel(
 
     fun loadMoreGoods() {
         goodsRepository.getPagedGoods(page + 1, ITEM_COUNT) { moreGoods ->
-
             if (moreGoods.isNotEmpty()) {
                 _goods.postValue(_goods.value?.plus(moreGoods))
-                page.plus(1)
+                page = page.plus(1)
             } else {
                 Log.e("GoodsViewModel", "상품 로드 실패")
             }
