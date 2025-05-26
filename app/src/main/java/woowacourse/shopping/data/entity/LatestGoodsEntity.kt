@@ -15,8 +15,3 @@ fun LatestGoodsEntity.toLatestGoods() =
     LatestGoods(
         goodsId = goodsId,
     )
-
-fun LatestGoods.toLatestGoodsEntity() =
-    LatestGoodsEntity(
-        goodsId = goodsId,
-    )
