@@ -31,6 +31,7 @@ class DetailViewModel(
                 _cart.postValue(newCart)
             } else {
                 _cart.postValue(cart ?: return@getById)
+                addRecentProduct(product)
             }
         }
     }
