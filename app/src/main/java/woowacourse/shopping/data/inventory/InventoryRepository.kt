@@ -18,4 +18,8 @@ interface InventoryRepository {
     )
 
     fun insert(product: ProductItem)
+
+    fun insertAll(products: List<ProductItem>)
+
+    fun clear()
 }

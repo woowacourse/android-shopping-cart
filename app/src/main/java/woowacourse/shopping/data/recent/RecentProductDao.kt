@@ -17,4 +17,7 @@ interface RecentProductDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(recentProductEntity: RecentProductEntity)
+
+    @Query("DELETE FROM $RECENT_PRODUCT_TABLE_NAME")
+    fun clear()
 }

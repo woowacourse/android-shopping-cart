@@ -14,4 +14,6 @@ interface RecentProductRepository {
     )
 
     fun insert(recentProduct: RecentProduct)
+
+    fun clear()
 }

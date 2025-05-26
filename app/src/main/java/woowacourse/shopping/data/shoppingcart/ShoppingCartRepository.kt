@@ -22,4 +22,6 @@ interface ShoppingCartRepository {
     fun insert(cartProduct: CartProduct)
 
     fun delete(cartProduct: CartProduct)
+
+    fun clear()
 }

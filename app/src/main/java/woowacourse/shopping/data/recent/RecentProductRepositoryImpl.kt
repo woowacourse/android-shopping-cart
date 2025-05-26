@@ -31,4 +31,10 @@ class RecentProductRepositoryImpl(private val recentProductDao: RecentProductDao
             recentProductDao.insert(recentProduct.toEntity())
         }
     }
+
+    override fun clear() {
+        thread {
+            recentProductDao.clear()
+        }
+    }
 }

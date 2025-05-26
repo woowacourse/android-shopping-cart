@@ -62,4 +62,10 @@ class ShoppingCartRepositoryImpl(private val cartItemDao: CartItemDao) : Shoppin
             cartItemDao.delete(cartProduct.toEntity())
         }
     }
+
+    override fun clear() {
+        thread {
+            cartItemDao.clear()
+        }
+    }
 }
