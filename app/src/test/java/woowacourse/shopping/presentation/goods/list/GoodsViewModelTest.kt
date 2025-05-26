@@ -144,7 +144,9 @@ class GoodsViewModelTest {
     @Test
     fun `최근 본 상품 목록을 가져온다`() {
         // given
-        every { latestGoodsRepository.getAll() } returns listOf(LatestGoods(1), LatestGoods(2))
+        every { latestGoodsRepository.getAll(captureLambda()) } answers {
+            lambda<(List<LatestGoods>) -> Unit>().invoke(listOf(LatestGoods(1), LatestGoods(2)))
+        }
 
         // when
         goodsViewModel.setLatestGoods()
@@ -157,13 +159,16 @@ class GoodsViewModelTest {
     fun `상품이 선택될 때 최근 본 상품 목록을 갱신한다`() {
         // given
         val id = slot<Int>()
-        every { latestGoodsRepository.insertLatestGoods(capture(id)) } just Runs
+        every { latestGoodsRepository.insertLatestGoods(capture(id), any()) } just Runs
+        every { latestGoodsRepository.getLast(captureLambda()) } answers {
+            lambda<(LatestGoods?) -> Unit>().invoke(LatestGoods(1))
+        }
 
         // when
-        goodsViewModel.moveToDetail(1, { _, _ -> })
+        goodsViewModel.moveToDetail(1) { _, _ -> }
 
         // then
-        verify { latestGoodsRepository.insertLatestGoods(any()) }
+        verify { latestGoodsRepository.insertLatestGoods(any(), any()) }
 
         id.captured shouldBe 1
     }

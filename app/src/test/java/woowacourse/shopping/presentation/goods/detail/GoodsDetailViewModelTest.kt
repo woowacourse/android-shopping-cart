@@ -97,13 +97,15 @@ class GoodsDetailViewModelTest {
     fun `마지막으로 본 상품을 갱신한다`() {
         // given
         val id = slot<Int>()
-        every { latestGoodsRepository.insertLatestGoods(capture(id)) } just Runs
+        every { latestGoodsRepository.insertLatestGoods(capture(id), captureLambda()) } answers {
+            lambda<() -> Unit>().captured.invoke()
+        }
 
         // when
         goodsDetailViewModel.updateLatestGoods(1)
 
         // then
-        verify { latestGoodsRepository.insertLatestGoods(capture(id)) }
+        verify { latestGoodsRepository.insertLatestGoods(capture(id), any()) }
 
         id.captured shouldBe 1
     }
