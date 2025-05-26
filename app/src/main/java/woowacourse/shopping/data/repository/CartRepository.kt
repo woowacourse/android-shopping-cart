@@ -32,7 +32,7 @@ class CartRepository(
             callback(
                 CartProducts(
                     products = dao.getCartProductDetails(page, size).map { it.toDomain() },
-                    totalPage = dao.getTotalPageCount(size),
+                    totalPage = (dao.getCartItemCount() + size - TOTAL_PAGE_COUNT_OFFSET) / size,
                 ),
             )
         }
@@ -89,5 +89,9 @@ class CartRepository(
         thread {
             dao.insertCartProduct(cartProduct.toData())
         }
+    }
+
+    companion object {
+        private const val TOTAL_PAGE_COUNT_OFFSET = 1
     }
 }
