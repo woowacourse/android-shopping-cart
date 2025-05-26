@@ -43,7 +43,7 @@ class CartViewModel(
             _page.value = currentPage
         }
 
-        cartRepository.delete(cart)
+        cartRepository.deleteAll(cart)
         updatePageButtonStates()
     }
 

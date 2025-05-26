@@ -13,6 +13,8 @@ interface CartRepository {
 
     fun delete(cart: Cart)
 
+    fun deleteAll(cart: Cart)
+
     fun getPage(
         limit: Int,
         offset: Int,

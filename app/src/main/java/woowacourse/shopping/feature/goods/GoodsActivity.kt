@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.goods
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -144,6 +145,8 @@ class GoodsActivity : AppCompatActivity() {
         val changedId = data?.getLongExtra("GOODS_ID", 0) ?: 0
         val changedQuantity = data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
         adapter.updateItemQuantity(changedId, changedQuantity)
+
+        Log.d("123452", "dd")
 
         viewModel.refreshHistoryOnly()
     }

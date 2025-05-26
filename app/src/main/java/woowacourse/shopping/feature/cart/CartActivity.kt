@@ -2,7 +2,6 @@ package woowacourse.shopping.feature.cart
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,23 +12,22 @@ import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.adapter.CartViewHolder
 import woowacourse.shopping.feature.model.ResultCode
 
-class CartActivity :
-    AppCompatActivity(),
-    CartViewHolder.CartClickListener {
+class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         (application as ShoppingApplication).cartFactory
     }
-    private val adapter: CartAdapter by lazy { CartAdapter(this) }
+    private lateinit var adapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupAdapter()
         binding.lifecycleOwner = this
-        binding.rvGoods.adapter = adapter
         binding.viewModel = viewModel
+        binding.rvGoods.adapter = adapter
 
         updatePageButton()
     }
@@ -37,20 +35,6 @@ class CartActivity :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) finish()
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onClickDeleteButton(cart: Cart) {
-        viewModel.delete(cart)
-    }
-
-    override fun insertToCart(cart: Cart) {
-        viewModel.insertToCart(cart)
-        sendCartResult(cart)
-    }
-
-    override fun removeFromCart(cart: Cart) {
-        viewModel.removeFromCart(cart)
-        sendCartResult(cart)
     }
 
     private fun updatePageButton() {
@@ -62,13 +46,33 @@ class CartActivity :
         }
     }
 
+    private fun setupAdapter() {
+        adapter =
+            CartAdapter(
+                object : CartViewHolder.CartClickListener {
+                    override fun onClickDeleteButton(cart: Cart) {
+                        viewModel.delete(cart)
+                    }
+
+                    override fun insertToCart(cart: Cart) {
+                        viewModel.insertToCart(cart)
+                        sendCartResult(cart)
+                    }
+
+                    override fun removeFromCart(cart: Cart) {
+                        viewModel.removeFromCart(cart)
+                        sendCartResult(cart)
+                    }
+                },
+            )
+    }
+
     private fun sendCartResult(cart: Cart) {
         setResult(
             ResultCode.CART_INSERT.code,
             Intent().apply {
                 putExtra("GOODS_ID", cart.goods.id)
                 putExtra("GOODS_QUANTITY", viewModel.cart.value?.quantity)
-                Log.e("123451", "${viewModel.cart.value?.quantity}")
             },
         )
     }

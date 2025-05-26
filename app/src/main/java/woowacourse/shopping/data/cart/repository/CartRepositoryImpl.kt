@@ -58,6 +58,12 @@ class CartRepositoryImpl(
         }
     }
 
+    override fun deleteAll(cart: Cart) {
+        thread {
+            dao.delete(cart.toEntity())
+        }
+    }
+
     override fun getPage(
         limit: Int,
         offset: Int,
