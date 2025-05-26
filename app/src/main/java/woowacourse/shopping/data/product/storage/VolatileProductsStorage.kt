@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.product.local.storage
+package woowacourse.shopping.data.product.storage
 
 import woowacourse.shopping.data.product.local.entity.ProductEntity
 
