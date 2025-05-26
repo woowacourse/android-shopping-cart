@@ -44,11 +44,7 @@ class GoodsDetailViewModel(
 
     fun addToShoppingCart() {
         _goods.value?.let { goods ->
-            if (shoppingRepository.getGoodsById(goods.id) != null) {
-                shoppingRepository.increaseGoodsQuantity(goods.id, goods.quantity)
-            } else {
-                shoppingRepository.insertGoods(goods.id, goods.quantity)
-            }
+            shoppingRepository.increaseGoodsQuantity(goods.id, goods.quantity)
         }
         _onItemAddedToCart.setValue(_goods.value?.quantity ?: MIN_PURCHASE_QUANTITY)
     }

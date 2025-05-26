@@ -34,7 +34,7 @@ class ShoppingRepositoryImpl(
         quantity: Int,
     ) {
         thread {
-            shoppingDao.increaseQuantity(id, quantity)
+            shoppingDao.increaseOrInsert(id, quantity)
         }
     }
 

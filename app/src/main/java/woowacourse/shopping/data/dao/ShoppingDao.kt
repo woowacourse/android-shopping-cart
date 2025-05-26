@@ -15,6 +15,22 @@ interface ShoppingDao {
     @Query("DELETE FROM shoppingCart WHERE id = :id")
     fun delete(id: Int)
 
+    @Transaction
+    fun increaseOrInsert(
+        id: Int,
+        quantity: Int,
+    ) {
+        val exists = findGoodsById(id) != null
+        if (exists) {
+            increaseQuantity(id, quantity)
+        } else {
+            insert(ShoppingEntity(id = id, quantity = quantity))
+        }
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(goods: ShoppingEntity)
+
     @Query("UPDATE shoppingCart SET quantity = quantity + :quantity WHERE id = :id")
     fun increaseQuantity(
         id: Int,
@@ -38,9 +54,6 @@ interface ShoppingDao {
 
     @Query("DELETE FROM shoppingCart WHERE id = :id AND quantity <= 0")
     fun deleteIfQuantityZero(id: Int)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(goods: ShoppingEntity)
 
     @Query("SELECT * FROM shoppingCart ORDER BY id ASC LIMIT :count OFFSET (:page * :count)")
     fun getPagedGoods(
