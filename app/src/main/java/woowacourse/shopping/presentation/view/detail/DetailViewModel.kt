@@ -49,12 +49,12 @@ class DetailViewModel(
     }
 
     fun loadProduct(productId: Long) {
-        updateRecentProduct(productId)
-
         productRepository.findProductInfoById(productId) { result ->
             result
-                .onSuccess { _product.postValue(it.toUiModel()) }
-                .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
+                .onSuccess {
+                    _product.postValue(it.toUiModel())
+                    updateRecentProduct(productId)
+                }.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
         }
     }
 
