@@ -47,8 +47,19 @@ class ProductsActivity :
                             ?: return@registerForActivityResult
                     viewModel.updateSelectedQuantity(updateItems.toList())
                 }
+
+                ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK -> {
+                    val updateItem: Product =
+                        result.data?.getSerializableExtraData("recentProduct")
+                            ?: return@registerForActivityResult
+                    navigateToRecentProduct(updateItem)
+                }
             }
         }
+
+    private fun navigateToRecentProduct(product: Product) {
+        activityResultLauncher.launch(ProductDetailActivity.newIntent(this, product, true))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

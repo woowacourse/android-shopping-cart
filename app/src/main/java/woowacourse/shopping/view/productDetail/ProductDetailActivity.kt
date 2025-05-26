@@ -100,7 +100,11 @@ class ProductDetailActivity :
     }
 
     override fun onRecentProduct(product: Product) {
-        startActivity(newIntent(context = this, product = product, isLastWatching = true))
+        val intent =
+            Intent().apply {
+                putExtra("recentProduct", viewModel.recentWatchingProduct.value)
+            }
+        setResult(ResultFrom.PRODUCT_RECENT_WATCHING_CLICK.RESULT_OK, intent)
         finish()
     }
 
