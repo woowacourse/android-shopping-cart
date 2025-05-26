@@ -10,13 +10,17 @@ import kotlin.concurrent.thread
 class LatestGoodsRepositoryImpl(
     private val latestGoodsDao: LatestGoodsDao,
 ) : LatestGoodsRepository {
-    override fun insertLatestGoods(goodsId: Int) {
+    override fun insertLatestGoods(
+        goodsId: Int,
+        onSuccess: () -> Unit,
+    ) {
         thread {
             latestGoodsDao.insert(LatestGoodsEntity(goodsId))
             if (isFull()) {
                 deleteOldest()
             }
-        }.join()
+            onSuccess()
+        }
     }
 
     private fun isFull(): Boolean {
@@ -28,24 +32,16 @@ class LatestGoodsRepositoryImpl(
         latestGoodsDao.deleteOldest()
     }
 
-    override fun getAll(): List<LatestGoods> {
-        var result: List<LatestGoods> = emptyList()
-
+    override fun getAll(onSuccess: (List<LatestGoods>) -> Unit) {
         thread {
-            result = latestGoodsDao.getAll().map { it.toLatestGoods() }
-        }.join()
-
-        return result
+            onSuccess(latestGoodsDao.getAll().map { it.toLatestGoods() })
+        }
     }
 
-    override fun getLast(): LatestGoods? {
-        var result: LatestGoods? = null
-
+    override fun getLast(onSuccess: (LatestGoods?) -> Unit) {
         thread {
-            result = latestGoodsDao.getLast()?.toLatestGoods()
-        }.join()
-
-        return result
+            onSuccess(latestGoodsDao.getLast()?.toLatestGoods())
+        }
     }
 
     companion object {

@@ -61,7 +61,7 @@ class GoodsDetailViewModel(
     }
 
     fun updateLatestGoods(goodsId: Int) {
-        latestGoodsRepository.insertLatestGoods(goodsId)
+        latestGoodsRepository.insertLatestGoods(goodsId) {}
     }
 
     companion object {

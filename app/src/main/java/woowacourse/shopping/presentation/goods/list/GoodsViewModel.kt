@@ -70,10 +70,14 @@ class GoodsViewModel(
     }
 
     fun setLatestGoods() {
-        _latestGoods.value =
-            latestGoodsRepository.getAll().mapNotNull {
-                goodsRepository.getById(it.goodsId)
+        latestGoodsRepository.getAll { latestGoodsList ->
+            val updatedList = mutableListOf<Goods>()
+
+            latestGoodsList.forEach { item ->
+                goodsRepository.getById(item.goodsId)?.let { updatedList.add(it) }
             }
+            _latestGoods.postValue(updatedList)
+        }
     }
 
     fun addToShoppingCart(goodsId: Int) {
@@ -154,14 +158,16 @@ class GoodsViewModel(
         goodsId: Int,
         move: (goodsId: Int, lastId: Int?) -> Unit,
     ) {
-        val lastGoodsId = _latestGoods.value?.firstOrNull()?.id
-        updateLatestGoods(goodsId)
-        move(goodsId, lastGoodsId)
+        latestGoodsRepository.getLast { latestGoods ->
+            updateLatestGoods(goodsId)
+            move(goodsId, latestGoods?.goodsId)
+        }
     }
 
     private fun updateLatestGoods(goodsId: Int) {
-        latestGoodsRepository.insertLatestGoods(goodsId)
-        setLatestGoods()
+        latestGoodsRepository.insertLatestGoods(goodsId) {
+            setLatestGoods()
+        }
     }
 
     companion object {
