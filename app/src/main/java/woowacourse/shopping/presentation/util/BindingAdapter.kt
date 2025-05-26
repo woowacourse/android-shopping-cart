@@ -16,6 +16,11 @@ fun TextView.setPrice(item: ShoppingCartItem) {
     text = context.getString(R.string.text_price, DecimalFormat("#,###").format(item.goods.price.value))
 }
 
+@BindingAdapter("goodsTotalPrice")
+fun TextView.setTotalPrice(item: ShoppingCartItem) {
+    text = context.getString(R.string.text_price, DecimalFormat("#,###").format(item.totalPrice))
+}
+
 @BindingAdapter("goodsName")
 fun TextView.setName(item: ShoppingCartItem) {
     text = item.goods.name.value

@@ -30,10 +30,18 @@ class GoodsDetailViewModel(
         _item.value = ShoppingCartItem(goodsRepository.getGoodsById(id))
     }
 
+    fun increaseQuantity() {
+        _item.value = _item.value?.increaseQuantity()
+    }
+
+    fun decreaseQuantity() {
+        _item.value = _item.value?.decreaseQuantity()
+    }
+
     fun addToShoppingCart() {
         val currentItem = _item.value ?: return
 
-        shoppingCartRepository.addItem(currentItem) { result ->
+        shoppingCartRepository.addOrIncreaseItem(currentItem) { result ->
             result.onSuccess {
                 _shoppingCartEvent.postValue(ShoppingCartEvent.SUCCESS)
             }.onFailure {

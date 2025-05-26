@@ -4,7 +4,7 @@ data class ShoppingCartItem(
     val goods: Goods,
     val quantity: Int = DEFAULT_QUANTITY,
 ) {
-    val price: Int
+    val totalPrice: Int
         get() = goods.price.value * quantity
 
     fun increaseQuantity(): ShoppingCartItem = copy(quantity = quantity + 1)

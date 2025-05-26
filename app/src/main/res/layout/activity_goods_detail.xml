@@ -8,6 +8,10 @@
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.goods.detail.GoodsDetailViewModel" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.util.QuantityClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +65,7 @@
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:goodsPrice="@{vm.item}"
+            app:goodsTotalPrice="@{vm.item}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
@@ -71,6 +75,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="14dp"
+            app:item="@{vm.item}"
+            app:quantityClickListener="@{clickListener}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
@@ -78,7 +84,8 @@
             android:id="@+id/btn_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="@color/primary_color"
+            android:backgroundTint="@{vm.item.quantity > 0 ? @color/primary_color : @color/light_gray}"
+            android:enabled="@{vm.item.quantity > 0}"
             android:onClick="@{() -> vm.addToShoppingCart()}"
             android:text="@string/btn_shopping_cart"
             android:textColor="@color/white"

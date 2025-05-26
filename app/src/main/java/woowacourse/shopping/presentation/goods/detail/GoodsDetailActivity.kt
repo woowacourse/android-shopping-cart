@@ -9,7 +9,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsDetailBinding
+import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.util.QuantityClickListener
 import woowacourse.shopping.presentation.util.ShoppingCartEvent
 
 class GoodsDetailActivity : BaseActivity() {
@@ -22,7 +24,8 @@ class GoodsDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
-        setUpResultToast()
+        setUpClickListener()
+        observeEvent()
         viewModel.setGoods(intent.getLongExtra(EXTRA_GOODS, 0L))
     }
 
@@ -33,13 +36,26 @@ class GoodsDetailActivity : BaseActivity() {
         }
     }
 
-    private fun setUpResultToast() {
+    private fun setUpClickListener() {
+        binding.clickListener = object : QuantityClickListener {
+            override fun increase(item: ShoppingCartItem) {
+                viewModel.increaseQuantity()
+            }
+
+            override fun decrease(item: ShoppingCartItem) {
+                viewModel.decreaseQuantity()
+            }
+        }
+    }
+
+    private fun observeEvent() {
         viewModel.shoppingCartEvent.observe(this) { event ->
             val message = when (event) {
                 ShoppingCartEvent.SUCCESS -> R.string.text_save_success
                 ShoppingCartEvent.FAILURE -> R.string.text_save_failure
             }
             Toast.makeText(this, getString(message), Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 
