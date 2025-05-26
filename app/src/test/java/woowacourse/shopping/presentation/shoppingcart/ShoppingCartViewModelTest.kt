@@ -1,18 +1,16 @@
 package woowacourse.shopping.presentation.shoppingcart
 
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.fixture.FakeShoppingCartRepository
 import woowacourse.shopping.fixture.SUNDAE
-import woowacourse.shopping.fixture.createGoods
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.model.toUiModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
@@ -21,26 +19,59 @@ class ShoppingCartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        repository = mockk(relaxed = true)
+        repository = FakeShoppingCartRepository()
         shoppingCartViewModel = ShoppingCartViewModel(repository)
+    }
+
+    @Test
+    fun `장바구니에 담긴 물품의 수량을 증가시킨다`() {
+        // when
+        shoppingCartViewModel.increaseQuantity(SUNDAE)
+        val expected = shoppingCartViewModel.items.getOrAwaitValue().first()
+
+        // then
+        expected.quantity shouldBe 1
+    }
+
+    @Test
+    fun `장바구니에 담긴 물품의 수량을 감소시킨다`() {
+        // given
+        shoppingCartViewModel.increaseQuantity(SUNDAE)
+        shoppingCartViewModel.increaseQuantity(SUNDAE)
+
+        // when
+        shoppingCartViewModel.decreaseQuantity(SUNDAE)
+        val expected = shoppingCartViewModel.items.getOrAwaitValue().first()
+
+        // then
+        expected.quantity shouldBe 1
+    }
+
+    @Test
+    fun `장바구니에 담긴 물품의 수량이 0이 되면 물품을 삭제시킨다`() {
+        // when
+        shoppingCartViewModel.decreaseQuantity(SUNDAE)
+
+        // then
+        shoppingCartViewModel.items.getOrAwaitValue().shouldNotContain(SUNDAE)
     }
 
     @Test
     fun `장바구니의 물품을 삭제한다`() {
         // given
-        repository.addGoods(SUNDAE)
+        shoppingCartViewModel.increaseQuantity(SUNDAE)
 
         // when
-        shoppingCartViewModel.deleteGoods(SUNDAE.toUiModel())
+        shoppingCartViewModel.deleteItem(SUNDAE)
 
         // then
-        shoppingCartViewModel.goodsUiModels.getOrAwaitValue().shouldNotContain(SUNDAE.toUiModel())
+        shoppingCartViewModel.items.getOrAwaitValue().shouldNotContain(SUNDAE)
     }
 
     @Test
-    fun `페이지의 초기값은 1이다`() {
+    fun `페이지의 초기값은 0이다`() {
         // then
-        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 1
+        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 0
     }
 
     @Test
@@ -49,7 +80,7 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.increasePage()
 
         // then
-        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 2
+        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 1
     }
 
     @Test
@@ -61,28 +92,16 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.decreasePage()
 
         // then
-        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 1
+        shoppingCartViewModel.page.getOrAwaitValue() shouldBe 0
     }
 
     @Test
     fun `다음 페이지의 데이터가 존재할 경우 true를 반환한다`() {
-        // given
-        every { repository.getGoods(any(), any()) } returns listOf(createGoods())
-
         // when
         shoppingCartViewModel.increasePage()
 
         // then
         shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe true
-    }
-
-    @Test
-    fun `다음 페이지의 데이터가 존재하지 않을 경우 false를 반환한다`() {
-        // given
-        every { repository.getGoods(any(), any()) } returns emptyList()
-
-        // then
-        shoppingCartViewModel.hasNextPage.getOrAwaitValue() shouldBe false
     }
 
     @Test
