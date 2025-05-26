@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.room.runtime)
     kapt("androidx.room:room-compiler:2.7.1")
+    implementation(libs.okhttp)
+    implementation(libs.converter.gson)
 
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
@@ -63,6 +65,7 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
+    androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)

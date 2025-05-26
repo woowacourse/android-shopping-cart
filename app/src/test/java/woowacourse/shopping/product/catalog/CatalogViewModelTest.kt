@@ -5,7 +5,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.product.catalog.fixture.FakeMockProducts
+import woowacourse.shopping.fixture.FakeCartItemRepository
+import woowacourse.shopping.fixture.FakeCatalogItemRepository
+import woowacourse.shopping.fixture.FakeViewedItemRepository
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -17,7 +19,12 @@ class CatalogViewModelTest {
 
     @Test
     fun `초기 상태 테스트`() {
-        viewModel = CatalogViewModel(FakeMockProducts(size = 10))
+        viewModel =
+            CatalogViewModel(
+                FakeCatalogItemRepository(10),
+                FakeCartItemRepository(0),
+                FakeViewedItemRepository(0),
+            )
 
         val paging = viewModel.pagingData.value!!
 
@@ -29,12 +36,17 @@ class CatalogViewModelTest {
     @Test
     fun `더보기 버튼을 눌렀을 때 페이지가 증가되고 상품이 로드된다`() {
         // given
-        viewModel = CatalogViewModel(FakeMockProducts(size = 30))
-        val catalogProducts: List<ProductUiModel> = (viewModel.products)
+        viewModel =
+            CatalogViewModel(
+                FakeCatalogItemRepository(30),
+                FakeCartItemRepository(0),
+                FakeViewedItemRepository(0),
+            )
+        val catalogProducts: List<ProductUiModel> = (viewModel.pagingData.value?.products ?: emptyList())
         assertThat(viewModel.page).isEqualTo(0)
 
         // when
-        viewModel.loadNextCatalogProducts(PAGE_SIZE)
+        viewModel.loadNextCatalogProducts()
 
         // then
         assertThat(viewModel.page).isEqualTo(1)
@@ -43,14 +55,46 @@ class CatalogViewModelTest {
 
     @Test
     fun `상품 목록이 20개 이상이면 더보기 버튼이 활성화된다`() {
-        viewModel = CatalogViewModel(FakeMockProducts(size = 30))
+        // given
+        viewModel =
+            CatalogViewModel(
+                FakeCatalogItemRepository(30),
+                FakeCartItemRepository(0),
+                FakeViewedItemRepository(0),
+            )
 
         val hasNext = viewModel.pagingData.value?.hasNext
 
         assertThat(hasNext).isEqualTo(true)
     }
 
-    companion object {
-        private const val PAGE_SIZE = 20
+    @Test
+    fun `최근 본 상품이 있는 경우에 10개 이하이면 모든 데이터를 불러온다`() {
+        viewModel =
+            CatalogViewModel(
+                FakeCatalogItemRepository(30),
+                FakeCartItemRepository(0),
+                FakeViewedItemRepository(9),
+            )
+        val viewedSize = viewModel.recentViewedItems.value?.size
+        val hasViewed = viewModel.hasRecentViewedItems.value
+
+        assertThat(viewedSize).isEqualTo(9)
+        assertThat(hasViewed).isEqualTo(true)
+    }
+
+    @Test
+    fun `최근 본 상품이 있는 경우에 10개 이상이면 10개의 데이터만 불러온다`() {
+        viewModel =
+            CatalogViewModel(
+                FakeCatalogItemRepository(30),
+                FakeCartItemRepository(0),
+                FakeViewedItemRepository(20),
+            )
+        val viewedSize = viewModel.recentViewedItems.value?.size
+        val hasViewed = viewModel.hasRecentViewedItems.value
+
+        assertThat(viewedSize).isEqualTo(10)
+        assertThat(hasViewed).isEqualTo(true)
     }
 }
