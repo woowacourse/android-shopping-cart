@@ -55,13 +55,30 @@ class ShoppingDaoTest {
     }
 
     @Test
-    fun `상품의_수량을_변경한다`() {
+    fun `상품의_수량을_증가한다`() {
         // when
-        dao.updateQuantity(1, 4)
+        dao.increaseQuantity(1, 2)
         val actual = dao.getAll()
 
-        // then
         actual shouldBe listOf(createShoppingGoods(1, 4).toShoppingEntity())
+    }
+
+    @Test
+    fun `상품의_수량을_감소한다`() {
+        // when
+        dao.decreaseOrDelete(1, 1)
+        val actual = dao.getAll()
+
+        actual shouldBe listOf(createShoppingGoods(1, 1).toShoppingEntity())
+    }
+
+    @Test
+    fun `상품의_수량이_0이_되면_삭제한다`() {
+        // when
+        dao.decreaseOrDelete(1, 2)
+        val actual = dao.getAll()
+
+        actual shouldBe listOf()
     }
 
     @Test
