@@ -9,12 +9,16 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.RecentProduct" />
+        <variable
+            name="handler"
+            type="woowacourse.shopping.view.inventory.InventoryEventHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="5dp">
+        android:layout_marginHorizontal="5dp"
+        android:onClick="@{() -> handler.onSelectProduct(product.id)}">
 
         <ImageView
             android:id="@+id/iv_product_image"

@@ -85,8 +85,8 @@ class InventoryActivity :
         }
     }
 
-    override fun onSelectProduct(product: ProductItem) {
-        startActivity(ProductDetailActivity.newIntent(this, product.product.id))
+    override fun onSelectProduct(productId: Int) {
+        startActivity(ProductDetailActivity.newIntent(this, productId))
     }
 
     override fun onIncreaseQuantity(

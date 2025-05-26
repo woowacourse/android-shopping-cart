@@ -3,7 +3,7 @@ package woowacourse.shopping.view.inventory
 import woowacourse.shopping.view.inventory.item.InventoryItem.ProductItem
 
 interface InventoryEventHandler {
-    fun onSelectProduct(product: ProductItem)
+    fun onSelectProduct(productId: Int)
 
     fun onIncreaseQuantity(
         position: Int,

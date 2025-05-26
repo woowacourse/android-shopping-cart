@@ -42,7 +42,7 @@ class InventoryAdapter(
         when (holder) {
             is ProductViewHolder -> holder.bind(item as ProductItem)
             is ShowMoreViewHolder -> holder.bind(item as ShowMore)
-            is RecentItemsListViewHolder -> holder.bind(item as RecentProductsItem)
+            is RecentItemsListViewHolder -> holder.bind(item as RecentProductsItem, handler)
         }
     }
 

@@ -17,7 +17,7 @@ import woowacourse.shopping.data.shoppingcart.ShoppingCartRepositoryImpl
 import kotlin.concurrent.thread
 
 class ShoppingApplication : Application() {
-    private val useLocal = false
+    private val useLocal = true
 
     private val productDatabase: ProductDatabase by lazy {
         ProductDatabase.database(this).apply {
