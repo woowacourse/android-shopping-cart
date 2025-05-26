@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.products.ui
+package woowacourse.shopping.presentation.products.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.products.ProductsViewModel
+import woowacourse.shopping.presentation.products.ui.viewholder.LastWatchProductViewHolder
 
 @SuppressLint("NotifyDataSetChanged")
 class LastWatchProductsAdapter(

@@ -1,8 +1,9 @@
-package woowacourse.shopping.presentation.products.ui
+package woowacourse.shopping.presentation.products.ui.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemLastProductTitleBinding
+import woowacourse.shopping.presentation.products.ui.ProductsItem
 
 class LastWatchTitleViewHolder(
     parent: ViewGroup,

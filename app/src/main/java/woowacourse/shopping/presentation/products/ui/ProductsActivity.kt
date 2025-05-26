@@ -19,6 +19,7 @@ import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.cart.ui.CartActivity
 import woowacourse.shopping.presentation.productdetail.ui.ProductDetailActivity
 import woowacourse.shopping.presentation.products.ProductsViewModel
+import woowacourse.shopping.presentation.products.ui.adapter.ProductsAdapter
 import woowacourse.shopping.util.DatabaseProvider
 
 @SuppressLint("NotifyDataSetChanged")

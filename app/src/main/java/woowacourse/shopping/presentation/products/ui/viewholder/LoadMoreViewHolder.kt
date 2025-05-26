@@ -1,8 +1,9 @@
-package woowacourse.shopping.presentation.products.ui
+package woowacourse.shopping.presentation.products.ui.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
+import woowacourse.shopping.presentation.products.ui.ProductsItem
 
 class LoadMoreViewHolder(
     parent: ViewGroup,

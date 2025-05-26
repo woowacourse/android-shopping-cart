@@ -1,10 +1,11 @@
-package woowacourse.shopping.presentation.products.ui
+package woowacourse.shopping.presentation.products.ui.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.products.ProductsViewModel
+import woowacourse.shopping.presentation.products.ui.ProductsItem
 
 class ProductViewHolder(
     parent: ViewGroup,

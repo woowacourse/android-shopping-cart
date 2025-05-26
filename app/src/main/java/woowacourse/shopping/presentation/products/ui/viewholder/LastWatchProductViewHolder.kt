@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.products.ui
+package woowacourse.shopping.presentation.products.ui.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLastProductBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.products.ProductsViewModel
+import woowacourse.shopping.presentation.products.ui.adapter.ProductsAdapter
 
 class LastWatchProductViewHolder(
     private val binding: ItemLastProductBinding,

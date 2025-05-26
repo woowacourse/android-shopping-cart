@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.products.ui
+package woowacourse.shopping.presentation.products.ui.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import woowacourse.shopping.databinding.LayoutLastProductsBinding
 import woowacourse.shopping.presentation.products.ProductsViewModel
+import woowacourse.shopping.presentation.products.ui.adapter.LastWatchProductsAdapter
+import woowacourse.shopping.presentation.products.ui.adapter.ProductsAdapter
+import woowacourse.shopping.presentation.products.ui.ProductsItem
 
 class LastWatchProductsViewHolder(
     parent: ViewGroup,
