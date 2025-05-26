@@ -7,6 +7,10 @@ import woowacourse.shopping.data.di.NetworkModule.productApi
 import woowacourse.shopping.domain.usecase.AddSearchHistoryUseCase
 import woowacourse.shopping.domain.usecase.DecreaseCartProductQuantityUseCase
 import woowacourse.shopping.domain.usecase.GetCartProductsUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductsByIdsUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductsUseCase
+import woowacourse.shopping.domain.usecase.GetProductDetailUseCase
 import woowacourse.shopping.domain.usecase.GetRecentSearchHistoryUseCase
 import woowacourse.shopping.domain.usecase.GetSearchHistoryUseCase
 import woowacourse.shopping.domain.usecase.IncreaseCartProductQuantityUseCase
@@ -21,7 +25,7 @@ class ShoppingApp : Application() {
             .CartRepository(database.cartDao())
     }
 
-    val productRepository: woowacourse.shopping.domain.repository.ProductRepository by lazy {
+    private val productRepository: woowacourse.shopping.domain.repository.ProductRepository by lazy {
         woowacourse.shopping.data.repository
             .ProductRepository(database.productDao(), productApi)
     }
@@ -61,6 +65,22 @@ class ShoppingApp : Application() {
 
     val getRecentSearchHistoryUseCase by lazy {
         GetRecentSearchHistoryUseCase(historyRepository)
+    }
+
+    val getCatalogProductsUseCase by lazy {
+        GetCatalogProductsUseCase(productRepository)
+    }
+
+    val getCatalogProductUseCase by lazy {
+        GetCatalogProductUseCase(productRepository)
+    }
+
+    val getProductDetailUseCase by lazy {
+        GetProductDetailUseCase(productRepository)
+    }
+
+    val getCatalogProductsByIdsUseCase by lazy {
+        GetCatalogProductsByIdsUseCase(productRepository)
     }
 
     override fun onCreate() {

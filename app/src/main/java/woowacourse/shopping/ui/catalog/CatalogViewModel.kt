@@ -10,13 +10,17 @@ import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.model.CatalogProducts.Companion.EMPTY_CATALOG_PRODUCTS
 import woowacourse.shopping.domain.model.HistoryProduct
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.usecase.DecreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductsByIdsUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductsUseCase
 import woowacourse.shopping.domain.usecase.GetSearchHistoryUseCase
 import woowacourse.shopping.domain.usecase.IncreaseCartProductQuantityUseCase
 
 class CatalogViewModel(
-    private val productRepository: ProductRepository,
+    private val getCatalogProductsUseCase: GetCatalogProductsUseCase,
+    private val getCatalogProductUseCase: GetCatalogProductUseCase,
+    private val getCatalogProductsByIdsUseCase: GetCatalogProductsByIdsUseCase,
     private val getSearchHistoryUseCase: GetSearchHistoryUseCase,
     private val increaseCartProductQuantityUseCase: IncreaseCartProductQuantityUseCase,
     private val decreaseCartProductQuantityUseCase: DecreaseCartProductQuantityUseCase,
@@ -36,7 +40,7 @@ class CatalogViewModel(
                 ?.id ?: 0
 
     fun loadCartProducts(count: Int = SHOWN_PRODUCTS_COUNT) {
-        productRepository.fetchProducts(lastId = lastProductId, count = count) { newProducts ->
+        getCatalogProductsUseCase(lastId = lastProductId, count = count) { newProducts ->
             _catalogProducts.postValue(catalogProducts.value?.plus(newProducts))
         }
     }
@@ -60,13 +64,13 @@ class CatalogViewModel(
     }
 
     fun loadCartProduct(id: Int) {
-        productRepository.fetchProduct(id) { cartProduct ->
-            _catalogProducts.postValue(catalogProducts.value?.updateCatalogProduct(cartProduct ?: return@fetchProduct))
+        getCatalogProductUseCase(id) { cartProduct ->
+            _catalogProducts.postValue(catalogProducts.value?.updateCatalogProduct(cartProduct ?: return@getCatalogProductUseCase))
         }
     }
 
     fun loadCartProducts(ids: List<Int>) {
-        productRepository.fetchProducts(ids) { cartProducts ->
+        getCatalogProductsByIdsUseCase(ids) { cartProducts ->
             _catalogProducts.postValue(catalogProducts.value?.updateCatalogProducts(cartProducts))
         }
     }
@@ -84,7 +88,9 @@ class CatalogViewModel(
                     val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return CatalogViewModel(
-                        productRepository = application.productRepository,
+                        getCatalogProductsUseCase = application.getCatalogProductsUseCase,
+                        getCatalogProductUseCase = application.getCatalogProductUseCase,
+                        getCatalogProductsByIdsUseCase = application.getCatalogProductsByIdsUseCase,
                         getSearchHistoryUseCase = application.getSearchHistoryUseCase,
                         increaseCartProductQuantityUseCase = application.increaseCartProductQuantityUseCase,
                         decreaseCartProductQuantityUseCase = application.decreaseCartProductQuantityUseCase,

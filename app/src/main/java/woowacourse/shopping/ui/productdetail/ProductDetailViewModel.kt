@@ -11,15 +11,15 @@ import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.model.CatalogProduct.Companion.EMPTY_CATALOG_PRODUCT
 import woowacourse.shopping.domain.model.HistoryProduct
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.usecase.AddSearchHistoryUseCase
+import woowacourse.shopping.domain.usecase.GetProductDetailUseCase
 import woowacourse.shopping.domain.usecase.GetRecentSearchHistoryUseCase
 import woowacourse.shopping.domain.usecase.UpdateCartProductUseCase
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 
 class ProductDetailViewModel(
-    private val productRepository: ProductRepository,
+    private val getProductDetailUseCase: GetProductDetailUseCase,
     private val getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase,
     private val addSearchHistoryUseCase: AddSearchHistoryUseCase,
     private val updateCartProductUseCase: UpdateCartProductUseCase,
@@ -34,7 +34,7 @@ class ProductDetailViewModel(
     val onCartProductAddSuccess: SingleLiveData<Boolean?> get() = _onCartProductAddSuccess
 
     fun loadProductDetail(id: Int) {
-        productRepository.fetchProduct(id) { catalogProduct ->
+        getProductDetailUseCase(id) { catalogProduct ->
             _catalogProduct.postValue(catalogProduct)
         }
     }
@@ -77,7 +77,7 @@ class ProductDetailViewModel(
                     val application = checkNotNull(extras[APPLICATION_KEY]) as ShoppingApp
 
                     return ProductDetailViewModel(
-                        productRepository = application.productRepository,
+                        getProductDetailUseCase = application.getProductDetailUseCase,
                         getRecentSearchHistoryUseCase = application.getRecentSearchHistoryUseCase,
                         addSearchHistoryUseCase = application.addSearchHistoryUseCase,
                         updateCartProductUseCase = application.updateCartProductUseCase,
