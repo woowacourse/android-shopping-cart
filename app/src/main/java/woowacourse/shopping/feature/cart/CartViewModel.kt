@@ -23,11 +23,16 @@ class CartViewModel(
         _page.switchMap { pageNum ->
             cartRepository.getPage(PAGE_SIZE, (pageNum - 1) * PAGE_SIZE)
         }
-    val totalItemsCount: LiveData<Int> = cartRepository.getAllItemsSize()
+    private val _totalItemsCount = MutableLiveData(0)
+    val totalItemsCount: LiveData<Int> get() = _totalItemsCount
     private val _isLeftPageEnable = MutableLiveData(false)
     val isLeftPageEnable: LiveData<Boolean> get() = _isLeftPageEnable
     private val _isRightPageEnable = MutableLiveData(false)
     val isRightPageEnable: LiveData<Boolean> get() = _isRightPageEnable
+
+    init {
+        fetchTotalItemsCount()
+    }
 
     fun delete(cart: Cart) {
         val total = totalItemsCount.value ?: 0
@@ -82,6 +87,12 @@ class CartViewModel(
         if (current != null) {
             val updated = current.updateQuantity(current.quantity - 1)
             _cart.value = updated
+        }
+    }
+
+    private fun fetchTotalItemsCount() {
+        cartRepository.getAllItemsSize { count ->
+            _totalItemsCount.postValue(count)
         }
     }
 

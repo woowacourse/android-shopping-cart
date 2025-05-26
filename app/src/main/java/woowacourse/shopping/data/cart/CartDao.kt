@@ -42,7 +42,7 @@ interface CartDao {
     ): LiveData<List<CartEntity>>
 
     @Query("SELECT COUNT(*) FROM cart")
-    fun getAllItemsSize(): LiveData<Int>
+    fun getAllItemsSize(): Int
 
     @Query("SELECT SUM(quantity) FROM cart")
     fun getTotalQuantity(): Int

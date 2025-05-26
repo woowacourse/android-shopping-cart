@@ -18,7 +18,7 @@ interface CartRepository {
         offset: Int,
     ): LiveData<Carts>
 
-    fun getAllItemsSize(): LiveData<Int>
+    fun getAllItemsSize(callback: (Int) -> Unit)
 
     fun getTotalQuantity(callback: (Int) -> Unit)
 }

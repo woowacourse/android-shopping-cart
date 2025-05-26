@@ -68,7 +68,12 @@ class CartRepositoryImpl(
             Carts(carts = cartList, totalQuantity = totalQuantity)
         }
 
-    override fun getAllItemsSize(): LiveData<Int> = dao.getAllItemsSize()
+    override fun getAllItemsSize(callback: (Int) -> Unit) {
+        thread {
+            val itemsSize = dao.getAllItemsSize()
+            callback(itemsSize)
+        }
+    }
 
     override fun getTotalQuantity(callback: (Int) -> Unit) {
         thread {
