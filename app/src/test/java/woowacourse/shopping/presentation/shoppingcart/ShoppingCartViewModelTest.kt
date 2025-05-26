@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.shoppingcart
 
 import io.kotest.matchers.shouldBe
 import io.mockk.every
+import io.mockk.invoke
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -23,10 +24,10 @@ class ShoppingCartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { shoppingRepository.getPagedGoods(any(), any()) } returns
-            listOf(
-                SHOPPING_GOODS_SUNDAE,
-            )
+        every { shoppingRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+            lambda<(List<ShoppingGoods>) -> Unit>().invoke(listOf(SHOPPING_GOODS_SUNDAE))
+        }
+
         every { goodsRepository.getById(1) } returns GOODS_SUNDAE
         shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
     }
@@ -61,7 +62,9 @@ class ShoppingCartViewModelTest {
     @Test
     fun `다음 상품 목록이 존재하면 다음 페이지는 존재한다`() {
         // given
-        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf(ShoppingGoods(1, 2))
+        every { shoppingRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+            lambda<(List<ShoppingGoods>) -> Unit>().invoke(listOf(SHOPPING_GOODS_SUNDAE))
+        }
         shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
 
         // then
@@ -71,7 +74,10 @@ class ShoppingCartViewModelTest {
     @Test
     fun `다음 상품 목록이 존재하지 않으면 다음 페이지는 존재하지 않는다`() {
         // given
-        every { shoppingRepository.getPagedGoods(any(), any()) } returns listOf()
+        every { shoppingRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+            lambda<((List<ShoppingGoods>) -> Unit)>().invoke(listOf())
+        }
+
         shoppingCartViewModel = ShoppingCartViewModel(goodsRepository, shoppingRepository)
 
         // then
@@ -102,7 +108,7 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 3
 
         verify {
-            shoppingRepository.increaseGoodsQuantity(1)
+            shoppingRepository.increaseGoodsQuantity(1, onSuccess = any())
         }
     }
 
@@ -115,7 +121,7 @@ class ShoppingCartViewModelTest {
         shoppingCartViewModel.goods.getOrAwaitValue()[0].quantity shouldBe 1
 
         verify {
-            shoppingRepository.decreaseGoodsQuantity(1)
+            shoppingRepository.decreaseGoodsQuantity(1, onSuccess = any())
         }
     }
 }

@@ -4,6 +4,7 @@ import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
+import io.mockk.invoke
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.model.LatestGoods
+import woowacourse.shopping.domain.model.ShoppingGoods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.LatestGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
@@ -37,6 +39,14 @@ class GoodsViewModelTest {
 
     @Test
     fun `상품 목록을 정해진 수량만큼 가져온다`() {
+        // given
+        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+            lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf())
+        }
+
+        // when
+        goodsViewModel.initGoods()
+
         // then
         goodsViewModel.goods.getOrAwaitValue().size shouldBe 20
     }
@@ -44,6 +54,11 @@ class GoodsViewModelTest {
     @Test
     fun `상품 목록을 추가한다`() {
         // given
+        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+            lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf())
+        }
+
+        goodsViewModel.initGoods()
         val before = goodsViewModel.goods.getOrAwaitValue().size
 
         // when
@@ -82,6 +97,12 @@ class GoodsViewModelTest {
 
     @Test
     fun `구매할 상품 수량을 증가할 수 있다`() {
+        // given
+        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+            lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf())
+        }
+        goodsViewModel.initGoods()
+
         // when
         goodsViewModel.increaseGoodsCount(1)
         val actual = goodsViewModel.goods.getOrAwaitValue()[0].quantity
@@ -93,7 +114,10 @@ class GoodsViewModelTest {
     @Test
     fun `구매할 상품 수량을 감소할 수 있다`() {
         // given
-        goodsViewModel.increaseGoodsCount(1)
+        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+            lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf(createShoppingGoods(1, 1)))
+        }
+        goodsViewModel.initGoods()
 
         // when
         goodsViewModel.decreaseGoodsCount(1)
@@ -106,8 +130,9 @@ class GoodsViewModelTest {
     @Test
     fun `장바구니에 담긴 상품 개수를 복원한다`() {
         // given
-        every { shoppingRepository.getAllGoods() } returns setOf(createShoppingGoods(1, 2))
-
+        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+            lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf(createShoppingGoods(1, 2)))
+        }
         // when
         goodsViewModel.initGoods()
         val actual = goodsViewModel.goods.getOrAwaitValue()[0].quantity

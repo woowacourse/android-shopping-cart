@@ -39,13 +39,13 @@ class GoodsDetailViewModelTest {
         // given
         val id = slot<Int>()
         val count = slot<Int>()
-        every { shoppingRepository.increaseGoodsQuantity(capture(id), capture(count)) } just Runs
+        every { shoppingRepository.increaseGoodsQuantity(capture(id), capture(count), any()) } just Runs
 
         // when
         goodsDetailViewModel.addToShoppingCart()
 
         // then
-        verify { shoppingRepository.increaseGoodsQuantity(any(), any()) }
+        verify { shoppingRepository.increaseGoodsQuantity(any(), any(), any()) }
 
         id.captured shouldBe goods.id
         count.captured shouldBe 1
