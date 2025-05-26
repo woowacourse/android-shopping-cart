@@ -46,10 +46,10 @@ class ProductsAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when (productsItems[position]) {
-            is ProductsItem.ProductProductsItem -> 0
-            is ProductsItem.LoadMoreProductsItem -> 1
-            is ProductsItem.LastWatchProductsItem -> 2
-            is ProductsItem.LastWatchTitleItem -> 3
+            is ProductsItem.ProductProductsItem -> ProductsItemViewType.PRODUCT.typeId
+            is ProductsItem.LoadMoreProductsItem -> ProductsItemViewType.LOAD_MORE.typeId
+            is ProductsItem.LastWatchProductsItem -> ProductsItemViewType.LAST_WATCH.typeId
+            is ProductsItem.LastWatchTitleItem -> ProductsItemViewType.LAST_WATCH_TITLE.typeId
         }
 
 
