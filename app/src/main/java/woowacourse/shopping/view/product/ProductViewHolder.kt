@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.ProductQuantityClickListener
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
@@ -25,18 +26,14 @@ class ProductViewHolder(
     }
 
     private fun handleEmptySelectedQuantityVisibility() {
-        binding.productPlusQuantityButton.visibility = View.GONE
-        binding.productMinusQuantityButton.visibility = View.GONE
-        binding.productQuantity.visibility = View.GONE
+        binding.productQuantityComponentLayout.visibility = View.GONE
         binding.productPlusQuantityButtonDefault.visibility = View.VISIBLE
     }
 
     private fun handleSelectedQuantityVisibility(item: ProductsItem.ProductItem) {
-        binding.productPlusQuantityButton.visibility = View.VISIBLE
-        binding.productMinusQuantityButton.visibility = View.VISIBLE
-        binding.productQuantity.visibility = View.VISIBLE
+        binding.productQuantityComponentLayout.visibility = View.VISIBLE
         binding.productPlusQuantityButtonDefault.visibility = View.GONE
-        binding.productQuantity.text = item.selectedQuantity.toString()
+        binding.productQuantityComponent.quantity = item.selectedQuantity
     }
 
     companion object {
@@ -50,11 +47,7 @@ class ProductViewHolder(
         }
     }
 
-    interface ProductClickListener {
+    interface ProductClickListener : ProductQuantityClickListener {
         fun onProductClick(product: Product)
-
-        fun onPlusShoppingCartClick(product: Product)
-
-        fun onMinusShoppingCartClick(product: Product)
     }
 }

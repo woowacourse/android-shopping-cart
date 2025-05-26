@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.ProductQuantityClickListener
 import woowacourse.shopping.view.shoppingCart.ShoppingCartItem.ProductItem
 
 class ShoppingCartProductViewHolder(
@@ -13,9 +14,7 @@ class ShoppingCartProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.onRemoveProduct = shoppingCartListener::onRemoveButton
-        binding.shoppingCartQuantityComponent.onMinusButtonClick =
-            shoppingCartListener::onMinusButton
-        binding.shoppingCartQuantityComponent.onPlusButtonClick = shoppingCartListener::onPlusButton
+        binding.shoppingCartQuantityComponent.productQuantityClickListener = shoppingCartListener
     }
 
     fun bind(item: ProductItem) {
@@ -35,11 +34,7 @@ class ShoppingCartProductViewHolder(
         }
     }
 
-    interface ShoppingCartProductClickListener {
+    interface ShoppingCartProductClickListener : ProductQuantityClickListener {
         fun onRemoveButton(product: Product)
-
-        fun onMinusButton(product: Product)
-
-        fun onPlusButton(product: Product)
     }
 }

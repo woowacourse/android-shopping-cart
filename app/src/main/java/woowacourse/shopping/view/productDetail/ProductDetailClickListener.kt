@@ -1,15 +1,12 @@
 package woowacourse.shopping.view.productDetail
 
 import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.view.common.ProductQuantityClickListener
 
-interface ProductDetailClickListener {
+interface ProductDetailClickListener : ProductQuantityClickListener {
     fun onCloseButton()
 
     fun onAddingToShoppingCart()
-
-    fun onPlusQuantity(product: Product)
-
-    fun onMinusQuantity(product: Product)
 
     fun onRecentProduct(product: Product)
 }

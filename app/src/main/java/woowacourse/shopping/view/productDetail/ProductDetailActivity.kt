@@ -51,8 +51,7 @@ class ProductDetailActivity :
         binding.lifecycleOwner = this
         binding.productDetailEventListener = this
         binding.productDetailQuantityComponent.product = product
-        binding.productDetailQuantityComponent.onPlusButtonClick = ::onPlusQuantity
-        binding.productDetailQuantityComponent.onMinusButtonClick = ::onMinusQuantity
+        binding.productDetailQuantityComponent.productQuantityClickListener = this
     }
 
     private fun setupObservers() {
@@ -91,11 +90,11 @@ class ProductDetailActivity :
         viewModel.addToShoppingCart()
     }
 
-    override fun onPlusQuantity(product: Product) {
+    override fun onPlusShoppingCartClick(product: Product) {
         viewModel.plusQuantity()
     }
 
-    override fun onMinusQuantity(product: Product) {
+    override fun onMinusShoppingCartClick(product: Product) {
         viewModel.minusQuantity()
     }
 
