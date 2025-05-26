@@ -34,10 +34,10 @@ class GoodsViewModel(
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
-        val currentItems = _items.value ?: loadGoods(page)
+        val currentItems = _items.value ?: loadGoods(page++)
         shoppingCartRepository.getAllItems { result ->
             result.onSuccess { items ->
-                updateQuantity(currentItems, items)
+                updateItems(currentItems, items)
             }.onFailure {
                 _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
             }
@@ -57,7 +57,9 @@ class GoodsViewModel(
     fun increaseQuantity(item: ShoppingCartItem) {
         _items.value = _items.value?.map {
             if (it.goods.id == item.goods.id) {
-                it.copy(quantity = it.quantity + 1)
+                val updated = it.increaseQuantity()
+                updateQuantity(updated)
+                updated
             } else {
                 it
             }
@@ -65,24 +67,18 @@ class GoodsViewModel(
     }
 
     fun decreaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.map {
-            if (it.goods.id == item.goods.id && item.quantity > MINIMUM_VALUE) {
-                it.copy(quantity = it.quantity - 1)
+        _items.value = _items.value?.mapNotNull {
+            if (it.goods.id == item.goods.id) {
+                if (it.quantity > MINIMUM_VALUE) {
+                    val updated = it.decreaseQuantity()
+                    updateQuantity(updated)
+                    updated
+                } else {
+                    removeItem(it)
+                    null
+                }
             } else {
                 it
-            }
-        }
-    }
-
-    fun addToShoppingCart() {
-        val currentItems = _items.value ?: return
-        val mappedItems = currentItems.filter { it.quantity > MINIMUM_VALUE }
-
-        shoppingCartRepository.addItems(mappedItems) { result ->
-            result.onSuccess {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.SUCCESS)
-            }.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
             }
         }
     }
@@ -97,7 +93,7 @@ class GoodsViewModel(
         return goods.map { ShoppingCartItem(it) }
     }
 
-    private fun updateQuantity(
+    private fun updateItems(
         currentItems: List<ShoppingCartItem>,
         selectedItems: List<ShoppingCartItem>,
     ) {
@@ -106,6 +102,22 @@ class GoodsViewModel(
             item.copy(quantity = selected?.quantity ?: MINIMUM_VALUE)
         }
         _items.postValue(updatedItems)
+    }
+
+    private fun removeItem(item: ShoppingCartItem) {
+        shoppingCartRepository.removeItem(item) { result ->
+            result.onFailure {
+                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
+            }
+        }
+    }
+
+    private fun updateQuantity(item: ShoppingCartItem) {
+        shoppingCartRepository.upsertItem(item) { result ->
+            result.onFailure {
+                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
+            }
+        }
     }
 
     companion object {

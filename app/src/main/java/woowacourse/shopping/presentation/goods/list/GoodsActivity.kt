@@ -75,10 +75,8 @@ class GoodsActivity : BaseActivity() {
                 ShoppingCartEvent.FAILURE -> {
                     Toast.makeText(this, getString(R.string.text_save_failure), Toast.LENGTH_SHORT).show()
                 }
-
                 ShoppingCartEvent.SUCCESS -> {}
             }
-            navigateToShoppingCart()
         }
     }
 
@@ -100,7 +98,7 @@ class GoodsActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                viewModel.addToShoppingCart()
+                navigateToShoppingCart()
                 true
             }
 
