@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.cart
 
+import woowacourse.shopping.data.recentProducts.RecentProductEntity
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.model.product.Product
 
@@ -13,3 +14,7 @@ fun CartItem.toEntity(): CartItemEntity =
         product.price,
         quantity = this.quantity,
     )
+
+fun RecentProductEntity.toProduct(): Product = Product(id, title, imageUrl, price)
+
+fun Product.toEntity(): RecentProductEntity = RecentProductEntity(id, title, imageUrl, price)

@@ -9,7 +9,7 @@ import woowacourse.shopping.data.cart.CartItemEntity
 import woowacourse.shopping.data.recentProducts.RecentProductDao
 import woowacourse.shopping.data.recentProducts.RecentProductEntity
 
-@Database(entities = [RecentProductEntity::class, CartItemEntity::class], version = 1)
+@Database(entities = [RecentProductEntity::class, CartItemEntity::class], version = 2)
 abstract class ShoppingDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
 
@@ -27,7 +27,9 @@ abstract class ShoppingDatabase : RoomDatabase() {
                             context.applicationContext,
                             ShoppingDatabase::class.java,
                             "shopping_cart_db",
-                        ).build()
+                        ).fallbackToDestructiveMigration()
+                        .build()
+
                 INSTANCE = instance
                 instance
             }

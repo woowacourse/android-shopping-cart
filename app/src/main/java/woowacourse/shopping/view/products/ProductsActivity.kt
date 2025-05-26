@@ -31,6 +31,7 @@ class ProductsActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initRecentProductsRecyclerView()
         initProductsRecyclerView()
+        observeRecentProductsView()
         observeProductsView()
         observeCartButton()
         setupScrollListenerForMoreButton()
@@ -65,7 +66,6 @@ class ProductsActivity : AppCompatActivity() {
             ProductsAdapter(
                 productClickListener = { cartItem ->
                     navigateToProductDetail(cartItem)
-                    recentProductsAdapter.updateRecentProductsView(cartItem.product)
                     productsViewModel.addRecentProduct(cartItem)
                 },
                 openQuantitySelectListener = { cartItem ->
@@ -100,6 +100,12 @@ class ProductsActivity : AppCompatActivity() {
             list.forEach {
                 productsAdapter.updateQuantityView(it.product.id)
             }
+        }
+    }
+
+    private fun observeRecentProductsView() {
+        productsViewModel.recentProducts.observe(this) { recentProducts ->
+            recentProductsAdapter.updateRecentProductsView(recentProducts)
         }
     }
 

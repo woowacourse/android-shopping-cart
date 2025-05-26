@@ -12,6 +12,8 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.products.ProductRepository
 import woowacourse.shopping.data.products.ProductRepositoryImpl
+import woowacourse.shopping.data.recentProducts.RecentProductsRepository
+import woowacourse.shopping.data.recentProducts.RecentProductsRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.model.product.Product
 import woowacourse.shopping.view.Event
@@ -20,6 +22,7 @@ import woowacourse.shopping.view.QuantityController
 class ProductsViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val recentProductsRepository: RecentProductsRepository,
 ) : ViewModel(),
     QuantityController {
     private val _productsInShop = MutableLiveData<List<CartItem>>()
@@ -34,10 +37,8 @@ class ProductsViewModel(
     private val _cartItemCount = MutableLiveData(INITIAL_CART_ITEM_COUNT)
     val cartItemCount: LiveData<Int> = _cartItemCount
 
-//    private val _recentProducts = MutableLiveData<List<Product>>()
-//    val recentProducts: LiveData<List<Product>> = _recentProducts
-
-    private val recentProducts = mutableListOf<Product>()
+    private val _recentProducts = MutableLiveData<List<Product>>()
+    val recentProducts: LiveData<List<Product>> = _recentProducts
 
     private var isAllProductsFetched = false
     private var currentPage = INITIAL_PAGE
@@ -93,7 +94,14 @@ class ProductsViewModel(
         }
     }
 
+    private fun setRecentProducts() {
+        recentProductsRepository.getAll { recentProducts ->
+            _recentProducts.postValue(recentProducts)
+        }
+    }
+
     fun loadPage() {
+        setRecentProducts()
         setUpdatedProducts()
         val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
@@ -131,7 +139,8 @@ class ProductsViewModel(
 
     fun addRecentProduct(cartItem: CartItem) {
         val recentProduct = cartItem.product
-        recentProducts.add(recentProduct)
+        recentProductsRepository.add(recentProduct)
+        _recentProducts.value = _recentProducts.value?.plus(cartItem.product)
     }
 
     private fun updateCartItemCount() {
@@ -182,11 +191,13 @@ class ProductsViewModel(
 
                     val database = ShoppingDatabase.getDatabase(context)
                     val cartDao = database.cartDao()
+                    val recentProductDao = database.recentProductDao()
                     extras.createSavedStateHandle()
 
                     return ProductsViewModel(
                         ProductRepositoryImpl(),
                         CartRepositoryImpl(cartDao),
+                        RecentProductsRepositoryImpl(recentProductDao),
                     ) as T
                 }
             }
