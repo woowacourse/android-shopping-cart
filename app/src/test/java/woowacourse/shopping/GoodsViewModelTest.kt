@@ -48,19 +48,19 @@ class GoodsViewModelTest {
 
         historyRepository =
             object : HistoryRepository {
-                override fun getAll(callback: (List<History>) -> Unit) {
+                override fun getAll(callback: (List<Cart>) -> Unit) {
                     callback(
                         listOf(
-                            History(1, "치킨", "http://example.com/chicken.jpg"),
+                            Cart(goods = Goods(1, "Test", 1000, "url"), quantity = 1),
                         ),
                     )
                 }
 
-                override fun insert(history: History) {
+                override fun insert(history: Cart) {
                     // 테스트용 빈 구현
                 }
 
-                override fun findLatest(callback: (History?) -> Unit) {
+                override fun findLatest(callback: (Cart?) -> Unit) {
                 }
             }
 
