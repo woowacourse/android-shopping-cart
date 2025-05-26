@@ -101,12 +101,13 @@ class ShoppingCartViewModel(
         item: CartProduct,
         newQuantity: Int,
     ) {
-        repository.updateQuantity(item.product.id, item.quantity, newQuantity) {}
-        val index = cartProducts.indexOfFirst { it.product.id == item.product.id }
-        if (index != -1) {
-            cartProducts[index] = cartProducts[index].copy(quantity = newQuantity)
+        repository.updateQuantity(item.product.id, item.quantity, newQuantity) {
+            val index = cartProducts.indexOfFirst { it.product.id == item.product.id }
+            if (index != -1) {
+                cartProducts[index] = cartProducts[index].copy(quantity = newQuantity)
+            }
+            loadPage(_page.value ?: FIRST_PAGE_NUMBER)
         }
-        loadPage(_page.value ?: FIRST_PAGE_NUMBER)
     }
 
     private fun checkHasNext(

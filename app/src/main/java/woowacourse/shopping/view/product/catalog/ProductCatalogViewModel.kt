@@ -119,14 +119,14 @@ class ProductCatalogViewModel(
         item: ProductCatalogItem.ProductItem,
         newQuantity: Int,
     ) {
-        cartProductRepository.updateQuantity(item.product.id, item.quantity, newQuantity) {}
-        val index = productItems.indexOfFirst { it.product.id == item.product.id }
-        if (index != -1) {
-            productItems[index] = productItems[index].copy(quantity = newQuantity)
+        cartProductRepository.updateQuantity(item.product.id, item.quantity, newQuantity) {
+            val index = productItems.indexOfFirst { it.product.id == item.product.id }
+            if (index != -1) {
+                productItems[index] = productItems[index].copy(quantity = newQuantity)
+            }
+            _totalQuantity.postValue((totalQuantity.value ?: 0) + (newQuantity - item.quantity))
+            _productCatalogItems.postValue(buildCatalogItems())
         }
-
-        _totalQuantity.value = (totalQuantity.value ?: 0) + (newQuantity - item.quantity)
-        _productCatalogItems.value = buildCatalogItems()
     }
 
     private fun buildCatalogItems(): List<ProductCatalogItem> =

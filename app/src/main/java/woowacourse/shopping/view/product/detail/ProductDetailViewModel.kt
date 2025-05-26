@@ -21,9 +21,6 @@ class ProductDetailViewModel(
     private val _lastViewedProduct = MutableLiveData<RecentProduct?>()
     val lastViewedProduct: LiveData<RecentProduct?> get() = _lastViewedProduct
 
-//    var lastViewedProduct: RecentProduct? = null
-//        private set
-
     private val _quantity = MutableLiveData(INITIAL_QUANTITY)
     val quantity: LiveData<Int> get() = _quantity
 
@@ -48,10 +45,11 @@ class ProductDetailViewModel(
             product.id,
             shoppingCartQuantity,
             shoppingCartQuantity + addQuantity,
-        ) {}
-        shoppingCartQuantity += addQuantity
+        ) {
+            shoppingCartQuantity += addQuantity
+            updateQuantity(INITIAL_QUANTITY)
+        }
         _addToCartEvent.setValue(Unit)
-        updateQuantity(INITIAL_QUANTITY)
     }
 
     override fun onQuantityIncreaseClick(item: Product) {
@@ -87,8 +85,8 @@ class ProductDetailViewModel(
     }
 
     private fun updateQuantity(newQuantity: Int) {
-        _quantity.value = newQuantity
-        _totalPrice.value = newQuantity * product.price
+        _quantity.postValue(newQuantity)
+        _totalPrice.postValue(newQuantity * product.price)
     }
 
     companion object {
