@@ -134,6 +134,26 @@ class GoodsViewModel(
         }
     }
 
+    fun updateItemQuantity(
+        id: Long,
+        quantity: Int,
+    ) {
+        val currentItems = _items.value.orEmpty().toMutableList()
+
+        val index = currentItems.indexOfFirst { it is Cart && it.goods.id == id }
+
+        if (index != -1) {
+            val oldItem = currentItems[index] as Cart
+            val updatedItem = oldItem.copy(quantity = quantity)
+
+            currentItems[index] = updatedItem
+            _items.value = currentItems
+
+            val total = currentItems.filterIsInstance<Cart>().sumOf { it.quantity }
+            _totalQuantity.value = total
+        }
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
         private const val INITIAL_PAGE = 0

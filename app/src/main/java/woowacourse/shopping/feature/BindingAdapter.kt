@@ -15,11 +15,16 @@ fun ImageView.loadImageFromUrl(url: String) {
 }
 
 @BindingAdapter("cartItems")
-fun RecyclerView.bindItems(items: List<Cart>?) {
+fun RecyclerView.bindCartItems(items: List<Cart>?) {
+    if (adapter is CartAdapter && items != null) {
+        (adapter as CartAdapter).setItems(items)
+    }
+}
+
+@BindingAdapter("items")
+fun RecyclerView.bindItems(items: List<Any>?) {
     if (adapter is GoodsAdapter && items != null) {
         (adapter as GoodsAdapter).setItems(items)
-    } else if (adapter is CartAdapter && items != null) {
-        (adapter as CartAdapter).setItems(items)
     }
 }
 

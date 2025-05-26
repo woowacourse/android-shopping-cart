@@ -2,7 +2,6 @@ package woowacourse.shopping.feature.goods
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -79,9 +78,6 @@ class GoodsActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.items.observe(this) { itemList ->
-            adapter.setItems(itemList)
-        }
         viewModel.hasNextPage.observe(this) { hasNext ->
             adapter.setHasNextPage(hasNext)
         }
@@ -144,10 +140,7 @@ class GoodsActivity : AppCompatActivity() {
     private fun handleActivityResult(data: Intent?) {
         val changedId = data?.getLongExtra("GOODS_ID", 0) ?: 0
         val changedQuantity = data?.getIntExtra("GOODS_QUANTITY", 0) ?: 0
-        adapter.updateItemQuantity(changedId, changedQuantity)
-
-        Log.d("123452", "dd")
-
+        viewModel.updateItemQuantity(changedId, changedQuantity)
         viewModel.refreshHistoryOnly()
     }
 

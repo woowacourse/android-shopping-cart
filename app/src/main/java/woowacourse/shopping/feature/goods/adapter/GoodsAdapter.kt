@@ -51,18 +51,6 @@ class GoodsAdapter(
         }
     }
 
-    fun updateItemQuantity(
-        id: Long,
-        quantity: Int,
-    ) {
-        val index = items.indexOfFirst { it is Cart && it.goods.id == id }
-        if (index != -1) {
-            val oldItem = items[index] as Cart
-            items[index] = oldItem.copy(quantity = quantity)
-            notifyItemChanged(index)
-        }
-    }
-
     override fun getItemViewType(position: Int): Int =
         when {
             position < items.size -> {
