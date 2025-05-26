@@ -2,7 +2,7 @@ package woowacourse.shopping.domain
 
 class Page(
     private val initialPage: Int,
-    private val pageSize: Int,
+    val pageSize: Int,
 ) {
     var currentPage: Int = initialPage
         private set
