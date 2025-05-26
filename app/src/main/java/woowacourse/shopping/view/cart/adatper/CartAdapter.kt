@@ -15,10 +15,11 @@ class CartAdapter(
 ) : RecyclerView.Adapter<CartViewHolder>() {
     fun submitList(newItems: List<Cart>) {
         val oldSize = items.size
-        val updatedItems = newItems.subtract(items.toSet()).toList()
+        val updatedItem =
+            newItems.find { newItem -> items.any { it.product == newItem.product && it.quantity != newItem.quantity } }
         items = newItems
-        if (updatedItems.size == 1) {
-            val updateItemIndex = newItems.indexOf(updatedItems[0])
+        if (updatedItem != null) {
+            val updateItemIndex = newItems.indexOf(updatedItem)
             notifyItemChanged(updateItemIndex)
             return
         }
