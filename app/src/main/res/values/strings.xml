@@ -8,4 +8,5 @@
     <string name="price_text">가격</string>
     <string name="cart">Cart</string>
     <string name="recent_product_text">최근 본 상품</string>
+    <string name="last_product_text">마지막으로 본 상품</string>
 </resources>
