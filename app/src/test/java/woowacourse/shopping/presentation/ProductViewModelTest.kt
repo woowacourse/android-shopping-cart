@@ -1,35 +1,27 @@
 package woowacourse.shopping.presentation
 
-import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.Fixture
-import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.fixture.FakeProductRepository
 import woowacourse.shopping.presentation.product.ProductViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductViewModelTest {
     private lateinit var cartRepository: CartRepository
-    private lateinit var productRepository: ProductRepository
+    private lateinit var productRepository: FakeProductRepository
     private lateinit var recentProductRepository: RecentProductRepository
     private lateinit var viewModel: ProductViewModel
 
     @BeforeEach
     fun setUp() {
         cartRepository = mockk(relaxed = true)
-        productRepository = mockk(relaxed = true)
+        productRepository = FakeProductRepository()
         recentProductRepository = mockk(relaxed = true)
-
-        every { productRepository.fetchPagingProducts(any(), any(), any()) } answers {
-            val callback = thirdArg<(Result<List<CartItem>>) -> Unit>()
-            callback(Result.success(Fixture.mockedCartItems))
-        }
 
         viewModel = ProductViewModel(cartRepository, productRepository, recentProductRepository)
     }
