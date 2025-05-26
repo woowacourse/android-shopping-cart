@@ -1,11 +1,11 @@
 package woowacourse.shopping.data.shoppingcart.repository
 
 import woowacourse.shopping.data.shoppingcart.database.ShoppingCartDao
-import woowacourse.shopping.data.shoppingcart.util.toDomain
-import woowacourse.shopping.data.shoppingcart.util.toEntity
+import woowacourse.shopping.data.shoppingcart.mapper.toDomain
+import woowacourse.shopping.data.shoppingcart.mapper.toEntity
+import woowacourse.shopping.data.util.doAsyncCatching
 import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import kotlin.concurrent.thread
 
 class ShoppingCartRepositoryImpl(
     private val dao: ShoppingCartDao,
@@ -99,15 +99,5 @@ class ShoppingCartRepositoryImpl(
             },
             onResult = onResult,
         )
-    }
-
-    private inline fun <T> doAsyncCatching(
-        crossinline block: () -> T,
-        crossinline onResult: (Result<T>) -> Unit,
-    ) {
-        thread {
-            val result = runCatching { block() }
-            onResult(result)
-        }
     }
 }
