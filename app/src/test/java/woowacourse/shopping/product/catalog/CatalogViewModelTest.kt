@@ -9,6 +9,7 @@ import woowacourse.shopping.fixture.FakeCartItemRepository
 import woowacourse.shopping.fixture.FakeCatalogItemRepository
 import woowacourse.shopping.fixture.FakeViewedItemRepository
 import woowacourse.shopping.util.InstantTaskExecutorExtension
+import woowacourse.shopping.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CatalogViewModelTest {
@@ -26,7 +27,7 @@ class CatalogViewModelTest {
                 FakeViewedItemRepository(0),
             )
 
-        val paging = viewModel.pagingData.value!!
+        val paging = viewModel.pagingData.getOrAwaitValue()
 
         assertThat(viewModel.page).isEqualTo(0)
         assertThat(paging.hasNext).isFalse
@@ -42,7 +43,7 @@ class CatalogViewModelTest {
                 FakeCartItemRepository(0),
                 FakeViewedItemRepository(0),
             )
-        val catalogProducts: List<ProductUiModel> = (viewModel.pagingData.value?.products ?: emptyList())
+        val catalogProducts: List<ProductUiModel> = (viewModel.pagingData.getOrAwaitValue().products)
         assertThat(viewModel.page).isEqualTo(0)
 
         // when
@@ -63,7 +64,7 @@ class CatalogViewModelTest {
                 FakeViewedItemRepository(0),
             )
 
-        val hasNext = viewModel.pagingData.value?.hasNext
+        val hasNext = viewModel.pagingData.getOrAwaitValue().hasNext
 
         assertThat(hasNext).isEqualTo(true)
     }
@@ -76,8 +77,8 @@ class CatalogViewModelTest {
                 FakeCartItemRepository(0),
                 FakeViewedItemRepository(9),
             )
-        val viewedSize = viewModel.recentViewedItems.value?.size
-        val hasViewed = viewModel.hasRecentViewedItems.value
+        val viewedSize = viewModel.recentViewedItems.getOrAwaitValue().size
+        val hasViewed = viewModel.hasRecentViewedItems.getOrAwaitValue()
 
         assertThat(viewedSize).isEqualTo(9)
         assertThat(hasViewed).isEqualTo(true)
@@ -91,8 +92,8 @@ class CatalogViewModelTest {
                 FakeCartItemRepository(0),
                 FakeViewedItemRepository(20),
             )
-        val viewedSize = viewModel.recentViewedItems.value?.size
-        val hasViewed = viewModel.hasRecentViewedItems.value
+        val viewedSize = viewModel.recentViewedItems.getOrAwaitValue().size
+        val hasViewed = viewModel.hasRecentViewedItems.getOrAwaitValue()
 
         assertThat(viewedSize).isEqualTo(10)
         assertThat(hasViewed).isEqualTo(true)

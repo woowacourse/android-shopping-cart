@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.fixture.FakeCartItemRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
+import woowacourse.shopping.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
@@ -23,7 +24,7 @@ class CartViewModelTest {
                 FakeCartItemRepository(0),
             )
 
-        val products = viewModel.cartProducts.value ?: emptyList()
+        val products = viewModel.cartProducts.getOrAwaitValue()
 
         assertThat(products.size).isEqualTo(0)
         assertThat(viewModel.getPage()).isEqualTo(0)
@@ -39,11 +40,11 @@ class CartViewModelTest {
         repeat(2) { viewModel.onNextPage() }
         assertThat(viewModel.getPage()).isEqualTo(2)
 
-        val lastItem = viewModel.cartProducts.value!!.last()
+        val lastItem = viewModel.cartProducts.getOrAwaitValue().last()
         viewModel.onDeleteProduct(lastItem)
 
         assertThat(viewModel.getPage()).isEqualTo(1)
-        assertThat(viewModel.cartProducts.value!!.size).isEqualTo(5)
+        assertThat(viewModel.cartProducts.getOrAwaitValue().size).isEqualTo(5)
     }
 
     @Test
@@ -112,8 +113,8 @@ class CartViewModelTest {
 
         viewModel.decreaseQuantity(product)
 
-        val updated = viewModel.product.value
-        assertThat(updated?.quantity).isEqualTo(2)
+        val updated = viewModel.product.getOrAwaitValue()
+        assertThat(updated.quantity).isEqualTo(2)
     }
 
     @Test
@@ -134,7 +135,7 @@ class CartViewModelTest {
 
         viewModel.decreaseQuantity(product)
 
-        val updated = viewModel.product.value
-        assertThat(updated?.quantity).isEqualTo(1)
+        val updated = viewModel.product.getOrAwaitValue()
+        assertThat(updated.quantity).isEqualTo(1)
     }
 }
