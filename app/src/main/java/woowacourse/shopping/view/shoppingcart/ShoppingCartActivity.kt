@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.view.base.BaseActivity
+import woowacourse.shopping.view.inventory.InventoryActivity
 
 class ShoppingCartActivity :
     BaseActivity<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart),
@@ -18,10 +20,7 @@ class ShoppingCartActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            title = getString(R.string.shopping_cart_toolbar_title)
-        }
+        initActionBar()
 
         val application = application as ShoppingApplication
         val factory =
@@ -34,8 +33,30 @@ class ShoppingCartActivity :
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
+        goToMainActivity()
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun initActionBar() {
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.shopping_cart_toolbar_title)
+        }
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    goToMainActivity()
+                }
+            },
+        )
+    }
+
+    private fun goToMainActivity() {
+        val intent =
+            InventoryActivity.newIntent(this@ShoppingCartActivity)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     private fun initRecyclerView() {
