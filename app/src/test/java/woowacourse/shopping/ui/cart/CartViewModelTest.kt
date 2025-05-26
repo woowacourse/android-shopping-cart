@@ -13,7 +13,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.CartProducts
-import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.usecase.DecreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.GetCartProductsUseCase
+import woowacourse.shopping.domain.usecase.IncreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.RemoveCartProductUseCase
 import woowacourse.shopping.model.DUMMY_CART_PRODUCTS_1
 import woowacourse.shopping.model.DUMMY_PRODUCT_1
 import woowacourse.shopping.util.InstantTaskExecutorExtension
@@ -21,28 +24,37 @@ import woowacourse.shopping.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
-    private lateinit var cartRepository: CartRepository
+    private lateinit var getCartProductsUseCase: GetCartProductsUseCase
+    private lateinit var removeCartProductUseCase: RemoveCartProductUseCase
+    private lateinit var increaseCartProductQuantityUseCase: IncreaseCartProductQuantityUseCase
+    private lateinit var decreaseCartProductQuantityUseCase: DecreaseCartProductQuantityUseCase
     private lateinit var viewModel: CartViewModel
 
     @BeforeEach
     fun setup() {
-        cartRepository = mockk(relaxed = true)
+        getCartProductsUseCase = mockk()
+        removeCartProductUseCase = mockk()
+        increaseCartProductQuantityUseCase = mockk()
+        decreaseCartProductQuantityUseCase = mockk()
 
         every {
-            cartRepository.fetchCartProducts(any(), any(), any())
+            getCartProductsUseCase.invoke(any(), any(), any())
         } answers {
             thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS_1)
         }
 
-        viewModel = CartViewModel(cartRepository)
+        viewModel =
+            CartViewModel(
+                getCartProductsUseCase,
+                removeCartProductUseCase,
+                increaseCartProductQuantityUseCase,
+                decreaseCartProductQuantityUseCase,
+            )
     }
 
     @Test
     fun `장바구니 상품 목록을 불러온다`() {
-        // when
-        viewModel = CartViewModel(cartRepository)
-
-        // then
+        // given & when & then
         assertThat(viewModel.cartProducts.getOrAwaitValue().products).hasSize(5)
         assertThat(viewModel.cartProducts.getOrAwaitValue().products).containsExactlyElementsIn(DUMMY_CART_PRODUCTS_1.products)
     }
@@ -54,7 +66,7 @@ class CartViewModelTest {
         val newQuantity = 10
 
         every {
-            cartRepository.increaseProductQuantity(eq(productId), any(), any())
+            increaseCartProductQuantityUseCase.invoke(eq(productId), any(), any())
         } answers {
             thirdArg<(Int) -> Unit>().invoke(newQuantity)
         }
@@ -68,7 +80,6 @@ class CartViewModelTest {
                 .getOrAwaitValue()
                 .products
                 .find { it.product.id == productId }
-
         assertThat(updatedProduct?.quantity).isEqualTo(newQuantity)
         assertThat(viewModel.editedProductIds.getOrAwaitValue()).contains(productId)
     }
@@ -79,7 +90,7 @@ class CartViewModelTest {
         val productId = DUMMY_PRODUCT_1.id
 
         every {
-            cartRepository.decreaseProductQuantity(eq(productId), any(), any())
+            decreaseCartProductQuantityUseCase.invoke(eq(productId), any(), any())
         } answers {
             thirdArg<(Int) -> Unit>().invoke(0)
         }
@@ -88,7 +99,7 @@ class CartViewModelTest {
         viewModel.decreaseCartProductQuantity(productId)
 
         // then
-        verify { cartRepository.fetchCartProducts(any(), any(), any()) }
+        verify { getCartProductsUseCase.invoke(any(), any(), any()) }
         assertThat(viewModel.editedProductIds.getOrAwaitValue()).contains(productId)
     }
 
@@ -97,27 +108,27 @@ class CartViewModelTest {
         // given
         val productId = DUMMY_PRODUCT_1.id
 
-        every {
-            cartRepository.removeCartProduct(productId)
-        } just Runs
+        every { removeCartProductUseCase.invoke(productId) } just Runs
+        every { getCartProductsUseCase.invoke(any(), any(), any()) } answers {
+            thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS_1)
+        }
 
         // when
         viewModel.removeCartProduct(productId)
 
         // then
-        verify { cartRepository.removeCartProduct(productId) }
-        verify { cartRepository.fetchCartProducts(any(), any(), any()) }
-
+        verify { removeCartProductUseCase.invoke(productId) }
+        verify { getCartProductsUseCase.invoke(any(), any(), any()) }
         assertThat(viewModel.editedProductIds.getOrAwaitValue()).contains(productId)
     }
 
     @Test
     fun `장바구니 상품 페이지를 증가시키고 상품 목록을 불러온다`() {
         // given
-        clearMocks(cartRepository)
+        clearMocks(getCartProductsUseCase)
 
         every {
-            cartRepository.fetchCartProducts(any(), any(), any())
+            getCartProductsUseCase.invoke(any(), any(), any())
         } answers {
             thirdArg<(CartProducts) -> Unit>().invoke(DUMMY_CART_PRODUCTS_1)
         }
@@ -126,7 +137,7 @@ class CartViewModelTest {
         viewModel.increasePage()
 
         // then
-        verify { cartRepository.fetchCartProducts(2, 5, any()) }
+        verify { getCartProductsUseCase.invoke(2, 5, any()) }
         assertThat(viewModel.pageState.getOrAwaitValue().current).isEqualTo(2)
     }
 

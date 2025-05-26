@@ -1,9 +1,7 @@
 package woowacourse.shopping.ui.productdetail
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
@@ -13,39 +11,49 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CatalogProduct
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.HistoryRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.model.HistoryProduct
+import woowacourse.shopping.domain.usecase.AddSearchHistoryUseCase
+import woowacourse.shopping.domain.usecase.GetProductDetailUseCase
+import woowacourse.shopping.domain.usecase.GetRecentSearchHistoryUseCase
+import woowacourse.shopping.domain.usecase.UpdateCartProductUseCase
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_HISTORY_PRODUCT_1
 import woowacourse.shopping.model.DUMMY_PRODUCT_1
-import woowacourse.shopping.ui.productdetail.ProductDetailViewModel
 import woowacourse.shopping.util.InstantTaskExecutorExtension
 import woowacourse.shopping.util.getOrAwaitValue
 import woowacourse.shopping.util.setUpTestLiveData
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
-    private lateinit var productRepository: ProductRepository
-    private lateinit var cartRepository: CartRepository
-    private lateinit var historyRepository: HistoryRepository
+    private lateinit var getProductDetailUseCase: GetProductDetailUseCase
+    private lateinit var getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase
+    private lateinit var addSearchHistoryUseCase: AddSearchHistoryUseCase
+    private lateinit var updateCartProductUseCase: UpdateCartProductUseCase
     private lateinit var viewModel: ProductDetailViewModel
 
     @BeforeEach
     fun setup() {
-        productRepository = mockk(relaxed = true)
-        cartRepository = mockk(relaxed = true)
-        historyRepository = mockk(relaxed = true)
+        getProductDetailUseCase = mockk()
+        getRecentSearchHistoryUseCase = mockk()
+        addSearchHistoryUseCase = mockk(relaxed = true)
+        updateCartProductUseCase = mockk(relaxed = true)
 
-        viewModel = ProductDetailViewModel(productRepository, cartRepository, historyRepository)
+        viewModel =
+            ProductDetailViewModel(
+                getProductDetailUseCase,
+                getRecentSearchHistoryUseCase,
+                addSearchHistoryUseCase,
+                updateCartProductUseCase,
+            )
     }
 
     @Test
     fun `상품 상세 정보를 불러온다`() {
         // given
         val expected = DUMMY_CATALOG_PRODUCT_1
+
         every {
-            productRepository.fetchProduct(DUMMY_PRODUCT_1.id, any())
+            getProductDetailUseCase.invoke(DUMMY_PRODUCT_1.id, any())
         } answers {
             secondArg<(CatalogProduct?) -> Unit>().invoke(expected)
         }
@@ -62,9 +70,9 @@ class ProductDetailViewModelTest {
     fun `가장 최근에 탐색한 상품을 불러온다`() {
         // given
         every {
-            historyRepository.fetchRecentSearchHistory(any())
+            getRecentSearchHistoryUseCase.invoke(any())
         } answers {
-            firstArg<(woowacourse.shopping.domain.model.HistoryProduct?) -> Unit>().invoke(DUMMY_HISTORY_PRODUCT_1)
+            firstArg<(HistoryProduct?) -> Unit>().invoke(DUMMY_HISTORY_PRODUCT_1)
         }
 
         // when
@@ -84,7 +92,7 @@ class ProductDetailViewModelTest {
         viewModel.addHistoryProduct(productId)
 
         // then
-        verify { historyRepository.saveSearchHistory(productId) }
+        verify { addSearchHistoryUseCase.invoke(productId) }
     }
 
     @Test
@@ -120,15 +128,12 @@ class ProductDetailViewModelTest {
         // given
         val catalogProduct = DUMMY_CATALOG_PRODUCT_1
         setUpTestLiveData(catalogProduct, "_catalogProduct", viewModel)
-        every {
-            cartRepository.saveCartProduct(CartProduct(DUMMY_PRODUCT_1, 5))
-        } just Runs
 
         // when
         viewModel.updateCartProduct()
 
         // then
-        verify { cartRepository.saveCartProduct(CartProduct(DUMMY_PRODUCT_1, 5)) }
+        verify { updateCartProductUseCase.invoke(CartProduct(DUMMY_PRODUCT_1, 5)) }
         assertThat(viewModel.onCartProductAddSuccess.getValue()).isTrue()
     }
 

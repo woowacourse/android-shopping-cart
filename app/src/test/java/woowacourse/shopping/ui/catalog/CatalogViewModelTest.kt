@@ -11,9 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.model.HistoryProduct
-import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.HistoryRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.usecase.DecreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductsByIdsUseCase
+import woowacourse.shopping.domain.usecase.GetCatalogProductsUseCase
+import woowacourse.shopping.domain.usecase.GetSearchHistoryUseCase
+import woowacourse.shopping.domain.usecase.IncreaseCartProductQuantityUseCase
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCTS_1
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCTS_2
 import woowacourse.shopping.model.DUMMY_CATALOG_PRODUCT_1
@@ -26,18 +29,38 @@ import woowacourse.shopping.util.setUpTestLiveData
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CatalogViewModelTest {
-    private lateinit var productRepository: ProductRepository
-    private lateinit var cartRepository: CartRepository
-    private lateinit var historyRepository: HistoryRepository
+    private lateinit var getCatalogProductsUseCase: GetCatalogProductsUseCase
+    private lateinit var getCatalogProductUseCase: GetCatalogProductUseCase
+    private lateinit var getCatalogProductsByIdsUseCase: GetCatalogProductsByIdsUseCase
+    private lateinit var getSearchHistoryUseCase: GetSearchHistoryUseCase
+    private lateinit var increaseCartProductQuantityUseCase: IncreaseCartProductQuantityUseCase
+    private lateinit var decreaseCartProductQuantityUseCase: DecreaseCartProductQuantityUseCase
     private lateinit var viewModel: CatalogViewModel
 
     @BeforeEach
     fun setup() {
-        productRepository = mockk(relaxed = true)
-        cartRepository = mockk(relaxed = true)
-        historyRepository = mockk(relaxed = true)
+        getCatalogProductsUseCase = mockk()
+        getCatalogProductUseCase = mockk()
+        getCatalogProductsByIdsUseCase = mockk()
+        getSearchHistoryUseCase = mockk()
+        increaseCartProductQuantityUseCase = mockk()
+        decreaseCartProductQuantityUseCase = mockk()
 
-        viewModel = CatalogViewModel(productRepository, cartRepository, historyRepository)
+        every {
+            getCatalogProductsUseCase.invoke(any(), any(), any())
+        } answers {
+            thirdArg<(CatalogProducts) -> Unit>().invoke(DUMMY_CATALOG_PRODUCTS_1)
+        }
+
+        viewModel =
+            CatalogViewModel(
+                getCatalogProductsUseCase,
+                getCatalogProductUseCase,
+                getCatalogProductsByIdsUseCase,
+                getSearchHistoryUseCase,
+                increaseCartProductQuantityUseCase,
+                decreaseCartProductQuantityUseCase,
+            )
     }
 
     @Test
@@ -46,10 +69,10 @@ class CatalogViewModelTest {
         setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_1, "_catalogProducts", viewModel)
 
         val newProduct = DUMMY_CATALOG_PRODUCT_2
-        val newData = CatalogProducts(products = listOf(DUMMY_CATALOG_PRODUCT_2), hasMore = false)
+        val newData = CatalogProducts(products = listOf(newProduct), hasMore = false)
 
         every {
-            productRepository.fetchProducts(any(), any(), any())
+            getCatalogProductsUseCase.invoke(any(), any(), any())
         } answers {
             thirdArg<(CatalogProducts) -> Unit>().invoke(newData)
         }
@@ -69,7 +92,7 @@ class CatalogViewModelTest {
         val expected = listOf(DUMMY_HISTORY_PRODUCT_1)
 
         every {
-            historyRepository.fetchAllSearchHistory(any())
+            getSearchHistoryUseCase.invoke(any())
         } answers {
             firstArg<(List<HistoryProduct>) -> Unit>().invoke(expected)
         }
@@ -89,7 +112,7 @@ class CatalogViewModelTest {
         setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_1, "_catalogProducts", viewModel)
 
         every {
-            cartRepository.increaseProductQuantity(eq(productId), any(), any())
+            increaseCartProductQuantityUseCase.invoke(eq(productId), any(), any())
         } answers {
             thirdArg<(Int) -> Unit>().invoke(10)
         }
@@ -109,7 +132,7 @@ class CatalogViewModelTest {
         setUpTestLiveData(DUMMY_CATALOG_PRODUCTS_1, "_catalogProducts", viewModel)
 
         every {
-            cartRepository.decreaseProductQuantity(eq(productId), any(), any())
+            decreaseCartProductQuantityUseCase.invoke(eq(productId), any(), any())
         } answers {
             thirdArg<(Int) -> Unit>().invoke(1)
         }
@@ -131,7 +154,7 @@ class CatalogViewModelTest {
         val updatedProduct = DUMMY_CATALOG_PRODUCT_1.copy(quantity = 100)
 
         every {
-            productRepository.fetchProduct(eq(productId), any())
+            getCatalogProductUseCase.invoke(eq(productId), any())
         } answers {
             secondArg<(CatalogProduct?) -> Unit>().invoke(updatedProduct)
         }
@@ -152,7 +175,7 @@ class CatalogViewModelTest {
         val updatedProducts = listOf(DUMMY_CATALOG_PRODUCT_1.copy(quantity = 6))
 
         every {
-            productRepository.fetchProducts(any<List<Int>>(), any())
+            getCatalogProductsByIdsUseCase.invoke(any(), any())
         } answers {
             secondArg<(List<CatalogProduct>) -> Unit>().invoke(updatedProducts)
         }
