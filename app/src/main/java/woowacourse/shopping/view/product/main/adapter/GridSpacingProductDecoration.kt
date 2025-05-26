@@ -36,6 +36,8 @@ class GridSpacingProductDecoration(
         ) {
             outRect.left = edgeSpacing
             outRect.right = edgeSpacing
+        } else {
+            outRect.right = spacing / 2
         }
     }
 }

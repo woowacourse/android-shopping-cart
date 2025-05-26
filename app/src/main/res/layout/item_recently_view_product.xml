@@ -7,7 +7,7 @@
 
         <variable
             name="navigateToProductDetail"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1" />
 
         <variable
             name="recentlyViewedProduct"
@@ -16,32 +16,34 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_product_recently_viewed_item"
-        android:layout_width="98dp"
-        android:layout_height="121dp"
-        android:onClick="@{() -> navigateToProductDetail.invoke()}">
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:onClick="@{() -> navigateToProductDetail.invoke(recentlyViewedProduct)}">
 
         <ImageView
             android:id="@+id/iv_recently_view_product"
-            android:layout_width="98dp"
-            android:layout_height="98dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:contentDescription="@string/recently_view_product_description"
+            android:scaleType="centerCrop"
             app:imageUrl="@{recentlyViewedProduct.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             style="@style/ProductRecentlyViewedNameStyle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
             android:layout_marginTop="7dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingHorizontal="4dp"
             android:text="@{recentlyViewedProduct.name}"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/iv_recently_view_product"
             app:layout_constraintStart_toStartOf="@id/iv_recently_view_product"
             app:layout_constraintTop_toBottomOf="@id/iv_recently_view_product"
-            tools:text="PET 보틀 - 정사각형(500ml)" />
+            tools:text="PET 보틀 - 정사각형(500ml) 3종  택" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
