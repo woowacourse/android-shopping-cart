@@ -32,17 +32,16 @@ class ProductsViewModel(
 
 
     init {
+        fetchCartProducts()
+        fetchLastProducts()
+    }
+
+    fun fetchCartProducts(){
         cartRepository.fetchAllProduct { cartList ->
             val result = cartList.associate { it.product.id to it.count }
 
             mainHandler.post {
                 _cart.value = result
-            }
-        }
-        lastProductRepository.fetchProducts { products ->
-            val result = products.map { it.product }
-            mainHandler.post {
-                _lastProducts.value = result
             }
         }
     }

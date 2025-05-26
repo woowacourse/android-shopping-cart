@@ -54,6 +54,7 @@ class ProductsActivity : BindingActivity<ActivityProductsBinding>(R.layout.activ
     override fun onResume() {
         super.onResume()
         viewModel.fetchLastProducts()
+        viewModel.fetchCartProducts()
 
     }
 
