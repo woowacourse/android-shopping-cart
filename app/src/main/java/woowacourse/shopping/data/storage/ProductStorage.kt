@@ -5,8 +5,8 @@ import woowacourse.shopping.data.network.entity.ProductPageEntity
 
 @Suppress("ktlint:standard:max-line-length")
 object ProductStorage {
-    private val ProductEntity = mutableMapOf<Long, ProductEntity>()
-    private val ProductDtoValues get() = ProductEntity.values.toList()
+    private val productEntities = mutableMapOf<Long, ProductEntity>()
+    private val ProductEntitiesValues get() = productEntities.values.toList()
 
     init {
         initialize()
@@ -274,28 +274,28 @@ object ProductStorage {
                 quantity = 10,
             ),
         ).forEach {
-            ProductEntity[it.id] = it
+            productEntities[it.id] = it
         }
     }
 
-    operator fun get(id: Long): ProductEntity = ProductEntity[id] ?: throw IllegalArgumentException()
+    operator fun get(id: Long): ProductEntity = productEntities[id] ?: throw IllegalArgumentException()
 
     fun getProductsById(productIds: List<Long>): List<ProductEntity> {
-        return productIds.mapNotNull { ProductEntity[it] }
+        return productIds.mapNotNull { productEntities[it] }
     }
 
     fun singlePage(
         fromIndex: Int,
         toIndex: Int,
     ): ProductPageEntity {
-        val endIndex = minOf(toIndex, ProductEntity.size)
+        val endIndex = minOf(toIndex, productEntities.size)
 
-        if (fromIndex >= ProductEntity.size || fromIndex < 0) {
+        if (fromIndex >= productEntities.size || fromIndex < 0) {
             return ProductPageEntity(emptyList(), false)
         }
 
-        val result = ProductDtoValues.subList(fromIndex, endIndex)
-        val hasNextPage = endIndex < ProductEntity.size
+        val result = ProductEntitiesValues.subList(fromIndex, endIndex)
+        val hasNextPage = endIndex < productEntities.size
 
         return ProductPageEntity(result, hasNextPage)
     }
