@@ -1,11 +1,12 @@
 package woowacourse.shopping.view.productDetail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.product.ProductImageUrls.imageUrl
+import woowacourse.shopping.data.product.repository.DefaultProductsRepository
+import woowacourse.shopping.data.product.repository.ProductsRepository
 import woowacourse.shopping.data.shoppingCart.repository.DefaultShoppingCartRepository
 import woowacourse.shopping.data.shoppingCart.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.product.CartItem
@@ -14,6 +15,7 @@ import woowacourse.shopping.view.MutableSingleLiveData
 import woowacourse.shopping.view.SingleLiveData
 
 class ProductDetailViewModel(
+    private val productsRepository: ProductsRepository = DefaultProductsRepository(),
     private val shoppingCartRepository: ShoppingCartRepository = DefaultShoppingCartRepository(),
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
@@ -29,6 +31,7 @@ class ProductDetailViewModel(
 
     fun updateProduct(product: Product) {
         _product.value = product
+        productsRepository.recordViewedProduct(product)
         updateQuantity()
     }
 
@@ -48,8 +51,6 @@ class ProductDetailViewModel(
                 return
             }
         val cartItem = CartItem(product, quantity.value ?: 1)
-
-        Log.e("TAG", "cartItem: $cartItem")
 
         shoppingCartRepository.upsert(cartItem) { result: Result<Unit> ->
             result

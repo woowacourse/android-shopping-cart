@@ -78,7 +78,9 @@ class ProductsViewModel(
             result
                 .onSuccess { recentViewedProducts: List<Product> ->
                     val recentViewedProducts =
-                        ProductsItem.RecentViewedProductsItem(recentViewedProducts)
+                        ProductsItem.RecentViewedProductsItem(
+                            recentViewedProducts.subList(0, LOAD_RECENT_VIEWED_PRODUCTS_SIZE),
+                        )
                     _productItems.postValue(listOf(recentViewedProducts) + productItems + loadItem)
                 }.onFailure {
                     _productItems.postValue(productItems + loadItem)
@@ -108,5 +110,6 @@ class ProductsViewModel(
 
     companion object {
         private const val LOAD_PRODUCTS_SIZE = 20
+        private const val LOAD_RECENT_VIEWED_PRODUCTS_SIZE = 10
     }
 }

@@ -75,6 +75,7 @@ class ProductDetailActivity :
     }
 
     override fun onClose() {
+        setResult(RESULT_OK)
         finish()
     }
 

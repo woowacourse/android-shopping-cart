@@ -33,4 +33,6 @@ object VolatileProductsDataSource : ProductsDataSource {
         )
 
     override fun load(): List<ProductEntity> = products
+
+    override fun getById(id: Long): ProductEntity? = products.firstOrNull { it.id == id }
 }
