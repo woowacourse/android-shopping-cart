@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.repository
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
@@ -12,7 +11,14 @@ class HttpCatalogProductRepositoryImpl(
     private val baseUrl: String,
     private val client: OkHttpClient = OkHttpClient(),
 ) : CatalogProductRepository {
+    private var cachedProducts: List<ProductUiModel>? = null
+
     private fun getAllProducts(callback: (List<ProductUiModel>) -> Unit) {
+        if (cachedProducts != null) {
+            callback(cachedProducts!!)
+            return
+        }
+
         thread {
             try {
                 val request =
@@ -23,16 +29,16 @@ class HttpCatalogProductRepositoryImpl(
 
                 val response = client.newCall(request).execute()
                 val body = response.body?.string() ?: ""
+
                 val gson = Gson()
                 val type = object : TypeToken<List<ProductUiModel>>() {}.type
                 val products = gson.fromJson<List<ProductUiModel>>(body, type)
 
-                Log.d("HTTP_GET", "$products")
+                cachedProducts = products
                 callback(products)
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.d("HTTP_GET", "Failed.")
-                callback(emptyList()) // 실패 시 빈 리스트 반환
+                callback(emptyList())
             }
         }
     }
