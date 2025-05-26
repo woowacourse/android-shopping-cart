@@ -7,15 +7,15 @@ import woowacourse.shopping.presentation.model.CatalogItem.CatalogType
 import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 
 class CatalogAdapter(
-    products: List<CatalogItem> = emptyList(),
+    items: List<CatalogItem> = emptyList(),
     private val eventListener: CatalogEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val recentProductAdapter = RecentProductAdapter(emptyList(), eventListener)
-    private val products = products.toMutableList()
+    private val recentProductsAdapter = RecentProductAdapter(emptyList(), eventListener)
+    private val catalogItems = items.toMutableList()
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = catalogItems.size
 
-    override fun getItemViewType(position: Int): Int = products[position].viewType.ordinal
+    override fun getItemViewType(position: Int): Int = catalogItems[position].viewType.ordinal
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +25,7 @@ class CatalogAdapter(
             CatalogType.RECENT_PRODUCT ->
                 RecentProductContainerViewHolder.from(
                     parent,
-                    recentProductAdapter,
+                    recentProductsAdapter,
                 )
 
             CatalogType.PRODUCT -> ProductViewHolder.from(parent, eventListener)
@@ -36,7 +36,7 @@ class CatalogAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        val item = products[position]
+        val item = catalogItems[position]
         when (holder) {
             is ProductViewHolder -> holder.bind(item as CatalogItem.ProductItem)
             is RecentProductContainerViewHolder -> holder.bind(item as CatalogItem.RecentProducts)
@@ -45,27 +45,27 @@ class CatalogAdapter(
     }
 
     fun submitList(newItems: List<CatalogItem>) {
-        newItems.forEachIndexed { index, newProduct ->
-            val oldProduct = products.getOrNull(index)
+        newItems.forEachIndexed { index, newItem ->
+            val oldItem = catalogItems.getOrNull(index)
 
-            if (oldProduct == null) {
-                products.add(index, newProduct)
+            if (oldItem == null) {
+                catalogItems.add(index, newItem)
                 notifyItemInserted(index)
                 return@forEachIndexed
             }
 
-            if (oldProduct != newProduct) {
-                products[index] = newProduct
+            if (oldItem != newItem) {
+                catalogItems[index] = newItem
                 notifyItemChanged(index)
             }
         }
     }
 
     interface CatalogEventListener : QuantityChangeListener {
-        fun onProductClicked(productId: Long)
+        fun onProductClick(productId: Long)
 
-        fun onLoadMoreClicked()
+        fun onLoadMoreClick()
 
-        fun onQuantitySelectorOpenButtonClicked(productId: Long)
+        fun onQuantitySelectorOpenButtonClick(productId: Long)
     }
 }

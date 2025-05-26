@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="listener"
+            name="eventListener"
             type="woowacourse.shopping.presentation.view.catalog.adapter.CatalogAdapter.CatalogEventListener" />
 
     </data>
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/mint"
-            android:onClick="@{() -> listener.onLoadMoreClicked() }"
+            android:onClick="@{() -> eventListener.onLoadMoreClick() }"
             android:text="@string/load_more_text"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"

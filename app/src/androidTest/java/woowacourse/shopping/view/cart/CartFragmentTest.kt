@@ -29,7 +29,7 @@ class CartFragmentTest {
     private lateinit var fragmentScenario: FragmentScenario<CartFragment>
 
     @BeforeEach
-    fun setup() {
+    fun setupCartAdapter() {
         val fakeProductRepository = FakeProductRepository()
         val fakeCartRepository =
             FakeCartRepository(

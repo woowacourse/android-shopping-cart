@@ -10,11 +10,11 @@
             type="int" />
 
         <variable
-            name="onIncreaseClicked"
+            name="onIncreaseClick"
             type="android.view.View.OnClickListener" />
 
         <variable
-            name="onDecreaseClicked"
+            name="onDecreaseClick"
             type="android.view.View.OnClickListener" />
 
     </data>
@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:onClick="@{onDecreaseClicked}"
+            android:onClick="@{onDecreaseClick}"
             android:text="@string/minus"
             android:textColor="@color/gray_55"
             android:textSize="22sp"
@@ -62,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:onClick="@{onIncreaseClicked}"
+            android:onClick="@{onIncreaseClick}"
             android:text="@string/plus"
             android:textColor="@color/gray_55"
             android:textSize="22sp"

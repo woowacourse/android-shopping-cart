@@ -17,12 +17,12 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initObserver()
-        initListener()
-        fetchProductFromArguments()
+        setupObservers()
+        setupListeners()
+        loadProductFromArgs()
     }
 
-    private fun initObserver() {
+    private fun setupObservers() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
 
@@ -38,20 +38,20 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         }
     }
 
-    private fun initListener() {
+    private fun setupListeners() {
         binding.btnClose.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
         binding.viewRecentProduct.setOnClickListener {
             val recentProductId = viewModel.recentProduct.value?.id ?: return@setOnClickListener
-            viewModel.fetchProduct(recentProductId)
+            viewModel.loadProduct(recentProductId)
         }
     }
 
-    private fun fetchProductFromArguments() {
+    private fun loadProductFromArgs() {
         val productId = arguments?.getLong(EXTRA_PRODUCT) ?: return
-        viewModel.fetchProduct(productId)
+        viewModel.loadProduct(productId)
     }
 
     companion object {
