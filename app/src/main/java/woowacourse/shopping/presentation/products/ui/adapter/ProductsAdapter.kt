@@ -71,11 +71,18 @@ class ProductsAdapter(
     }
 
     fun updateLoadMoreItem(isLoadable: Boolean) {
-        if (isLoadable) {
+        val alreadyHasLoadMoreItem = productsItems.any { it is ProductsItem.LoadMoreProductsItem }
+
+        if (isLoadable && !alreadyHasLoadMoreItem) {
             productsItems.add(ProductsItem.LoadMoreProductsItem)
             notifyItemInserted(productsItems.lastIndex)
+        } else if (!isLoadable && alreadyHasLoadMoreItem) {
+            val index = productsItems.indexOfFirst { it is ProductsItem.LoadMoreProductsItem }
+            productsItems.removeAt(index)
+            notifyItemRemoved(index)
         }
     }
+
 
     fun refreshItemById(id: Int) {
         val index = productsItems.indexOfFirst {
