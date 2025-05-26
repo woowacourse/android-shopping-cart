@@ -14,15 +14,16 @@ class FakeRecentlyViewedProductRepositoryImpl(
     }
 
     override fun getRecentlyViewedProducts(callback: (List<CartProductEntity>) -> Unit) {
-        val products: List<ProductUiModel> =
-            catalogProductRepository.getCartProductsByUids(productUids.toList())
-        callback(products.map { it.toEntity() })
+        catalogProductRepository.getCartProductsByUids(productUids.toList()) { products ->
+            callback(products.map { it.toEntity() })
+        }
     }
 
     override fun getLatestViewedProduct(callback: (ProductUiModel) -> Unit) {
         val lastIndex = listOf(productUids.last)
-        val product: ProductUiModel? =
-            catalogProductRepository.getCartProductsByUids(lastIndex).firstOrNull()
-        product?.let { callback(it) }
+        catalogProductRepository.getCartProductsByUids(lastIndex) { products ->
+            val first = products.first()
+            callback(first)
+        }
     }
 }
