@@ -19,6 +19,9 @@ class ProductsViewModel(
     private var allProducts: List<Product> = emptyList()
     private var shoppingCart: List<CartItem> = emptyList()
 
+    private val _shoppingCartSize: MutableLiveData<Int> = MutableLiveData(0)
+    val shoppingCartSize: LiveData<Int> get() = _shoppingCartSize
+
     private val _productItems: MutableLiveData<List<ProductsItem>> = MutableLiveData(emptyList())
     val productItems: LiveData<List<ProductsItem>> get() = _productItems
 
@@ -45,6 +48,7 @@ class ProductsViewModel(
     private fun loadShoppingCart() {
         shoppingCartRepository.load { result: Result<List<CartItem>> ->
             shoppingCart = result.getOrElse { emptyList() }
+            _shoppingCartSize.postValue(shoppingCart.size)
             updateProducts()
         }
     }
