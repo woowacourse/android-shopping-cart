@@ -39,17 +39,21 @@
                 android:id="@+id/rv_recent_goods"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="4dp"
                 android:nestedScrollingEnabled="false"
-                android:padding="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_recent_goods" />
+                android:visibility="@{vm.recentGoods.empty ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_recent_goods"
+                app:recentGoodsList="@{vm.recentGoods}" />
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/gray_3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_recent_goods" />
+                app:layout_constraintTop_toBottomOf="@id/rv_recent_goods" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_goods_list"

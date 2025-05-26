@@ -2,14 +2,15 @@ package woowacourse.shopping.presentation.goods.list
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
 import woowacourse.shopping.databinding.MenuCartActionViewBinding
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
@@ -25,7 +26,8 @@ class GoodsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
         setUpBinding()
-        setUpGoodsList()
+        setUpItems()
+        setUpRecentGoods()
         observeEvent()
     }
 
@@ -41,7 +43,7 @@ class GoodsActivity : BaseActivity() {
         }
     }
 
-    private fun setUpGoodsList() {
+    private fun setUpItems() {
         binding.rvGoodsList.apply {
             GoodsAdapter(
                 quantityClickListener = object : QuantityClickListener {
@@ -70,19 +72,29 @@ class GoodsActivity : BaseActivity() {
         }
     }
 
+    private fun setUpRecentGoods() {
+        binding.rvRecentGoods.apply {
+            adapter = RecentGoodsAdapter(clickListener = ::navigateToDetail)
+            layoutManager =
+                LinearLayoutManager(this@GoodsActivity, LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
     private fun observeEvent() {
         viewModel.shoppingCartEvent.observe(this) { event ->
             when (event) {
                 ShoppingCartEvent.FAILURE -> {
-                    Toast.makeText(this, getString(R.string.text_save_failure), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.text_save_failure), Toast.LENGTH_SHORT)
+                        .show()
                 }
+
                 ShoppingCartEvent.SUCCESS -> {}
             }
         }
     }
 
-    private fun navigateToDetail(item: ShoppingCartItem) {
-        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, item.goods.id)
+    private fun navigateToDetail(goods: Goods) {
+        val intent = GoodsDetailActivity.newIntent(this@GoodsActivity, goods.id)
         startActivity(intent)
     }
 

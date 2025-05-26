@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.goods.detail.GoodsDetailViewModel" />
@@ -41,7 +43,7 @@
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:goodsName="@{vm.item.goods.name}"
+            app:goodsName="@{vm.item.goods}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_goods"
@@ -67,7 +69,8 @@
             android:textSize="20sp"
             app:goodsTotalPrice="@{vm.item}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="100,000원" />
 
         <include
             android:id="@+id/view_quantity_controller"
@@ -76,9 +79,46 @@
             android:layout_height="wrap_content"
             android:layout_margin="14dp"
             app:item="@{vm.item}"
-            app:quantityClickListener="@{clickListener}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:quantityClickListener="@{clickListener}" />
+
+        <LinearLayout
+            android:layout_width="324dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_recent_goods"
+            android:orientation="vertical"
+            android:visibility="@{vm.recentGoods == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_quantity_controller">
+
+            <TextView
+                android:id="@+id/tv_recent_goods_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="16dp"
+                android:includeFontPadding="false"
+                android:text="@string/latest_goods_label"
+                android:textColor="@color/primary_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="마지막으로 본 상품" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="18sp"
+                app:goodsName="@{vm.recentGoods}"
+                tools:text="PET보틀-정사각형(500ml)" />
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shopping_cart"

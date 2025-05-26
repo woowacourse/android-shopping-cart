@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.RepositoryProvider
+import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.domain.repository.GoodsRepository
+import woowacourse.shopping.domain.repository.RecentGoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
 import woowacourse.shopping.presentation.util.ShoppingCartEvent
@@ -17,10 +19,15 @@ import woowacourse.shopping.presentation.util.SingleLiveData
 class GoodsViewModel(
     private val goodsRepository: GoodsRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentGoodsRepository: RecentGoodsRepository,
 ) : ViewModel() {
     private val _items: MutableLiveData<List<ShoppingCartItem>> = MutableLiveData()
     val items: LiveData<List<ShoppingCartItem>>
         get() = _items
+
+    private val _recentGoods: MutableLiveData<List<Goods>> = MutableLiveData()
+    val recentGoods: LiveData<List<Goods>>
+        get() = _recentGoods
 
     private val _showLoadMore: MutableLiveData<Boolean> = MutableLiveData(false)
     val showLoadMore: LiveData<Boolean>
@@ -38,15 +45,8 @@ class GoodsViewModel(
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
-        val currentItems = _items.value ?: loadGoods(page++)
-        shoppingCartRepository.getAllItems { result ->
-            result.onSuccess { items ->
-                updateItems(currentItems, items)
-                _itemsCount.postValue(items.sumOf { it.quantity })
-            }.onFailure {
-                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
-            }
-        }
+        fetchRecentGoods()
+        fetchShoppingCartItems()
     }
 
     fun addGoods() {
@@ -86,6 +86,32 @@ class GoodsViewModel(
                 }
             } else {
                 it
+            }
+        }
+    }
+
+    private fun fetchShoppingCartItems() {
+        val currentItems = _items.value ?: loadGoods(page++)
+        shoppingCartRepository.getAllItems { result ->
+            result.onSuccess { items ->
+                updateItems(currentItems, items)
+                _itemsCount.postValue(items.sumOf { it.quantity })
+            }.onFailure {
+                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
+            }
+        }
+    }
+
+    private fun fetchRecentGoods() {
+        recentGoodsRepository.getRecentGoods { result ->
+            result.onSuccess { ids ->
+                if (ids.isNullOrEmpty()) {
+                    _recentGoods.postValue(emptyList())
+                } else {
+                    _recentGoods.postValue(ids.map { id -> goodsRepository.getGoodsById(id) })
+                }
+            }.onFailure {
+                _recentGoods.postValue(emptyList())
             }
         }
     }
@@ -138,6 +164,7 @@ class GoodsViewModel(
                 GoodsViewModel(
                     goodsRepository = RepositoryProvider.goodsRepository,
                     shoppingCartRepository = RepositoryProvider.shoppingCartRepository,
+                    recentGoodsRepository = RepositoryProvider.recentGoodsRepository,
                 )
             }
         }
