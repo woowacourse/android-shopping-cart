@@ -19,7 +19,7 @@ class ProductRepositoryImpl(
     ) {
         runThread(
             block = {
-                productDataSource.fetchPagingProducts(page, pageSize).map { it.toCartItems() }
+                productDataSource.fetchPagingProducts(page, pageSize).toCartItems()
             },
             onResult = onResult,
         )
@@ -42,25 +42,17 @@ class ProductRepositoryImpl(
     ) {
         runThread(
             block = {
-                val cartEntities = cartDataSource.getPagedCartProducts(page, pageSize).getOrThrow()
-                val cartItems = cartEntities.map { it.toCartItem().getOrThrow() }
-                Result.success(cartItems)
+                cartDataSource.getPagedCartProducts(page, pageSize).map { it.toCartItem() }
             },
             onResult = onResult,
         )
     }
 
-    private fun CartEntity.toCartItem(): Result<CartItem> =
-        try {
-            val product = productDataSource.fetchProductById(productId).getOrThrow()
-            Result.success(CartItem(product, quantity))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map { product ->
-            val quantity = cartDataSource.getQuantityById(product.productId).getOrThrow()
+            val quantity = cartDataSource.getQuantityById(product.productId)
             CartItem(product, quantity)
         }
+
+    private fun CartEntity.toCartItem(): CartItem = CartItem(productDataSource.fetchProductById(productId), quantity)
 }

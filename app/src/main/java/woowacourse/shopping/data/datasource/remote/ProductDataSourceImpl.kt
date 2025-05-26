@@ -9,19 +9,10 @@ class ProductDataSourceImpl(
     override fun fetchPagingProducts(
         page: Int,
         pageSize: Int,
-    ): Result<List<Product>> {
+    ): List<Product> {
         val offset = page * pageSize
-        return try {
-            Result.success(productService.fetchPagingProducts(offset, pageSize))
-        } catch (e: Exception) {
-            Result.failure(Exception("상품 목록 조회에 실패했습니다: $e"))
-        }
+        return productService.fetchPagingProducts(offset, pageSize)
     }
 
-    override fun fetchProductById(id: Long): Result<Product> =
-        try {
-            Result.success(productService.fetchProductById(id))
-        } catch (e: Exception) {
-            Result.failure(Exception("상품 조회에 실패했습니다: $e"))
-        }
+    override fun fetchProductById(id: Long): Product = productService.fetchProductById(id)
 }

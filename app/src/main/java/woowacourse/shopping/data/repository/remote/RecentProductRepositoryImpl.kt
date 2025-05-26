@@ -14,17 +14,9 @@ class RecentProductRepositoryImpl(
     override fun getRecentProducts(onResult: (Result<List<Product>>) -> Unit) {
         runThread(
             block = {
-                val recentlyViewedProduct =
-                    recentProductDataSource
-                        .getProducts()
-                        .getOrThrow()
-
-                val products =
-                    recentlyViewedProduct
-                        .map {
-                            productDataSource.fetchProductById(it.productId).getOrThrow()
-                        }
-                Result.success(products)
+                recentProductDataSource
+                    .getProducts()
+                    .map { productDataSource.fetchProductById(it.productId) }
             },
             onResult = onResult,
         )
@@ -33,8 +25,7 @@ class RecentProductRepositoryImpl(
     override fun getMostRecentProduct(onResult: (Result<Product?>) -> Unit) {
         runThread(
             block = {
-                val recentProduct = recentProductDataSource.getMostRecentProduct().getOrNull()
-                recentProduct?.toProduct() ?: Result.success(null)
+                recentProductDataSource.getMostRecentProduct()?.toProduct()
             },
             onResult = onResult,
         )
@@ -46,11 +37,11 @@ class RecentProductRepositoryImpl(
     ) {
         runThread(
             block = {
-                val recentProducts = recentProductDataSource.getProducts().getOrDefault(emptyList())
+                val recentProducts = recentProductDataSource.getProducts()
                 val productId = product.productId
 
                 if (isNewProduct(recentProducts, productId) && recentProducts.size == 10) {
-                    val oldProduct = recentProductDataSource.getOldestProduct().getOrThrow()
+                    val oldProduct = recentProductDataSource.getOldestProduct()
                     recentProductDataSource.delete(oldProduct)
                 }
 
@@ -66,7 +57,7 @@ class RecentProductRepositoryImpl(
         productId: Long,
     ): Boolean = recentProducts.none { it.productId == productId }
 
-    private fun RecentlyViewedProduct.toProduct(): Result<Product?> = productDataSource.fetchProductById(this.productId)
+    private fun RecentlyViewedProduct.toProduct(): Product = productDataSource.fetchProductById(this.productId)
 
     private fun Product.toEntity(): RecentlyViewedProduct =
         RecentlyViewedProduct(
