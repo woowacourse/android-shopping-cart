@@ -31,6 +31,10 @@ class GoodsViewModel(
     val shoppingCartEvent: SingleLiveData<ShoppingCartEvent>
         get() = _shoppingCartEvent
 
+    private val _itemsCount: MutableLiveData<Int> = MutableLiveData(0)
+    val itemsCount: LiveData<Int>
+        get() = _itemsCount
+
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
@@ -38,6 +42,7 @@ class GoodsViewModel(
         shoppingCartRepository.getAllItems { result ->
             result.onSuccess { items ->
                 updateItems(currentItems, items)
+                _itemsCount.postValue(items.sumOf { it.quantity })
             }.onFailure {
                 _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
             }
@@ -59,6 +64,7 @@ class GoodsViewModel(
             if (it.goods.id == item.goods.id) {
                 val updated = it.increaseQuantity()
                 updateQuantity(updated)
+                _itemsCount.postValue(_itemsCount.value?.plus(COUNT_OFFSET))
                 updated
             } else {
                 it
@@ -70,6 +76,7 @@ class GoodsViewModel(
         _items.value = _items.value?.map {
             if (it.goods.id == item.goods.id) {
                 val updated = it.decreaseQuantity()
+                _itemsCount.postValue(_itemsCount.value?.minus(COUNT_OFFSET))
                 if (updated.quantity > MINIMUM_VALUE) {
                     updateQuantity(updated)
                     updated
@@ -124,6 +131,7 @@ class GoodsViewModel(
         private const val DEFAULT_PAGE: Int = 0
         private const val ITEM_COUNT: Int = 20
         private const val MINIMUM_VALUE: Int = 0
+        private const val COUNT_OFFSET: Int = 1
 
         val FACTORY: ViewModelProvider.Factory = viewModelFactory {
             initializer {

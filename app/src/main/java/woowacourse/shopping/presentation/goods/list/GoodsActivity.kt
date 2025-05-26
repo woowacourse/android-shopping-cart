@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityGoodsBinding
+import woowacourse.shopping.databinding.MenuCartActionViewBinding
 import woowacourse.shopping.domain.model.ShoppingCartItem
 import woowacourse.shopping.presentation.BaseActivity
 import woowacourse.shopping.presentation.goods.detail.GoodsDetailActivity
@@ -92,18 +93,19 @@ class GoodsActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.goods_list_action_bar, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+        val menuBinding = MenuCartActionViewBinding.inflate(layoutInflater)
+        val cartItem = menu?.findItem(R.id.action_cart)
+        cartItem?.actionView = menuBinding.root
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_cart -> {
+        menuBinding.apply {
+            vm = viewModel
+            lifecycleOwner = this@GoodsActivity
+            clCartAction.setOnClickListener {
                 navigateToShoppingCart()
-                true
             }
-
-            else -> super.onOptionsItemSelected(item)
         }
+
+        return true
     }
 
     companion object {
