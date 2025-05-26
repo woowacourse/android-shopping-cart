@@ -23,8 +23,8 @@ class ProductDetailViewModel(
     private val _count: MutableLiveData<Int> = MutableLiveData(1)
     val count: LiveData<Int> get() = _count
 
-    val putProductFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
-    val finishFlag: SingleLiveEvent<Unit> = SingleLiveEvent()
+    val onProductAddedEvent: SingleLiveEvent<Unit> = SingleLiveEvent()
+    val onFinishEvent: SingleLiveEvent<Unit> = SingleLiveEvent()
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -62,8 +62,8 @@ class ProductDetailViewModel(
             cartRepository.upsertCartProduct(p, c)
 
             mainHandler.post {
-                putProductFlag.call()
-                finishFlag.call()
+                onProductAddedEvent.call()
+                onFinishEvent.call()
             }
         }.start()
     }

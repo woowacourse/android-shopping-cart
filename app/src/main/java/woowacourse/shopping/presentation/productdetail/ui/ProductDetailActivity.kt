@@ -32,10 +32,10 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(R.la
         updateLastProduct()
         initViewBinding()
 
-        viewModel.putProductFlag.observe(this) {
+        viewModel.onProductAddedEvent.observe(this) {
             Toast.makeText(this, getString(R.string.product_detail_cart_add_success), Toast.LENGTH_SHORT).show()
         }
-        viewModel.finishFlag.observe(this) {
+        viewModel.onFinishEvent.observe(this) {
             finish()
         }
         viewModel.latestProduct.observe(this){ lastProduct ->
