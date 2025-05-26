@@ -8,7 +8,7 @@ class ProductsDataSource(private val service: ProductService) {
     fun getProduct(productId: Long): ProductEntity = service.getProduct(productId)
 
     fun getProducts(productIds: List<Long>): List<ProductEntity> {
-        return productIds.map { service.getProduct(it) }
+        return service.getProducts(productIds)
     }
 
     fun singlePage(
