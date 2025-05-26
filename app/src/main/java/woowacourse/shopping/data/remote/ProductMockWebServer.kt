@@ -17,11 +17,13 @@ class ProductMockWebServer : ProductService {
         executeRequest(
             PAGING_PRODUCTS.format(offset, pageSize),
             object : TypeToken<List<Product>>() {}.type,
-        )
+        ) ?: emptyList()
 
-    override fun fetchProductById(id: Long): Product = executeRequest(FIND_PRODUCT.format(id), object : TypeToken<Product>() {}.type)
+    override fun fetchProductById(id: Long): Product =
+        executeRequest(FIND_PRODUCT.format(id), object : TypeToken<Product>() {}.type)
+            ?: throw NoSuchElementException("${id}에 해당하는 상품 조회에 실패했습니다.")
 
-    override fun fetchProducts(): List<Product> = executeRequest(ALL_PRODUCTS, object : TypeToken<List<Product>>() {}.type)
+    override fun fetchProducts(): List<Product> = executeRequest(ALL_PRODUCTS, object : TypeToken<List<Product>>() {}.type) ?: emptyList()
 
     private fun <T> executeRequest(
         url: String,
