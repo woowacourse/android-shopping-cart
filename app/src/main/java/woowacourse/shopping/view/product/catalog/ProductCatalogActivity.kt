@@ -44,10 +44,14 @@ class ProductCatalogActivity : AppCompatActivity() {
                 this,
                 ProductCatalogViewModel.provideFactory(),
             )[ProductCatalogViewModel::class.java]
-
-        initRecentRecyclerView()
-        initRecyclerView()
         initObservers()
+        initRecyclerView()
+        initRecentRecyclerView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshShoppingCartState()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

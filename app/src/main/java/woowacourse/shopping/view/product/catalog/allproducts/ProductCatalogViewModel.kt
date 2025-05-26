@@ -61,6 +61,10 @@ class ProductCatalogViewModel(
         pageResultProducts.value = pageResultProducts.value
     }
 
+    fun refreshShoppingCartState() {
+        pageResultProducts.value = pageResultProducts.value
+    }
+
     private fun PagedResult<Product>.toProductItems(): List<ProductItem> {
         val items =
             this.items
