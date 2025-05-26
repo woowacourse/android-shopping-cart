@@ -10,9 +10,7 @@ class CartViewHolder(
     private val onQuantityChange: (String, Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: ShoppingCartItem) {
-        binding.product = item.product
-
-        binding.quantityControl.tvQuantity.text = item.quantity.toString()
+        binding.model = item
 
         binding.onProductRemoveClickListener =
             object : OnProductRemoveClickListener {

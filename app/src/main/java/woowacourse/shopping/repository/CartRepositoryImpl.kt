@@ -28,6 +28,12 @@ class CartRepositoryImpl : CartRepository {
         return _cartState
     }
 
+    override fun addProduct2(cart: ShoppingCartItem) {
+        _cartState = _cartState.copy(items = _cartState.items + (cart.product.id to cart))
+    }
+
+    override fun getProductQuantity(productId: String): Int = _cartState.getQuantity(productId)
+
     override fun updateQuantity(
         productId: String,
         quantity: Int,
