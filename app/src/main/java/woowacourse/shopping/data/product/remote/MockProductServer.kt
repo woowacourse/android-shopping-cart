@@ -9,9 +9,10 @@ import woowacourse.shopping.data.product.storage.VolatileProductsStorage.load
 import java.net.URI
 import kotlin.concurrent.thread
 
-class MockWebServer {
-    fun startMockWebServer(port: Int) {
-        val mockWebServer = MockWebServer()
+class MockProductServer {
+    val mockWebServer = MockWebServer()
+
+    fun start(port: Int) {
         thread {
             mockWebServer.start(port)
         }
@@ -47,5 +48,9 @@ class MockWebServer {
             }
 
         mockWebServer.dispatcher = dispatcher
+    }
+
+    fun shutDown() {
+        mockWebServer.shutdown()
     }
 }

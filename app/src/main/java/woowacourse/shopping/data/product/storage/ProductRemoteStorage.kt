@@ -4,14 +4,14 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import woowacourse.shopping.data.common.convertJsonToList
 import woowacourse.shopping.data.product.local.entity.ProductEntity
-import woowacourse.shopping.data.product.remote.MockWebServer
+import woowacourse.shopping.data.product.remote.MockProductServer
 
 class ProductRemoteStorage : ProductsStorage {
-    private val mockWebServer = MockWebServer()
+    private val mockProductServer = MockProductServer()
     private val client = OkHttpClient()
 
     init {
-        mockWebServer.startMockWebServer(12345)
+        mockProductServer.start(12345)
     }
 
     override fun load(
