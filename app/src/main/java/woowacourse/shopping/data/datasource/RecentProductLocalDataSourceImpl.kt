@@ -6,15 +6,17 @@ import woowacourse.shopping.data.db.RecentProductEntity
 class RecentProductLocalDataSourceImpl(
     private val recentProductDao: RecentProductDao,
 ) : RecentProductLocalDataSource {
-    override fun getRecentProductCount(): Int = recentProductDao.getRecentProductCount()
-
     override fun getRecentProducts(limit: Int): List<RecentProductEntity> = recentProductDao.getRecentProducts(limit)
 
     override fun insertRecentProduct(recentProduct: RecentProductEntity) {
         recentProductDao.insertRecentProduct(recentProduct)
     }
 
-    override fun deleteOldestRecentProduct() {
-        recentProductDao.deleteOldestRecentProduct()
+    override fun trimToLimit(limit: Int) {
+        val savedRecentProductCount = recentProductDao.getRecentProductCount()
+        if (savedRecentProductCount > limit) {
+            val overflowCount = savedRecentProductCount - limit
+            recentProductDao.deleteOldestRecentProducts(overflowCount)
+        }
     }
 }

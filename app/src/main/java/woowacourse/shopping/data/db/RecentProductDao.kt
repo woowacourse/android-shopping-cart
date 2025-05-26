@@ -18,13 +18,13 @@ interface RecentProductDao {
 
     @Query(
         """
-        DELETE FROM RecentViewedProducts 
-        WHERE productId = (
-            SELECT productId FROM RecentViewedProducts 
-            ORDER BY lastViewedAt ASC 
-            LIMIT 1
-        )
-    """,
+            DELETE FROM RecentViewedProducts 
+            WHERE productId IN (
+                SELECT productId FROM RecentViewedProducts 
+                ORDER BY lastViewedAt ASC 
+                LIMIT :overflowCount
+            )
+        """,
     )
-    fun deleteOldestRecentProduct()
+    fun deleteOldestRecentProducts(overflowCount: Int)
 }
