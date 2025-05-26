@@ -1,10 +1,8 @@
 package woowacourse.shopping.product.catalog
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.CatalogDatabase
 import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.mapper.toUiModel
 import woowacourse.shopping.data.repository.CartProductRepository
@@ -13,12 +11,10 @@ import woowacourse.shopping.data.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.product.catalog.CatalogItem.ProductItem
 
 class CatalogViewModel(
-    private val catalogProductRepository: CatalogProductRepository = CatalogDatabase,
+    private val catalogProductRepository: CatalogProductRepository,
     private val cartProductRepository: CartProductRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ViewModel() {
-    val allProductsSize get() = catalogProductRepository.getAllProductsSize()
-
     private val _catalogItems =
         MutableLiveData<List<CatalogItem>>(emptyList<CatalogItem>())
     val catalogItems: LiveData<List<CatalogItem>> = _catalogItems
@@ -37,7 +33,9 @@ class CatalogViewModel(
     val recentlyViewedProducts: LiveData<List<ProductUiModel>> = _recentlyViewedProducts
 
     init {
-        loadCatalog(0, PAGE_SIZE)
+        catalogProductRepository.getAllProductsSize { allProductsSize ->
+            loadCatalog(0, PAGE_SIZE, allProductsSize)
+        }
     }
 
     fun increaseQuantity(product: ProductUiModel) {
@@ -64,59 +62,57 @@ class CatalogViewModel(
     fun loadNextCatalogProducts() {
         increasePage()
         val currentPage = page.value ?: 0
-        val startIndex = currentPage * PAGE_SIZE
-        val endIndex = minOf(startIndex + PAGE_SIZE, allProductsSize)
 
-        loadCatalog(startIndex, endIndex)
-        loadCartItemSize()
+        catalogProductRepository.getAllProductsSize { size ->
+            val startIndex = currentPage * PAGE_SIZE
+            val endIndex = minOf(startIndex + PAGE_SIZE, size)
+
+            loadCatalog(startIndex, endIndex, size)
+        }
     }
 
     fun loadCatalogUntilCurrentPage() {
         _catalogItems.value = emptyList()
         val currentPage = page.value ?: 0
-        val startIndex = 0
-        val endIndex = minOf((currentPage + 1) * PAGE_SIZE, allProductsSize)
 
-        loadCatalog(startIndex, endIndex)
+        catalogProductRepository.getAllProductsSize { size ->
+            val startIndex = 0
+            val endIndex = minOf((currentPage + 1) * PAGE_SIZE, size)
 
-        Log.d("ITEM_SIZE", "${catalogItems.value?.size}")
+            loadCatalog(startIndex, endIndex, size)
+        }
     }
 
     fun loadCatalog(
         startIndex: Int,
         endIndex: Int,
+        allProductsSize: Int,
     ) {
-        val pagedProducts: List<ProductUiModel> =
-            catalogProductRepository.getProductsInRange(startIndex, endIndex)
+        catalogProductRepository.getProductsInRange(startIndex, endIndex) { pagedProducts ->
 
-        cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
+            cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
+                val cartProductMap = cartProducts.associateBy { it.uid }
 
-            val cartProductMap = cartProducts.associateBy { it.uid }
-
-            val mergedProducts =
-                pagedProducts.map { product ->
-                    val cartProduct = cartProductMap[product.id]
-                    if (cartProduct != null && product.id == cartProduct.uid) {
-                        product.copy(quantity = cartProduct.quantity)
-                    } else {
-                        product
+                val mergedProducts =
+                    pagedProducts.map { product ->
+                        val cartProduct = cartProductMap[product.id]
+                        if (cartProduct != null) product.copy(quantity = cartProduct.quantity) else product
                     }
-                }
 
-            val items: List<ProductItem> = mergedProducts.map { ProductItem(it) }
-            val prevItems: List<CatalogItem> =
-                _catalogItems.value.orEmpty().filterNot { it is CatalogItem.LoadMoreButtonItem }
+                val items = mergedProducts.map { ProductItem(it) }
+                val prevItems =
+                    _catalogItems.value.orEmpty().filterNot { it is CatalogItem.LoadMoreButtonItem }
+                val hasNextPage = endIndex < allProductsSize
 
-            val hasNextPage = endIndex < allProductsSize
+                val updatedItems =
+                    if (hasNextPage) {
+                        prevItems + items + CatalogItem.LoadMoreButtonItem
+                    } else {
+                        prevItems + items
+                    }
 
-            val updatedItems =
-                if (hasNextPage) {
-                    prevItems + items + CatalogItem.LoadMoreButtonItem
-                } else {
-                    prevItems + items
-                }
-
-            _catalogItems.postValue(updatedItems)
+                _catalogItems.postValue(updatedItems)
+            }
         }
     }
 
