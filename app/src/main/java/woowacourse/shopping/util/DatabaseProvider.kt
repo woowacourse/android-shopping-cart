@@ -13,7 +13,7 @@ object DatabaseProvider {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "shopping.db"
-            ).build()
+            ).createFromAsset("Sample.db").build()
         }
         return instance!!
     }
