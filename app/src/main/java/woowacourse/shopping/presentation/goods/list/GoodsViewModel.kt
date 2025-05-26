@@ -47,7 +47,7 @@ class GoodsViewModel(
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
-        _goods.value ?: goodsRepository.getPagedGoods(page, ITEM_COUNT) { currentGoods ->
+        goodsRepository.getPagedGoods(page, ITEM_COUNT) { currentGoods ->
             shoppingRepository.getAllGoods { selectedItems ->
                 val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
 
