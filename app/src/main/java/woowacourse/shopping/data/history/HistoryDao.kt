@@ -9,11 +9,14 @@ interface HistoryDao {
     @Query("SELECT * FROM history WHERE id =:id")
     fun findById(id: Long): HistoryEntity?
 
-    @Query("SELECT * FROM history ORDER BY createdAt DESC LIMIT 1 OFFSET 1")
-    fun findLast(): HistoryEntity?
+    @Query("SELECT * FROM history ORDER BY createdAt DESC LIMIT :limit OFFSET :offset")
+    fun findLast(
+        limit: Int,
+        offset: Int,
+        ): HistoryEntity?
 
-    @Query("SELECT * FROM history ORDER BY createdAt DESC LIMIT 10")
-    fun findRecentTen(): List<HistoryEntity>
+    @Query("SELECT * FROM history ORDER BY createdAt DESC LIMIT :limit")
+    fun findRecentProduct(limit: Int): List<HistoryEntity>
 
     @Insert
     fun insert(productEntity: HistoryEntity)
