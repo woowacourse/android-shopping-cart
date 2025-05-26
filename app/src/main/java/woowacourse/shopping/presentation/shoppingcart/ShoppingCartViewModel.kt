@@ -9,8 +9,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.repository.GoodsRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
-import woowacourse.shopping.presentation.util.event.MutableSingleLiveData
-import woowacourse.shopping.presentation.util.event.SingleLiveData
 
 class ShoppingCartViewModel(
     private val goodsRepository: GoodsRepository,
@@ -31,10 +29,6 @@ class ShoppingCartViewModel(
     private val _hasPreviousPage: MutableLiveData<Boolean> = MutableLiveData()
     val hasPreviousPage: LiveData<Boolean>
         get() = _hasPreviousPage
-
-    private val _onQuantityChanged: MutableSingleLiveData<Int> = MutableSingleLiveData()
-    val onQuantityChanged: SingleLiveData<Int>
-        get() = _onQuantityChanged
 
     init {
         updateState()

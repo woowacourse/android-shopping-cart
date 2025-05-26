@@ -33,9 +33,4 @@ class ShoppingCartAdapter(
         items = goods
         notifyDataSetChanged()
     }
-
-    fun changeQuantity(goodsId: Int) {
-        val position = items.indexOfFirst { it.id == goodsId }
-        notifyItemChanged(position)
-    }
 }

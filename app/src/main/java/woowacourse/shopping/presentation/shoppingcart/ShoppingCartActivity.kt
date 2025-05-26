@@ -68,10 +68,6 @@ class ShoppingCartActivity : BaseActivity() {
         viewModel.goods.observe(this) { goods ->
             adapter.updateItems(goods)
         }
-
-        viewModel.onQuantityChanged.observe(this) { goodsId ->
-            adapter.changeQuantity(goodsId)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
