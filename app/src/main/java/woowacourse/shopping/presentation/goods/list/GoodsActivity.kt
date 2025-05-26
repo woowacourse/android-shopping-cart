@@ -130,7 +130,7 @@ class GoodsActivity : BaseActivity() {
         }
 
         viewModel.latestGoods.observe(this) {
-            latestGoodsAdapter.addLatestGoods(it)
+            latestGoodsAdapter.updateLatestGoods(it)
         }
     }
 

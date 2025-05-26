@@ -25,14 +25,18 @@ class LatestGoodsAdapter(
         holder.bind(items[position])
     }
 
-    fun addLatestGoods(newItems: List<Goods>) {
+    fun updateLatestGoods(newItems: List<Goods>) {
+        val oldItems = items.toList()
+
         items.clear()
         items.addAll(newItems)
 
-        notifyItemRangeChanged(POSITION_START, items.size)
-    }
+        oldItems.forEachIndexed { index, item ->
+            if (newItems[index] != item) notifyItemChanged(index)
+        }
 
-    companion object {
-        private const val POSITION_START: Int = 0
+        if (oldItems.size < newItems.size) {
+            notifyItemRangeInserted(oldItems.size, newItems.size - oldItems.size)
+        }
     }
 }
