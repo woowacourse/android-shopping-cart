@@ -9,4 +9,6 @@ interface GoodsService {
     ): List<GoodsEntity>
 
     fun getGoodsById(id: Int): GoodsEntity?
+
+    fun getGoodsListByIds(id: List<Int>): List<GoodsEntity>
 }

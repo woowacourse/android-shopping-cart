@@ -18,8 +18,9 @@ class GoodsDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val latestGoodsRepository: LatestGoodsRepository,
 ) : ViewModel() {
-    var lastGoods: Goods? = null
-        private set
+    private val _lastGoods: MutableLiveData<Goods> = MutableLiveData()
+    val lastGoods: LiveData<Goods>
+        get() = _lastGoods
 
     private val _goods: MutableLiveData<Goods> = MutableLiveData()
     val goods: LiveData<Goods>
@@ -29,17 +30,25 @@ class GoodsDetailViewModel(
     val onItemAddedToCart: SingleLiveData<Int>
         get() = _onItemAddedToCart
 
-    fun setGoods(id: Int) {
-        _goods.value = goodsRepository.getById(id)?.updateQuantity(MIN_PURCHASE_QUANTITY)
+    fun setGoodsAndLast(
+        id: Int,
+        lastId: Int?,
+    ) {
+        goodsRepository.getById(id) {
+            _goods.postValue(it?.updateQuantity(MIN_PURCHASE_QUANTITY))
+            setLastGoods(id, lastId)
+        }
     }
 
-    fun setLastGoods(id: Int?) {
-        lastGoods =
-            if (id == null || id == goods.value?.id) {
-                null
-            } else {
-                goodsRepository.getById(id)
+    private fun setLastGoods(
+        id: Int,
+        lastId: Int?,
+    ) {
+        if (lastId != null && lastId != id) {
+            goodsRepository.getById(lastId) {
+                _lastGoods.postValue(it)
             }
+        }
     }
 
     fun addToShoppingCart() {

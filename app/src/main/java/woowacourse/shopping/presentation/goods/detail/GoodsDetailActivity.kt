@@ -28,8 +28,7 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        viewModel.setGoods(getGoodsId())
-        viewModel.setLastGoods(getLastGoodsId())
+        viewModel.setGoodsAndLast(getGoodsId(), getLastGoodsId())
 
         setUpBinding()
 

@@ -42,14 +42,19 @@ class ShoppingCartViewModel(
 
     private fun updateState() {
         shoppingRepository.getPagedGoods(_page.value ?: DEFAULT_PAGE_VALUE, ITEM_COUNT) { pagedGoods ->
-            val updatedGoods =
-                pagedGoods.mapNotNull {
-                    goodsRepository.getById(it.goodsId)?.updateQuantity(it.goodsQuantity)
-                }
+            val quantityMap = pagedGoods.associateBy({ it.goodsId }, { it.goodsQuantity })
 
-            _goods.postValue(updatedGoods)
-            updateNextPage()
-            updatePreviousPage()
+            goodsRepository.getGoodsListByIds(pagedGoods.map { it.goodsId }) { goods ->
+                val updatedGoods =
+                    goods.map { goodsItem ->
+                        val quantity = quantityMap[goodsItem.id] ?: 0
+                        goodsItem.copy(quantity = quantity)
+                    }
+
+                _goods.postValue(updatedGoods)
+                updateNextPage()
+                updatePreviousPage()
+            }
         }
     }
 

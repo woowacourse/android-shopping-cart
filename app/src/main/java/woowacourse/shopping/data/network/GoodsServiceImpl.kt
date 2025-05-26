@@ -49,6 +49,24 @@ class GoodsServiceImpl : GoodsService {
         }
     }
 
+    override fun getGoodsListByIds(id: List<Int>): List<GoodsEntity> {
+        val url =
+            BASE_URL.toHttpUrl()
+                .newBuilder()
+                .addPathSegment("products")
+                .addPathSegment("ids")
+                .addQueryParameter(PARAM_ID, id.joinToString())
+                .build()
+
+        val body = executeRequest(url)
+        return try {
+            gson.fromJson(body, Array<GoodsEntity>::class.java).toList()
+        } catch (e: JsonSyntaxException) {
+            Log.e("GoodsServiceImpl", "JSON 파싱 실패 (상품 ID: $id): ${e.message}")
+            emptyList()
+        }
+    }
+
     private fun executeRequest(url: okhttp3.HttpUrl): String? {
         val request =
             requestBuilder

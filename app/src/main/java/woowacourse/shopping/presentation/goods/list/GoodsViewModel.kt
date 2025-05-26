@@ -72,12 +72,9 @@ class GoodsViewModel(
 
     fun setLatestGoods() {
         latestGoodsRepository.getAll { latestGoodsList ->
-            val updatedList = mutableListOf<Goods>()
-
-            latestGoodsList.forEach { item ->
-                goodsRepository.getById(item.goodsId)?.let { updatedList.add(it) }
+            goodsRepository.getGoodsListByIds(latestGoodsList.map { it.goodsId }) { latestGoods ->
+                _latestGoods.postValue(latestGoods)
             }
-            _latestGoods.postValue(updatedList)
         }
     }
 

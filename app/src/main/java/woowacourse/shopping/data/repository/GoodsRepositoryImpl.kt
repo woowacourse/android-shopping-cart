@@ -9,14 +9,13 @@ import kotlin.concurrent.thread
 class GoodsRepositoryImpl(
     private val goodsService: GoodsService,
 ) : GoodsRepository {
-    override fun getById(id: Int): Goods? {
-        var result: Goods? = null
-
+    override fun getById(
+        id: Int,
+        onSuccess: (Goods?) -> Unit,
+    ) {
         thread {
-            result = goodsService.getGoodsById(id)?.toGoods()
-        }.join()
-
-        return result
+            onSuccess(goodsService.getGoodsById(id)?.toGoods())
+        }
     }
 
     override fun getPagedGoods(
@@ -27,6 +26,19 @@ class GoodsRepositoryImpl(
         thread {
             onSuccess(
                 goodsService.getPagedGoods(page, count).map {
+                    it.toGoods() ?: throw Exception()
+                },
+            )
+        }
+    }
+
+    override fun getGoodsListByIds(
+        ids: List<Int>,
+        onSuccess: (List<Goods>) -> Unit,
+    ) {
+        thread {
+            onSuccess(
+                goodsService.getGoodsListByIds(ids).map {
                     it.toGoods() ?: throw Exception()
                 },
             )

@@ -204,4 +204,8 @@ class GoodsStorage {
             emptyList()
         }
     }
+
+    fun getGoodsListByIds(id: List<Int?>): List<GoodsEntity> {
+        return id.mapNotNull { getGoodsById(it) }
+    }
 }

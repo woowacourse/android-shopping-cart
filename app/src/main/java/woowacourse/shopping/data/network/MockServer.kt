@@ -24,6 +24,7 @@ class MockServer {
                 return when (request.requestUrl?.encodedPath) {
                     "/products" -> handleProductRequest(request)
                     "/products/page" -> handlePagedProductsRequest(request)
+                    "/products/ids" -> handleProductIdsRequest(request)
                     else -> MockResponse().setResponseCode(NOT_FOUND)
                 }
             }
@@ -60,6 +61,25 @@ class MockServer {
         val toIndex = minOf(fromIndex + count, goodsStorage.dummyData.size)
         val pagedProducts = goodsStorage.getPage(fromIndex, toIndex)
         val body = gson.toJson(pagedProducts)
+
+        return MockResponse()
+            .setHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
+            .setResponseCode(OK)
+            .setBody(body)
+    }
+
+    private fun handleProductIdsRequest(request: RecordedRequest): MockResponse {
+        val idsParam = request.requestUrl?.queryParameter(PARAM_ID)?.split(", ")?.map { it.toIntOrNull() }
+        if (idsParam == null) {
+            return MockResponse()
+                .setHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
+                .setResponseCode(NOT_FOUND)
+        }
+
+        val matchedProducts =
+            goodsStorage.getGoodsListByIds(idsParam)
+
+        val body = gson.toJson(matchedProducts)
 
         return MockResponse()
             .setHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
