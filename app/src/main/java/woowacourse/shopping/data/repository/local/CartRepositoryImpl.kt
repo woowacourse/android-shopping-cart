@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.repository.local
 
+import woowacourse.shopping.data.CartItemMapper
 import woowacourse.shopping.data.datasource.local.CartDataSource
 import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.data.runThread
@@ -8,10 +9,25 @@ import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
+    private val cartItemMapper: CartItemMapper,
 ) : CartRepository {
     override fun getCartItemCount(onResult: (Result<Int?>) -> Unit) {
         runThread(
             block = { cartDataSource.getCartProductCount() },
+            onResult = onResult,
+        )
+    }
+
+    override fun fetchPagedCartItems(
+        page: Int,
+        pageSize: Int,
+        onResult: (Result<List<CartItem>>) -> Unit,
+    ) {
+        runThread(
+            block = {
+                val entities = cartDataSource.getPagedCartProducts(page, pageSize)
+                entities.map { cartItemMapper.toDomain(it) }
+            },
             onResult = onResult,
         )
     }
@@ -28,7 +44,7 @@ class CartRepositoryImpl(
         onResult: (Result<Unit>) -> Unit,
     ) {
         runThread(
-            block = { cartDataSource.insertProduct(cartItem.toEntity()) },
+            block = { cartDataSource.insertProduct(cartItemMapper.toData(cartItem)) },
             onResult = onResult,
         )
     }
@@ -83,10 +99,4 @@ class CartRepositoryImpl(
             onResult = onResult,
         )
     }
-
-    private fun CartItem.toEntity(): CartEntity =
-        CartEntity(
-            productId = this.product.productId,
-            quantity = 1,
-        )
 }

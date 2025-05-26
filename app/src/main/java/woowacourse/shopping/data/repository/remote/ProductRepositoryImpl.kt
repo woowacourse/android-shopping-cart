@@ -2,7 +2,6 @@ package woowacourse.shopping.data.repository.remote
 
 import woowacourse.shopping.data.datasource.local.CartDataSource
 import woowacourse.shopping.data.datasource.remote.ProductDataSource
-import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.data.runThread
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
@@ -35,24 +34,9 @@ class ProductRepositoryImpl(
         )
     }
 
-    override fun fetchPagedCartItems(
-        page: Int,
-        pageSize: Int,
-        onResult: (Result<List<CartItem>>) -> Unit,
-    ) {
-        runThread(
-            block = {
-                cartDataSource.getPagedCartProducts(page, pageSize).map { it.toCartItem() }
-            },
-            onResult = onResult,
-        )
-    }
-
     private fun List<Product>.toCartItems(): List<CartItem> =
         this.map { product ->
             val quantity = cartDataSource.getQuantityById(product.productId)
             CartItem(product, quantity)
         }
-
-    private fun CartEntity.toCartItem(): CartItem = CartItem(productDataSource.fetchProductById(productId), quantity)
 }

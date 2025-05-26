@@ -1,5 +1,6 @@
 package woowacourse.shopping.di
 
+import woowacourse.shopping.data.CartItemMapper
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.data.repository.remote.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.remote.RecentProductRepositoryImpl
@@ -24,7 +25,9 @@ object RepositoryModule {
     fun provideCartRepository(): CartRepository =
         cartRepository ?: run {
             val cartDataSource = DataSourceModule.provideCartDataSource()
-            CartRepositoryImpl(cartDataSource).also { cartRepository = it }
+            val productDataSource = DataSourceModule.provideProductDataSource()
+            val cartItemMapper = CartItemMapper(productDataSource)
+            CartRepositoryImpl(cartDataSource, cartItemMapper).also { cartRepository = it }
         }
 
     fun provideRecentProductRepository(): RecentProductRepository =

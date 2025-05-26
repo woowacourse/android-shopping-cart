@@ -6,13 +6,11 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.ResultState
 import woowacourse.shopping.presentation.SingleLiveData
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<ResultState<List<CartItem>>> = MutableLiveData()
     val products: LiveData<ResultState<List<CartItem>>> = _products
@@ -28,7 +26,7 @@ class CartViewModel(
     }
 
     fun loadItems(currentPage: Int) {
-        productRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
+        cartRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
             result
                 .onSuccess { pagedProducts -> _products.postValue(ResultState.Success(pagedProducts)) }
                 .onFailure { _products.postValue(ResultState.Failure()) }
@@ -77,7 +75,7 @@ class CartViewModel(
     }
 
     private fun reloadProductsByPage(currentPage: Int) {
-        productRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
+        cartRepository.fetchPagedCartItems(PAGE_SIZE, currentPage) { result ->
             result
                 .onSuccess { pagedProducts ->
                     if (pagedProducts.isEmpty()) {
