@@ -80,11 +80,11 @@ class MainViewModel(
         val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
         val updated = cart.decrease()
         cartRepository.update(updated) {
-            if (updated.quantity == 0) {
+            if (updated.quantity == 1) {
                 cartRepository.deleteById(cart.product.id) {
                     _carts.postValue(
                         currentCarts.toMutableList().apply {
-                            this[cartIndex] = updated
+                            this[cartIndex] = updated.copy(quantity = 0)
                         },
                     )
                 }
