@@ -17,6 +17,7 @@ import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailViewModel(
+    productId: Long,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
@@ -43,6 +44,7 @@ class DetailViewModel(
         }
 
     init {
+        loadProduct(productId)
         loadRecentProduct()
     }
 
@@ -103,13 +105,14 @@ class DetailViewModel(
         private const val DEFAULT_QUANTITY = 1
         private const val QUANTITY_STEP = 1
 
-        val Factory: ViewModelProvider.Factory =
+        fun Factory(productId: Long): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T =
                     DetailViewModel(
+                        productId,
                         RepositoryProvider.productRepository,
                         RepositoryProvider.cartRepository,
                         RepositoryProvider.recentProductRepository,

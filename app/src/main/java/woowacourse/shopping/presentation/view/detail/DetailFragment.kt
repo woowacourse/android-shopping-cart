@@ -10,7 +10,9 @@ import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
-    private val viewModel: DetailViewModel by viewModels { DetailViewModel.Factory }
+    private val viewModel: DetailViewModel by viewModels {
+        DetailViewModel.Factory(requireArguments().getLong(EXTRA_PRODUCT))
+    }
 
     override fun onViewCreated(
         view: View,
@@ -19,7 +21,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         setupListeners()
-        loadProductFromArgs()
     }
 
     private fun setupObservers() {
@@ -47,11 +48,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
             val recentProductId = viewModel.recentProduct.value?.id ?: return@setOnClickListener
             viewModel.loadProduct(recentProductId)
         }
-    }
-
-    private fun loadProductFromArgs() {
-        val productId = arguments?.getLong(EXTRA_PRODUCT) ?: return
-        viewModel.loadProduct(productId)
     }
 
     companion object {
