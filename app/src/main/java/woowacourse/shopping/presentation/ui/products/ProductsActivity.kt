@@ -36,9 +36,11 @@ class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity
         productsAdapter = ProductsAdapter(createAdapterOnClickHandler(), this, viewModel)
         initViewBinding()
         initObservers()
-        viewModel.updateProducts()
-        viewModel.updateIsLoadable()
 
+        if (savedInstanceState == null) {
+            viewModel.updateProducts()
+            viewModel.updateIsLoadable()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
