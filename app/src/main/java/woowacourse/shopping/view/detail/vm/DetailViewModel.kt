@@ -26,7 +26,7 @@ class DetailViewModel(
         cartRepository.getById(productId) { cart: Cart? ->
             val product = productRepository.getById(productId)
             if (cart == null) {
-                val newCart = Cart(product, 0)
+                val newCart = Cart(product, 1)
                 addRecentProduct(product)
                 _cart.postValue(newCart)
             } else {
