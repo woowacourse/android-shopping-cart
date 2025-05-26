@@ -6,4 +6,6 @@
     <dimen name="font_size_large">20sp</dimen>
     <dimen name="font_size_xlarge">24sp</dimen>
     <dimen name="font_size_2xlarge">36sp</dimen>
+    <dimen name="spacing_12dp">12dp</dimen>
+    <dimen name="spacing_20dp">20dp</dimen>
 </resources>

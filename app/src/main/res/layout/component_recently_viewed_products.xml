@@ -9,15 +9,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="210dp">
+        android:layout_height="210dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:id="@+id/tv_recently_viewed_products_title"
             style="@style/ProductRecentlyViewedProductsTitleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
             android:layout_marginBottom="8dp"
             android:text="@string/recently_viewed_products_title"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,9 +27,7 @@
             android:id="@+id/rv_recently_viewed_products"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
-            android:clipToPadding="false"
             android:contentDescription="@string/recently_viewed_products_description"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

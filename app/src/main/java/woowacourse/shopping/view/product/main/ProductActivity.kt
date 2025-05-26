@@ -13,6 +13,8 @@ import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.product.detail.ProductDetailActivity
+import woowacourse.shopping.view.product.main.adapter.GridSpacingProductDecoration
+import woowacourse.shopping.view.product.main.adapter.ProductAdapter
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
@@ -20,9 +22,9 @@ class ProductActivity : AppCompatActivity() {
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
             ::onShowMore,
-            ::navigateToProductDetail,
             ::onAddCart,
-            productViewModel,
+            ::navigateToProductDetail,
+            viewModel = productViewModel,
         )
     }
 
@@ -47,6 +49,12 @@ class ProductActivity : AppCompatActivity() {
                     }
             }
         binding.rvProducts.layoutManager = layoutManager
+        val spacingInPx = resources.getDimensionPixelSize(R.dimen.spacing_12dp)
+        val edgeSpacingPx = resources.getDimensionPixelSize(R.dimen.spacing_20dp)
+
+        binding.rvProducts.addItemDecoration(
+            GridSpacingProductDecoration(2, spacingInPx, edgeSpacingPx),
+        )
     }
 
     private fun initView() {
@@ -87,7 +95,6 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun onShowMore(): Boolean {
-        productViewModel.changeShowState(true)
         productViewModel.fetchData()
         return true
     }
