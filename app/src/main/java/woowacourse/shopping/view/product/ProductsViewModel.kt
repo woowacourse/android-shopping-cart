@@ -61,7 +61,7 @@ class ProductsViewModel(
                 ?.product
         val startExclusive: Int = allProducts.indexOf(lastProduct)
         val lastExclusive: Int =
-            (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allProducts.size)
+            (startExclusive + 1 + LOAD_PRODUCTS_SIZE).coerceAtMost(allProducts.size)
         val newProducts = allProducts.subList(startExclusive + 1, lastExclusive)
         addProductItems(newProducts)
     }
@@ -83,7 +83,10 @@ class ProductsViewModel(
                 .onSuccess { recentViewedProducts: List<Product> ->
                     val recentViewedProducts =
                         ProductsItem.RecentViewedProductsItem(
-                            recentViewedProducts.subList(0, LOAD_RECENT_VIEWED_PRODUCTS_SIZE),
+                            recentViewedProducts.subList(
+                                0,
+                                LOAD_RECENT_VIEWED_PRODUCTS_SIZE.coerceAtMost(recentViewedProducts.size),
+                            ),
                         )
                     _productItems.postValue(listOf(recentViewedProducts) + productItems + loadItem)
                 }.onFailure {
