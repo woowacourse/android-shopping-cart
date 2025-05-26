@@ -7,6 +7,16 @@ data class ShoppingCartItem(
     val price: Int
         get() = goods.price.value * quantity
 
+    fun increaseQuantity(): ShoppingCartItem = copy(quantity = quantity + 1)
+
+    fun decreaseQuantity(): ShoppingCartItem {
+        return if (quantity > 0) {
+            copy(quantity = quantity - 1)
+        } else {
+            this
+        }
+    }
+
     companion object {
         private const val DEFAULT_QUANTITY = 0
     }
