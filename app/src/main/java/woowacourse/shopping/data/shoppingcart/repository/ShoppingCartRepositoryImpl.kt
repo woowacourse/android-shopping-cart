@@ -10,26 +10,48 @@ import kotlin.concurrent.thread
 class ShoppingCartRepositoryImpl(
     private val dao: ShoppingCartDao,
 ) : ShoppingCartRepository {
-    override fun addItem(
+    override fun upsertItem(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit
     ) {
         doAsyncCatching(
             block = {
-                dao.upsertItem(item.toEntity())
+                val existing = dao.getItemById(item.goods.id)
+                if (existing != null) {
+                    dao.update(item.goods.id, item.quantity)
+                } else {
+                    dao.insert(item.toEntity())
+                }
             },
             onResult = onResult,
         )
     }
 
-    override fun addItems(
-        items: List<ShoppingCartItem>,
+    override fun addOrIncreaseItem(
+        item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit
     ) {
         doAsyncCatching(
             block = {
-                val entities = items.map { it.toEntity() }
-                dao.upsertItems(entities)
+                val existing = dao.getItemById(item.goods.id)
+                val newQuantity = (existing?.quantity ?: 0) + item.quantity
+                if (existing != null) {
+                    dao.update(item.goods.id, newQuantity)
+                } else {
+                    dao.insert(item.toEntity())
+                }
+            },
+            onResult = onResult,
+        )
+    }
+
+    override fun decreaseQuantity(
+        item: ShoppingCartItem,
+        onResult: (Result<Unit>) -> Unit
+    ) {
+        doAsyncCatching(
+            block = {
+                dao.update(item.goods.id, item.quantity)
             },
             onResult = onResult,
         )
@@ -44,6 +66,27 @@ class ShoppingCartRepositoryImpl(
                 dao.delete(shoppingCartItem.toEntity())
             },
             onResult = onResult,
+        )
+    }
+
+    override fun getItem(
+        id: Long,
+        onResult: (Result<ShoppingCartItem?>) -> Unit
+    ) {
+        doAsyncCatching(
+            block = {
+                dao.getItemById(id)?.toDomain()
+            },
+            onResult = onResult,
+        )
+    }
+
+    override fun getAllItems(onResult: (Result<List<ShoppingCartItem>>) -> Unit) {
+        doAsyncCatching(
+            block = {
+                dao.getAll().map { it.toDomain() }
+            },
+            onResult = onResult
         )
     }
 

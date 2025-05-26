@@ -3,13 +3,18 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.domain.model.ShoppingCartItem
 
 interface ShoppingCartRepository {
-    fun addItem(
+    fun upsertItem(
         item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     )
 
-    fun addItems(
-        items: List<ShoppingCartItem>,
+    fun addOrIncreaseItem(
+        item: ShoppingCartItem,
+        onResult: (Result<Unit>) -> Unit,
+    )
+
+    fun decreaseQuantity(
+        item: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     )
 
@@ -17,6 +22,13 @@ interface ShoppingCartRepository {
         shoppingCartItem: ShoppingCartItem,
         onResult: (Result<Unit>) -> Unit,
     )
+
+    fun getItem(
+        id: Long,
+        onResult: (Result<ShoppingCartItem?>) -> Unit
+    )
+
+    fun getAllItems(onResult: (Result<List<ShoppingCartItem>>) -> Unit)
 
     fun getPagedItems(
         page: Int,
