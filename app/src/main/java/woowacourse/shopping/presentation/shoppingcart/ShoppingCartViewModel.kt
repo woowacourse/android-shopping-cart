@@ -102,21 +102,15 @@ class ShoppingCartViewModel(
         goodsId: Int,
         transform: (Goods) -> Goods,
     ): Goods {
-        var updatedItem: Goods? = null
         val updatedList =
-            goods.value.orEmpty().mapIndexed { _, item ->
-                if (item.id == goodsId) {
-                    val transformed = transform(item)
-                    updatedItem = transformed
-                    transformed
-                } else {
-                    item
-                }
+            goods.value.orEmpty().map { item ->
+                if (item.id == goodsId) transform(item) else item
             }
 
+        val updatedItem = updatedList.first { it.id == goodsId }
+
         _goods.value = updatedList
-        _onQuantityChanged.setValue(goodsId)
-        return updatedItem ?: throw IllegalStateException("id $goodsId 해당하는 Goods가 없습니다")
+        return updatedItem
     }
 
     fun increasePage() {
