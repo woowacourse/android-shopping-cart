@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.presentation.model.CartItemUiModel
+import woowacourse.shopping.presentation.model.CartProductUiModel
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
@@ -14,7 +14,7 @@ class CartViewHolder(
         binding.eventListener = eventListener
     }
 
-    fun bind(cartItem: CartItemUiModel) {
+    fun bind(cartItem: CartProductUiModel) {
         binding.cartItem = cartItem
     }
 

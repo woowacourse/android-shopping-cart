@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.di.provider.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.fixture.FakeCartRepository
 import woowacourse.shopping.fixture.FakeProductRepository
 import woowacourse.shopping.fixture.FakeRecentProductRepository
@@ -36,7 +36,7 @@ class CatalogFragmentTest {
         val fakeProductRepository = FakeProductRepository()
         val fakeCartRepository =
             FakeCartRepository(
-                initialCartItems = productsFixture.take(1).map { CartItem(it, 1) },
+                initialCartProducts = productsFixture.take(1).map { CartProduct(it, 1) },
             )
         val fakeRecentProductRepository =
             FakeRecentProductRepository(
@@ -119,6 +119,7 @@ class CatalogFragmentTest {
     @Test
     fun `최근_본_상품_목록이_보여진다`() {
         // Then
+        Thread.sleep(100)
         nthProductInRecyclerView(R.id.text_view_recent_product_name, 0).check(matches(withText(productsFixture[0].name)))
     }
 

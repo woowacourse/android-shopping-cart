@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.di.provider.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.presentation.model.CartItemUiModel
+import woowacourse.shopping.presentation.model.CartProductUiModel
 import woowacourse.shopping.presentation.model.FetchPageDirection
 import woowacourse.shopping.presentation.model.toCartItemUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
@@ -23,8 +23,8 @@ class CartViewModel(
     private val _toastEvent = MutableSingleLiveData<CartMessageEvent>()
     val toastEvent: SingleLiveData<CartMessageEvent> = _toastEvent
 
-    private val _cartItems = MutableLiveData<List<CartItemUiModel>>(emptyList())
-    val cartItems: LiveData<List<CartItemUiModel>> = _cartItems
+    private val _cartItems = MutableLiveData<List<CartProductUiModel>>(emptyList())
+    val cartItems: LiveData<List<CartProductUiModel>> = _cartItems
 
     private val _page = MutableLiveData(DEFAULT_PAGE)
     val page: LiveData<Int> = _page
@@ -83,7 +83,7 @@ class CartViewModel(
     }
 
     private fun handleFetchCartItemsSuccess(
-        pageableItem: PageableItem<CartItem>,
+        pageableItem: PageableItem<CartProduct>,
         newPage: Int,
     ) {
         _cartItems.postValue(pageableItem.items.map { it.toCartItemUiModel() })
@@ -106,12 +106,12 @@ class CartViewModel(
         }
     }
 
-    private fun updateItemQuantityInList(updatedCartItem: CartItem) {
+    private fun updateItemQuantityInList(updatedCartProduct: CartProduct) {
         val items = _cartItems.value.orEmpty()
         val updatedItems =
             items.map { item ->
-                if (item.productId != updatedCartItem.product.id) return@map item
-                updatedCartItem.toCartItemUiModel()
+                if (item.productId != updatedCartProduct.product.id) return@map item
+                updatedCartProduct.toCartItemUiModel()
             }
         _cartItems.postValue(updatedItems)
     }

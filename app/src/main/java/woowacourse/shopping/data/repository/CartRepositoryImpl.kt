@@ -5,7 +5,7 @@ import woowacourse.shopping.data.datasource.ProductRemoteDataSource
 import woowacourse.shopping.data.db.CartEntity
 import woowacourse.shopping.data.model.toProduct
 import woowacourse.shopping.data.util.runCatchingInThread
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.repository.CartRepository
 
@@ -13,7 +13,7 @@ class CartRepositoryImpl(
     private val cartLocalDataSource: CartLocalDataSource,
     private val productRemoteDataSource: ProductRemoteDataSource,
 ) : CartRepository {
-    override fun getAll(onResult: (Result<List<CartItem>>) -> Unit) =
+    override fun getAll(onResult: (Result<List<CartProduct>>) -> Unit) =
         runCatchingInThread(onResult) {
             cartLocalDataSource.getAll().toCartItems()
         }
@@ -26,7 +26,7 @@ class CartRepositoryImpl(
     override fun loadCartItems(
         offset: Int,
         limit: Int,
-        onResult: (Result<PageableItem<CartItem>>) -> Unit,
+        onResult: (Result<PageableItem<CartProduct>>) -> Unit,
     ) = runCatchingInThread(onResult) {
         val entities = cartLocalDataSource.loadCartItems(offset, limit)
         val cartItems = entities.toCartItems()
@@ -36,7 +36,7 @@ class CartRepositoryImpl(
 
     override fun findCartItemByProductId(
         productId: Long,
-        onResult: (Result<CartItem>) -> Unit,
+        onResult: (Result<CartProduct>) -> Unit,
     ) = runCatchingInThread(onResult) {
         cartLocalDataSource.findCartItemByProductId(productId).toCartItem()
     }
@@ -70,18 +70,18 @@ class CartRepositoryImpl(
         cartLocalDataSource.deleteCartItem(productId)
     }
 
-    private fun CartEntity.toCartItem(): CartItem {
+    private fun CartEntity.toCartItem(): CartProduct {
         val product = productRemoteDataSource.findProductById(productId).toProduct()
-        return CartItem(product, quantity)
+        return CartProduct(product, quantity)
     }
 
-    private fun List<CartEntity>.toCartItems(): List<CartItem> {
+    private fun List<CartEntity>.toCartItems(): List<CartProduct> {
         val productIds = this.map { it.productId }
         val productMap = productRemoteDataSource.findProductsByIds(productIds).associateBy { it.id }
 
         return this.mapNotNull { entity ->
             val product = productMap[entity.productId]?.toProduct() ?: return@mapNotNull null
-            CartItem(product, entity.quantity)
+            CartProduct(product, entity.quantity)
         }
     }
 

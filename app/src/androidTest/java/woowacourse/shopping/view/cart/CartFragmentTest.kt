@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.R
 import woowacourse.shopping.di.provider.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.fixture.FakeCartRepository
 import woowacourse.shopping.fixture.FakeProductRepository
 import woowacourse.shopping.fixture.FakeRecentProductRepository
@@ -33,7 +33,7 @@ class CartFragmentTest {
         val fakeProductRepository = FakeProductRepository()
         val fakeCartRepository =
             FakeCartRepository(
-                initialCartItems = productsFixture.take(15).map { CartItem(it, 1) },
+                initialCartProducts = productsFixture.take(15).map { CartProduct(it, 1) },
             )
         val fakeRecentProductRepository = FakeRecentProductRepository()
 

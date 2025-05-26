@@ -1,8 +1,8 @@
 package woowacourse.shopping.presentation.model
 
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 
-data class CartItemUiModel(
+data class CartProductUiModel(
     val productId: Long,
     val productName: String,
     val imageUrl: String,
@@ -10,8 +10,8 @@ data class CartItemUiModel(
     val totalPrice: Int,
 )
 
-fun CartItem.toCartItemUiModel() =
-    CartItemUiModel(
+fun CartProduct.toCartItemUiModel() =
+    CartProductUiModel(
         product.id,
         product.name,
         product.imageUrl,

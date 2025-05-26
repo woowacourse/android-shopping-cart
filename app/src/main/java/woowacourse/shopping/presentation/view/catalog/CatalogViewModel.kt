@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.di.provider.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
@@ -170,10 +170,10 @@ class CatalogViewModel(
     }
 
     private fun applyCartQuantities(
-        cartItems: List<CartItem>,
+        cartProducts: List<CartProduct>,
         items: List<CatalogItem>,
     ): List<CatalogItem> {
-        val cartItemMap = cartItems.associateBy { it.product.id }
+        val cartItemMap = cartProducts.associateBy { it.product.id }
 
         return items.map { item ->
             if (item !is CatalogItem.ProductItem) return@map item
