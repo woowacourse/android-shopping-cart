@@ -10,19 +10,20 @@ import woowacourse.shopping.presentation.base.BaseFragment
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_detail) {
-    private val viewModel: DetailViewModel by viewModels { DetailViewModel.Factory }
+    private val viewModel: DetailViewModel by viewModels {
+        DetailViewModel.Factory(requireArguments().getLong(EXTRA_PRODUCT))
+    }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initObserver()
-        initListener()
-        fetchProductFromArguments()
+        setupObservers()
+        setupListeners()
     }
 
-    private fun initObserver() {
+    private fun setupObservers() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
 
@@ -38,20 +39,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(R.layout.fragment_det
         }
     }
 
-    private fun initListener() {
+    private fun setupListeners() {
         binding.btnClose.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
-        binding.viewRecentProduct.setOnClickListener {
-            val recentProductId = viewModel.recentProduct.value?.id ?: return@setOnClickListener
-            viewModel.fetchProduct(recentProductId)
-        }
-    }
-
-    private fun fetchProductFromArguments() {
-        val productId = arguments?.getLong(EXTRA_PRODUCT) ?: return
-        viewModel.fetchProduct(productId)
     }
 
     companion object {

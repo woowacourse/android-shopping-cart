@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.di.provider.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.presentation.model.CartItemUiModel
+import woowacourse.shopping.presentation.model.CartProductUiModel
 import woowacourse.shopping.presentation.model.FetchPageDirection
 import woowacourse.shopping.presentation.model.toCartItemUiModel
 import woowacourse.shopping.presentation.util.MutableSingleLiveData
@@ -23,8 +23,8 @@ class CartViewModel(
     private val _toastEvent = MutableSingleLiveData<CartMessageEvent>()
     val toastEvent: SingleLiveData<CartMessageEvent> = _toastEvent
 
-    private val _cartItems = MutableLiveData<List<CartItemUiModel>>(emptyList())
-    val cartItems: LiveData<List<CartItemUiModel>> = _cartItems
+    private val _cartItems = MutableLiveData<List<CartProductUiModel>>(emptyList())
+    val cartItems: LiveData<List<CartProductUiModel>> = _cartItems
 
     private val _page = MutableLiveData(DEFAULT_PAGE)
     val page: LiveData<Int> = _page
@@ -49,15 +49,15 @@ class CartViewModel(
         }
     }
 
-    fun deleteCartItem(item: CartItemUiModel) {
-        cartRepository.deleteCartItem(item.productId) { result ->
+    fun deleteCartItem(productId: Long) {
+        cartRepository.deleteCartItem(productId) { result ->
             result
-                .onSuccess { handleFetchCartItemDeleted(item.productId) }
+                .onSuccess { handleFetchCartItemDeleted(productId) }
                 .onFailure { postFailureEvent(CartMessageEvent.DELETE_CART_ITEM_FAILURE) }
         }
     }
 
-    fun addProductToCart(productId: Long) {
+    fun increaseProductQuantity(productId: Long) {
         cartRepository.addCartItem(productId, QUANTITY_STEP) { result ->
             result
                 .onSuccess { refreshProductQuantity(productId) }
@@ -65,12 +65,30 @@ class CartViewModel(
         }
     }
 
-    fun removeProductFromCart(productId: Long) {
+    fun decreaseProductQuantity(productId: Long) {
         cartRepository.decreaseCartItemQuantity(productId) { result ->
             result
                 .onSuccess { refreshProductQuantity(productId) }
                 .onFailure { postFailureEvent(CartMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE) }
         }
+    }
+
+    private fun calculatePage(direction: FetchPageDirection): Int {
+        val currentPage = _page.value ?: DEFAULT_PAGE
+        return when (direction) {
+            FetchPageDirection.PREVIOUS -> max(DEFAULT_PAGE, currentPage - PAGE_STEP)
+            FetchPageDirection.CURRENT -> currentPage
+            FetchPageDirection.NEXT -> currentPage + PAGE_STEP
+        }
+    }
+
+    private fun handleFetchCartItemsSuccess(
+        pageableItem: PageableItem<CartProduct>,
+        newPage: Int,
+    ) {
+        _cartItems.postValue(pageableItem.items.map { it.toCartItemUiModel() })
+        _hasMore.postValue(pageableItem.hasMore)
+        _page.postValue(newPage)
     }
 
     private fun refreshProductQuantity(productId: Long) {
@@ -88,23 +106,14 @@ class CartViewModel(
         }
     }
 
-    private fun updateItemQuantityInList(updatedCartItem: CartItem) {
+    private fun updateItemQuantityInList(updatedCartProduct: CartProduct) {
         val items = _cartItems.value.orEmpty()
         val updatedItems =
             items.map { item ->
-                if (item.productId != updatedCartItem.product.id) return@map item
-                updatedCartItem.toCartItemUiModel()
+                if (item.productId != updatedCartProduct.product.id) return@map item
+                updatedCartProduct.toCartItemUiModel()
             }
         _cartItems.postValue(updatedItems)
-    }
-
-    private fun handleFetchCartItemsSuccess(
-        pageableItem: PageableItem<CartItem>,
-        newPage: Int,
-    ) {
-        _cartItems.postValue(pageableItem.items.map { it.toCartItemUiModel() })
-        _hasMore.postValue(pageableItem.hasMore)
-        _page.postValue(newPage)
     }
 
     private fun handleFetchCartItemDeleted(deletedProductId: Long) {
@@ -112,15 +121,6 @@ class CartViewModel(
         val isLastItem = items.size == 1 && items.first().productId == deletedProductId
 
         fetchCartItems(if (isLastItem) FetchPageDirection.PREVIOUS else FetchPageDirection.CURRENT)
-    }
-
-    private fun calculatePage(direction: FetchPageDirection): Int {
-        val currentPage = _page.value ?: DEFAULT_PAGE
-        return when (direction) {
-            FetchPageDirection.PREVIOUS -> max(DEFAULT_PAGE, currentPage - PAGE_STEP)
-            FetchPageDirection.CURRENT -> currentPage
-            FetchPageDirection.NEXT -> currentPage + PAGE_STEP
-        }
     }
 
     private fun postFailureEvent(event: CartMessageEvent) {

@@ -1,15 +1,15 @@
 package woowacourse.shopping.fixture
 
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.repository.CartRepository
 
 class FakeCartRepository(
-    initialCartItems: List<CartItem> = emptyList(),
+    initialCartProducts: List<CartProduct> = emptyList(),
 ) : CartRepository {
-    private val cartItems = initialCartItems.toMutableList()
+    private val cartItems = initialCartProducts.toMutableList()
 
-    override fun getAll(onResult: (Result<List<CartItem>>) -> Unit) {
+    override fun getAll(onResult: (Result<List<CartProduct>>) -> Unit) {
         onResult(Result.success(cartItems.toList()))
     }
 
@@ -21,7 +21,7 @@ class FakeCartRepository(
     override fun loadCartItems(
         offset: Int,
         limit: Int,
-        onResult: (Result<PageableItem<CartItem>>) -> Unit,
+        onResult: (Result<PageableItem<CartProduct>>) -> Unit,
     ) {
         val pagedItems = cartItems.drop(offset).take(limit)
         val hasMore = (offset + limit) < cartItems.size
@@ -30,7 +30,7 @@ class FakeCartRepository(
 
     override fun findCartItemByProductId(
         productId: Long,
-        onResult: (Result<CartItem>) -> Unit,
+        onResult: (Result<CartProduct>) -> Unit,
     ) {
         val item = cartItems.find { it.product.id == productId }
         if (item != null) {
@@ -65,7 +65,7 @@ class FakeCartRepository(
             cartItems.remove(existingItem)
             cartItems.add(updatedItem)
         } else {
-            cartItems.add(CartItem(product, increaseQuantity))
+            cartItems.add(CartProduct(product, increaseQuantity))
         }
         onResult(Result.success(Unit))
     }

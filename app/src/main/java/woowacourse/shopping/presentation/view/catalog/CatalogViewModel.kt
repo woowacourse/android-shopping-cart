@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.di.provider.RepositoryProvider
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.PageableItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
@@ -36,10 +36,10 @@ class CatalogViewModel(
     private var page = 0
 
     init {
-        fetchProducts()
+        loadProducts()
     }
 
-    fun fetchProducts() {
+    fun loadProducts() {
         val offset = page * PRODUCT_LOAD_LIMIT
         productRepository.loadProducts(offset, PRODUCT_LOAD_LIMIT) { result ->
             result
@@ -48,23 +48,23 @@ class CatalogViewModel(
         }
     }
 
-    fun addProductToCart(productId: Long) {
+    fun increaseProductQuantity(productId: Long) {
         cartRepository.addCartItem(productId, QUANTITY_STEP) { result ->
             result
-                .onSuccess { updateProductQuantity(productId) }
+                .onSuccess { updateProductQuantityInList(productId) }
                 .onFailure { emitToastMessage(CatalogMessageEvent.INCREASE_PRODUCT_TO_CART_FAILURE) }
         }
     }
 
-    fun removeProductFromCart(productId: Long) {
+    fun decreaseProductQuantity(productId: Long) {
         cartRepository.decreaseCartItemQuantity(productId) { result ->
             result
-                .onSuccess { updateProductQuantity(productId) }
+                .onSuccess { updateProductQuantityInList(productId) }
                 .onFailure { emitToastMessage(CatalogMessageEvent.DECREASE_PRODUCT_FROM_CART_FAILURE) }
         }
     }
 
-    fun refreshCatalog() {
+    fun refreshCatalogItems() {
         if (_products.value.isNullOrEmpty()) return
 
         loadRecentProducts { recentProducts ->
@@ -75,10 +75,10 @@ class CatalogViewModel(
     private fun handleProductPageLoad(pageable: PageableItem<Product>) {
         page++
 
-        val currentItems = getCurrentProductItems()
+        val currentItems = currentProductItems()
         val newItems = pageable.items.map { it.toCatalogProductItem() }
         val mergedItems = (currentItems + newItems).distinctBy { it.productId }
-        val catalogWithLoadMore = appendLoadMoreItem(mergedItems, pageable.hasMore)
+        val catalogWithLoadMore = appendLoadMore(mergedItems, pageable.hasMore)
 
         loadRecentProducts { recentProducts ->
             rebuildCatalogItems(recentProducts, catalogWithLoadMore)
@@ -104,8 +104,8 @@ class CatalogViewModel(
         cartRepository.getAll { result ->
             result
                 .onSuccess { cartItems ->
-                    val updatedItems = applyCartQuantitiesToItems(cartItems, currentItems)
-                    val finalCatalog = prependRecentProductsItem(recentProductsItem, updatedItems)
+                    val updatedItems = applyCartQuantities(cartItems, currentItems)
+                    val finalCatalog = prependRecentProducts(recentProductsItem, updatedItems)
                     _products.postValue(finalCatalog)
                     updateCartItemCount()
                 }.onFailure {
@@ -114,7 +114,7 @@ class CatalogViewModel(
         }
     }
 
-    private fun updateProductQuantity(productId: Long) {
+    private fun updateProductQuantityInList(productId: Long) {
         cartRepository.findQuantityByProductId(productId) { result ->
             result
                 .onSuccess { newQuantity -> applyProductQuantityUpdate(productId, newQuantity) }
@@ -147,10 +147,9 @@ class CatalogViewModel(
         }
     }
 
-    private fun getCurrentProductItems(): List<CatalogItem.ProductItem> =
-        _products.value.orEmpty().filterIsInstance<CatalogItem.ProductItem>()
+    private fun currentProductItems(): List<CatalogItem.ProductItem> = _products.value.orEmpty().filterIsInstance<CatalogItem.ProductItem>()
 
-    private fun appendLoadMoreItem(
+    private fun appendLoadMore(
         products: List<CatalogItem.ProductItem>,
         hasMore: Boolean,
     ): List<CatalogItem> =
@@ -159,7 +158,7 @@ class CatalogViewModel(
             if (hasMore) add(CatalogItem.LoadMoreItem)
         }
 
-    private fun prependRecentProductsItem(
+    private fun prependRecentProducts(
         recentProducts: CatalogItem.RecentProducts?,
         items: List<CatalogItem>,
     ): List<CatalogItem> {
@@ -170,11 +169,11 @@ class CatalogViewModel(
         }
     }
 
-    private fun applyCartQuantitiesToItems(
-        cartItems: List<CartItem>,
+    private fun applyCartQuantities(
+        cartProducts: List<CartProduct>,
         items: List<CatalogItem>,
     ): List<CatalogItem> {
-        val cartItemMap = cartItems.associateBy { it.product.id }
+        val cartItemMap = cartProducts.associateBy { it.product.id }
 
         return items.map { item ->
             if (item !is CatalogItem.ProductItem) return@map item

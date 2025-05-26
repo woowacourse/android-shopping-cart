@@ -10,7 +10,7 @@ class LoadMoreViewHolder(
     eventListener: CatalogAdapter.CatalogEventListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.listener = eventListener
+        binding.eventListener = eventListener
     }
 
     companion object {

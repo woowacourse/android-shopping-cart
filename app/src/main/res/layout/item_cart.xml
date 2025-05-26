@@ -7,7 +7,7 @@
 
         <variable
             name="cartItem"
-            type="woowacourse.shopping.presentation.model.CartItemUiModel" />
+            type="woowacourse.shopping.presentation.model.CartProductUiModel" />
 
         <variable
             name="eventListener"
@@ -29,7 +29,7 @@
             android:layout_height="32dp"
             android:backgroundTint="@color/transparent"
             android:contentDescription="@null"
-            android:onClick="@{() -> eventListener.onProductDeletion(cartItem)}"
+            android:onClick="@{() -> eventListener.onDeleteProduct(cartItem.productId)}"
             android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -70,8 +70,8 @@
             app:layout_constraintBottom_toTopOf="@id/text_view_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/image_view_product"
-            app:onDecreaseClicked="@{() -> eventListener.decreaseQuantity(cartItem.productId)}"
-            app:onIncreaseClicked="@{() -> eventListener.increaseQuantity(cartItem.productId)}"
+            app:onDecreaseClick="@{() -> eventListener.decreaseQuantity(cartItem.productId)}"
+            app:onIncreaseClick="@{() -> eventListener.increaseQuantity(cartItem.productId)}"
             app:quantity="@{cartItem.quantity}" />
 
         <TextView

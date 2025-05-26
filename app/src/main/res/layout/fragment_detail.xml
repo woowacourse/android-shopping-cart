@@ -91,8 +91,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_detail_price"
             app:layout_constraintTop_toTopOf="@id/text_view_detail_price"
-            app:onDecreaseClicked="@{() -> vm.decreaseQuantity() }"
-            app:onIncreaseClicked="@{() -> vm.increaseQuantity() }"
+            app:onDecreaseClick="@{() -> vm.decreaseQuantity() }"
+            app:onIncreaseClick="@{() -> vm.increaseQuantity() }"
             app:quantity="@{vm.quantity}" />
 
         <LinearLayout
@@ -101,9 +101,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:background="@drawable/shape_cart_item"
+            android:onClick="@{() -> vm.loadProduct(vm.recentProduct.id)}"
             android:orientation="vertical"
             android:padding="20dp"
-            android:visibility="@{(vm.recentProduct == null || vm.recentProduct.id == vm.product.id) ? View.GONE : View.VISIBLE}"
+            android:visibility="@{vm.isRecentProductVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/btn_add_cart"
             app:layout_constraintTop_toBottomOf="@id/text_view_detail_price">
 
@@ -137,7 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint"
-            android:onClick="@{() -> vm.addProduct()}"
+            android:onClick="@{() -> vm.addProductToCart()}"
             android:text="@string/detail_add_cart_button_text"
             android:textColor="@color/white"
             android:textSize="20sp"

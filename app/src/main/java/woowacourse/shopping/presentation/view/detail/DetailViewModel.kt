@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.view.detail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +17,7 @@ import woowacourse.shopping.presentation.util.SingleLiveData
 import woowacourse.shopping.presentation.view.detail.event.DetailMessageEvent
 
 class DetailViewModel(
+    productId: Long,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
@@ -35,17 +37,24 @@ class DetailViewModel(
     private val _addToCartSuccessEvent = MutableSingleLiveData<Unit>()
     val addToCartSuccessEvent: SingleLiveData<Unit> = _addToCartSuccessEvent
 
+    val isRecentProductVisible: LiveData<Boolean> =
+        MediatorLiveData<Boolean>().apply {
+            addSource(_product) { updateVisibility() }
+            addSource(_recentProduct) { updateVisibility() }
+        }
+
     init {
-        fetchRecentProduct()
+        loadProduct(productId)
+        loadRecentProduct()
     }
 
-    fun fetchProduct(productId: Long) {
-        updateRecentProduct(productId)
-
+    fun loadProduct(productId: Long) {
         productRepository.findProductInfoById(productId) { result ->
             result
-                .onSuccess { _product.postValue(it.toUiModel()) }
-                .onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
+                .onSuccess {
+                    _product.postValue(it.toUiModel())
+                    updateRecentProduct(productId)
+                }.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
         }
     }
 
@@ -56,12 +65,10 @@ class DetailViewModel(
 
     fun decreaseQuantity() {
         val currentQuantity = _quantity.value ?: DEFAULT_QUANTITY
-        if (currentQuantity > DEFAULT_QUANTITY) {
-            _quantity.value = currentQuantity - QUANTITY_STEP
-        }
+        _quantity.value = (currentQuantity - QUANTITY_STEP).coerceAtLeast(DEFAULT_QUANTITY)
     }
 
-    fun addProduct() {
+    fun addProductToCart() {
         val product = _product.value ?: return
         val quantity = _quantity.value ?: DEFAULT_QUANTITY
 
@@ -72,13 +79,7 @@ class DetailViewModel(
         }
     }
 
-    private fun updateRecentProduct(productId: Long) {
-        recentProductRepository.insertAndTrimToLimit(productId) { result ->
-            result.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
-        }
-    }
-
-    private fun fetchRecentProduct() {
+    private fun loadRecentProduct() {
         recentProductRepository.getRecentProducts(1) { result ->
             result
                 .onSuccess { _recentProduct.postValue(it.firstOrNull()?.toUiModel()) }
@@ -86,17 +87,30 @@ class DetailViewModel(
         }
     }
 
+    private fun updateRecentProduct(productId: Long) {
+        recentProductRepository.insertAndTrimToLimit(productId) { result ->
+            result.onFailure { _toastEvent.postValue(DetailMessageEvent.FETCH_PRODUCT_FAILURE) }
+        }
+    }
+
+    private fun MediatorLiveData<Boolean>.updateVisibility() {
+        val currentProduct = _product.value
+        val recent = _recentProduct.value
+        value = recent != null && recent.id != currentProduct?.id
+    }
+
     companion object {
         private const val DEFAULT_QUANTITY = 1
         private const val QUANTITY_STEP = 1
 
-        val Factory: ViewModelProvider.Factory =
+        fun Factory(productId: Long): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(
                     modelClass: Class<T>,
                     extras: CreationExtras,
                 ): T =
                     DetailViewModel(
+                        productId,
                         RepositoryProvider.productRepository,
                         RepositoryProvider.cartRepository,
                         RepositoryProvider.recentProductRepository,

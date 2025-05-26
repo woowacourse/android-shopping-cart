@@ -33,14 +33,14 @@ class CatalogFragment :
     ) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
-        setupListener()
-        observeViewModel()
+        setupListeners()
+        setupObservers()
     }
 
     override fun onStart() {
         super.onStart()
 
-        viewModel.refreshCatalog()
+        viewModel.refreshCatalogItems()
     }
 
     override fun onDestroyView() {
@@ -48,24 +48,24 @@ class CatalogFragment :
         _toolbarBinding = null
     }
 
-    override fun onProductClicked(productId: Long) {
+    override fun onProductClick(productId: Long) {
         navigateTo(DetailFragment::class.java, DetailFragment.newBundle(productId))
     }
 
-    override fun onLoadMoreClicked() {
-        viewModel.fetchProducts()
+    override fun onLoadMoreClick() {
+        viewModel.loadProducts()
     }
 
-    override fun onQuantitySelectorOpenButtonClicked(productId: Long) {
-        viewModel.addProductToCart(productId)
+    override fun onQuantitySelectorOpenButtonClick(productId: Long) {
+        viewModel.increaseProductQuantity(productId)
     }
 
     override fun increaseQuantity(productId: Long) {
-        viewModel.addProductToCart(productId)
+        viewModel.increaseProductQuantity(productId)
     }
 
     override fun decreaseQuantity(productId: Long) {
-        viewModel.removeProductFromCart(productId)
+        viewModel.decreaseProductQuantity(productId)
     }
 
     private fun setupUI() {
@@ -73,7 +73,7 @@ class CatalogFragment :
         setupCartToolbarMenu()
     }
 
-    private fun setupListener() {
+    private fun setupListeners() {
         toolbarBinding.ivShoppingCart.setOnClickListener {
             navigateTo(CartFragment::class.java)
         }
@@ -113,7 +113,7 @@ class CatalogFragment :
         }
     }
 
-    private fun observeViewModel() {
+    private fun setupObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
             catalogAdapter.submitList(it)
         }

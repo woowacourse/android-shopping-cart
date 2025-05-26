@@ -2,11 +2,11 @@ package woowacourse.shopping.presentation.view.cart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.CartItemUiModel
+import woowacourse.shopping.presentation.model.CartProductUiModel
 import woowacourse.shopping.presentation.ui.layout.QuantityChangeListener
 
 class CartAdapter(
-    initialProducts: List<CartItemUiModel> = emptyList(),
+    initialProducts: List<CartProductUiModel> = emptyList(),
     private val eventListener: CartEventListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val products = initialProducts.toMutableList()
@@ -25,13 +25,13 @@ class CartAdapter(
         holder.bind(products[position])
     }
 
-    fun updateItemsManually(newProducts: List<CartItemUiModel>) {
+    fun updateItemsManually(newProducts: List<CartProductUiModel>) {
         removeMissingItems(newProducts)
         updateChangedItems(newProducts)
         addNewItems(newProducts)
     }
 
-    private fun removeMissingItems(newProducts: List<CartItemUiModel>) {
+    private fun removeMissingItems(newProducts: List<CartProductUiModel>) {
         val iterator = products.listIterator()
         while (iterator.hasNext()) {
             val item = iterator.next()
@@ -43,7 +43,7 @@ class CartAdapter(
         }
     }
 
-    private fun updateChangedItems(newProducts: List<CartItemUiModel>) {
+    private fun updateChangedItems(newProducts: List<CartProductUiModel>) {
         newProducts.forEach { newItem ->
             val oldIndex = products.indexOfFirst { it.productId == newItem.productId }
             if (oldIndex != -1 && products[oldIndex] != newItem) {
@@ -53,7 +53,7 @@ class CartAdapter(
         }
     }
 
-    private fun addNewItems(newProducts: List<CartItemUiModel>) {
+    private fun addNewItems(newProducts: List<CartProductUiModel>) {
         newProducts.forEach { newItem ->
             val exists = products.any { it.productId == newItem.productId }
             if (!exists) {
@@ -64,6 +64,6 @@ class CartAdapter(
     }
 
     interface CartEventListener : QuantityChangeListener {
-        fun onProductDeletion(cartItem: CartItemUiModel)
+        fun onDeleteProduct(productId: Long)
     }
 }

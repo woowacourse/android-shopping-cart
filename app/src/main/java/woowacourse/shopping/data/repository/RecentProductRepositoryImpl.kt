@@ -11,14 +11,16 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 class RecentProductRepositoryImpl(
     private val productRemoteDataSource: ProductRemoteDataSource,
     private val recentProductLocalDataSource: RecentProductLocalDataSource,
+    private val recentProductLimit: Int = 10,
 ) : RecentProductRepository {
     override fun getRecentProducts(
         limit: Int,
         onResult: (Result<List<Product>>) -> Unit,
     ) = runCatchingInThread(onResult) {
-        recentProductLocalDataSource
-            .getRecentProducts(limit)
-            .map { productRemoteDataSource.findProductById(it.productId).toProduct() }
+        val recentProducts = recentProductLocalDataSource.getRecentProducts(limit)
+        val products =
+            productRemoteDataSource.findProductsByIds(recentProducts.map { it.productId })
+        products.map { it.toProduct() }
     }
 
     override fun insertAndTrimToLimit(
@@ -26,20 +28,6 @@ class RecentProductRepositoryImpl(
         onResult: (Result<Unit>) -> Unit,
     ) = runCatchingInThread(onResult) {
         recentProductLocalDataSource.insertRecentProduct(RecentProductEntity(productId))
-        trimRecentProductsToLimit()
-    }
-
-    private fun trimRecentProductsToLimit() {
-        val savedRecentProductCount = recentProductLocalDataSource.getRecentProductCount()
-        if (savedRecentProductCount > RECENT_PRODUCT_LIMIT) {
-            val overflowCount = savedRecentProductCount - RECENT_PRODUCT_LIMIT
-            repeat(overflowCount) {
-                recentProductLocalDataSource.deleteOldestRecentProduct()
-            }
-        }
-    }
-
-    companion object {
-        private const val RECENT_PRODUCT_LIMIT = 10
+        recentProductLocalDataSource.trimToLimit(recentProductLimit)
     }
 }

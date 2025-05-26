@@ -85,7 +85,7 @@ class CatalogViewModelTest {
     fun `특정 상품의 장바구니 담은 개수를 증가시킬 수 있다`() {
         // When
         val productId = 1L
-        viewModel.addProductToCart(productId)
+        viewModel.increaseProductQuantity(productId)
 
         // Then
         val observedItems =
@@ -98,13 +98,13 @@ class CatalogViewModelTest {
     fun `특정 상품의 장바구니 담은 개수를 감소시킬 수 있다`() {
         // Give
         val productId = 1L
-        viewModel.addProductToCart(productId)
+        viewModel.increaseProductQuantity(productId)
         val beforeObservedItems =
             viewModel.products.getOrAwaitValue().filterIsInstance<CatalogItem.ProductItem>()
         val beforeQuantity = beforeObservedItems.find { it.productId == productId }?.quantity ?: 0
 
         // When
-        viewModel.removeProductFromCart(productId)
+        viewModel.decreaseProductQuantity(productId)
 
         // Then
         val afterObservedItems =

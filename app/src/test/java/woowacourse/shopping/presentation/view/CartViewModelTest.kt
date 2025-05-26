@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.fixture.FakeCartRepository
 import woowacourse.shopping.fixture.productsFixture
 import woowacourse.shopping.presentation.model.FetchPageDirection
@@ -16,14 +16,14 @@ import woowacourse.shopping.presentation.view.util.getOrAwaitValue
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
-    private val dummyCartItems =
+    private val dummyCartProducts =
         productsFixture.take(10).map {
-            CartItem(it, 2)
+            CartProduct(it, 2)
         }
 
     @BeforeEach
     fun setUp() {
-        val fakeCartRepository = FakeCartRepository(dummyCartItems)
+        val fakeCartRepository = FakeCartRepository(dummyCartProducts)
         viewModel =
             CartViewModel(fakeCartRepository)
     }
@@ -63,7 +63,7 @@ class CartViewModelTest {
         val target = items.last()
 
         // When
-        viewModel.deleteCartItem(target)
+        viewModel.deleteCartItem(target.productId)
         val newItems = viewModel.cartItems.getOrAwaitValue()
 
         // Then
@@ -88,7 +88,7 @@ class CartViewModelTest {
         // When
         val before = viewModel.cartItems.getOrAwaitValue()
         val target = before.first()
-        viewModel.addProductToCart(target.productId)
+        viewModel.increaseProductQuantity(target.productId)
 
         // Then
         val after = viewModel.cartItems.getOrAwaitValue()
@@ -102,7 +102,7 @@ class CartViewModelTest {
         val target = before.first()
 
         // When
-        viewModel.removeProductFromCart(target.productId)
+        viewModel.decreaseProductQuantity(target.productId)
 
         // Then
         val after = viewModel.cartItems.getOrAwaitValue()
@@ -114,8 +114,8 @@ class CartViewModelTest {
         // When
         val before = viewModel.cartItems.getOrAwaitValue()
         val target = before.first()
-        viewModel.removeProductFromCart(target.productId)
-        viewModel.removeProductFromCart(target.productId)
+        viewModel.decreaseProductQuantity(target.productId)
+        viewModel.decreaseProductQuantity(target.productId)
 
         // Then
         val after = viewModel.cartItems.getOrAwaitValue()

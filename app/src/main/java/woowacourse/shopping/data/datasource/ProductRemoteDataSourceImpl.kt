@@ -5,14 +5,14 @@ import woowacourse.shopping.data.model.ProductResponse
 import woowacourse.shopping.data.service.ProductService
 
 class ProductRemoteDataSourceImpl(
-    private val mockProductService: ProductService,
+    private val productService: ProductService,
 ) : ProductRemoteDataSource {
-    override fun findProductById(id: Long): ProductResponse = mockProductService.findProductById(id)
+    override fun findProductById(id: Long): ProductResponse = productService.findProductById(id)
 
-    override fun findProductsByIds(ids: List<Long>): List<ProductResponse> = mockProductService.findProductsByIds(ids)
+    override fun findProductsByIds(ids: List<Long>): List<ProductResponse> = productService.findProductsByIds(ids)
 
     override fun loadProducts(
         offset: Int,
         limit: Int,
-    ): PageableResponse<ProductResponse> = mockProductService.loadProducts(offset, limit)
+    ): PageableResponse<ProductResponse> = productService.loadProducts(offset, limit)
 }
