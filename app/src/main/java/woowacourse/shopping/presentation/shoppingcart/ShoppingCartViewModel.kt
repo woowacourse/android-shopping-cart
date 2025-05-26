@@ -18,7 +18,7 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
     val items: LiveData<List<ShoppingCartItem>>
         get() = _items
 
-    private val _page: MutableLiveData<Int> = MutableLiveData(DEFAULT_VALUE)
+    private val _page: MutableLiveData<Int> = MutableLiveData(DEFAULT_PAGE_VALUE)
     val page: LiveData<Int>
         get() = _page
 
@@ -38,15 +38,44 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
         updateState()
     }
 
+    fun increaseQuantity(item: ShoppingCartItem) {
+        _items.value = _items.value?.map {
+            if (it.goods.id == item.goods.id) {
+                val updated = it.increaseQuantity()
+                updateQuantity(updated)
+                updated
+            } else {
+                it
+            }
+        }
+    }
+
+    fun decreaseQuantity(item: ShoppingCartItem) {
+        _items.value = _items.value?.mapNotNull {
+            if (it.goods.id == item.goods.id) {
+                val updated = it.decreaseQuantity()
+                if (updated.quantity > MINIMUM_VALUE) {
+                    updateQuantity(updated)
+                    updated
+                } else {
+                    deleteItem(it)
+                    null
+                }
+            } else {
+                it
+            }
+        }
+    }
+
     fun deleteItem(item: ShoppingCartItem) {
         repository.removeItem(item) { result ->
             result.onSuccess {
                 _shoppingCartEvent.postValue(ShoppingCartEvent.SUCCESS)
+                updateState()
             }.onFailure {
                 _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
             }
         }
-        updateState()
     }
 
     fun increasePage() {
@@ -59,31 +88,11 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
         updateState()
     }
 
-    fun increaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.map {
-            if (it.goods.id == item.goods.id) {
-                it.copy(quantity = it.quantity + 1)
-            } else {
-                it
-            }
-        }
-    }
-
-    fun decreaseQuantity(item: ShoppingCartItem) {
-        _items.value = _items.value?.map {
-            if (it.goods.id == item.goods.id && item.quantity > 0) {
-                it.copy(quantity = it.quantity - 1)
-            } else {
-                it
-            }
-        }
-    }
-
     private fun updateState() {
-        val currentPage = _page.value ?: DEFAULT_VALUE
+        val currentPage = _page.value ?: DEFAULT_PAGE_VALUE
         repository.getPagedItems(currentPage, ITEM_COUNT) { result ->
             result.onSuccess { items ->
-                if (items.isEmpty() && currentPage > DEFAULT_VALUE) {
+                if (items.isEmpty() && currentPage > DEFAULT_PAGE_VALUE) {
                     _page.postValue(currentPage - PAGE_CHANGE_AMOUNT)
                     updateState()
                     return@onSuccess
@@ -98,12 +107,12 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
     }
 
     private fun updatePreviousPage() {
-        _hasPreviousPage.postValue(_page.value != DEFAULT_VALUE)
+        _hasPreviousPage.postValue(_page.value != DEFAULT_PAGE_VALUE)
     }
 
     private fun updateNextPage() {
         repository.getPagedItems(
-            _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_VALUE,
+            _page.value?.plus(PAGE_CHANGE_AMOUNT) ?: DEFAULT_PAGE_VALUE,
             ITEM_COUNT
         ) { result ->
             result.onSuccess { items ->
@@ -114,10 +123,27 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) : Vi
         }
     }
 
+    private fun updateQuantity(item: ShoppingCartItem) {
+       repository.upsertItem(item) { result ->
+            result.onFailure {
+                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
+            }
+        }
+    }
+
+    private fun removeItem(item: ShoppingCartItem) {
+        repository.removeItem(item) { result ->
+            result.onFailure {
+                _shoppingCartEvent.postValue(ShoppingCartEvent.FAILURE)
+            }
+        }
+    }
+
     companion object {
         private const val ITEM_COUNT: Int = 5
-        private const val DEFAULT_VALUE: Int = 0
+        private const val DEFAULT_PAGE_VALUE: Int = 0
         private const val PAGE_CHANGE_AMOUNT: Int = 1
+        private const val MINIMUM_VALUE: Int = 0
 
         val FACTORY: ViewModelProvider.Factory = viewModelFactory {
             initializer {
