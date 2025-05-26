@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.network
 
-import woowacourse.shopping.data.network.entitiy.ProductEntity
-import woowacourse.shopping.data.network.entitiy.ProductPageEntity
+import woowacourse.shopping.data.network.entity.ProductEntity
+import woowacourse.shopping.data.network.entity.ProductPageEntity
 
 interface ProductService {
     fun getProduct(productId: Long): ProductEntity

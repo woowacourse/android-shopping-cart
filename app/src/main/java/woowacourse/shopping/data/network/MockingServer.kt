@@ -6,8 +6,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import woowacourse.shopping.data.network.entitiy.ProductEntity
-import woowacourse.shopping.data.network.entitiy.ProductPageEntity
+import woowacourse.shopping.data.network.entity.ProductEntity
+import woowacourse.shopping.data.network.entity.ProductPageEntity
 import woowacourse.shopping.data.storage.ProductStorage
 
 class MockingServer : ProductService {

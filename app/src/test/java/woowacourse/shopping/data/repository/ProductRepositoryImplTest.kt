@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.datasource.ProductsDataSource
 import woowacourse.shopping.data.fake.FakeProductRepositoryImpl
-import woowacourse.shopping.data.network.entitiy.ProductEntity
-import woowacourse.shopping.data.network.entitiy.ProductPageEntity
+import woowacourse.shopping.data.network.entity.ProductEntity
+import woowacourse.shopping.data.network.entity.ProductPageEntity
 import woowacourse.shopping.domain.product.Product
 import woowacourse.shopping.domain.product.ProductSinglePage
 import woowacourse.shopping.domain.repository.ProductRepository

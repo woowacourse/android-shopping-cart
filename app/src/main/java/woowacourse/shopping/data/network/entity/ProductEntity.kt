@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.network.entitiy
+package woowacourse.shopping.data.network.entity
 
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.product.Price

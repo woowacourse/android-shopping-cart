@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.data.network.ProductService
-import woowacourse.shopping.data.network.entitiy.ProductEntity
-import woowacourse.shopping.data.network.entitiy.ProductPageEntity
+import woowacourse.shopping.data.network.entity.ProductEntity
+import woowacourse.shopping.data.network.entity.ProductPageEntity
 
 class ProductsDataSource(private val service: ProductService) {
     fun getProduct(productId: Long): ProductEntity = service.getProduct(productId)
