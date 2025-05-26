@@ -56,6 +56,7 @@ class ProductsActivity : AppCompatActivity() {
                                     ),
                                 )
                             ) {
+                                ProductsItem.ItemType.RECENT_VIEWED_PRODUCT -> spanCount
                                 ProductsItem.ItemType.PRODUCT -> 1
                                 ProductsItem.ItemType.MORE -> spanCount
                             }

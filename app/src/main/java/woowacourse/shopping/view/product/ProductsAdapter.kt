@@ -17,8 +17,14 @@ class ProductsAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (ProductsItem.ItemType.from(viewType)) {
-            ProductsItem.ItemType.PRODUCT -> ProductViewHolder.of(parent, onSelectProduct)
-            ProductsItem.ItemType.MORE -> ProductMoreViewHolder.of(parent, onLoad)
+            ProductsItem.ItemType.RECENT_VIEWED_PRODUCT ->
+                RecentViewedProductsViewHolder.of(parent, onSelectProduct)
+
+            ProductsItem.ItemType.PRODUCT ->
+                ProductViewHolder.of(parent, onSelectProduct)
+
+            ProductsItem.ItemType.MORE ->
+                ProductMoreViewHolder.of(parent, onLoad)
         }
 
     override fun onBindViewHolder(
@@ -26,6 +32,7 @@ class ProductsAdapter(
         position: Int,
     ) {
         when (holder) {
+            is RecentViewedProductsViewHolder -> holder.bind(items[position] as ProductsItem.RecentViewedProductsItem)
             is ProductViewHolder -> holder.bind(items[position] as ProductsItem.ProductItem)
             is ProductMoreViewHolder -> holder.bind(items[position] as ProductsItem.LoadItem)
         }
@@ -45,6 +52,7 @@ class ProductsAdapter(
 
         val oldItemCount = itemCount - 1
         this.items = items
+        notifyItemChanged(0)
         notifyItemRangeInserted(oldItemCount, itemCount - oldItemCount)
     }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.product
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,39 +50,40 @@ class ProductsViewModel(
     }
 
     fun updateProducts() {
-        runCatching {
-            val lastProduct: Product? =
-                _productItems.value
-                    ?.filterIsInstance<ProductsItem.ProductItem>()
-                    ?.lastOrNull()
-                    ?.product
-            val startExclusive: Int = allProducts.indexOf(lastProduct)
-            val lastExclusive: Int =
-                (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allProducts.size)
-            allProducts.subList(startExclusive + 1, lastExclusive)
-        }.onSuccess { newProducts: List<Product> ->
-            addProductItems(newProducts)
-        }.onFailure {
-            _event.postValue(ProductsEvent.UPDATE_PRODUCT_FAILURE)
-        }
+        val lastProduct: Product? =
+            _productItems.value
+                ?.filterIsInstance<ProductsItem.ProductItem>()
+                ?.lastOrNull()
+                ?.product
+        val startExclusive: Int = allProducts.indexOf(lastProduct)
+        val lastExclusive: Int =
+            (startExclusive + LOAD_PRODUCTS_SIZE).coerceAtMost(allProducts.size)
+        val newProducts = allProducts.subList(startExclusive + 1, lastExclusive)
+        addProductItems(newProducts)
     }
 
     private fun addProductItems(newProducts: List<Product>) {
-        val newProductItems: List<ProductsItem.ProductItem> =
-            newProducts.map { product: Product ->
-                val quantity: Int = shoppingCart.find { it.id == product.id }?.quantity ?: 0
-                ProductsItem.ProductItem(product, quantity)
-            }
+        productsRepository.loadLastViewedProducts { result: Result<List<Product>> ->
+            val newProductItems: List<ProductsItem.ProductItem> =
+                newProducts.map { product: Product ->
+                    val quantity: Int = shoppingCart.find { it.id == product.id }?.quantity ?: 0
+                    ProductsItem.ProductItem(product, quantity)
+                }
 
-        Log.e("TAG", "addProductItems invoked... newProductItems: $newProductItems")
+            val currentProductItems =
+                productItems.value?.filterIsInstance<ProductsItem.ProductItem>() ?: emptyList()
 
-        val currentProductItems =
-            productItems.value?.filterIsInstance<ProductsItem.ProductItem>() ?: emptyList()
-
-        val productItems = currentProductItems + newProductItems
-        val loadItem = ProductsItem.LoadItem(allProducts.size > productItems.size)
-
-        _productItems.postValue(productItems + loadItem)
+            val productItems = currentProductItems + newProductItems
+            val loadItem = ProductsItem.LoadItem(allProducts.size > productItems.size)
+            result
+                .onSuccess { recentViewedProducts: List<Product> ->
+                    val recentViewedProducts =
+                        ProductsItem.RecentViewedProductsItem(recentViewedProducts)
+                    _productItems.postValue(listOf(recentViewedProducts) + productItems + loadItem)
+                }.onFailure {
+                    _productItems.postValue(productItems + loadItem)
+                }
+        }
     }
 
     fun updateShoppingCart(onUpdate: () -> Unit) {
