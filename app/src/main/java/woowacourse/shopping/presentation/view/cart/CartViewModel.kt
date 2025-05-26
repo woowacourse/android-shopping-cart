@@ -73,6 +73,24 @@ class CartViewModel(
         }
     }
 
+    private fun calculatePage(direction: FetchPageDirection): Int {
+        val currentPage = _page.value ?: DEFAULT_PAGE
+        return when (direction) {
+            FetchPageDirection.PREVIOUS -> max(DEFAULT_PAGE, currentPage - PAGE_STEP)
+            FetchPageDirection.CURRENT -> currentPage
+            FetchPageDirection.NEXT -> currentPage + PAGE_STEP
+        }
+    }
+
+    private fun handleFetchCartItemsSuccess(
+        pageableItem: PageableItem<CartItem>,
+        newPage: Int,
+    ) {
+        _cartItems.postValue(pageableItem.items.map { it.toCartItemUiModel() })
+        _hasMore.postValue(pageableItem.hasMore)
+        _page.postValue(newPage)
+    }
+
     private fun refreshProductQuantity(productId: Long) {
         cartRepository.findCartItemByProductId(productId) { result ->
             result
@@ -98,29 +116,11 @@ class CartViewModel(
         _cartItems.postValue(updatedItems)
     }
 
-    private fun handleFetchCartItemsSuccess(
-        pageableItem: PageableItem<CartItem>,
-        newPage: Int,
-    ) {
-        _cartItems.postValue(pageableItem.items.map { it.toCartItemUiModel() })
-        _hasMore.postValue(pageableItem.hasMore)
-        _page.postValue(newPage)
-    }
-
     private fun handleFetchCartItemDeleted(deletedProductId: Long) {
         val items = _cartItems.value.orEmpty()
         val isLastItem = items.size == 1 && items.first().productId == deletedProductId
 
         fetchCartItems(if (isLastItem) FetchPageDirection.PREVIOUS else FetchPageDirection.CURRENT)
-    }
-
-    private fun calculatePage(direction: FetchPageDirection): Int {
-        val currentPage = _page.value ?: DEFAULT_PAGE
-        return when (direction) {
-            FetchPageDirection.PREVIOUS -> max(DEFAULT_PAGE, currentPage - PAGE_STEP)
-            FetchPageDirection.CURRENT -> currentPage
-            FetchPageDirection.NEXT -> currentPage + PAGE_STEP
-        }
     }
 
     private fun postFailureEvent(event: CartMessageEvent) {
