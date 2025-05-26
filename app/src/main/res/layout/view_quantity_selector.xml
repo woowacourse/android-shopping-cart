@@ -26,14 +26,11 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_quantity_minus"
+            style="@style/QuantityButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
             android:onClick="@{onDecreaseClick}"
             android:text="@string/minus"
-            android:textColor="@color/gray_55"
-            android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/textview_quantity"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -59,14 +56,11 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_quantity_plus"
+            style="@style/QuantityButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
             android:onClick="@{onIncreaseClick}"
             android:text="@string/plus"
-            android:textColor="@color/gray_55"
-            android:textSize="22sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/textview_quantity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
