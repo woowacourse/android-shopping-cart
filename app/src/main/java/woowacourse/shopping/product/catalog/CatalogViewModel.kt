@@ -41,8 +41,8 @@ class CatalogViewModel(
     fun increaseQuantity(product: ProductUiModel) {
         cartProductRepository.updateProduct(product.toEntity(), 1) { updatedProduct ->
             _updatedItem.postValue(updatedProduct?.toUiModel())
+            loadCartItemSize()
         }
-        loadCartItemSize()
     }
 
     fun decreaseQuantity(product: ProductUiModel) {
@@ -55,8 +55,8 @@ class CatalogViewModel(
                     _updatedItem.postValue(updatedProduct?.toUiModel())
                 }
             }
+            loadCartItemSize()
         }
-        loadCartItemSize()
     }
 
     fun loadNextCatalogProducts() {
