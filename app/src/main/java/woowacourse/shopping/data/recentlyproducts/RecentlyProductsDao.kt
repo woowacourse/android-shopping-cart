@@ -10,7 +10,7 @@ interface RecentlyProductsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(product: RecentlyProductsEntity)
 
-    @Query("SELECT product_id FROM recently_products ORDER BY time DESC LIMIT 1")
+    @Query("SELECT product_id FROM recently_products ORDER BY time DESC LIMIT 1 OFFSET 1")
     fun getRecent(): Long?
 
     @Query("SELECT product_id FROM recently_products ORDER BY time DESC")

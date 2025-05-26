@@ -42,6 +42,7 @@ class ProductDetailActivity : AppCompatActivity() {
         initViewModel(product)
         initObservers()
         initBindingQuantityController()
+        viewModel.getLastViewedProduct()
     }
 
     private fun initViewModel(product: Product) {
@@ -51,6 +52,7 @@ class ProductDetailActivity : AppCompatActivity() {
                 ProductDetailViewModel.provideFactory(product),
             )[ProductDetailViewModel::class.java]
         binding.vm = viewModel
+        binding.lastViewedProduct.vm = viewModel
         binding.lifecycleOwner = this
     }
 

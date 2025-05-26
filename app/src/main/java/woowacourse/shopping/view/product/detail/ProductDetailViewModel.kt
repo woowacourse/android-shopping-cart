@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.ShoppingProvider
+import woowacourse.shopping.data.mapper.toProductDomain
+import woowacourse.shopping.data.recentlyproducts.RecentlyProductsRepository
 import woowacourse.shopping.data.shoppingcart.ShoppingCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.utils.SingleLiveData
@@ -12,6 +14,7 @@ import woowacourse.shopping.utils.SingleLiveData
 class ProductDetailViewModel(
     val product: Product,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentlyProductsRepository: RecentlyProductsRepository,
 ) : ViewModel() {
     private val _navigateEvent = SingleLiveData<Unit>()
     val navigateEvent: SingleLiveData<Unit> = _navigateEvent
@@ -21,6 +24,9 @@ class ProductDetailViewModel(
 
     private val _quantity = MutableLiveData(0)
     val quantity: LiveData<Int> = _quantity
+
+    private val _recentProduct = MutableLiveData<Product>(null)
+    val recentProduct: LiveData<Product> = _recentProduct
 
     fun addToShoppingCart() {
         runCatching {
@@ -40,16 +46,21 @@ class ProductDetailViewModel(
         _quantity.value = _quantity.value?.minus(1)
     }
 
+    fun getLastViewedProduct() {
+        _recentProduct.value = recentlyProductsRepository.getFirst()?.toProductDomain()
+    }
+
     companion object {
         fun provideFactory(
             product: Product,
             repository: ShoppingCartRepository = ShoppingProvider.shoppingCartRepository,
+            recentlyProductsRepository: RecentlyProductsRepository = ShoppingProvider.recentlyProductsRepository,
         ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-                        return ProductDetailViewModel(product, repository) as T
+                        return ProductDetailViewModel(product, repository, recentlyProductsRepository) as T
                     }
                     throw IllegalArgumentException()
                 }

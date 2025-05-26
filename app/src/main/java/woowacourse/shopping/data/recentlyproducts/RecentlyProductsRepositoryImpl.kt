@@ -15,12 +15,12 @@ class RecentlyProductsRepositoryImpl(
         }.join()
     }
 
-    override fun getFirst(): Long {
+    override fun getFirst(): Long? {
         var recentProduct: Long? = null
         thread {
             recentProduct = dao.getRecent()
-        }
-        return recentProduct ?: throw IllegalArgumentException()
+        }.join()
+        return recentProduct
     }
 
     override fun getAll(): List<Long>? {
