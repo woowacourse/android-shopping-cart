@@ -9,15 +9,19 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
+import woowacourse.shopping.view.recentproduct.RecentProductsAdapter
 
 class ProductsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductsBinding
-    private lateinit var adapter: ProductsAdapter
+    private lateinit var productsAdapter: ProductsAdapter
+    private lateinit var recentProductsAdapter: RecentProductsAdapter
     private val productsViewModel: ProductsViewModel by viewModels { ProductsViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +29,8 @@ class ProductsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_products)
         binding.viewModel = productsViewModel
         binding.lifecycleOwner = this
-        initRecyclerView()
+        initRecentProductsRecyclerView()
+        initProductsRecyclerView()
         observeProductsView()
         observeCartButton()
         setupScrollListenerForMoreButton()
@@ -55,10 +60,14 @@ class ProductsActivity : AppCompatActivity() {
         )
     }
 
-    private fun initRecyclerView() {
-        adapter =
+    private fun initProductsRecyclerView() {
+        productsAdapter =
             ProductsAdapter(
-                productClickListener = { cartItem -> navigateToProductDetail(cartItem) },
+                productClickListener = { cartItem ->
+                    navigateToProductDetail(cartItem)
+                    recentProductsAdapter.updateRecentProductsView(cartItem.product)
+                    productsViewModel.addRecentProduct(cartItem)
+                },
                 openQuantitySelectListener = { cartItem ->
                     productsViewModel.onOpenQuantitySelectClick(cartItem)
                 },
@@ -74,15 +83,22 @@ class ProductsActivity : AppCompatActivity() {
                     },
             )
 
-        binding.rvProducts.adapter = adapter
+        binding.rvProducts.adapter = productsAdapter
         binding.rvProducts.addItemDecoration(GridSpacingItemDecoration(SPAN_COUNT, SPACING_DP))
+    }
+
+    private fun initRecentProductsRecyclerView() {
+        recentProductsAdapter = RecentProductsAdapter()
+        binding.rvRecentProduct.adapter = recentProductsAdapter
+        binding.rvRecentProduct.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     }
 
     private fun observeProductsView() {
         productsViewModel.productsInShop.observe(this) { list ->
-            adapter.updateProductsView(list)
+            productsAdapter.updateProductsView(list)
             list.forEach {
-                adapter.updateQuantityView(it.product.id)
+                productsAdapter.updateQuantityView(it.product.id)
             }
         }
     }

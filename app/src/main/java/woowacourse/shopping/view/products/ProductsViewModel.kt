@@ -13,6 +13,7 @@ import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.products.ProductRepository
 import woowacourse.shopping.data.products.ProductRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
+import woowacourse.shopping.model.product.Product
 import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.QuantityController
 
@@ -32,6 +33,11 @@ class ProductsViewModel(
 
     private val _cartItemCount = MutableLiveData(INITIAL_CART_ITEM_COUNT)
     val cartItemCount: LiveData<Int> = _cartItemCount
+
+//    private val _recentProducts = MutableLiveData<List<Product>>()
+//    val recentProducts: LiveData<List<Product>> = _recentProducts
+
+    private val recentProducts = mutableListOf<Product>()
 
     private var isAllProductsFetched = false
     private var currentPage = INITIAL_PAGE
@@ -121,6 +127,11 @@ class ProductsViewModel(
         cartRepository.add(cartItem) {
             updateCartItemCount()
         }
+    }
+
+    fun addRecentProduct(cartItem: CartItem) {
+        val recentProduct = cartItem.product
+        recentProducts.add(recentProduct)
     }
 
     private fun updateCartItemCount() {
