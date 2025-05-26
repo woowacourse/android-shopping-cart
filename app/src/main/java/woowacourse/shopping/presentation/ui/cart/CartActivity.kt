@@ -10,12 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.presentation.ui.base.BaseActivity
-import woowacourse.shopping.presentation.ui.cart.CartAdapter
+import woowacourse.shopping.presentation.ui.base.BindingActivity
 import woowacourse.shopping.presentation.viewmodel.cart.CartViewModel
 import woowacourse.shopping.util.DatabaseProvider
 
-class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
+class CartActivity : BindingActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels {
         provideCartViewModelFactory(this)
     }

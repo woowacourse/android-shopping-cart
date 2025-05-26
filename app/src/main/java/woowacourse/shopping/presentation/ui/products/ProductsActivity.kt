@@ -11,21 +11,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.dummyProducts
-import woowacourse.shopping.data.entity.toEntity
 import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.LastProductRepository
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.databinding.MenuCartCombinedBinding
-import woowacourse.shopping.presentation.ui.base.BaseActivity
+import woowacourse.shopping.presentation.ui.base.BindingActivity
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.viewmodel.products.ProductsViewModel
 import woowacourse.shopping.util.DatabaseProvider
 
 @SuppressLint("NotifyDataSetChanged")
-class ProductsActivity : BaseActivity<ActivityProductsBinding>(R.layout.activity_products) {
+class ProductsActivity : BindingActivity<ActivityProductsBinding>(R.layout.activity_products) {
     private val viewModel: ProductsViewModel by viewModels {
         provideProductsViewModelFactory(this)
     }

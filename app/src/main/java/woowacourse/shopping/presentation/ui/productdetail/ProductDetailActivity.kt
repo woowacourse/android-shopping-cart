@@ -12,15 +12,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.LastProductRepository
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.ui.base.BaseActivity
+import woowacourse.shopping.presentation.ui.base.BindingActivity
 import woowacourse.shopping.presentation.viewmodel.productdetail.ProductDetailViewModel
 import woowacourse.shopping.util.DatabaseProvider
 
-class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
+class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
     val viewModel: ProductDetailViewModel by viewModels {
         provideProductDetailViewModelFactory(this)
     }

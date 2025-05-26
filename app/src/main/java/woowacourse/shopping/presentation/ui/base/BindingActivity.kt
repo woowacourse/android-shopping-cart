@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-abstract class BaseActivity<BINDING : ViewDataBinding>(
+abstract class BindingActivity<BINDING : ViewDataBinding>(
     @LayoutRes private val layoutResId: Int,
 ) : AppCompatActivity() {
     private var _binding: BINDING? = null
