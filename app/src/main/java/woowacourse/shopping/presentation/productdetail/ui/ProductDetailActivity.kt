@@ -42,7 +42,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(R.la
             binding.lastProduct = lastProduct
         }
         viewModel.product.observe(this) { product ->
-            if (product != Product.INVALID_PRODUCT) {
+            if (product != Product.DEFAULT_PRODUCT) {
                 viewModel.addLastProduct()
             }
         }

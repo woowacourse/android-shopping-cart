@@ -17,7 +17,7 @@ class ProductDetailViewModel(
     private val lastProductRepository: LastProductRepository,
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> =
-        MutableLiveData(Product.Companion.INVALID_PRODUCT)
+        MutableLiveData(Product.Companion.DEFAULT_PRODUCT)
     val product: LiveData<Product> get() = _product
 
     private val _count: MutableLiveData<Int> = MutableLiveData(1)
@@ -49,7 +49,7 @@ class ProductDetailViewModel(
     fun updateProductDetail(id: Int) {
         productsRepository.fetchProductDetail(id) { result ->
             mainHandler.post {
-                _product.value = result ?: Product.INVALID_PRODUCT
+                _product.value = result ?: Product.DEFAULT_PRODUCT
             }
         }
     }
