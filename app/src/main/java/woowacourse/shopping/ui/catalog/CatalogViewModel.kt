@@ -10,14 +10,14 @@ import woowacourse.shopping.ShoppingApp
 import woowacourse.shopping.domain.model.CatalogProducts
 import woowacourse.shopping.domain.model.CatalogProducts.Companion.EMPTY_CATALOG_PRODUCTS
 import woowacourse.shopping.domain.model.HistoryProduct
-import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.usecase.DecreaseCartProductQuantityUseCase
+import woowacourse.shopping.domain.usecase.GetSearchHistoryUseCase
 import woowacourse.shopping.domain.usecase.IncreaseCartProductQuantityUseCase
 
 class CatalogViewModel(
     private val productRepository: ProductRepository,
-    private val historyRepository: HistoryRepository,
+    private val getSearchHistoryUseCase: GetSearchHistoryUseCase,
     private val increaseCartProductQuantityUseCase: IncreaseCartProductQuantityUseCase,
     private val decreaseCartProductQuantityUseCase: DecreaseCartProductQuantityUseCase,
 ) : ViewModel() {
@@ -42,7 +42,7 @@ class CatalogViewModel(
     }
 
     fun loadHistoryProducts() {
-        historyRepository.fetchAllSearchHistory { historyProducts ->
+        getSearchHistoryUseCase { historyProducts ->
             _historyProducts.postValue(historyProducts)
         }
     }
@@ -85,7 +85,7 @@ class CatalogViewModel(
 
                     return CatalogViewModel(
                         productRepository = application.productRepository,
-                        historyRepository = application.historyRepository,
+                        getSearchHistoryUseCase = application.getSearchHistoryUseCase,
                         increaseCartProductQuantityUseCase = application.increaseCartProductQuantityUseCase,
                         decreaseCartProductQuantityUseCase = application.decreaseCartProductQuantityUseCase,
                     ) as T

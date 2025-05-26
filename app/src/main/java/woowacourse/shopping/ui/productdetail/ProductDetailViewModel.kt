@@ -11,15 +11,17 @@ import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.CatalogProduct
 import woowacourse.shopping.domain.model.CatalogProduct.Companion.EMPTY_CATALOG_PRODUCT
 import woowacourse.shopping.domain.model.HistoryProduct
-import woowacourse.shopping.domain.repository.HistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.usecase.AddSearchHistoryUseCase
+import woowacourse.shopping.domain.usecase.GetRecentSearchHistoryUseCase
 import woowacourse.shopping.domain.usecase.UpdateCartProductUseCase
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
-    private val historyRepository: HistoryRepository,
+    private val getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase,
+    private val addSearchHistoryUseCase: AddSearchHistoryUseCase,
     private val updateCartProductUseCase: UpdateCartProductUseCase,
 ) : ViewModel() {
     private val _catalogProduct: MutableLiveData<CatalogProduct> = MutableLiveData(EMPTY_CATALOG_PRODUCT)
@@ -38,13 +40,13 @@ class ProductDetailViewModel(
     }
 
     fun loadLastHistoryProduct() {
-        historyRepository.fetchRecentSearchHistory { historyProduct ->
+        getRecentSearchHistoryUseCase { historyProduct ->
             _lastHistoryProduct.postValue(historyProduct)
         }
     }
 
     fun addHistoryProduct(id: Int) {
-        historyRepository.saveSearchHistory(id)
+        addSearchHistoryUseCase(id)
     }
 
     fun decreaseCartProductQuantity() {
@@ -76,7 +78,8 @@ class ProductDetailViewModel(
 
                     return ProductDetailViewModel(
                         productRepository = application.productRepository,
-                        historyRepository = application.historyRepository,
+                        getRecentSearchHistoryUseCase = application.getRecentSearchHistoryUseCase,
+                        addSearchHistoryUseCase = application.addSearchHistoryUseCase,
                         updateCartProductUseCase = application.updateCartProductUseCase,
                     ) as T
                 }

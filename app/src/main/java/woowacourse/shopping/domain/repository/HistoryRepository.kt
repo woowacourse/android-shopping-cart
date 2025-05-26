@@ -3,9 +3,9 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.domain.model.HistoryProduct
 
 interface HistoryRepository {
-    fun fetchAllSearchHistory(callback: (List<HistoryProduct>) -> Unit)
+    fun fetchAllHistory(): List<HistoryProduct>
 
-    fun saveSearchHistory(productId: Int)
+    fun fetchRecentHistory(): HistoryProduct?
 
-    fun fetchRecentSearchHistory(callback: (HistoryProduct?) -> Unit)
+    fun saveHistory(productId: Int)
 }
