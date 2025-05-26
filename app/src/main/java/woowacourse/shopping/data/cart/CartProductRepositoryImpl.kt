@@ -4,10 +4,13 @@ import woowacourse.shopping.data.PagedResult
 import woowacourse.shopping.data.cart.local.CartProductLocalDataSource
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.repository.CartProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 class CartProductRepositoryImpl(
     private val localDataSource: CartProductLocalDataSource,
+    private val productRepository: ProductRepository,
 ) : CartProductRepository {
     private var totalCount: Int = 0
 
@@ -27,10 +30,23 @@ class CartProductRepositoryImpl(
 
         val endIndex = (offset + limit).coerceAtMost(totalCount)
         thread {
-            val items =
-                localDataSource.getPagedProducts(endIndex - offset, offset).map { it.toDomain() }
+            val entities = localDataSource.getPagedProducts(endIndex - offset, offset)
+            val latch = CountDownLatch(entities.size)
+
+            val cartProducts = mutableListOf<CartProduct>()
+            entities.forEach { entity ->
+                productRepository.getProductById(entity.productId) { product ->
+                    product?.let {
+                        val cartProduct = CartProduct(it, entity.quantity)
+                        cartProducts.add(cartProduct)
+                    }
+                    latch.countDown()
+                }
+            }
+
+            latch.await()
             val hasNext = endIndex < totalCount
-            onSuccess(PagedResult(items, hasNext))
+            onSuccess(PagedResult(cartProducts, hasNext))
         }
     }
 
