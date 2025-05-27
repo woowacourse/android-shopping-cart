@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.common
+package woowacourse.shopping.view.util
 
 interface QuantityControlEventHandler<T> {
     fun onQuantityIncreaseClick(item: T)

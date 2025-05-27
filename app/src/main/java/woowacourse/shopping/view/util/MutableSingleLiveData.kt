@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.common
+package woowacourse.shopping.view.util
 
 class MutableSingleLiveData<T> : SingleLiveData<T> {
     constructor() : super()

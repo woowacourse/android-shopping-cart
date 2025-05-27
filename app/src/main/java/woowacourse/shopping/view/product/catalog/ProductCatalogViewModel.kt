@@ -8,9 +8,9 @@ import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartProductRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
-import woowacourse.shopping.view.common.MutableSingleLiveData
-import woowacourse.shopping.view.common.SingleLiveData
 import woowacourse.shopping.view.product.catalog.adapter.ProductCatalogItem
+import woowacourse.shopping.view.util.MutableSingleLiveData
+import woowacourse.shopping.view.util.SingleLiveData
 
 class ProductCatalogViewModel(
     private val productRepository: ProductRepository,

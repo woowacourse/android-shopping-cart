@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.view.common.QuantityControlEventHandler
+import woowacourse.shopping.view.util.QuantityControlEventHandler
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,

@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.common
+package woowacourse.shopping.view.util
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
