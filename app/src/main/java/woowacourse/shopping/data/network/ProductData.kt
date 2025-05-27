@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.dummy
+package woowacourse.shopping.data.network
 
-import woowacourse.shopping.data.PagedResult
+import woowacourse.shopping.data.model.PagedResult
 import woowacourse.shopping.domain.model.Product
 
 @Suppress("ktlint:standard:max-line-length")

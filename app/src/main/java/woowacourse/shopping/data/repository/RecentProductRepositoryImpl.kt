@@ -1,8 +1,9 @@
-package woowacourse.shopping.data.recent
+package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.product.toLocalDateTime
-import woowacourse.shopping.data.recent.local.RecentProductLocalDataSource
+import woowacourse.shopping.data.datasource.local.RecentProductLocalDataSource
+import woowacourse.shopping.data.util.toLocalDateTime
 import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.model.toEntity
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import kotlin.concurrent.thread

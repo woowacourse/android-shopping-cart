@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import woowacourse.shopping.data.cart.CartProductEntity
-import woowacourse.shopping.data.cart.local.CartProductDao
-import woowacourse.shopping.data.recent.RecentProductEntity
-import woowacourse.shopping.data.recent.local.RecentProductDao
+import woowacourse.shopping.data.dao.CartProductDao
+import woowacourse.shopping.data.dao.RecentProductDao
+import woowacourse.shopping.data.entity.CartProductEntity
+import woowacourse.shopping.data.entity.RecentProductEntity
 
 @Database(
     entities = [CartProductEntity::class, RecentProductEntity::class],

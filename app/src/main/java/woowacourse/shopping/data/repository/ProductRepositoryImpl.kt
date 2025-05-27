@@ -1,7 +1,7 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.PagedResult
-import woowacourse.shopping.data.product.remote.ProductRemoteDataSource
+import woowacourse.shopping.data.datasource.remote.ProductRemoteDataSource
+import woowacourse.shopping.data.model.PagedResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.concurrent.thread

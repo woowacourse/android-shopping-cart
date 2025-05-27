@@ -5,7 +5,6 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import woowacourse.shopping.data.dummy.ProductData
 
 class ShoppingServer {
     private val server = MockWebServer()

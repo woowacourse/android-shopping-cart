@@ -2,14 +2,14 @@ package woowacourse.shopping
 
 import android.app.Application
 import woowacourse.shopping.data.ShoppingCartDatabase
-import woowacourse.shopping.data.cart.CartProductRepositoryImpl
-import woowacourse.shopping.data.cart.local.CartProductLocalDataSource
+import woowacourse.shopping.data.datasource.local.CartProductLocalDataSource
+import woowacourse.shopping.data.datasource.local.RecentProductLocalDataSource
+import woowacourse.shopping.data.datasource.remote.ProductRemoteDataSource
 import woowacourse.shopping.data.network.ShoppingServer
-import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.remote.ProductRemoteDataSource
-import woowacourse.shopping.data.product.remote.ProductServiceImpl
-import woowacourse.shopping.data.recent.RecentProductRepositoryImpl
-import woowacourse.shopping.data.recent.local.RecentProductLocalDataSource
+import woowacourse.shopping.data.repository.CartProductRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
+import woowacourse.shopping.data.service.ProductServiceImpl
 import kotlin.concurrent.thread
 
 class ShoppingApplication : Application() {

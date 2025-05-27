@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.cart.local
+package woowacourse.shopping.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import woowacourse.shopping.data.cart.CartProductEntity
+import woowacourse.shopping.data.entity.CartProductEntity
 
 @Dao
 interface CartProductDao {

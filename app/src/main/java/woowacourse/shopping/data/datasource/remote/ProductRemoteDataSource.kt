@@ -1,6 +1,7 @@
-package woowacourse.shopping.data.product.remote
+package woowacourse.shopping.data.datasource.remote
 
-import woowacourse.shopping.data.PagedResult
+import woowacourse.shopping.data.model.PagedResult
+import woowacourse.shopping.data.service.ProductService
 import woowacourse.shopping.domain.model.Product
 
 class ProductRemoteDataSource(

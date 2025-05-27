@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.product.remote
+package woowacourse.shopping.data.service
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import woowacourse.shopping.data.PagedResult
+import woowacourse.shopping.data.model.PagedResult
 import woowacourse.shopping.domain.model.Product
 
 class ProductServiceImpl : ProductService {

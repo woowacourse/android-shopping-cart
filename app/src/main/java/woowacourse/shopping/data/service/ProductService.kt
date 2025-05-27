@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.product.remote
+package woowacourse.shopping.data.service
 
-import woowacourse.shopping.data.PagedResult
+import woowacourse.shopping.data.model.PagedResult
 import woowacourse.shopping.domain.model.Product
 
 interface ProductService {
