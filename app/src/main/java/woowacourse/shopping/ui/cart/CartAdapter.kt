@@ -1,26 +1,18 @@
 package woowacourse.shopping.ui.cart
 
-import android.annotation.SuppressLint
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.R
-import woowacourse.shopping.databinding.CartItemBinding
 import woowacourse.shopping.domain.cart.CartProduct
 
 class CartAdapter(
-    private var items: List<CartProduct>,
+    private val items: MutableList<CartProduct>,
     private val cartClickListener: CartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): CartViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding: CartItemBinding =
-            DataBindingUtil.inflate(inflater, R.layout.cart_item, parent, false)
-        return CartViewHolder(binding, cartClickListener)
+        return CartViewHolder.create(parent, cartClickListener)
     }
 
     override fun getItemCount(): Int = items.size
@@ -33,9 +25,15 @@ class CartAdapter(
         holder.bind(item)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(cartProducts: List<CartProduct>) {
-        items = cartProducts
-        notifyDataSetChanged()
+    fun updateItems(newCartProducts: List<CartProduct>) {
+        val deletedItem = this.items.firstOrNull { product -> !newCartProducts.contains(product) }
+        val startPosition = deletedItem?.let { this.items.indexOf(deletedItem) } ?: 0
+        val itemCount = this.items.size - startPosition
+
+        items.clear()
+        notifyItemRangeRemoved(startPosition, itemCount)
+
+        items.addAll(newCartProducts)
+        notifyItemRangeInserted(startPosition, itemCount)
     }
 }

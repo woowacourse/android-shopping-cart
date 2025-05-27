@@ -23,7 +23,7 @@
             android:background="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="Cart"
+            app:title="@string/cart_title"
             app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -42,7 +42,7 @@
             android:id="@+id/btn_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/button_inactive"
+            android:backgroundTint="@color/base_gray"
             android:onClick="@{()->viewModel.moveToPrevious()}"
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -54,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
+            android:text="@{String.valueOf(viewModel.pageNumber)}"
             android:textColor="@color/deep_gray"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -67,7 +68,7 @@
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/button_active"
+            android:backgroundTint="@color/neo_green"
             android:onClick="@{()->viewModel.moveToNext()}"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="@id/btn_previous"

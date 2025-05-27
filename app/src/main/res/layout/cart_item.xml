@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -16,10 +17,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="18dp"
         android:layout_marginVertical="12dp"
-        android:background="@drawable/cart_item_shape">
+        android:background="@drawable/shape_cart_item">
 
         <TextView
             android:id="@+id/tv_cart_name"
@@ -27,10 +28,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="18dp"
-            android:text="@{cartProduct.name}"
+            android:ellipsize="end"
+            android:maxEms="15"
+            android:singleLine="true"
+            android:text="@{cartProduct.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@+id/btn_close"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[이든] 동원 스위트콘" />
@@ -41,35 +48,52 @@
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@color/white"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete_description"
-            android:onClick="@{() -> cartClickListener.onClick(cartProduct)}"
-            android:src="@drawable/close"
+            android:onClick="@{() -> cartClickListener.onClickRemoveButton(cartProduct.id)}"
+            android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="150dp"
+            android:id="@+id/iv_cart_product_image"
+            android:layout_width="0dp"
             android:layout_height="75dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:contentDescription="@string/product_description"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="2.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_cart_name"
-            app:setImageWithGlide="@{cartProduct.imageUrl}"
+            app:setImageWithGlide="@{cartProduct.product.imageUrl}"
             tools:src="@drawable/ic_launcher_background" />
+
+        <include
+            android:id="@+id/include_cart_product_quantity_select"
+            layout="@layout/quantity_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/tv_cart_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.7"
+            app:layout_constraintStart_toEndOf="@id/iv_cart_product_image"
+            app:layout_constraintTop_toBottomOf="@id/btn_close"
+            bind:id="@{cartProduct.product.id}"
+            bind:listener="@{cartClickListener}"
+            bind:quantity="@{cartProduct.quantity}" />
 
         <TextView
             android:id="@+id/tv_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="17dp"
-            android:text="@{@string/price(cartProduct.price)}"
+            android:text="@{@string/price(cartProduct.totalPrice())}"
             android:textColor="@color/deep_gray"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_cart_product_image"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="999,999,999,999,900원" />
     </androidx.constraintlayout.widget.ConstraintLayout>

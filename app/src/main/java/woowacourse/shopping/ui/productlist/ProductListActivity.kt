@@ -34,6 +34,11 @@ class ProductListActivity : AppCompatActivity() {
         initObserver()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.loadInfos()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_list, menu)
         return super.onCreateOptionsMenu(menu)
@@ -99,26 +104,42 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun initAdapter(): ProductListAdapter {
         return ProductListAdapter(
-            items = emptyList(),
-            productClickListener = { product ->
-                val intent = ProductDetailActivity.newIntent(this@ProductListActivity, product)
-                startActivity(intent)
-            },
-            loadMoreClickListener = {
-                viewModel.loadProducts()
-            },
+            items = mutableListOf(),
+            productClickListener = initProductClickListener(),
+            loadMoreClickListener = { viewModel.loadMore() },
         )
+    }
+
+    private fun initProductClickListener(): ProductClickListener {
+        return object : ProductClickListener {
+            override fun onClickProduct(productId: Long) {
+                val intent = ProductDetailActivity.newIntent(this@ProductListActivity, productId)
+                startActivity(intent)
+            }
+
+            override fun onClickAddButton(productId: Long) {
+                viewModel.increaseQuantity(productId, 1)
+            }
+
+            override fun increase(productId: Long) {
+                viewModel.increaseQuantity(productId, 1)
+            }
+
+            override fun decrease(productId: Long) {
+                viewModel.decreaseQuantity(productId, -1)
+            }
+        }
     }
 
     private fun initCustomGridLayoutManager(): GridLayoutManager {
         return GridLayoutManager(this@ProductListActivity, 2).apply {
-            spanSizeLookup = CustomSpanSizeLookup(binding.productsRecyclerView.adapter!!)
+            spanSizeLookup = CustomSpanSizeLookup(productListAdapter)
         }
     }
 
     private fun initObserver() {
-        viewModel.products.observe(this) {
-            productListAdapter.update(it)
+        viewModel.productsUiState.observe(this) {
+            productListAdapter.update(it.productViewTypes)
         }
     }
 }

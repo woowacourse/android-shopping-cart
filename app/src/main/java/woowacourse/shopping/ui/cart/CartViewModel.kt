@@ -11,37 +11,33 @@ import woowacourse.shopping.providers.RepositoryProvider
 class CartViewModel(
     private val repository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<CartProduct>>(emptyList())
-    val products: LiveData<List<CartProduct>> get() = _products
+    private val _uiState = MutableLiveData(CartProductsUiModel())
+    val uiState: LiveData<CartProductsUiModel> get() = _uiState
 
     private val _pageNumber = MutableLiveData(1)
     val pageNumber: LiveData<Int> get() = _pageNumber
 
     val isFirstPage: Boolean
         get() = pageNumber.value == 1
-
     var isLastPage: Boolean = false
         private set
 
     init {
-        update()
+        loadCartProducts()
     }
 
-    fun update() {
+    fun loadCartProducts() {
         val pageNumber = pageNumber.value ?: 1
-        repository.fetchInRange(PAGE_FETCH_SIZE, (pageNumber - 1) * PAGE_SIZE) { products ->
-            isLastPage = products.size != PAGE_FETCH_SIZE
 
-            val visibleProductsSize = PAGE_SIZE.coerceAtMost(products.size)
-
-            if (visibleProductsSize == 0) {
-                if (isFirstPage) {
-                    _products.postValue(emptyList())
-                } else {
-                    moveToPrevious()
-                }
-            } else {
-                _products.postValue(products.take(visibleProductsSize))
+        repository.fetchInRange(
+            PAGE_FETCH_SIZE,
+            (pageNumber - 1) * PAGE_SIZE,
+        ) { result ->
+            result.onSuccess { cartProducts ->
+                isLastPage =
+                    cartProducts.size != PAGE_FETCH_SIZE // 비동기로 uistate 에서 관리하면 값이 늦게 갱신되고 있음..
+                val visibleProductsSize = PAGE_SIZE.coerceAtMost(cartProducts.size)
+                handleUpdateItems(visibleProductsSize, cartProducts)
             }
         }
     }
@@ -51,20 +47,65 @@ class CartViewModel(
     }
 
     fun moveToPrevious() {
-        if (pageNumber.value != 1) {
-            _pageNumber.postValue(_pageNumber.value?.minus(1))
+        if (!isFirstPage) {
+            _pageNumber.postValue(pageNumber.value?.minus(1))
         }
     }
 
     fun moveToNext() {
         if (!isLastPage) {
-            _pageNumber.value = _pageNumber.value?.plus(1)
+            _pageNumber.value = pageNumber.value?.plus(1)
         }
     }
 
-    fun deleteProduct(cartProduct: CartProduct) {
-        repository.delete(cartProduct.id!!) {
-            update()
+    fun deleteProduct(cartId: Long) {
+        repository.delete(cartId) {
+            loadCartProducts()
+        }
+    }
+
+    private fun handleUpdateItems(
+        visibleProductsSize: Int,
+        products: List<CartProduct>,
+    ) {
+        val cartProductUiModel = uiState.value ?: return
+        if (hasPages(visibleProductsSize)) {
+            moveToPrevious()
+            return
+        }
+
+        val updateItems = products.take(visibleProductsSize)
+        _uiState.postValue(
+            cartProductUiModel
+                .loadPage(updateItems),
+        )
+    }
+
+    private fun hasPages(visibleProductsSize: Int): Boolean {
+        return visibleProductsSize == 0 && !isFirstPage
+    }
+
+    fun increaseQuantity(productId: Long) {
+        val cartProductUiModel = uiState.value ?: return
+        repository.updateQuantity(productId, 1) { result ->
+            result.onSuccess {
+                _uiState.postValue(
+                    cartProductUiModel
+                        .increaseQuantity(productId),
+                )
+            }
+        }
+    }
+
+    fun decreaseQuantity(productId: Long) {
+        val cartProductUiModel = uiState.value ?: return
+        repository.updateQuantity(productId, -1) { result ->
+            result.onSuccess {
+                _uiState.postValue(
+                    cartProductUiModel
+                        .decreaseQuantity(productId),
+                )
+            }
         }
     }
 

@@ -76,6 +76,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setupBindings() {
+        binding.lifecycleOwner = this
         binding.cartRecyclerView.adapter = cartAdapter
         binding.viewModel = viewModel
     }
@@ -83,22 +84,31 @@ class CartActivity : AppCompatActivity() {
     private fun initAdapter(): CartAdapter {
         return CartAdapter(
             items = mutableListOf(),
-            cartClickListener = { product ->
-                viewModel.deleteProduct(product)
-            },
+            cartClickListener =
+                object : CartClickListener {
+                    override fun onClickRemoveButton(cartId: Long) {
+                        viewModel.deleteProduct(cartId)
+                    }
+
+                    override fun increase(productId: Long) {
+                        viewModel.increaseQuantity(productId)
+                    }
+
+                    override fun decrease(productId: Long) {
+                        viewModel.decreaseQuantity(productId)
+                    }
+                },
         )
     }
 
     private fun initObserve() {
-        viewModel.products.observe(this) {
-            cartAdapter.updateItems(it)
+        viewModel.uiState.observe(this) {
+            cartAdapter.updateItems(it.cartProducts)
             setPaginationVisibility()
             setPaginationButtonTint()
         }
-
-        viewModel.pageNumber.observe(this) { pageNumber ->
-            binding.tvPageNumber.text = pageNumber.toString()
-            viewModel.update()
+        viewModel.pageNumber.observe(this) {
+            viewModel.loadCartProducts()
         }
     }
 
@@ -112,9 +122,9 @@ class CartActivity : AppCompatActivity() {
 
     private fun setPaginationButtonTint() {
         binding.btnPrevious.backgroundTintList =
-            ColorStateList.valueOf(getColor(if (viewModel.isFirstPage) R.color.button_inactive else R.color.button_active))
+            ColorStateList.valueOf(getColor(if (viewModel.isFirstPage) R.color.base_gray else R.color.neo_green))
         binding.btnNext.backgroundTintList =
-            ColorStateList.valueOf(getColor(if (viewModel.isLastPage) R.color.button_inactive else R.color.button_active))
+            ColorStateList.valueOf(getColor(if (viewModel.isLastPage) R.color.base_gray else R.color.neo_green))
     }
 
     companion object {

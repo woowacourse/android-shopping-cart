@@ -1,7 +1,9 @@
 package woowacourse.shopping.ui.productlist
 
-import woowacourse.shopping.domain.product.Product
+import woowacourse.shopping.ui.common.QuantityChangeListener
 
-fun interface ProductClickListener {
-    fun onClick(product: Product)
+interface ProductClickListener : QuantityChangeListener {
+    fun onClickProduct(productId: Long)
+
+    fun onClickAddButton(productId: Long)
 }

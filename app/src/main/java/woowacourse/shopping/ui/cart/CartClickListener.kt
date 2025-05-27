@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.cart
 
-import woowacourse.shopping.domain.cart.CartProduct
+import woowacourse.shopping.ui.common.QuantityChangeListener
 
-fun interface CartClickListener {
-    fun onClick(cartProduct: CartProduct)
+interface CartClickListener : QuantityChangeListener {
+    fun onClickRemoveButton(cartId: Long)
 }
