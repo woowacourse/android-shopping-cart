@@ -2,6 +2,8 @@ package woowacourse.shopping.view
 
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 
 inline fun <reified T : Parcelable> Intent.getParcelableCompat(key: String): T? {
@@ -10,5 +12,11 @@ inline fun <reified T : Parcelable> Intent.getParcelableCompat(key: String): T? 
     } else {
         @Suppress("DEPRECATION")
         extras?.getParcelable(key)
+    }
+}
+
+fun mainThread(block: () -> Unit) {
+    Handler(Looper.getMainLooper()).post {
+        block()
     }
 }

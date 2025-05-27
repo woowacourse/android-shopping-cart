@@ -4,12 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.uimodel.QuantityInfo
+import woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel
+import woowacourse.shopping.view.uimodel.ShoppingCartRecyclerViewItems
 
 class ShoppingCartAdapter(
     private val handler: ShoppingCartEventHandler,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private var products: List<Product> = listOf()
+    private var products: List<ShoppingCartItemUiModel> = listOf()
+    private var currentPage: Int = 0
+    var quantityInfo = QuantityInfo<ShoppingCartItemUiModel>()
+        private set
 
     override fun getItemCount(): Int = products.size
 
@@ -18,7 +23,8 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = products[position]
-        holder.bind(item)
+        val quantity = quantityInfo[item]
+        holder.bind(item, currentPage, quantity)
     }
 
     override fun onCreateViewHolder(
@@ -29,13 +35,12 @@ class ShoppingCartAdapter(
         return ShoppingCartViewHolder(binding, handler)
     }
 
-    fun updateProducts(newProducts: List<Product>) {
-        products = newProducts
+    fun updateProducts(items: ShoppingCartRecyclerViewItems) {
+        val previousCount = itemCount
+        products = items.page.items
+        currentPage = items.page.currentPage
+        quantityInfo = items.quantityInfo
+        notifyItemRangeChanged(0, previousCount)
+        notifyItemRangeRemoved(previousCount - itemCount, previousCount - itemCount)
     }
-}
-
-interface ShoppingCartEventHandler {
-    fun onProductRemove(product: Product)
-
-    fun onPagination(page: Int)
 }

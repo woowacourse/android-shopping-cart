@@ -6,39 +6,44 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.view.base.ShoppingCartActivityTemplate
+import woowacourse.shopping.view.base.ActivityBoilerPlateCode
+import woowacourse.shopping.view.base.ActivityBoilerPlateCodeImpl
+import woowacourse.shopping.view.base.QuantitySelectorEventHandler
 import woowacourse.shopping.view.getParcelableCompat
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.view.uimodel.ProductUiModel
+import woowacourse.shopping.view.uimodel.QuantityObservable
 
 class ProductDetailActivity :
-    ShoppingCartActivityTemplate<ActivityProductDetailBinding>(R.layout.activity_product_detail) {
-    private val viewModel: ProductDetailViewModel by viewModels()
-    private val handler: ProductDetailEventHandler by lazy {
-        object : ProductDetailEventHandler {
-            override fun onAddToCartSelected(product: Product) {
-                viewModel.addProduct(product)
-                startActivity(ShoppingCartActivity.newIntent(this@ProductDetailActivity))
-            }
-        }
-    }
+    AppCompatActivity(),
+    ActivityBoilerPlateCode<ActivityProductDetailBinding> by ActivityBoilerPlateCodeImpl(
+        R.layout.activity_product_detail,
+    ) {
+    private val viewModel: ProductDetailViewModel by viewModels { ProductDetailViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initialize()
         setSupportActionBar(binding.toolbarProductDetail as Toolbar)
-        val product: Product =
+        val productUiModel: ProductUiModel =
             intent.getParcelableCompat(KEY_PRODUCT) ?: run {
                 onUnexpectedError(getString(R.string.error_product_is_null))
                 return
             }
-        viewModel.setProduct(product)
+        viewModel.setProduct(productUiModel)
         binding.apply {
+            handler = ProductDetailEventHandlerImpl()
             viewModel = this@ProductDetailActivity.viewModel
-            handler = this@ProductDetailActivity.handler
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.addRecentProduct()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,15 +63,30 @@ class ProductDetailActivity :
 
         fun newIntent(
             context: Context,
-            product: Product,
+            productUiModel: ProductUiModel,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(KEY_PRODUCT, product)
+                putExtra(KEY_PRODUCT, productUiModel)
             }
+        }
+    }
+
+    private inner class ProductDetailEventHandlerImpl : ProductDetailEventHandler {
+        override fun onQuantityMinusSelected(uiModel: QuantityObservable) {
+            viewModel.decreaseCount()
+        }
+
+        override fun onQuantityPlusSelected(uiModel: QuantityObservable) {
+            viewModel.increaseCount()
+        }
+
+        override fun onAddToCartSelected(productUiModel: ProductUiModel) {
+            viewModel.addProduct(productUiModel)
+            startActivity(ShoppingCartActivity.newIntent(this@ProductDetailActivity))
         }
     }
 }
 
-interface ProductDetailEventHandler {
-    fun onAddToCartSelected(product: Product)
+interface ProductDetailEventHandler : QuantitySelectorEventHandler {
+    fun onAddToCartSelected(productUiModel: ProductUiModel)
 }

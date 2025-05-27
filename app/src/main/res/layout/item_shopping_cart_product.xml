@@ -2,14 +2,23 @@
 <layout>
 
     <data>
-
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.Product" />
+        name="quantity"
+        type="androidx.lifecycle.MutableLiveData&lt;java.lang.Integer&gt;" />
 
         <variable
             name="handler"
             type="woowacourse.shopping.view.shoppingcart.ShoppingCartEventHandler" />
+        <variable
+            name="page"
+            type="int" />
+        <variable
+            name="product"
+            type="woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel" />
+
+        <variable
+            name="onProductRemove"
+            type="kotlin.jvm.functions.Function2&lt;woowacourse.shopping.view.uimodel.ShoppingCartItemUiModel, java.lang.Integer,kotlin.Unit&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +31,6 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="18dp"
-
         android:background="@drawable/background_item_shopping_cart">
 
         <TextView
@@ -33,7 +41,7 @@
             android:layout_marginEnd="28dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{product.productUiModel.name}"
             android:textColor="#555555"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -48,7 +56,7 @@
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginStart="12dp"
-            shoppingCart:image="@{product.imageUrl}"
+            shoppingCart:image="@{product.productUiModel.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,22 +64,41 @@
             tools:src="@drawable/sample_product_detail_image" />
 
         <ImageView
+            android:onClick="@{()->handler.onProductRemove(product, page)}"
             android:id="@+id/iv_remove_item_product_icon"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginEnd="12dp"
-            android:onClick="@{() -> handler.onProductRemove(product)}"
             android:src="@drawable/icon_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_shopping_cart_item"
             app:tint="#AAAAAA" />
+
+        <LinearLayout
+            android:id="@+id/layout_product_quantity_selector"
+            app:layout_constraintTop_toBottomOf="@+id/iv_remove_item_product_icon"
+            app:layout_constraintBottom_toTopOf="@+id/tv_price"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            >
+
+            <include
+                app:quantityObservable="@{product}"
+                app:quantity="@{quantity}"
+                app:handler="@{handler}"
+                layout="@layout/button_quantity_selector" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:price="@{product.price}"
+            android:price="@{product.productUiModel.price}"
             android:textColor="#555555"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_shopping_cart_image"
