@@ -25,7 +25,7 @@ class RecentProductRepositoryImpl(
     override fun getMostRecentProduct(onResult: (Result<Product?>) -> Unit) {
         runThread(
             block = {
-                recentProductDataSource.getMostRecentProduct()?.toProduct()
+                recentProductDataSource.getMostRecentProduct()?.toDomain()
             },
             onResult = onResult,
         )
@@ -57,7 +57,7 @@ class RecentProductRepositoryImpl(
         productId: Long,
     ): Boolean = recentProducts.none { it.productId == productId }
 
-    private fun RecentlyViewedProduct.toProduct(): Product = productDataSource.fetchProductById(this.productId)
+    private fun RecentlyViewedProduct.toDomain(): Product = productDataSource.fetchProductById(this.productId)
 
     private fun Product.toEntity(): RecentlyViewedProduct =
         RecentlyViewedProduct(
