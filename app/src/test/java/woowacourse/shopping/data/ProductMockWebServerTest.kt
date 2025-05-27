@@ -1,6 +1,5 @@
 package woowacourse.shopping.data
 
-import com.google.gson.Gson
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -14,7 +13,6 @@ import woowacourse.shopping.domain.model.Product
 class ProductMockWebServerTest {
     private lateinit var mockWebServer: MockWebServer
     private lateinit var productService: ProductMockWebServer
-    private val gson = Gson()
 
     @BeforeEach
     fun setup() {
