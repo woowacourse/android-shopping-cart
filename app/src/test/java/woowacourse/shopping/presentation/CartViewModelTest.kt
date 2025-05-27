@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.fixture.FakeCartRepository
 import woowacourse.shopping.presentation.cart.CartViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -18,10 +19,20 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        cartRepository = mockk<CartRepository>(relaxed = true)
+        cartRepository = FakeCartRepository()
         productRepository = mockk<ProductRepository>(relaxed = true)
-        viewModel = CartViewModel(cartRepository, productRepository)
+        viewModel = CartViewModel(cartRepository)
         (viewModel.totalPages as MutableLiveData).value = 5
+    }
+
+    @Test
+    fun `장바구니_상품을_불러온다`() {
+        viewModel.loadItems(0)
+
+        val result = viewModel.products.getOrAwaitValue()
+        assertThat(result).isInstanceOf(ResultState.Success::class.java)
+        val cartItems = (result as ResultState.Success).data
+        assertThat(cartItems).hasSize(10)
     }
 
     @Test

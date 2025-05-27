@@ -5,11 +5,19 @@ import woowacourse.shopping.domain.repository.CartRepository
 
 class FakeCartRepository : CartRepository {
     override fun getCartItemCount(onResult: (Result<Int?>) -> Unit) {
-        TODO("Not yet implemented")
+        onResult(Result.success(3))
+    }
+
+    override fun fetchPagedCartItems(
+        page: Int,
+        pageSize: Int,
+        onResult: (Result<List<CartItem>>) -> Unit,
+    ) {
+        onResult(Result.success(ProductsFixture.dummyCartItems))
     }
 
     override fun getTotalQuantity(onResult: (Result<Int?>) -> Unit) {
-        TODO("Not yet implemented")
+        onResult(Result.success(10))
     }
 
     override fun insertProduct(
@@ -32,20 +40,20 @@ class FakeCartRepository : CartRepository {
         quantity: Int,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        TODO("Not yet implemented")
+        onResult(Result.success(Unit))
     }
 
     override fun decreaseQuantity(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        TODO("Not yet implemented")
+        onResult(Result.success(Unit))
     }
 
     override fun deleteProduct(
         productId: Long,
         onResult: (Result<Unit>) -> Unit,
     ) {
-        TODO("Not yet implemented")
+        onResult(Result.success(Unit))
     }
 }

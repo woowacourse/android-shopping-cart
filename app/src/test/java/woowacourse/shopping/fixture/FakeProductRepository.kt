@@ -22,17 +22,7 @@ class FakeProductRepository : ProductRepository {
         val product = ProductsFixture.dummyProducts.find { it.productId == productId }
         if (product != null) {
             onResult(Result.success(product))
-        } else {
-            onResult(Result.failure(NoSuchElementException("Product not found: $product")))
         }
-    }
-
-    override fun fetchPagedCartItems(
-        page: Int,
-        pageSize: Int,
-        onResult: (Result<List<CartItem>>) -> Unit,
-    ) {
-        TODO("Not yet implemented")
     }
 
     private fun List<Product>.toCartItems(): List<CartItem> =

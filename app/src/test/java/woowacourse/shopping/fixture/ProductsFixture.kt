@@ -15,7 +15,7 @@ object ProductsFixture {
             "https://sitem.ssgcdn.com/64/93/82/item/0000006829364_i1_464.jpg",
         )
 
-    val mockedCartItems =
+    val dummyCartItems =
         List(10) {
             CartItem(
                 product =
