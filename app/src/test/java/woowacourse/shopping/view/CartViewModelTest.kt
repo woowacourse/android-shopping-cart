@@ -7,9 +7,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.FakeCartStorage
+import woowacourse.shopping.data.FakeCartRepository
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.ext.getOrAwaitValue
 import woowacourse.shopping.view.cart.vm.CartViewModel
 
@@ -19,23 +22,13 @@ class CartViewModelTest {
     val instantExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: CartViewModel
-    private lateinit var cartStorage: FakeCartStorage
+    private lateinit var cartRepository: CartRepository
 
     @BeforeEach
     fun setUp() {
-        cartStorage =
-            FakeCartStorage(
-                products =
-                    mutableListOf(
-                        Product(1L, "맥북", Price(1000), ""),
-                        Product(2L, "아이폰", Price(2000), ""),
-                        Product(3L, "에어팟", Price(3000), ""),
-                        Product(4L, "매직키보드", Price(4000), ""),
-                        Product(5L, "에어팟맥스", Price(5000), ""),
-                        Product(6L, "에어팟깁스", Price(6000), ""),
-                    ),
-            )
-        viewModel = CartViewModel(cartStorage)
+        cartRepository = FakeCartRepository(
+        )
+        viewModel = CartViewModel(cartRepository)
     }
 
     @Test
@@ -44,7 +37,7 @@ class CartViewModelTest {
         viewModel.loadCarts()
 
         // Then
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.carts.getOrAwaitValue()
         val pageNumber = viewModel.pageNumber.getOrAwaitValue()
         val pageState = viewModel.pageState.getOrAwaitValue()
 
@@ -61,7 +54,7 @@ class CartViewModelTest {
         viewModel.addPage()
 
         // Then
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.carts.getOrAwaitValue()
         val pageNumber = viewModel.pageNumber.getOrAwaitValue()
 
         assertThat(pageNumber).isEqualTo(2)
@@ -77,7 +70,7 @@ class CartViewModelTest {
         viewModel.subPage()
 
         // Then
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.carts.getOrAwaitValue()
         val pageNumber = viewModel.pageNumber.getOrAwaitValue()
 
         assertThat(pageNumber).isEqualTo(1)
@@ -93,7 +86,7 @@ class CartViewModelTest {
         viewModel.deleteProduct(6L)
 
         val pageNumber = viewModel.pageNumber.getOrAwaitValue()
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.carts.getOrAwaitValue()
 
         assertThat(pageNumber).isEqualTo(1)
         assertThat(products).hasSize(5)
@@ -106,7 +99,7 @@ class CartViewModelTest {
 
         // Then
         val pageNumber = viewModel.pageNumber.getOrAwaitValue()
-        val products = viewModel.products.getOrAwaitValue()
+        val products = viewModel.carts.getOrAwaitValue()
 
         assertThat(pageNumber).isEqualTo(1)
         assertThat(products).hasSize(5)

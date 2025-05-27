@@ -5,11 +5,19 @@
     android:padding="10dp">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
-            name="model"
-            type="woowacourse.shopping.domain.Product" />
+            name="cart"
+            type="woowacourse.shopping.domain.Cart" />
+
         <variable
-            name="eventHandler"
+            name="quantitySelectorEventHandler"
+            type="woowacourse.shopping.view.util.QuantitySelectorEventHandler" />
+
+        <variable
+            name="productsAdapterEventHandler"
             type="woowacourse.shopping.view.main.event.ProductsAdapterEventHandler" />
     </data>
 
@@ -17,18 +25,41 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> eventHandler.onSelectProduct(model.id)}">
+        android:onClick="@{() -> productsAdapterEventHandler.onSelectProduct(cart)}">
 
         <ImageView
             android:id="@+id/image_view_product"
-            setImage="@{model.imgUrl}"
-            android:layout_width="154dp"
+            setImage="@{cart.product.imgUrl}"
+            android:layout_width="0dp"
             android:layout_height="154dp"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/textView_product_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <include
+            android:id="@+id/include_quantity_selector"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:visibility="@{cart.quantity &gt; 0 ? View.VISIBLE : View.GONE}"
+            app:cart="@{cart}"
+            app:quantitySelectorEvent="@{quantitySelectorEventHandler}"
+            app:layout_constraintBottom_toTopOf="@id/textView_product_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:onClick="@{()->productsAdapterEventHandler.onAddCart(cart)}"
+            android:src="@drawable/floating_plus"
+            android:visibility="@{cart.quantity == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/textView_product_name"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/textView_product_name"
@@ -39,13 +70,13 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{cart.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="@{model.name}"
-            app:layout_constraintTop_toBottomOf="@id/image_view_product"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view_product"
             tools:text="PET보틀-정사각..." />
 
         <TextView
@@ -54,15 +85,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@{@string/format_thousand_won(cart.product.priceValue)}"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@{@string/format_thousand_won(model.priceValue)}"
-            app:layout_constraintTop_toBottomOf="@id/textView_product_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView_product_name"
             tools:text="10,000원" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

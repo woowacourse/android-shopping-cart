@@ -13,30 +13,45 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.event.DetailScreenEventHandler
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
+import woowacourse.shopping.view.main.MainActivity
+import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels { DetailViewModelFactory() }
+    private val quantitySelectorEventHandler
+        get() =
+            object : QuantitySelectorEventHandler {
+                override fun onQuantityMinus(cart: Cart) {
+                    viewModel.minusCartQuantity(cart)
+                }
+
+                override fun onQuantityPlus(cart: Cart) {
+                    viewModel.plusCartQuantity(cart)
+                }
+            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        binding.lifecycleOwner = this@DetailActivity
-        binding.eventHandler =
+        binding.lifecycleOwner = this
+        binding.detailScreenEventHandler =
             DetailScreenEventHandler {
-                viewModel.addProduct()
-                startActivity(CartActivity.newIntent(this@DetailActivity))
+                viewModel.insertCart()
+                startActivity(CartActivity.newIntent(this))
             }
+        binding.quantitySelectorEventHandler = quantitySelectorEventHandler
+        binding.vm = viewModel
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0L)
         viewModel.load(productId)
-
+        viewModel.loadRecentProduct(productId)
         initView()
-        observeViewModel()
     }
 
     private fun initView() {
@@ -49,12 +64,6 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    private fun observeViewModel() {
-        viewModel.product.observe(this) {
-            binding.model = it
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_action_bar_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -63,12 +72,22 @@ class DetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_bar_close -> {
+                navigateToMain()
                 finish()
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun navigateToMain() {
+        val intent =
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        startActivity(intent)
+        finish()
     }
 
     companion object {

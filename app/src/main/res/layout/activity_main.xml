@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import type="android.view.View" />
 
         <variable
-            name="adapter"
+            name="productAdapter"
             type="woowacourse.shopping.view.main.adapter.ProductAdapter" />
+
+        <variable
+            name="recentProductAdapter"
+            type="woowacourse.shopping.view.main.adapter.RecentProductAdapter" />
 
         <variable
             name="vm"
@@ -17,34 +20,97 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="20dp"
-        android:paddingTop="20dp"
-        tools:context=".view.main.MainActivity">
+        android:fillViewport="true">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_product"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:adapter="@{adapter}"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/button_load"
-            app:layout_constraintTop_toTopOf="parent"
-            app:spanCount="2" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="더보기"
-            android:visibility="@{vm.loadable ? View.VISIBLE :View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_product" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_top_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="#555555">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/cart_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/cart_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/cart_count_badge"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/cart_count_badge"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/cart_badge_quantity_background"
+                    android:gravity="center"
+                    android:text="@{vm.totalQuantity.toString()}"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:visibility="@{vm.totalQuantity &gt; 0 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/text_view_recent_product_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/recent_product_title"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="@{vm.recentProductsCount &gt; 0 ? View.VISIBLE : View.GONE}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_recent_product"
+                android:layout_width="match_parent"
+                android:layout_height="121dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="40dp"
+                android:adapter="@{recentProductAdapter}"
+                android:orientation="horizontal"
+                android:visibility="@{vm.recentProductsCount  &gt; 0 ? View.VISIBLE : View.GONE}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:adapter="@{productAdapter}"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
+
+            <Button
+                android:id="@+id/button_load"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/more_load"
+                android:visibility="@{vm.loadable ? View.VISIBLE :View.GONE}" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

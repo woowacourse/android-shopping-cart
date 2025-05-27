@@ -4,35 +4,44 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.main.event.ProductsAdapterEventHandler
+import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 
 class ProductAdapter(
-    private val items: MutableList<Product> = mutableListOf(),
+    private var items: List<Cart> = listOf(),
+    private val quantitySelectorEventHandler: QuantitySelectorEventHandler,
     private val handler: ProductsAdapterEventHandler,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    fun submitList(newItems: List<Product>) {
+) : RecyclerView.Adapter<ProductViewHolder>() {
+    fun submitList(newItems: List<Cart>) {
         val lastPosition = items.size
+        val newItemsSize = newItems.size
         val subList = newItems.subList(lastPosition, newItems.size)
-        items.addAll(subList)
-        notifyItemRangeInserted(lastPosition, newItems.size)
+        val updatedItems = newItems.subtract(items.toSet()).toList()
+        if (updatedItems.size == 1) {
+            val updateItemIndex = newItems.indexOf(updatedItems[0])
+            items = newItems
+            notifyItemChanged(updateItemIndex)
+        } else {
+            items = items + subList
+            notifyItemRangeInserted(lastPosition, newItemsSize - lastPosition)
+        }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
+    ): ProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val bind = ItemProductBinding.inflate(inflater)
-
-        return ProductViewHolder(bind, handler)
+        val bind = ItemProductBinding.inflate(inflater, parent, false)
+        return ProductViewHolder(bind, quantitySelectorEventHandler, handler)
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: ProductViewHolder,
         position: Int,
     ) {
-        (holder as ProductViewHolder).bind(items[position])
+        holder.bind(items[position])
     }
 
     override fun getItemCount(): Int = items.size

@@ -7,116 +7,78 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.FakeProductStorage
+import woowacourse.shopping.data.FakeCartRepository
+import woowacourse.shopping.data.FakeProductRepository
+import woowacourse.shopping.data.FakeRecentProductRepository
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ext.getOrAwaitValue
 import woowacourse.shopping.fixture.productFixture1
 import woowacourse.shopping.fixture.productFixture2
 import woowacourse.shopping.fixture.productFixture3
 import woowacourse.shopping.fixture.productFixture4
 import woowacourse.shopping.view.main.vm.MainViewModel
+import java.time.LocalDateTime
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MainViewModelTest {
+
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
+
     private lateinit var viewModel: MainViewModel
-    private lateinit var fakeStorage: FakeProductStorage
+    private lateinit var fakeCartRepository: FakeCartRepository
+    private lateinit var fakeProductRepository: FakeProductRepository
+    private lateinit var fakeRecentProductRepository: FakeRecentProductRepository
 
     @BeforeEach
     fun setup() {
-        fakeStorage = FakeProductStorage()
-        viewModel = MainViewModel(fakeStorage)
+        fakeCartRepository = FakeCartRepository()
+        fakeProductRepository = FakeProductRepository()
+        fakeRecentProductRepository = FakeRecentProductRepository()
+        viewModel =
+            MainViewModel(fakeCartRepository, fakeProductRepository, fakeRecentProductRepository)
     }
 
     @Test
-    fun `초기 상태에서 상품을 로드하면 상품 목록이 갱신된다`() {
-        // given
-        val page = 1
-        val pageSize = 3
-        fakeStorage.setProducts(
-            listOf(
-                productFixture1,
-                productFixture2,
-                productFixture3,
-            ),
-        )
+    fun `상품을 로드하면 carts LiveData가 갱신된다`() {
         // when
-        viewModel.loadProducts(page, pageSize)
+        viewModel.loadProducts()
 
         // then
-        val expected =
-            listOf(
-                Product(
-                    1L,
-                    "마리오 그린올리브 300g",
-                    Price(3980),
-                    "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/27/41/8412707034127_1.png",
-                ),
-                Product(
-                    2L,
-                    "비비고 통새우 만두 200g",
-                    Price(81980),
-                    "https://images.emarteveryday.co.kr/images/product/8801392067167/vSYMPCA3qqbLJjhv.png",
-                ),
-                Product(
-                    3L,
-                    "스테비아 방울토마토 500g",
-                    Price(89860),
-                    "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/97/12/2500000351297_1.png",
-                ),
-            )
-
-        assertThat(viewModel.products.getOrAwaitValue()).isEqualTo(expected)
+        val carts = viewModel.carts.getOrAwaitValue()
+        assertThat(carts).isNotEmpty()
     }
 
     @Test
-    fun `다음 페이지에 상품이 없으면 loadable은 true가 된다`() {
+    fun `최근 본 상품 로드 시 recentProducts LiveData가 갱신된다`() {
         // given
-        val page = 2
-        val pageSize = 3
-        fakeStorage.setProducts(emptyList())
+        fakeRecentProductRepository.insert(
+            RecentProduct(Product(1L, "맥북", Price(1000), ""), LocalDateTime.of(2024, 5, 1, 12, 0)),
+        ) {
+
+        }
 
         // when
-        viewModel.loadProducts(page, pageSize)
+        viewModel.loadRecentProducts()
 
         // then
-        assertThat(viewModel.loadable.getOrAwaitValue()).isTrue
+        val recentProducts = viewModel.recentProducts.getOrAwaitValue()
+        assertThat(recentProducts).hasSize(7)
     }
 
     @Test
-    fun `기존 상품 목록에 이어서 새로운 상품이 추가된다`() {
-        // given
-        val page = 2
-        val pageSize = 2
-        fakeStorage.setProducts(
-            listOf(
-                productFixture1,
-                productFixture2,
-                productFixture3,
-                productFixture4,
-            ),
-        )
+    fun `페이지 이동하면 loadProducts 호출`() {
         // when
-        viewModel.loadProducts(page, pageSize)
-        // then
-        val expected =
-            listOf(
-                Product(
-                    3L,
-                    "스테비아 방울토마토 500g",
-                    Price(89860),
-                    "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/97/12/2500000351297_1.png",
-                ),
-                Product(
-                    4L,
-                    "디벨라 스파게티면 500g",
-                    Price(1980),
-                    "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/85/00/8005121000085_1.png",
-                ),
-            )
+        viewModel.moveNextPage()
 
-        assertThat(viewModel.products.getOrAwaitValue()).isEqualTo(expected)
+        // then
+        val carts = viewModel.carts.getOrAwaitValue()
+        assertThat(carts).isNotEmpty()
     }
 }

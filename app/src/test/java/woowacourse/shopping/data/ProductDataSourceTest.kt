@@ -5,13 +5,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.ProductRepository
 
-class ProductStorageTest {
-    private lateinit var storage: ProductStorage
+class ProductDataSourceTest {
+    private lateinit var productRepository: ProductRepository
 
     @BeforeEach
     fun setUp() {
-        storage = ProductStorageImpl()
+        productRepository = FakeProductRepository()
     }
 
     @Test
@@ -20,16 +21,11 @@ class ProductStorageTest {
         val id = 1L
 
         // given
-        val result = storage[id]
+        val result = productRepository.getById(id)
 
         assertEquals(
             result,
-            Product(
-                1L,
-                "마리오 그린올리브 300g",
-                Price(3980),
-                "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/27/41/8412707034127_1.png",
-            ),
+            Product(1L, "맥북", Price(1000), ""),
         )
     }
 }

@@ -3,14 +3,16 @@ package woowacourse.shopping.view.cart.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.CartStorage
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Page
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.CartRepository
 
-class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
+class CartViewModel(
+    private val cartRepository: CartRepository,
+) : ViewModel() {
     private val page = Page(initialPage = INITIAL_PAGE_NUMBER, pageSize = PAGE_SIZE)
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> = _products
+    private val _carts = MutableLiveData<List<Cart>>()
+    val carts: LiveData<List<Cart>> = _carts
 
     private val _pageState = MutableLiveData<PageState>()
     val pageState: LiveData<PageState> = _pageState
@@ -19,14 +21,11 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     val pageNumber: LiveData<Int> = _pageNumber
 
     private fun updatePageNoText() {
-        _pageNumber.value = page.getPageNumber()
+        _pageNumber.postValue(page.getPageNumber())
     }
 
     fun deleteProduct(productId: Long) {
-        cartStorage.deleteProduct(productId)
-        loadCarts()
-
-        if (page.resetToLastPageIfEmpty(products.value?.size ?: 0)) {
+        cartRepository.deleteById(productId) {
             loadCarts()
         }
     }
@@ -42,23 +41,70 @@ class CartViewModel(private val cartStorage: CartStorage) : ViewModel() {
     }
 
     fun loadCarts() {
-        val productsRange = page.targetRange(cartStorage.totalSize())
-        val products = cartStorage.slice(productsRange)
-        _products.value = products
-        setPageState()
-        updatePageNoText()
+        val (offset, limit) = page.targetRange()
+        cartRepository.getPaged(offset, limit) { carts: List<Cart> ->
+            _carts.postValue(carts)
+        }
+        setPageState(offset, limit)
     }
 
-    private fun setPageState() {
-        val totalSize = cartStorage.totalSize()
-        val hasNext = page.hasNextPage(totalSize)
-        val isLastPage = page.isLastPage(totalSize)
-        _pageState.value =
-            PageState(
-                previousPageEnabled = page.hasPreviousPage(),
-                nextPageEnabled = hasNext,
-                pageVisibility = hasNext || isLastPage,
+    private fun setPageState(
+        offset: Int,
+        limit: Int,
+    ) {
+        cartRepository.totalSize { totalSize ->
+            cartRepository.hasNextPage(offset + 1, limit) { hasNext ->
+                cartRepository.hasOnlyPage(limit) { hasOnePage ->
+                    _pageState.postValue(
+                        PageState(
+                            previousPageEnabled = page.hasPreviousPage(),
+                            nextPageEnabled = hasNext,
+                            pageVisibility = !hasOnePage,
+                        ),
+                    )
+                }
+            }
+            updatePageNoText()
+            page.resetToLastPageIfEmpty(carts.value?.size ?: 0) {
+                loadCarts()
+            }
+        }
+    }
+
+    fun plusCartQuantity(cart: Cart) {
+        val currentCarts = carts.value ?: return
+        val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
+        val updated = cart.increase()
+        cartRepository.update(updated) {
+            _carts.postValue(
+                currentCarts.toMutableList().apply {
+                    this[cartIndex] = updated
+                },
             )
+        }
+    }
+
+    fun minusCartQuantity(cart: Cart) {
+        val currentCarts = carts.value ?: return
+        val cartIndex = currentCarts.indexOfFirst { cart.product.id == it.product.id }
+        val updated = cart.decrease()
+        cartRepository.update(updated) {
+            if (updated.quantity == 0) {
+                cartRepository.deleteById(cart.product.id) {
+                    _carts.postValue(
+                        currentCarts.toMutableList().apply {
+                            this[cartIndex] = updated
+                        },
+                    )
+                }
+                return@update
+            }
+            _carts.postValue(
+                currentCarts.toMutableList().apply {
+                    this[cartIndex] = updated
+                },
+            )
+        }
     }
 
     companion object {

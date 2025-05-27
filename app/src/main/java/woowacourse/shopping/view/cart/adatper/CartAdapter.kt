@@ -4,18 +4,25 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.view.cart.event.CartAdapterEventHandler
+import woowacourse.shopping.view.util.QuantitySelectorEventHandler
 
 class CartAdapter(
-    private val items: MutableList<Product> = mutableListOf(),
+    private var items: List<Cart> = listOf(),
+    private val quantitySelectorEventHandler: QuantitySelectorEventHandler,
     private val handler: CartAdapterEventHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    fun submitList(newItems: List<Product>) {
+    fun submitList(newItems: List<Cart>) {
         val oldSize = items.size
-        items.clear()
-        items.addAll(newItems)
-
+        val updatedItem =
+            newItems.find { newItem -> items.any { it.product == newItem.product && it.quantity != newItem.quantity } }
+        items = newItems
+        if (updatedItem != null) {
+            val updateItemIndex = newItems.indexOf(updatedItem)
+            notifyItemChanged(updateItemIndex)
+            return
+        }
         if (newItems.size == oldSize) {
             notifyItemRangeChanged(0, newItems.size)
         } else {
@@ -29,7 +36,7 @@ class CartAdapter(
         viewType: Int,
     ): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding, handler)
+        return CartViewHolder(binding, quantitySelectorEventHandler, handler)
     }
 
     override fun getItemCount(): Int = items.size

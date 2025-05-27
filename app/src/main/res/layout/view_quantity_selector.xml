@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="cart"
+            type="woowacourse.shopping.domain.Cart" />
+
+        <variable
+            name="quantitySelectorEvent"
+            type="woowacourse.shopping.view.util.QuantitySelectorEventHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/image_view_minus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:onClick="@{() -> quantitySelectorEvent.onQuantityMinus(cart)}"
+            android:text="@string/minus"
+            android:textColor="@color/gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/text_view_count"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_count"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@{String.valueOf(cart.quantity)}"
+            android:textColor="@color/gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/image_view_plus"
+            app:layout_constraintStart_toEndOf="@id/image_view_minus"
+            tools:text="2" />
+
+        <TextView
+            android:id="@+id/image_view_plus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:onClick="@{() -> quantitySelectorEvent.onQuantityPlus(cart)}"
+            android:text="@string/plus"
+            android:textColor="@color/gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_view_count" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

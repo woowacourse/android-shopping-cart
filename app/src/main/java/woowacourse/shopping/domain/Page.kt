@@ -2,16 +2,16 @@ package woowacourse.shopping.domain
 
 class Page(
     private val initialPage: Int,
-    private val pageSize: Int,
+    val pageSize: Int,
 ) {
-    private var currentPage: Int = initialPage
+    var currentPage: Int = initialPage
+        private set
 
     fun getPageNumber(): Int = currentPage
 
-    fun targetRange(itemSize: Int): IntRange {
-        val start = (currentPage - 1) * pageSize
-        val end = minOf(start + pageSize, itemSize) - 1
-        return start..end
+    fun targetRange(): PagingOffset {
+        val offset = (currentPage - 1) * pageSize
+        return PagingOffset(offset, pageSize)
     }
 
     fun moveToNextPage() {
@@ -24,20 +24,15 @@ class Page(
         }
     }
 
-    fun resetToLastPageIfEmpty(itemSize: Int): Boolean {
+    fun resetToLastPageIfEmpty(
+        itemSize: Int,
+        onResetEvent: () -> Unit,
+    ) {
         if (itemSize == 0 && currentPage > initialPage) {
             currentPage--
-            return true
+            onResetEvent()
         }
-        return false
     }
 
     fun hasPreviousPage() = currentPage > initialPage
-
-    fun hasNextPage(itemSize: Int): Boolean {
-        val fromIndex = currentPage * pageSize
-        return fromIndex < itemSize
-    }
-
-    fun isLastPage(itemSize: Int) = currentPage * pageSize >= itemSize
 }
