@@ -20,8 +20,7 @@ class CatalogViewModel(
         MutableLiveData<List<CatalogItem>>(emptyList<CatalogItem>())
     val catalogItems: LiveData<List<CatalogItem>> = _catalogItems
 
-    private val _page = MutableLiveData<Int>(INITIAL_PAGE)
-    val page: LiveData<Int> = _page
+    private var page = INITIAL_PAGE
 
     private val _updatedItem = MutableLiveData<ProductUiModel>()
     val updatedItem: LiveData<ProductUiModel> = _updatedItem
@@ -80,11 +79,10 @@ class CatalogViewModel(
     }
 
     fun loadNextCatalogProducts() {
-        increasePage()
-        val currentPage = page.value ?: 0
+        page++
 
         catalogProductRepository.getAllProductsSize { size ->
-            val startIndex = currentPage * PAGE_SIZE
+            val startIndex = page * PAGE_SIZE
             val endIndex = minOf(startIndex + PAGE_SIZE, size)
 
             loadCatalog(startIndex, endIndex, size)
@@ -93,11 +91,10 @@ class CatalogViewModel(
 
     fun loadCatalogUntilCurrentPage() {
         _catalogItems.value = emptyList()
-        val currentPage = page.value ?: 0
 
         catalogProductRepository.getAllProductsSize { size ->
             val startIndex = 0
-            val endIndex = minOf((currentPage + 1) * PAGE_SIZE, size)
+            val endIndex = minOf((page + 1) * PAGE_SIZE, size)
 
             loadCatalog(startIndex, endIndex, size)
         }
@@ -146,10 +143,6 @@ class CatalogViewModel(
         recentlyViewedProductRepository.getRecentlyViewedProducts { products ->
             _recentlyViewedProducts.postValue(products.map { it.toUiModel() })
         }
-    }
-
-    private fun increasePage() {
-        _page.value = _page.value?.plus(1)
     }
 
     companion object {
