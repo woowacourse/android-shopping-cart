@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.goods
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.carts.repository.CartRepository
@@ -22,10 +23,21 @@ class GoodsViewModel(
     val goodsWithCartQuantity: LiveData<List<CartItem>> get() = _goodsWithCartQuantity
     private var _totalCartItemSize: MutableLiveData<String> = MutableLiveData("0")
     val totalCartItemSize: LiveData<String> get() = _totalCartItemSize
+    private var _hasCartItem: MutableLiveData<Boolean> = MutableLiveData(false)
+    val hasCartItem: LiveData<Boolean> get() = _hasCartItem
+    private var _isOverflowCartSizeThreshold: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isOverflowCartSizeThreshold: LiveData<Boolean> get() = _isOverflowCartSizeThreshold
+
     private val _navigateToCart = MutableSingleLiveData<Unit>()
     val navigateToCart: SingleLiveData<Unit> get() = _navigateToCart
     private val _recentlyViewedGoods: MutableLiveData<List<Goods>> = MutableLiveData()
     val recentlyViewedGoods: LiveData<List<Goods>> get() = _recentlyViewedGoods
+    val hasRecentlyViewedGoods =
+        MediatorLiveData<Boolean>().apply {
+            addSource(recentlyViewedGoods) { goods ->
+                value = goods.isNotEmpty()
+            }
+        }
 
     init {
         appendCartItemsWithZeroQuantity()
@@ -63,18 +75,20 @@ class GoodsViewModel(
                 goods.map { goods ->
                     cartItemsMap[goods.id] ?: CartItem(goods = goods, quantity = 0)
                 }
-            setTotalCartItemSize(cartItems.sumOf { it.quantity })
+            setTotalCartItem(cartItems.sumOf { it.quantity })
         }
     }
 
-    private fun setTotalCartItemSize(totalCartQuantity: Int) {
+    private fun setTotalCartItem(totalCartQuantity: Int) {
         val sizeText =
             when {
                 totalCartQuantity < 1 -> "0"
-                totalCartQuantity in 1..99 -> totalCartQuantity.toString()
-                else -> "99+"
+                totalCartQuantity in 1..MAXIMUM_CART_SIZE_THRESHOLD -> totalCartQuantity.toString()
+                else -> "$MAXIMUM_CART_SIZE_THRESHOLD+"
             }
         _totalCartItemSize.postValue(sizeText)
+        _hasCartItem.value = totalCartQuantity > 0
+        _isOverflowCartSizeThreshold.value = totalCartQuantity > MAXIMUM_CART_SIZE_THRESHOLD
     }
 
     fun addPage() {
@@ -96,5 +110,6 @@ class GoodsViewModel(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val MAXIMUM_CART_SIZE_THRESHOLD = 99
     }
 }

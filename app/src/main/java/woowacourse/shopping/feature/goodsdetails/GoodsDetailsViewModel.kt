@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.goodsdetails
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
@@ -25,6 +26,12 @@ class GoodsDetailsViewModel(
     val alertEvent: SingleLiveData<GoodsDetailsAlertMessage> = _alertEvent
     private val _mostRecentlyViewedGoods: MutableLiveData<Goods?> = MutableLiveData(null)
     val mostRecentlyViewedGoods: LiveData<Goods?> get() = _mostRecentlyViewedGoods
+    val hasMostRecentlyViewedGoods =
+        MediatorLiveData<Boolean>().apply {
+            addSource(mostRecentlyViewedGoods) { goods ->
+                value = goods != null
+            }
+        }
     private val _clickMostRecentlyGoodsEvent = MutableSingleLiveData<Goods>()
     val clickMostRecentlyGoodsEvent: SingleLiveData<Goods> get() = _clickMostRecentlyGoodsEvent
 

@@ -30,7 +30,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.totalCartItemSize.equals(`0`) ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.hasCartItem ? View.VISIBLE : View.GONE}"
             app:cardCornerRadius="100dp">
 
             <TextView
@@ -42,7 +42,7 @@
                 android:padding="3dp"
                 android:text="@{viewModel.totalCartItemSize}"
                 android:textColor="@color/white"
-                android:textSize="@{viewModel.totalCartItemSize.equals(`99+`) ? @dimen/nav_cart_text_small : @dimen/nav_cart_text_normal}"
+                android:textSize="@{viewModel.isOverflowCartSizeThreshold ? @dimen/nav_cart_text_small : @dimen/nav_cart_text_normal}"
                 tools:text="99" />
         </androidx.cardview.widget.CardView>
 
