@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package woowacourse.shopping.util
 
 import androidx.lifecycle.LiveData
