@@ -12,8 +12,6 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 class CartViewModel(
     private val cartProductRepository: CartProductRepository,
 ) : ViewModel() {
-    private val products = mutableListOf<ProductUiModel>()
-
     private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
     val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
 
@@ -34,7 +32,6 @@ class CartViewModel(
     }
 
     fun deleteCartProduct(cartProduct: ProductItem) {
-        products.remove(cartProduct.productItem)
         cartProductRepository.deleteCartProduct(cartProduct.productItem.toEntity())
 
         cartProductRepository.getAllProductsSize { updatedSize ->
@@ -47,20 +44,20 @@ class CartViewModel(
         }
     }
 
-    fun onPaginationButtonClick(buttonDirection: Int) {
+    fun onPaginationButtonClick(buttonEvent: ButtonEvent) {
         cartProductRepository.getAllProductsSize { totalSize ->
             val currentPage = page.value ?: INITIAL_PAGE
             val lastPage = (totalSize - 1) / PAGE_SIZE
 
-            when (buttonDirection) {
-                PREV_BUTTON -> {
+            when (buttonEvent) {
+                ButtonEvent.DECREASE -> {
                     if (currentPage > 0) {
                         decreasePage()
                         loadCartProducts()
                     }
                 }
 
-                NEXT_BUTTON -> {
+                ButtonEvent.INCREASE -> {
                     if (currentPage < lastPage) {
                         increasePage()
                         loadCartProducts()
@@ -71,16 +68,20 @@ class CartViewModel(
     }
 
     fun updateQuantity(
-        event: Int,
+        buttonEvent: ButtonEvent,
         product: ProductUiModel,
     ) {
-        if (event == DECREASE_BUTTON) {
-            cartProductRepository.updateProduct(product.toEntity(), -1) { product ->
-                _updatedItem.postValue(product?.toUiModel())
+        when (buttonEvent) {
+            ButtonEvent.INCREASE -> {
+                cartProductRepository.updateProduct(product.toEntity(), -1) { product ->
+                    _updatedItem.postValue(product?.toUiModel())
+                }
             }
-        } else if (event == INCREASE_BUTTON) {
-            cartProductRepository.updateProduct(product.toEntity(), 1) { product ->
-                _updatedItem.postValue(product?.toUiModel())
+
+            ButtonEvent.DECREASE -> {
+                cartProductRepository.updateProduct(product.toEntity(), 1) { product ->
+                    _updatedItem.postValue(product?.toUiModel())
+                }
             }
         }
     }
@@ -128,9 +129,5 @@ class CartViewModel(
     companion object {
         private const val PAGE_SIZE = 5
         private const val INITIAL_PAGE = 0
-        private const val PREV_BUTTON = 1
-        private const val NEXT_BUTTON = 2
-        private const val DECREASE_BUTTON = 0
-        private const val INCREASE_BUTTON = 1
     }
 }
