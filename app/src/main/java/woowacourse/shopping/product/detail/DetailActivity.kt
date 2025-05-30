@@ -43,12 +43,8 @@ class DetailActivity : AppCompatActivity() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
         binding.layoutQuantityControlBar.quantityControlListener =
-            QuantityControlListener { event, _ ->
-                if (event == 1) {
-                    viewModel.increaseQuantity()
-                } else {
-                    viewModel.decreaseQuantity()
-                }
+            QuantityControlListener { buttonEvent, _ ->
+                viewModel::updateQuantity
             }
         binding.layoutLatestViewedProduct.latestViewedProductClickListener =
             LatestViewedProductClickListener { product ->
