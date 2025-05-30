@@ -9,6 +9,12 @@ interface RecentProductDao {
     @Query("SELECT * FROM recent_product ORDER BY viewedTime DESC")
     fun getAll(): List<RecentProductEntity>
 
+    @Query("SELECT count(*) FROM recent_product")
+    fun getAllSize(): Int
+
+    @Query("SELECT * FROM recent_product ORDER BY viewedTime ASC LIMIT 1")
+    fun getOldest(): RecentProductEntity?
+
     @Insert
     fun insert(recentProduct: RecentProductEntity)
 

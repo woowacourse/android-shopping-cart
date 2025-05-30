@@ -20,15 +20,10 @@ class RecentProductsRepositoryImpl(
         callback: (Result<Unit>) -> Unit,
     ) {
         runAsyncResult(function = {
-            val existing = recentProductDao.findRecentProductById(product.id)
+            val existing: RecentProductEntity? = recentProductDao.findRecentProductById(product.id)
             if (existing == null) {
-                val allProducts = recentProductDao.getAll()
-                if (allProducts.size >= MAX_RECENT_PRODUCT_COUNT) {
-                    val oldest = allProducts.lastOrNull()
-                    if (oldest != null) {
-                        recentProductDao.delete(oldest.id)
-                    }
-                }
+                val allProductsSize: Int = recentProductDao.getAllSize()
+                deleteOldestProduct(allProductsSize)
                 recentProductDao.insert(product.toEntity())
             } else {
                 recentProductDao.updateViewedTime(product.id)
@@ -64,6 +59,15 @@ class RecentProductsRepositoryImpl(
         runAsyncResult(function = {
             recentProductDao.findRecentProductById(productId)?.toProduct()
         }, callback)
+    }
+
+    private fun deleteOldestProduct(allProductsSize: Int) {
+        if (allProductsSize >= MAX_RECENT_PRODUCT_COUNT) {
+            val oldest: RecentProductEntity? = recentProductDao.getOldest()
+            if (oldest != null) {
+                recentProductDao.delete(oldest.id)
+            }
+        }
     }
 
     companion object {
