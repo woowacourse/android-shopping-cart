@@ -86,7 +86,6 @@ class ProductDetailViewModel(
     }
 
     fun setLastProductTitle() {
-        setLastProductVisibility()
         recentProductsRepository.getSecondMostRecentProduct { result ->
             result
                 .onSuccess {
@@ -95,14 +94,6 @@ class ProductDetailViewModel(
                     _toastMessage.postValue(Event(Unit))
                 }
         }
-    }
-
-    private fun setLastProductVisibility() {
-//        recentProductsRepository.getAll { recentProducts ->
-//            val secondRecent = recentProducts.getOrNull(1)
-//            val shouldShow = secondRecent != null && secondRecent.id != cartItem.product.id
-//            _lastProductVisibility.postValue(shouldShow)
-//        }
     }
 
     companion object {

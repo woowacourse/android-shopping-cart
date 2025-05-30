@@ -50,13 +50,6 @@ class RecentProductsRepositoryImpl(
         )
     }
 
-    override fun getMostRecentProduct(callback: (Result<Product>) -> Unit) {
-        runAsyncResult(
-            function = { recentProductDao.getMostRecentProduct()?.toProduct() },
-            callback,
-        )
-    }
-
     override fun update(
         productId: Long,
         callback: (Result<Unit>) -> Unit,

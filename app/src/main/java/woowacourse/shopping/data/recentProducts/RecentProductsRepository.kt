@@ -17,8 +17,6 @@ interface RecentProductsRepository {
 
     fun getSecondMostRecentProduct(callback: (Result<Product>) -> Unit)
 
-    fun getMostRecentProduct(callback: (Result<Product>) -> Unit)
-
     fun update(
         productId: Long,
         callback: (Result<Unit>) -> Unit,
