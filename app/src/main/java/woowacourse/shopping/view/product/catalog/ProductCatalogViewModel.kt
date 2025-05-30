@@ -77,19 +77,21 @@ class ProductCatalogViewModel(
 
     private fun loadProducts() {
         productRepository.getPagedProducts(PRODUCT_SIZE_LIMIT, offset) { result ->
-            offset += result.items.size
+            result.onSuccess { pagedResult ->
+                offset += pagedResult.items.size
 
-            val tempItems = mutableListOf<ProductCatalogItem.ProductItem>()
-            var completedCount = 0
-            result.items.forEach { product ->
-                cartProductRepository.getQuantityByProductId(product.id) { quantity ->
-                    tempItems.add(ProductCatalogItem.ProductItem(product, quantity ?: 0))
-                    completedCount++
+                val tempItems = mutableListOf<ProductCatalogItem.ProductItem>()
+                var completedCount = 0
+                pagedResult.items.forEach { product ->
+                    cartProductRepository.getQuantityByProductId(product.id) { quantity ->
+                        tempItems.add(ProductCatalogItem.ProductItem(product, quantity ?: 0))
+                        completedCount++
 
-                    if (completedCount == result.items.size) {
-                        productItems.addAll(tempItems)
-                        hasNext = result.hasNext
-                        _productCatalogItems.postValue(buildCatalogItems())
+                        if (completedCount == pagedResult.items.size) {
+                            productItems.addAll(tempItems)
+                            hasNext = pagedResult.hasNext
+                            _productCatalogItems.postValue(buildCatalogItems())
+                        }
                     }
                 }
             }

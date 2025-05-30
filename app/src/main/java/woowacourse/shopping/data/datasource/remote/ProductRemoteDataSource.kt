@@ -7,12 +7,28 @@ import woowacourse.shopping.domain.model.Product
 class ProductRemoteDataSource(
     private val service: ProductService,
 ) {
-    fun getProductById(id: Long): Product? = service.getProductById(id)
+    fun getProductById(
+        id: Long,
+        onResult: (Result<Product?>) -> Unit,
+    ) {
+        val result = service.getProductById(id)
+        onResult(Result.success(result))
+    }
 
-    fun getProductsByIds(ids: List<Long>): List<Product>? = service.getProductsByIds(ids)
+    fun getProductsByIds(
+        ids: List<Long>,
+        onResult: (Result<List<Product>>) -> Unit,
+    ) {
+        val result = service.getProductsByIds(ids) ?: emptyList()
+        onResult(Result.success(result))
+    }
 
     fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): PagedResult<Product>? = service.getPagedProducts(limit, offset)
+        onResult: (Result<PagedResult<Product>>) -> Unit,
+    ) {
+        val result = service.getPagedProducts(limit, offset) ?: PagedResult(emptyList(), false)
+        onResult(Result.success(result))
+    }
 }

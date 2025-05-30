@@ -32,19 +32,21 @@ class CartProductRepositoryImpl(
         thread {
             val entities = localDataSource.getPagedProducts(endIndex - offset, offset)
             val productIds = entities.map { it.productId }
-            productRepository.getProductsByIds(productIds) { products ->
-                if (products == null) {
-                    onSuccess(PagedResult(emptyList(), false))
-                    return@getProductsByIds
-                }
-                val productMap = products.associateBy { it.id }
-                val cartProducts =
-                    entities.mapNotNull { entity ->
-                        productMap[entity.productId]?.let { product ->
-                            CartProduct(product, entity.quantity)
-                        }
+            productRepository.getProductsByIds(productIds) { result ->
+                result.onSuccess { products ->
+                    if (products.isEmpty()) {
+                        onSuccess(PagedResult(emptyList(), false))
+                        return@getProductsByIds
                     }
-                onSuccess(PagedResult(cartProducts, endIndex < totalCount))
+                    val productMap = products.associateBy { it.id }
+                    val cartProducts =
+                        entities.mapNotNull { entity ->
+                            productMap[entity.productId]?.let { product ->
+                                CartProduct(product, entity.quantity)
+                            }
+                        }
+                    onSuccess(PagedResult(cartProducts, endIndex < totalCount))
+                }
             }
         }
     }

@@ -11,34 +11,27 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
     override fun getProductById(
         id: Long,
-        onSuccess: (Product?) -> Unit,
+        onResult: (Result<Product?>) -> Unit,
     ) {
-        val result = remoteDataSource.getProductById(id)
-        onSuccess(result)
+        remoteDataSource.getProductById(id, onResult)
     }
 
     override fun getProductsByIds(
         ids: List<Long>,
-        onSuccess: (List<Product>?) -> Unit,
+        onResult: (Result<List<Product>>) -> Unit,
     ) {
-        val result = remoteDataSource.getProductsByIds(ids)
-        onSuccess(result)
+        remoteDataSource.getProductsByIds(ids, onResult)
     }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-        onSuccess: (PagedResult<Product>) -> Unit,
+        onResult: (Result<PagedResult<Product>>) -> Unit,
     ) {
         require(offset >= 0)
         require(limit > 0)
         thread {
-            val result = remoteDataSource.getPagedProducts(limit, offset)
-            if (result == null) {
-                onSuccess(PagedResult(emptyList(), false))
-            } else {
-                onSuccess(result)
-            }
+            remoteDataSource.getPagedProducts(limit, offset, onResult)
         }
     }
 }

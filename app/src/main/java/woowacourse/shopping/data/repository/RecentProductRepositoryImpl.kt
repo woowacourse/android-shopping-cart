@@ -16,10 +16,12 @@ class RecentProductRepositoryImpl(
         thread {
             val entity = localDataSource.getLastViewedProduct()
             if (entity != null) {
-                productRepository.getProductById(entity.productId) { product ->
-                    val result =
-                        product?.let { RecentProduct(it, entity.viewedAt.toLocalDateTime()) }
-                    onSuccess(result)
+                productRepository.getProductById(entity.productId) { result ->
+                    result.onSuccess { product ->
+                        val recentProduct =
+                            product?.let { RecentProduct(it, entity.viewedAt.toLocalDateTime()) }
+                        onSuccess(recentProduct)
+                    }
                 }
             } else {
                 onSuccess(null)
@@ -35,20 +37,22 @@ class RecentProductRepositoryImpl(
         thread {
             val entities = localDataSource.getPagedProducts(limit, offset)
             val productIds = entities.map { it.productId }
-            productRepository.getProductsByIds(productIds) { products ->
-                if (products == null) {
-                    onSuccess(emptyList())
-                    return@getProductsByIds
-                }
-
-                val productMap = products.associateBy { it.id }
-                val recentProducts =
-                    entities.mapNotNull { entity ->
-                        productMap[entity.productId]?.let { product ->
-                            RecentProduct(product, entity.viewedAt.toLocalDateTime())
-                        }
+            productRepository.getProductsByIds(productIds) { result ->
+                result.onSuccess { products ->
+                    if (products.isEmpty()) {
+                        onSuccess(emptyList())
+                        return@getProductsByIds
                     }
-                onSuccess(recentProducts)
+
+                    val productMap = products.associateBy { it.id }
+                    val recentProducts =
+                        entities.mapNotNull { entity ->
+                            productMap[entity.productId]?.let { product ->
+                                RecentProduct(product, entity.viewedAt.toLocalDateTime())
+                            }
+                        }
+                    onSuccess(recentProducts)
+                }
             }
         }
     }
