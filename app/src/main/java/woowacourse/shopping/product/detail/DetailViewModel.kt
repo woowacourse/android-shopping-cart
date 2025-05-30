@@ -1,5 +1,6 @@
 package woowacourse.shopping.product.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,7 +42,10 @@ class DetailViewModel(
 
     fun addToCart() {
         val addedProduct = product.value?.copy(quantity = quantity.value ?: 0)
-        addedProduct?.let { cartProductRepository.insertCartProduct(addedProduct.toEntity()) }
+        addedProduct?.let {
+            Log.d("ADDED", "$addedProduct")
+            cartProductRepository.insertCartProduct(addedProduct.toEntity()) {}
+        }
     }
 
     fun setLatestViewedProduct() {

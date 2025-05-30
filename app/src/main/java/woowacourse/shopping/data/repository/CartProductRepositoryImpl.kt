@@ -1,20 +1,30 @@
 package woowacourse.shopping.data.repository
 
-import androidx.annotation.IdRes
 import woowacourse.shopping.data.dao.CartProductDao
 import woowacourse.shopping.data.entity.CartProductEntity
-import woowacourse.shopping.product.catalog.ProductUiModel
 import kotlin.concurrent.thread
 
 class CartProductRepositoryImpl(
     val cartProductDao: CartProductDao,
 ) : CartProductRepository {
-    override fun insertCartProduct(cartProduct: CartProductEntity) {
-        thread { cartProductDao.insertCartProduct(cartProduct) }
+    override fun insertCartProduct(
+        cartProduct: CartProductEntity,
+        callback: (Unit) -> Unit,
+    ) {
+        thread {
+            cartProductDao.insertCartProduct(cartProduct)
+            callback(Unit)
+        }
     }
 
-    override fun deleteCartProduct(productId: Int) {
-        thread { cartProductDao.deleteCartProduct(productId) }
+    override fun deleteCartProduct(
+        productId: Int,
+        callback: (Unit) -> Unit,
+    ) {
+        thread {
+            cartProductDao.deleteCartProduct(productId)
+            callback(Unit)
+        }
     }
 
     override fun getCartProductsInRange(
@@ -31,6 +41,7 @@ class CartProductRepositoryImpl(
     override fun updateProductQuantity(
         productId: Int,
         diff: Int,
+        callback: (Unit) -> Unit,
     ) {
         thread {
             val targetProduct = cartProductDao.getCartProduct(productId)
@@ -40,13 +51,14 @@ class CartProductRepositoryImpl(
                 } else {
                     cartProductDao.updateProduct(productId, diff)
                 }
+                callback(Unit)
             }
         }
     }
 
     override fun getProduct(
         id: Int,
-        callback: (CartProductEntity) -> Unit
+        callback: (CartProductEntity) -> Unit,
     ) {
         thread {
             val product = cartProductDao.getCartProduct(id)

@@ -1,6 +1,7 @@
 package woowacourse.shopping.product.catalog
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import androidx.activity.enableEdgeToEdge
@@ -53,18 +54,20 @@ class CatalogActivity : AppCompatActivity() {
     private fun setupCartMenuItem(menu: Menu?) {
         val menuItem = menu?.findItem(R.id.action_cart) ?: return
 
-        val binding = DataBindingUtil.inflate<MenuCartLayoutBinding>(
-            LayoutInflater.from(this),
-            R.layout.menu_cart_layout,
-            null,
-            false
-        ).apply {
-            layoutCartMenu.setOnClickListener {
-                startActivity(CartActivity.newIntent(this@CatalogActivity))
-            }
-            vm = viewModel
-            lifecycleOwner = this@CatalogActivity
-        }
+        val binding =
+            DataBindingUtil
+                .inflate<MenuCartLayoutBinding>(
+                    LayoutInflater.from(this),
+                    R.layout.menu_cart_layout,
+                    null,
+                    false,
+                ).apply {
+                    layoutCartMenu.setOnClickListener {
+                        startActivity(CartActivity.newIntent(this@CatalogActivity))
+                    }
+                    vm = viewModel
+                    lifecycleOwner = this@CatalogActivity
+                }
 
         menuItem.actionView = binding.root
     }
@@ -82,19 +85,20 @@ class CatalogActivity : AppCompatActivity() {
 
                         override fun onLoadButtonClick() = viewModel.loadNextCatalogProducts()
                     },
-                quantityControlListener = object : QuantityControlListener {
-                    override fun onQuantityChanged(
-                        buttonEvent: ButtonEvent,
-                        product: ProductUiModel
-                    ) {
-                        when (buttonEvent) {
-                            ButtonEvent.INCREASE -> viewModel.increaseQuantity(product.id)
-                            ButtonEvent.DECREASE -> viewModel.decreaseQuantity(product.id)
+                quantityControlListener =
+                    object : QuantityControlListener {
+                        override fun onQuantityChanged(
+                            buttonEvent: ButtonEvent,
+                            product: ProductUiModel,
+                        ) {
+                            when (buttonEvent) {
+                                ButtonEvent.INCREASE -> viewModel.increaseQuantity(product.id)
+                                ButtonEvent.DECREASE -> viewModel.decreaseQuantity(product.id)
+                            }
                         }
-                    }
 
-                    override fun onAdd(product: ProductUiModel) = viewModel.addToCart(product)
-                },
+                        override fun onAdd(product: ProductUiModel) = viewModel.addToCart(product)
+                    },
             )
 
         binding.recyclerViewProducts.adapter = adapter
@@ -107,7 +111,7 @@ class CatalogActivity : AppCompatActivity() {
                 override fun getSpanSize(position: Int): Int =
                     spanSizeByPosition(
                         position,
-                        binding.recyclerViewProducts.adapter?.itemCount ?: 0
+                        binding.recyclerViewProducts.adapter?.itemCount ?: 0,
                     )
             }
         binding.recyclerViewProducts.layoutManager = gridLayoutManager
@@ -130,7 +134,10 @@ class CatalogActivity : AppCompatActivity() {
             binding.recyclerViewRecentlyViewedProducts.adapter as RecentlyViewedProductAdapter
 
         viewModel.catalogItems.observe(this, productsAdapter::setItems)
-        viewModel.updatedItem.observe(this, productsAdapter::updateItem)
+        viewModel.updatedItem.observe(this) {
+            productsAdapter.updateItem(it)
+            Log.d("updatedItem", "show $it")
+        }
         viewModel.recentlyViewedProducts.observe(this, recentProductsAdapter::setItems)
 
         binding.lifecycleOwner = this

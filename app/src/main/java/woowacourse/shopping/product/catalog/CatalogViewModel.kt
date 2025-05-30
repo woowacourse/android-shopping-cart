@@ -1,5 +1,6 @@
 package woowacourse.shopping.product.catalog
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,33 +40,39 @@ class CatalogViewModel(
     }
 
     fun addToCart(product: ProductUiModel) {
-        cartProductRepository.insertCartProduct(product.copy(quantity = 1).toEntity())
-        cartProductRepository.getProduct(product.id) { addedProduct ->
-            _updatedItem.postValue(addedProduct.toUiModel())
-            loadCartItemSize()
+        cartProductRepository.insertCartProduct(product.copy(quantity = 1).toEntity()) {
+            cartProductRepository.getProduct(product.id) { addedProduct ->
+                Log.d("ADDED", "$addedProduct")
+                _updatedItem.postValue(addedProduct.toUiModel())
+                loadCartItemSize()
+            }
         }
     }
 
     fun increaseQuantity(productId: Int) {
-        cartProductRepository.updateProductQuantity(productId, SIZE_ONE)
-        cartProductRepository.getProduct(productId) { product ->
-            _updatedItem.postValue(product.toUiModel())
-            loadCartItemSize()
+        cartProductRepository.updateProductQuantity(productId, SIZE_ONE) {
+            cartProductRepository.getProduct(productId) { product ->
+                _updatedItem.postValue(product.toUiModel())
+                Log.d("updatedItem", "${updatedItem.value}")
+                loadCartItemSize()
+            }
         }
     }
 
     fun decreaseQuantity(productId: Int) {
         cartProductRepository.getProductQuantity(productId) { quantity ->
             if (quantity == SIZE_ONE) {
-                cartProductRepository.deleteCartProduct(productId)
-                val item: CatalogItem =
-                    catalogItems.value?.first { (it as ProductItem).productItem.id == productId }
-                        ?: return@getProductQuantity
-                _updatedItem.postValue((item as ProductItem).productItem.copy(quantity = 0))
+                cartProductRepository.deleteCartProduct(productId) {
+                    val item: CatalogItem =
+                        catalogItems.value?.first { (it as ProductItem).productItem.id == productId }
+                            ?: return@deleteCartProduct
+                    _updatedItem.postValue((item as ProductItem).productItem.copy(quantity = 0))
+                }
             } else {
-                cartProductRepository.updateProductQuantity(productId, -SIZE_ONE)
-                cartProductRepository.getProduct(productId) { product ->
-                    _updatedItem.postValue(product.toUiModel())
+                cartProductRepository.updateProductQuantity(productId, -SIZE_ONE) {
+                    cartProductRepository.getProduct(productId) { product ->
+                        _updatedItem.postValue(product.toUiModel())
+                    }
                 }
             }
             loadCartItemSize()

@@ -1,12 +1,17 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.entity.CartProductEntity
-import woowacourse.shopping.product.catalog.ProductUiModel
 
 interface CartProductRepository {
-    fun insertCartProduct(cartProduct: CartProductEntity)
+    fun insertCartProduct(
+        cartProduct: CartProductEntity,
+        callback: (Unit) -> Unit,
+    )
 
-    fun deleteCartProduct(productId: Int)
+    fun deleteCartProduct(
+        productId: Int,
+        callback: (Unit) -> Unit,
+    )
 
     fun getCartProductsInRange(
         startIndex: Int,
@@ -17,11 +22,12 @@ interface CartProductRepository {
     fun updateProductQuantity(
         productId: Int,
         diff: Int,
+        callback: (Unit) -> Unit,
     )
 
     fun getProduct(
         id: Int,
-        callback: (CartProductEntity) -> Unit
+        callback: (CartProductEntity) -> Unit,
     )
 
     fun getProductQuantity(

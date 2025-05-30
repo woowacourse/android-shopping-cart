@@ -3,8 +3,8 @@ package woowacourse.shopping.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.cart.CartItem.ProductItem
-import woowacourse.shopping.data.mapper.toEntity
 import woowacourse.shopping.data.mapper.toUiModel
 import woowacourse.shopping.data.repository.CartProductRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
@@ -12,8 +12,8 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 class CartViewModel(
     private val cartProductRepository: CartProductRepository,
 ) : ViewModel() {
-    private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
-    val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
+    private val _cartProducts = MutableLiveData<List<CartItem>>()
+    val cartProducts: LiveData<List<CartItem>> = _cartProducts
 
     private val _isNextButtonEnabled = MutableLiveData<Boolean>(false)
     val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
@@ -32,15 +32,15 @@ class CartViewModel(
     }
 
     fun deleteCartProduct(productId: Int) {
-        cartProductRepository.deleteCartProduct(productId)
-
-        cartProductRepository.getAllProductsSize { updatedSize ->
-            val currentPage = page.value ?: INITIAL_PAGE
-            val startIndex = currentPage * PAGE_SIZE
-            if (startIndex >= updatedSize && currentPage > 0) {
-                decreasePage()
+        cartProductRepository.deleteCartProduct(productId) {
+            cartProductRepository.getAllProductsSize { updatedSize ->
+                val currentPage = page.value ?: INITIAL_PAGE
+                val startIndex = currentPage * PAGE_SIZE
+                if (startIndex >= updatedSize && currentPage > 0) {
+                    decreasePage()
+                }
+                loadCartProducts()
             }
-            loadCartProducts()
         }
     }
 
@@ -73,16 +73,20 @@ class CartViewModel(
     ) {
         when (buttonEvent) {
             ButtonEvent.INCREASE -> {
-                cartProductRepository.updateProductQuantity(product.id, -1)
-                cartProductRepository.getProduct(product.id) { product ->
-                    _updatedItem.postValue(product.toUiModel())
+                cartProductRepository.updateProductQuantity(product.id, -1) {
+                    cartProductRepository.getProduct(product.id) { product ->
+                        _updatedItem.postValue(product.toUiModel())
+                        loadCartProducts()
+                    }
                 }
             }
 
             ButtonEvent.DECREASE -> {
-                cartProductRepository.updateProductQuantity(product.id, 1)
-                cartProductRepository.getProduct(product.id) { product ->
-                    _updatedItem.postValue(product.toUiModel())
+                cartProductRepository.updateProductQuantity(product.id, 1) {
+                    cartProductRepository.getProduct(product.id) { product ->
+                        _updatedItem.postValue(product.toUiModel())
+                        loadCartProducts()
+                    }
                 }
             }
         }
@@ -118,10 +122,16 @@ class CartViewModel(
             }
 
             cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
-                val pagedProducts: List<ProductUiModel> =
-                    cartProducts.map { it.toUiModel() }
+                val pagedProducts: List<ProductItem> =
+                    cartProducts.map { ProductItem(it.toUiModel()) }
+                val paginationButton =
+                    PaginationButtonItem(
+                        page = (page.value ?: 0) + 1,
+                        isNextButtonEnabled = isNextButtonEnabled.value ?: false,
+                        isPrevButtonEnabled = isPrevButtonEnabled.value ?: false,
+                    )
 
-                _cartProducts.postValue(pagedProducts)
+                _cartProducts.postValue(pagedProducts + paginationButton)
                 checkNextButtonEnabled(totalSize)
                 checkPrevButtonEnabled()
             }
