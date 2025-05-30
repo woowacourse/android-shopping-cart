@@ -15,7 +15,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.intent.getSerializableExtraData
-import woowacourse.shopping.view.observeToastMessage
 import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -57,7 +56,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         setCloseButtonClickListener()
         observeRecentProductVisibility()
-        observeToastMessage(productDetailViewModel.toastMessage, this)
+        productDetailViewModel.observeToastMessage(this)
         observeAddToCart()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

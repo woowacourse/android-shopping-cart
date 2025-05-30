@@ -14,13 +14,15 @@ import woowacourse.shopping.data.recentProducts.RecentProductsRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.QuantityController
+import woowacourse.shopping.view.ToastMessageHandler
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
     private val recentProductsRepository: RecentProductsRepository,
     val cartItem: CartItem,
 ) : ViewModel(),
-    QuantityController {
+    QuantityController,
+    ToastMessageHandler {
     private val _addToCart = MutableLiveData<Event<Unit>>()
     val addToCart: LiveData<Event<Unit>> = _addToCart
 
@@ -34,7 +36,7 @@ class ProductDetailViewModel(
     val lastProductVisibility: LiveData<Boolean> = _lastProductVisibility
 
     private val _toastMessage = MutableLiveData<Event<Unit>>()
-    val toastMessage: LiveData<Event<Unit>> = _toastMessage
+    override val toastMessage: LiveData<Event<Unit>> = _toastMessage
 
     override fun increaseQuantity(
         productId: Long,

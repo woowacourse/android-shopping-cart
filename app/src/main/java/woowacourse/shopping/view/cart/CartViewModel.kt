@@ -15,11 +15,13 @@ import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.Event
 import woowacourse.shopping.view.QuantityController
+import woowacourse.shopping.view.ToastMessageHandler
 
 class CartViewModel(
     private val cartRepository: CartRepository,
 ) : ViewModel(),
-    QuantityController {
+    QuantityController,
+    ToastMessageHandler {
     private val _currentPageNumber = MutableLiveData(INITIAL_PAGE)
     val currentPageNumber: LiveData<Int> = _currentPageNumber
 
@@ -39,7 +41,7 @@ class CartViewModel(
     val finishCart: LiveData<Event<Unit>> = _finishCart
 
     private val _toastMessage = MutableLiveData<Event<Unit>>()
-    val toastMessage: LiveData<Event<Unit>> = _toastMessage
+    override val toastMessage: LiveData<Event<Unit>> = _toastMessage
 
     private var cachedItems: List<CartItem> = emptyList()
 
