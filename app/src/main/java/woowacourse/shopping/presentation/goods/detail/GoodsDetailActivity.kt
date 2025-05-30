@@ -28,7 +28,10 @@ class GoodsDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        viewModel.setGoodsAndLast(getGoodsId(), getLastGoodsId())
+        viewModel.setGoodsAndLast(getGoodsId(), getLastGoodsId()).onFailure {
+            Toast.makeText(this, R.string.error_no_goods, Toast.LENGTH_SHORT).show()
+            finish()
+        }
 
         setUpBinding()
 

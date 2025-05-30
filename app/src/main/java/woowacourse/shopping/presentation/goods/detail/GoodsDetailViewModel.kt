@@ -33,10 +33,15 @@ class GoodsDetailViewModel(
     fun setGoodsAndLast(
         id: Int,
         lastId: Int?,
-    ) {
-        goodsRepository.getById(id) {
-            _goods.postValue(it?.updateQuantity(MIN_PURCHASE_QUANTITY))
-            setLastGoods(id, lastId)
+    ): Result<Unit> {
+        return runCatching {
+            goodsRepository.getById(
+                id,
+                onSuccess = {
+                    _goods.postValue(it?.updateQuantity(MIN_PURCHASE_QUANTITY))
+                    setLastGoods(id, lastId)
+                },
+            )
         }
     }
 

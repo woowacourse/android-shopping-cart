@@ -6,9 +6,9 @@ interface GoodsService {
     fun getPagedGoods(
         page: Int,
         count: Int,
-    ): List<GoodsEntity>
+    ): Result<List<GoodsEntity>>
 
-    fun getGoodsById(id: Int): GoodsEntity?
+    fun getGoodsById(id: Int): Result<GoodsEntity?>
 
-    fun getGoodsListByIds(id: List<Int>): List<GoodsEntity>
+    fun getGoodsListByIds(id: List<Int>): Result<List<GoodsEntity>>
 }

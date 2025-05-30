@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.repository
 
+import android.util.Log
 import woowacourse.shopping.data.entity.toGoods
 import woowacourse.shopping.data.service.GoodsService
 import woowacourse.shopping.domain.model.Goods
@@ -14,7 +15,12 @@ class GoodsRepositoryImpl(
         onSuccess: (Goods?) -> Unit,
     ) {
         thread {
-            onSuccess(goodsService.getGoodsById(id)?.toGoods())
+            val result = goodsService.getGoodsById(id)
+            result.onSuccess { goodsEntity ->
+                onSuccess(goodsEntity?.toGoods())
+            }.onFailure {
+                Log.e(TAG, it.message ?: ERROR_LOAD_FAIL.format("getById"))
+            }.getOrThrow()
         }
     }
 
@@ -24,11 +30,12 @@ class GoodsRepositoryImpl(
         onSuccess: (List<Goods>) -> Unit,
     ) {
         thread {
-            onSuccess(
-                goodsService.getPagedGoods(page, count).map {
-                    it.toGoods() ?: throw Exception()
-                },
-            )
+            val result = goodsService.getPagedGoods(page, count)
+            result.onSuccess { goodsEntity ->
+                onSuccess(goodsEntity.map { it.toGoods() ?: throw Exception(ERROR_CONVERT_FAIL) })
+            }.onFailure {
+                Log.e(TAG, it.message ?: ERROR_LOAD_FAIL.format("getPagedGoods"))
+            }
         }
     }
 
@@ -37,11 +44,18 @@ class GoodsRepositoryImpl(
         onSuccess: (List<Goods>) -> Unit,
     ) {
         thread {
-            onSuccess(
-                goodsService.getGoodsListByIds(ids).map {
-                    it.toGoods() ?: throw Exception()
-                },
-            )
+            val result = goodsService.getGoodsListByIds(ids)
+            result.onSuccess { goodsEntity ->
+                onSuccess(goodsEntity.map { it.toGoods() ?: throw Exception(ERROR_CONVERT_FAIL) })
+            }.onFailure {
+                Log.e(TAG, it.message ?: ERROR_LOAD_FAIL.format("getGoodsListByIds"))
+            }
         }
+    }
+
+    companion object {
+        private const val TAG = "GoodsRepositoryImpl"
+        private const val ERROR_CONVERT_FAIL = "Goods 변환 실패"
+        private const val ERROR_LOAD_FAIL = "%s: 서버 요청 실패"
     }
 }

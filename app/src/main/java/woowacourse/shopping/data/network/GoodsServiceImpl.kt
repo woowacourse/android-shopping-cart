@@ -2,18 +2,18 @@ package woowacourse.shopping.data.network
 
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import woowacourse.shopping.data.entity.GoodsEntity
 import woowacourse.shopping.data.service.GoodsService
+import java.io.IOException
 
 class GoodsServiceImpl : GoodsService {
     override fun getPagedGoods(
         page: Int,
         count: Int,
-    ): List<GoodsEntity> {
+    ): Result<List<GoodsEntity>> {
         val url =
             BASE_URL.toHttpUrl()
                 .newBuilder()
@@ -23,16 +23,13 @@ class GoodsServiceImpl : GoodsService {
                 .addQueryParameter(PARAM_COUNT, count.toString())
                 .build()
 
-        val body = executeRequest(url)
-        return try {
+        return runCatching {
+            val body = executeRequest(url)
             gson.fromJson(body, Array<GoodsEntity>::class.java).toList()
-        } catch (e: JsonSyntaxException) {
-            Log.e("GoodsServiceImpl", "JSON 파싱 실패: ${e.message}")
-            emptyList()
         }
     }
 
-    override fun getGoodsById(id: Int): GoodsEntity? {
+    override fun getGoodsById(id: Int): Result<GoodsEntity?> {
         val url =
             BASE_URL.toHttpUrl()
                 .newBuilder()
@@ -40,16 +37,13 @@ class GoodsServiceImpl : GoodsService {
                 .addQueryParameter(PARAM_ID, id.toString())
                 .build()
 
-        val body = executeRequest(url)
-        return try {
+        return runCatching {
+            val body = executeRequest(url)
             gson.fromJson(body, GoodsEntity::class.java)
-        } catch (e: JsonSyntaxException) {
-            Log.e("GoodsServiceImpl", "JSON 파싱 실패 (상품 ID: $id): ${e.message}")
-            null
         }
     }
 
-    override fun getGoodsListByIds(id: List<Int>): List<GoodsEntity> {
+    override fun getGoodsListByIds(id: List<Int>): Result<List<GoodsEntity>> {
         val url =
             BASE_URL.toHttpUrl()
                 .newBuilder()
@@ -58,12 +52,9 @@ class GoodsServiceImpl : GoodsService {
                 .addQueryParameter(PARAM_ID, id.joinToString())
                 .build()
 
-        val body = executeRequest(url)
-        return try {
+        return kotlin.runCatching {
+            val body = executeRequest(url)
             gson.fromJson(body, Array<GoodsEntity>::class.java).toList()
-        } catch (e: JsonSyntaxException) {
-            Log.e("GoodsServiceImpl", "JSON 파싱 실패 (상품 ID: $id): ${e.message}")
-            emptyList()
         }
     }
 
@@ -76,15 +67,16 @@ class GoodsServiceImpl : GoodsService {
         return try {
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
-                    Log.e("GoodsDaoImpl", "요청 실패: ${response.code}")
-                    null
+                    val message = "요청 실패: ${response.code}"
+                    Log.e(TAG, message)
+                    throw IOException(message)
                 } else {
                     response.body?.string()?.trim()
                 }
             }
         } catch (e: Exception) {
-            Log.e("GoodsDaoImpl", "요청 예외 발생: ${e.message}")
-            null
+            Log.e(TAG, "요청 예외 발생: ${e.message}")
+            throw e
         }
     }
 
@@ -94,6 +86,7 @@ class GoodsServiceImpl : GoodsService {
         private val client = OkHttpClient()
         private const val BASE_URL: String = "http://localhost:8888"
 
+        private const val TAG: String = "GoodsDaoImpl"
         private const val PARAM_ID: String = "id"
         private const val PARAM_PAGE: String = "page"
         private const val PARAM_COUNT: String = "count"
