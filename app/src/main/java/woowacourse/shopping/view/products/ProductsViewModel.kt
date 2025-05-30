@@ -151,13 +151,24 @@ class ProductsViewModel(
 
     fun addRecentProduct(cartItem: CartItem) {
         val recentProduct = cartItem.product
-        recentProductsRepository.add(recentProduct)
-        _recentProducts.value = _recentProducts.value?.plus(cartItem.product)
+        recentProductsRepository.add(recentProduct) { result ->
+            result
+                .onSuccess {
+                    _recentProducts.postValue(_recentProducts.value?.plus(cartItem.product))
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
+        }
     }
 
     private fun setRecentProducts() {
-        recentProductsRepository.getAll { recentProducts ->
-            _recentProducts.postValue(recentProducts)
+        recentProductsRepository.getAll { result ->
+            result
+                .onSuccess { recentProducts ->
+                    _recentProducts.postValue(recentProducts)
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
         }
     }
 

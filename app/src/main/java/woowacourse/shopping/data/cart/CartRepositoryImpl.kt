@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.cart
 
+import woowacourse.shopping.data.runAsyncResult
 import woowacourse.shopping.model.cart.CartItem
 import kotlin.concurrent.thread
 
@@ -63,20 +64,5 @@ class CartRepositoryImpl(
         callback: (Result<Int>) -> Unit,
     ) {
         runAsyncResult(function = { cartDao.findQuantityById(productId) }, callback)
-    }
-
-    private fun <T> runAsyncResult(
-        function: () -> T,
-        callback: (Result<T>) -> Unit,
-    ) {
-        thread {
-            runCatching {
-                function()
-            }.onSuccess {
-                callback(Result.success(it))
-            }.onFailure {
-                callback(Result.failure(it))
-            }
-        }
     }
 }

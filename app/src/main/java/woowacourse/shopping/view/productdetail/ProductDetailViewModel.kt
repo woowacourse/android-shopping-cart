@@ -85,8 +85,13 @@ class ProductDetailViewModel(
 
     fun setLastProductTitle() {
         setLastProductVisibility()
-        recentProductsRepository.getSecondMostRecentProduct {
-            _lastProductTitle.postValue(it.title)
+        recentProductsRepository.getSecondMostRecentProduct { result ->
+            result
+                .onSuccess {
+                    _lastProductTitle.postValue(it.title)
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
         }
     }
 

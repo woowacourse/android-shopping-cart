@@ -2,20 +2,24 @@ package woowacourse.shopping.data.recentProducts
 
 import woowacourse.shopping.data.cart.toEntity
 import woowacourse.shopping.data.cart.toProduct
+import woowacourse.shopping.data.runAsyncResult
 import woowacourse.shopping.model.product.Product
 
 class RecentProductsRepositoryImpl(
     private val recentProductDao: RecentProductDao,
 ) : RecentProductsRepository {
-    override fun getAll(callback: (List<Product>) -> Unit) {
-        Thread {
-            val values = recentProductDao.getAll().map { it.toProduct() }
-            callback(values)
-        }.start()
+    override fun getAll(callback: (Result<List<Product>>) -> Unit) {
+        runAsyncResult(
+            function = { recentProductDao.getAll().map { it.toProduct() } },
+            callback,
+        )
     }
 
-    override fun add(product: Product) {
-        Thread {
+    override fun add(
+        product: Product,
+        callback: (Result<Unit>) -> Unit,
+    ) {
+        runAsyncResult(function = {
             val existing = recentProductDao.findRecentProductById(product.id)
             if (existing == null) {
                 val allProducts = recentProductDao.getAll()
@@ -29,45 +33,44 @@ class RecentProductsRepositoryImpl(
             } else {
                 recentProductDao.updateViewedTime(product.id)
             }
-        }.start()
+        }, callback)
     }
 
     override fun remove(
         productId: Long,
-        callback: () -> Unit,
+        callback: (Result<Unit>) -> Unit,
     ) {
-        Thread {
-        }.start()
+        runAsyncResult(function = { recentProductDao.delete(productId) }, callback)
     }
 
-    override fun getSecondMostRecentProduct(callback: (Product) -> Unit) {
-        Thread {
-            val value = recentProductDao.getSecondMostRecentProduct()
-            if (value != null) callback(value.toProduct())
-        }.start()
+    override fun getSecondMostRecentProduct(callback: (Result<Product>) -> Unit) {
+        runAsyncResult(
+            function = { recentProductDao.getSecondMostRecentProduct()?.toProduct() },
+            callback,
+        )
     }
 
-    override fun getMostRecentProduct(callback: (Product) -> Unit) {
-        Thread {
-            val value = recentProductDao.getMostRecentProduct()
-            if (value != null) callback(value.toProduct())
-        }.start()
+    override fun getMostRecentProduct(callback: (Result<Product>) -> Unit) {
+        runAsyncResult(
+            function = { recentProductDao.getMostRecentProduct()?.toProduct() },
+            callback,
+        )
     }
 
-    override fun update(productId: Long) {
-        Thread {
-            recentProductDao.updateViewedTime(productId)
-        }.start()
+    override fun update(
+        productId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
+        runAsyncResult(function = { recentProductDao.updateViewedTime(productId) }, callback)
     }
 
     override fun findRecentProductById(
         productId: Long,
-        callback: (Product) -> Unit,
+        callback: (Result<Product>) -> Unit,
     ) {
-        Thread {
-            val value = recentProductDao.findRecentProductById(productId)
-            if (value != null) callback(value.toProduct())
-        }
+        runAsyncResult(function = {
+            recentProductDao.findRecentProductById(productId)?.toProduct()
+        }, callback)
     }
 
     companion object {
