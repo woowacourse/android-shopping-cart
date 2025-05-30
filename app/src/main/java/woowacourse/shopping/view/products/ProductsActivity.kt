@@ -15,6 +15,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.model.cart.CartItem
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.observeToastMessage
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 import woowacourse.shopping.view.recentproduct.RecentProductsAdapter
 
@@ -34,6 +35,7 @@ class ProductsActivity : AppCompatActivity() {
         observeRecentProductsView()
         observeProductsView()
         observeCartButton()
+        observeToastMessage(productsViewModel.toastMessage, this)
         setupScrollListenerForMoreButton()
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

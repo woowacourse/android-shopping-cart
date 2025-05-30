@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.view.observeToastMessage
 import woowacourse.shopping.view.products.QuantitySelectButtonListener
 
 class CartActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class CartActivity : AppCompatActivity() {
         initRecyclerView()
         observeLoadedProducts()
         observeFinishCartButton()
+        observeToastMessage(cartViewModel.toastMessage, this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

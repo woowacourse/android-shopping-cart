@@ -40,6 +40,9 @@ class ProductsViewModel(
     private val _recentProducts = MutableLiveData<List<Product>>()
     val recentProducts: LiveData<List<Product>> = _recentProducts
 
+    private val _toastMessage = MutableLiveData<Event<Unit>>()
+    val toastMessage: LiveData<Event<Unit>> = _toastMessage
+
     private var isAllProductsFetched = false
     private var currentPage = INITIAL_PAGE
     private val loadedItems = mutableListOf<CartItem>()
@@ -78,19 +81,29 @@ class ProductsViewModel(
     }
 
     override fun updateQuantity() {
-        cartRepository.getAll { cartItems ->
+        cartRepository.getAll { result ->
             val allProducts = _productsInShop.value?.toMutableList() ?: return@getAll
-            cartItems.forEach { cartItem ->
-                val index = allProducts.indexOfFirst { it.product.id == cartItem.product.id }
-                val product = allProducts[index]
-                if (cartItem.quantity != product.quantity) {
-                    allProducts[index] = product.copy(quantity = cartItem.quantity)
+            result
+                .onSuccess { cartItems ->
+                    cartItems.forEach { cartItem ->
+                        val index =
+                            allProducts.indexOfFirst { it.product.id == cartItem.product.id }
+                        val product = allProducts[index]
+                        if (cartItem.quantity != product.quantity) {
+                            allProducts[index] = product.copy(quantity = cartItem.quantity)
+                        }
+                    }
+                    _productsInShop.postValue(allProducts)
+                    _productsInShop.value?.forEach {
+                        cartRepository.update(it.product.id, it.quantity) { result ->
+                            result.onSuccess {
+                                return@update
+                            }
+                        }
+                    }
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
                 }
-            }
-            _productsInShop.postValue(allProducts)
-            _productsInShop.value?.forEach {
-                cartRepository.update(it.product.id, it.quantity)
-            }
         }
     }
 
@@ -126,8 +139,13 @@ class ProductsViewModel(
     }
 
     fun onOpenQuantitySelectClick(cartItem: CartItem) {
-        cartRepository.add(cartItem) {
-            updateCartItemCount()
+        cartRepository.add(cartItem) { result ->
+            result
+                .onSuccess {
+                    updateCartItemCount()
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
         }
     }
 
@@ -144,8 +162,13 @@ class ProductsViewModel(
     }
 
     private fun updateCartItemCount() {
-        cartRepository.getAll { cartItems ->
-            _cartItemCount.postValue(cartItems.size)
+        cartRepository.getAll { result ->
+            result
+                .onSuccess {
+                    _cartItemCount.postValue(it.size)
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
         }
     }
 
@@ -159,17 +182,22 @@ class ProductsViewModel(
         }
 
         loadedItems.forEach { cartItem ->
-            cartRepository.findQuantityById(cartItem.product.id) { quantity ->
-                val updated = cartItem.copy(quantity = quantity)
+            cartRepository.findQuantityById(cartItem.product.id) { result ->
+                result
+                    .onSuccess { quantity ->
+                        val updated = cartItem.copy(quantity = quantity)
 
-                synchronized(updatedList) {
-                    updatedList.add(updated)
-                    completedCount++
+                        synchronized(updatedList) {
+                            updatedList.add(updated)
+                            completedCount++
 
-                    if (completedCount == loadedItems.size) {
-                        _productsInShop.postValue(updatedList)
+                            if (completedCount == loadedItems.size) {
+                                _productsInShop.postValue(updatedList)
+                            }
+                        }
+                    }.onFailure {
+                        _toastMessage.postValue(Event(Unit))
                     }
-                }
             }
         }
     }

@@ -38,13 +38,21 @@ class CartViewModel(
     private val _finishCart = MutableLiveData<Event<Unit>>()
     val finishCart: LiveData<Event<Unit>> = _finishCart
 
+    private val _toastMessage = MutableLiveData<Event<Unit>>()
+    val toastMessage: LiveData<Event<Unit>> = _toastMessage
+
     private var cachedItems: List<CartItem> = emptyList()
 
     private fun loadAllItemsAndThen(action: () -> Unit) {
-        cartRepository.getAll { allItems ->
-            _cartItems.postValue(allItems)
-            cachedItems = allItems
-            action()
+        cartRepository.getAll { result ->
+            result
+                .onSuccess { allItems ->
+                    _cartItems.postValue(allItems)
+                    cachedItems = allItems
+                    action()
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
         }
     }
 
@@ -87,16 +95,28 @@ class CartViewModel(
 
     override fun updateQuantity() {
         _cartItems.value?.forEach {
-            cartRepository.update(it.product.id, it.quantity)
+            cartRepository.update(it.product.id, it.quantity) { result ->
+                result
+                    .onSuccess {
+                        return@update
+                    }.onFailure {
+                        _toastMessage.postValue(Event(Unit))
+                    }
+            }
         }
     }
 
     fun removeFromCart(cartItem: CartItem) {
-        cartRepository.remove(cartItem.product.id) {
-            loadAllItemsAndThen {
-                if (!existPage()) _currentPageNumber.postValue(minusPageNumber())
-                loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
-            }
+        cartRepository.remove(cartItem.product.id) { result ->
+            result
+                .onSuccess {
+                    loadAllItemsAndThen {
+                        if (!existPage()) _currentPageNumber.postValue(minusPageNumber())
+                        loadPage(_currentPageNumber.value ?: INITIAL_PAGE)
+                    }
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
         }
     }
 

@@ -33,6 +33,9 @@ class ProductDetailViewModel(
     private val _lastProductVisibility = MutableLiveData<Boolean>()
     val lastProductVisibility: LiveData<Boolean> = _lastProductVisibility
 
+    private val _toastMessage = MutableLiveData<Event<Unit>>()
+    val toastMessage: LiveData<Event<Unit>> = _toastMessage
+
     override fun increaseQuantity(
         productId: Long,
         quantityIncrease: Int,
@@ -57,13 +60,27 @@ class ProductDetailViewModel(
     override fun updateQuantity() {
         val productId = cartItem.product.id
         val quantity = _quantity.value ?: INIT_QUANTITY
-        cartRepository.update(productId, quantity)
+        cartRepository.update(productId, quantity) { result ->
+            result
+                .onSuccess {
+                    return@update
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
+        }
     }
 
     fun onAddToCartClicked() {
         val newCartItem = cartItem.copy(quantity = _quantity.value ?: INIT_QUANTITY)
         _addToCart.value = Event(Unit)
-        cartRepository.add(newCartItem) {}
+        cartRepository.add(newCartItem) { result ->
+            result
+                .onSuccess {
+                    return@add
+                }.onFailure {
+                    _toastMessage.postValue(Event(Unit))
+                }
+        }
     }
 
     fun setLastProductTitle() {

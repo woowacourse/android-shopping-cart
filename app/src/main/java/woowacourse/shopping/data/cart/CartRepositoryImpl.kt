@@ -1,79 +1,82 @@
 package woowacourse.shopping.data.cart
 
-import android.os.Handler
-import android.os.Looper
 import woowacourse.shopping.model.cart.CartItem
+import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDao: CartDao,
 ) : CartRepository {
-    override fun getAll(callback: (List<CartItem>) -> Unit) {
-        Thread {
-            val values = cartDao.getAll().map { it.toCartItem() }
-            callback(values)
-        }.start()
+    override fun getAll(callback: (Result<List<CartItem>>) -> Unit) {
+        runAsyncResult(function = {
+            cartDao.getAll().map { it.toCartItem() }
+        }, callback)
     }
 
     override fun add(
         cartItem: CartItem,
-        callback: () -> Unit,
+        callback: (Result<Unit>) -> Unit,
     ) {
-        Thread {
+        runAsyncResult(function = {
             val existing = cartDao.findItemById(cartItem.product.id)
             if (existing == null) {
                 cartDao.insert(cartItem.toEntity())
             } else {
                 cartDao.update(cartItem.product.id, cartItem.quantity)
             }
-            Handler(Looper.getMainLooper()).post {
-                callback()
-            }
-        }.start()
+        }, callback)
     }
 
     override fun remove(
         productId: Long,
-        callback: () -> Unit,
+        callback: (Result<Unit>) -> Unit,
     ) {
-        Thread {
-            cartDao.delete(productId)
-            callback()
-        }.start()
+        runAsyncResult(function = { cartDao.delete(productId) }, callback)
     }
 
     override fun update(
         productId: Long,
         quantityIncrease: Int,
+        callback: (Result<Unit>) -> Unit,
     ) {
-        Thread {
-            cartDao.update(productId, quantityIncrease)
-        }.start()
+        runAsyncResult(function = { cartDao.update(productId, quantityIncrease) }, callback)
     }
 
     override fun fetchProducts(
         offset: Int,
         limit: Int,
-        callback: (List<CartItem>) -> Unit,
+        callback: (Result<List<CartItem>>) -> Unit,
     ) {
-        Thread {
-            val values = cartDao.fetchProducts(offset, limit).map { it.toCartItem() }
-            callback(values)
-        }.start()
+        runAsyncResult(
+            function = { cartDao.fetchProducts(offset, limit).map { it.toCartItem() } },
+            callback,
+        )
     }
 
     override fun clear() {
-        Thread {
+        thread {
             cartDao.clear()
-        }.start()
+        }
     }
 
     override fun findQuantityById(
         productId: Long,
-        callback: (Int) -> Unit,
+        callback: (Result<Int>) -> Unit,
     ) {
-        Thread {
-            val value = cartDao.findQuantityById(productId)
-            callback(value)
-        }.start()
+        runAsyncResult(function = { cartDao.findQuantityById(productId) }, callback)
+    }
+
+    private fun <T> runAsyncResult(
+        function: () -> T,
+        callback: (Result<T>) -> Unit,
+    ) {
+        thread {
+            runCatching {
+                function()
+            }.onSuccess {
+                callback(Result.success(it))
+            }.onFailure {
+                callback(Result.failure(it))
+            }
+        }
     }
 }
