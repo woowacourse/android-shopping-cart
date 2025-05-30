@@ -81,15 +81,19 @@ class CatalogActivity : AppCompatActivity() {
                         }
 
                         override fun onLoadButtonClick() = viewModel.loadNextCatalogProducts()
-
-                        override fun onQuantityAddClick(product: ProductUiModel) =
-                            viewModel.increaseQuantity(product)
                     },
-                quantityControlListener = { buttonEvent, product ->
-                    when (buttonEvent) {
-                        ButtonEvent.INCREASE -> viewModel.increaseQuantity(product)
-                        ButtonEvent.DECREASE -> viewModel.decreaseQuantity(product)
+                quantityControlListener = object : QuantityControlListener {
+                    override fun onQuantityChanged(
+                        buttonEvent: ButtonEvent,
+                        product: ProductUiModel
+                    ) {
+                        when (buttonEvent) {
+                            ButtonEvent.INCREASE -> viewModel.increaseQuantity(product.id)
+                            ButtonEvent.DECREASE -> viewModel.decreaseQuantity(product.id)
+                        }
                     }
+
+                    override fun onAdd(product: ProductUiModel) = viewModel.addToCart(product)
                 },
             )
 

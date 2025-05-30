@@ -31,8 +31,8 @@ class CartViewModel(
         loadCartProducts()
     }
 
-    fun deleteCartProduct(cartProduct: ProductItem) {
-        cartProductRepository.deleteCartProduct(cartProduct.productItem.toEntity())
+    fun deleteCartProduct(productId: Int) {
+        cartProductRepository.deleteCartProduct(productId)
 
         cartProductRepository.getAllProductsSize { updatedSize ->
             val currentPage = page.value ?: INITIAL_PAGE
@@ -73,14 +73,16 @@ class CartViewModel(
     ) {
         when (buttonEvent) {
             ButtonEvent.INCREASE -> {
-                cartProductRepository.updateProduct(product.toEntity(), -1) { product ->
-                    _updatedItem.postValue(product?.toUiModel())
+                cartProductRepository.updateProductQuantity(product.id, -1)
+                cartProductRepository.getProduct(product.id) { product ->
+                    _updatedItem.postValue(product.toUiModel())
                 }
             }
 
             ButtonEvent.DECREASE -> {
-                cartProductRepository.updateProduct(product.toEntity(), 1) { product ->
-                    _updatedItem.postValue(product?.toUiModel())
+                cartProductRepository.updateProductQuantity(product.id, 1)
+                cartProductRepository.getProduct(product.id) { product ->
+                    _updatedItem.postValue(product.toUiModel())
                 }
             }
         }

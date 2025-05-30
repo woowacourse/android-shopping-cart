@@ -2,9 +2,11 @@ package woowacourse.shopping.product.catalog
 
 import woowacourse.shopping.cart.ButtonEvent
 
-fun interface QuantityControlListener {
-    fun onClick(
+interface QuantityControlListener {
+    fun onQuantityChanged(
         buttonEvent: ButtonEvent,
         product: ProductUiModel,
     )
+
+    fun onAdd(product: ProductUiModel)
 }

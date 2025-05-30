@@ -1,7 +1,9 @@
 package woowacourse.shopping.data.repository
 
+import androidx.annotation.IdRes
 import woowacourse.shopping.data.dao.CartProductDao
 import woowacourse.shopping.data.entity.CartProductEntity
+import woowacourse.shopping.product.catalog.ProductUiModel
 import kotlin.concurrent.thread
 
 class CartProductRepositoryImpl(
@@ -11,8 +13,8 @@ class CartProductRepositoryImpl(
         thread { cartProductDao.insertCartProduct(cartProduct) }
     }
 
-    override fun deleteCartProduct(cartProduct: CartProductEntity) {
-        thread { cartProductDao.deleteCartProduct(cartProduct) }
+    override fun deleteCartProduct(productId: Int) {
+        thread { cartProductDao.deleteCartProduct(productId) }
     }
 
     override fun getCartProductsInRange(
@@ -26,23 +28,29 @@ class CartProductRepositoryImpl(
         }
     }
 
-    override fun updateProduct(
-        cartProductEntity: CartProductEntity,
+    override fun updateProductQuantity(
+        productId: Int,
         diff: Int,
-        callback: (CartProductEntity?) -> Unit,
     ) {
         thread {
-            val targetProduct = cartProductDao.getCartProduct(cartProductEntity.uid)
-            if (targetProduct == null) {
-                cartProductDao.insertCartProduct(cartProductEntity.copy(quantity = 1))
-            } else if (targetProduct.quantity == 1 && diff == -1) {
-                return@thread
-            } else {
-                cartProductDao.updateProduct(cartProductEntity.uid, diff)
+            val targetProduct = cartProductDao.getCartProduct(productId)
+            targetProduct?.let {
+                if (targetProduct.quantity == 1 && diff == -1) {
+                    return@thread
+                } else {
+                    cartProductDao.updateProduct(productId, diff)
+                }
             }
+        }
+    }
 
-            val updatedProduct = cartProductDao.getCartProduct(cartProductEntity.uid)
-            callback(updatedProduct)
+    override fun getProduct(
+        id: Int,
+        callback: (CartProductEntity) -> Unit
+    ) {
+        thread {
+            val product = cartProductDao.getCartProduct(id)
+            product?.let { callback(it) }
         }
     }
 

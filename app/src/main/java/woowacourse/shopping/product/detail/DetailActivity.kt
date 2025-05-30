@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.cart.ButtonEvent
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
 import woowacourse.shopping.product.catalog.QuantityControlListener
@@ -54,8 +55,13 @@ class DetailActivity : AppCompatActivity() {
 
     private fun bindListeners() {
         binding.layoutQuantityControlBar.quantityControlListener =
-            QuantityControlListener { buttonEvent, _ ->
-                viewModel.updateQuantity(buttonEvent)
+            object : QuantityControlListener {
+                override fun onQuantityChanged(
+                    buttonEvent: ButtonEvent,
+                    product: ProductUiModel
+                ) = viewModel.updateQuantity(buttonEvent)
+
+                override fun onAdd(product: ProductUiModel) = Unit
             }
         binding.layoutLatestViewedProduct.latestViewedProductClickListener =
             LatestViewedProductClickListener { product ->

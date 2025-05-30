@@ -38,21 +38,34 @@ class CatalogViewModel(
         }
     }
 
-    fun increaseQuantity(product: ProductUiModel) {
-        cartProductRepository.updateProduct(product.toEntity(), 1) { updatedProduct ->
-            _updatedItem.postValue(updatedProduct?.toUiModel())
+    fun addToCart(product: ProductUiModel) {
+        cartProductRepository.insertCartProduct(product.copy(quantity = 1).toEntity())
+        cartProductRepository.getProduct(product.id) { addedProduct ->
+            _updatedItem.postValue(addedProduct.toUiModel())
             loadCartItemSize()
         }
     }
 
-    fun decreaseQuantity(product: ProductUiModel) {
-        cartProductRepository.getProductQuantity(product.id) { quantity ->
-            if (quantity == 1) {
-                cartProductRepository.deleteCartProduct(product.toEntity().copy(quantity = 1))
-                _updatedItem.postValue(product.copy(quantity = 0))
+    fun increaseQuantity(productId: Int) {
+        cartProductRepository.updateProductQuantity(productId, SIZE_ONE)
+        cartProductRepository.getProduct(productId) { product ->
+            _updatedItem.postValue(product.toUiModel())
+            loadCartItemSize()
+        }
+    }
+
+    fun decreaseQuantity(productId: Int) {
+        cartProductRepository.getProductQuantity(productId) { quantity ->
+            if (quantity == SIZE_ONE) {
+                cartProductRepository.deleteCartProduct(productId)
+                val item: CatalogItem =
+                    catalogItems.value?.first { (it as ProductItem).productItem.id == productId }
+                        ?: return@getProductQuantity
+                _updatedItem.postValue((item as ProductItem).productItem.copy(quantity = 0))
             } else {
-                cartProductRepository.updateProduct(product.toEntity(), -1) { updatedProduct ->
-                    _updatedItem.postValue(updatedProduct?.toUiModel())
+                cartProductRepository.updateProductQuantity(productId, -SIZE_ONE)
+                cartProductRepository.getProduct(productId) { product ->
+                    _updatedItem.postValue(product.toUiModel())
                 }
             }
             loadCartItemSize()
@@ -135,5 +148,6 @@ class CatalogViewModel(
     companion object {
         private const val PAGE_SIZE = 20
         private const val INITIAL_PAGE = 0
+        private const val SIZE_ONE = 1
     }
 }

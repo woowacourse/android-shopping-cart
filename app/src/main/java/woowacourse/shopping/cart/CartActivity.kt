@@ -14,6 +14,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.cart.CartItem.PaginationButtonItem
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.product.catalog.ProductUiModel
+import woowacourse.shopping.product.catalog.QuantityControlListener
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -43,10 +44,17 @@ class CartActivity : AppCompatActivity() {
                 cartItems = emptyList(),
                 onDeleteProductClick =
                     DeleteProductClickListener { product ->
-                        viewModel.deleteCartProduct(CartItem.ProductItem(product))
+                        viewModel.deleteCartProduct(product.id)
                     },
                 onPaginationButtonClick = viewModel::onPaginationButtonClick,
-                onQuantityControl = viewModel::updateQuantity,
+                onQuantityControl = object : QuantityControlListener {
+                    override fun onQuantityChanged(
+                        buttonEvent: ButtonEvent,
+                        product: ProductUiModel
+                    ) = viewModel.updateQuantity(buttonEvent, product)
+
+                    override fun onAdd(product: ProductUiModel) = Unit
+                }
             )
     }
 
