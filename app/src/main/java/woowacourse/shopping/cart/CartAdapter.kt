@@ -23,9 +23,19 @@ class CartAdapter(
     }
 
     fun setCartItem(product: ProductUiModel) {
-        val index = cartItems.filterIsInstance<ProductItem>().indexOfFirst { it.productItem.id == product.id }
+        val index =
+            cartItems
+                .filterIsInstance<ProductItem>()
+                .indexOfFirst { it.productItem.id == product.id }
         cartItems[index] = ProductItem(product)
         notifyItemChanged(index)
+    }
+
+    fun setButton(buttonItem: PaginationButtonItem) {
+        if (cartItems.isNotEmpty()) {
+            cartItems[cartItems.lastIndex] = buttonItem
+            notifyItemChanged(cartItems.lastIndex)
+        }
     }
 
     override fun onCreateViewHolder(

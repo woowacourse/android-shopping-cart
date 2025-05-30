@@ -27,6 +27,9 @@ class CartViewModel(
     private val _updatedItem = MutableLiveData<ProductUiModel>()
     val updatedItem: LiveData<ProductUiModel> = _updatedItem
 
+    private val _updateButton = MutableLiveData<PaginationButtonItem>()
+    val updateButton: LiveData<PaginationButtonItem> = _updateButton
+
     init {
         loadCartProducts()
     }
@@ -91,6 +94,10 @@ class CartViewModel(
         }
     }
 
+    fun updateButton() {
+        _updateButton.postValue(getPaginationButton())
+    }
+
     private fun checkNextButtonEnabled(totalSize: Int) {
         val currentPage = page.value ?: INITIAL_PAGE
         val lastPage = (totalSize - 1) / PAGE_SIZE
@@ -123,12 +130,7 @@ class CartViewModel(
             cartProductRepository.getCartProductsInRange(startIndex, endIndex) { cartProducts ->
                 val pagedProducts: List<ProductItem> =
                     cartProducts.map { ProductItem(it.toUiModel()) }
-                val paginationButton =
-                    PaginationButtonItem(
-                        page = (page.value ?: 0) + 1,
-                        isNextButtonEnabled = isNextButtonEnabled.value ?: false,
-                        isPrevButtonEnabled = isPrevButtonEnabled.value ?: false,
-                    )
+                val paginationButton = getPaginationButton()
 
                 _cartProducts.postValue(pagedProducts + paginationButton)
                 checkNextButtonEnabled(totalSize)
@@ -136,6 +138,13 @@ class CartViewModel(
             }
         }
     }
+
+    private fun getPaginationButton(): PaginationButtonItem =
+        PaginationButtonItem(
+            page = (page.value ?: 0) + 1,
+            isNextButtonEnabled = isNextButtonEnabled.value ?: false,
+            isPrevButtonEnabled = isPrevButtonEnabled.value ?: false,
+        )
 
     companion object {
         private const val PAGE_SIZE = 5

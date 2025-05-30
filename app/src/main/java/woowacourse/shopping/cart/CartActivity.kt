@@ -59,12 +59,12 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun observeCartViewModel() {
-        viewModel.cartProducts.observe(this) { products ->
-            (binding.recyclerViewCart.adapter as CartAdapter).setCartItems(products)
-        }
-        viewModel.updatedItem.observe(this) { item ->
-            (binding.recyclerViewCart.adapter as CartAdapter).setCartItem(item)
-        }
+        val cartAdapter = (binding.recyclerViewCart.adapter as CartAdapter)
+        viewModel.cartProducts.observe(this, cartAdapter::setCartItems)
+        viewModel.updatedItem.observe(this, cartAdapter::setCartItem)
+        viewModel.isNextButtonEnabled.observe(this) { viewModel.updateButton() }
+        viewModel.isPrevButtonEnabled.observe(this) { viewModel.updateButton() }
+        viewModel.updateButton.observe(this, cartAdapter::setButton)
     }
 
     override fun onSupportNavigateUp(): Boolean {
