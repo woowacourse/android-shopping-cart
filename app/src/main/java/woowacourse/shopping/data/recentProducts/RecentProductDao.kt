@@ -2,6 +2,7 @@ package woowacourse.shopping.data.recentProducts
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
@@ -15,7 +16,7 @@ interface RecentProductDao {
     @Query("SELECT * FROM recent_product ORDER BY viewedTime ASC LIMIT 1")
     fun getOldest(): RecentProductEntity?
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(recentProduct: RecentProductEntity)
 
     @Query("DELETE FROM recent_product WHERE id = :productId")
