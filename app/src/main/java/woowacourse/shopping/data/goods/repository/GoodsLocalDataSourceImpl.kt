@@ -25,7 +25,7 @@ class GoodsLocalDataSourceImpl(
         thread {
             shoppingDatabase
                 .recentSeenGoodsDao()
-                .addRecentGoodsWithLimit(goods.id.toString())
+                .addRecentGoodsAndTrimOld(goods.id.toString())
             Handler(Looper.getMainLooper()).post {
                 onComplete()
             }

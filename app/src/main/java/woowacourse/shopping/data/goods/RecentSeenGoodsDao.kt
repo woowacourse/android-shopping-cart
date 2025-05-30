@@ -20,7 +20,7 @@ interface RecentSeenGoodsDao {
     fun deleteOldestItems(maxCount: Int)
 
     @Transaction
-    fun addRecentGoodsWithLimit(
+    fun addRecentGoodsAndTrimOld(
         goodsId: String,
         maxCount: Int = 10,
     ) {
