@@ -15,37 +15,45 @@ class CartProductRepositoryImpl(
     private var totalCount: Int = 0
 
     init {
-        thread { totalCount = localDataSource.getTotalCount() }.join()
+        thread {
+            localDataSource.getTotalCount { result ->
+                result.onSuccess { totalCount = it }
+            }
+        }.join()
     }
 
     override fun getPagedProducts(
         limit: Int,
         offset: Int,
-        onSuccess: (PagedResult<CartProduct>) -> Unit,
+        onResult: (Result<PagedResult<CartProduct>>) -> Unit,
     ) {
         if (offset >= totalCount) {
-            onSuccess(PagedResult(emptyList(), false))
+            onResult(Result.success(PagedResult(emptyList(), false)))
             return
         }
 
         val endIndex = (offset + limit).coerceAtMost(totalCount)
         thread {
-            val entities = localDataSource.getPagedProducts(endIndex - offset, offset)
-            val productIds = entities.map { it.productId }
-            productRepository.getProductsByIds(productIds) { result ->
-                result.onSuccess { products ->
-                    if (products.isEmpty()) {
-                        onSuccess(PagedResult(emptyList(), false))
-                        return@getProductsByIds
-                    }
-                    val productMap = products.associateBy { it.id }
-                    val cartProducts =
-                        entities.mapNotNull { entity ->
-                            productMap[entity.productId]?.let { product ->
-                                CartProduct(product, entity.quantity)
+            localDataSource.getPagedProducts(endIndex - offset, offset) { result ->
+                result.onSuccess { entities ->
+                    val productIds = entities.map { it.productId }
+                    productRepository.getProductsByIds(productIds) { result ->
+                        result.onSuccess { products ->
+                            if (products.isEmpty()) {
+                                onResult(Result.success(PagedResult(emptyList(), false)))
+                                return@getProductsByIds
                             }
+                            val productMap = products.associateBy { it.id }
+                            val cartProducts =
+                                entities.mapNotNull { entity ->
+                                    productMap[entity.productId]?.let { product ->
+                                        CartProduct(product, entity.quantity)
+                                    }
+                                }
+                            val pagedResult = PagedResult(cartProducts, endIndex < totalCount)
+                            onResult(Result.success(pagedResult))
                         }
-                    onSuccess(PagedResult(cartProducts, endIndex < totalCount))
+                    }
                 }
             }
         }
@@ -53,18 +61,16 @@ class CartProductRepositoryImpl(
 
     override fun getQuantityByProductId(
         productId: Long,
-        onSuccess: (Int?) -> Unit,
+        onResult: (Result<Int?>) -> Unit,
     ) {
         thread {
-            val result = localDataSource.getQuantityByProductId(productId)
-            onSuccess(result)
+            localDataSource.getQuantityByProductId(productId, onResult)
         }
     }
 
-    override fun getTotalQuantity(onSuccess: (Int) -> Unit) {
+    override fun getTotalQuantity(onResult: (Result<Int>) -> Unit) {
         thread {
-            val result = localDataSource.getTotalQuantity()
-            onSuccess(result)
+            localDataSource.getTotalQuantity(onResult)
         }
     }
 
@@ -72,37 +78,38 @@ class CartProductRepositoryImpl(
         productId: Long,
         currentQuantity: Int,
         newQuantity: Int,
-        onSuccess: () -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
         thread {
             when {
-                currentQuantity == newQuantity -> onSuccess()
-                newQuantity == 0 -> {
-                    deleteByProductId(productId) { onSuccess() }
-                }
+                currentQuantity == newQuantity -> onResult(Result.success(Unit))
+                newQuantity == 0 -> deleteByProductId(productId, onResult)
 
                 currentQuantity == 0 -> {
-                    localDataSource.insert(CartProductEntity(productId, newQuantity))
-                    totalCount++
-                    onSuccess()
+                    localDataSource.insert(CartProductEntity(productId, newQuantity)) { result ->
+                        result.onSuccess {
+                            totalCount++
+                            onResult(Result.success(Unit))
+                        }
+                    }
                 }
 
-                else -> {
-                    localDataSource.updateQuantity(productId, newQuantity)
-                    onSuccess()
-                }
+                else -> localDataSource.updateQuantity(productId, newQuantity, onResult)
             }
         }
     }
 
     override fun deleteByProductId(
         productId: Long,
-        onSuccess: () -> Unit,
+        onResult: (Result<Unit>) -> Unit,
     ) {
         thread {
-            localDataSource.deleteByProductId(productId)
-            totalCount--
-            onSuccess()
+            localDataSource.deleteByProductId(productId) { result ->
+                result.onSuccess {
+                    totalCount--
+                    onResult(Result.success(Unit))
+                }
+            }
         }
     }
 }

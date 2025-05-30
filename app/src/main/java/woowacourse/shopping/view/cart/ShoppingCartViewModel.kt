@@ -42,16 +42,18 @@ class ShoppingCartViewModel(
     }
 
     override fun onProductRemoveClick(item: CartProduct) {
-        repository.deleteByProductId(item.product.id) {
-            cartProducts.removeIf { it.product.id == item.product.id }
+        repository.deleteByProductId(item.product.id) { result ->
+            result.onSuccess {
+                cartProducts.removeIf { it.product.id == item.product.id }
 
-            val currentPage = page.value ?: FIRST_PAGE_NUMBER
-            val startIndex = (currentPage - 1) * PAGE_SIZE
+                val currentPage = page.value ?: FIRST_PAGE_NUMBER
+                val startIndex = (currentPage - 1) * PAGE_SIZE
 
-            if (startIndex >= cartProducts.size && currentPage > FIRST_PAGE_NUMBER) {
-                loadPage(currentPage - 1)
-            } else {
-                loadPage(currentPage)
+                if (startIndex >= cartProducts.size && currentPage > FIRST_PAGE_NUMBER) {
+                    loadPage(currentPage - 1)
+                } else {
+                    loadPage(currentPage)
+                }
             }
         }
     }
@@ -71,9 +73,11 @@ class ShoppingCartViewModel(
 
         if (cartProducts.size < end) {
             repository.getPagedProducts(end - cartProducts.size, cartProducts.size) { result ->
-                cartProducts.addAll(result.items)
-                val hasNext = result.hasNext
-                updatePageState(page, offset, end, hasNext)
+                result.onSuccess { pagedResult ->
+                    cartProducts.addAll(pagedResult.items)
+                    val hasNext = pagedResult.hasNext
+                    updatePageState(page, offset, end, hasNext)
+                }
             }
         } else {
             checkHasNext(end) {
@@ -101,12 +105,14 @@ class ShoppingCartViewModel(
         item: CartProduct,
         newQuantity: Int,
     ) {
-        repository.updateQuantity(item.product.id, item.quantity, newQuantity) {
-            val index = cartProducts.indexOfFirst { it.product.id == item.product.id }
-            if (index != -1) {
-                cartProducts[index] = cartProducts[index].copy(quantity = newQuantity)
+        repository.updateQuantity(item.product.id, item.quantity, newQuantity) { result ->
+            result.onSuccess {
+                val index = cartProducts.indexOfFirst { it.product.id == item.product.id }
+                if (index != -1) {
+                    cartProducts[index] = cartProducts[index].copy(quantity = newQuantity)
+                }
+                loadPage(_page.value ?: FIRST_PAGE_NUMBER)
             }
-            loadPage(_page.value ?: FIRST_PAGE_NUMBER)
         }
     }
 
@@ -115,7 +121,9 @@ class ShoppingCartViewModel(
         callback: (Boolean) -> Unit,
     ) {
         repository.getPagedProducts(1, offset) { result ->
-            callback(result.items.isNotEmpty())
+            result.onSuccess { pagedResult ->
+                callback(pagedResult.items.isNotEmpty())
+            }
         }
     }
 

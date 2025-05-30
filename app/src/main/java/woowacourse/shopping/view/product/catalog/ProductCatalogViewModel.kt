@@ -63,8 +63,10 @@ class ProductCatalogViewModel(
         } else {
             syncProductQuantities()
         }
-        cartProductRepository.getTotalQuantity {
-            _totalQuantity.postValue(it)
+        cartProductRepository.getTotalQuantity { result ->
+            result.onSuccess {
+                _totalQuantity.postValue(it)
+            }
         }
     }
 
@@ -83,14 +85,16 @@ class ProductCatalogViewModel(
                 val tempItems = mutableListOf<ProductCatalogItem.ProductItem>()
                 var completedCount = 0
                 pagedResult.items.forEach { product ->
-                    cartProductRepository.getQuantityByProductId(product.id) { quantity ->
-                        tempItems.add(ProductCatalogItem.ProductItem(product, quantity ?: 0))
-                        completedCount++
+                    cartProductRepository.getQuantityByProductId(product.id) { result ->
+                        result.onSuccess { quantity ->
+                            tempItems.add(ProductCatalogItem.ProductItem(product, quantity ?: 0))
+                            completedCount++
 
-                        if (completedCount == pagedResult.items.size) {
-                            productItems.addAll(tempItems)
-                            hasNext = pagedResult.hasNext
-                            _productCatalogItems.postValue(buildCatalogItems())
+                            if (completedCount == pagedResult.items.size) {
+                                productItems.addAll(tempItems)
+                                hasNext = pagedResult.hasNext
+                                _productCatalogItems.postValue(buildCatalogItems())
+                            }
                         }
                     }
                 }
@@ -103,14 +107,16 @@ class ProductCatalogViewModel(
         var completedCount = 0
 
         productItems.forEach { item ->
-            cartProductRepository.getQuantityByProductId(item.product.id) { quantity ->
-                updatedItems.add(item.copy(quantity = quantity ?: 0))
-                completedCount++
+            cartProductRepository.getQuantityByProductId(item.product.id) { result ->
+                result.onSuccess { quantity ->
+                    updatedItems.add(item.copy(quantity = quantity ?: 0))
+                    completedCount++
 
-                if (completedCount == productItems.size) {
-                    productItems.clear()
-                    productItems.addAll(updatedItems)
-                    _productCatalogItems.postValue(buildCatalogItems())
+                    if (completedCount == productItems.size) {
+                        productItems.clear()
+                        productItems.addAll(updatedItems)
+                        _productCatalogItems.postValue(buildCatalogItems())
+                    }
                 }
             }
         }
@@ -120,13 +126,19 @@ class ProductCatalogViewModel(
         item: ProductCatalogItem.ProductItem,
         newQuantity: Int,
     ) {
-        cartProductRepository.updateQuantity(item.product.id, item.quantity, newQuantity) {
-            val index = productItems.indexOfFirst { it.product.id == item.product.id }
-            if (index != -1) {
-                productItems[index] = productItems[index].copy(quantity = newQuantity)
+        cartProductRepository.updateQuantity(
+            item.product.id,
+            item.quantity,
+            newQuantity,
+        ) { result ->
+            result.onSuccess {
+                val index = productItems.indexOfFirst { it.product.id == item.product.id }
+                if (index != -1) {
+                    productItems[index] = productItems[index].copy(quantity = newQuantity)
+                }
+                _totalQuantity.postValue((totalQuantity.value ?: 0) + (newQuantity - item.quantity))
+                _productCatalogItems.postValue(buildCatalogItems())
             }
-            _totalQuantity.postValue((totalQuantity.value ?: 0) + (newQuantity - item.quantity))
-            _productCatalogItems.postValue(buildCatalogItems())
         }
     }
 

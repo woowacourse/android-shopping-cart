@@ -6,23 +6,55 @@ import woowacourse.shopping.data.entity.CartProductEntity
 class CartProductLocalDataSource(
     private val dao: CartProductDao,
 ) {
-    fun insert(cartProductEntity: CartProductEntity) = dao.insert(cartProductEntity)
+    fun insert(
+        cartProductEntity: CartProductEntity,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        dao.insert(cartProductEntity)
+        onResult(Result.success(Unit))
+    }
 
-    fun getTotalCount(): Int = dao.getTotalCount()
+    fun getTotalCount(onResult: (Result<Int>) -> Unit) {
+        val result = dao.getTotalCount()
+        onResult(Result.success(result))
+    }
 
     fun getPagedProducts(
         limit: Int,
         offset: Int,
-    ): List<CartProductEntity> = dao.getPagedProducts(limit, offset)
+        onResult: (Result<List<CartProductEntity>>) -> Unit,
+    ) {
+        val result = dao.getPagedProducts(limit, offset)
+        onResult(Result.success(result))
+    }
 
-    fun getQuantityByProductId(productId: Long): Int? = dao.getQuantityByProductId(productId)
+    fun getQuantityByProductId(
+        productId: Long,
+        onResult: (Result<Int?>) -> Unit,
+    ) {
+        val result = dao.getQuantityByProductId(productId)
+        onResult(Result.success(result))
+    }
 
-    fun getTotalQuantity(): Int = dao.getTotalQuantity()
+    fun getTotalQuantity(onResult: (Result<Int>) -> Unit) {
+        val result = dao.getTotalQuantity()
+        onResult(Result.success(result))
+    }
 
     fun updateQuantity(
         productId: Long,
         quantity: Int,
-    ) = dao.updateQuantity(productId, quantity)
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        dao.updateQuantity(productId, quantity)
+        onResult(Result.success(Unit))
+    }
 
-    fun deleteByProductId(productId: Long) = dao.deleteByProductId(productId)
+    fun deleteByProductId(
+        productId: Long,
+        onResult: (Result<Unit>) -> Unit,
+    ) {
+        dao.deleteByProductId(productId)
+        onResult(Result.success(Unit))
+    }
 }
