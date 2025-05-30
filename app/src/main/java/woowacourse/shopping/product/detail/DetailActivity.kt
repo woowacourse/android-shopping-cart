@@ -26,22 +26,33 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
 
         applyWindowInsets()
         setSupportActionBar()
-        setAddToCartClickListener()
 
-        val product: ProductUiModel? = productFromIntent()
-        product?.let {
-            binding.product = it
-            binding.layoutQuantityControlBar.product = it
-            setViewModel(it)
-            observeProduct()
-        }
-        binding.vm = viewModel
-        binding.lifecycleOwner = this
+        val product: ProductUiModel = productFromIntentOrFinish() ?: return
+        setViewModel(product)
+        observeProduct()
+        bindProduct(product)
+        bindListeners()
+        viewModel.setLatestViewedProduct()
+    }
+
+    private fun setViewModel(product: ProductUiModel) {
+        viewModel =
+            ViewModelProvider(
+                this,
+                DetailViewModelFactory(product, application as ShoppingApplication),
+            )[DetailViewModel::class.java]
+    }
+
+    private fun bindProduct(product: ProductUiModel) {
+        binding.product = product
+        binding.layoutQuantityControlBar.product = product
+    }
+
+    private fun bindListeners() {
         binding.layoutQuantityControlBar.quantityControlListener =
             QuantityControlListener { buttonEvent, _ ->
                 viewModel::updateQuantity
@@ -52,15 +63,12 @@ class DetailActivity : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
             }
-        viewModel.setLatestViewedProduct()
-    }
-
-    private fun setViewModel(product: ProductUiModel) {
-        viewModel =
-            ViewModelProvider(
-                this,
-                DetailViewModelFactory(product, application as ShoppingApplication),
-            )[DetailViewModel::class.java]
+        binding.addToCartClickListener =
+            AddToCartClickListener { product ->
+                showToastMessage()
+                viewModel.addToCart()
+                finish()
+            }
     }
 
     private fun observeProduct() {
@@ -97,15 +105,6 @@ class DetailActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
 
-    private fun setAddToCartClickListener() {
-        binding.addToCartClickListener =
-            AddToCartClickListener { product ->
-                showToastMessage()
-                viewModel.addToCart()
-                finish()
-            }
-    }
-
     private fun setSupportActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(false)
@@ -126,7 +125,16 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun productFromIntent(): ProductUiModel? = intent.intentParcelableExtra(KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
+    private fun productFromIntentOrFinish(): ProductUiModel? {
+        val product = intent.intentParcelableExtra(KEY_PRODUCT_DETAIL, ProductUiModel::class.java)
+        if (product == null) {
+            Toast
+                .makeText(this, getString(R.string.text_no_product_error), Toast.LENGTH_SHORT)
+                .show()
+            finish()
+        }
+        return product
+    }
 
     companion object {
         private const val KEY_PRODUCT_DETAIL = "productDetail"

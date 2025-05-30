@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
+import woowacourse.shopping.cart.ButtonEvent
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityCatalogBinding
 import woowacourse.shopping.databinding.MenuCartLayoutBinding
@@ -82,11 +83,14 @@ class CatalogActivity : AppCompatActivity() {
                             viewModel.increaseQuantity(product)
                         }
                     },
-                quantityControlListener = { event, product ->
-                    if (event == 1) {
-                        viewModel.increaseQuantity(product)
-                    } else {
-                        viewModel.decreaseQuantity(product)
+                quantityControlListener = { buttonEvent, product ->
+                    when (buttonEvent) {
+                        ButtonEvent.INCREASE -> {
+                            viewModel.increaseQuantity(product)
+                        }
+                        ButtonEvent.DECREASE -> {
+                            viewModel.decreaseQuantity(product)
+                        }
                     }
                 },
             )

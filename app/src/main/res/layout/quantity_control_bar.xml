@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="woowacourse.shopping.cart.ButtonEvent" />
 
         <variable
             name="quantity"
@@ -29,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:onClick="@{() -> quantityControlListener.onClick(1, product)}"
+            android:onClick="@{() -> quantityControlListener.onClick(ButtonEvent.INCREASE, product)}"
             android:src="@drawable/icon_add"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +53,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_prev_selector"
                 android:backgroundTint="@color/white"
-                android:onClick="@{() -> quantityControlListener.onClick(0, product)}"
+                android:onClick="@{() -> quantityControlListener.onClick(ButtonEvent.DECREASE, product)}"
                 android:text="-"
                 android:textColor="@color/gray_5"
                 android:textSize="22dp"
@@ -82,7 +83,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_next_selector"
                 android:backgroundTint="@color/white"
-                android:onClick="@{() -> quantityControlListener.onClick(1, product)}"
+                android:onClick="@{() -> quantityControlListener.onClick(ButtonEvent.INCREASE, product)}"
                 android:text="+"
                 android:textColor="@color/gray_5"
                 android:textSize="22sp"

@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="woowacourse.shopping.cart.ButtonEvent" />
+
         <variable
             name="paginationButtonItem"
             type="woowacourse.shopping.cart.CartItem.PaginationButtonItem" />
@@ -34,7 +36,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_prev_selector"
                 android:enabled="@{paginationButtonItem.isPrevButtonEnabled}"
-                android:onClick="@{() -> clickListener.onClick(1)}"
+                android:onClick="@{() -> clickListener.onClick(ButtonEvent.DECREASE)}"
                 android:text="@string/text_prev_button"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -42,11 +44,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:text="@{String.valueOf(paginationButtonItem.page)}"
                 android:id="@+id/textView_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp"
+                android:text="@{String.valueOf(paginationButtonItem.page)}"
                 android:textColor="@color/gray_5"
                 android:textSize="22sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -61,7 +63,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/pagination_next_selector"
                 android:enabled="@{paginationButtonItem.isNextButtonEnabled}"
-                android:onClick="@{() -> clickListener.onClick(2)}"
+                android:onClick="@{() -> clickListener.onClick(ButtonEvent.INCREASE)}"
                 android:text="@string/text_next_button"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
