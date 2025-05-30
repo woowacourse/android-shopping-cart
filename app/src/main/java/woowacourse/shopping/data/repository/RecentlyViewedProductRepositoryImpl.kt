@@ -8,8 +8,8 @@ import woowacourse.shopping.product.catalog.ProductUiModel
 import kotlin.concurrent.thread
 
 class RecentlyViewedProductRepositoryImpl(
-    val recentlyViewedProductDao: RecentlyViewedProductDao,
-    val catalogProductRepository: CatalogProductRepository,
+    private val recentlyViewedProductDao: RecentlyViewedProductDao,
+    private val catalogProductRepository: CatalogProductRepository,
 ) : RecentlyViewedProductRepository {
     override fun insertRecentlyViewedProductUid(uid: Int) {
         thread {
