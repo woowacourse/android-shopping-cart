@@ -9,9 +9,4 @@ interface ProductRepository {
         offset: Int,
         limit: Int,
     ): List<CartItem>
-
-    fun update(
-        productId: Long,
-        quantity: Int,
-    )
 }
