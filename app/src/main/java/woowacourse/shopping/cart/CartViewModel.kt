@@ -73,19 +73,18 @@ class CartViewModel(
     ) {
         when (buttonEvent) {
             ButtonEvent.INCREASE -> {
-                cartProductRepository.updateProductQuantity(product.id, -1) {
+                cartProductRepository.updateProductQuantity(product.id, 1) {
                     cartProductRepository.getProduct(product.id) { product ->
                         _updatedItem.postValue(product.toUiModel())
-                        loadCartProducts()
                     }
                 }
             }
 
             ButtonEvent.DECREASE -> {
-                cartProductRepository.updateProductQuantity(product.id, 1) {
+                if (product.quantity == 1) return
+                cartProductRepository.updateProductQuantity(product.id, -1) {
                     cartProductRepository.getProduct(product.id) { product ->
                         _updatedItem.postValue(product.toUiModel())
-                        loadCartProducts()
                     }
                 }
             }

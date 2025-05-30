@@ -67,19 +67,6 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-//    private fun updateCartItems() {
-// //        val products: List<ProductUiModel> = viewModel.cartProducts.value ?: return
-// //        val isNext: Boolean = viewModel.isNextButtonEnabled.value == true
-// //        val isPrev: Boolean = viewModel.isPrevButtonEnabled.value == true
-//        val page: Int = viewModel.page.value ?: 0
-//        val paginationItem = PaginationButtonItem(page + 1, isNext, isPrev)
-//
-//        val cartItems: List<CartItem> = products.map { CartItem.ProductItem(it) }
-//        val cartItemsWithPaginationBtn =
-//            if (cartItems.isEmpty()) cartItems else cartItems + paginationItem
-//        (binding.recyclerViewCart.adapter as CartAdapter).setCartItems(cartItemsWithPaginationBtn)
-//    }
-
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return super.onSupportNavigateUp()
