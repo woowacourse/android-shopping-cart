@@ -30,7 +30,7 @@
             android:contentDescription="@string/text_product_image"
             android:scaleType="centerCrop"
             android:src="@drawable/iced_americano"
-            app:imageUrl="@{product}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"

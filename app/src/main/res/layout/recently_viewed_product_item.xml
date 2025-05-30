@@ -29,7 +29,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/iced_americano"
             android:visibility="@{product.quantity}"
-            app:imageUrl="@{product}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
