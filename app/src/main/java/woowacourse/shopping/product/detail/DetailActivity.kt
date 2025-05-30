@@ -55,7 +55,7 @@ class DetailActivity : AppCompatActivity() {
     private fun bindListeners() {
         binding.layoutQuantityControlBar.quantityControlListener =
             QuantityControlListener { buttonEvent, _ ->
-                viewModel::updateQuantity
+                viewModel.updateQuantity(buttonEvent)
             }
         binding.layoutLatestViewedProduct.latestViewedProductClickListener =
             LatestViewedProductClickListener { product ->
@@ -74,16 +74,6 @@ class DetailActivity : AppCompatActivity() {
     private fun observeProduct() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
-
-        viewModel.product.observe(this) {
-            viewModel.setQuantity()
-            viewModel.setPriceSum()
-            viewModel.addToRecentlyViewedProduct()
-        }
-
-        viewModel.quantity.observe(this) {
-            viewModel.setPriceSum()
-        }
 
         viewModel.latestViewedProduct.observe(this) { product ->
             binding.layoutLatestViewedProduct.product = product
