@@ -46,7 +46,7 @@ class CartActivity : AppCompatActivity() {
                         viewModel.deleteCartProduct(CartItem.ProductItem(product))
                     },
                 onPaginationButtonClick = viewModel::onPaginationButtonClick,
-                quantityControlListener = viewModel::updateQuantity,
+                onQuantityControl = viewModel::updateQuantity,
             )
     }
 
