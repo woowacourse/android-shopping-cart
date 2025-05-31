@@ -69,7 +69,7 @@ class ProductsActivity : AppCompatActivity() {
                     productsViewModel.addRecentProduct(cartItem)
                 },
                 openQuantitySelectListener = { cartItem ->
-                    productsViewModel.onOpenQuantitySelectClick(cartItem)
+                    productsViewModel.openQuantitySelectAndAddToCart(cartItem)
                 },
                 quantitySelectButtonListener =
                     object : QuantitySelectButtonListener {

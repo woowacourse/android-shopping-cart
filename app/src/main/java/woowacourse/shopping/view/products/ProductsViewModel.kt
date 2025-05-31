@@ -139,7 +139,7 @@ class ProductsViewModel(
         _navigateToCart.value = Event(Unit)
     }
 
-    fun onOpenQuantitySelectClick(cartItem: CartItem) {
+    fun openQuantitySelectAndAddToCart(cartItem: CartItem) {
         cartRepository.add(cartItem) { result ->
             result
                 .onSuccess {
