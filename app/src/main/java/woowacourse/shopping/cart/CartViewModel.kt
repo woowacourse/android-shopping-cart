@@ -80,7 +80,7 @@ class CartViewModel(
     private fun loadCartProducts(pageSize: Int = PAGE_SIZE) {
         repository.getAllCartItemSize { totalSize ->
             var current = currentPage
-            while (current > 0 && current * pageSize >= totalSize) {
+            if (current > 0 && current * pageSize >= totalSize) {
                 current--
             }
             val startIndex = current * pageSize
