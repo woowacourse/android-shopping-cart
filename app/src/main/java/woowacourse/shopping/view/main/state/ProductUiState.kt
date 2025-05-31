@@ -36,17 +36,5 @@ data class ProductUiState(
         return result
     }
 
-    fun productItemCount() = productItems.size
-
-    fun addItems(
-        newItems: List<ProductState>,
-        hasNextPage: Boolean,
-    ): ProductUiState {
-        return copy(
-            productItems = productItems + newItems,
-            load = LoadState.of(hasNextPage),
-        )
-    }
-
     private fun targetIndex(productId: Long) = productItems.indexOfFirst { it.item.id == productId }
 }

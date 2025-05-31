@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.main.adapter.recent
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.view.main.adapter.HistoryViewHolder
@@ -10,10 +9,6 @@ class RecentProductAdapter(
     private val items: List<HistoryState>,
     private val handler: HistoryViewHolder.Handler,
 ) : RecyclerView.Adapter<HistoryViewHolder>() {
-    init {
-        Log.d("dsadasas", "init")
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
