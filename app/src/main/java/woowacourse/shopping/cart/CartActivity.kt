@@ -27,8 +27,7 @@ class CartActivity : AppCompatActivity() {
         setupToolbar()
         initBinding()
         initRecyclerView()
-        observeCartProducts()
-        observePagination()
+        observeCartViewModel()
     }
 
     private fun createViewModel(): CartViewModel {
@@ -58,23 +57,16 @@ class CartActivity : AppCompatActivity() {
             )
     }
 
-    private fun observeCartProducts() {
+    private fun observeCartViewModel() {
         val adapter = getCartAdapter()
 
-        viewModel.cartProducts.observe(this) {
-            adapter.setData(it)
+        viewModel.pagingData.observe(this) {
+            adapter.setData(it.products)
+            adapter.setPagination()
         }
 
         viewModel.product.observe(this) {
             adapter.updateProduct(it)
-        }
-    }
-
-    private fun observePagination() {
-        viewModel.pageEvent.observe(this) {
-            val adapter = getCartAdapter()
-            val paginationPos = adapter.itemCount - 1
-            adapter.notifyItemChanged(paginationPos)
         }
     }
 

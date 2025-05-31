@@ -59,6 +59,11 @@ class CartAdapter(
         }
     }
 
+    fun setPagination() {
+        val paginationPos = itemCount - 1
+        notifyItemChanged(paginationPos)
+    }
+
     private fun shouldShowPagination(): Boolean = cartHandler.isNextButtonEnabled() || cartHandler.isPrevButtonEnabled()
 
     override fun getItemCount(): Int = cartProducts.size + if (shouldShowPagination()) 1 else 0

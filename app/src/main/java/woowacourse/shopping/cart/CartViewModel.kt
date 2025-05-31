@@ -7,28 +7,25 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.cart.event.CartEventHandler
 import woowacourse.shopping.data.cart.CartItemRepository
 import woowacourse.shopping.product.catalog.ProductUiModel
-import woowacourse.shopping.util.SingleLiveEvent
+import woowacourse.shopping.product.catalog.model.PagingData
 
 class CartViewModel(
     private val repository: CartItemRepository,
 ) : ViewModel(),
     CartEventHandler {
-    private val _cartProducts = MutableLiveData<List<ProductUiModel>>()
-    val cartProducts: LiveData<List<ProductUiModel>> = _cartProducts
-
     private val _isNextButtonEnabled = MutableLiveData<Boolean>(false)
     val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
 
     private val _isPrevButtonEnabled = MutableLiveData<Boolean>(false)
     val isPrevButtonEnabled: LiveData<Boolean> = _isPrevButtonEnabled
 
-    private val _pageEvent = SingleLiveEvent<Int>()
-    val pageEvent: LiveData<Int> = _pageEvent
-
     private val _product = MutableLiveData<ProductUiModel>()
     val product: LiveData<ProductUiModel> = _product
 
     private var currentPage: Int = INITIAL_PAGE
+
+    private val _pagingData = MutableLiveData<PagingData>()
+    val pagingData: LiveData<PagingData> = _pagingData
 
     init {
         loadCartProducts()
@@ -45,7 +42,6 @@ class CartViewModel(
             val lastPage = (size - 1) / PAGE_SIZE
             if (currentPage < lastPage) {
                 currentPage++
-                _pageEvent.postValue(currentPage)
                 loadCartProducts()
             }
         }
@@ -54,7 +50,6 @@ class CartViewModel(
     override fun onPrevPage() {
         if (currentPage > 0) {
             currentPage--
-            _pageEvent.postValue(currentPage)
             loadCartProducts()
         }
     }
@@ -74,11 +69,11 @@ class CartViewModel(
         }
     }
 
-    override fun isNextButtonEnabled(): Boolean = _isNextButtonEnabled.value == true
+    override fun isNextButtonEnabled(): Boolean = pagingData.value?.hasNext == true
 
-    override fun isPrevButtonEnabled(): Boolean = _isPrevButtonEnabled.value == true
+    override fun isPrevButtonEnabled(): Boolean = pagingData.value?.hasPrevious == true
 
-    override fun isPaginationEnabled(): Boolean = (_isNextButtonEnabled.value == true) || (_isPrevButtonEnabled.value == true)
+    override fun isPaginationEnabled(): Boolean = (pagingData.value?.hasNext == true) || (pagingData.value?.hasPrevious == true)
 
     override fun getPage(): Int = currentPage
 
@@ -88,16 +83,22 @@ class CartViewModel(
             while (current > 0 && current * pageSize >= totalSize) {
                 current--
             }
-            currentPage = current
-            _pageEvent.postValue(current)
-
             val startIndex = current * pageSize
             val endIndex = minOf(startIndex + pageSize, totalSize)
 
             repository.subListCartItems(startIndex, endIndex) { products ->
-                _cartProducts.postValue(products)
-                _isNextButtonEnabled.postValue(current < (totalSize - 1) / pageSize)
-                _isPrevButtonEnabled.postValue(current > 0)
+                val hasNext = current < (totalSize - 1) / pageSize
+                val hasPrevious = current > 0
+
+                val newPagingData =
+                    PagingData(
+                        products = products,
+                        page = current,
+                        hasNext = hasNext,
+                        hasPrevious = hasPrevious,
+                    )
+
+                _pagingData.postValue(newPagingData)
             }
         }
     }
