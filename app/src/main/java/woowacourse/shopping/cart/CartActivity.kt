@@ -17,6 +17,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by lazy { createViewModel() }
+    private lateinit var cartAdapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,28 +50,25 @@ class CartActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         val handler = CartEventHandlerImpl(viewModel)
-        binding.recyclerViewCart.adapter =
+        cartAdapter =
             CartAdapter(
                 cartProducts = emptyList(),
                 cartHandler = handler,
                 handler = handler,
             )
+        binding.recyclerViewCart.adapter = cartAdapter
     }
 
     private fun observeCartViewModel() {
-        val adapter = getCartAdapter()
-
         viewModel.pagingData.observe(this) {
-            adapter.setData(it.products)
-            adapter.setPagination()
+            cartAdapter.setData(it.products)
+            cartAdapter.setPagination()
         }
 
         viewModel.product.observe(this) {
-            adapter.updateProduct(it)
+            cartAdapter.updateProduct(it)
         }
     }
-
-    private fun getCartAdapter(): CartAdapter = binding.recyclerViewCart.adapter as CartAdapter
 
     private fun setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
