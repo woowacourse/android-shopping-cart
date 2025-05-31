@@ -29,7 +29,6 @@ class CartActivity : AppCompatActivity() {
     }
     private val cartAdapter by lazy {
         CartAdapter(
-            items = emptyList(),
             handler = viewModel.cartAdapterHandler,
             cartQuantityHandler = viewModel.cartQuantityHandler,
         )

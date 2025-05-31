@@ -2,21 +2,15 @@ package woowacourse.shopping.view.cart.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.view.core.handler.CartQuantityHandler
 import woowacourse.shopping.view.main.state.ProductState
 
 class CartAdapter(
-    private var items: List<ProductState>,
     private val handler: Handler,
     private val cartQuantityHandler: CartQuantityHandler,
-) : RecyclerView.Adapter<CartViewHolder>() {
-    fun submitList(newItems: List<ProductState>) {
-        items = newItems
-        notifyDataSetChanged()
-    }
-
+) : ListAdapter<ProductState, CartViewHolder>(CartDiffer()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,13 +19,11 @@ class CartAdapter(
         return CartViewHolder(binding, handler, cartQuantityHandler)
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 
     interface Handler : CartViewHolder.Handler
