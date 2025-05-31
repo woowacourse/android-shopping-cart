@@ -53,7 +53,7 @@ class ProductsViewModel(
         productId: Long,
         quantityIncrease: Int,
     ) {
-        _productsInShop.postValue(
+        _productsInShop.value =
             _productsInShop.value?.map {
                 if (it.product.id == productId) {
                     val newQuantity = it.quantity + quantityIncrease
@@ -61,8 +61,7 @@ class ProductsViewModel(
                 } else {
                     it
                 }
-            },
-        )
+            }
     }
 
     override fun decreaseQuantity(
@@ -70,7 +69,7 @@ class ProductsViewModel(
         quantityDecrease: Int,
         minQuantity: Int,
     ) {
-        _productsInShop.postValue(
+        _productsInShop.value =
             _productsInShop.value?.map {
                 if (it.product.id == productId && it.quantity > minQuantity) {
                     val newQuantity = it.quantity - quantityDecrease
@@ -78,8 +77,7 @@ class ProductsViewModel(
                 } else {
                     it
                 }
-            },
-        )
+            }
     }
 
     override fun updateQuantity() {
