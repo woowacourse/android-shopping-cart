@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.goods
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +10,8 @@ import woowacourse.shopping.data.history.repository.HistoryRepository
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.Goods
 import woowacourse.shopping.domain.model.Goods.Companion.dummyGoods
+import woowacourse.shopping.feature.model.State
+import woowacourse.shopping.util.Event
 import woowacourse.shopping.util.MutableSingleLiveData
 import woowacourse.shopping.util.SingleLiveData
 import woowacourse.shopping.util.updateCartQuantity
@@ -22,16 +23,19 @@ class GoodsViewModel(
 ) : ViewModel() {
     private val _items = MutableLiveData<List<Any>>()
     val items: LiveData<List<Any>> get() = _items
+
     private val _totalQuantity = MutableLiveData(0)
     val totalQuantity: LiveData<Int> get() = _totalQuantity
+
     private val _hasNextPage = MutableLiveData(true)
     val hasNextPage: LiveData<Boolean> get() = _hasNextPage
+
     private val _navigateToCart = MutableSingleLiveData<Cart>()
     val navigateToCart: SingleLiveData<Cart> get() = _navigateToCart
-    private val _isSuccess = MutableSingleLiveData<Unit>()
-    val isSuccess: SingleLiveData<Unit> get() = _isSuccess
-    private val _isFail = MutableSingleLiveData<Unit>()
-    val isFail: SingleLiveData<Unit> get() = _isFail
+
+    private val _cartInsertEvent = MutableLiveData<Event<State>>()
+    val cartInsertEvent: LiveData<Event<State>> get() = _cartInsertEvent
+
     private var page: Int = INITIAL_PAGE
 
     init {
@@ -48,9 +52,9 @@ class GoodsViewModel(
             try {
                 cartRepository.insert(cart)
                 updateItemsAndTotalQuantity(cart, cart.quantity + 1)
-                _isSuccess.setValue(Unit)
+                _cartInsertEvent.value = Event(State.Success)
             } catch (e: Exception) {
-                _isFail.setValue(Unit)
+                _cartInsertEvent.value = Event(State.Failure)
             }
         }
     }
@@ -76,7 +80,6 @@ class GoodsViewModel(
 
             _items.postValue(updatedItems)
         }
-        Log.d("123451", "dd")
     }
 
     fun findCartFromHistory(cart: Cart) {

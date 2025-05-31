@@ -21,6 +21,7 @@ import woowacourse.shopping.feature.goods.adapter.GoodsClickListener
 import woowacourse.shopping.feature.goods.adapter.GoodsSpanSizeLookup
 import woowacourse.shopping.feature.goodsdetails.GoodsDetailsActivity
 import woowacourse.shopping.feature.model.ResultCode
+import woowacourse.shopping.feature.model.State
 import woowacourse.shopping.util.toUi
 
 class GoodsActivity : AppCompatActivity() {
@@ -87,11 +88,25 @@ class GoodsActivity : AppCompatActivity() {
     }
 
     private fun observeCartInsertResult() {
-        viewModel.isSuccess.observe(this) { cart ->
-            Toast.makeText(this, R.string.goods_detail_cart_insert_success_toast_message, Toast.LENGTH_SHORT).show()
-        }
-        viewModel.isFail.observe(this) {
-            Toast.makeText(this, R.string.goods_detail_cart_insert_fail_toast_message, Toast.LENGTH_SHORT).show()
+        viewModel.cartInsertEvent.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { state ->
+                when (state) {
+                    is State.Success ->
+                        Toast
+                            .makeText(
+                                this,
+                                R.string.goods_detail_cart_insert_success_toast_message,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    is State.Failure ->
+                        Toast
+                            .makeText(
+                                this,
+                                R.string.goods_detail_cart_insert_fail_toast_message,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                }
+            }
         }
     }
 
