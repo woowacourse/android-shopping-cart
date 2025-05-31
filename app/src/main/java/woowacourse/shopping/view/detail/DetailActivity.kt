@@ -16,11 +16,10 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.core.ext.showToast
-import woowacourse.shopping.view.core.handler.CartQuantityHandler
 import woowacourse.shopping.view.detail.vm.DetailViewModel
 import woowacourse.shopping.view.detail.vm.DetailViewModelFactory
 
-class DetailActivity : AppCompatActivity(), CartQuantityHandler {
+class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels {
         val container = (application as App).container
@@ -53,7 +52,7 @@ class DetailActivity : AppCompatActivity(), CartQuantityHandler {
         with(binding) {
             lifecycleOwner = this@DetailActivity
             vm = viewModel
-            cartQuantityEventHandler = this@DetailActivity
+            cartQuantityEventHandler = viewModel.cartQuantityHandler
         }
     }
 
@@ -109,14 +108,6 @@ class DetailActivity : AppCompatActivity(), CartQuantityHandler {
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onClickIncrease(productId: Long) {
-        viewModel.increaseCartQuantity()
-    }
-
-    override fun onClickDecrease(productId: Long) {
-        viewModel.decreaseCartQuantity()
     }
 
     companion object {

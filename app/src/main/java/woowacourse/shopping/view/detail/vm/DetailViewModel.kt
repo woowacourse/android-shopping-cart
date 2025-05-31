@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
 import woowacourse.shopping.view.detail.DetailActivity.Companion.NO_LAST_SEEN_PRODUCT
 import woowacourse.shopping.view.detail.DetailUiEvent
 import woowacourse.shopping.view.main.state.IncreaseState
@@ -100,4 +101,15 @@ class DetailViewModel(
     private fun sendEvent(event: DetailUiEvent) {
         _event.setValue(event)
     }
+
+    val cartQuantityHandler =
+        object : CartQuantityHandler {
+            override fun onClickIncrease(productId: Long) {
+                increaseCartQuantity()
+            }
+
+            override fun onClickDecrease(productId: Long) {
+                decreaseCartQuantity()
+            }
+        }
 }
