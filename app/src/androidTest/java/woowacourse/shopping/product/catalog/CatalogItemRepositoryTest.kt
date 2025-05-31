@@ -44,6 +44,12 @@ class CatalogItemRepositoryTest {
         }
         """.trimIndent()
 
+    private fun successResponse(body: String): MockResponse =
+        MockResponse()
+            .setResponseCode(200)
+            .addHeader("Content-Type", "application/json")
+            .setBody(body)
+
     @Before
     fun setup() {
         mockWebServer = MockWebServer()
@@ -51,16 +57,8 @@ class CatalogItemRepositoryTest {
             object : Dispatcher() {
                 override fun dispatch(request: RecordedRequest): MockResponse =
                     when (request.path) {
-                        "//products" ->
-                            MockResponse()
-                                .setResponseCode(200)
-                                .addHeader("Content-Type", "application/json")
-                                .setBody(mockProductsJson)
-                        "//products/1" ->
-                            MockResponse()
-                                .setResponseCode(200)
-                                .addHeader("Content-Type", "application/json")
-                                .setBody(singleProductJson)
+                        "//products" -> successResponse(mockProductsJson)
+                        "//products/1" -> successResponse(singleProductJson)
                         else -> MockResponse().setResponseCode(404)
                     }
             }
