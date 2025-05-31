@@ -37,7 +37,8 @@ class CatalogViewModel(
     }
 
     fun onQuantitySelectorToggled(product: ProductUiModel) {
-        val toggled = product.copy(isExpanded = !product.isExpanded, quantity = product.quantity + 1)
+        val toggled =
+            product.copy(isExpanded = !product.isExpanded, quantity = product.quantity + 1)
         updateProduct(toggled)
     }
 
@@ -121,7 +122,9 @@ class CatalogViewModel(
         _pagingData.postValue(
             PagingData(
                 products = loadedProducts.toList(),
+                page = currentPage,
                 hasNext = loadedProducts.size < dataSource.getProductsSize(),
+                hasPrevious = currentPage > 0,
             ),
         )
     }
