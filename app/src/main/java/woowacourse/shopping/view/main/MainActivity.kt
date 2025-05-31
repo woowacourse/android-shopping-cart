@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
     private val productsAdapter: ProductAdapter by lazy {
-        ProductAdapter(emptyList(), viewModel.productAdapterEventHandler)
+        ProductAdapter(viewModel.productAdapterEventHandler)
     }
     private lateinit var binding: ActivityMainBinding
 
