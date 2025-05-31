@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.domain.model.CartItem
@@ -9,9 +10,7 @@ import woowacourse.shopping.domain.model.CartItem
 class CartAdapter(
     private val cartCounterClickListener: CartCounterClickListener,
     private val cartPageClickListener: CartPageClickListener,
-) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
-    private var products: MutableList<CartItem> = mutableListOf()
-
+) : ListAdapter<CartItem, CartAdapter.CartViewHolder>(CartItemDiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -29,22 +28,7 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
-    }
-
-    override fun getItemCount(): Int = products.size
-
-    fun submitList(newProducts: List<CartItem>) {
-        val oldSize = products.size
-        val newSize = newProducts.size
-
-        if (oldSize > 0) {
-            products.clear()
-            notifyItemRangeRemoved(0, oldSize)
-        }
-
-        products.addAll(newProducts)
-        notifyItemRangeInserted(0, newSize)
+        holder.bind(getItem(position))
     }
 
     class CartViewHolder(
@@ -59,7 +43,6 @@ class CartAdapter(
 
         fun bind(cartItem: CartItem) {
             binding.cartItem = cartItem
-
             binding.executePendingBindings()
         }
     }
