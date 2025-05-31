@@ -17,7 +17,13 @@ interface CartProductDao {
     @Query("SELECT * FROM CartProducts WHERE uid = :id")
     fun getCartProduct(id: Int): CartProductEntity?
 
-    @Query("SELECT * FROM CartProducts LIMIT :endIndex OFFSET :startIndex")
+    @Query(
+        """
+        SELECT * FROM CartProducts 
+        LIMIT (:endIndex - :startIndex) 
+        OFFSET :startIndex
+        """,
+    )
     fun getCartProductsInRange(
         startIndex: Int,
         endIndex: Int,
