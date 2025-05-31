@@ -15,9 +15,11 @@ class CatalogViewModel(
     private val cartProductRepository: CartProductRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ViewModel() {
-    private val _catalogItems =
+    private val catalogItems: MutableList<CatalogItem> = mutableListOf()
+
+    private val _loadedCatalogItems =
         MutableLiveData<List<CatalogItem>>(emptyList<CatalogItem>())
-    val catalogItems: LiveData<List<CatalogItem>> = _catalogItems
+    val loadedCatalogItems: LiveData<List<CatalogItem>> = _loadedCatalogItems
 
     private var page = INITIAL_PAGE
 
@@ -60,7 +62,7 @@ class CatalogViewModel(
             if (quantity == SIZE_ONE) {
                 cartProductRepository.deleteCartProduct(productId) {
                     val item: CatalogItem =
-                        catalogItems.value?.first { (it as ProductItem).productItem.id == productId }
+                        catalogItems.firstOrNull { (it as ProductItem).productItem.id == productId }
                             ?: return@deleteCartProduct
                     _updatedItem.postValue((item as ProductItem).productItem.copy(quantity = 0))
                 }
@@ -87,7 +89,7 @@ class CatalogViewModel(
     }
 
     fun loadCatalogUntilCurrentPage() {
-        _catalogItems.value = emptyList()
+        catalogItems.clear()
 
         catalogProductRepository.getAllProductsSize { size ->
             val startIndex = 0
@@ -114,18 +116,16 @@ class CatalogViewModel(
                     }
 
                 val items = mergedProducts.map { ProductItem(it) }
-                val prevItems =
-                    _catalogItems.value.orEmpty().filterNot { it is CatalogItem.LoadMoreButtonItem }
                 val hasNextPage = endIndex < allProductsSize
 
                 val updatedItems =
                     if (hasNextPage) {
-                        prevItems + items + CatalogItem.LoadMoreButtonItem
+                        items + CatalogItem.LoadMoreButtonItem
                     } else {
-                        prevItems + items
+                        items
                     }
 
-                _catalogItems.postValue(updatedItems)
+                _loadedCatalogItems.postValue(updatedItems)
             }
         }
     }

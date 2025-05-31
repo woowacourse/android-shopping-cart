@@ -38,10 +38,19 @@ class ProductAdapter(
             is CatalogItem.ProductItem -> VIEW_TYPE_PRODUCT
         }
 
-    fun setItems(items: List<CatalogItem>) {
+    fun clearItems() {
+        val removedSize = products.size
         products.clear()
+        notifyItemRangeRemoved(0, removedSize)
+    }
+
+    fun addLoadedItems(items: List<CatalogItem>) {
+        if (products.lastOrNull() is CatalogItem.LoadMoreButtonItem) {
+            products.removeAt(products.lastIndex)
+            notifyItemRemoved(products.lastIndex + 1)
+        }
         products.addAll(items)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(products.lastIndex, items.size)
     }
 
     fun updateItem(product: ProductUiModel) {

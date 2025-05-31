@@ -40,6 +40,7 @@ class CatalogActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        (binding.recyclerViewProducts.adapter as ProductAdapter).clearItems()
         viewModel.loadCatalogUntilCurrentPage()
         viewModel.loadCartItemSize()
         viewModel.loadRecentlyViewedProducts()
@@ -133,7 +134,8 @@ class CatalogActivity : AppCompatActivity() {
         val recentProductsAdapter: RecentlyViewedProductAdapter =
             binding.recyclerViewRecentlyViewedProducts.adapter as RecentlyViewedProductAdapter
 
-        viewModel.catalogItems.observe(this, productsAdapter::setItems)
+//        viewModel.catalogItems.observe(this, productsAdapter::setItems)
+        viewModel.loadedCatalogItems.observe(this, productsAdapter::addLoadedItems)
         viewModel.updatedItem.observe(this) {
             productsAdapter.updateItem(it)
             Log.d("updatedItem", "show $it")
