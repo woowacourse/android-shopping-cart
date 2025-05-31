@@ -1,6 +1,5 @@
 package woowacourse.shopping.product.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,7 @@ class DetailViewModel(
     private val _product = MutableLiveData<ProductUiModel>(productData)
     val product: LiveData<ProductUiModel> = _product
 
-    private val _quantity = MutableLiveData<Int>(productData.quantity)
+    private val _quantity = MutableLiveData<Int>(1)
     val quantity: LiveData<Int> = _quantity
 
     private val _price = MutableLiveData<Int>(productData.price)
@@ -41,10 +40,15 @@ class DetailViewModel(
     }
 
     fun addToCart() {
-        val addedProduct = product.value?.copy(quantity = quantity.value ?: 0)
-        addedProduct?.let {
-            Log.d("ADDED", "$addedProduct")
-            cartProductRepository.insertCartProduct(addedProduct.toEntity()) {}
+        val addedProduct = product.value?.copy(quantity = quantity.value ?: 0) ?: return
+        cartProductRepository.getProductQuantity(addedProduct.id) { quantity ->
+            with(addedProduct) {
+                if (quantity == null) {
+                    cartProductRepository.insertCartProduct(this.toEntity()) {}
+                } else {
+                    cartProductRepository.updateProductQuantity(this.id, this.quantity) {}
+                }
+            }
         }
     }
 
@@ -60,7 +64,7 @@ class DetailViewModel(
     }
 
     private fun decreaseQuantity() {
-        if ((_quantity.value ?: 0) <= 0) return
+        if ((_quantity.value ?: 1) <= 1) return
         _quantity.value = _quantity.value?.minus(1)
         setPriceSum()
     }
