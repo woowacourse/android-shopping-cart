@@ -11,6 +11,10 @@
         <variable
             name="quantitySelectButtonListener"
             type="woowacourse.shopping.view.products.QuantitySelectButtonListener" />
+
+        <variable
+            name="quantity"
+            type="java.lang.Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,6 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:text="@{String.valueOf(quantity)}"
             android:textAlignment="center"
             android:textSize="22sp"
             android:textStyle="bold"

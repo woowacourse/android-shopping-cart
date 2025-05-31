@@ -15,11 +15,10 @@ class CartViewHolder(
 
     fun bind(item: CartItem) {
         binding.cartItem = item
-        binding.viewQuantitySelect.tvProductQuantity.text = item.quantity.toString()
 
         val quantityBinding = binding.viewQuantitySelect
         quantityBinding.productId = item.product.id
-        quantityBinding.tvProductQuantity.text = item.quantity.toString()
+        quantityBinding.quantity = item.quantity
         quantityBinding.quantitySelectButtonListener = quantitySelectButtonListener
     }
 

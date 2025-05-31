@@ -8,10 +8,22 @@
         <variable
             name="cartItem"
             type="woowacourse.shopping.model.cart.CartItem" />
+
+        <variable
+            name="productEventListener"
+            type="woowacourse.shopping.view.products.ProductEventListener" />
+
+        <variable
+            name="isSelectorVisible"
+            type="java.lang.Boolean" />
+
+        <import type="android.view.View" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btn_selected_product"
+        android:onClick="@{()->productEventListener.onProductClick(cartItem)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true">
@@ -33,6 +45,8 @@
             android:layout_margin="8dp"
             android:background="@drawable/background_white_round"
             android:contentDescription="@null"
+            android:onClick="@{()->productEventListener.onOpenQuantitySelectClick(cartItem)}"
+            android:visibility="@{isSelectorVisible ? View.GONE: View.VISIBLE}"
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@id/product_image" />
@@ -40,7 +54,7 @@
         <include
             android:id="@+id/view_quantity_select"
             layout="@layout/item_product_quantity_selector"
-            android:visibility="gone"
+            android:visibility="@{isSelectorVisible || cartItem.quantity > 1 ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_marginBottom="8dp"

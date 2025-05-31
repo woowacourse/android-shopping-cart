@@ -64,13 +64,18 @@ class ProductsActivity : AppCompatActivity() {
     private fun initProductsRecyclerView() {
         productsAdapter =
             ProductsAdapter(
-                productClickListener = { cartItem ->
-                    navigateToProductDetail(cartItem)
-                    productsViewModel.addRecentProduct(cartItem)
-                },
-                openQuantitySelectListener = { cartItem ->
-                    productsViewModel.openQuantitySelectAndAddToCart(cartItem)
-                },
+                productEventListener =
+                    object : ProductEventListener {
+                        override fun onProductClick(item: CartItem) {
+                            navigateToProductDetail(item)
+                            productsViewModel.addRecentProduct(item)
+                        }
+
+                        override fun onOpenQuantitySelectClick(item: CartItem) {
+                            productsViewModel.openQuantitySelectAndAddToCart(item)
+                            productsAdapter.notifyQuantityChanged(item.product.id)
+                        }
+                    },
                 quantitySelectButtonListener =
                     object : QuantitySelectButtonListener {
                         override fun increase(productId: Long) {
@@ -97,9 +102,9 @@ class ProductsActivity : AppCompatActivity() {
     private fun observeProductsView() {
         productsViewModel.productsInShop.observe(this) { list ->
             productsAdapter.notifyProductsChanged(list)
-            list.forEach {
-                productsAdapter.notifyQuantityChanged(it.product.id)
-            }
+//            list.forEach {
+//                productsAdapter.notifyQuantityChanged(it.product.id)
+//            }
         }
     }
 
