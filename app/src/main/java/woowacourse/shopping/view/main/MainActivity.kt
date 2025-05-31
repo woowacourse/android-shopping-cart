@@ -15,12 +15,11 @@ import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.core.ext.showToast
 import woowacourse.shopping.view.detail.DetailActivity
 import woowacourse.shopping.view.main.adapter.ProductAdapter
-import woowacourse.shopping.view.main.adapter.ProductAdapterEventHandler
 import woowacourse.shopping.view.main.adapter.ProductRvItems
 import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 
-class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
+class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels {
         val container = (application as App).container
         MainViewModelFactory(
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
         )
     }
     private val productsAdapter: ProductAdapter by lazy {
-        ProductAdapter(emptyList(), this)
+        ProductAdapter(emptyList(), viewModel.productAdapterEventHandler)
     }
     private lateinit var binding: ActivityMainBinding
 
@@ -122,30 +121,6 @@ class MainActivity : AppCompatActivity(), ProductAdapterEventHandler {
     ) {
         val intent = DetailActivity.newIntent(this, productId, lastSeenProductId)
         startActivity(intent)
-    }
-
-    override fun onSelectProduct(productId: Long) {
-        viewModel.saveHistory(productId)
-    }
-
-    override fun onLoadMoreItems() {
-        viewModel.loadPage()
-    }
-
-    override fun showQuantity(productId: Long) {
-        viewModel.increaseCartQuantity(productId)
-    }
-
-    override fun onClickHistory(productId: Long) {
-        viewModel.saveHistory(productId)
-    }
-
-    override fun onClickIncrease(productId: Long) {
-        viewModel.increaseCartQuantity(productId)
-    }
-
-    override fun onClickDecrease(productId: Long) {
-        viewModel.decreaseCartQuantity(productId)
     }
 
     override fun onResume() {

@@ -14,6 +14,7 @@ import woowacourse.shopping.view.core.ext.addSourceList
 import woowacourse.shopping.view.loader.HistoryLoader
 import woowacourse.shopping.view.loader.ProductWithCartLoader
 import woowacourse.shopping.view.main.MainUiEvent
+import woowacourse.shopping.view.main.adapter.ProductAdapterEventHandler
 import woowacourse.shopping.view.main.state.HistoryState
 import woowacourse.shopping.view.main.state.IncreaseState
 import woowacourse.shopping.view.main.state.LoadState
@@ -154,6 +155,33 @@ class MainViewModel(
                 load = load,
             )
     }
+
+    val productAdapterEventHandler =
+        object : ProductAdapterEventHandler {
+            override fun onLoadMoreItems() {
+                loadPage()
+            }
+
+            override fun onSelectProduct(productId: Long) {
+                saveHistory(productId)
+            }
+
+            override fun showQuantity(productId: Long) {
+                increaseCartQuantity(productId)
+            }
+
+            override fun onClickHistory(productId: Long) {
+                saveHistory(productId)
+            }
+
+            override fun onClickIncrease(productId: Long) {
+                increaseCartQuantity(productId)
+            }
+
+            override fun onClickDecrease(productId: Long) {
+                decreaseCartQuantity(productId)
+            }
+        }
 
     companion object {
         private const val INITIAL_PAGE = 0
