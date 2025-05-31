@@ -77,8 +77,8 @@ class GoodsDetailsActivity : AppCompatActivity() {
             setResult(
                 ResultCode.GOODS_DETAIL_INSERT.code,
                 Intent().apply {
-                    putExtra("GOODS_ID", cart.id)
-                    putExtra("GOODS_QUANTITY", viewModel.cart.value?.quantity)
+                    putExtra(GOODS_ID, cart.id)
+                    putExtra(GOODS_QUANTITY, viewModel.cart.value?.quantity)
                 },
             )
         }
@@ -119,6 +119,9 @@ class GoodsDetailsActivity : AppCompatActivity() {
 
     companion object {
         private const val GOODS_KEY = "GOODS_KEY"
+        private const val GOODS_ID = "GOODS_ID"
+        private const val GOODS_QUANTITY = "GOODS_QUANTITY"
+        private const val HISTORY_ID = "HISTORY_ID"
 
         fun newIntent(
             context: Context,
