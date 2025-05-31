@@ -2,6 +2,7 @@ package woowacourse.shopping.view.main
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +21,16 @@ import woowacourse.shopping.view.main.vm.MainViewModel
 import woowacourse.shopping.view.main.vm.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.syncHistory()
+                viewModel.syncCartQuantities()
+            }
+        }
+
     private val viewModel: MainViewModel by viewModels {
         val container = (application as App).container
         MainViewModelFactory(
@@ -82,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                     ProductRvItems.ViewType.VIEW_TYPE_DIVIDER.ordinal,
                     ProductRvItems.ViewType.VIEW_TYPE_LOAD.ordinal,
                     -> 2
+
                     else -> throw IllegalArgumentException()
                 }
             }
@@ -120,12 +132,6 @@ class MainActivity : AppCompatActivity() {
         lastSeenProductId: Long?,
     ) {
         val intent = DetailActivity.newIntent(this, productId, lastSeenProductId)
-        startActivity(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.syncHistory()
-        viewModel.syncCartQuantities()
+        activityResultLauncher.launch(intent)
     }
 }
