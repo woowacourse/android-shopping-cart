@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="vm"
@@ -25,30 +26,30 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_selected_goods"/>
+            tools:listitem="@layout/item_selected_goods" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_page_info"
             android:layout_width="match_parent"
             android:layout_height="130dp"
-            android:visibility="@{!vm.hasNextPage &amp;&amp; vm.page == 1 ? View.GONE : View.VISIBLE}"
+            app:isVisible="@{vm.hasNextPage || vm.page != 0}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_selected_goods_list">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:onClick="@{() -> vm.decreasePage()}"
                 android:id="@+id/btn_previous_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/btn_previous_page"
+                android:backgroundTint="@{vm.hasPreviousPage ? @color/primary_color : @color/light_gray}"
+                android:enabled="@{vm.hasPreviousPage ? true : false}"
+                android:onClick="@{() -> vm.decreasePage()}"
                 android:text="@string/btn_previous_page"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:backgroundTint="@{vm.hasPreviousPage ? @color/primary_color : @color/light_gray}"
-                android:enabled="@{vm.hasPreviousPage ? true : false}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_page"
                 app:layout_constraintEnd_toStartOf="@id/tv_page"
                 app:layout_constraintTop_toTopOf="@id/tv_page" />
@@ -57,9 +58,9 @@
                 android:id="@+id/tv_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{String.valueOf(vm.page + 1)}"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:text="@{vm.page.toString()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,17 +68,17 @@
                 tools:text="1" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:onClick="@{() -> vm.increasePage()}"
                 android:id="@+id/btn_next_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_marginStart="16dp"
                 android:background="@drawable/btn_next_page"
                 android:backgroundTint="@{vm.hasNextPage ? @color/primary_color : @color/light_gray}"
+                android:enabled="@{vm.hasNextPage ? true : false}"
+                android:onClick="@{() -> vm.increasePage()}"
                 android:text="@string/btn_next_page"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:enabled="@{vm.hasNextPage ? true : false}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_page"
                 app:layout_constraintStart_toEndOf="@id/tv_page"
                 app:layout_constraintTop_toTopOf="@id/tv_page" />

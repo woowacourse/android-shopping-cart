@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain> <!-- 안드로이드 에뮬레이터용 -->
+        <domain includeSubdomains="true">localhost</domain>   <!-- 실제 기기에서 ADB reverse proxy 사용 시 -->
+    </domain-config>
+</network-security-config>

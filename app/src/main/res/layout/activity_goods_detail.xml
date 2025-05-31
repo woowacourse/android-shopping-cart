@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="lastGoodsClickListener"
+            type="woowacourse.shopping.presentation.goods.detail.LastGoodsClickListener" />
+
+        <variable
+            name="selectorClickListener"
+            type="woowacourse.shopping.presentation.util.QuantitySelectorListener" />
 
         <variable
             name="vm"
@@ -54,35 +65,49 @@
             app:layout_constraintTop_toBottomOf="@id/tv_goods_name" />
 
         <TextView
-            android:id="@+id/tv_price_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_price"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
-
-        <TextView
             android:id="@+id/tv_goods_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="18dp"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:goodsPrice="@{vm.goods.price.value}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:goodsPrice="@{vm.goods.totalPrice()}"
+            app:layout_constraintStart_toStartOf="@id/tv_goods_name"
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="99,800원" />
 
-        <Button
-            android:onClick="@{() -> vm.addToShoppingCart()}"
+
+        <include
+            android:id="@+id/cl_goods_quantity"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_goods_price"
+            bind:quantity="@{vm.goods.quantity}"
+            bind:quantityChangeListener="@{selectorClickListener}" />
+
+        <include
+            android:id="@+id/cl_last_goods"
+            layout="@layout/view_last_goods"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
+            android:clickable="true"
+            app:isVisible="@{vm.lastGoods != null}"
+            app:layout_constraintBottom_toTopOf="@id/btn_shopping_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            bind:goods="@{vm.lastGoods}"
+            bind:lastGoodsClickListener="@{lastGoodsClickListener}" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:backgroundTint="@color/primary_color"
+            android:onClick="@{() -> vm.addToShoppingCart()}"
             android:text="@string/btn_shopping_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

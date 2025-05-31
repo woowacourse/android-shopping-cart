@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="clickListener"
+            name="shoppingCartClickListener"
             type="woowacourse.shopping.presentation.shoppingcart.ShoppingCartClickListener" />
 
         <variable
@@ -50,17 +51,30 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:onClick="@{() -> clickListener.onDeleteGoods(goods)}"
+            android:onClick="@{() -> shoppingCartClickListener.onDeleteGoods(goods)}"
             android:src="@drawable/btn_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/cl_goods_count"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="18dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_goods_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_delete"
+            bind:goodsId="@{goods.id}"
+            bind:quantity="@{goods.quantity}" />
 
         <TextView
             android:id="@+id/tv_goods_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:goodsPrice="@{goods.price.value}"
+            app:goodsPrice="@{goods.totalPrice()}"
             app:layout_constraintBottom_toBottomOf="@id/iv_goods"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />

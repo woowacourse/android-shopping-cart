@@ -54,6 +54,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.google.material)
+    implementation(libs.okhttp)
+    implementation(libs.mockwebserver)
+    implementation(libs.gson)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
@@ -68,6 +71,8 @@ dependencies {
     androidTestImplementation(libs.mannodermaus.junit5.core)
     androidTestImplementation(libs.awaitility.kotlin)
     testImplementation(libs.mockk)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     implementation(libs.glide)
 }

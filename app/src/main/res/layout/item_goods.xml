@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="goods"
@@ -17,13 +20,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> goodsClickListener.onGoodsClick(goods)}"
+        android:onClick="@{() -> goodsClickListener.onGoodsClick(goods.id)}"
         android:padding="6dp">
 
         <ImageView
             android:id="@+id/iv_goods"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="154dp"
+            android:layout_height="154dp"
             android:background="@color/black"
             android:scaleType="centerCrop"
             app:goodsImage="@{goods.imageUrl}"
@@ -31,6 +34,36 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btn_plus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_select_goods"
+            android:gravity="center"
+            android:onClick="@{() -> goodsClickListener.onPlusClick(goods.id)}"
+            android:text="@string/btn_plus"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:isVisible="@{goods.quantity == 0}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintEnd_toEndOf="@id/iv_goods"
+            tools:visibility="invisible" />
+
+        <include
+            android:id="@+id/cl_goods_quantity"
+            layout="@layout/view_quantity_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:isVisible="@{goods.quantity > 0}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_goods"
+            app:layout_constraintEnd_toEndOf="@id/iv_goods"
+            app:layout_constraintStart_toStartOf="@id/iv_goods"
+            bind:goodsId="@{goods.id}"
+            bind:quantity="@{goods.quantity}" />
 
         <TextView
             android:id="@+id/tv_goods_name"

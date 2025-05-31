@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.goods.list
 
-import woowacourse.shopping.domain.model.Goods
+interface GoodsClickListener {
+    fun onGoodsClick(selectedGoodsId: Int)
 
-fun interface GoodsClickListener {
-    fun onGoodsClick(goods: Goods)
+    fun onPlusClick(goodsId: Int)
 }

@@ -10,36 +10,63 @@ import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.BaseActivity
+import woowacourse.shopping.presentation.util.QuantitySelectorListener
 
 class ShoppingCartActivity : BaseActivity() {
     private val binding by bind<ActivityShoppingCartBinding>(R.layout.activity_shopping_cart)
     private val viewModel: ShoppingCartViewModel by viewModels {
-        ShoppingCartViewModel.provideFactory((application as ShoppingApplication).shoppingRepository)
+        ShoppingCartViewModel.provideFactory(
+            (application as ShoppingApplication).goodsRepository,
+            (application as ShoppingApplication).shoppingRepository,
+        )
     }
+    private val shoppingCartAdapter = makeAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpScreen(binding.root)
-        setupAppBar()
+        setUpAppBar()
+        setUpBinding()
 
-        binding.vm = viewModel
-        binding.lifecycleOwner = this
-
-        val adapter = ShoppingCartAdapter { goods -> viewModel.deleteGoods(goods) }
         binding.rvSelectedGoodsList.apply {
-            this.adapter = adapter
+            this.adapter = shoppingCartAdapter
             layoutManager = LinearLayoutManager(this@ShoppingCartActivity)
         }
-
-        viewModel.goods.observe(this) { goods ->
-            adapter.updateItems(goods)
-        }
+        setUpObserver(shoppingCartAdapter)
     }
 
-    private fun setupAppBar() {
+    private fun setUpBinding() {
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+    }
+
+    private fun setUpAppBar() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = getString(R.string.label_shopping_cart_title)
+        }
+    }
+
+    private fun makeAdapter(): ShoppingCartAdapter {
+        return ShoppingCartAdapter(
+            { goods ->
+                viewModel.deleteGoods(goods)
+            },
+            object : QuantitySelectorListener {
+                override fun onIncreaseQuantity(goodsId: Int) {
+                    viewModel.increaseGoodsCount(goodsId)
+                }
+
+                override fun onDecreaseQuantity(goodsId: Int) {
+                    viewModel.decreaseGoodsCount(goodsId)
+                }
+            },
+        )
+    }
+
+    private fun setUpObserver(adapter: ShoppingCartAdapter) {
+        viewModel.goods.observe(this) { goods ->
+            adapter.updateItems(goods)
         }
     }
 
