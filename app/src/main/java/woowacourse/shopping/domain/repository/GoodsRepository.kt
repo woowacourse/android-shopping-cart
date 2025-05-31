@@ -12,10 +12,12 @@ interface GoodsRepository {
         page: Int,
         count: Int,
         onSuccess: (List<Goods>) -> Unit,
+        onFailure: (String?) -> Unit,
     )
 
     fun getGoodsListByIds(
         ids: List<Int>,
         onSuccess: (List<Goods>) -> Unit,
+        onFailure: (String?) -> Unit,
     )
 }

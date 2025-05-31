@@ -43,14 +43,18 @@ class GoodsViewModel(
     private var page: Int = DEFAULT_PAGE
 
     fun initGoods() {
-        goodsRepository.getPagedGoods(page, ITEM_COUNT) { currentGoods ->
-            shoppingRepository.getAllGoods { selectedItems ->
+        goodsRepository.getPagedGoods(page, ITEM_COUNT, onSuccess = { currentGoods ->
+            shoppingRepository.getAllGoods(onSuccess = { selectedItems ->
                 val updatedGoods = getUpdatedGoods(currentGoods, selectedItems)
 
                 _goods.postValue(updatedGoods)
                 _shoppingGoodsCount.postValue(selectedItems.sumOf { it.goodsQuantity })
-            }
-        }
+            }, onFailure = { errorMessage ->
+                Log.e(TAG, "initGoods: $errorMessage")
+            })
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "initGoods: $errorMessage")
+        })
     }
 
     private fun getUpdatedGoods(
@@ -67,11 +71,19 @@ class GoodsViewModel(
     }
 
     fun setLatestGoods() {
-        latestGoodsRepository.getAll { latestGoodsList ->
-            goodsRepository.getGoodsListByIds(latestGoodsList.map { it.goodsId }) { latestGoods ->
-                _latestGoods.postValue(latestGoods)
-            }
-        }
+        latestGoodsRepository.getAll(onSuccess = { latestGoodsList ->
+            goodsRepository.getGoodsListByIds(
+                latestGoodsList.map { it.goodsId },
+                onSuccess = { latestGoods ->
+                    _latestGoods.postValue(latestGoods)
+                },
+                onFailure = { errorMessage ->
+                    Log.e(TAG, "setLatestGoods: $errorMessage")
+                },
+            )
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "setLatestGoods: $errorMessage")
+        })
     }
 
     fun addToShoppingCart(goodsId: Int) {
@@ -79,9 +91,11 @@ class GoodsViewModel(
             updateGoodsQuantity(goodsId) {
                 it.increaseQuantity()
             }
-        shoppingRepository.insertGoods(updatedItem.id, QUANTITY_CHANGE_AMOUNT) {
+        shoppingRepository.insertGoods(updatedItem.id, QUANTITY_CHANGE_AMOUNT, onSuccess = {
             _shoppingGoodsCount.postValue(_shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT))
-        }
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "addToShoppingCart: $errorMessage")
+        })
     }
 
     fun increaseGoodsCount(goodsId: Int) {
@@ -89,9 +103,11 @@ class GoodsViewModel(
             updateGoodsQuantity(goodsId) {
                 it.increaseQuantity()
             }
-        shoppingRepository.increaseGoodsQuantity(updatedItem.id) {
+        shoppingRepository.increaseGoodsQuantity(updatedItem.id, onSuccess = {
             _shoppingGoodsCount.postValue(_shoppingGoodsCount.value?.plus(QUANTITY_CHANGE_AMOUNT))
-        }
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "increaseGoodsCount: $errorMessage")
+        })
     }
 
     fun decreaseGoodsCount(goodsId: Int) {
@@ -99,9 +115,11 @@ class GoodsViewModel(
             updateGoodsQuantity(goodsId) {
                 it.decreaseQuantity()
             }
-        shoppingRepository.decreaseGoodsQuantity(updatedItem.id) {
+        shoppingRepository.decreaseGoodsQuantity(updatedItem.id, onSuccess = {
             _shoppingGoodsCount.postValue(_shoppingGoodsCount.value?.minus(QUANTITY_CHANGE_AMOUNT))
-        }
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "decreaseGoodsCount: $errorMessage")
+        })
     }
 
     private fun updateGoodsQuantity(
@@ -120,21 +138,25 @@ class GoodsViewModel(
     }
 
     fun loadMoreGoods() {
-        goodsRepository.getPagedGoods(page + 1, ITEM_COUNT) { moreGoods ->
+        goodsRepository.getPagedGoods(page + 1, ITEM_COUNT, onSuccess = { moreGoods ->
             if (moreGoods.isNotEmpty()) {
                 _goods.postValue(_goods.value?.plus(moreGoods))
                 page = page.plus(1)
             } else {
-                Log.e("GoodsViewModel", "상품 로드 실패")
+                Log.e(TAG, "상품 로드 실패")
             }
             _shouldShowLoadMore.postValue(false)
-        }
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "loadMoreGoods: $errorMessage")
+        })
     }
 
     fun updateShouldShowLoadMore() {
-        goodsRepository.getPagedGoods(page + 1, ITEM_COUNT) {
+        goodsRepository.getPagedGoods(page + 1, ITEM_COUNT, onSuccess = {
             _shouldShowLoadMore.postValue(it.isNotEmpty())
-        }
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "updateShouldShowLoadMore: $errorMessage")
+        })
     }
 
     fun updateShouldNavigateToShoppingCart() {
@@ -145,19 +167,24 @@ class GoodsViewModel(
         goodsId: Int,
         move: (goodsId: Int, lastId: Int?) -> Unit,
     ) {
-        latestGoodsRepository.getLast { latestGoods ->
+        latestGoodsRepository.getLast(onSuccess = { latestGoods ->
             updateLatestGoods(goodsId)
             move(goodsId, latestGoods?.goodsId)
-        }
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "moveToDetail: $errorMessage")
+        })
     }
 
     private fun updateLatestGoods(goodsId: Int) {
-        latestGoodsRepository.insertLatestGoods(goodsId) {
+        latestGoodsRepository.insertLatestGoods(goodsId, onSuccess = {
             setLatestGoods()
-        }
+        }, onFailure = { errorMessage ->
+            Log.e(TAG, "updateLatestGoods: $errorMessage")
+        })
     }
 
     companion object {
+        private const val TAG: String = "GoodsViewModel"
         private const val QUANTITY_CHANGE_AMOUNT: Int = 1
         private const val DEFAULT_PAGE: Int = 0
         private const val MINIMUM_QUANTITY: Int = 0

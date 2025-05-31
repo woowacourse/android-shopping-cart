@@ -32,7 +32,7 @@ class GoodsViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda(), any()) } answers {
             lambda<(List<Goods>) -> Unit>().invoke(listOf(createGoods()))
         }
 
@@ -43,10 +43,10 @@ class GoodsViewModelTest {
     @Test
     fun `상품 목록을 정해진 수량만큼 가져온다`() {
         // given
-        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda(), any()) } answers {
             lambda<(List<Goods>) -> Unit>().invoke(List(20) { createGoods() })
         }
-        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+        every { shoppingRepository.getAllGoods(captureLambda(), any()) } answers {
             lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf())
         }
 
@@ -60,7 +60,7 @@ class GoodsViewModelTest {
     @Test
     fun `상품 목록을 추가한다`() {
         // given
-        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+        every { shoppingRepository.getAllGoods(captureLambda(), any()) } answers {
             lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf())
         }
 
@@ -78,7 +78,7 @@ class GoodsViewModelTest {
     @Test
     fun `데이터가 존재할 경우 로딩이 가능하다`() {
         // given
-        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda(), any()) } answers {
             lambda<(List<Goods>) -> Unit>().invoke(listOf(createGoods()))
         }
         goodsViewModel.initGoods()
@@ -94,7 +94,7 @@ class GoodsViewModelTest {
     @Test
     fun `데이터가 존재하지 않을 경우 로딩이 불가능하다`() {
         // given
-        every { goodsRepository.getPagedGoods(any(), any(), captureLambda()) } answers {
+        every { goodsRepository.getPagedGoods(any(), any(), captureLambda(), any()) } answers {
             lambda<(List<Goods>) -> Unit>().invoke(emptyList())
         }
         goodsViewModel.initGoods()
@@ -110,7 +110,7 @@ class GoodsViewModelTest {
     @Test
     fun `구매할 상품 수량을 증가할 수 있다`() {
         // given
-        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+        every { shoppingRepository.getAllGoods(captureLambda(), any()) } answers {
             lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf())
         }
         goodsViewModel.initGoods()
@@ -126,7 +126,7 @@ class GoodsViewModelTest {
     @Test
     fun `구매할 상품 수량을 감소할 수 있다`() {
         // given
-        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+        every { shoppingRepository.getAllGoods(captureLambda(), any()) } answers {
             lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf(createShoppingGoods(1, 1)))
         }
         goodsViewModel.initGoods()
@@ -142,7 +142,7 @@ class GoodsViewModelTest {
     @Test
     fun `장바구니에 담긴 상품 개수를 복원한다`() {
         // given
-        every { shoppingRepository.getAllGoods(captureLambda()) } answers {
+        every { shoppingRepository.getAllGoods(captureLambda(), any()) } answers {
             lambda<(Set<ShoppingGoods>) -> Unit>().invoke(setOf(createShoppingGoods(1, 2)))
         }
         goodsViewModel.initGoods()
@@ -157,10 +157,10 @@ class GoodsViewModelTest {
     @Test
     fun `최근 본 상품 목록을 가져온다`() {
         // given
-        every { latestGoodsRepository.getAll(captureLambda()) } answers {
+        every { latestGoodsRepository.getAll(captureLambda(), any()) } answers {
             lambda<(List<LatestGoods>) -> Unit>().invoke(listOf(LatestGoods(1), LatestGoods(2)))
         }
-        every { goodsRepository.getGoodsListByIds(any(), captureLambda()) } answers {
+        every { goodsRepository.getGoodsListByIds(any(), captureLambda(), any()) } answers {
             lambda<(List<Goods>) -> Unit>().invoke(listOf(createGoods(), createGoods()))
         }
 
@@ -177,8 +177,8 @@ class GoodsViewModelTest {
     fun `상품이 선택될 때 최근 본 상품 목록을 갱신한다`() {
         // given
         val id = slot<Int>()
-        every { latestGoodsRepository.insertLatestGoods(capture(id), any()) } just Runs
-        every { latestGoodsRepository.getLast(captureLambda()) } answers {
+        every { latestGoodsRepository.insertLatestGoods(capture(id), any(), any()) } just Runs
+        every { latestGoodsRepository.getLast(captureLambda(), any()) } answers {
             lambda<(LatestGoods?) -> Unit>().invoke(LatestGoods(1))
         }
         goodsViewModel.initGoods()
@@ -187,7 +187,7 @@ class GoodsViewModelTest {
         goodsViewModel.moveToDetail(1) { _, _ -> }
 
         // then
-        verify { latestGoodsRepository.insertLatestGoods(any(), any()) }
+        verify { latestGoodsRepository.insertLatestGoods(any(), any(), any()) }
 
         id.captured shouldBe 1
     }

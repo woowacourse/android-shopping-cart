@@ -261,7 +261,7 @@ class ShoppingCartActivityTest {
     private fun addItems(count: Int) {
         val launch = CountDownLatch(count)
         repeat(count) {
-            shoppingRepository.insertGoods(it + 1, 1) {}
+            shoppingRepository.insertGoods(it + 1, 1, onSuccess = {}, onFailure = {})
             launch.countDown()
         }
         launch.await()
@@ -270,7 +270,7 @@ class ShoppingCartActivityTest {
     private fun removeItems(count: Int) {
         val launch = CountDownLatch(count)
         repeat(count) {
-            shoppingRepository.removeGoods(it + 1) {}
+            shoppingRepository.removeGoods(it + 1, onSuccess = {}, onFailure = {})
             launch.countDown()
         }
         launch.await()

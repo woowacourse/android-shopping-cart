@@ -43,13 +43,13 @@ class GoodsDetailViewModelTest {
         // given
         val id = slot<Int>()
         val count = slot<Int>()
-        every { shoppingRepository.increaseGoodsQuantity(capture(id), capture(count), any()) } just Runs
+        every { shoppingRepository.increaseGoodsQuantity(capture(id), capture(count), any(), any()) } just Runs
 
         // when
         goodsDetailViewModel.addToShoppingCart()
 
         // then
-        verify { shoppingRepository.increaseGoodsQuantity(any(), any(), any()) }
+        verify { shoppingRepository.increaseGoodsQuantity(any(), any(), any(), any()) }
 
         id.captured shouldBe goods.id
         count.captured shouldBe 1
@@ -95,7 +95,7 @@ class GoodsDetailViewModelTest {
     fun `마지막으로 본 상품을 갱신한다`() {
         // given
         val id = slot<Int>()
-        every { latestGoodsRepository.insertLatestGoods(capture(id), captureLambda()) } answers {
+        every { latestGoodsRepository.insertLatestGoods(capture(id), captureLambda(), any()) } answers {
             lambda<() -> Unit>().captured.invoke()
         }
 
@@ -103,7 +103,7 @@ class GoodsDetailViewModelTest {
         goodsDetailViewModel.updateLatestGoods(1)
 
         // then
-        verify { latestGoodsRepository.insertLatestGoods(capture(id), any()) }
+        verify { latestGoodsRepository.insertLatestGoods(capture(id), any(), any()) }
 
         id.captured shouldBe 1
     }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.entity
 
-import android.util.Log
 import woowacourse.shopping.domain.model.Goods
 
 class GoodsEntity(
@@ -18,15 +17,10 @@ fun Goods.toEntity(): GoodsEntity =
         imageUrl = imageUrl,
     )
 
-fun GoodsEntity.toGoods(): Goods? =
-    try {
-        Goods.of(
-            id = id.toInt(),
-            name = name,
-            price = price.toInt(),
-            imageUrl = imageUrl,
-        )
-    } catch (e: Exception) {
-        Log.e("GoodsEntity", "Goods 변환 실패: ${e.message}")
-        null
-    }
+fun GoodsEntity.toGoods(): Goods =
+    Goods.of(
+        id = id.toInt(),
+        name = name,
+        price = price.toInt(),
+        imageUrl = imageUrl,
+    )

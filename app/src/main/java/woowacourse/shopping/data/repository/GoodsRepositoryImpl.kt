@@ -28,13 +28,19 @@ class GoodsRepositoryImpl(
         page: Int,
         count: Int,
         onSuccess: (List<Goods>) -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
             val result = goodsService.getPagedGoods(page, count)
             result.onSuccess { goodsEntity ->
-                onSuccess(goodsEntity.map { it.toGoods() ?: throw Exception(ERROR_CONVERT_FAIL) })
+                try {
+                    val converted = goodsEntity.map { it.toGoods() }
+                    onSuccess(converted)
+                } catch (e: Exception) {
+                    onFailure(e.message)
+                }
             }.onFailure {
-                Log.e(TAG, it.message ?: ERROR_LOAD_FAIL.format("getPagedGoods"))
+                onFailure(it.message)
             }
         }
     }
@@ -42,20 +48,20 @@ class GoodsRepositoryImpl(
     override fun getGoodsListByIds(
         ids: List<Int>,
         onSuccess: (List<Goods>) -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
             val result = goodsService.getGoodsListByIds(ids)
             result.onSuccess { goodsEntity ->
-                onSuccess(goodsEntity.map { it.toGoods() ?: throw Exception(ERROR_CONVERT_FAIL) })
+                onSuccess(goodsEntity.map { it.toGoods() })
             }.onFailure {
-                Log.e(TAG, it.message ?: ERROR_LOAD_FAIL.format("getGoodsListByIds"))
+                onFailure(it.message)
             }
         }
     }
 
     companion object {
         private const val TAG = "GoodsRepositoryImpl"
-        private const val ERROR_CONVERT_FAIL = "Goods 변환 실패"
         private const val ERROR_LOAD_FAIL = "%s: 서버 요청 실패"
     }
 }

@@ -10,9 +10,16 @@ import kotlin.concurrent.thread
 class ShoppingRepositoryImpl(
     private val shoppingDao: ShoppingDao,
 ) : ShoppingRepository {
-    override fun getAllGoods(onSuccess: (Set<ShoppingGoods>) -> Unit) {
+    override fun getAllGoods(
+        onSuccess: (Set<ShoppingGoods>) -> Unit,
+        onFailure: (String?) -> Unit,
+    ) {
         thread {
-            onSuccess(shoppingDao.getAll().map { it.toShoppingGoods() }.toSet())
+            try {
+                onSuccess(shoppingDao.getAll().map { it.toShoppingGoods() }.toSet())
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 
@@ -20,10 +27,15 @@ class ShoppingRepositoryImpl(
         id: Int,
         quantity: Int,
         onSuccess: () -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
-            shoppingDao.insert(ShoppingGoods(id, quantity).toShoppingEntity())
-            onSuccess()
+            try {
+                shoppingDao.insert(ShoppingGoods(id, quantity).toShoppingEntity())
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 
@@ -31,10 +43,15 @@ class ShoppingRepositoryImpl(
         id: Int,
         quantity: Int,
         onSuccess: () -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
-            shoppingDao.increaseOrInsert(id, quantity)
-            onSuccess()
+            try {
+                shoppingDao.increaseOrInsert(id, quantity)
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 
@@ -42,20 +59,30 @@ class ShoppingRepositoryImpl(
         id: Int,
         quantity: Int,
         onSuccess: () -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
-            shoppingDao.decreaseOrDelete(id, quantity)
-            onSuccess()
+            try {
+                shoppingDao.decreaseOrDelete(id, quantity)
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 
     override fun removeGoods(
         id: Int,
         onSuccess: () -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
-            shoppingDao.delete(id)
-            onSuccess()
+            try {
+                shoppingDao.delete(id)
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 
@@ -63,9 +90,14 @@ class ShoppingRepositoryImpl(
         page: Int,
         count: Int,
         onSuccess: (List<ShoppingGoods>) -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
-            onSuccess(shoppingDao.getPagedGoods(page, count).map { it.toShoppingGoods() })
+            try {
+                onSuccess(shoppingDao.getPagedGoods(page, count).map { it.toShoppingGoods() })
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 }

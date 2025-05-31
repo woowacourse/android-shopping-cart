@@ -55,7 +55,7 @@ class GoodsActivityTest {
         latestGoodsRepository = LatestGoodsRepositoryImpl(dao)
         application.initLatestGoodsRepository(latestGoodsRepository as LatestGoodsRepositoryImpl)
 
-        latestGoodsRepository.insertLatestGoods(1) {}
+        latestGoodsRepository.insertLatestGoods(1, onSuccess = {}, onFailure = {})
 
         val intent = Intent(ApplicationProvider.getApplicationContext(), GoodsActivity::class.java)
         scenario = ActivityScenario.launch(intent)

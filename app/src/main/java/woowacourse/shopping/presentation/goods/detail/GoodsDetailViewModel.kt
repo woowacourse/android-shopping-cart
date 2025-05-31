@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.goods.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -58,9 +59,11 @@ class GoodsDetailViewModel(
 
     fun addToShoppingCart() {
         _goods.value?.let { goods ->
-            shoppingRepository.increaseGoodsQuantity(goods.id, goods.quantity) {
+            shoppingRepository.increaseGoodsQuantity(goods.id, goods.quantity, onSuccess = {
                 _onItemAddedToCart.postValue(_goods.value?.quantity ?: MIN_PURCHASE_QUANTITY)
-            }
+            }, onFailure = { errorMessage ->
+                Log.e(TAG, "addToShoppingCart: $errorMessage")
+            })
         }
     }
 
@@ -75,10 +78,16 @@ class GoodsDetailViewModel(
     }
 
     fun updateLatestGoods(goodsId: Int) {
-        latestGoodsRepository.insertLatestGoods(goodsId) {}
+        latestGoodsRepository.insertLatestGoods(goodsId, onSuccess = {}, onFailure = { errorMessage ->
+            Log.e(
+                TAG,
+                "updateLatestGoods: $errorMessage",
+            )
+        })
     }
 
     companion object {
+        private const val TAG: String = "GoodsDetailViewModel"
         private const val MIN_PURCHASE_QUANTITY: Int = 1
 
         fun provideFactory(

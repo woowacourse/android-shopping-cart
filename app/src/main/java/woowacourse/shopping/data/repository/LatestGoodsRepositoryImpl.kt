@@ -13,13 +13,18 @@ class LatestGoodsRepositoryImpl(
     override fun insertLatestGoods(
         goodsId: Int,
         onSuccess: () -> Unit,
+        onFailure: (String?) -> Unit,
     ) {
         thread {
-            latestGoodsDao.insert(LatestGoodsEntity(goodsId))
-            if (isFull()) {
-                deleteOldest()
+            try {
+                latestGoodsDao.insert(LatestGoodsEntity(goodsId))
+                if (isFull()) {
+                    deleteOldest()
+                }
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e.message)
             }
-            onSuccess()
         }
     }
 
@@ -32,15 +37,29 @@ class LatestGoodsRepositoryImpl(
         latestGoodsDao.deleteOldest()
     }
 
-    override fun getAll(onSuccess: (List<LatestGoods>) -> Unit) {
+    override fun getAll(
+        onSuccess: (List<LatestGoods>) -> Unit,
+        onFailure: (String?) -> Unit,
+    ) {
         thread {
-            onSuccess(latestGoodsDao.getAll().map { it.toLatestGoods() })
+            try {
+                onSuccess(latestGoodsDao.getAll().map { it.toLatestGoods() })
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 
-    override fun getLast(onSuccess: (LatestGoods?) -> Unit) {
+    override fun getLast(
+        onSuccess: (LatestGoods?) -> Unit,
+        onFailure: (String?) -> Unit,
+    ) {
         thread {
-            onSuccess(latestGoodsDao.getLast()?.toLatestGoods())
+            try {
+                onSuccess(latestGoodsDao.getLast()?.toLatestGoods())
+            } catch (e: Exception) {
+                onFailure(e.message)
+            }
         }
     }
 

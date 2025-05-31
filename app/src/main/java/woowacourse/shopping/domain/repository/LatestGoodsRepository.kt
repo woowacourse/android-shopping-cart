@@ -6,9 +6,16 @@ interface LatestGoodsRepository {
     fun insertLatestGoods(
         goodsId: Int,
         onSuccess: () -> Unit,
+        onFailure: (String?) -> Unit,
     )
 
-    fun getAll(onSuccess: (List<LatestGoods>) -> Unit)
+    fun getAll(
+        onSuccess: (List<LatestGoods>) -> Unit,
+        onFailure: (String?) -> Unit,
+    )
 
-    fun getLast(onSuccess: (LatestGoods?) -> Unit)
+    fun getLast(
+        onSuccess: (LatestGoods?) -> Unit,
+        onFailure: (String?) -> Unit,
+    )
 }
