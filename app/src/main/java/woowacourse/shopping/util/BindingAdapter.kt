@@ -34,17 +34,17 @@ fun setPageNumber(
 @BindingAdapter("enableNextButton")
 fun setNextButtonEnabled(
     view: View,
-    handler: CartEventHandler,
+    isEnabled: Boolean,
 ) {
-    view.isEnabled = handler.isNextButtonEnabled()
+    view.isEnabled = isEnabled
 }
 
 @BindingAdapter("enablePrevButton")
 fun setPrevButtonEnabled(
     view: View,
-    handler: CartEventHandler,
+    isEnabled: Boolean,
 ) {
-    view.isEnabled = handler.isPrevButtonEnabled()
+    view.isEnabled = isEnabled
 }
 
 @BindingAdapter("app:visibleIfNotSameProduct")
