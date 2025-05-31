@@ -83,8 +83,9 @@ class DetailActivity : AppCompatActivity() {
                 }
 
                 is DetailUiEvent.MoveToLastSeenProduct -> {
-                    startActivity(newIntent(this, it.productId))
-                    finish()
+                    val intent = newIntent(this, it.productId)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
                 }
             }
         }
