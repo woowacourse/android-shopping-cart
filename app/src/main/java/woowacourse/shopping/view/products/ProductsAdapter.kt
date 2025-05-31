@@ -32,13 +32,13 @@ class ProductsAdapter(
         holder.bind(cartItems[position])
     }
 
-    fun updateProductsView(list: List<CartItem>) {
+    fun notifyProductsChanged(list: List<CartItem>) {
         cartItems.clear()
         cartItems.addAll(list)
         notifyItemRangeChanged(0, list.size)
     }
 
-    fun updateQuantityView(productId: Long) {
+    fun notifyQuantityChanged(productId: Long) {
         val position = cartItems.indexOfFirst { it.product.id == productId }
         notifyItemChanged(position)
     }

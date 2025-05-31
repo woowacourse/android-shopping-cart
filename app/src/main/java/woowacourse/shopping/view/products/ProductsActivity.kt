@@ -97,9 +97,9 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun observeProductsView() {
         productsViewModel.productsInShop.observe(this) { list ->
-            productsAdapter.updateProductsView(list)
+            productsAdapter.notifyProductsChanged(list)
             list.forEach {
-                productsAdapter.updateQuantityView(it.product.id)
+                productsAdapter.notifyQuantityChanged(it.product.id)
             }
         }
     }
