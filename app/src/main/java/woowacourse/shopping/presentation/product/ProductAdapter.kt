@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
@@ -13,18 +14,12 @@ class ProductAdapter(
     private val onClickLoadMore: () -> Unit,
     private val cartCounterClickListener: CartCounterClickListener,
     private val itemClickListener: ItemClickListener,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: List<CartItem> = emptyList()
-    private var showLoadMore: Boolean = false
-
-    fun setData(
-        newList: List<CartItem>,
-        showLoadMore: Boolean,
-    ) {
-        this.items = newList
-        this.showLoadMore = showLoadMore
-        notifyDataSetChanged()
-    }
+) : ListAdapter<ProductListItem, RecyclerView.ViewHolder>(ProductDiffCallback()) {
+    override fun getItemViewType(position: Int): Int =
+        when (getItem(position)) {
+            is ProductListItem.Product -> R.layout.item_product
+            is ProductListItem.LoadMore -> R.layout.item_load_more
+        }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -51,15 +46,11 @@ class ProductAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        when (holder) {
-            is ProductViewHolder -> holder.bind(items[position])
-            is LoadMoreViewHolder -> holder.bind(onClickLoadMore)
+        when (val item = getItem(position)) {
+            is ProductListItem.Product -> (holder as ProductViewHolder).bind(item.item)
+            is ProductListItem.LoadMore -> (holder as LoadMoreViewHolder).bind(onClickLoadMore)
         }
     }
-
-    override fun getItemCount(): Int = items.size + if (showLoadMore) 1 else 0
-
-    override fun getItemViewType(position: Int): Int = if (position < items.size) R.layout.item_product else R.layout.item_load_more
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,

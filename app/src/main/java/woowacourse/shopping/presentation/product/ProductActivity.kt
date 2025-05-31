@@ -123,19 +123,6 @@ class ProductActivity :
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { result ->
-            when (result) {
-                is ResultState.Success -> {
-                    val showLoadMore = viewModel.showLoadMore.value == true
-                    productAdapter.setData(result.data, showLoadMore)
-                }
-
-                is ResultState.Failure -> {
-                    showToast(R.string.product_toast_load_failure)
-                }
-            }
-        }
-
         viewModel.recentProducts.observe(this) { result ->
             when (result) {
                 is ResultState.Success -> {
@@ -148,17 +135,32 @@ class ProductActivity :
             }
         }
 
-        viewModel.cartItemCount.observe(this) { count ->
-            _toolbarBinding?.tvCartCount?.apply {
-                text = count.toString()
-                visibility = if (count > 0) View.VISIBLE else View.GONE
+        viewModel.products.observe(this) { result ->
+            when (result) {
+                is ResultState.Success -> {
+                    val showLoadMore = viewModel.showLoadMore.value == true
+                    val list = result.data.toProductListItems(showLoadMore)
+                    productAdapter.submitList(list)
+                }
+
+                is ResultState.Failure -> {
+                    showToast(R.string.product_toast_load_failure)
+                }
             }
         }
 
         viewModel.showLoadMore.observe(this) { showLoadMore ->
             val productsState = viewModel.products.value
             if (productsState is ResultState.Success) {
-                productAdapter.setData(productsState.data, showLoadMore)
+                val list = productsState.data.toProductListItems(showLoadMore)
+                productAdapter.submitList(list)
+            }
+        }
+
+        viewModel.cartItemCount.observe(this) { count ->
+            _toolbarBinding?.tvCartCount?.apply {
+                text = count.toString()
+                visibility = if (count > 0) View.VISIBLE else View.GONE
             }
         }
 
@@ -203,4 +205,8 @@ class ProductActivity :
         super.onDestroy()
         _toolbarBinding = null
     }
+
+    private fun List<CartItem>.toProductListItems(showLoadMore: Boolean): List<ProductListItem> =
+        this.map { ProductListItem.Product(it) } +
+            if (showLoadMore) listOf(ProductListItem.LoadMore) else emptyList()
 }
