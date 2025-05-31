@@ -19,6 +19,6 @@ class CartViewHolder(
     }
 
     interface Handler {
-        fun onClickDeleteItem(cartId: Long)
+        fun onClickDeleteItem(productId: Long)
     }
 }

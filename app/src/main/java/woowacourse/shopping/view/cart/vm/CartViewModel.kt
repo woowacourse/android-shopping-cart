@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.view.cart.CartUiEvent
+import woowacourse.shopping.view.cart.adapter.CartAdapter
 import woowacourse.shopping.view.cart.state.CartUiState
 import woowacourse.shopping.view.cart.vm.Paging.Companion.INITIAL_PAGE_NO
 import woowacourse.shopping.view.cart.vm.Paging.Companion.PAGE_SIZE
 import woowacourse.shopping.view.core.common.withState
 import woowacourse.shopping.view.core.event.MutableSingleLiveData
 import woowacourse.shopping.view.core.event.SingleLiveData
+import woowacourse.shopping.view.core.handler.CartQuantityHandler
 import woowacourse.shopping.view.loader.CartLoader
 import woowacourse.shopping.view.main.state.IncreaseState
 
@@ -91,4 +93,22 @@ class CartViewModel(
     private fun sendEvent(event: CartUiEvent) {
         _event.setValue(event)
     }
+
+    val cartQuantityHandler =
+        object : CartQuantityHandler {
+            override fun onClickIncrease(productId: Long) {
+                increaseCartQuantity(productId)
+            }
+
+            override fun onClickDecrease(productId: Long) {
+                decreaseCartQuantity(productId)
+            }
+        }
+
+    val cartAdapterHandler =
+        object : CartAdapter.Handler {
+            override fun onClickDeleteItem(productId: Long) {
+                deleteProduct(productId)
+            }
+        }
 }

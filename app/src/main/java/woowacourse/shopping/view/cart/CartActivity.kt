@@ -17,9 +17,8 @@ import woowacourse.shopping.view.cart.adapter.CartAdapter
 import woowacourse.shopping.view.cart.vm.CartViewModel
 import woowacourse.shopping.view.cart.vm.CartViewModelFactory
 import woowacourse.shopping.view.core.ext.showToast
-import woowacourse.shopping.view.core.handler.CartQuantityHandler
 
-class CartActivity : AppCompatActivity(), CartQuantityHandler, CartAdapter.Handler {
+class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         val container = (application as App).container
@@ -29,7 +28,11 @@ class CartActivity : AppCompatActivity(), CartQuantityHandler, CartAdapter.Handl
         )
     }
     private val cartAdapter by lazy {
-        CartAdapter(items = emptyList(), handler = this, cartQuantityHandler = this)
+        CartAdapter(
+            items = emptyList(),
+            handler = viewModel.cartAdapterHandler,
+            cartQuantityHandler = viewModel.cartQuantityHandler,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,10 +88,6 @@ class CartActivity : AppCompatActivity(), CartQuantityHandler, CartAdapter.Handl
         }
     }
 
-    override fun onClickDeleteItem(cardId: Long) {
-        viewModel.deleteProduct(cardId)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -98,14 +97,6 @@ class CartActivity : AppCompatActivity(), CartQuantityHandler, CartAdapter.Handl
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onClickIncrease(productId: Long) {
-        viewModel.increaseCartQuantity(productId)
-    }
-
-    override fun onClickDecrease(productId: Long) {
-        viewModel.decreaseCartQuantity(productId)
     }
 
     companion object {
