@@ -105,7 +105,7 @@ class CartViewModel(
             }
         }
 
-    val cartAdapterHandler =
+    val cartEventHandler =
         object : CartAdapter.Handler {
             override fun onClickDeleteItem(productId: Long) {
                 deleteProduct(productId)

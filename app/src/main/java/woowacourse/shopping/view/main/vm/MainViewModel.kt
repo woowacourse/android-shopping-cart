@@ -152,7 +152,7 @@ class MainViewModel(
             )
     }
 
-    val productAdapterEventHandler =
+    val productEventHandler =
         object : ProductAdapterEventHandler {
             override fun onLoadMoreItems() {
                 loadPage()
