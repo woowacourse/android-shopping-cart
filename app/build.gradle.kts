@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.okhttp)
     implementation(libs.gson)
-    implementation(libs.mockwebserver)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotest.runner.junit5)
