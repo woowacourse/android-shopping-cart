@@ -1,6 +1,5 @@
 package woowacourse.shopping.product.catalog
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,7 +40,6 @@ class CatalogViewModel(
     fun addToCart(product: ProductUiModel) {
         cartProductRepository.insertCartProduct(product.copy(quantity = 1).toEntity()) {
             cartProductRepository.getProduct(product.id) { addedProduct ->
-                Log.d("ADDED", "$addedProduct")
                 _updatedItem.postValue(addedProduct.toUiModel())
                 loadCartItemSize()
             }
@@ -52,7 +50,6 @@ class CatalogViewModel(
         cartProductRepository.updateProductQuantity(productId, SIZE_ONE) {
             cartProductRepository.getProduct(productId) { product ->
                 _updatedItem.postValue(product.toUiModel())
-                Log.d("updatedItem", "${updatedItem.value}")
                 loadCartItemSize()
             }
         }
