@@ -8,6 +8,8 @@ class ProductRepositoryImpl : ProductRepository {
 
     override fun getAll(): List<CartItem> = dummyProducts.map { CartItem(it) }
 
+    override fun getAllSize(): Int = dummyProducts.size
+
     override fun fetchProducts(
         offset: Int,
         limit: Int,

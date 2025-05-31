@@ -5,6 +5,8 @@ import woowacourse.shopping.model.cart.CartItem
 interface ProductRepository {
     fun getAll(): List<CartItem>
 
+    fun getAllSize(): Int
+
     fun fetchProducts(
         offset: Int,
         limit: Int,

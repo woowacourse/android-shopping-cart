@@ -111,14 +111,15 @@ class ProductsViewModel(
         setUpdatedProducts()
         val pageSize = PAGE_SIZE
         val nextStart = currentPage * pageSize
-        val nextEnd = minOf(nextStart + pageSize, productRepository.getAll().size)
+        val totalProductsSize = productRepository.getAllSize()
+        val nextEnd = minOf(nextStart + pageSize, totalProductsSize)
 
-        if (nextStart < productRepository.getAll().size) {
+        if (nextStart < totalProductsSize) {
             val nextItems = productRepository.fetchProducts(nextStart, nextEnd)
             loadedItems.addAll(nextItems)
             _productsInShop.postValue(loadedItems.toList())
             currentPage++
-            if (nextEnd == productRepository.getAll().size) isAllProductsFetched = true
+            if (nextEnd == totalProductsSize) isAllProductsFetched = true
         }
     }
 
