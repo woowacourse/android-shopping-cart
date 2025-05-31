@@ -1,18 +1,18 @@
 package woowacourse.shopping.product.catalog
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.product.ProductQuantityHandler
 import woowacourse.shopping.product.catalog.event.CatalogEventHandler
 import woowacourse.shopping.product.catalog.viewHolder.LoadButtonViewHolder
 import woowacourse.shopping.product.catalog.viewHolder.ProductViewHolder
+import woowacourse.shopping.util.DiffCallback
 
 class ProductAdapter(
-    private var products: List<ProductUiModel>,
     private val catalogHandler: CatalogEventHandler,
     private val quantityHandler: ProductQuantityHandler,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : ListAdapter<ProductUiModel, RecyclerView.ViewHolder>(DiffCallback()) {
     private var showLoadMoreButton = false
 
     override fun onCreateViewHolder(
@@ -29,10 +29,8 @@ class ProductAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        when (holder) {
-            is ProductViewHolder -> {
-                holder.bind(products[position])
-            }
+        if (getItemViewType(position) == PRODUCT) {
+            (holder as ProductViewHolder).bind(getItem(position))
         }
     }
 
@@ -43,52 +41,21 @@ class ProductAdapter(
             PRODUCT
         }
 
-    fun setData(newProducts: List<ProductUiModel>) {
-        val oldProducts = this.products
-        this.products = newProducts
-
-        val diffResult =
-            DiffUtil.calculateDiff(
-                object : DiffUtil.Callback() {
-                    override fun getOldListSize() = oldProducts.size
-
-                    override fun getNewListSize() = newProducts.size
-
-                    override fun areItemsTheSame(
-                        oldPos: Int,
-                        newPos: Int,
-                    ) = oldProducts[oldPos].id == newProducts[newPos].id
-
-                    override fun areContentsTheSame(
-                        oldPos: Int,
-                        newPos: Int,
-                    ) = oldProducts[oldPos] == newProducts[newPos]
-
-                    override fun getChangePayload(
-                        oldPos: Int,
-                        newPos: Int,
-                    ): Any? = null
-                },
-            )
-
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    override fun getItemCount(): Int = products.size + if (showLoadMoreButton) 1 else 0
+    override fun getItemCount(): Int = currentList.size + if (showLoadMoreButton) 1 else 0
 
     fun setLoadButtonVisible(visible: Boolean) {
         val previous = showLoadMoreButton
         showLoadMoreButton = visible
         if (previous != visible) {
             if (visible) {
-                notifyItemInserted(products.size)
+                notifyItemInserted(currentList.size)
             } else {
-                notifyItemRemoved(products.size)
+                notifyItemRemoved(currentList.size)
             }
         }
     }
 
-    fun isLoadMoreButtonPosition(position: Int): Boolean = showLoadMoreButton && position == products.size
+    fun isLoadMoreButtonPosition(position: Int): Boolean = showLoadMoreButton && position == currentList.size
 
     companion object {
         private const val PRODUCT = 1

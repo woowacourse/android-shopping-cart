@@ -74,7 +74,7 @@ class CatalogActivity : AppCompatActivity() {
     }
 
     private fun setupProductRecyclerView(handler: CatalogEventHandlerImpl) {
-        productAdapter = ProductAdapter(emptyList(), handler, handler)
+        productAdapter = ProductAdapter(handler, handler)
         binding.recyclerViewProducts.apply {
             this.adapter = productAdapter
             layoutManager =
@@ -101,8 +101,8 @@ class CatalogActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.pagingData.observe(this) { paging ->
             productAdapter.apply {
-                setData(paging.products)
-                setLoadButtonVisible(paging.hasNext)
+                productAdapter.submitList(paging.products)
+                productAdapter.setLoadButtonVisible(paging.hasNext)
             }
         }
         viewModel.recentViewedItems.observe(this) { recentItems ->
